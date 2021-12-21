@@ -1,0 +1,27 @@
+Package: SCpubr
+Type: Package
+Title: Generate clean visualizations of Single Cell data.
+Version: 0.1.0
+Author: Enrique Blanco Carmona
+Maintainer: Enrique Blanco Carmona <enblacar1996@gmail.com>
+Description: General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments..
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.0.0)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+biocViews:
+Imports:
+  Seurat,
+  ggplot2,
+  ggpubr,
+  magrittr,
+  tidyr,
+  dplyr,
+  colortools,
+  viridis,
+  pbapply,
+  patchwork,
+  Nebulosa
+  
