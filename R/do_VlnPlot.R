@@ -8,6 +8,7 @@
 #' @param cols # From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
 #' @param cols.group # Vector of colors matching the unique values in group.by.
 #' @param cols.split # Vector of colors matching the unique values in split.by.
+#' @param plot_boxplot # Logical. Whether to plot a boxplot inside the violin or not.
 #' @param legend # Whether to plot the legend or not.
 #' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title # Title to use in the plot.
@@ -39,6 +40,7 @@ do_VlnPlot <- function(sample,
                        cols.split = NULL,
                        pt.size = 0,
                        y_cut = NULL,
+                       plot_boxplot = TRUE,
                        legend.position = "bottom",
                        plot.title = "",
                        xlab = "",
@@ -80,7 +82,6 @@ do_VlnPlot <- function(sample,
         ggplot2::xlab(xlab) &
         ggpubr::theme_pubr(legend = legend.position) &
         ggplot2::scale_y_continuous(labels = scales::comma) &
-        ggplot2::geom_boxplot(width = .1, fill = "white", outlier.colour = NA) &
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
                        axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
                        axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
@@ -88,6 +89,12 @@ do_VlnPlot <- function(sample,
                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                        plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5)) &
         ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
+
+    if (plot_boxplot == TRUE){
+      plot <- plot &
+        ggplot2::geom_boxplot(width = .1, fill = "white", outlier.colour = NA)
+    }
+
     if (remove_x_axis == TRUE){
         plot <- plot & ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
     }
