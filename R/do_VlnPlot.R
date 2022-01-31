@@ -1,35 +1,38 @@
 #' Wrapper for \link[Seurat]{VlnPlot}.
 #'
 #'
-#' @param sample # Seurat object.
-#' @param features # Features to represent.
-#' @param group.by # Variable you want the cells to be colored for.
-#' @param split.by # Split into as many plots as unique values in the variable provided.
-#' @param cols # From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
-#' @param cols.group # Vector of colors matching the unique values in group.by.
-#' @param cols.split # Vector of colors matching the unique values in split.by.
-#' @param plot_boxplot # Logical. Whether to plot a boxplot inside the violin or not.
-#' @param legend # Whether to plot the legend or not.
-#' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title # Title to use in the plot.
-#' @param pt.size # Size of points in the VlnPlot.
-#' @param xlab # Title for the X axis.
-#' @param ylab # Title for the Y axis.
-#' @param remove_x_axis # Remove X axis labels and ticks from the plot.
-#' @param remove_y_axis # Remove Y axis labels and ticks from the plot.
-#' @param axis.text.fonsize # Modify the fontsize for axis texts.
-#' @param axis.title.fonsize # Modify the fontsize for axis titles.
-#' @param plot.title.fonsize # Modify the fontsize for the plot title.
-#' @param legend.text.fontsize # Modify the fontsize for the legend text.
-#' @param legend.title.fontsize # Modify the fontsize for the legend title.
-#' @param y_cut # Vector with the values in which the Violins should be cut. Only works for one feature.
-#' @param legend.ncol # Number of columns in the legend.
+#' @param sample  Seurat object.
+#' @param features Features to represent.
+#' @param group.by  Variable you want the cells to be colored for.
+#' @param split.by  Split into as many plots as unique values in the variable provided.
+#' @param cols  From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
+#' @param cols.group  Vector of colors matching the unique values in group.by.
+#' @param cols.split  Vector of colors matching the unique values in split.by.
+#' @param plot_boxplot Logical. Whether to plot a boxplot inside the violin or not.
+#' @param legend  Whether to plot the legend or not.
+#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param plot.title  Title to use in the plot.
+#' @param pt.size  Size of points in the VlnPlot.
+#' @param xlab  Title for the X axis.
+#' @param ylab  Title for the Y axis.
+#' @param remove_x_axis  Remove X axis labels and ticks from the plot.
+#' @param remove_y_axis  Remove Y axis labels and ticks from the plot.
+#' @param axis.text.fonsize  Modify the fontsize for axis texts.
+#' @param axis.title.fonsize  Modify the fontsize for axis titles.
+#' @param plot.title.fonsize  Modify the fontsize for the plot title.
+#' @param legend.text.fontsize  Modify the fontsize for the legend text.
+#' @param legend.title.fontsize  Modify the fontsize for the legend title.
+#' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
+#' @param legend.ncol  Number of columns in the legend.
 
 
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_VlnPlot <- function(sample,
                        features,
                        group.by = NULL,

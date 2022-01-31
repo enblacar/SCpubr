@@ -24,11 +24,16 @@ do_Nebulosa_plot(
 
 \item{legend.position}{Position of the legend in the plot.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use Seurat::Reductions(sample).}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
 }
 \value{
 
 }
 \description{
 Wrapper for Nebulosa::plot_density in Seurat.
+}
+\examples{
+\dontrun{
+TBD
+}
 }

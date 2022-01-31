@@ -1,6 +1,6 @@
 Package: SCpubr
 Type: Package
-Title: Generate clean visualizations of Single Cell data.
+Title: Generate clean visualizations of Single Cell data
 Version: 0.1.0
 Author: Enrique Blanco Carmona
 Maintainer: Enrique Blanco Carmona <enblacar1996@gmail.com>

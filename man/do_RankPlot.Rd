@@ -74,3 +74,8 @@ do_RankPlot(
 \description{
 RankPlot plot.
 }
+\examples{
+\dontrun{
+TBD
+}
+}

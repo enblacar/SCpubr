@@ -1,32 +1,35 @@
 #' Wrapper for \link[Seurat]{DimPlot}.
 #'
 #'
-#' @param sample # Seurat object.
-#' @param reduction # Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
-#' @param group.by # Variable you want the cells to be colored for.
-#' @param split.by # Split into as many plots as unique values in the variable provided.
-#' @param colors.use # Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by variable.
-#' @param cols.split # Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.
-#' @param label # Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
-#' @param cells.highlight # Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
-#' @param cols.highlight # HEX color code to use with the highlighted cells.
-#' @param shuffle # Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
-#' @param pt.size # Point size of the cells.
-#' @param legend # Whether to plot the legend or not.
-#' @param legend.title # Logical stating whether the legend title is shown or not.
-#' @param legend.ncol # Number of columns in the legend.
-#' @param legend.text.size # Fontsize of the legend labels.
-#' @param legend.title.size # Fontisize of the legend title.
-#' @param legend.icon.size # Size of the icons in legend.
-#' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.byrow # Logical stating whether the legend is filled by row or not.
-#' @param plot.title # Title to use in the plot.
-#' @param ncol # Number of columns used in the arrangement of the output plot using "split.by" parameter.
+#' @param sample Seurat object.
+#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
+#' @param group.by Variable you want the cells to be colored for.
+#' @param split.by Split into as many plots as unique values in the variable provided.
+#' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by variable.
+#' @param cols.split Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.
+#' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
+#' @param cells.highlight Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
+#' @param cols.highlight HEX color code to use with the highlighted cells.
+#' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
+#' @param pt.size Point size of the cells.
+#' @param legend Whether to plot the legend or not.
+#' @param legend.title Logical stating whether the legend title is shown or not.
+#' @param legend.ncol Number of columns in the legend.
+#' @param legend.text.size Fontsize of the legend labels.
+#' @param legend.title.size Fontisize of the legend title.
+#' @param legend.icon.size Size of the icons in legend.
+#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param legend.byrow Logical stating whether the legend is filled by row or not.
+#' @param plot.title Title to use in the plot.
+#' @param ncol Number of columns used in the arrangement of the output plot using "split.by" parameter.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_DimPlot <- function(sample,
                        reduction = "umap",
                        label = FALSE,

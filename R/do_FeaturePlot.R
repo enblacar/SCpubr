@@ -1,24 +1,27 @@
 #' Wrapper for \link[Seurat]{FeaturePlot}.
 #'
 #'
-#' @param sample # Seurat object.
-#' @param assay # Assay to use.
-#' @param reduction # Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
-#' @param features # Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
-#' @param pt.size # Point size.
-#' @param legend # Whether to plot the legend or not.
-#' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param scale.begin # Value to where you want the continuous color scale to start. It has to be in the range of the feature's values.
-#' @param scale.end # Value to where you want the continuous color scale to end. It has to be in the range of the feature's values.
-#' @param plot.title # Title for the plot.
-#' @param ncol # Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
-#' @param cells.highlight # Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
-#' @param idents.highlight # Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
-#' @param dims # Vector of 2 dimensions to use. Defaults to first and second dimensions.
+#' @param sample Seurat object.
+#' @param assay Assay to use.
+#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
+#' @param features Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
+#' @param pt.size Point size.
+#' @param legend Whether to plot the legend or not.
+#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param scale.begin Value to where you want the continuous color scale to start. It has to be in the range of the feature's values.
+#' @param scale.end Value to where you want the continuous color scale to end. It has to be in the range of the feature's values.
+#' @param plot.title Title for the plot.
+#' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
+#' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
+#' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
+#' @param dims Vector of 2 dimensions to use. Defaults to first and second dimensions.
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_FeaturePlot <- function(sample,
                            assay = "SCT",
                            features,

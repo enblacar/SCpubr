@@ -28,7 +28,7 @@ do_FeaturePlot(
 
 \item{features}{Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use Seurat::Reductions(sample).}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
 
 \item{pt.size}{Point size.}
 
@@ -46,7 +46,7 @@ do_FeaturePlot(
 
 \item{cells.highlight}{Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.}
 
-\item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in Seurat::Idents(sample).}
+\item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
 
 \item{dims}{Vector of 2 dimensions to use. Defaults to first and second dimensions.}
 }
@@ -55,4 +55,9 @@ do_FeaturePlot(
 }
 \description{
 Wrapper for \link[Seurat]{FeaturePlot}.
+}
+\examples{
+\dontrun{
+TBD
+}
 }

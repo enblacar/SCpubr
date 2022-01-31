@@ -1,32 +1,35 @@
 #' Wrapper for computing publication ready bar plots.
 #'
 #'
-#' @param sample # Seurat object.
-#' @param var.to.plot # Main variable in the bar plot. Example: seurat_clusters
-#' @param group.by # Secondary variable to group the bar plot for. Example: orig.ident
-#' @param order.by # Value in var.to.plot to order the items in group.by for.
-#' @param labels.order # Vector of labels to explicitly state the order or the bars.
-#' @param position # Either "fill" or "stack." Posigion "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.
-#' @param xlab # Title for the X axis.
-#' @param ylab # Title for the Y axis.
-#' @param colors.use # Palette of colors to use. It must match the group.by variable in terms of length and names.
-#' @param legend.title # Logical stating whether the legend title is shown or not.
-#' @param legend.position # Position of the legend in the plot.
-#' @param legend.col # Number of columns in the legend.
-#' @param legend.text.size # Fontsize of the legend labels.
-#' @param legend.title.size # Fontisize of the legend title.
-#' @param legend.icon.size # Size of the icons in legend.
-#' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param axis.text.size # Fontsize for axis text.
-#' @param axis.title.size # Fontsize for axis title.
-#' @param plot.title.size # Fontsize for the plot title.
-#' @param legend.byrow # Logical stating whether the legend is filled by row or not.
-#' @param plot.title # Title to use in the plot.
+#' @param sample  Seurat object.
+#' @param var.to.plot  Main variable in the bar plot. Example: seurat_clusters
+#' @param group.by  Secondary variable to group the bar plot for. Example: orig.ident
+#' @param order.by  Value in var.to.plot to order the items in group.by for.
+#' @param labels.order  Vector of labels to explicitly state the order or the bars.
+#' @param position  Either "fill" or "stack." Posigion "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.
+#' @param xlab  Title for the X axis.
+#' @param ylab  Title for the Y axis.
+#' @param colors.use  Palette of colors to use. It must match the group.by variable in terms of length and names.
+#' @param legend.title  Logical stating whether the legend title is shown or not.
+#' @param legend.position  Position of the legend in the plot.
+#' @param legend.col  Number of columns in the legend.
+#' @param legend.text.size  Fontsize of the legend labels.
+#' @param legend.title.size  Fontisize of the legend title.
+#' @param legend.icon.size  Size of the icons in legend.
+#' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param axis.text.size  Fontsize for axis text.
+#' @param axis.title.size  Fontsize for axis title.
+#' @param plot.title.size  Fontsize for the plot title.
+#' @param legend.byrow  Logical stating whether the legend is filled by row or not.
+#' @param plot.title  Title to use in the plot.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_BarPlot <- function(sample,
                        var.to.plot,
                        group.by = NULL,
@@ -73,10 +76,10 @@ do_BarPlot <- function(sample,
             factor_levels <- labels.order
         }
         p <- sample@meta.data %>%
-            dplyr::select(!!sym(var.to.plot)) %>%
-            dplyr::group_by(!!sym(var.to.plot)) %>%
+            dplyr::select(!!rlang::sym(var.to.plot)) %>%
+            dplyr::group_by(!!rlang::sym(var.to.plot)) %>%
             dplyr:: summarise(n = dplyr::n()) %>%
-            dplyr::mutate(x_values = as.factor(!!sym(var.to.plot))) %>%
+            dplyr::mutate(x_values = as.factor(!!rlang::sym(var.to.plot))) %>%
             #dplyr::mutate(x_values = ifelse(is.null(labels.order) == TRUE, forcats::fct_reorder(x_values, n), labels.order)) %>%
             ggplot2::ggplot(mapping = ggplot2::aes(x = x_values, y = n, fill = x_values)) +
             geom_bar(position = position, stat="identity", width = 1,
@@ -102,13 +105,13 @@ do_BarPlot <- function(sample,
 
         if (!(is.null(order.by))){
             factor_levels <- sample@meta.data %>%
-                dplyr::select(!!sym(var.to.plot), !!sym(group.by)) %>%
-                dplyr::group_by(!!sym(group.by), !!sym(var.to.plot)) %>%
+                dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
+                dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
                 dplyr:: summarise(n = dplyr::n()) %>%
-                dplyr::mutate(x_value = !!sym(group.by)) %>%
+                dplyr::mutate(x_value = !!rlang::sym(group.by)) %>%
                 dplyr::filter(x_value == order.by) %>%
-                dplyr::mutate(num_cells = {sample@meta.data %>% dplyr::select(!!sym(var.to.plot)) %>% dplyr::group_by(!!sym(var.to.plot)) %>% dplyr::summarise(n = dplyr::n()) %>%
-                        dplyr::filter(!!sym(var.to.plot) %in% unique(sample@meta.data[, c(group.by, var.to.plot)][sample@meta.data[, c(group.by, var.to.plot)][, group.by] == order.by, ][, var.to.plot])) %>%
+                dplyr::mutate(num_cells = {sample@meta.data %>% dplyr::select(!!rlang::sym(var.to.plot)) %>% dplyr::group_by(!!rlang::sym(var.to.plot)) %>% dplyr::summarise(n = dplyr::n()) %>%
+                        dplyr::filter(!!rlang::sym(var.to.plot) %in% unique(sample@meta.data[, c(group.by, var.to.plot)][sample@meta.data[, c(group.by, var.to.plot)][, group.by] == order.by, ][, var.to.plot])) %>%
                         dplyr::pull(n)}) %>%
                 dplyr::mutate(frac = n/num_cells) %>%
                 dplyr::arrange(dplyr::desc(frac)) %>%
@@ -123,11 +126,11 @@ do_BarPlot <- function(sample,
 
         } else {
             data <- sample@meta.data %>%
-                dplyr::select(!!sym(var.to.plot), !!sym(group.by)) %>%
-                dplyr::group_by(!!sym(group.by), !!sym(var.to.plot)) %>%
+                dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
+                dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
                 dplyr:: summarise(n = dplyr::n()) %>%
                 dplyr::arrange(dplyr::desc(n)) %>%
-                dplyr::mutate(x_values = as.factor(!!(sym(var.to.plot))))
+                dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot))))
 
             factor_levels <- rev(sort(unique(data$x_values)))
         }
@@ -137,13 +140,13 @@ do_BarPlot <- function(sample,
         }
 
         p <- sample@meta.data %>%
-            dplyr::select(!!sym(var.to.plot), !!sym(group.by)) %>%
-            dplyr::group_by(!!sym(group.by), !!sym(var.to.plot)) %>%
+            dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
+            dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
             dplyr::summarise(n = dplyr::n()) %>%
             dplyr::arrange(dplyr::desc(n)) %>%
-            dplyr::mutate(x_values = as.factor(!!(sym(var.to.plot)))) %>%
+            dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot)))) %>%
             dplyr::mutate(x_values = factor(x_values, levels = factor_levels)) %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = x_values, y = n, fill = !!sym(group.by))) +
+            ggplot2::ggplot(mapping = ggplot2::aes(x = x_values, y = n, fill = !!rlang::sym(group.by))) +
             geom_bar(position = position, stat="identity", width = 1,
                      colour="black",
                      size = 1) +

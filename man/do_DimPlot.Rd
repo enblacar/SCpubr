@@ -35,7 +35,7 @@ do_DimPlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use Seurat::Reductions(sample).}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
 
 \item{label}{Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
@@ -69,7 +69,7 @@ do_DimPlot(
 
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
-\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either Seurat::Idents(sample) or the group.by variable.}
+\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by variable.}
 
 \item{plot.title}{Title to use in the plot.}
 
@@ -80,4 +80,9 @@ do_DimPlot(
 }
 \description{
 Wrapper for \link[Seurat]{DimPlot}.
+}
+\examples{
+\dontrun{
+TBD
+}
 }

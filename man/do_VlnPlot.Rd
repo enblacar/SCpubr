@@ -15,6 +15,7 @@ do_VlnPlot(
   cols.split = NULL,
   pt.size = 0,
   y_cut = NULL,
+  plot_boxplot = TRUE,
   legend.position = "bottom",
   plot.title = "",
   xlab = "",
@@ -40,7 +41,7 @@ do_VlnPlot(
 
 \item{legend}{Whether to plot the legend or not.}
 
-\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from RColorBrewer::brewer.pal.info, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
+\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from \code{RColorBrewer::brewer.pal.info}, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
 
 \item{cols.group}{Vector of colors matching the unique values in group.by.}
 
@@ -49,6 +50,8 @@ do_VlnPlot(
 \item{pt.size}{Size of points in the VlnPlot.}
 
 \item{y_cut}{Vector with the values in which the Violins should be cut. Only works for one feature.}
+
+\item{plot_boxplot}{Logical. Whether to plot a boxplot inside the violin or not.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -79,4 +82,9 @@ do_VlnPlot(
 }
 \description{
 Wrapper for \link[Seurat]{VlnPlot}.
+}
+\examples{
+\dontrun{
+TBD
+}
 }

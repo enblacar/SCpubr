@@ -11,28 +11,31 @@
 #' - Neftel, C. et al. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). https://doi.org/10.1016/j.cell.2019.06.024
 #' - Tirosh, I., Venteicher, A., Hebert, C. et al. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). https://doi.org/10.1038/nature20123
 #'
-#' @param sample # Seurat object.
-#' @param x1 # First feature in the X axis. Will go on the right side if y2 is not provided and top-right quadrant if provided.
-#' @param x2 # Second feature on the X axis. Will go on the left side if y2 is not provided and top-left quadrant if provided.
-#' @param y1 # First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.
-#' @param y2 # Second feature on the Y axis. Will become the bottom-left quadrant if provided.
-#' @param categorical # Do you want to color the cells using a categorical variable?
-#' @param categorical_feature # Categorical metadata variable to color the cells for.
-#' @param continuous # Do you want to color the cells using a continuous variable?
-#' @param continuous_feature # Continuous metadata variable to color the cells for.
-#' @param legend.position # Position of the legend in the plot. One of: top, bottom, left, right.
-#' @param plot.title # Title to use in the plot.
-#' @param xlab # Title for the X axis. Only works if y2 is not set up.
-#' @param ylab # Title for the Y axis. Only works if y2 is not set up.
-#' @param axis.ticks # Whether to show axis ticks.
-#' @param axis.text # Whether to show axis text.
-#' @param complex.output # Logical. Returns a patchwork plot with the RankPlot of variables across X and Y axis.
-#' @param complex.output.grouping.variable # Variable to group the values in the RankPlot.
+#' @param sample  Seurat object.
+#' @param x1  First feature in the X axis. Will go on the right side if y2 is not provided and top-right quadrant if provided.
+#' @param x2  Second feature on the X axis. Will go on the left side if y2 is not provided and top-left quadrant if provided.
+#' @param y1  First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.
+#' @param y2  Second feature on the Y axis. Will become the bottom-left quadrant if provided.
+#' @param categorical  Do you want to color the cells using a categorical variable?
+#' @param categorical_feature  Categorical metadata variable to color the cells for.
+#' @param continuous  Do you want to color the cells using a continuous variable?
+#' @param continuous_feature  Continuous metadata variable to color the cells for.
+#' @param legend.position  Position of the legend in the plot. One of: top, bottom, left, right.
+#' @param plot.title  Title to use in the plot.
+#' @param xlab  Title for the X axis. Only works if y2 is not set up.
+#' @param ylab  Title for the Y axis. Only works if y2 is not set up.
+#' @param axis.ticks  Whether to show axis ticks.
+#' @param axis.text  Whether to show axis text.
+#' @param complex.output  Logical. Returns a patchwork plot with the RankPlot of variables across X and Y axis.
+#' @param complex.output.grouping.variable  Variable to group the values in the RankPlot.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_ButterflyPlot <- function(sample,
                         x1,
                         x2,

@@ -1,30 +1,33 @@
 #' Wrapper for \link[Seurat]{DotPlot}.
 #'
 #'
-#' @param sample # Seurat object.
-#' @param features # Features to represent.
-#' @param group.by # Variable you want the cells to be colored for.
-#' @param split.by # Split into as many plots as unique values in the variable provided.
-#' @param cols # From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
-#' @param legend # Whether to plot the legend or not.
-#' @param legend.position # Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title # Title to use in the plot.
-#' @param xlab # Title for the X axis.
-#' @param ylab # Title for the Y axis.
-#' @param remove_x_axis # Remove X axis labels and ticks from the plot.
-#' @param remove_y_axis # Remove Y axis labels and ticks from the plot.
-#' @param axis.text.fonsize # Modify the fontsize for axis texts.
-#' @param axis.title.fonsize # Modify the fontsize for axis titles.
-#' @param plot.title.fonsize # Modify the fontsize for the plot title.
-#' @param legend.text.fontsize # Modify the fontsize for the legend text.
-#' @param legend.title.fontsize # Mofify the fontsize for the legend title.
-#' @param flip # Whether to flip the axis.
-#' @param dot.scale # Scale the size of the dots.
+#' @param sample Seurat object.
+#' @param features Features to represent.
+#' @param group.by Variable you want the cells to be colored for.
+#' @param split.by Split into as many plots as unique values in the variable provided.
+#' @param cols From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
+#' @param legend Whether to plot the legend or not.
+#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param plot.title Title to use in the plot.
+#' @param xlab Title for the X axis.
+#' @param ylab Title for the Y axis.
+#' @param remove_x_axis Remove X axis labels and ticks from the plot.
+#' @param remove_y_axis Remove Y axis labels and ticks from the plot.
+#' @param axis.text.fonsize Modify the fontsize for axis texts.
+#' @param axis.title.fonsize Modify the fontsize for axis titles.
+#' @param plot.title.fonsize Modify the fontsize for the plot title.
+#' @param legend.text.fontsize Modify the fontsize for the legend text.
+#' @param legend.title.fontsize Mofify the fontsize for the legend title.
+#' @param flip Whether to flip the axis.
+#' @param dot.scale Scale the size of the dots.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 do_DotPlot <- function(sample,
                        features,
                        group.by = NULL,

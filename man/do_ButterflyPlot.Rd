@@ -78,3 +78,8 @@ This plots are based on the following publications:
 \item Tirosh, I., Venteicher, A., Hebert, C. et al. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). https://doi.org/10.1038/nature20123
 }
 }
+\examples{
+\dontrun{
+TBD
+}
+}

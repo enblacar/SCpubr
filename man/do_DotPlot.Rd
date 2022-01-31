@@ -39,7 +39,7 @@ do_DotPlot(
 
 \item{dot.scale}{Scale the size of the dots.}
 
-\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from RColorBrewer::brewer.pal.info, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
+\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from \code{RColorBrewer::brewer.pal.info}, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -70,4 +70,9 @@ do_DotPlot(
 }
 \description{
 Wrapper for \link[Seurat]{DotPlot}.
+}
+\examples{
+\dontrun{
+TBD
+}
 }

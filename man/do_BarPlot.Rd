@@ -75,3 +75,8 @@ do_BarPlot(
 \description{
 Wrapper for computing publication ready bar plots.
 }
+\examples{
+\dontrun{
+TBD
+}
+}
