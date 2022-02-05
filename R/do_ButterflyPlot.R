@@ -11,12 +11,15 @@
 #' - Neftel, C. et al. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). https://doi.org/10.1016/j.cell.2019.06.024
 #' - Tirosh, I., Venteicher, A., Hebert, C. et al. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). https://doi.org/10.1038/nature20123
 #'
+#' @importFrom rlang .data
+#'
 #' @param sample  Seurat object.
 #' @param x1  First feature in the X axis. Will go on the right side if y2 is not provided and top-right quadrant if provided.
 #' @param x2  Second feature on the X axis. Will go on the left side if y2 is not provided and top-left quadrant if provided.
 #' @param y1  First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.
 #' @param y2  Second feature on the Y axis. Will become the bottom-left quadrant if provided.
 #' @param categorical  Do you want to color the cells using a categorical variable?
+#' @param colors.use Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.
 #' @param categorical_feature  Categorical metadata variable to color the cells for.
 #' @param continuous  Do you want to color the cells using a continuous variable?
 #' @param continuous_feature  Continuous metadata variable to color the cells for.
@@ -29,7 +32,7 @@
 #' @param complex.output  Logical. Returns a patchwork plot with the RankPlot of variables across X and Y axis.
 #' @param complex.output.grouping.variable  Variable to group the values in the RankPlot.
 #'
-#' @return
+#' @return  A ggplot2 object containing a butterfly plot.
 #' @export
 #'
 #' @examples
@@ -102,7 +105,7 @@ do_ButterflyPlot <- function(sample,
         # Plain plot without coloring.
         if (categorical == FALSE & continuous == FALSE) {
             df <- data.frame("set_x" = x, "set_y" = y)
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y)) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y)) +
                         ggplot2::geom_point() +
                         ggpubr::theme_pubr(legend = "bottom") +
                         ggpubr::rremove("legend.title")
@@ -111,7 +114,7 @@ do_ButterflyPlot <- function(sample,
         } else if (categorical == TRUE){
             df <- data.frame("set_x" = x, "set_y" = y, "color" = scores[, categorical_feature])
             colors.use <- colors.use[names(colors.use) %in% unique(df[, categorical_feature])]
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y, color = !!(sym(categorical_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(categorical_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "bottom", legend.position)) +
                 ggpubr::rremove("legend.title") +
@@ -120,7 +123,7 @@ do_ButterflyPlot <- function(sample,
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
             df <- data.frame("set_x" = x, "set_y" = y, "color" = scores[, continuous_feature])
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y, color = !!(sym(continuous_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(continuous_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "right", legend.position)) +
                 viridis::scale_color_viridis(name = continuous_feature)
@@ -179,7 +182,7 @@ do_ButterflyPlot <- function(sample,
         # Plain plot without coloring.
         if (categorical == FALSE & continuous == FALSE) {
             df <- data.frame("set_x" = x, "set_y" = d)
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y)) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y)) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = "bottom") +
                 ggpubr::rremove("legend.title")
@@ -188,7 +191,7 @@ do_ButterflyPlot <- function(sample,
         } else if (categorical == TRUE){
             df <- data.frame("set_x" = x, "set_y" = d, "color" = scores[, categorical_feature])
             colors.use <- colors.use[names(colors.use) %in% unique(df[, categorical_feature])]
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y, color = !!(sym(categorical_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(categorical_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "bottom", legend.position)) +
                 ggpubr::rremove("legend.title") +
@@ -197,7 +200,7 @@ do_ButterflyPlot <- function(sample,
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
             df <- data.frame("set_x" = x, "set_y" = d, "color" = scores[, continuous_feature])
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = set_x, y = set_y, color = !!(sym(continuous_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(continuous_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "right", legend.position)) +
                 viridis::scale_color_viridis(name = continuous_feature)
@@ -205,8 +208,8 @@ do_ButterflyPlot <- function(sample,
 
         # Add the extra axis and axis titles.
         plot <- plot +
-            ggplot2::scale_y_continuous(sec.axis = sec_axis(~.*1, name = y_lab2)) +
-            ggplot2::scale_x_continuous(sec.axis = sec_axis(~.*1, name = x_lab2)) +
+            ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*1, name = y_lab2)) +
+            ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~.*1, name = x_lab2)) +
             ggplot2::xlab(x_lab1) +
             ggplot2::ylab(y_lab1) +
             ggplot2::ggtitle(plot.title)
@@ -241,8 +244,8 @@ do_ButterflyPlot <- function(sample,
 
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
-            p.x <- do_RankPlot(sample, feature_to_rank = "x_axis", group.by = !!(sym(complex.output.grouping.variable)), continuous_feature = TRUE)
-            p.y <- do_RankPlot(sample, feature_to_rank = "y_axis", group.by = !!(sym(complex.output.grouping.variable)), continuous_feature = TRUE)
+            p.x <- do_RankPlot(sample, feature_to_rank = "x_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
+            p.y <- do_RankPlot(sample, feature_to_rank = "y_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
             plot <- plot | p.x | p.y
         }
     }

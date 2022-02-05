@@ -21,7 +21,7 @@
 #' @param flip Whether to flip the axis.
 #' @param dot.scale Scale the size of the dots.
 #'
-#' @return
+#' @return A ggplot2 object containing a Dot Plot.
 #' @export
 #'
 #' @examples

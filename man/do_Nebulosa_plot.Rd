@@ -27,7 +27,7 @@ do_Nebulosa_plot(
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
 }
 \value{
-
+A ggplot2 object containing a Nebulosa plot.
 }
 \description{
 Wrapper for Nebulosa::plot_density in Seurat.

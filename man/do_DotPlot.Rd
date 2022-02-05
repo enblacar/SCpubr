@@ -66,7 +66,7 @@ do_DotPlot(
 \item{flip}{Whether to flip the axis.}
 }
 \value{
-
+A ggplot2 object containing a Dot Plot.
 }
 \description{
 Wrapper for \link[Seurat]{DotPlot}.

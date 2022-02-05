@@ -7,7 +7,6 @@
 #' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
 #' @param group.by Variable you want the cells to be grouped for.
 #' @param colors.use Named vector with the color asignment.
-#' @param cols Color palette matching the unique values in either Seurat::Idents(sample) or in group.by.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title Title to use in the plot.
@@ -21,9 +20,8 @@
 #' @param legend.text.fontsize Modify the fontsize for the legend text.
 #' @param legend.title.fontsize Mofify the fontsize for the legend title.
 #' @param flip Whether to flip the axis.
-#' @param dot.scale Scale the size of the dots.
 #'
-#' @return
+#' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
 #'
 #' @examples
@@ -64,7 +62,7 @@ do_RankPlot <- function(sample,
 
     color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = ranked_groups, color = !!sym(color_by))) +
+    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
         ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
         ggpubr::theme_pubr(legend = legend.position) +
         ggplot2::ggtitle(plot.title) +

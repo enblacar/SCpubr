@@ -39,6 +39,10 @@ do_DimPlot(
 
 \item{label}{Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
+\item{label.color}{HEX code for the color of the text in the labels if label is set to TRUE.}
+
+\item{repel}{Whether to repel the labels if label is set to TRUE.}
+
 \item{shuffle}{Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
 
 \item{pt.size}{Point size of the cells.}
@@ -74,9 +78,13 @@ do_DimPlot(
 \item{plot.title}{Title to use in the plot.}
 
 \item{ncol}{Number of columns used in the arrangement of the output plot using "split.by" parameter.}
+
+\item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
+
+\item{dims}{Dimensions to plot, if the dimensional reduction chosen has more than 2, like PCA.}
 }
 \value{
-
+A ggplot2 object containing a DimPlot.
 }
 \description{
 Wrapper for \link[Seurat]{DimPlot}.

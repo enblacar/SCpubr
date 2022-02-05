@@ -15,7 +15,7 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 dimensions to use. Defaults to first and second dimensions.
-#' @return
+#' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
 #' @examples
@@ -138,9 +138,9 @@ do_FeaturePlot <- function(sample,
     if (!is.null(plot.title)){
         if (length(features) > 1){
             p <- p + patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = element_text(size = 18,
-                                                                                                 face = "bold",
-                                                                                                 hjust = 0.5)))
+                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18,
+                                                                                                          face = "bold",
+                                                                                                          hjust = 0.5)))
         } else {
             p <- p + ggplot2::ggtitle(plot.title)
         }
@@ -155,10 +155,10 @@ do_FeaturePlot <- function(sample,
     if (reduction == "diffusion"){
         # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
         p <- p &
-            xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
-                   max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
-            ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
-                   max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
+            ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
+                          max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
+            ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
+                          max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
             # Remove axis elements so that the axis title is the only thing left.
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &

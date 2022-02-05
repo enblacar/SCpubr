@@ -62,14 +62,10 @@ do_RankPlot(
 
 \item{flip}{Whether to flip the axis.}
 
-\item{cols}{Color palette matching the unique values in either Seurat::Idents(sample) or in group.by.}
-
 \item{legend}{Whether to plot the legend or not.}
-
-\item{dot.scale}{Scale the size of the dots.}
 }
 \value{
-
+A ggplot2 object containing a Bee Swarm plot.
 }
 \description{
 RankPlot plot.

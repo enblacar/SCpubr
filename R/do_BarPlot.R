@@ -1,5 +1,6 @@
 #' Wrapper for computing publication ready bar plots.
-#'
+#' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
 #'
 #' @param sample  Seurat object.
 #' @param var.to.plot  Main variable in the bar plot. Example: seurat_clusters
@@ -12,7 +13,7 @@
 #' @param colors.use  Palette of colors to use. It must match the group.by variable in terms of length and names.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.position  Position of the legend in the plot.
-#' @param legend.col  Number of columns in the legend.
+#' @param legend.ncol  Number of columns in the legend.
 #' @param legend.text.size  Fontsize of the legend labels.
 #' @param legend.title.size  Fontisize of the legend title.
 #' @param legend.icon.size  Size of the icons in legend.
@@ -22,8 +23,9 @@
 #' @param plot.title.size  Fontsize for the plot title.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
 #' @param plot.title  Title to use in the plot.
+#' @param horizontal Whether to plot the BarPlot horizontally.
 #'
-#' @return
+#' @return A ggplot2 object containing a barplot.
 #' @export
 #'
 #' @examples
@@ -80,11 +82,10 @@ do_BarPlot <- function(sample,
             dplyr::group_by(!!rlang::sym(var.to.plot)) %>%
             dplyr:: summarise(n = dplyr::n()) %>%
             dplyr::mutate(x_values = as.factor(!!rlang::sym(var.to.plot))) %>%
-            #dplyr::mutate(x_values = ifelse(is.null(labels.order) == TRUE, forcats::fct_reorder(x_values, n), labels.order)) %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = x_values, y = n, fill = x_values)) +
-            geom_bar(position = position, stat="identity", width = 1,
-                     colour="black",
-                     size = 1) +
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = .data$x_values)) +
+            ggplot2::geom_bar(position = position, stat="identity", width = 1,
+                              colour="black",
+                              size = 1) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
             ggplot2::xlab(xlab) +
@@ -107,17 +108,17 @@ do_BarPlot <- function(sample,
             factor_levels <- sample@meta.data %>%
                 dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
                 dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
-                dplyr:: summarise(n = dplyr::n()) %>%
+                dplyr::summarise(n = dplyr::n()) %>%
                 dplyr::mutate(x_value = !!rlang::sym(group.by)) %>%
-                dplyr::filter(x_value == order.by) %>%
+                dplyr::filter(.data$x_value == order.by) %>%
                 dplyr::mutate(num_cells = {sample@meta.data %>% dplyr::select(!!rlang::sym(var.to.plot)) %>% dplyr::group_by(!!rlang::sym(var.to.plot)) %>% dplyr::summarise(n = dplyr::n()) %>%
                         dplyr::filter(!!rlang::sym(var.to.plot) %in% unique(sample@meta.data[, c(group.by, var.to.plot)][sample@meta.data[, c(group.by, var.to.plot)][, group.by] == order.by, ][, var.to.plot])) %>%
-                        dplyr::pull(n)}) %>%
-                dplyr::mutate(frac = n/num_cells) %>%
-                dplyr::arrange(dplyr::desc(frac)) %>%
-                dplyr::pull(orig.ident)
+                        dplyr::pull(.data$n)}) %>%
+                dplyr::mutate(frac = .data$n/.data$num_cells) %>%
+                dplyr::arrange(dplyr::desc(.data$frac)) %>%
+                dplyr::pull(!!rlang::sym(group.by))
 
-            total_levels <- unique(sample$orig.ident)
+            total_levels <- unique(sample[[group.by]])
 
             if (length(factor_levels) != length(total_levels)){
                 factor_levels <- c(factor_levels, total_levels[!(total_levels %in% factor_levels)])
@@ -129,10 +130,10 @@ do_BarPlot <- function(sample,
                 dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
                 dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
                 dplyr:: summarise(n = dplyr::n()) %>%
-                dplyr::arrange(dplyr::desc(n)) %>%
+                dplyr::arrange(dplyr::desc(.data$n)) %>%
                 dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot))))
 
-            factor_levels <- rev(sort(unique(data$x_values)))
+            factor_levels <- rev(sort(unique(.data$x_values)))
         }
 
         if (!is.null(labels.order)){
@@ -143,13 +144,13 @@ do_BarPlot <- function(sample,
             dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
             dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
             dplyr::summarise(n = dplyr::n()) %>%
-            dplyr::arrange(dplyr::desc(n)) %>%
+            dplyr::arrange(dplyr::desc(.data$n)) %>%
             dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot)))) %>%
-            dplyr::mutate(x_values = factor(x_values, levels = factor_levels)) %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = x_values, y = n, fill = !!rlang::sym(group.by))) +
-            geom_bar(position = position, stat="identity", width = 1,
-                     colour="black",
-                     size = 1) +
+            dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels)) %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = !!rlang::sym(group.by))) +
+            ggplot2::geom_bar(position = position, stat="identity", width = 1,
+                              colour="black",
+                              size = 1) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
             ggplot2::xlab(xlab) +

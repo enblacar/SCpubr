@@ -8,7 +8,7 @@
 #' @param legend.position Position of the legend in the plot.
 #' @param plot.title Title to use in the plot.
 #'
-#' @return
+#' @return  A ggplot2 object containing a Nebulosa plot.
 #' @export
 #'
 #' @examples
@@ -37,9 +37,9 @@ do_Nebulosa_plot <- function(sample,
             plot <- plot + ggplot2::ggtitle(plot.title)
         } else {
             plot <- plot + patchwork::plot_annotation(title = plot.title,
-                                                      theme = ggplot2::theme(plot.title = element_text(size = 18,
-                                                                                                       face = "bold",
-                                                                                                       hjust = 0.5)))
+                                                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18,
+                                                                                                                face = "bold",
+                                                                                                                hjust = 0.5)))
         }
     }
     return(plot)

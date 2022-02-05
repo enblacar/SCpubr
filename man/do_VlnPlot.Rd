@@ -78,7 +78,7 @@ do_VlnPlot(
 \item{legend.ncol}{Number of columns in the legend.}
 }
 \value{
-
+A ggplot2 object containing a Violin Plot.
 }
 \description{
 Wrapper for \link[Seurat]{VlnPlot}.

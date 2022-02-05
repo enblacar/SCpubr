@@ -51,6 +51,8 @@ do_BarPlot(
 
 \item{legend.title}{Logical stating whether the legend title is shown or not.}
 
+\item{legend.ncol}{Number of columns in the legend.}
+
 \item{legend.text.size}{Fontsize of the legend labels.}
 
 \item{legend.title.size}{Fontisize of the legend title.}
@@ -67,10 +69,10 @@ do_BarPlot(
 
 \item{colors.use}{Palette of colors to use. It must match the group.by variable in terms of length and names.}
 
-\item{legend.col}{Number of columns in the legend.}
+\item{horizontal}{Whether to plot the BarPlot horizontally.}
 }
 \value{
-
+A ggplot2 object containing a barplot.
 }
 \description{
 Wrapper for computing publication ready bar plots.

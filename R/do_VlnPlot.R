@@ -26,7 +26,7 @@
 #' @param legend.ncol  Number of columns in the legend.
 
 
-#' @return
+#' @return A ggplot2 object containing a Violin Plot.
 #' @export
 #'
 #' @examples

@@ -22,8 +22,12 @@
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.
 #' @param plot.title Title to use in the plot.
 #' @param ncol Number of columns used in the arrangement of the output plot using "split.by" parameter.
+#' @param dims Dimensions to plot, if the dimensional reduction chosen has more than 2, like PCA.
+#' @param repel Whether to repel the labels if label is set to TRUE.
+#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
+#' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
 #'
-#' @return
+#' @return  A ggplot2 object containing a DimPlot.
 #' @export
 #'
 #' @examples

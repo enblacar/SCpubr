@@ -51,7 +51,7 @@ do_FeaturePlot(
 \item{dims}{Vector of 2 dimensions to use. Defaults to first and second dimensions.}
 }
 \value{
-
+A ggplot2 object containing a Feature Plot.
 }
 \description{
 Wrapper for \link[Seurat]{FeaturePlot}.

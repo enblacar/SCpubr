@@ -4,7 +4,7 @@ Title: Generate clean visualizations of Single Cell data
 Version: 0.1.0
 Author: Enrique Blanco Carmona
 Maintainer: Enrique Blanco Carmona <enblacar1996@gmail.com>
-Description: General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments..
+Description: General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,5 +23,8 @@ Imports:
   viridis,
   pbapply,
   patchwork,
-  Nebulosa
+  Nebulosa,
+  ggbeeswarm,
+  rlang,
+  scales
   

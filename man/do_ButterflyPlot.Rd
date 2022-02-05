@@ -40,6 +40,8 @@ do_ButterflyPlot(
 
 \item{categorical_feature}{Categorical metadata variable to color the cells for.}
 
+\item{colors.use}{Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.}
+
 \item{continuous}{Do you want to color the cells using a continuous variable?}
 
 \item{continuous_feature}{Continuous metadata variable to color the cells for.}
@@ -61,7 +63,7 @@ do_ButterflyPlot(
 \item{complex.output.grouping.variable}{Variable to group the values in the RankPlot.}
 }
 \value{
-
+A ggplot2 object containing a butterfly plot.
 }
 \description{
 This plot aims to show the relationships between distinct enrichment scores. If 3 variables are provided, the relationship is between the Y axis and the dual X axis.
