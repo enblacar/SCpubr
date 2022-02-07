@@ -40,6 +40,30 @@ do_PTEA <- function(sample,
                     number_comparisons = 1,
                     verbose = T){
 
+
+  check_color_list <- !(is.null(colors.use))
+  check_group.by <- !(is.null(group.by))
+
+  # If the user has provided a color list.
+  if (check_color_list){
+    if (check_group.by == FALSE){
+      # Reduce the color list to contain only values included in the sample.
+      colors.use <- colors.use[names(colors.use) %in% levels(sample)]
+
+      group.by_values <- levels(sample)
+      if (names(colors.use) != unique(sample@meta.data[, group.by])){
+        stop(paste0("The color list provided does not contain all possible unique values stored in the Seurat object identities."))
+      }
+    } else if (check_group.by == TRUE) {
+      # Reduce the color list to contain only values included in the sample.
+      colors.use <- colors.use[names(colors.use) %in% unique(sample@meta.data[, group.by])]
+
+      if (names(colors.use) != unique(sample@meta.data[, group.by])){
+        stop(paste0("The color list provided does not contain all possible unique values stored in ", group.by, " metadata variable."))
+      }
+    }
+  }
+
   if (compute_enrichment == TRUE){
     if (verbose){message(paste("Computing enrichment scores:", list.name))}
     sample <- Seurat::AddModuleScore(sample, features = list(markers[[list.name]]), name = list.name)
@@ -54,7 +78,7 @@ do_PTEA <- function(sample,
 
   # Compute null distribution.
   # What happens inside the replicate seems to work on a different environment level.
-  set.seed(777) # Reproducibility.
+  #set.seed(777) # Reproducibility.
 
   if (verbose){message("Computing permutations.")}
   # We want a null distribution with at least 1.000.000 permutations.
