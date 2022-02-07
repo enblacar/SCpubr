@@ -6,7 +6,7 @@
 #' @param feature_to_rank Features for which the cells are going to be ranked.
 #' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
 #' @param group.by Variable you want the cells to be grouped for.
-#' @param colors.use Named vector with the color asignment.
+#' @param colors.use Named vector with the color assignment.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title Title to use in the plot.
@@ -14,11 +14,11 @@
 #' @param ylab Title for the Y axis.
 #' @param remove_x_axis Remove X axis labels and ticks from the plot.
 #' @param remove_y_axis Remove Y axis labels and ticks from the plot.
-#' @param axis.text.fonsize Modify the fontsize for axis texts.
-#' @param axis.title.fonsize Modify the fontsize for axis titles.
-#' @param plot.title.fonsize Modify the fontsize for the plot title.
-#' @param legend.text.fontsize Modify the fontsize for the legend text.
-#' @param legend.title.fontsize Mofify the fontsize for the legend title.
+#' @param axis.text.fonsize Modify the font size for axis texts.
+#' @param axis.title.fonsize Modify the font size for axis titles.
+#' @param plot.title.fonsize Modify the font size for the plot title.
+#' @param legend.text.fontsize Modify the font size for the legend text.
+#' @param legend.title.fontsize Modify the font size for the legend title.
 #' @param flip Whether to flip the axis.
 #'
 #' @return  A ggplot2 object containing a Bee Swarm plot.

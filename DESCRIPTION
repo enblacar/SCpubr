@@ -26,5 +26,7 @@ Imports:
   Nebulosa,
   ggbeeswarm,
   rlang,
-  scales
+  scales,
+  stringr,
+  Matrix
   

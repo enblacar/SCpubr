@@ -49,15 +49,15 @@ do_DotPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{axis.text.fonsize}{Modify the fontsize for axis texts.}
+\item{axis.text.fonsize}{Modify the font size for axis texts.}
 
-\item{axis.title.fonsize}{Modify the fontsize for axis titles.}
+\item{axis.title.fonsize}{Modify the font size for axis titles.}
 
-\item{plot.title.fonsize}{Modify the fontsize for the plot title.}
+\item{plot.title.fonsize}{Modify the font size for the plot title.}
 
-\item{legend.text.fontsize}{Modify the fontsize for the legend text.}
+\item{legend.text.fontsize}{Modify the font size for the legend text.}
 
-\item{legend.title.fontsize}{Mofify the fontsize for the legend title.}
+\item{legend.title.fontsize}{Modify the font size for the legend title.}
 
 \item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
 

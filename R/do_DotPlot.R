@@ -13,11 +13,11 @@
 #' @param ylab Title for the Y axis.
 #' @param remove_x_axis Remove X axis labels and ticks from the plot.
 #' @param remove_y_axis Remove Y axis labels and ticks from the plot.
-#' @param axis.text.fonsize Modify the fontsize for axis texts.
-#' @param axis.title.fonsize Modify the fontsize for axis titles.
-#' @param plot.title.fonsize Modify the fontsize for the plot title.
-#' @param legend.text.fontsize Modify the fontsize for the legend text.
-#' @param legend.title.fontsize Mofify the fontsize for the legend title.
+#' @param axis.text.fonsize Modify the font size for axis texts.
+#' @param axis.title.fonsize Modify the font size for axis titles.
+#' @param plot.title.fonsize Modify the font size for the plot title.
+#' @param legend.text.fontsize Modify the font size for the legend text.
+#' @param legend.title.fontsize Modify the font size for the legend title.
 #' @param flip Whether to flip the axis.
 #' @param dot.scale Scale the size of the dots.
 #'

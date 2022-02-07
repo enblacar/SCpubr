@@ -11,7 +11,6 @@
 #' - Neftel, C. et al. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). https://doi.org/10.1016/j.cell.2019.06.024
 #' - Tirosh, I., Venteicher, A., Hebert, C. et al. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). https://doi.org/10.1038/nature20123
 #'
-#' @importFrom rlang .data
 #'
 #' @param sample  Seurat object.
 #' @param x1  First feature in the X axis. Will go on the right side if y2 is not provided and top-right quadrant if provided.

@@ -15,8 +15,8 @@
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
 #' @param legend.ncol Number of columns in the legend.
-#' @param legend.text.size Fontsize of the legend labels.
-#' @param legend.title.size Fontisize of the legend title.
+#' @param legend.text.size Font size of the legend labels.
+#' @param legend.title.size Font size of the legend title.
 #' @param legend.icon.size Size of the icons in legend.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.

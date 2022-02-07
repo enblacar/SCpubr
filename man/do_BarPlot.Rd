@@ -39,7 +39,7 @@ do_BarPlot(
 
 \item{order.by}{Value in var.to.plot to order the items in group.by for.}
 
-\item{position}{Either "fill" or "stack." Posigion "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.}
+\item{position}{Either "fill" or "stack." Position "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.}
 
 \item{xlab}{Title for the X axis.}
 
@@ -53,15 +53,15 @@ do_BarPlot(
 
 \item{legend.ncol}{Number of columns in the legend.}
 
-\item{legend.text.size}{Fontsize of the legend labels.}
+\item{legend.text.size}{Font size of the legend labels.}
 
-\item{legend.title.size}{Fontisize of the legend title.}
+\item{legend.title.size}{Fantasize of the legend title.}
 
-\item{axis.text.size}{Fontsize for axis text.}
+\item{axis.text.size}{Font size for axis text.}
 
-\item{axis.title.size}{Fontsize for axis title.}
+\item{axis.title.size}{Font size for axis title.}
 
-\item{plot.title.size}{Fontsize for the plot title.}
+\item{plot.title.size}{Font size for the plot title.}
 
 \item{legend.icon.size}{Size of the icons in legend.}
 
@@ -69,10 +69,10 @@ do_BarPlot(
 
 \item{colors.use}{Palette of colors to use. It must match the group.by variable in terms of length and names.}
 
-\item{horizontal}{Whether to plot the BarPlot horizontally.}
+\item{horizontal}{Whether to plot the Bar plot horizontally.}
 }
 \value{
-A ggplot2 object containing a barplot.
+A ggplot2 object containing a Bar plot.
 }
 \description{
 Wrapper for computing publication ready bar plots.

@@ -65,9 +65,9 @@ do_DimPlot(
 
 \item{legend.ncol}{Number of columns in the legend.}
 
-\item{legend.text.size}{Fontsize of the legend labels.}
+\item{legend.text.size}{Font size of the legend labels.}
 
-\item{legend.title.size}{Fontisize of the legend title.}
+\item{legend.title.size}{Font size of the legend title.}
 
 \item{legend.icon.size}{Size of the icons in legend.}
 

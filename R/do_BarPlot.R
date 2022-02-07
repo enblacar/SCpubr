@@ -7,25 +7,25 @@
 #' @param group.by  Secondary variable to group the bar plot for. Example: orig.ident
 #' @param order.by  Value in var.to.plot to order the items in group.by for.
 #' @param labels.order  Vector of labels to explicitly state the order or the bars.
-#' @param position  Either "fill" or "stack." Posigion "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.
+#' @param position  Either "fill" or "stack." Position "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
 #' @param colors.use  Palette of colors to use. It must match the group.by variable in terms of length and names.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.position  Position of the legend in the plot.
 #' @param legend.ncol  Number of columns in the legend.
-#' @param legend.text.size  Fontsize of the legend labels.
-#' @param legend.title.size  Fontisize of the legend title.
+#' @param legend.text.size  Font size of the legend labels.
+#' @param legend.title.size  Fantasize of the legend title.
 #' @param legend.icon.size  Size of the icons in legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param axis.text.size  Fontsize for axis text.
-#' @param axis.title.size  Fontsize for axis title.
-#' @param plot.title.size  Fontsize for the plot title.
+#' @param axis.text.size  Font size for axis text.
+#' @param axis.title.size  Font size for axis title.
+#' @param plot.title.size  Font size for the plot title.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
 #' @param plot.title  Title to use in the plot.
-#' @param horizontal Whether to plot the BarPlot horizontally.
+#' @param horizontal Whether to plot the Bar plot horizontally.
 #'
-#' @return A ggplot2 object containing a barplot.
+#' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
 #' @examples
