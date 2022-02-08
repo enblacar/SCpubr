@@ -29,4 +29,8 @@ Imports:
   scales,
   stringr,
   Matrix
-  
+Suggests: 
+    BiocStyle, 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

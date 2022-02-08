@@ -124,11 +124,11 @@ do_DimPlot <- function(sample,
             # If no special grouping is set up, DimPlot defaults back to Seurat::Idents(sample) or levels(sample).
             if (is.null(group.by)){
                 # Generate a vector of colors equal to the number of identities in the sample.
-                colors.use <- colortools::wheel("#457b9d", length(levels(sample)))
+                colors.use <- colortools::setColors("#457b9d", length(levels(sample)))
                 names(colors.use) <- levels(sample)
             } else {
                 # Generate a vector of colors equal to the number of unique identities in the grouping variable.
-                colors.use <-  colortools::wheel("#457b9d", length(unique(sample[[]][, group.by])))
+                colors.use <-  colortools::setColors("#457b9d", length(unique(sample[[]][, group.by])))
                 names(colors.use) <- unique(sample[[]][, group.by])
             }
         }
