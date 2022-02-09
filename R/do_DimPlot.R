@@ -181,7 +181,7 @@ do_DimPlot <- function(sample,
                                               reduction = reduction,
                                               dims = dims,
                                               cells.highlight = cells.highlight,
-                                              sizes.highlight = pt.size,
+                                              sizes.highlight = sizes.highlight,
                                               pt.size = pt.size,
                                               raster = raster,
                                               ncol = ncol) +
