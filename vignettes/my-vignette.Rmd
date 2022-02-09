@@ -208,6 +208,29 @@ SCpubr::do_DimPlot(sample,
 ```
 
 ## Highlighting cells.
+One of the nice features of `Seurat::DimPlot()` is the possibility of highlighting a certain group of cells in the DimPlot. This is achieved by using the `cells.highligh` parameter. This is how the default plot looks like.
+
+```{r, fig.cap = "Seurat DimPlot highlighting cells."}
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+Seurat::DimPlot(sample, cells.highlight = cells.use)
+```
+
+This is how SCpubr returns this plot. For this, the same parameter has to be set up.
+
+```{r, fig.cap = "SCpubr DimPlot highlighting cells."}
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+SCpubr::do_DimPlot(sample, cells.highlight = cells.use)
+```
+
+By default, the size of all cells in `SCpubr::do_DimPlot()` is the same. However, the size of the highlighted dots can be modified with the parameter `sizes.highlight` from Seurat.
+
+```{r, fig.cap = "SCpubr DimPlot highlighting cells bigger dot size."}
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 1)
+```
 
 ## Splitting by a category.
 

@@ -12,6 +12,7 @@
 #' @param cols.highlight HEX color code to use with the highlighted cells.
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param pt.size Point size of the cells.
+#' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
 #' @param legend.ncol Number of columns in the legend.
@@ -41,6 +42,7 @@ do_DimPlot <- function(sample,
                        repel = TRUE,
                        shuffle = TRUE,
                        pt.size = 0.5,
+                       sizes.highlight = 0.5,
                        group.by = NULL,
                        split.by = NULL,
                        cols.split = "#0A305F",
@@ -213,7 +215,7 @@ do_DimPlot <- function(sample,
                                               reduction = reduction,
                                               dims = dims,
                                               cells.highlight = cells.highlight,
-                                              sizes.highlight = pt.size,
+                                              sizes.highlight = sizes.highlight,
                                               pt.size = pt.size,
                                               raster = raster,
                                               ncol = ncol) +
