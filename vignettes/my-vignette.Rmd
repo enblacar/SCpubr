@@ -229,7 +229,7 @@ By default, the size of all cells in `SCpubr::do_DimPlot()` is the same. However
 ```{r, fig.cap = "SCpubr DimPlot highlighting cells bigger dot size."}
 # Select 1000 random cells out of clusters 1, 5 and 7.
 cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
-SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 2)
+SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 5)
 ```
 
 ## Splitting by a category.

@@ -187,8 +187,8 @@ do_DimPlot <- function(sample,
                                               ncol = ncol) +
                         ggplot2::ggtitle(iteration) +
                         ggpubr::theme_pubr(legend = legend.position) +
-                        ggplot2::scale_color_manual(labels = c("Selected", "Unselected"),
-                                                    values = c(cols.split[[iteration]], "grey75"))  +
+                        ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                                    values = c("grey75", cols.split[[iteration]]))  +
                         ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                                        legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
                                        legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
@@ -221,8 +221,8 @@ do_DimPlot <- function(sample,
                                               ncol = ncol) +
                         ggplot2::ggtitle(iteration) +
                         ggpubr::theme_pubr(legend = legend.position) +
-                        ggplot2::scale_color_manual(labels = c("Selected", "Unselected"),
-                                                    values = c(cols.split, "grey75"))  +
+                        ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                                    values = c("grey75", cols.split))  +
                         ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                                        legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
                                        legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
@@ -247,8 +247,8 @@ do_DimPlot <- function(sample,
                                   ncol = ncol) +
             ggplot2::ggtitle(plot.title) +
             ggpubr::theme_pubr(legend = legend.position) +
-            ggplot2::scale_color_manual(labels = c("Selected", "Unselected"),
-                                        values = c(cols.highlight, "grey75"))  +
+            ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                        values = c("grey", cols.highlight))  +
             ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
