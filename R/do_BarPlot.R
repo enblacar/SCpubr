@@ -1,6 +1,4 @@
 #' Wrapper for computing publication ready bar plots.
-#' @importFrom magrittr "%>%"
-#' @importFrom rlang .data
 #'
 #' @param sample  Seurat object.
 #' @param var.to.plot  Main variable in the bar plot. Example: seurat_clusters
@@ -54,10 +52,10 @@ do_BarPlot <- function(sample,
                        colors.use = NULL,
                        horizontal = TRUE){
     # Checks for packages.
-    used_packages <- c("Seurat", "colortools", "dplyr", "ggplot2", "rlang", "ggpubr")
-    SCpubr:::check_suggests(pkgs = used_packages)
+    SCpubr:::check_suggests(function_name = "do_BarPlot")
 
-
+    # Define pipe operator internally.
+    `%>%` <- purrr::`%>%`
 
     # If no color scale is provided, generate a custom one.
     if (is.null(colors.use)){
@@ -82,7 +80,7 @@ do_BarPlot <- function(sample,
             dplyr::group_by(!!rlang::sym(var.to.plot)) %>%
             dplyr:: summarise(n = dplyr::n()) %>%
             dplyr::mutate(x_values = as.factor(!!rlang::sym(var.to.plot))) %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = .data$x_values)) +
+            ggplot2::ggplot(mapping = ggplot2::aes(x = rlang::.data$x_values, y = rlang::.data$n, fill = rlang::.data$x_values)) +
             ggplot2::geom_bar(position = position, stat="identity", width = 1,
                               colour="black",
                               size = 1) +
@@ -110,12 +108,12 @@ do_BarPlot <- function(sample,
                 dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
                 dplyr::summarise(n = dplyr::n()) %>%
                 dplyr::mutate(x_value = !!rlang::sym(group.by)) %>%
-                dplyr::filter(.data$x_value == order.by) %>%
+                dplyr::filter(rlang::.data$x_value == order.by) %>%
                 dplyr::mutate(num_cells = {sample@meta.data %>% dplyr::select(!!rlang::sym(var.to.plot)) %>% dplyr::group_by(!!rlang::sym(var.to.plot)) %>% dplyr::summarise(n = dplyr::n()) %>%
                         dplyr::filter(!!rlang::sym(var.to.plot) %in% unique(sample@meta.data[, c(group.by, var.to.plot)][sample@meta.data[, c(group.by, var.to.plot)][, group.by] == order.by, ][, var.to.plot])) %>%
-                        dplyr::pull(.data$n)}) %>%
-                dplyr::mutate(frac = .data$n/.data$num_cells) %>%
-                dplyr::arrange(dplyr::desc(.data$frac)) %>%
+                        dplyr::pull(rlang::.data$n)}) %>%
+                dplyr::mutate(frac = rlang::.data$n/rlang::.data$num_cells) %>%
+                dplyr::arrange(dplyr::desc(rlang::.data$frac)) %>%
                 dplyr::pull(!!rlang::sym(group.by))
 
             total_levels <- unique(sample[[group.by]])
@@ -130,10 +128,10 @@ do_BarPlot <- function(sample,
                 dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
                 dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
                 dplyr::summarise(n = dplyr::n()) %>%
-                dplyr::arrange(dplyr::desc(.data$n)) %>%
+                dplyr::arrange(dplyr::desc(rlang::.data$n)) %>%
                 dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot))))
 
-            factor_levels <- rev(sort(unique(.data$x_values)))
+            factor_levels <- rev(sort(unique(rlang::.data$x_values)))
         }
 
         if (!is.null(labels.order)){
@@ -144,10 +142,10 @@ do_BarPlot <- function(sample,
             dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
             dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
             dplyr::summarise(n = dplyr::n()) %>%
-            dplyr::arrange(dplyr::desc(.data$n)) %>%
+            dplyr::arrange(dplyr::desc(rlang::.data$n)) %>%
             dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot)))) %>%
-            dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels)) %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = !!rlang::sym(group.by))) +
+            dplyr::mutate(x_values = factor(rlang::.data$x_values, levels = factor_levels)) %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = rlang::.data$x_values, y = rlang::.data$n, fill = !!rlang::sym(group.by))) +
             ggplot2::geom_bar(position = position, stat="identity", width = 1,
                               colour="black",
                               size = 1) +

@@ -62,7 +62,7 @@ do_RankPlot <- function(sample,
 
     color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
+    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = rlang::.data$ranked_groups, color = !!rlang::sym(color_by))) +
         ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
         ggpubr::theme_pubr(legend = legend.position) +
         ggplot2::ggtitle(plot.title) +

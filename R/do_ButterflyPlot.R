@@ -58,8 +58,10 @@ do_ButterflyPlot <- function(sample,
                         complex.output.grouping.variable = FALSE
                         ){
     # Checks for packages.
-    used_packages <- c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "rlang", "viridis")
-    SCpubr:::check_suggests(pkgs = used_packages)
+    SCpubr:::check_suggests(function_name = "do_ButterflyPlot")
+
+    # Define pipe operator internally.
+    `%>%` <- purrr::`%>%`
 
     # Check.
     if (categorical == TRUE & continuous == TRUE){
@@ -107,7 +109,7 @@ do_ButterflyPlot <- function(sample,
         # Plain plot without coloring.
         if (categorical == FALSE & continuous == FALSE) {
             df <- data.frame("set_x" = x, "set_y" = y)
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y)) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y)) +
                         ggplot2::geom_point() +
                         ggpubr::theme_pubr(legend = "bottom") +
                         ggpubr::rremove("legend.title")
@@ -116,7 +118,7 @@ do_ButterflyPlot <- function(sample,
         } else if (categorical == TRUE){
             df <- data.frame("set_x" = x, "set_y" = y, "color" = scores[, categorical_feature])
             colors.use <- colors.use[names(colors.use) %in% unique(df[, categorical_feature])]
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(categorical_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y, color = !!(rlang::sym(categorical_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "bottom", legend.position)) +
                 ggpubr::rremove("legend.title") +
@@ -125,7 +127,7 @@ do_ButterflyPlot <- function(sample,
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
             df <- data.frame("set_x" = x, "set_y" = y, "color" = scores[, continuous_feature])
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(continuous_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y, color = !!(rlang::sym(continuous_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "right", legend.position)) +
                 viridis::scale_color_viridis(name = continuous_feature)
@@ -184,7 +186,7 @@ do_ButterflyPlot <- function(sample,
         # Plain plot without coloring.
         if (categorical == FALSE & continuous == FALSE) {
             df <- data.frame("set_x" = x, "set_y" = d)
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y)) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y)) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = "bottom") +
                 ggpubr::rremove("legend.title")
@@ -193,7 +195,7 @@ do_ButterflyPlot <- function(sample,
         } else if (categorical == TRUE){
             df <- data.frame("set_x" = x, "set_y" = d, "color" = scores[, categorical_feature])
             colors.use <- colors.use[names(colors.use) %in% unique(df[, categorical_feature])]
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(categorical_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y, color = !!(rlang::sym(categorical_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "bottom", legend.position)) +
                 ggpubr::rremove("legend.title") +
@@ -202,7 +204,7 @@ do_ButterflyPlot <- function(sample,
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
             df <- data.frame("set_x" = x, "set_y" = d, "color" = scores[, continuous_feature])
-            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = !!(rlang::sym(continuous_feature)))) +
+            plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = rlang::.data$set_x, y = rlang::.data$set_y, color = !!(rlang::sym(continuous_feature)))) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = ifelse(is.null(legend.position), "right", legend.position)) +
                 viridis::scale_color_viridis(name = continuous_feature)

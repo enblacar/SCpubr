@@ -9,15 +9,15 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "rlang", "ggpubr", "magrittr", "rlang"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "rlang", "viridis", "magrittr", "rlang"),
-                   "do_DimPlot" = c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork", "magrittr", "rlang"),
-                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr", "magrittr", "rlang"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "magrittr", "rlang"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork", "magrittr", "rlang"),
-                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "magrittr", "rlang"),
-                   "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "magrittr", "rlang"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "scales", "magrittr", "rlang"))
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "rlang", "ggpubr", "purrr", "rlang"),
+                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "rlang", "viridis", "purrr", "rlang"),
+                   "do_DimPlot" = c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
+                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork"),
+                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
+                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "rlang"),
+                   "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "scales"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -41,8 +41,9 @@ check_suggests <- function(function_name){
 #' TBD
 #' }
 check_colors <- function(colors) {
-  sapply(color, function(x) {
-    tryCatch(is.matrix(grDevices::col2rgb(x)),
+  check <- sapply(colors, function(color) {
+              tryCatch(is.matrix(grDevices::col2rgb(colors)),
              error = function(e) FALSE)
   })
+  return(check)
 }

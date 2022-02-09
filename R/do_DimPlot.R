@@ -62,8 +62,7 @@ do_DimPlot <- function(sample,
                        raster = FALSE,
                        dims = c(1, 2)){
     # Checks for packages.
-    used_packages <- c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork")
-    SCpubr:::check_suggests(pkgs = used_packages)
+    SCpubr:::check_suggests(function_name = "do_DimPlot")
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
     if (!(is.null(group.by)) & !(is.null(colors.use))){
@@ -87,10 +86,15 @@ do_DimPlot <- function(sample,
     }
 
     # Check whether the user has provided only one color to cols.highlight.
-    if (cols.highlight != "#0A305F"){
+    if (cols.highlight != "#0A305F" & !(is.null(cols.highlight))){
         # Check if the input is a character object or not.
         if (!(is.character(cols.highlight))){
             stop("The value for cols.highlight must be a character containing a HEX code.")
+        }
+
+        # Check for cols.highlight.
+        if (sum(SCpubr:::check_colors(cols.highlight)) != length(cols.highlight)){
+          stop("The value for cols.highlight is not a valid color representation.")
         }
     }
     # From: https://stackoverflow.com/a/13290832
@@ -103,20 +107,16 @@ do_DimPlot <- function(sample,
         }
     }
     # Check for cols.split.
-    if (cols.split != "#0A305F" & cols.split != TRUE){
-        check <- SCpubr:::check_colors(colors.use)
+    if (!(is.null(cols.split)) & cols.split != "#0A305F" & cols.split != TRUE){
+        check <- SCpubr:::check_colors(cols.split)
         if (sum(check) != length(cols.split)){
             stop("Not all provided colors for cols.split are valid color representations.")
         }
     }
-    # Check for cols.highlight.
-    if (sum(SCpubr:::check_colors(cols.highlight)) != length(cols.highlight)){
-        stop("The value for cols.highlight is not a valid color representation.")
-    }
+
 
     # If the user does not want to highlight any cells (Regular case.).
     if (is.null(cells.highlight)){
-
         # If no special color palette is provided by the user, generate a default one.
         if (is.null(colors.use)){
             # If no special grouping is set up, DimPlot defaults back to Seurat::Idents(sample) or levels(sample).

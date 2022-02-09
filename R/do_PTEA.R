@@ -41,6 +41,9 @@ do_PTEA <- function(sample,
                     verbose = T){
 
 
+  # Define pipe operator internally.
+  `%>%` <- purrr::`%>%`
+
   check_color_list <- !(is.null(colors.use))
   check_group.by <- !(is.null(group.by))
 
@@ -129,12 +132,12 @@ do_PTEA <- function(sample,
   data.plot <- as.data.frame(null.dist) %>% # Make the matrix into tidiverse accepted object.
     dplyr::mutate(Empirical = test.dist) %>% # Add the empirical distribution to the matrix of AddModuleScore() iterations.
     tidyr::pivot_longer(dplyr::everything(), names_to = "Distribution", values_to = "Enrichment") %>%
-    dplyr::mutate(Distribution = ifelse(.data$Distribution == "Empirical", "Empirical", "Null")) # Assign any name in Distribution that is not "Empirical" into "Null". By default, non-labelled df columns are named V1, V2...
+    dplyr::mutate(Distribution = ifelse(rlang::.data$Distribution == "Empirical", "Empirical", "Null")) # Assign any name in Distribution that is not "Empirical" into "Null". By default, non-labelled df columns are named V1, V2...
 
   # Visualize the density plot of both distributions.
   p.dist <- data.plot %>% # Transform from wide to long format.
     ggplot2::ggplot() +
-    ggplot2::geom_density(mapping = ggplot2::aes(x = .data$Enrichment, color = .data$Distribution)) +
+    ggplot2::geom_density(mapping = ggplot2::aes(x = rlang::.data$Enrichment, color = rlang::.data$Distribution)) +
     ggplot2::scale_color_manual(values = colortools::opposite("steelblue")) +
     ggplot2::ggtitle(paste0(list.name)) +
     ggpubr::theme_pubr(legend = "right")
@@ -143,8 +146,8 @@ do_PTEA <- function(sample,
   # Generate the p-values for each enrichment score in the empirical distribution.
   num_permutations <- sum(data.plot$Distribution == "Null")
   null_dist_values <- data.plot %>% # Gather the null distribution.
-    dplyr::filter(.data$Distribution == "Null") %>% # Filter only the values for the NULL.
-    dplyr::select(.data$Enrichment)
+    dplyr::filter(rlang::.data$Distribution == "Null") %>% # Filter only the values for the NULL.
+    dplyr::select(rlang::.data$Enrichment)
   null_dist_values <- null_dist_values$Enrichment
 
   if (verbose){message("Computing p-values.")}
@@ -168,10 +171,10 @@ do_PTEA <- function(sample,
   if (verbose) {message(paste0("Using the FDR cutoff of: ", FDR))}
   fdr <- FDR  # FDR to use. Divided by 4 which is the total number of lists of markers that we are gonna test and compare to the same subset of cells (tumor bulk).
   dist.data <- dist.data %>%
-    dplyr::arrange(.data$p.value) %>% # Order by ascending p-value.
-    dplyr::mutate(q.value = stats::p.adjust(.data$p.value, method = "BH")) %>% # Adjust for multiple testing and produce q-values.
-    dplyr::mutate(significant = ifelse(.data$q.value < fdr, TRUE, FALSE)) %>%  # Assign significance.
-    dplyr::mutate(significant_corrected = ifelse(.data$q.value < fdr & .data$Empirical > 0, TRUE, FALSE)) # Assess the outliers with negative enrichment scores that surpass the cutoffs.
+    dplyr::arrange(rlang::.data$p.value) %>% # Order by ascending p-value.
+    dplyr::mutate(q.value = stats::p.adjust(rlang::.data$p.value, method = "BH")) %>% # Adjust for multiple testing and produce q-values.
+    dplyr::mutate(significant = ifelse(rlang::.data$q.value < fdr, TRUE, FALSE)) %>%  # Assign significance.
+    dplyr::mutate(significant_corrected = ifelse(rlang::.data$q.value < fdr & rlang::.data$Empirical > 0, TRUE, FALSE)) # Assess the outliers with negative enrichment scores that surpass the cutoffs.
 
   # Check if we had weird cases of significant cells with negative enrichments.
   if (verbose) {
@@ -184,8 +187,8 @@ do_PTEA <- function(sample,
   # Visualizations.
   # UMAP coloring the cells that surpassed the FDR correction.
   surpassing_cells <- dist.data %>%
-    dplyr::filter(.data$significant_corrected == TRUE) %>%
-    dplyr::pull(.data$Cell)
+    dplyr::filter(rlang::.data$significant_corrected == TRUE) %>%
+    dplyr::pull(rlang::.data$Cell)
 
   p.umap <- SCpubr::do_DimPlot(sample, label = T, legend = F, group.by = group.by, colors.use = colors.use) |
             SCpubr::do_DimPlot(sample, cells.highlight = surpassing_cells, legend = F, plot.title = paste("Cells that surpassed FDR correction",
