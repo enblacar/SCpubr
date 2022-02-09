@@ -12,6 +12,8 @@ Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 biocViews:
+Imports:
+  rlang
 Suggests:
   Seurat,
   ggplot2,
@@ -24,7 +26,6 @@ Suggests:
   patchwork,
   Nebulosa,
   ggbeeswarm,
-  rlang,
   scales,
   stringr,
   Matrix,
