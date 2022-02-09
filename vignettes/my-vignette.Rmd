@@ -229,11 +229,50 @@ By default, the size of all cells in `SCpubr::do_DimPlot()` is the same. However
 ```{r, fig.cap = "SCpubr DimPlot highlighting cells bigger dot size."}
 # Select 1000 random cells out of clusters 1, 5 and 7.
 cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
-SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 5)
+SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 2)
 ```
 
 ## Splitting by a category.
+Another useful paramter of `Seurat::DimPlot` is `split.by`, which allows you to split your DimPlot into multiple panels, each one containing a different unique value of the metadata variable you have provided to the argument. One can understand this as using the `group.by` parameter and then splitting the resulting DimPlot into different panels. In this example, we are going to use the different clusters as an example This is how it looks by default:
 
+```{r, fig.cap = "Seurat DimPlot using split.by.", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions. 
+Seurat::DimPlot(sample, split.by = "seurat_clusters", ncol = 5)
+```
+As can be observed, this plots accomplish the task of separating the cells into each panel, but the approach followed actually makes interpretation difficult. Clusters such as Cluster 9, with fewer cells, tell pretty much nothing. Not knowing how the original UMAP looked like is a major downside of this approach. This is where `SCpubr` focus. Instead of using `Seurat`'s `split.by` parameter, it generates as many plots as unique values in the metadata to split the plot by, but uses `cells.highlight` instead, which keeps the rest of cells greyed out. This is how it looks:
+
+```{r, fig.cap = "SCpubr DimPlot using split.by.", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F)
+```
+
+This way, we can see that clusters such as Cluster 7 are way more disperse than the rest, accounting not only for standalone groups of cells but also blending in other bigger clusters. Actually, the user might want to change the color of the highlighted cells in this split DimPlot. This is achieved by using `cols.split` parameter and providing either a color name recognized by `ggplot2` or (recommended) a HEX code.
+
+
+```{r, fig.cap = "SCpubr DimPlot using split.by with a changed color", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = "black")
+```
+
+
+
+Furthermore, one might also want to color each cluster by the original color. This can be achieved by using the argument `cols.split`, either providing a named vector of each cluster (or metadata variable unique value) as names and color hex codes as values or `TRUE`, thus resorting to the default `SCpubr` categorical coloring. 
+
+```{r, fig.cap = "SCpubr DimPlot using split.by with default SCpubr colors", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = TRUE)
+```
+
+```{r, fig.cap = "SCpubr DimPlot using split.by using custom list of colors", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+colors.use <- RColorBrewer::brewer.pal(length(unique(sample$seurat_clusters)), "Paired")
+names(colors.use) <- levels(sample$seurat_clusters)
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = colors.use)
+```
 # do_FeaturePlot()
 
 # do_NebulosaPlot()

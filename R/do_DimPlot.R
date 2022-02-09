@@ -107,7 +107,7 @@ do_DimPlot <- function(sample,
         }
     }
     # Check for cols.split.
-    if (cols.split != "#0A305F"){
+    if (cols.split != "#0A305F" & cols.split != TRUE){
         check <- areColors(cols.split)
         if (sum(check) != length(cols.split)){
             stop("Not all provided colors for cols.split are valid color representations.")
@@ -165,18 +165,28 @@ do_DimPlot <- function(sample,
         # If the UMAP has to be split in multiple panes.
         } else {
             # If the user provided multiple highlighting colors.
-            if (length(cols.split) > 1) {
+            if (length(cols.split) > 1 | cols.split == TRUE) {
+                # If the user wants different coloring but has not provided a vector of colors, then resort to the default coloring.
+                if (cols.split == TRUE){
+                  # Generate a vector of colors equal to the number of identities in the sample.
+                  data.use <- sample[[]][, split.by, drop = F]
+                  names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+                  cols.split <- colortools::setColors("#457b9d", length(names.use))
+                  names(cols.split) <- names.use
+                }
                 # List to store each individual plots.
                 list.plots <- list()
                 # Recover all metadata.
                 data <- sample[[]]
                 # Retrieve the metadata column belonging to the split.by parameter.
                 data.use <- data[, split.by, drop = F]
+                # Retrieve the plotting order, keep factor levels if the column is a factor.
+                plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
 
                 # Iterate over each unique value in split.by parameter.
-                for (iteration in unique(data.use[, 1])){
+                for (iteration in plot_order){
                     # Retrieve the cells that do belong to the iteration's split.by value.
-                    cells.highlight <- rownames(data.use[data.use[[split.by]] == iteration, , drop = F])
+                    cells.highlight <- rownames(data.use)[which(data.use == iteration)]
                     p.umap <- Seurat::DimPlot(sample,
                                               reduction = reduction,
                                               dims = dims,
@@ -207,10 +217,12 @@ do_DimPlot <- function(sample,
                 data <- sample[[]]
                 # Retrieve only the metadata belonging to split.by parameter.
                 data.use <- data[, split.by, drop = F]
-                # Iterate over each unique value in split.by parameter.
-                for (iteration in unique(data.use[, 1])){
+                # Retrieve the plotting order.
+                plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+                # Retrieve the plotting order, keep factor levels if the column is a factor.
+                for (iteration in plot_order){
                     # Recover the cells for which the iteration value of split.by is true.
-                    cells.highlight <- rownames(data.use[data.use[[split.by]] == iteration, , drop = F])
+                    cells.highlight <- rownames(data.use)[which(data.use == iteration)]
                     p.umap <- Seurat::DimPlot(sample,
                                               reduction = reduction,
                                               dims = dims,
