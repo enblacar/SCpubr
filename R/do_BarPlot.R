@@ -53,10 +53,10 @@ do_BarPlot <- function(sample,
                        legend.byrow = FALSE,
                        colors.use = NULL,
                        horizontal = TRUE){
-    # Checks to ensure proper execution.
-    if (!("magrittr" %in% (.packages()))){
-        stop('Please load package "magrittr" as: library("magrittr")')
-    }
+    # Checks for packages.
+    used_packages <- c("Seurat", "colortools", "dplyr", "ggplot2", "rlang", "ggpubr")
+    SCpubr:::check_suggests(pkgs = used_packages)
+
 
 
     # If no color scale is provided, generate a custom one.
@@ -129,7 +129,7 @@ do_BarPlot <- function(sample,
             data <- sample@meta.data %>%
                 dplyr::select(!!rlang::sym(var.to.plot), !!rlang::sym(group.by)) %>%
                 dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(var.to.plot)) %>%
-                dplyr:: summarise(n = dplyr::n()) %>%
+                dplyr::summarise(n = dplyr::n()) %>%
                 dplyr::arrange(dplyr::desc(.data$n)) %>%
                 dplyr::mutate(x_values = as.factor(!!(rlang::sym(var.to.plot))))
 

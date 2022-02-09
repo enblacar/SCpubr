@@ -61,7 +61,9 @@ do_DimPlot <- function(sample,
                        ncol = NULL,
                        raster = FALSE,
                        dims = c(1, 2)){
-
+    # Checks for packages.
+    used_packages <- c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork")
+    SCpubr:::check_suggests(pkgs = used_packages)
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
     if (!(is.null(group.by)) & !(is.null(colors.use))){
@@ -92,29 +94,23 @@ do_DimPlot <- function(sample,
         }
     }
     # From: https://stackoverflow.com/a/13290832
-    # Check that the input colors are valid color representations.
-    areColors <- function(x) {
-        sapply(x, function(X) {
-            tryCatch(is.matrix(grDevices::col2rgb(X)),
-                     error = function(e) FALSE)
-        })
-    }
+
     # Check for colors.use.
     if (!is.null(colors.use)){
-        check <- areColors(colors.use)
+        check <- SCpubr:::check_colors(colors.use)
         if (sum(check) != length(colors.use)){
             stop("Not all provided colors for colors.use are valid color representations.")
         }
     }
     # Check for cols.split.
     if (cols.split != "#0A305F" & cols.split != TRUE){
-        check <- areColors(cols.split)
+        check <- SCpubr:::check_colors(colors.use)
         if (sum(check) != length(cols.split)){
             stop("Not all provided colors for cols.split are valid color representations.")
         }
     }
     # Check for cols.highlight.
-    if (sum(areColors(cols.highlight)) != length(cols.highlight)){
+    if (sum(SCpubr:::check_colors(cols.highlight)) != length(cols.highlight)){
         stop("The value for cols.highlight is not a valid color representation.")
     }
 

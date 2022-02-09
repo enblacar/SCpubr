@@ -57,6 +57,9 @@ do_ButterflyPlot <- function(sample,
                         complex.output = FALSE,
                         complex.output.grouping.variable = FALSE
                         ){
+    # Checks for packages.
+    used_packages <- c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "rlang", "viridis")
+    SCpubr:::check_suggests(pkgs = used_packages)
 
     # Check.
     if (categorical == TRUE & continuous == TRUE){

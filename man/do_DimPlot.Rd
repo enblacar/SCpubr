@@ -12,6 +12,7 @@ do_DimPlot(
   repel = TRUE,
   shuffle = TRUE,
   pt.size = 0.5,
+  sizes.highlight = 0.5,
   group.by = NULL,
   split.by = NULL,
   cols.split = "#0A305F",
@@ -46,6 +47,8 @@ do_DimPlot(
 \item{shuffle}{Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
 
 \item{pt.size}{Point size of the cells.}
+
+\item{sizes.highlight}{Point size of highlighted cells using cells.highlight parameter.}
 
 \item{group.by}{Variable you want the cells to be colored for.}
 
