@@ -47,17 +47,23 @@ do_DotPlot <- function(sample,
                        remove_x_axis = FALSE,
                        remove_y_axis = FALSE,
                        flip = FALSE){
-
-    plot <- Seurat::DotPlot(sample, features = features, cols = cols, group.by = group.by, split.by = split.by, dot.scale = dot.scale) +
-                            ggplot2::ylab(ylab) +
-                            ggplot2::xlab(xlab) +
-                            ggpubr::theme_pubr(legend = legend.position) +
-                            ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                                           axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
-                                           axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
-                                           legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 1),
-                                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                                           plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5))
+    # Checks for packages.
+    check_suggests(function_name = "do_DotPlot")
+    plot <- Seurat::DotPlot(sample,
+                            features = features,
+                            cols = cols,
+                            group.by = group.by,
+                            split.by = split.by,
+                            dot.scale = dot.scale) +
+            ggplot2::ylab(ylab) +
+            ggplot2::xlab(xlab) +
+            ggpubr::theme_pubr(legend = legend.position) +
+            ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
+                           axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
+                           axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
+                           legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 1),
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                           plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5))
     if (remove_x_axis == TRUE){
         plot <- plot + ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
     }

@@ -12,9 +12,8 @@ Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 biocViews:
-Imports:
-  rlang
 Suggests:
+  rlang,
   Seurat,
   ggplot2,
   ggpubr,
@@ -32,5 +31,6 @@ Suggests:
   BiocStyle, 
   rmarkdown,
   knitr,
-  purrr
+  purrr,
+  utils
 VignetteBuilder: knitr

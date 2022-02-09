@@ -1,6 +1,5 @@
 #' Wrapper for computing publication ready bar plots.
 #'
-#' @importFrom rlang .data
 #' @param sample  Seurat object.
 #' @param var.to.plot  Main variable in the bar plot. Example: seurat_clusters
 #' @param group.by  Secondary variable to group the bar plot for. Example: orig.ident
@@ -53,7 +52,7 @@ do_BarPlot <- function(sample,
                        colors.use = NULL,
                        horizontal = TRUE){
     # Checks for packages.
-    SCpubr:::check_suggests(function_name = "do_BarPlot")
+    check_suggests(function_name = "do_BarPlot")
 
     # Define pipe operator internally.
     `%>%` <- purrr::`%>%`
@@ -62,11 +61,11 @@ do_BarPlot <- function(sample,
     if (is.null(colors.use)){
         if (is.null(group.by)){
             # Generate a color palette equal to the number of identities in the seurat object.
-            colors.use <- colortools::wheel("#2874A6", length(levels(sample)))
+            colors.use <- colortools::setColors("#2874A6", length(levels(sample)))
             names(colors.use) <- levels(sample)
         } else {
             # Generate a color palette equal to the number of unique values in group.by variable.
-            colors.use <-  colortools::wheel("#2874A6", length(unique(sample[[]][, group.by])))
+            colors.use <-  colortools::setColors("#2874A6", length(unique(sample[[]][, group.by])))
             names(colors.use) <- unique(sample[[]][, group.by])
         }
     }

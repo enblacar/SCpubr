@@ -21,7 +21,10 @@ do_Nebulosa_plot <- function(sample,
                              plot.title = NULL,
                              legend.position = "right",
                              reduction = "umap"){
-    # Plot a density plot using Nebulosa package.
+  # Checks for packages.
+  check_suggests(function_name = "do_Nebulosa_plot")
+
+  # Plot a density plot using Nebulosa package.
     plot <- Nebulosa::plot_density(object = sample,
                                    features = features,
                                    joint = joint,

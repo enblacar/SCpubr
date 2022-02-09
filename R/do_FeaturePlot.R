@@ -36,7 +36,8 @@ do_FeaturePlot <- function(sample,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2)){
-
+    # Checks for packages.
+    check_suggests(function_name = "do_FeaturePlot")
     # Regular FeaturePlot.
     if (is.null(cells.highlight) & is.null(idents.highlight)){
         p <- Seurat::FeaturePlot(sample,

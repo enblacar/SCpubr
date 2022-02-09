@@ -56,7 +56,8 @@ do_VlnPlot <- function(sample,
                        remove_x_axis = TRUE,
                        remove_y_axis = FALSE,
                        legend.ncol = 3){
-
+    # Checks for packages.
+    check_suggests(function_name = "do_VlnPlot")
     if (!(is.null(y_cut)) & length(features) > 1){
         stop('You can only provide values for y_cut if only one feature is provided to the function.')
     }
@@ -80,7 +81,12 @@ do_VlnPlot <- function(sample,
 
     }
 
-    plot <- Seurat::VlnPlot(sample, features = features, cols = colors.use, group.by = group.by, split.by = split.by, pt.size = pt.size) &
+    plot <- Seurat::VlnPlot(sample,
+                            features = features,
+                            cols = colors.use,
+                            group.by = group.by,
+                            split.by = split.by,
+                            pt.size = pt.size) &
         ggplot2::ylab(ylab) &
         ggplot2::xlab(xlab) &
         ggpubr::theme_pubr(legend = legend.position) &

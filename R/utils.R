@@ -9,13 +9,13 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "rlang", "ggpubr", "purrr", "rlang"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "rlang", "viridis", "purrr", "rlang"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "utils", "rlang"),
+                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "utils", "rlang"),
                    "do_DimPlot" = c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
-                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "rlang"),
+                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "utils", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "scales"))
   pkgs <- pkg_list[[function_name]]

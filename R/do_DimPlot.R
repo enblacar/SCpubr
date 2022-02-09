@@ -62,7 +62,7 @@ do_DimPlot <- function(sample,
                        raster = FALSE,
                        dims = c(1, 2)){
     # Checks for packages.
-    SCpubr:::check_suggests(function_name = "do_DimPlot")
+    check_suggests(function_name = "do_DimPlot")
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
     if (!(is.null(group.by)) & !(is.null(colors.use))){
@@ -93,7 +93,7 @@ do_DimPlot <- function(sample,
         }
 
         # Check for cols.highlight.
-        if (sum(SCpubr:::check_colors(cols.highlight)) != length(cols.highlight)){
+        if (sum(check_colors(cols.highlight)) != length(cols.highlight)){
           stop("The value for cols.highlight is not a valid color representation.")
         }
     }
@@ -101,14 +101,14 @@ do_DimPlot <- function(sample,
 
     # Check for colors.use.
     if (!is.null(colors.use)){
-        check <- SCpubr:::check_colors(colors.use)
+        check <- check_colors(colors.use)
         if (sum(check) != length(colors.use)){
             stop("Not all provided colors for colors.use are valid color representations.")
         }
     }
     # Check for cols.split.
     if (!(is.null(cols.split)) & cols.split != "#0A305F" & cols.split != TRUE){
-        check <- SCpubr:::check_colors(cols.split)
+        check <- check_colors(cols.split)
         if (sum(check) != length(cols.split)){
             stop("Not all provided colors for cols.split are valid color representations.")
         }
