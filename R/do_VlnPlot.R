@@ -58,6 +58,8 @@ do_VlnPlot <- function(sample,
                        legend.ncol = 3){
     # Checks for packages.
     check_suggests(function_name = "do_VlnPlot")
+
+    # Check for y_cut and only having 1 feature.
     if (!(is.null(y_cut)) & length(features) > 1){
         stop('You can only provide values for y_cut if only one feature is provided to the function.')
     }

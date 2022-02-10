@@ -6,10 +6,10 @@
 #' @param group.by Variable you want the cells to be colored for.
 #' @param split.by Split into as many plots as unique values in the variable provided.
 #' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by variable.
-#' @param cols.split Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.
+#' @param colors.split Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.
 #' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param cells.highlight Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
-#' @param cols.highlight HEX color code to use with the highlighted cells.
+#' @param colors.highlight HEX color code to use with the highlighted cells.
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param pt.size Point size of the cells.
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
@@ -45,9 +45,9 @@ do_DimPlot <- function(sample,
                        sizes.highlight = 0.5,
                        group.by = NULL,
                        split.by = NULL,
-                       cols.split = "#0A305F",
+                       colors.split = "#0A305F",
                        cells.highlight = NULL,
-                       cols.highlight = "#0A305F",
+                       colors.highlight = "#0A305F",
                        legend = TRUE,
                        legend.title = FALSE,
                        legend.position = "bottom",
@@ -63,188 +63,108 @@ do_DimPlot <- function(sample,
                        dims = c(1, 2)){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
+
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
-    if (!(is.null(group.by)) & !(is.null(colors.use))){
-        if (sum(names(colors.use) %in% unique(sample[[]][, group.by])) != length(unique(sample[[]][, group.by]))){
-            stop('The names of the color vector provided to "colors.use" do not entirely match the unique values in "group.by" parameter.')
-        }
-        if (length(colors.use) != length(unique(sample[[]][, group.by]))){
-            stop('The number of values provided to "colors.use" is lower than the unique values in "group.by" parameter.')
-        }
-    }
-    # Check whether the names of cols.split match the unique values in split.by or whether the number of colors is lower to the number of unique values in split.by.
-    if (!(is.null(split.by)) & cols.split != "#0A305F"){
-        if (length(cols.split) > 1){
-            if (sum(names(cols.split) %in% unique(sample[[]][, split.by])) != length(unique(sample[[]][, split.by]))){
-                stop('The names of the color vector provided to "cols.highlight" do not entirely match the unique values in "split.by" parameter.')
-            }
-            if (length(cols.split) != length(unique(sample[[]][, split.by]))){
-                stop('The number of values provided to "cols.split" is lower than the unique values in "split.by" parameter.')
-            }
-        }
-    }
-
-    # Check whether the user has provided only one color to cols.highlight.
-    if (cols.highlight != "#0A305F" & !(is.null(cols.highlight))){
-        # Check if the input is a character object or not.
-        if (!(is.character(cols.highlight))){
-            stop("The value for cols.highlight must be a character containing a HEX code.")
-        }
-
-        # Check for cols.highlight.
-        if (sum(check_colors(cols.highlight)) != length(cols.highlight)){
-          stop("The value for cols.highlight is not a valid color representation.")
-        }
-    }
-    # From: https://stackoverflow.com/a/13290832
-
+    if (!(is.null(group.by)) & !(is.null(colors.use))){check_consistency_colors_and_names(sample = sample, colors = colors.use, groping_variable = group.by)}
+    # Check whether the names of colors.split match the unique values in split.by or whether the number of colors is lower to the number of unique values in split.by.
+    if (!(is.null(split.by)) & colors.split != "#0A305F" & length(colors.split) > 1){check_consistency_colors_and_names(sample = sample, colors = colors.split, groping_variable = split.by)}
+    # Check for colors.highlight.
+    if (colors.highlight != "#0A305F" & !(is.null(colors.highlight))){check_colors(colors.highlight, parameter_name = "colors.highlight")}
     # Check for colors.use.
-    if (!is.null(colors.use)){
-        check <- check_colors(colors.use)
-        if (sum(check) != length(colors.use)){
-            stop("Not all provided colors for colors.use are valid color representations.")
-        }
-    }
-    # Check for cols.split.
-    if (!(is.null(cols.split)) & cols.split != "#0A305F" & cols.split != TRUE){
-        check <- check_colors(cols.split)
-        if (sum(check) != length(cols.split)){
-            stop("Not all provided colors for cols.split are valid color representations.")
-        }
-    }
+    if (!is.null(colors.use)){check_colors(colors.use)}
+    # Check for colors.split.
+    if (!(is.null(colors.split)) & colors.split != "#0A305F" & colors.split != TRUE){check_colors(colors.split)}
 
 
+    # Automatically generate color palettes when the user has not defined one.
     # If the user does not want to highlight any cells (Regular case.).
-    if (is.null(cells.highlight)){
-        # If no special color palette is provided by the user, generate a default one.
-        if (is.null(colors.use)){
-            # If no special grouping is set up, DimPlot defaults back to Seurat::Idents(sample) or levels(sample).
-            if (is.null(group.by)){
-                # Generate a vector of colors equal to the number of identities in the sample.
-                colors.use <- colortools::setColors("#457b9d", length(levels(sample)))
-                names(colors.use) <- levels(sample)
-            } else {
-                # Generate a vector of colors equal to the number of unique identities in the grouping variable.
-                colors.use <-  colortools::setColors("#457b9d", length(unique(sample[[]][, group.by])))
-                names(colors.use) <- unique(sample[[]][, group.by])
-            }
+    if (is.null(cells.highlight) & is.null(colors.use)){
+        # If no special grouping is set up, DimPlot defaults back to Seurat::Idents(sample) or levels(sample).
+        if (is.null(group.by)){colors.use <- generate_color_scale(levels(sample))} else {colors.use <- generate_color_scale(unique(sample[[]][, group.by]))}
+    }
+
+    # If the user wants different coloring but has not provided a vector of colors, then resort to the default coloring.
+    if (colors.split == TRUE){
+      # Generate a vector of colors equal to the number of identities in the sample.
+      data.use <- sample[[]][, split.by, drop = F]
+      names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+      colors.split <- generate_color_scale(names.use)
+    }
+
+
+    # If the UMAP does not need to be split in multiple panes (default case).
+    if (is.null(split.by)){
+        p.umap <- Seurat::DimPlot(sample,
+                                  reduction = reduction,
+                                  label = label,
+                                  dims = dims,
+                                  repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.color = ifelse(is.null(label) == TRUE, NULL, "black"),
+                                  shuffle = TRUE,
+                                  pt.size = pt.size,
+                                  group.by = group.by,
+                                  cols = colors.use,
+                                  raster = raster,
+                                  ncol = ncol) +
+            ggpubr::theme_pubr(legend = legend.position) +
+            ggplot2::ggtitle(plot.title) +
+            ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
+                           legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
+                           legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
+            ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          byrow = legend.byrow,
+                                                          override.aes = list(size = legend.icon.size)))
+        # If a custom color scale is provided, this line's aim is to reorder the legend labels into alphabetical order.
+        if (!(is.null(colors.use))){
+            p.umap <- p.umap + ggplot2::scale_color_manual(values = colors.use, breaks = sort(names(colors.use)))
         }
 
-        # If the UMAP does not need to be split in multiple panes (default case).
-        if (is.null(split.by)){
+    }
+    # If the UMAP has to be split in multiple panes.
+    else if (!(is.null(split.by))){
+        # If the user provided multiple highlighting colors.
+        multiple_colors <- ifelse(length(colors.split) > 1, TRUE, FALSE)
+        # List to store each individual plots.
+        list.plots <- list()
+        # Recover all metadata.
+        data <- sample[[]]
+        # Retrieve the metadata column belonging to the split.by parameter.
+        data.use <- data[, split.by, drop = F]
+        # Retrieve the plotting order, keep factor levels if the column is a factor.
+        plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+        # Iterate over each unique value in split.by parameter.
+        for (iteration in plot_order){
+            # Retrieve the cells that do belong to the iteration's split.by value.
+            cells.highlight <- rownames(data.use)[which(data.use == iteration)]
             p.umap <- Seurat::DimPlot(sample,
                                       reduction = reduction,
-                                      label = label,
                                       dims = dims,
-                                      repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                      label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                      label.color = ifelse(is.null(label) == TRUE, NULL, "black"),
-                                      shuffle = TRUE,
+                                      cells.highlight = cells.highlight,
+                                      sizes.highlight = sizes.highlight,
                                       pt.size = pt.size,
-                                      group.by = group.by,
-                                      cols = colors.use,
                                       raster = raster,
                                       ncol = ncol) +
+                ggplot2::ggtitle(iteration) +
                 ggpubr::theme_pubr(legend = legend.position) +
-                ggplot2::ggtitle(plot.title) +
+                ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                            values = c("grey75", ifelse(multiple_colors == TRUE, colors.split[[iteration]], colors.split)))  +
                 ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                                legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
                                legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
                 ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                               byrow = legend.byrow,
                                                               override.aes = list(size = legend.icon.size)))
-            # If a custom color scale is provided, this line's aim is to reorder the legend labels into alphabetical order.
-            if (!(is.null(colors.use))){
-                p.umap <- p.umap + ggplot2::scale_color_manual(values = colors.use, breaks = sort(names(colors.use)))
-            }
-        # If the UMAP has to be split in multiple panes.
-        } else {
-            # If the user provided multiple highlighting colors.
-            if (length(cols.split) > 1 | cols.split == TRUE) {
-                # If the user wants different coloring but has not provided a vector of colors, then resort to the default coloring.
-                if (cols.split == TRUE){
-                  # Generate a vector of colors equal to the number of identities in the sample.
-                  data.use <- sample[[]][, split.by, drop = F]
-                  names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-                  cols.split <- colortools::setColors("#457b9d", length(names.use))
-                  names(cols.split) <- names.use
-                }
-                # List to store each individual plots.
-                list.plots <- list()
-                # Recover all metadata.
-                data <- sample[[]]
-                # Retrieve the metadata column belonging to the split.by parameter.
-                data.use <- data[, split.by, drop = F]
-                # Retrieve the plotting order, keep factor levels if the column is a factor.
-                plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-
-                # Iterate over each unique value in split.by parameter.
-                for (iteration in plot_order){
-                    # Retrieve the cells that do belong to the iteration's split.by value.
-                    cells.highlight <- rownames(data.use)[which(data.use == iteration)]
-                    p.umap <- Seurat::DimPlot(sample,
-                                              reduction = reduction,
-                                              dims = dims,
-                                              cells.highlight = cells.highlight,
-                                              sizes.highlight = sizes.highlight,
-                                              pt.size = pt.size,
-                                              raster = raster,
-                                              ncol = ncol) +
-                        ggplot2::ggtitle(iteration) +
-                        ggpubr::theme_pubr(legend = legend.position) +
-                        ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                                    values = c("grey75", cols.split[[iteration]]))  +
-                        ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                                       legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                                       legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
-                        ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                                      byrow = legend.byrow,
-                                                                      override.aes = list(size = legend.icon.size)))
-                    list.plots[[iteration]] <- p.umap
-                }
-                # Assemble individual plots as a patch.
-                p.umap <- patchwork::wrap_plots(list.plots, ncol = ncol)
-            # If the user did not provide a vector of colors, therefore using the default value in this function.
-            } else {
-                # List to store each individual plot.
-                list.plots <- list()
-                # Retrieve metadta from sample.
-                data <- sample[[]]
-                # Retrieve only the metadata belonging to split.by parameter.
-                data.use <- data[, split.by, drop = F]
-                # Retrieve the plotting order.
-                plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-                # Retrieve the plotting order, keep factor levels if the column is a factor.
-                for (iteration in plot_order){
-                    # Recover the cells for which the iteration value of split.by is true.
-                    cells.highlight <- rownames(data.use)[which(data.use == iteration)]
-                    p.umap <- Seurat::DimPlot(sample,
-                                              reduction = reduction,
-                                              dims = dims,
-                                              cells.highlight = cells.highlight,
-                                              sizes.highlight = sizes.highlight,
-                                              pt.size = pt.size,
-                                              raster = raster,
-                                              ncol = ncol) +
-                        ggplot2::ggtitle(iteration) +
-                        ggpubr::theme_pubr(legend = legend.position) +
-                        ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                                    values = c("grey75", cols.split))  +
-                        ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                                       legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                                       legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
-                        ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                                      byrow = legend.byrow,
-                                                                      override.aes = list(size = legend.icon.size)))
-                    list.plots[[iteration]] <- p.umap
-                }
-                # Assemble individual panes together.
-                p.umap <- patchwork::wrap_plots(list.plots, ncol = ncol)
-            }
+            list.plots[[iteration]] <- p.umap
         }
+        # Assemble individual plots as a patch.
+        p.umap <- patchwork::wrap_plots(list.plots, ncol = ncol)
+    }
+
+
     # If the user wants to highlight some of the cells.
-    } else {
+    else if (!(is.null(cells.highlight))) {
         p.umap <- Seurat::DimPlot(sample,
                                   reduction = reduction,
                                   cells.highlight = cells.highlight,
@@ -256,7 +176,7 @@ do_DimPlot <- function(sample,
             ggplot2::ggtitle(plot.title) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                        values = c("grey", cols.highlight))  +
+                                        values = c("grey", colors.highlight))  +
             ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
@@ -265,6 +185,8 @@ do_DimPlot <- function(sample,
                                                           override.aes = list(size = legend.icon.size)))
     }
 
+
+    # General additions to all kind of plots.
     # Legend treatment.
     if (legend == FALSE){
         p.umap <- p.umap & ggpubr::rremove("legend.title") & ggpubr::rremove("legend")
