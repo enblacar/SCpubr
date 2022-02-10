@@ -303,7 +303,7 @@ SCpubr::do_DimPlot(sample, label = T, legend = F)
 
 Another broadly used function in `Seurat` is `Seurat::FeaturePlot()`. It is a very similar function to `Seurat::DimPlot()` which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs.
 
-```{r, fig.cap= Seurat FeaturePlot}
+```{r, fig.cap= "Seurat FeaturePlot"}
 Seurat::FeaturePlot(sample, features = "nCount_RNA")
 ```
 First thing that stands out, it that the color scale could be changed to one with two very opposite ends, so that identifying regions with low and high UMIs become an easier task. Apart from that, we want apply the same treatment as in `do_DimPlot()` section. 
@@ -316,7 +316,7 @@ Seurat::FeaturePlot(sample, features = "nCount_RNA") +
 
 This way, we can observe that most of the clusters have a really similar number of UMIs, despite selected ones which have up to 4 times more. These could very well be doublets. This is `SCpubr::do_FeaturePlot()` variation:
 
-```{r, fig.cap = SCpubr FeaturePlot, with minor modifications}
+```{r, fig.cap = "SCpubr FeaturePlot, with minor modifications"}
 SCpubr::do_FeaturePlot(sample, features = "nCount_RNA", plot.title = "Number of UMIs")
 ```
 
@@ -326,13 +326,13 @@ By default, `SCpubr` enlarges the dots a bit and makes the legend bold, to bette
 
 `SCpubr::do_FeaturePlot()` can tackle multiple queries at the same time. Plots can be rearranged as desired with `ncol` parameter:
 
-```{r, fig.cap = SCpubr FeaturePlot, with 4 features and 2 columns}
+```{r, fig.cap = "SCpubr FeaturePlot, with 4 features and 2 columns"}
 SCpubr::do_FeaturePlot(sample, features = c("nCount_RNA", "nFeature_RNA", "percent.mt", "CD14"), plot.title = "My very important features", ncol = 2)
 ```
 
 With multiple queries, using `plot.title` parameter actually adds an overall title. If one wants to modify the title of each plot independently, a more complex approach is needed, which requires more R expertise, using `patchwork` package.
 
-```{r, fig.cap = SCpubr FeaturePlot, with individual modified titles}
+```{r, fig.cap = "SCpubr FeaturePlot, with individual modified titles"}
 ((SCpubr::do_FeaturePlot(sample, features = "nCount_RNA", plot.title = "Plot A") | SCpubr::do_FeaturePlot(sample, features = "nFeature_RNA", plot.title = "Plot B")) /
 (SCpubr::do_FeaturePlot(sample, features = "percent.mt", plot.title = "Plot C") | SCpubr::do_FeaturePlot(sample, features = "CD14", plot.title = "Plot D"))) + 
 patchwork::plot_annotation(title = "My very important features", theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18, face = "bold", hjust = 0.5)))
@@ -343,7 +343,7 @@ patchwork::plot_annotation(title = "My very important features", theme = ggplot2
 
 One of the things that can be misleading, is that it could be the case that a very specific subset of cells are driving the ends of the color scales. Let's say that we have identified that clusters 2, 5, and 8 are responsible of this behavior. We would like to have plot the values without taking those cells into consideration. The very first thing that comes to mind is, indeed, removing the cells completely, resulting in the following:
 
-```{r, fig.cap = SCpubr FeaturePlot, removing cells from clusters 2, 5 and 8}
+```{r, fig.cap = "SCpubr FeaturePlot, removing cells from clusters 2, 5 and 8"}
 cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
 SCpubr::do_FeaturePlot(sample[, cells.plot], features = c("CD14"), plot.title = "My very important features")
 ```
@@ -358,26 +358,23 @@ This way, by adding the cells back and modifying the legend, we accomplish the d
 
 ```{r, fig.cap = SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using idents.highlight}
 
-SCpubr::do_FeaturePlot(sample, idents.highlight = c("2", "5", "8"), features = c("CD14"), plot.title = "My very important features", ncol = 2)
+SCpubr::do_FeaturePlot(sample, idents.highlight = levels(sample)[!(levels(sample) %in% c("2", "5", "8"))], features = c("CD14"), plot.title = "My very important features", ncol = 2)
 ```
-
-## Modifying the ends of the color scale.
-Sometimes, one might want to delimit the range of the color scale. This might be relevant when plotting a variable for which we are only interested in positive values. This is the case of the enrichment scores computed using `Seurat::AddModuleScore()`. Sometimes, they fall into the negative values, potentially meaning that these cells, for the particular list of genes provided, not only they are not enriched in them but actually underexpressed with regards a control set. Delimiting the range of the color scale can be achieved using the parameters `scale.begin` and `scale.end`:
-
-```{r, fig.cap = SCpubr FeaturePlot delimiting the range}
-# Compute enrichment scores for CD14 and LYZ, known markers for CD14+ monocytes.
-sample <- Seurat::AddModuleScore(sample, features = list(c("CD14", "LYZ")), name = "Monocyte_signature")
-# Plot. The enrichment is always stored as metadata with the name provided plus a "1" afterwards.
-p1 <- SCpubr::do_FeaturePlot(sample, features = "CD14")
-p2 <- SCpubr::do_FeaturePlot(sample, features = "LYZ")
-p3 <- SCpubr::do_FeaturePlot(sample, features = "Monocyte_signature1", plot.title = "Monocyte signature")
-p4 <- SCpubr::do_FeaturePlot(sample, features = "Monocyte_signature1", plot.title = "Adjusted scale", scale.begin = 0, scale.end = 2)
-
-(p1 | p2) / (p3 | p4)
-```
-
 
 # do_NebulosaPlot()
+
+This plot comes straight from the [Nebulosa package](http://bioconductor.org/packages/release/bioc/html/Nebulosa.html). For more information, here is their [vignette](http://bioconductor.org/packages/release/bioc/vignettes/Nebulosa/inst/doc/nebulosa_seurat.html). In short, it computes a "density" of whether the surrounding cells (in the UMAP embedding) also express the variable that you provide to the function, same variables that one could feed to `Seurat::FeaturePlot()`. This is how their default plot looks like:
+
+```{r, fig.cap= "Nebulosa plot"}
+Nebulosa::plot_density(sample, "CD14")
+```
+
+This way, not only we do know which clusters are enriched in CD14, we also know the regions of it with the hightest density of cells expressing it. Minor modifications, on the line of the rest of plots, are applied in `SCpubr`:
+```{r, fig.cap = "SCpubr Nebulosa plot."}
+SCpubr::do_Nebulosa_plot(sample, features = "CD14")
+```
+
+
 
 # do_RankPlot()
 

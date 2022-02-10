@@ -7,10 +7,17 @@
 do_Nebulosa_plot(
   sample,
   features,
+  slot = "data",
+  dims = c(1, 2),
+  size = 1,
+  reduction = "umap",
+  combine = TRUE,
+  method = c("ks", "wkde"),
   joint = FALSE,
   plot.title = NULL,
-  legend.position = "right",
-  reduction = "umap"
+  pal = "viridis",
+  shape = 16,
+  legend.position = "right"
 )
 }
 \arguments{
@@ -18,13 +25,27 @@ do_Nebulosa_plot(
 
 \item{features}{Features to plot density for. It can be a single one or a vector of multiple features.}
 
+\item{slot}{Slot to retrieve the data from. "data" by default.}
+
+\item{dims}{Vector of 2 dims to plot the data. By default, first and second from the specified reduction.}
+
+\item{size}{Size of the dots.}
+
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
+
+\item{combine}{Whether to create a single plot out of multiple features.}
+
+\item{method}{Kernel density estimation method. Either "ks" or "wkde" or both. See \link[Nebulosa]{plot_density} for more details.}
+
 \item{joint}{Whether to plot different features as joint density.}
 
 \item{plot.title}{Title to use in the plot.}
 
-\item{legend.position}{Position of the legend in the plot.}
+\item{pal}{Viridis palette to use. Use the names.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
+\item{shape}{Shape of the geometry (ggplot number).}
+
+\item{legend.position}{Position of the legend in the plot.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.
