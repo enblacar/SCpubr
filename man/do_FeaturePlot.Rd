@@ -14,8 +14,6 @@ do_FeaturePlot(
   legend.position = "right",
   plot.title = NULL,
   ncol = NULL,
-  scale.begin = NULL,
-  scale.end = NULL,
   cells.highlight = NULL,
   idents.highlight = NULL,
   dims = c(1, 2)
@@ -39,10 +37,6 @@ do_FeaturePlot(
 \item{plot.title}{Title for the plot.}
 
 \item{ncol}{Number of columns to use in the arrangement of the output if more than one feature is queried to the function.}
-
-\item{scale.begin}{Value to where you want the continuous color scale to start. It has to be in the range of the feature's values.}
-
-\item{scale.end}{Value to where you want the continuous color scale to end. It has to be in the range of the feature's values.}
 
 \item{cells.highlight}{Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.}
 

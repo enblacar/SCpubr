@@ -15,9 +15,9 @@ do_DimPlot(
   sizes.highlight = 0.5,
   group.by = NULL,
   split.by = NULL,
-  cols.split = "#0A305F",
+  colors.split = "#0A305F",
   cells.highlight = NULL,
-  cols.highlight = "#0A305F",
+  colors.highlight = "#0A305F",
   legend = TRUE,
   legend.title = FALSE,
   legend.position = "bottom",
@@ -54,11 +54,11 @@ do_DimPlot(
 
 \item{split.by}{Split into as many plots as unique values in the variable provided.}
 
-\item{cols.split}{Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.}
+\item{colors.split}{Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.}
 
 \item{cells.highlight}{Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.}
 
-\item{cols.highlight}{HEX color code to use with the highlighted cells.}
+\item{colors.highlight}{HEX color code to use with the highlighted cells.}
 
 \item{legend}{Whether to plot the legend or not.}
 

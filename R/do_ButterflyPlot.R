@@ -241,14 +241,14 @@ do_ButterflyPlot <- function(sample,
         if (categorical == FALSE & continuous == FALSE) {
             message("No Complex output can be returned as no categorical or continuous variables are selected.")
         } else if (categorical == TRUE){
-            p.x <- do_RankPlot(sample, feature_to_rank = "x_axis", group.by = complex.output.grouping.variable, colors.use = colors.use)
-            p.y <- do_RankPlot(sample, feature_to_rank = "y_axis", group.by = complex.output.grouping.variable, colors.use = colors.use)
+            p.x <- do_BeeSwarmPlot(sample, feature_to_rank = "x_axis", group.by = complex.output.grouping.variable, colors.use = colors.use)
+            p.y <- do_BeeSwarmPlot(sample, feature_to_rank = "y_axis", group.by = complex.output.grouping.variable, colors.use = colors.use)
             plot <- plot | p.x | p.y
 
         # Color based on a continuous variable.
         } else if (continuous == TRUE){
-            p.x <- do_RankPlot(sample, feature_to_rank = "x_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
-            p.y <- do_RankPlot(sample, feature_to_rank = "y_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
+            p.x <- do_BeeSwarmPlot(sample, feature_to_rank = "x_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
+            p.y <- do_BeeSwarmPlot(sample, feature_to_rank = "y_axis", group.by = !!(rlang::sym(complex.output.grouping.variable)), continuous_feature = TRUE)
             plot <- plot | p.x | p.y
         }
     }

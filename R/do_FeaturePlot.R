@@ -8,8 +8,6 @@
 #' @param pt.size Point size.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param scale.begin Value to where you want the continuous color scale to start. It has to be in the range of the feature's values.
-#' @param scale.end Value to where you want the continuous color scale to end. It has to be in the range of the feature's values.
 #' @param plot.title Title for the plot.
 #' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
@@ -31,8 +29,6 @@ do_FeaturePlot <- function(sample,
                            legend.position = "right",
                            plot.title = NULL,
                            ncol = NULL,
-                           scale.begin = NULL,
-                           scale.end = NULL,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2)){
@@ -40,6 +36,8 @@ do_FeaturePlot <- function(sample,
     check_suggests(function_name = "do_FeaturePlot")
     # Regular FeaturePlot.
     if (is.null(cells.highlight) & is.null(idents.highlight)){
+        # Check if the feature is actually in the object.
+        check_feature(sample = sample, features = features, reduction = reduction)
         p <- Seurat::FeaturePlot(sample,
                                  features,
                                  reduction = reduction,
@@ -56,20 +54,23 @@ do_FeaturePlot <- function(sample,
         if (reduction == "diffusion"){
             p <- p & ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
         }
-        # Set the range of the color scale to scale.begin and scale.end parameters.
-        if (!is.null(scale.begin) | !is.null(scale.end)){
-            p <- p & ggplot2::scale_color_continuous(type = "viridis", limits = c(scale.begin, scale.end))
-        }
+
     # Modified FeaturePlot including only a subset of cells.
     } else {
+        # Check if the feature is actually in the object.
+        check_feature(sample = sample, features = features, reduction = reduction)
         # Get the subset of wanted cells according to the combination of idents.highlight and cells.highlight parameters.
         if (is.null(idents.highlight) & !(is.null(cells.highlight))){
             # Only if cells.highlight parameters is used.
             cells.use <- cells.highlight
         } else if (!(is.null(idents.highlight)) & is.null(cells.highlight)){
             # Only if idents.highlight parameter is used.
+            # Check if the provided identities are part of the active identities in the object.
+            check_identity(sample = sample, identities = idents.highlight)
             cells.use <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% idents.highlight])
         } else if (!(is.null(idents.highlight)) & !(is.null(cells.highlight))){
+            # Check if the provided identities are part of the active identities in the object.
+            check_identity(sample = sample, identities = idents.highlight)
             # Both idents.highlight and cells.highlight are used.
             cells.1 <- cells.highlight
             cells.2 <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% idents.highlight])
@@ -113,10 +114,6 @@ do_FeaturePlot <- function(sample,
             if (reduction == "diffusion"){
                 # Add "DC" labels.
                 p.loop <- p.loop + ggplot2::xlab(paste0("DC_", dims[1])) + ggplot2::ylab(paste0("DC_", dims[2]))
-            }
-            # Set the color scale to the values provided for scale.being and scale.end.
-            if (!is.null(scale.begin) | !is.null(scale.end)){
-                p.loop <- p.loop & ggplot2::scale_color_continuous(type = "viridis", limits = c(scale.begin, scale.end))
             }
             # Add the plot to the list.
             list.plots[[feature]] <- p.loop

@@ -17,6 +17,15 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
 # Aim of this package
 This package aims to provide a streamlined way of generating publication ready figures for known single-cell visualizations. As subjective as the term "aesthetically pleasant" can be, this a set of theme modifications implemented across different plot types. This package also serves as a personal project, with future prospects of growth.
 
@@ -247,23 +256,23 @@ As can be observed, this plots accomplish the task of separating the cells into 
 SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F)
 ```
 
-This way, we can see that clusters such as Cluster 7 are way more disperse than the rest, accounting not only for standalone groups of cells but also blending in other bigger clusters. Actually, the user might want to change the color of the highlighted cells in this split DimPlot. This is achieved by using `cols.split` parameter and providing either a color name recognized by `ggplot2` or (recommended) a HEX code.
+This way, we can see that clusters such as Cluster 7 are way more disperse than the rest, accounting not only for standalone groups of cells but also blending in other bigger clusters. Actually, the user might want to change the color of the highlighted cells in this split DimPlot. This is achieved by using `colors.split` parameter and providing either a color name recognized by `ggplot2` or (recommended) a HEX code.
 
 
 ```{r, fig.cap = "SCpubr DimPlot using split.by with a changed color", fig.width=10, fig.height=5}
 # Using ncol = 5 to maintain some of the proportions.
 # Using legend = F to remove unwanted repeated legends.
-SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = "black")
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, colors.split = "black")
 ```
 
 
 
-Furthermore, one might also want to color each cluster by the original color. This can be achieved by using the argument `cols.split`, either providing a named vector of each cluster (or metadata variable unique value) as names and color hex codes as values or `TRUE`, thus resorting to the default `SCpubr` categorical coloring. 
+Furthermore, one might also want to color each cluster by the original color. This can be achieved by using the argument `colorss.split`, either providing a named vector of each cluster (or metadata variable unique value) as names and color hex codes as values or `TRUE`, thus resorting to the default `SCpubr` categorical coloring. 
 
 ```{r, fig.cap = "SCpubr DimPlot using split.by with default SCpubr colors", fig.width=10, fig.height=5}
 # Using ncol = 5 to maintain some of the proportions.
 # Using legend = F to remove unwanted repeated legends.
-SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = TRUE)
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, colors.split = TRUE)
 ```
 
 ```{r, fig.cap = "SCpubr DimPlot using split.by using custom list of colors", fig.width=10, fig.height=5}
@@ -271,9 +280,102 @@ SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, c
 # Using legend = F to remove unwanted repeated legends.
 colors.use <- RColorBrewer::brewer.pal(length(unique(sample$seurat_clusters)), "Paired")
 names(colors.use) <- levels(sample$seurat_clusters)
-SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, cols.split = colors.use)
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, colors.split = colors.use)
 ```
+
+## Adding labels to the cluster instead of using the legend.
+In some cases, what we want is an indication of which cluster is what, right on top of it. That, sometimes, makes visualizations clearer. It has several downsides, the most important being that the label is located around the highest density point of the cells in the cluster. If the clusters are scattered across the UMAP, this might result in "errant" labels, misplaced. Also, when one has really long cluster names or a lot of clusters, the plot might quickly become crowded. This plot is accomplished by using `label = T` to label the clusters, `repel = T` to avoid overlapping of labels and `Seurat::NoLegend()` to remove the legend.
+
+```{r, fig.cap = "Seurat DimPlot using labels."}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+Seurat::DimPlot(sample, label = T, repel = T) + Seurat::NoLegend()
+```
+This is, in turn, how `SCpubr` returns this kind of plot. Note that `repel = T` is set by default.
+
+```{r, fig.cap = "Seurat DimPlot using labels."}
+SCpubr::do_DimPlot(sample, label = T, legend = F)
+```
+
+
 # do_FeaturePlot()
+## Build up
+
+Another broadly used function in `Seurat` is `Seurat::FeaturePlot()`. It is a very similar function to `Seurat::DimPlot()` which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs.
+
+```{r, fig.cap= Seurat FeaturePlot}
+Seurat::FeaturePlot(sample, features = "nCount_RNA")
+```
+First thing that stands out, it that the color scale could be changed to one with two very opposite ends, so that identifying regions with low and high UMIs become an easier task. Apart from that, we want apply the same treatment as in `do_DimPlot()` section. 
+
+```{r, fig.cap= Seurat FeaturePlot, with new color scale and general modifications}
+Seurat::FeaturePlot(sample, features = "nCount_RNA") + 
+  Seurat::NoAxes() + 
+  viridis::scale_color_viridis()
+```
+
+This way, we can observe that most of the clusters have a really similar number of UMIs, despite selected ones which have up to 4 times more. These could very well be doublets. This is `SCpubr::do_FeaturePlot()` variation:
+
+```{r, fig.cap = SCpubr FeaturePlot, with minor modifications}
+SCpubr::do_FeaturePlot(sample, features = "nCount_RNA", plot.title = "Number of UMIs")
+```
+
+By default, `SCpubr` enlarges the dots a bit and makes the legend bold, to better stand out. 
+
+## Multiple features
+
+`SCpubr::do_FeaturePlot()` can tackle multiple queries at the same time. Plots can be rearranged as desired with `ncol` parameter:
+
+```{r, fig.cap = SCpubr FeaturePlot, with 4 features and 2 columns}
+SCpubr::do_FeaturePlot(sample, features = c("nCount_RNA", "nFeature_RNA", "percent.mt", "CD14"), plot.title = "My very important features", ncol = 2)
+```
+
+With multiple queries, using `plot.title` parameter actually adds an overall title. If one wants to modify the title of each plot independently, a more complex approach is needed, which requires more R expertise, using `patchwork` package.
+
+```{r, fig.cap = SCpubr FeaturePlot, with individual modified titles}
+((SCpubr::do_FeaturePlot(sample, features = "nCount_RNA", plot.title = "Plot A") | SCpubr::do_FeaturePlot(sample, features = "nFeature_RNA", plot.title = "Plot B")) /
+(SCpubr::do_FeaturePlot(sample, features = "percent.mt", plot.title = "Plot C") | SCpubr::do_FeaturePlot(sample, features = "CD14", plot.title = "Plot D"))) + 
+patchwork::plot_annotation(title = "My very important features", theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18, face = "bold", hjust = 0.5)))
+
+```
+
+## Working with subsets of cells
+
+One of the things that can be misleading, is that it could be the case that a very specific subset of cells are driving the ends of the color scales. Let's say that we have identified that clusters 2, 5, and 8 are responsible of this behavior. We would like to have plot the values without taking those cells into consideration. The very first thing that comes to mind is, indeed, removing the cells completely, resulting in the following:
+
+```{r, fig.cap = SCpubr FeaturePlot, removing cells from clusters 2, 5 and 8}
+cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
+SCpubr::do_FeaturePlot(sample[, cells.plot], features = c("CD14"), plot.title = "My very important features")
+```
+
+However, this falls back to the same problem as with `Seurat::DimPlot` with the `split.by` parameter. We lose the overall context of where the cells are. This is taken care by in `SCpubr::do_FeaturePlot()`, when using the `cells.highlight` parameter:
+
+```{r, fig.cap = "SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8"}
+cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
+SCpubr::do_FeaturePlot(sample, cells.highlight = cells.plot, features = c("CD14"), plot.title = "My very important features", ncol = 2)
+```
+This way, by adding the cells back and modifying the legend, we accomplish the desired effect. Furthermore, `SCpubr::do_FeaturePlot()` also accepts a vector of the identities to plot, as long as they are part of `levels(seurat_object)`. This can be achieved by using the `idents.highlight` instead.
+
+```{r, fig.cap = SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using idents.highlight}
+
+SCpubr::do_FeaturePlot(sample, idents.highlight = c("2", "5", "8"), features = c("CD14"), plot.title = "My very important features", ncol = 2)
+```
+
+## Modifying the ends of the color scale.
+Sometimes, one might want to delimit the range of the color scale. This might be relevant when plotting a variable for which we are only interested in positive values. This is the case of the enrichment scores computed using `Seurat::AddModuleScore()`. Sometimes, they fall into the negative values, potentially meaning that these cells, for the particular list of genes provided, not only they are not enriched in them but actually underexpressed with regards a control set. Delimiting the range of the color scale can be achieved using the parameters `scale.begin` and `scale.end`:
+
+```{r, fig.cap = SCpubr FeaturePlot delimiting the range}
+# Compute enrichment scores for CD14 and LYZ, known markers for CD14+ monocytes.
+sample <- Seurat::AddModuleScore(sample, features = list(c("CD14", "LYZ")), name = "Monocyte_signature")
+# Plot. The enrichment is always stored as metadata with the name provided plus a "1" afterwards.
+p1 <- SCpubr::do_FeaturePlot(sample, features = "CD14")
+p2 <- SCpubr::do_FeaturePlot(sample, features = "LYZ")
+p3 <- SCpubr::do_FeaturePlot(sample, features = "Monocyte_signature1", plot.title = "Monocyte signature")
+p4 <- SCpubr::do_FeaturePlot(sample, features = "Monocyte_signature1", plot.title = "Adjusted scale", scale.begin = 0, scale.end = 2)
+
+(p1 | p2) / (p3 | p4)
+```
+
 
 # do_NebulosaPlot()
 
@@ -289,12 +391,7 @@ SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, c
 
 # do_PTEA()
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+
 
 ```{r setup}
 library(SCpubr)

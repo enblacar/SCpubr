@@ -86,3 +86,83 @@ generate_color_scale <- function(names_use){
   names(colors) <- names_use
   return(colors)
 }
+
+
+#' Compute the max and min value of a variable provided to FeaturePlot.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to plot.
+#' @param assay Assay used.
+#' @param reduction Reduction used.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+compute_scale_limits <- function(sample, feature, assay, reduction){
+  if (feature %in% rownames(sample)){
+    scale.begin <- min(sample@assays[[assay]]@data[feature,])
+    scale.end <- max(sample@assays[[assay]]@data[feature,])
+  } else if (feature %in% colnames(sample@meta.data)){
+    scale.begin <- min(sample@meta.data[, feature])
+    scale.end <- max(sample@meta.data[, feature])
+  } else if (feature %in% colnames(sample@reductions[[reduction]][[]])){
+    scale.begin <- min(sample@reductions[[reduction]][[]][, feature])
+    scale.end <- max(sample@reductions[[reduction]][[]][, feature])
+  }
+  return(list("scale.begin" = scale.begin,
+              "scale.end" = scale.end))
+}
+
+
+#' Check if the feature to plot is in the Seurat object.
+#'
+#' @param sample Seurat object.
+#' @param features Feature to plot.
+#' @param reduction Reduction used.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_feature <- function(sample, features, reduction){
+  for (feature in features){
+    check <- 0
+    if (!(feature %in% rownames(sample))){
+      check <- check + 1
+    }
+    if (!(feature %in% colnames(sample@meta.data))){
+      check <- check + 1
+    }
+    if (!(feature %in% colnames(sample@reductions[[reduction]][[]]))){
+      check <- check + 1
+    }
+    if (check == 3) {
+      stop(paste0("The requested feature (", feature, ") could not be found:\n", "    - Not matching any gene name (rownames of the provided object).\n",
+                  "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in the selected reduction (", reduction, ")."))
+    }
+  }
+}
+
+#' Check if the identity provided is in the current Seurat identities.
+#'
+#' @param sample Seurat object.
+#' @param identities Identities to test.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_identity <- function(sample, identities){
+  for (identity in identities){
+    if (!(identity %in% levels(sample))){
+      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."))
+    }
+  }
+}
