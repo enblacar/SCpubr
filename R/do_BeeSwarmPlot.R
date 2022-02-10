@@ -3,9 +3,10 @@
 #'
 #' @param sample Seurat object.
 #' @param assay Seurat assay to choose.
-#' @param feature_to_rank Features for which the cells are going to be ranked.
+#' @param feature_to_rank Features for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
 #' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
 #' @param group.by Variable you want the cells to be grouped for.
+#' @param reduction Reduction associated to feature_to_rank if this feature is a component like PC_1, UMAP_1 or similar.
 #' @param colors.use Named vector with the color assignment.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -32,6 +33,7 @@ do_BeeSwarmPlot <- function(sample,
                        feature_to_rank,
                        group.by,
                        assay = "SCT",
+                       reduction = "umap",
                        continuous_feature = FALSE,
                        colors.use = NULL,
                        legend.position = "right",
@@ -48,23 +50,25 @@ do_BeeSwarmPlot <- function(sample,
                        flip = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_BeeSwarmPlot")
-
-    if (!(feature_to_rank %in% colnames(sample@meta.data)) & (feature_to_rank %in% rownames(sample))){
-        message("Feature provided is not in the metadata columns but found as a gene name.")
-        sample$rank_me <- sample@assays[[assay]]@data[feature_to_rank, ]
-        sample$rank <- rank(sample$rank_me)
-    } else if (feature_to_rank %in% colnames(sample@meta.data)) {
-        sample$rank_me <- sample@meta.data[, feature_to_rank]
-        sample$rank <- rank(sample$rank_me)
+    check_feature(sample = sample, features = feature_to_rank, reduction = reduction)
+    if (feature_to_rank %in% colnames(sample@meta.data)) {
+      sample$rank_me <- sample@meta.data[, feature_to_rank]
+      sample$rank <- rank(sample$rank_me)
+    } else if (feature_to_rank %in% rownames(sample)){
+      sample$rank_me <- sample@assays[[assay]]@data[feature_to_rank, ]
+      sample$rank <- rank(sample$rank_me)
+    } else if (feature_to_rank %in% colnames(sample@reductions[[reduction]][[]])){
+      sample$rank_me <- sample@reductions[[reduction]][[]][, feature_to_rank]
+      sample$rank <- rank(sample$rank_me)
     } else {
-        stop(paste0("The following feature was not found as either metadata variable nor as a gene name: ", feature_to_rank))
+        stop(paste0("The following feature was not found: ", feature_to_rank, "\n Please check whether it is a metadata variable, a gene name, or the name of a dimension reduction component (and specified it correctly in the reduction parameter)."))
     }
     # Compute the ranking
     sample$ranked_groups <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
 
     color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = rlang::.data$ranked_groups, color = !!rlang::sym(color_by))) +
+    plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
         ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
         ggpubr::theme_pubr(legend = legend.position) +
         ggplot2::ggtitle(plot.title) +
@@ -80,18 +84,13 @@ do_BeeSwarmPlot <- function(sample,
 
     if (continuous_feature == TRUE){
         plot <- plot + viridis::scale_color_viridis()
-    } else {
-        if (is.null(colors.use)){
-            colors.use <- colortools::setColors("#457b9d", length(levels(sample)))
-            names(colors.use) <- unique(levels(sample))
-        }
-
-        plot <- plot + ggplot2::scale_color_manual(values = colors.use)
+    } else if (continuous_feature == FALSE) {
+        if (is.null(colors.use)){colors.use <- generate_color_scale(levels(sample))}
+        plot <- plot +
+                  ggplot2::scale_color_manual(values = colors.use) +
+                  ggpubr::rremove("legend")
     }
 
-    if (continuous_feature == FALSE){
-        plot <- plot + ggpubr::rremove("legend")
-    }
     if (remove_x_axis == TRUE){
         plot <- plot + ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
     }

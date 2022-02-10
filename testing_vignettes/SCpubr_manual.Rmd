@@ -377,6 +377,13 @@ SCpubr::do_Nebulosa_plot(sample, features = "CD14")
 
 
 # do_RankPlot()
+Instert deep explanation here.
+
+```{r, fig.cap = "SCpubr BeeSwarm plot"}
+SCpubr::do_BeeSwarmPlot(sample, feature_to_rank = "nCount_RNA", group.by = "seurat_clusters", continuous_feature = TRUE)
+```
+
+
 
 # do_DotPlot()
 

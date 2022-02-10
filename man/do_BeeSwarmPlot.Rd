@@ -9,6 +9,7 @@ do_BeeSwarmPlot(
   feature_to_rank,
   group.by,
   assay = "SCT",
+  reduction = "umap",
   continuous_feature = FALSE,
   colors.use = NULL,
   legend.position = "right",
@@ -28,11 +29,13 @@ do_BeeSwarmPlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{feature_to_rank}{Features for which the cells are going to be ranked.}
+\item{feature_to_rank}{Features for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.}
 
 \item{group.by}{Variable you want the cells to be grouped for.}
 
 \item{assay}{Seurat assay to choose.}
+
+\item{reduction}{Reduction associated to feature_to_rank if this feature is a component like PC_1, UMAP_1 or similar.}
 
 \item{continuous_feature}{Is the feature to rank and color for continuous? I.e: an enrichment score.}
 

@@ -129,7 +129,7 @@ compute_scale_limits <- function(sample, feature, assay, reduction){
 #' \dontrun{
 #' TBD
 #' }
-check_feature <- function(sample, features, reduction){
+check_feature <- function(sample, features, reduction = NULL){
   for (feature in features){
     check <- 0
     if (!(feature %in% rownames(sample))){
