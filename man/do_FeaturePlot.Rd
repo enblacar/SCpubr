@@ -6,11 +6,12 @@
 \usage{
 do_FeaturePlot(
   sample,
-  assay = "SCT",
+  assay = NULL,
   features,
-  reduction = "umap",
+  reduction = NULL,
   pt.size = 0.5,
   legend = TRUE,
+  slot = NULL,
   legend.position = "right",
   plot.title = NULL,
   ncol = NULL,
@@ -22,15 +23,17 @@ do_FeaturePlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{assay}{Assay to use.}
+\item{assay}{Assay to use. Defauls to the current assay.}
 
 \item{features}{Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
 \item{pt.size}{Point size.}
 
 \item{legend}{Whether to plot the legend or not.}
+
+\item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -42,7 +45,7 @@ do_FeaturePlot(
 
 \item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
 
-\item{dims}{Vector of 2 dimensions to use. Defaults to first and second dimensions.}
+\item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

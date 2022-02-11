@@ -352,13 +352,13 @@ However, this falls back to the same problem as with `Seurat::DimPlot` with the 
 
 ```{r, fig.cap = "SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8"}
 cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
-SCpubr::do_FeaturePlot(sample, cells.highlight = cells.plot, features = c("CD14"), plot.title = "My very important features", ncol = 2)
+SCpubr::do_FeaturePlot(sample, cells.highlight = cells.plot, features = c("CD14"), plot.title = "My very important features")
 ```
 This way, by adding the cells back and modifying the legend, we accomplish the desired effect. Furthermore, `SCpubr::do_FeaturePlot()` also accepts a vector of the identities to plot, as long as they are part of `levels(seurat_object)`. This can be achieved by using the `idents.highlight` instead.
 
-```{r, fig.cap = SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using idents.highlight}
+```{r, fig.cap = "SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using idents.highlight"}
 
-SCpubr::do_FeaturePlot(sample, idents.highlight = levels(sample)[!(levels(sample) %in% c("2", "5", "8"))], features = c("CD14"), plot.title = "My very important features", ncol = 2)
+SCpubr::do_FeaturePlot(sample, idents.highlight = levels(sample)[!(levels(sample) %in% c("2", "5", "8"))], features = c("CD14"), plot.title = "My very important features")
 ```
 
 # do_NebulosaPlot()
@@ -380,7 +380,7 @@ SCpubr::do_Nebulosa_plot(sample, features = "CD14")
 Instert deep explanation here.
 
 ```{r, fig.cap = "SCpubr BeeSwarm plot"}
-SCpubr::do_BeeSwarmPlot(sample, feature_to_rank = "nCount_RNA", group.by = "seurat_clusters", continuous_feature = TRUE)
+SCpubr::do_BeeSwarmPlot(sample, feature_to_rank = "PC_25", group.by = "seurat_clusters", continuous_feature = TRUE)
 ```
 
 

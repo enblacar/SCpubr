@@ -7,16 +7,17 @@
 do_Nebulosa_plot(
   sample,
   features,
-  slot = "data",
+  slot = NULL,
   dims = c(1, 2),
   size = 1,
-  reduction = "umap",
+  reduction = NULL,
   combine = TRUE,
   method = c("ks", "wkde"),
   joint = FALSE,
   plot.title = NULL,
   pal = "viridis",
   shape = 16,
+  legend = TRUE,
   legend.position = "right"
 )
 }
@@ -25,7 +26,7 @@ do_Nebulosa_plot(
 
 \item{features}{Features to plot density for. It can be a single one or a vector of multiple features.}
 
-\item{slot}{Slot to retrieve the data from. "data" by default.}
+\item{slot}{Slot to retrieve the data from. Defaults to "data".}
 
 \item{dims}{Vector of 2 dims to plot the data. By default, first and second from the specified reduction.}
 
@@ -44,6 +45,8 @@ do_Nebulosa_plot(
 \item{pal}{Viridis palette to use. Use the names.}
 
 \item{shape}{Shape of the geometry (ggplot number).}
+
+\item{legend}{Whether to plot the legend or not. Logical.}
 
 \item{legend.position}{Position of the legend in the plot.}
 }

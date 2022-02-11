@@ -8,8 +8,9 @@ do_BeeSwarmPlot(
   sample,
   feature_to_rank,
   group.by,
-  assay = "SCT",
-  reduction = "umap",
+  assay = NULL,
+  reduction = NULL,
+  slot = NULL,
   continuous_feature = FALSE,
   colors.use = NULL,
   legend.position = "right",
@@ -33,9 +34,11 @@ do_BeeSwarmPlot(
 
 \item{group.by}{Variable you want the cells to be grouped for.}
 
-\item{assay}{Seurat assay to choose.}
+\item{assay}{Assay to use. Defauls to the current assay.}
 
-\item{reduction}{Reduction associated to feature_to_rank if this feature is a component like PC_1, UMAP_1 or similar.}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
+
+\item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{continuous_feature}{Is the feature to rank and color for continuous? I.e: an enrichment score.}
 

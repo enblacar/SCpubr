@@ -2,7 +2,7 @@
 #'
 #'
 #' @param sample Seurat object.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
+#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param group.by Variable you want the cells to be colored for.
 #' @param split.by Split into as many plots as unique values in the variable provided.
 #' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by variable.
@@ -23,7 +23,7 @@
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.
 #' @param plot.title Title to use in the plot.
 #' @param ncol Number of columns used in the arrangement of the output plot using "split.by" parameter.
-#' @param dims Dimensions to plot, if the dimensional reduction chosen has more than 2, like PCA.
+#' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param repel Whether to repel the labels if label is set to TRUE.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
@@ -36,7 +36,7 @@
 #' TBD
 #' }
 do_DimPlot <- function(sample,
-                       reduction = "umap",
+                       reduction = NULL,
                        label = FALSE,
                        label.color = "black",
                        repel = TRUE,
@@ -63,6 +63,33 @@ do_DimPlot <- function(sample,
                        dims = c(1, 2)){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
+    # Check the reduction.
+    reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
+    # Check the dimensions.
+    dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
+    # Check logical parameters.
+    logical_list <- list("label" = label,
+                         "repel" = repel,
+                         "shuffle" = shuffle,
+                         "legend" = legend,
+                         "legend.title" = legend.title,
+                         "legend.byrow" = legend.byrow,
+                         "raster" = raster)
+    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+    # Check numeric parameters.
+    numeric_list <- list("pt.size" = pt.size,
+                         "sizes.highlight" = sizes.highlight,
+                         "legend.ncol" = legend.ncol,
+                         "legend.text.size" = legend.text.size,
+                         "legend.title.size" = legend.title.size,
+                         "legend.icon.size" = legend.icon.size)
+    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+    if(!(is.null(ncol))){check_type(parameters = list("ncol" = ncol), required_type = "numeric", test_function = is.numeric)}
+    # Check character parameters.
+    character_list <- list("legend.position" = legend.position,
+                           "plot.title" = plot.title)
+    check_type(parameters = character_list, required_type = "character", test_function = is.character)
+    if(!(is.null(cells.highlight))){check_type(parameters = list("cells.highlight" = cells.highlight), required_type = "chracter", test_function = is.character)}
 
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
@@ -72,10 +99,11 @@ do_DimPlot <- function(sample,
     # Check for colors.highlight.
     if (colors.highlight != "#0A305F" & !(is.null(colors.highlight))){check_colors(colors.highlight, parameter_name = "colors.highlight")}
     # Check for colors.use.
-    if (!is.null(colors.use)){check_colors(colors.use)}
+    if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
     # Check for colors.split.
-    if (!(is.null(colors.split)) & colors.split != "#0A305F" & colors.split != TRUE){check_colors(colors.split)}
-
+    if (!(is.null(colors.split)) & colors.split != "#0A305F" & colors.split != TRUE){check_colors(colors.split, parameter_name = "colors.split")}
+    # Check for label.color.
+    check_colors(label.color, parameter_name = "label.color")
 
     # Automatically generate color palettes when the user has not defined one.
     # If the user does not want to highlight any cells (Regular case.).

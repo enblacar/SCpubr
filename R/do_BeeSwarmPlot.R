@@ -2,11 +2,12 @@
 #'
 #'
 #' @param sample Seurat object.
-#' @param assay Seurat assay to choose.
+#' @param assay Assay to use. Defauls to the current assay.
+#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
+#' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param feature_to_rank Features for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
 #' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
 #' @param group.by Variable you want the cells to be grouped for.
-#' @param reduction Reduction associated to feature_to_rank if this feature is a component like PC_1, UMAP_1 or similar.
 #' @param colors.use Named vector with the color assignment.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -32,8 +33,9 @@
 do_BeeSwarmPlot <- function(sample,
                        feature_to_rank,
                        group.by,
-                       assay = "SCT",
-                       reduction = "umap",
+                       assay = NULL,
+                       reduction = NULL,
+                       slot = NULL,
                        continuous_feature = FALSE,
                        colors.use = NULL,
                        legend.position = "right",
@@ -50,16 +52,52 @@ do_BeeSwarmPlot <- function(sample,
                        flip = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_BeeSwarmPlot")
-    check_feature(sample = sample, features = feature_to_rank, reduction = reduction)
+    # Check the assay.
+    out <- check_and_set_assay(sample, assay = assay)
+    sample <- out[["sample"]]
+    assay <- out[["assay"]]
+    # Check the reduction.
+    reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
+    # Check logical parameters.
+    logical_list <- list("continuous_feature" = continuous_feature,
+                         "remove_x_axis" = remove_x_axis,
+                         "remove_y_axis" = remove_y_axis,
+                         "flip" = flip)
+    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+    # Check numeric parameters.
+    numeric_list <- list("axis.text.fonsize" = axis.text.fonsize,
+                         "axis.title.fonsize" = axis.title.fonsize,
+                         "plot.title.fonsize" = plot.title.fonsize,
+                         "legend.text.fontsize" = legend.text.fontsize,
+                         "legend.title.fontsize" = legend.title.fontsize)
+    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+    # Check character parameters.
+    character_list <- list("legend.position" = legend.position,
+                           "plot.title" = plot.title,
+                           "feature_to_rank" = feature_to_rank,
+                           "group.by" = group.by,
+                           "ylab" = ylab)
+    check_type(parameters = character_list, required_type = "character", test_function = is.character)
+    if(!(is.null(xlab))){check_type(parameters = list("xlab" = xlab), required_type = "chracter", test_function = is.character)}
+    if(!(is.null(slot))){check_type(parameters = list("slot" = slot), required_type = "chracter", test_function = is.character)}
+    # Check slot.
+    slot <- check_and_set_slot(slot = slot)
+
+    dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
     if (feature_to_rank %in% colnames(sample@meta.data)) {
       sample$rank_me <- sample@meta.data[, feature_to_rank]
       sample$rank <- rank(sample$rank_me)
     } else if (feature_to_rank %in% rownames(sample)){
-      sample$rank_me <- sample@assays[[assay]]@data[feature_to_rank, ]
+      sample$rank_me <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
       sample$rank <- rank(sample$rank_me)
-    } else if (feature_to_rank %in% colnames(sample@reductions[[reduction]][[]])){
-      sample$rank_me <- sample@reductions[[reduction]][[]][, feature_to_rank]
-      sample$rank <- rank(sample$rank_me)
+    } else if (feature_to_rank %in% dim_colnames){
+      for(red in Seurat::Reductions(object = sample)){
+        if (feature_to_rank %in% colnames(sample@reductions[[red]][[]])){
+          reduction <- red
+          sample$rank_me <- sample@reductions[[reduction]][[]][, feature_to_rank]
+          sample$rank <- rank(sample$rank_me)
+        }
+      }
     } else {
         stop(paste0("The following feature was not found: ", feature_to_rank, "\n Please check whether it is a metadata variable, a gene name, or the name of a dimension reduction component (and specified it correctly in the reduction parameter)."))
     }

@@ -2,8 +2,9 @@
 #'
 #'
 #' @param sample Seurat object.
-#' @param assay Assay to use.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
+#' @param assay Assay to use. Defauls to the current assay.
+#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
+#' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param features Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
 #' @param pt.size Point size.
 #' @param legend Whether to plot the legend or not.
@@ -12,7 +13,7 @@
 #' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
-#' @param dims Vector of 2 dimensions to use. Defaults to first and second dimensions.
+#' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -21,11 +22,12 @@
 #' TBD
 #' }
 do_FeaturePlot <- function(sample,
-                           assay = "SCT",
+                           assay = NULL,
                            features,
-                           reduction = "umap",
+                           reduction = NULL,
                            pt.size = 0.5,
                            legend = TRUE,
+                           slot = NULL,
                            legend.position = "right",
                            plot.title = NULL,
                            ncol = NULL,
@@ -34,10 +36,36 @@ do_FeaturePlot <- function(sample,
                            dims = c(1, 2)){
     # Checks for packages.
     check_suggests(function_name = "do_FeaturePlot")
+    # Check the assay.
+    out <- check_and_set_assay(sample, assay = assay)
+    sample <- out[["sample"]]
+    assay <- out[["assay"]]
+    # Check the reduction.
+    reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
+    # Check the dimensions.
+    dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
+    # Check logical parameters.
+    logical_list <- list("legend" = legend)
+    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+    # Check numeric parameters.
+    numeric_list <- list("pt.size" = pt.size)
+    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+    if(!(is.null(ncol))){check_type(parameters = list("ncol" = ncol), required_type = "numeric", test_function = is.numeric)}
+    # Check character parameters.
+    character_list <- list("legend.position" = legend.position,
+                           "plot.title" = plot.title,
+                           "features" = features)
+    check_type(parameters = character_list, required_type = "character", test_function = is.character)
+    if(!(is.null(cells.highlight))){check_type(parameters = list("cells.highlight" = cells.highlight), required_type = "chracter", test_function = is.character)}
+    if(!(is.null(idents.highlight))){check_type(parameters = list("idents.highlight" = idents.highlight), required_type = "chracter", test_function = is.character)}
+    if(!(is.null(slot))){check_type(parameters = list("slot" = slot), required_type = "chracter", test_function = is.character)}
+    # Check slot.
+    slot <- check_and_set_slot(slot = slot)
+
     # Regular FeaturePlot.
     if (is.null(cells.highlight) & is.null(idents.highlight)){
         # Check if the feature is actually in the object.
-        check_feature(sample = sample, features = features, reduction = reduction)
+        check_feature(sample = sample, features = features)
         p <- Seurat::FeaturePlot(sample,
                                  features,
                                  reduction = reduction,
@@ -58,7 +86,7 @@ do_FeaturePlot <- function(sample,
     # Modified FeaturePlot including only a subset of cells.
     } else {
         # Check if the feature is actually in the object.
-        check_feature(sample = sample, features = features, reduction = reduction)
+        check_feature(sample = sample, features = features)
         # Get the subset of wanted cells according to the combination of idents.highlight and cells.highlight parameters.
         if (is.null(idents.highlight) & !(is.null(cells.highlight))){
             # Only if cells.highlight parameters is used.

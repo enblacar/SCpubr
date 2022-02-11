@@ -6,7 +6,7 @@
 \usage{
 do_DimPlot(
   sample,
-  reduction = "umap",
+  reduction = NULL,
   label = FALSE,
   label.color = "black",
   repel = TRUE,
@@ -36,7 +36,7 @@ do_DimPlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
+\item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
 \item{label}{Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
@@ -84,7 +84,7 @@ do_DimPlot(
 
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
-\item{dims}{Dimensions to plot, if the dimensional reduction chosen has more than 2, like PCA.}
+\item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 }
 \value{
 A ggplot2 object containing a DimPlot.
