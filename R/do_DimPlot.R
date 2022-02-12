@@ -27,6 +27,7 @@
 #' @param repel Whether to repel the labels if label is set to TRUE.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
+#' @param ... Other parameters for \link[Seurat]{DimPlot}.
 #'
 #' @return  A ggplot2 object containing a DimPlot.
 #' @export
@@ -60,7 +61,8 @@ do_DimPlot <- function(sample,
                        plot.title = "",
                        ncol = NULL,
                        raster = FALSE,
-                       dims = c(1, 2)){
+                       dims = c(1, 2),
+                       ...){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
     # Check the reduction.
@@ -82,14 +84,14 @@ do_DimPlot <- function(sample,
                          "legend.ncol" = legend.ncol,
                          "legend.text.size" = legend.text.size,
                          "legend.title.size" = legend.title.size,
-                         "legend.icon.size" = legend.icon.size)
+                         "legend.icon.size" = legend.icon.size,
+                         "ncol" = ncol)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
-    if(!(is.null(ncol))){check_type(parameters = list("ncol" = ncol), required_type = "numeric", test_function = is.numeric)}
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
-                           "plot.title" = plot.title)
+                           "plot.title" = plot.title,
+                           "cells.highlight" = cells.highlight)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-    if(!(is.null(cells.highlight))){check_type(parameters = list("cells.highlight" = cells.highlight), required_type = "chracter", test_function = is.character)}
 
     # Checks to ensure proper function.
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
@@ -135,7 +137,8 @@ do_DimPlot <- function(sample,
                                   group.by = group.by,
                                   cols = colors.use,
                                   raster = raster,
-                                  ncol = ncol) +
+                                  ncol = ncol,
+                                  ...) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::ggtitle(plot.title) +
             ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
@@ -173,7 +176,8 @@ do_DimPlot <- function(sample,
                                       sizes.highlight = sizes.highlight,
                                       pt.size = pt.size,
                                       raster = raster,
-                                      ncol = ncol) +
+                                      ncol = ncol,
+                                      ...) +
                 ggplot2::ggtitle(iteration) +
                 ggpubr::theme_pubr(legend = legend.position) +
                 ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
@@ -200,7 +204,8 @@ do_DimPlot <- function(sample,
                                   dims = dims,
                                   pt.size = pt.size,
                                   raster = raster,
-                                  ncol = ncol) +
+                                  ncol = ncol,
+                                  ...) +
             ggplot2::ggtitle(plot.title) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),

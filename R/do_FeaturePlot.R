@@ -7,6 +7,8 @@
 #' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param features Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
 #' @param pt.size Point size.
+#' @param split.by Split the plot in as many unique values stored in the provided metadata column.
+#' @param split.by.idents Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title Title for the plot.
@@ -27,17 +29,20 @@ do_FeaturePlot <- function(sample,
                            reduction = NULL,
                            pt.size = 0.5,
                            legend = TRUE,
+                           split.by = NULL,
+                           split.by.idents = NULL,
                            slot = NULL,
                            legend.position = "right",
                            plot.title = NULL,
                            ncol = NULL,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
-                           dims = c(1, 2)){
+                           dims = c(1, 2),
+                           ...){
     # Checks for packages.
     check_suggests(function_name = "do_FeaturePlot")
     # Check the assay.
-    out <- check_and_set_assay(sample, assay = assay)
+    out <- check_and_set_assay(sample = sample, assay = assay)
     sample <- out[["sample"]]
     assay <- out[["assay"]]
     # Check the reduction.
@@ -48,22 +53,30 @@ do_FeaturePlot <- function(sample,
     logical_list <- list("legend" = legend)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
-    numeric_list <- list("pt.size" = pt.size)
+    numeric_list <- list("pt.size" = pt.size,
+                         "ncol" = ncol)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
-    if(!(is.null(ncol))){check_type(parameters = list("ncol" = ncol), required_type = "numeric", test_function = is.numeric)}
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
+                           "features" = features,
+                           "cells.highlight" = cells.highlight,
+                           "idents.highlight" = idents.highlight,
+                           "slot" = slot,
+                           "split.by" = split.by,
                            "plot.title" = plot.title,
-                           "features" = features)
+                           "split.by.idents" = split.by.idents)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-    if(!(is.null(cells.highlight))){check_type(parameters = list("cells.highlight" = cells.highlight), required_type = "chracter", test_function = is.character)}
-    if(!(is.null(idents.highlight))){check_type(parameters = list("idents.highlight" = idents.highlight), required_type = "chracter", test_function = is.character)}
-    if(!(is.null(slot))){check_type(parameters = list("slot" = slot), required_type = "chracter", test_function = is.character)}
+
     # Check slot.
     slot <- check_and_set_slot(slot = slot)
 
+    # Check split.by.
+    if (!(split.by %in% colnames(sample@meta.data))){
+      stop("Could not find '", split.by, "' in metadata columns.")
+    }
     # Regular FeaturePlot.
-    if (is.null(cells.highlight) & is.null(idents.highlight)){
+    check <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
+    if (check){
         # Check if the feature is actually in the object.
         check_feature(sample = sample, features = features)
         p <- Seurat::FeaturePlot(sample,
@@ -72,7 +85,8 @@ do_FeaturePlot <- function(sample,
                                  order = T,
                                  dims = dims,
                                  pt.size = pt.size,
-                                 ncol = ncol) &
+                                 ncol = ncol,
+                                 ...) &
             Seurat::NoAxes() &
             viridis::scale_color_viridis(na.value = "grey75") &
             ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
@@ -85,8 +99,8 @@ do_FeaturePlot <- function(sample,
 
     # Modified FeaturePlot including only a subset of cells.
     } else {
-        # Check if the feature is actually in the object.
-        check_feature(sample = sample, features = features)
+      # Check if the feature is actually in the object.
+      dim_colnames <- check_feature(sample = sample, features = features, dump_reduction_names = TRUE)
         # Get the subset of wanted cells according to the combination of idents.highlight and cells.highlight parameters.
         if (is.null(idents.highlight) & !(is.null(cells.highlight))){
             # Only if cells.highlight parameters is used.
@@ -103,28 +117,46 @@ do_FeaturePlot <- function(sample,
             cells.1 <- cells.highlight
             cells.2 <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% idents.highlight])
             cells.use <- unique(c(cells.1, cells.2))
+        } else if (!(is.null(split.by))){
+            if (is.null(split.by.idents)){
+              cells.use <- colnames(sample)
+            } else {
+              if (sum(duplicated(split.by.idents)) != 0){
+                message("Found and removed duplicated values in split.by.idents.")
+                split.by.idents <- split.by.idents[!duplicated(split.by.idents)]
+              }
+              cells.use <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% split.by.idents])
+            }
         }
         # Plots are generated independently if more than one feature is provided.
         list.plots <- list()
+        count_iteration <- 0
         for (feature in features){
             # A "dummy" metadta column is generated using the values of the selected feature.
-            # If the feature is in the metadata columns.
-            if (feature %in% colnames(sample[[]])){
-                sample$dummy <- sample[[]][, feature]
-            # If the feature is a gene in the current active assay.
-            } else {
-                sample$dummy <- sample@assays[[assay]]@data[feature, ]
+            if (feature %in% colnames(sample@meta.data)) {
+              sample$dummy <- sample@meta.data[, feature]
+            } else if (feature %in% rownames(sample)){
+              sample$dummy <- Seurat::GetAssayData(object = sample, slot = slot)[feature, ]
+            } else if (feature %in% dim_colnames){
+              for(red in Seurat::Reductions(object = sample)){
+                if (feature %in% colnames(sample@reductions[[red]][[]])){
+                  reduction <- red
+                  sample$dummy <- sample@reductions[[reduction]][[]][, feature]
+                }
+              }
             }
             # Assign NAs to the values corresponding to the cells  not selected.
             sample$dummy[!(names(sample$dummy) %in% cells.use)] <- NA
 
-            p.loop <- Seurat::FeaturePlot(sample,
-                                          "dummy",
-                                          reduction = reduction,
-                                          order = T,
-                                          dims = dims,
-                                          pt.size = pt.size) +
-                # This is actually a "fake cell" with alpha 0 (invisible), which helps adding a new legend label for the grayed out not selected (NS) cells.
+            if (is.null(split.by)){
+              p.loop <- Seurat::FeaturePlot(sample,
+                                            "dummy",
+                                            reduction = reduction,
+                                            order = T,
+                                            dims = dims,
+                                            pt.size = pt.size,
+                                            ...) +
+                # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
                 ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
                                                            y = min(Seurat::Embeddings(sample, reduction)[, 2]),
                                                            fill = "NS"),
@@ -138,16 +170,77 @@ do_FeaturePlot <- function(sample,
                 # Override aesthetic of the legend, providing the desired gray color.
                 ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
                                                                                      alpha = 1)))
+            } else {
+              # Recover all metadata.
+              data <- sample[[]]
+              # Retrieve the metadata column belonging to the split.by parameter.
+              data.use <- data[, split.by, drop = F]
+              # Retrieve the plotting order, keep factor levels if the column is a factor.
+              if (is.null(split.by.idents)){
+                plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+              } else {
+                plot_order <- sort(split.by.idents)
+              }
+              list.plots.split.by <- list()
+              count_plot <- 0
+              count_iteration <- count_iteration + 1
+              if (legend.position != "right"){"Using split.by parameter will force the legend of each individual plot to the right."}
+              limits <- c(min(sample$dummy), max(sample$dummy))
+              for (iteration in plot_order){
+                count_plot <- count_plot + 1
+                # Create a second dummy variable.
+                sample$dummy2 <- sample$dummy
+                cells.iteration <- sample[[]][, split.by] == iteration
+                sample$dummy2[!(cells.iteration)] <- NA
+                p.loop <- Seurat::FeaturePlot(sample,
+                                              "dummy2",
+                                              reduction = reduction,
+                                              order = T,
+                                              dims = dims,
+                                              pt.size = pt.size,
+                                              ...) +
+                  # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
+                  ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
+                                                             y = min(Seurat::Embeddings(sample, reduction)[, 2]),
+                                                             fill = "NS"),
+                                      alpha = 0) +
+                  Seurat::NoAxes() +
+                  ggplot2::scale_color_viridis_c(limits = limits, na.value = "grey75") +
+                  ggplot2::ggtitle(feature) +
+                  ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
+                  ggplot2::ylab(ifelse(count_plot == 1, feature, "")) +
+                  ggplot2::theme(plot.title = ggplot2::element_text(size = 12, face = "bold", hjust = 0.5),
+                                 axis.title.y = ggplot2::element_text(size = 12, face = "bold", vjust = 0.5),
+                                 legend.text = ggplot2::element_text(size = 10, face = "bold"),
+                                 legend.position = ifelse(legend.position != "right", "right", legend.position)) +
+                  # Override aesthetic of the legend, providing the desired gray color.
+                  ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
+                                                                                       alpha = 1)))
+                # Only keep the legend of the last plot, as we are setting the same color scale.
+                if (count_plot != length(plot_order)) {p.loop <- p.loop + Seurat::NoLegend()}
+
+                list.plots.split.by[[iteration]] <- p.loop
+              }
+              # Assemble individual plots as a patch.
+              p.loop <- patchwork::wrap_plots(list.plots.split.by, ncol = length(plot_order))
+            }
+
             # Patch for diffusion maps.
             if (reduction == "diffusion"){
                 # Add "DC" labels.
-                p.loop <- p.loop + ggplot2::xlab(paste0("DC_", dims[1])) + ggplot2::ylab(paste0("DC_", dims[2]))
+                p.loop <- p.loop & ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
             }
             # Add the plot to the list.
             list.plots[[feature]] <- p.loop
         }
         # Generate the final plot with patchwork and use the "ncol" parameter value for the number of colums.
-        p <- patchwork::wrap_plots(list.plots, ncol = ncol)
+        if (is.null(split.by)){
+          p <- patchwork::wrap_plots(list.plots, ncol = ncol)
+        } else {
+          if (!(is.null(ncol))){message("Ignoring 'ncol' parameter as split.by parameter is used. Number of columns equal to each unique value in split.by.")}
+          p <- patchwork::wrap_plots(list.plots, ncol = 1)
+        }
+
 
         # Patch for the case in which features only contains one element and a custom plot title is provided.
         # Basically, as this is a "patchwork" object, the way the title has to be set is different than using "ggplot2::ggtitle()".
@@ -155,9 +248,6 @@ do_FeaturePlot <- function(sample,
             p[[1]]$labels$title <- plot.title
             p <- p[[1]]
         }
-        # Remove the dummy variable.
-        sample$dummy <- NULL
-
     }
 
     # Add custom title.

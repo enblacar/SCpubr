@@ -11,13 +11,16 @@ do_FeaturePlot(
   reduction = NULL,
   pt.size = 0.5,
   legend = TRUE,
+  split.by = NULL,
+  split.by.idents = NULL,
   slot = NULL,
   legend.position = "right",
   plot.title = NULL,
   ncol = NULL,
   cells.highlight = NULL,
   idents.highlight = NULL,
-  dims = c(1, 2)
+  dims = c(1, 2),
+  ...
 )
 }
 \arguments{
@@ -32,6 +35,10 @@ do_FeaturePlot(
 \item{pt.size}{Point size.}
 
 \item{legend}{Whether to plot the legend or not.}
+
+\item{split.by}{Split the plot in as many unique values stored in the provided metadata column.}
+
+\item{split.by.idents}{Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.}
 
 \item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
 

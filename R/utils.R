@@ -13,7 +13,7 @@ check_suggests <- function(function_name){
                    "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "utils", "rlang"),
                    "do_DimPlot" = c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "utils", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
@@ -299,7 +299,7 @@ check_and_set_assay <- function(sample, assay){
 check_type <- function(parameters, required_type, test_function){
   for(parameter_name in names(parameters)){
     parameter <- parameters[[parameter_name]]
-    if (!(test_function(parameter))){
+    if (!(is.null(parameter)) & !(test_function(parameter))){
       stop("Parameter ", parameter_name, " needs to be a ", required_type, ".")
     }
   }

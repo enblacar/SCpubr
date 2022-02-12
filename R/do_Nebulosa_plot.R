@@ -56,10 +56,10 @@ do_Nebulosa_plot <- function(sample,
   character_list <- list("legend.position" = legend.position,
                          "features" = features,
                          "pal" = pal,
-                         "method" = method)
+                         "method" = method,
+                         "plot.title" = plot.title,
+                         "slot" = slot)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-  if(!(is.null(plot.title))){check_type(parameters = list("plot.title" = plot.title), required_type = "character", test_function = is.character)}
-  if(!(is.null(slot))){check_type(parameters = list("slot" = slot), required_type = "chracter", test_function = is.character)}
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
 

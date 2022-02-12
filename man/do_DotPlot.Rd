@@ -11,19 +11,20 @@ do_DotPlot(
   group.by = NULL,
   split.by = NULL,
   legend = TRUE,
-  dot.scale = 10,
-  cols = c("lightgrey", "#014f86"),
-  legend.position = "bottom",
+  dot.scale = 6,
+  cols = c("grey75", "#014f86"),
+  legend.position = "right",
   plot.title = "",
   xlab = "",
   ylab = "",
-  axis.text.fonsize = 28,
-  axis.title.fonsize = 28,
-  plot.title.fonsize = 30,
-  legend.text.fontsize = 20,
-  legend.title.fontsize = 24,
+  axis.text.fonsize = 16,
+  axis.title.fonsize = 16,
+  plot.title.fonsize = 18,
+  legend.text.fontsize = 16,
+  legend.title.fontsize = 16,
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
+  cluster.idents = TRUE,
   flip = FALSE,
   ...
 )
@@ -66,6 +67,8 @@ do_DotPlot(
 \item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
 
 \item{remove_y_axis}{Remove Y axis labels and ticks from the plot.}
+
+\item{cluster.idents}{Logical. Whether to cluster the identities based on the expression of the features.}
 
 \item{flip}{Whether to flip the axis.}
 

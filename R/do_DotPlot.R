@@ -81,10 +81,10 @@ do_DotPlot <- function(sample,
                            "features" = features,
                            "xlab" = xlab,
                            "ylab" = ylab,
-                           "cols" = cols)
+                           "cols" = cols,
+                           "group.by" = group.by,
+                           "split.by" = split.by)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-    if(!(is.null(group.by))){check_type(parameters = list("group.by" = group.by), required_type = "chracter", test_function = is.character)}
-    if(!(is.null(split.by))){check_type(parameters = list("split.by" = split.by), required_type = "chracter", test_function = is.character)}
 
     # Check the features.
     check_feature(sample = sample, features = features)

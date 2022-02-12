@@ -76,10 +76,10 @@ do_BeeSwarmPlot <- function(sample,
                            "plot.title" = plot.title,
                            "feature_to_rank" = feature_to_rank,
                            "group.by" = group.by,
-                           "ylab" = ylab)
+                           "ylab" = ylab,
+                           "xlab" = xlab,
+                           "slot" = slot)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-    if(!(is.null(xlab))){check_type(parameters = list("xlab" = xlab), required_type = "chracter", test_function = is.character)}
-    if(!(is.null(slot))){check_type(parameters = list("slot" = slot), required_type = "chracter", test_function = is.character)}
     # Check slot.
     slot <- check_and_set_slot(slot = slot)
 
