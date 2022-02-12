@@ -387,6 +387,12 @@ SCpubr::do_BeeSwarmPlot(sample, feature_to_rank = "PC_25", group.by = "seurat_cl
 
 # do_DotPlot()
 
+
+
+```{r, fig.cap = "SCpubr DotPlot"}
+SCpubr::do_DotPlot(sample, features = "CD14")
+```
+
 # do_VlnPlot()
 
 # do_BarPlot()

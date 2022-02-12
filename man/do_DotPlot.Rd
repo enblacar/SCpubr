@@ -7,6 +7,7 @@
 do_DotPlot(
   sample,
   features,
+  assay = NULL,
   group.by = NULL,
   split.by = NULL,
   legend = TRUE,
@@ -23,13 +24,16 @@ do_DotPlot(
   legend.title.fontsize = 24,
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
-  flip = FALSE
+  flip = FALSE,
+  ...
 )
 }
 \arguments{
 \item{sample}{Seurat object.}
 
 \item{features}{Features to represent.}
+
+\item{assay}{Assay to use. Defaults to the current assay.}
 
 \item{group.by}{Variable you want the cells to be colored for.}
 
@@ -64,6 +68,8 @@ do_DotPlot(
 \item{remove_y_axis}{Remove Y axis labels and ticks from the plot.}
 
 \item{flip}{Whether to flip the axis.}
+
+\item{...}{Other arguments provided to \link[Seurat]{DotPlot}.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.
