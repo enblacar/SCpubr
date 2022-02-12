@@ -53,6 +53,8 @@ do_FeaturePlot(
 \item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
 
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
+
+\item{...}{Extra parameters used in \link[Seurat]{FeaturePlot}.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

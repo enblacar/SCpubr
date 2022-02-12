@@ -16,6 +16,7 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
+#' @param ... Extra parameters used in \link[Seurat]{FeaturePlot}.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -71,9 +72,12 @@ do_FeaturePlot <- function(sample,
     slot <- check_and_set_slot(slot = slot)
 
     # Check split.by.
-    if (!(split.by %in% colnames(sample@meta.data))){
-      stop("Could not find '", split.by, "' in metadata columns.")
+    if (!(is.null(split.by))){
+      if (!(split.by %in% colnames(sample@meta.data))){
+        stop("Could not find '", split.by, "' in metadata columns.")
+      }
     }
+
     # Regular FeaturePlot.
     check <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
     if (check){
@@ -140,8 +144,8 @@ do_FeaturePlot <- function(sample,
             } else if (feature %in% dim_colnames){
               for(red in Seurat::Reductions(object = sample)){
                 if (feature %in% colnames(sample@reductions[[red]][[]])){
-                  reduction <- red
-                  sample$dummy <- sample@reductions[[reduction]][[]][, feature]
+                  red.feature <- red
+                  sample$dummy <- sample@reductions[[red.feature]][[]][, feature]
                 }
               }
             }
@@ -166,7 +170,8 @@ do_FeaturePlot <- function(sample,
                 ggplot2::ggtitle(feature) +
                 ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
                                legend.text = ggplot2::element_text(size = 10, face = "bold"),
-                               legend.position = legend.position) +
+                               legend.position = legend.position,
+                               legend.spacing = ggplot2::unit(0.01, "cm")) +
                 # Override aesthetic of the legend, providing the desired gray color.
                 ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
                                                                                      alpha = 1)))
@@ -212,7 +217,8 @@ do_FeaturePlot <- function(sample,
                   ggplot2::theme(plot.title = ggplot2::element_text(size = 12, face = "bold", hjust = 0.5),
                                  axis.title.y = ggplot2::element_text(size = 12, face = "bold", vjust = 0.5),
                                  legend.text = ggplot2::element_text(size = 10, face = "bold"),
-                                 legend.position = ifelse(legend.position != "right", "right", legend.position)) +
+                                 legend.position = ifelse(legend.position != "right", "right", legend.position),
+                                 legend.spacing = ggplot2::unit(0.01, "cm")) +
                   # Override aesthetic of the legend, providing the desired gray color.
                   ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
                                                                                        alpha = 1)))
