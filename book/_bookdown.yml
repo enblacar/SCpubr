@@ -1,5 +1,5 @@
 delete_merged_file: true
-output_dir: "docs"
+output_dir: "../docs"
 book_filename: "SCPubr_reference_guide.html"
 language:
   ui:
