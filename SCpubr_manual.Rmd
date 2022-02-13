@@ -1,41 +1,27 @@
---- 
-title: "SCpubr - Complete reference"
-author: "Enrique Blanco Carmona"
-date: "`r Sys.Date()`"
-site: bookdown::bookdown_site
-documentclass: book
-bibliography: [book.bib, packages.bib]
-# url: your book url like https://bookdown.org/yihui/bookdown
-# cover-image: path to the social sharing image like images/cover.jpg
-description: |
-  General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments.
-link-citations: yes
-github-repo: enblacar/SCpubr
 ---
-# Aim of the package
-This package aims to provide a streamlined way of generating publication ready figures for known single-cell visualizations. As subjective as the term "aesthetically pleasant" can be, this a set of theme modifications implemented across different plot types. This package also serves as a personal project, with future prospects of growth.
+title: "Complete reference guide to SCpubr"
+shorttitle: "SCpubr"
+author: "Enrique Blanco Carmona"
+affiliation: "e.blancocarmona@kitz-heidelberg.de"
+package: SCpubr
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
+output:
+    bookdown::gitbook:
+      split_by: none
+      toc_collapsed: true
+      toc_depth: 1
+      fig_width: 8
+      fig_height: 8
+      fig_caption: true
+      config:
+        sharing: null
 
-<!--chapter:end:index.Rmd-->
-
-# Installation guide
-TBD
-
-## A section
-
-
-
-## Another section
-
-<!--chapter:end:01-Installation-guide.Rmd-->
-
-# Dataset
+vignette: >
+  %\VignetteIndexEntry{Complete reference guide to SCpubr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
+---
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -45,11 +31,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Aim of this package
+This package aims to provide a streamlined way of generating publication ready figures for known single-cell visualizations. As subjective as the term "aesthetically pleasant" can be, this a set of theme modifications implemented across different plot types. This package also serves as a personal project, with future prospects of growth.
+
+# Installation guide
+
+# Dataset used
+
 Through this vignette, a dataset containing 10K raw cells is used, which can be downloaded [here](https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-ht-v3-1-chromium-x-3-1-high).
 
 The following code is used to generate a Seurat object ready for plotting.
 
-```{r, eval = F}
+```{r Seurat object generation, eval = F}
 counts_path <- "path_to_count_matrix"
 
 # Path count matrix.
@@ -76,23 +69,20 @@ sample <- Seurat::FindClusters(sample, resolution = 0.2)
 ```
 
 
-
-
-<!--chapter:end:02-Dataset.Rmd-->
-
-# DimPlots
-
-
+# do_DimPlot()
+## Regular DimPlot
+### Build up
 ```{r echo = F}
 sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
 ```
-DimPlots are, probably, one of the most iconic visualizations from `Seurat`. It allows the user to visualize the cells in a dimensional reduction embedding such as `PCA` or `UMAP`. The cells can be, then, colored by any desired groups. In short, this visualization allows the user to plot **any kind of categorical data** onto the cells in the dimesional reduction embedding. This is achieved by using `Seurat::DimPlot()` funtion:
+This function aims to enhance Seurat's `DimPlot()` output.
 
+This is Seurat's default output for `DimPlot()`. 
 ```{r, fig.cap = "Default DimPlot."}
 Seurat::DimPlot(sample)
 ```
 
-Overall, this is a pretty neat visualization, but there are quite some changes that one would like to implement. For instance, shuffling the cells so that there is no overlap of cells just due to the cluster names.
+As it looks, there is nothing wrong, but there are quite some changes that one would like to implement. For instance, shuffling the cells so that there is no overlap of cells just due to the cluster names.
 
 ```{r, fig.cap = "DimPlot with the cells shuffled."}
 Seurat::DimPlot(sample, shuffle = T)
@@ -210,7 +200,7 @@ Seurat::DimPlot(sample, shuffle = T, pt.size = 0.5, cols = color_scale) +
 
 As of now, this plot looks much better and polished than the default counterpart. This, is the setting ground for `SCpubr::do_DimPlot()`. 
 
-## Regular DimPlots
+### Functionalities
 
 This is the default output from `SCpubr::do_DimPlot()`. 
 
@@ -233,9 +223,7 @@ SCpubr::do_DimPlot(sample,
                    legend.ncol = 4)
 ```
 
-
-## Highlighting cells
-
+## Highlighting cells.
 One of the nice features of `Seurat::DimPlot()` is the possibility of highlighting a certain group of cells in the DimPlot. This is achieved by using the `cells.highligh` parameter. This is how the default plot looks like.
 
 ```{r, fig.cap = "Seurat DimPlot highlighting cells."}
@@ -260,8 +248,7 @@ cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7
 SCpubr::do_DimPlot(sample, cells.highlight = cells.use, sizes.highlight = 2)
 ```
 
-## Splitting by a category
-
+## Splitting by a category.
 Another useful paramter of `Seurat::DimPlot` is `split.by`, which allows you to split your DimPlot into multiple panels, each one containing a different unique value of the metadata variable you have provided to the argument. One can understand this as using the `group.by` parameter and then splitting the resulting DimPlot into different panels. In this example, we are going to use the different clusters as an example This is how it looks by default:
 
 ```{r, fig.cap = "Seurat DimPlot using split.by.", fig.width=10, fig.height=5}
@@ -295,16 +282,33 @@ Furthermore, one might also want to color each cluster by the original color. Th
 SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, colors.split = TRUE)
 ```
 
+```{r, fig.cap = "SCpubr DimPlot using split.by using custom list of colors", fig.width=10, fig.height=5}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+colors.use <- RColorBrewer::brewer.pal(length(unique(sample$seurat_clusters)), "Paired")
+names(colors.use) <- levels(sample$seurat_clusters)
+SCpubr::do_DimPlot(sample, split.by = "seurat_clusters", ncol = 5, legend = F, colors.split = colors.use)
+```
+
+## Adding labels to the cluster instead of using the legend.
+In some cases, what we want is an indication of which cluster is what, right on top of it. That, sometimes, makes visualizations clearer. It has several downsides, the most important being that the label is located around the highest density point of the cells in the cluster. If the clusters are scattered across the UMAP, this might result in "errant" labels, misplaced. Also, when one has really long cluster names or a lot of clusters, the plot might quickly become crowded. This plot is accomplished by using `label = T` to label the clusters, `repel = T` to avoid overlapping of labels and `Seurat::NoLegend()` to remove the legend.
+
+```{r, fig.cap = "Seurat DimPlot using labels."}
+# Using ncol = 5 to maintain some of the proportions.
+# Using legend = F to remove unwanted repeated legends.
+Seurat::DimPlot(sample, label = T, repel = T) + Seurat::NoLegend()
+```
+This is, in turn, how `SCpubr` returns this kind of plot. Note that `repel = T` is set by default.
+
+```{r, fig.cap = "Seurat DimPlot using labels."}
+SCpubr::do_DimPlot(sample, label = T, legend = F)
+```
 
 
+# do_FeaturePlot()
+## Build up
 
-
-
-
-<!--chapter:end:03-DimPlots.Rmd-->
-
-# FeaturePlots 
-Another broadly used function in `Seurat` is `Seurat::FeaturePlot()`. It is basically the counterpart of `Seurat::DimPlot()` which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs:
+Another broadly used function in `Seurat` is `Seurat::FeaturePlot()`. It is a very similar function to `Seurat::DimPlot()` which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs.
 
 ```{r, fig.cap= "Seurat FeaturePlot"}
 Seurat::FeaturePlot(sample, features = "nCount_RNA")
@@ -391,9 +395,7 @@ With `SCpubr::FeaturePlot()` we can even subset the previous plot to any identit
 SCpubr::do_FeaturePlot(sample, features = c("LYN", "nCount_RNA", "PC_1"), split.by = "seurat_clusters", split.by.idents = c("2", "5", "7"))
 ```
 
-<!--chapter:end:04-FeaturePlots.Rmd-->
-
-# NebulosaPlots
+# do_NebulosaPlot()
 
 This plot comes straight from the [Nebulosa package](http://bioconductor.org/packages/release/bioc/html/Nebulosa.html). For more information, here is their [vignette](http://bioconductor.org/packages/release/bioc/vignettes/Nebulosa/inst/doc/nebulosa_seurat.html). In short, it computes a "density" of whether the surrounding cells (in the UMAP embedding) also express the variable that you provide to the function, same variables that one could feed to `Seurat::FeaturePlot()`. This is how their default plot looks like:
 
@@ -403,14 +405,38 @@ Nebulosa::plot_density(sample, "CD14")
 
 This way, not only we do know which clusters are enriched in CD14, we also know the regions of it with the hightest density of cells expressing it. Minor modifications, on the line of the rest of plots, are applied in `SCpubr`:
 ```{r, fig.cap = "SCpubr Nebulosa plot."}
-SCpubr::do_NebulosaPlot(sample, features = "CD14")
+SCpubr::do_Nebulosa_plot(sample, features = "CD14")
 ```
 
-Then, this type visualization becomes a natural partner to `Seurat::FeaturePlot()' as not only we are able to visualize the expression of a variable, but also query the density of the surrounding cells. Here is an example:
 
-```{r, fig.cap = "SCpubr FeaturePlot and NebulosaPlot.", fig.height= 4, fig.width=8}
-SCpubr::do_FeaturePlot(sample, features = "CD14") | SCpubr::do_NebulosaPlot(sample, features = "CD14")
+
+# do_BeeSwarmPlot()
+Instert deep explanation here.
+
+```{r, fig.cap = "SCpubr BeeSwarm plot"}
+SCpubr::do_BeeSwarmPlot(sample, feature_to_rank = "PC_25", group.by = "seurat_clusters", continuous_feature = TRUE)
 ```
 
-<!--chapter:end:05-NebulosaPlots.Rmd-->
 
+
+# do_DotPlot()
+
+
+
+```{r, fig.cap = "SCpubr DotPlot"}
+SCpubr::do_DotPlot(sample, features = "CD14")
+```
+
+# do_VlnPlot()
+
+# do_BarPlot()
+
+# do_ButterflyPlot()
+
+# do_PTEA()
+
+
+
+```{r setup}
+library(SCpubr)
+```

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 FeaturePlots | SCpubr - Complete reference</title>
+  <title>Chapter 5 Feature plots | SCpubr - Complete reference</title>
   <meta name="description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 FeaturePlots | SCpubr - Complete reference" />
+  <meta property="og:title" content="Chapter 5 Feature plots | SCpubr - Complete reference" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="enblacar/SCpubr" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 FeaturePlots | SCpubr - Complete reference" />
+  <meta name="twitter:title" content="Chapter 5 Feature plots | SCpubr - Complete reference" />
   
   <meta name="twitter:description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="dimplots.html"/>
-<link rel="next" href="nebulosaplots.html"/>
+<link rel="prev" href="dim-plots.html"/>
+<link rel="next" href="nebulosa-plots.html"/>
 <script src="assets/header-attrs-2.11/header-attrs.js"></script>
 <script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -134,8 +134,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">SCpubr - Complete reference guide</a></li>
-<li><a href="https://github.com/enblacar/SCpubr" target="blank">Github</a></li>
+<li><a href="./"><b>SCpubr - Complete reference guide</b></a></li>
+<li><a href="https://github.com/enblacar/SCpubr" target="blank"><b>Link to Github repository</b></a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
@@ -145,19 +145,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
-<li class="chapter" data-level="4" data-path="dimplots.html"><a href="dimplots.html"><i class="fa fa-check"></i><b>4</b> DimPlots</a>
+<li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="dimplots.html"><a href="dimplots.html#regular-dimplots"><i class="fa fa-check"></i><b>4.1</b> Regular DimPlots</a></li>
-<li class="chapter" data-level="4.2" data-path="dimplots.html"><a href="dimplots.html#highlighting-cells"><i class="fa fa-check"></i><b>4.2</b> Highlighting cells</a></li>
-<li class="chapter" data-level="4.3" data-path="dimplots.html"><a href="dimplots.html#splitting-by-a-category"><i class="fa fa-check"></i><b>4.3</b> Splitting by a category</a></li>
+<li class="chapter" data-level="4.1" data-path="dim-plots.html"><a href="dim-plots.html#regular-dimplots"><i class="fa fa-check"></i><b>4.1</b> Regular DimPlots</a></li>
+<li class="chapter" data-level="4.2" data-path="dim-plots.html"><a href="dim-plots.html#highlighting-cells"><i class="fa fa-check"></i><b>4.2</b> Highlighting cells</a></li>
+<li class="chapter" data-level="4.3" data-path="dim-plots.html"><a href="dim-plots.html#splitting-by-a-category"><i class="fa fa-check"></i><b>4.3</b> Splitting by a category</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="featureplots.html"><a href="featureplots.html"><i class="fa fa-check"></i><b>5</b> FeaturePlots</a>
+<li class="chapter" data-level="5" data-path="feature-plots.html"><a href="feature-plots.html"><i class="fa fa-check"></i><b>5</b> Feature plots</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="featureplots.html"><a href="featureplots.html#multiple-features"><i class="fa fa-check"></i><b>5.1</b> Multiple features</a></li>
-<li class="chapter" data-level="5.2" data-path="featureplots.html"><a href="featureplots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>5.2</b> Working with subsets of cells</a></li>
-<li class="chapter" data-level="5.3" data-path="featureplots.html"><a href="featureplots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>5.3</b> Splitting the FeaturePlot by a variable</a></li>
+<li class="chapter" data-level="5.1" data-path="feature-plots.html"><a href="feature-plots.html#multiple-features"><i class="fa fa-check"></i><b>5.1</b> Multiple features</a></li>
+<li class="chapter" data-level="5.2" data-path="feature-plots.html"><a href="feature-plots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>5.2</b> Working with subsets of cells</a></li>
+<li class="chapter" data-level="5.3" data-path="feature-plots.html"><a href="feature-plots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>5.3</b> Splitting the FeaturePlot by a variable</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="nebulosaplots.html"><a href="nebulosaplots.html"><i class="fa fa-check"></i><b>6</b> NebulosaPlots</a></li>
+<li class="chapter" data-level="6" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>6</b> Nebulosa plots</a></li>
+<li class="chapter" data-level="7" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html"><i class="fa fa-check"></i><b>7</b> Bee Swarm plots</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-categorical-variables"><i class="fa fa-check"></i><b>7.1</b> Using categorical variables</a></li>
+<li class="chapter" data-level="7.2" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-continuous-variables"><i class="fa fa-check"></i><b>7.2</b> Using continuous variables</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -178,10 +183,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="featureplots" class="section level1" number="5">
-<h1><span class="header-section-number">Chapter 5</span> FeaturePlots</h1>
+<div id="feature-plots" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Feature plots</h1>
 <p>Another broadly used function in <code>Seurat</code> is <code>Seurat::FeaturePlot()</code>. It is basically the counterpart of <code>Seurat::DimPlot()</code> which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="featureplots.html#cb23-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="feature-plots.html#cb23-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-26"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-26-1.png" alt="Seurat FeaturePlot" width="768" />
 <p class="caption">
@@ -189,9 +194,9 @@ Figure 5.1: Seurat FeaturePlot
 </p>
 </div>
 <p>First thing that stands out, it that the color scale could be changed to one with two very opposite ends, so that identifying regions with low and high UMIs become an easier task. Apart from that, we want apply the same treatment as in <code>do_DimPlot()</code> section.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="featureplots.html#cb24-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb24-2"><a href="featureplots.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span> </span>
-<span id="cb24-3"><a href="featureplots.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  viridis<span class="sc">::</span><span class="fu">scale_color_viridis</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="feature-plots.html#cb24-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb24-2"><a href="feature-plots.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span> </span>
+<span id="cb24-3"><a href="feature-plots.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  viridis<span class="sc">::</span><span class="fu">scale_color_viridis</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-27-1.png" alt="Seurat FeaturePlot, with new color scale and general modifications" width="768" />
 <p class="caption">
@@ -199,7 +204,7 @@ Figure 5.2: Seurat FeaturePlot, with new color scale and general modifications
 </p>
 </div>
 <p>This way, we can observe that most of the clusters have a really similar number of UMIs, despite selected ones which have up to 4 times more. These could very well be doublets. This is <code>SCpubr::do_FeaturePlot()</code> variation:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="featureplots.html#cb25-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Number of UMIs&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="feature-plots.html#cb25-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Number of UMIs&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-28"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-28-1.png" alt="SCpubr FeaturePlot, with minor modifications" width="768" />
 <p class="caption">
@@ -210,7 +215,7 @@ Figure 5.3: SCpubr FeaturePlot, with minor modifications
 <div id="multiple-features" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Multiple features</h2>
 <p><code>SCpubr::do_FeaturePlot()</code> can tackle multiple queries at the same time. Plots can be rearranged as desired with <code>ncol</code> parameter:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="featureplots.html#cb26-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;nFeature_RNA&quot;</span>, <span class="st">&quot;percent.mt&quot;</span>, <span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="feature-plots.html#cb26-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;nFeature_RNA&quot;</span>, <span class="st">&quot;percent.mt&quot;</span>, <span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-29"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-29-1.png" alt="SCpubr FeaturePlot, with 4 features and 2 columns" width="768" />
 <p class="caption">
@@ -218,9 +223,9 @@ Figure 5.4: SCpubr FeaturePlot, with 4 features and 2 columns
 </p>
 </div>
 <p>With multiple queries, using <code>plot.title</code> parameter actually adds an overall title. If one wants to modify the title of each plot independently, a more complex approach is needed, which requires more R expertise, using <code>patchwork</code> package.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="featureplots.html#cb27-1" aria-hidden="true" tabindex="-1"></a>((SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot A&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nFeature_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot B&quot;</span>)) <span class="sc">/</span></span>
-<span id="cb27-2"><a href="featureplots.html#cb27-2" aria-hidden="true" tabindex="-1"></a>(SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;percent.mt&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot C&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot D&quot;</span>))) <span class="sc">+</span> </span>
-<span id="cb27-3"><a href="featureplots.html#cb27-3" aria-hidden="true" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">&quot;My very important features&quot;</span>, <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="feature-plots.html#cb27-1" aria-hidden="true" tabindex="-1"></a>((SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot A&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nFeature_RNA&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot B&quot;</span>)) <span class="sc">/</span></span>
+<span id="cb27-2"><a href="feature-plots.html#cb27-2" aria-hidden="true" tabindex="-1"></a>(SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;percent.mt&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot C&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plot D&quot;</span>))) <span class="sc">+</span> </span>
+<span id="cb27-3"><a href="feature-plots.html#cb27-3" aria-hidden="true" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">&quot;My very important features&quot;</span>, <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>)))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-30"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-30-1.png" alt="SCpubr FeaturePlot, with individual modified titles" width="768" />
 <p class="caption">
@@ -231,8 +236,8 @@ Figure 5.5: SCpubr FeaturePlot, with individual modified titles
 <div id="working-with-subsets-of-cells" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Working with subsets of cells</h2>
 <p>One of the things that can be misleading, is that it could be the case that a very specific subset of cells are driving the ends of the color scales. Let’s say that we have identified that clusters 2, 5, and 8 are responsible of this behavior. We would like to have plot the values without taking those cells into consideration. The very first thing that comes to mind is, indeed, removing the cells completely, resulting in the following:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="featureplots.html#cb28-1" aria-hidden="true" tabindex="-1"></a>cells.plot <span class="ot">&lt;-</span> <span class="fu">colnames</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))])</span>
-<span id="cb28-2"><a href="featureplots.html#cb28-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample[, cells.plot], <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="feature-plots.html#cb28-1" aria-hidden="true" tabindex="-1"></a>cells.plot <span class="ot">&lt;-</span> <span class="fu">colnames</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))])</span>
+<span id="cb28-2"><a href="feature-plots.html#cb28-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample[, cells.plot], <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-31"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-31-1.png" alt="SCpubr FeaturePlot, removing cells from clusters 2, 5 and 8" width="768" />
 <p class="caption">
@@ -240,8 +245,8 @@ Figure 5.6: SCpubr FeaturePlot, removing cells from clusters 2, 5 and 8
 </p>
 </div>
 <p>However, this falls back to the same problem as with <code>Seurat::DimPlot</code> with the <code>split.by</code> parameter. We lose the overall context of where the cells are. This is taken care by in <code>SCpubr::do_FeaturePlot()</code>, when using the <code>cells.highlight</code> parameter:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="featureplots.html#cb29-1" aria-hidden="true" tabindex="-1"></a>cells.plot <span class="ot">&lt;-</span> <span class="fu">colnames</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))])</span>
-<span id="cb29-2"><a href="featureplots.html#cb29-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">cells.highlight =</span> cells.plot, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="feature-plots.html#cb29-1" aria-hidden="true" tabindex="-1"></a>cells.plot <span class="ot">&lt;-</span> <span class="fu">colnames</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))])</span>
+<span id="cb29-2"><a href="feature-plots.html#cb29-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">cells.highlight =</span> cells.plot, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-32"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-32-1.png" alt="SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8" width="768" />
 <p class="caption">
@@ -249,8 +254,8 @@ Figure 5.7: SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8
 </p>
 </div>
 <p>This way, by adding the cells back and modifying the legend, we accomplish the desired effect. Furthermore, <code>SCpubr::do_FeaturePlot()</code> also accepts a vector of the identities to plot, as long as they are part of <code>levels(seurat_object)</code>. This can be achieved by using the <code>idents.highlight</code> instead.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="featureplots.html#cb30-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-2"><a href="featureplots.html#cb30-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">idents.highlight =</span> <span class="fu">levels</span>(sample)[<span class="sc">!</span>(<span class="fu">levels</span>(sample) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))], <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="feature-plots.html#cb30-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-2"><a href="feature-plots.html#cb30-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">idents.highlight =</span> <span class="fu">levels</span>(sample)[<span class="sc">!</span>(<span class="fu">levels</span>(sample) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;8&quot;</span>))], <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>), <span class="at">plot.title =</span> <span class="st">&quot;My very important features&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-33"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-33-1.png" alt="SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using idents.highlight" width="768" />
 <p class="caption">
@@ -261,7 +266,7 @@ Figure 5.8: SCpubr FeaturePlot, masking cells from clusters 2, 5 and 8 using ide
 <div id="splitting-the-featureplot-by-a-variable" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> Splitting the FeaturePlot by a variable</h2>
 <p>In some cases, we want to visualize a given feature, let’s say, the expression of <code>LYN</code> across another variable, for instance <code>seurat_clusters</code>. This can be achieved easily in <code>Seurat</code> by using the <code>split.by</code> parameter:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="featureplots.html#cb31-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;LYN&quot;</span>, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="feature-plots.html#cb31-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;LYN&quot;</span>, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-34"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-34-1.png" alt="Seurat FeaturePlot split by clusters." width="1920" />
 <p class="caption">
@@ -269,7 +274,7 @@ Figure 5.9: Seurat FeaturePlot split by clusters.
 </p>
 </div>
 <p>Apart from the general aesthetic discrepancies mentioned before, there are two main aspects missing. First, is the overall layout of the UMAP embedding. Being able to correctly locate the clusters is really important. Secondly, knowing that, by default, the color scale is shared across all the plots (achieved by using <code>keep.scale = "feature"</code>), we would like to know up to which value this color scale reaches. In this two aspects is where <code>SCpubr::do_FeaturePlot()</code> delves into:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="featureplots.html#cb32-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;LYN&quot;</span>, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="feature-plots.html#cb32-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;LYN&quot;</span>, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-35"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-35-1.png" alt="SCpubr FeaturePlot split by clusters." width="1920" />
 <p class="caption">
@@ -282,7 +287,7 @@ Figure 5.10: SCpubr FeaturePlot split by clusters.
 <li><code>nCount_RNA</code> is a metadata variable located in <code>colnames(sample@meta.data)</code>.</li>
 <li><code>PC_1</code> is a column of a dimensional reduction embedding, located in <code>colnames(sample@reductions[["pca"]][[]])</code></li>
 </ul>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="featureplots.html#cb33-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;LYN&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;PC_1&quot;</span>), <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="feature-plots.html#cb33-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;LYN&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;PC_1&quot;</span>), <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-36"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-36-1.png" alt="SCpubr FeaturePlot split by clusters using multiple features." width="1920" />
 <p class="caption">
@@ -290,7 +295,7 @@ Figure 5.11: SCpubr FeaturePlot split by clusters using multiple features.
 </p>
 </div>
 <p>With <code>SCpubr::FeaturePlot()</code> we can even subset the previous plot to any identities in <code>split.by</code> we are particularly interested in. The color scale also limits itself to contain only the values in the selected identities. This can be achieved by provided a vector with the identities to <code>split.by.idents</code> parameter.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="featureplots.html#cb34-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;LYN&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;PC_1&quot;</span>), <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">split.by.idents =</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="feature-plots.html#cb34-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;LYN&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;PC_1&quot;</span>), <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">split.by.idents =</span> <span class="fu">c</span>(<span class="st">&quot;2&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-37"></span>
 <img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-37-1.png" alt="SCpubr FeaturePlot split by clusters using multiple features and selected identities." width="960" />
 <p class="caption">
@@ -305,8 +310,8 @@ Figure 5.12: SCpubr FeaturePlot split by clusters using multiple features and se
           </div>
         </div>
       </div>
-<a href="dimplots.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="nebulosaplots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="dim-plots.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="nebulosa-plots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="assets/gitbook-2.6.7/js/app.min.js"></script>

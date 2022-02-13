@@ -1,4 +1,4 @@
-# DimPlots
+# Dim plots
 
 
 ```{r echo = F}

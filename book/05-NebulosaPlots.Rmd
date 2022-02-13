@@ -1,4 +1,4 @@
-# NebulosaPlots
+# Nebulosa plots
 
 This plot comes straight from the [Nebulosa package](http://bioconductor.org/packages/release/bioc/html/Nebulosa.html). For more information, here is their [vignette](http://bioconductor.org/packages/release/bioc/vignettes/Nebulosa/inst/doc/nebulosa_seurat.html). In short, it computes a "density" of whether the surrounding cells (in the UMAP embedding) also express the variable that you provide to the function, same variables that one could feed to `Seurat::FeaturePlot()`. This is how their default plot looks like:
 

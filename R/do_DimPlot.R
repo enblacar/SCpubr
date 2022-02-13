@@ -231,17 +231,22 @@ do_DimPlot <- function(sample,
         p.umap <- p.umap & ggpubr::rremove("legend.title")
     }
     # For embeddings that are not diffusion maps, we remove all axes..
-    if (reduction != "diffusion"){
+    if (!(reduction %in% c("diffusion", "pca"))){
         p.umap <- p.umap & Seurat::NoAxes()
     # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
     } else {
+        if (reduction == "pca"){
+          prefix <- "PC_"
+        } else if (reduction == "diffusion"){
+          prefix <- "DC_"
+        }
         p.umap <- p.umap &
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
             ggpubr::rremove("ticks") &
             ggplot2::theme(axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
                            axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
-            ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
+            ggplot2::xlab(paste0(prefix, dims[1])) & ggplot2::ylab(paste0(prefix, dims[2]))
     }
     # Label treatment.
     if (label == TRUE && is.null(cells.highlight)){

@@ -1,4 +1,4 @@
-# FeaturePlots 
+# Feature plots 
 Another broadly used function in `Seurat` is `Seurat::FeaturePlot()`. It is basically the counterpart of `Seurat::DimPlot()` which instead of coloring the cells based on a categorical color scale, it uses a continuous one, according to a variable provided by the user. This can range from gene expression, to metadata variables such as the number of genes, or even values such as PC_1. This is how it looks, plotting the number of UMIs:
 
 ```{r, fig.cap= "Seurat FeaturePlot"}

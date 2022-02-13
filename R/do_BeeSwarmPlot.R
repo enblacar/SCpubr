@@ -138,13 +138,13 @@ do_BeeSwarmPlot <- function(sample,
     if (flip == TRUE){
         plot <- plot + ggplot2::coord_flip() + ggpubr::rremove("y.ticks") +
             ggpubr::rremove("y.text") +
-            ggplot2::xlab(ifelse(is.null(ylab), paste0("Ordering of cells across ", feature_to_rank), ylab)) +
+            ggplot2::xlab(ifelse(is.null(ylab), paste0("Ranking for ", feature_to_rank), ylab)) +
             ggplot2::ylab(xlab)
 
     } else {
         plot <- plot + ggpubr::rremove("x.ticks") +
             ggpubr::rremove("x.text") +
-            ggplot2::xlab(ifelse(is.null(xlab), paste0("Ordering of cells across ", feature_to_rank), xlab)) +
+            ggplot2::xlab(ifelse(is.null(xlab), paste0("Ranking for ", feature_to_rank), xlab)) +
             ggplot2::ylab(ylab)
 
     }
