@@ -17,7 +17,7 @@ check_suggests <- function(function_name){
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "utils", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "scales"))
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -62,12 +62,17 @@ check_colors <- function(colors, parameter_name = "") {
 #' \dontrun{
 #' TBD
 #' }
-check_consistency_colors_and_names <- function(sample, colors, groping_variable){
-  if (sum(names(colors) %in% unique(sample[[]][, groping_variable])) != length(unique(sample[[]][, groping_variable]))){
-    stop('The names of the color vector provided to "colors.highlight" do not entirely match the unique values in "split.by" parameter.')
+check_consistency_colors_and_names <- function(sample, colors, groping_variable = NULL){
+  if (is.null(grouping_variable)){
+    check_values <- levels(sample)
+  } else {
+    check_values <- unique(sample[[]][, groping_variable])
   }
-  if (length(colors) != length(unique(sample[[]][, groping_variable]))){
-    stop('The number of values provided to "colors.split" is lower than the unique values in "split.by" parameter.')
+  if (sum(names(colors) %in% check_values) != length(check_values)){
+    stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).')
+  }
+  if (length(colors) != length(check_values)){
+    stop('The number of colors provided is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).')
   }
 }
 

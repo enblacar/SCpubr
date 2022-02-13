@@ -3,27 +3,27 @@
 #'
 #' @param sample  Seurat object.
 #' @param features Features to represent.
+#' @param assay Assay to use. Defauls to the current assay.
+#' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param group.by  Variable you want the cells to be colored for.
-#' @param split.by  Split into as many plots as unique values in the variable provided.
-#' @param cols  From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from `RColorBrewer::brewer.pal.info`, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).
-#' @param cols.group  Vector of colors matching the unique values in group.by.
-#' @param cols.split  Vector of colors matching the unique values in split.by.
+#' @param split.by  CURRENTLY NOT WORKING. Split into as many plots as unique values in the variable provided.
+#' @param colors.use  Named vector of colors matching the unique values in either the current identities in the seurat object of the unique values in group.by or split.by.
 #' @param plot_boxplot Logical. Whether to plot a boxplot inside the violin or not.
 #' @param legend  Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title  Title to use in the plot.
+#' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param pt.size  Size of points in the VlnPlot.
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
-#' @param remove_x_axis  Remove X axis labels and ticks from the plot.
-#' @param remove_y_axis  Remove Y axis labels and ticks from the plot.
 #' @param axis.text.fonsize  Modify the fontsize for axis texts.
 #' @param axis.title.fonsize  Modify the fontsize for axis titles.
 #' @param plot.title.fonsize  Modify the fontsize for the plot title.
-#' @param legend.text.fontsize  Modify the fontsize for the legend text.
+#' @param legend.text.fontsize  Modify the fontsize for the legend text.remove_x_axis
 #' @param legend.title.fontsize  Modify the fontsize for the legend title.
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
+#' @param ncol Numeric. Number of columns to arrange multiple plots into.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -35,64 +35,120 @@
 #' }
 do_VlnPlot <- function(sample,
                        features,
+                       assay = NULL,
+                       slot = NULL,
                        group.by = NULL,
                        split.by = NULL,
-                       legend = TRUE,
-                       cols = NULL,
-                       cols.group = NULL,
-                       cols.split = NULL,
+                       legend = FALSE,
+                       colors.use = NULL,
                        pt.size = 0,
                        y_cut = NULL,
                        plot_boxplot = TRUE,
                        legend.position = "bottom",
-                       plot.title = "",
-                       xlab = "",
-                       ylab = "",
-                       axis.text.fonsize = 28,
-                       axis.title.fonsize = 28,
-                       plot.title.fonsize = 30,
-                       legend.text.fontsize = 20,
-                       legend.title.fontsize = 24,
-                       remove_x_axis = TRUE,
-                       remove_y_axis = FALSE,
+                       plot.title = NULL,
+                       individual.titles = NULL,
+                       xlab = NULL,
+                       ylab = NULL,
+                       axis.text.fonsize = 16,
+                       axis.title.fonsize = 16,
+                       plot.title.fonsize = 18,
+                       legend.text.fontsize = 16,
+                       legend.title.fontsize = 16,
+                       ncol = NULL,
                        legend.ncol = 3){
     # Checks for packages.
     check_suggests(function_name = "do_VlnPlot")
+    # Check the assay.
+    out <- check_and_set_assay(sample = sample, assay = assay)
+    sample <- out[["sample"]]
+    assay <- out[["assay"]]
+    # Check slot.
+    slot <- check_and_set_slot(slot = slot)
+    # Check logical parameters.
+    logical_list <- list("legend" = legend,
+                         "plot_boxplot" = plot_boxplot)
+    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+    # Check numeric parameters.
+    numeric_list <- list("pt.size" = pt.size,
+                         "y_cut" = y_cut,
+                         "axis.text.fonsize" = axis.text.fonsize,
+                         "axis.title.fonsize" = axis.title.fonsize,
+                         "plot.title.fonsize" = plot.title.fonsize,
+                         "legend.text.fontsize" = legend.text.fontsize,
+                         "legend.title.fontsize" = legend.title.fontsize,
+                         "legend.ncol" = legend.ncol,
+                         "ncol" = ncol)
+    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+    # Check character parameters.
+    character_list <- list("legend.position" = legend.position,
+                           "features" = features,
+                           "group.by" = group.by,
+                           "split.by" = split.by,
+                           "colors.use" = colors.use,
+                           "plot.title" = plot.title,
+                           "xlab" = xlab,
+                           "ylab" = ylab)
+    check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
+    # Check the feature.
+    check_feature(sample = sample, features = features)
+
+    # Disable split.by.
+    if (!(is.null(split.by))){stop("This options is currently not available.")}
     # Check for y_cut and only having 1 feature.
-    if (!(is.null(y_cut)) & length(features) > 1){
-        stop('You can only provide values for y_cut if only one feature is provided to the function.')
+    if (!(is.null(y_cut))){
+      if(length(features) != length(y_cut)){
+      stop('Total number of y_cut values does not match the number of features provided.')
+    }
     }
 
-    if (is.null(cols)){
-        if (is.null(group.by) & is.null(split.by)){
-            colors.use <- "steelblue"
-        }
+    # If group.by and split.by are NULL.
+    if (is.null(group.by) & is.null(split.by)){
+      if (is.null(colors.use)){
+        colors.use <- generate_color_scale(levels(sample))
+      } else {
+        check_consistency_colors_and_names(sample = sample, colors = colors.use)
+      }
+    # If group.by is not NULL but split.by is NULL.
+    } else if (!(is.null(group.by)) & is.null(split.by)){
+      if (is.null(colors.use)){
+        names.use <- sort(unique(sample@meta.data[, group.by]))
+        if (is.factor(names.use)){names.use <- levels(names.use)}
+        colors.use <- generate_color_scale(names.use)
+      } else {
+        check_consistency_colors_and_names(sample = sample, colors = colors.use, groping_variable = group.by)
+      }
+    # If group by is NULL but split.by is not NULL.
+    } else if (!(is.null(split.by)) & is.null(group.by)){
+      if (is.null(colors.use)){
+        names.use <- sort(unique(sample@meta.data[, split.by]))
+        if (is.factor(names.use)){names.use <- levels(names.use)}
+        colors.use <- generate_color_scale(names.use)
+      } else {
+        check_consistency_colors_and_names(sample = sample, colors = colors.use, groping_variable = split.by)
+      }
+    } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
 
-        if (!(is.null(group.by)) & is.null(cols.group)){
-            colors.use <- "steelblue"
-        } else if (!(is.null(group.by)) & !(is.null(cols.group))){
-            colors.use <- cols.group
-        }
-
-        if (!(is.null(split.by)) & is.null(cols.split)){
-            colors.use <- "steelblue"
-        } else if (!(is.null(split.by)) & !(is.null(cols.split))){
-            colors.use <- cols.split
-        }
-
+    if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
+      stop("The length of individual titles has to be equal to the number of features.")
     }
-
-    plot <- Seurat::VlnPlot(sample,
-                            features = features,
-                            cols = colors.use,
-                            group.by = group.by,
-                            split.by = split.by,
-                            pt.size = pt.size) &
-        ggplot2::ylab(ylab) &
-        ggplot2::xlab(xlab) &
+    counter <- 0
+    list.plots <- list()
+    for (feature in features) {
+      counter <- counter + 1
+      if (!is.null(y_cut) & length(features) > 1){
+        y_cut_select <- y_cut[counter]
+      } else {
+        y_cut_select <- y_cut
+      }
+      plot <- Seurat::VlnPlot(sample,
+                              features = feature,
+                              cols = colors.use,
+                              group.by = group.by,
+                              split.by = split.by,
+                              pt.size = pt.size) &
         ggpubr::theme_pubr(legend = legend.position) &
-        ggplot2::scale_y_continuous(labels = scales::comma) &
+        ggpubr::rremove("x.title") &
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
                        axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
                        axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
@@ -101,29 +157,39 @@ do_VlnPlot <- function(sample,
                        plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5)) &
         ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
 
-    if (plot_boxplot == TRUE){
-      plot <- plot &
-        ggplot2::geom_boxplot(width = .1, fill = "white", outlier.colour = NA)
-    }
+      if (!is.null(xlab)){
+        plot <- plot & ggplot2::xlab(xlab)
+      }
+      if (!is.null(ylab)){
+        plot <- plot & ggplot2::ylab(ylab)
+      }
+      if (plot_boxplot == TRUE){
+        plot <- plot &
+          ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
+      }
 
-    if (remove_x_axis == TRUE){
-        plot <- plot & ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
-    }
-    if (remove_y_axis == TRUE){
-        plot <- plot & ggpubr::rremove("y.text") + ggpubr::rremove("y.ticks")
-    }
-
-    if (legend == FALSE){
+      if (legend == FALSE){
         plot <- plot & Seurat::NoLegend()
-    }
+      }
 
-    if (!(is.null(y_cut))){
-        for (value in y_cut){
-            plot <- plot +
-                ggplot2::geom_hline(yintercept = value, linetype = "dashed", colour = "grey25", size = 1.5)
-        }
-    }
 
+      if (!(is.null(y_cut))){
+            plot <- plot &
+              ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
+      }
+
+      if (!(is.null(individual.titles))){
+        plot <- plot + ggplot2::ggtitle(individual.titles[counter])
+      }
+      list.plots[[feature]] <- plot
+    }
+    plot <- patchwork::wrap_plots(list.plots, ncol = ncol)
+
+    if (!(is.null(plot.title))){
+      plot <- plot + patchwork::plot_annotation(title = plot.title,
+                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fonsize + 2,
+                                                                                                          face = "bold",
+                                                                                                          hjust = 0.5)))
+    }
     return(plot)
-
 }

@@ -1,0 +1,3 @@
+# Violin plots
+
+Violin plots require very little description. It is a depction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different groups.
