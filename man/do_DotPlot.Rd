@@ -14,19 +14,16 @@ do_DotPlot(
   dot.scale = 6,
   cols = c("grey75", "#014f86"),
   legend.position = "right",
-  plot.title = "",
-  xlab = "",
-  ylab = "",
+  plot.title = NULL,
+  xlab = NULL,
+  ylab = NULL,
   axis.text.fonsize = 16,
   axis.title.fonsize = 16,
   plot.title.fonsize = 18,
-  legend.text.fontsize = 16,
-  legend.title.fontsize = 16,
-  remove_x_axis = FALSE,
-  remove_y_axis = FALSE,
-  cluster.idents = TRUE,
-  flip = FALSE,
-  ...
+  legend.text.fontsize = 12,
+  legend.title.fontsize = 12,
+  cluster.idents = FALSE,
+  flip = FALSE
 )
 }
 \arguments{
@@ -44,7 +41,7 @@ do_DotPlot(
 
 \item{dot.scale}{Scale the size of the dots.}
 
-\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from \code{RColorBrewer::brewer.pal.info}, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
+\item{cols}{Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -64,15 +61,9 @@ do_DotPlot(
 
 \item{legend.title.fontsize}{Modify the font size for the legend title.}
 
-\item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
-
-\item{remove_y_axis}{Remove Y axis labels and ticks from the plot.}
-
 \item{cluster.idents}{Logical. Whether to cluster the identities based on the expression of the features.}
 
 \item{flip}{Whether to flip the axis.}
-
-\item{...}{Other arguments provided to \link[Seurat]{DotPlot}.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.

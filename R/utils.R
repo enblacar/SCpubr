@@ -147,6 +147,9 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' TBD
 #' }
 check_feature <- function(sample, features, dump_reduction_names = FALSE){
+  if (is.list(features)){
+    features <- unlist(features)
+  }
   for (feature in features){
     check <- 0
     if (!(feature %in% rownames(sample))){
