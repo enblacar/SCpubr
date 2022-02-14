@@ -24,7 +24,6 @@
 #' @param number_comparisons Number of different lists that are going to be queried to the same cells. FDR value will be divided by this.
 #' @param verbose Defaults to TRUE. It will provide different print statements. Progress bars can not be suppressed by this.
 #' @return A list containing the plots and the surpassed cells, together with the p-value matrix.
-#' @export
 #'
 #' @examples
 #' \dontrun{

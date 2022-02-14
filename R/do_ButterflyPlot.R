@@ -31,7 +31,7 @@
 #' @param complex.output.grouping.variable  Variable to group the values in the RankPlot.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
-#' @export
+
 #'
 #' @examples
 #' \dontrun{
