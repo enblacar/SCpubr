@@ -44,6 +44,12 @@ fig:unnamed-chunk-47
 fig:unnamed-chunk-48
 fig:unnamed-chunk-49
 fig:unnamed-chunk-50
+fig:unnamed-chunk-51
+fig:unnamed-chunk-52
+fig:unnamed-chunk-53
+fig:unnamed-chunk-54
+fig:unnamed-chunk-55
+fig:unnamed-chunk-56
 aim-of-the-package
 installation-guide
 a-section
@@ -63,3 +69,7 @@ using-categorical-variables
 using-continuous-variables
 violin-plots
 violin-plots-as-a-means-of-qc
+dot-plots
+querying-multiple-features-at-once.
+clustering-the-identities.
+inverting-the-axes.
