@@ -2,6 +2,7 @@
 
 Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different groups. As such, it is also included in `Seurat` under `Seurat::VlnPlot()` function. The very first time a new user encounters this function is likely going to be when querying for different QC paramters, such as the number of UMIs, the number of genes or the percentage of mitochondrial RNA. This is how it looks for the number of UMIs:
 
+
 ```{r, fig.cap="Seurat's violin plot."}
 Seurat::VlnPlot(sample, features = "nCount_RNA")
 ```
@@ -29,8 +30,8 @@ For QC analyses, users might want to also add some other features such as a line
 ```{r, fig.cap="SCpubr's violin plot with horizontal line."}
 SCpubr::do_VlnPlot(sample = sample, features = "nCount_RNA", y_cut = 30000)
 ```
-When multiple features are queried, the user can set up different horizontal lines parsing them as a vector to `y_cut`. Also, the same can be achieved for the individual plot titles by using the `individual.titles` parameter. The only restriction, is that the vector has to be of the same length as the number of features. If for a particular plot, we do not want to modify anything, use `FALSE` instead.
+When multiple features are queried, the user can set up different horizontal lines parsing them as a vector to `y_cut`. Also, the same can be achieved for the individual plot titles by using the `individual.titles` parameter. The only restriction, is that the vector has to be of the same length as the number of features. If for a particular plot, we do not want to modify anything, use `NA` instead.
 
 ```{r, fig.cap="SCpubr's violin plot with multiple features.", fig.width=10, fig.height=5}
-SCpubr::do_VlnPlot(sample = sample, features = c("nCount_RNA", "nFeature_RNA"), y_cut = c(FALSE, 5000), individual.titles = c("UMIs", FALSE))
+SCpubr::do_VlnPlot(sample = sample, features = c("nCount_RNA", "nFeature_RNA"), y_cut = c(NA, 5000), individual.titles = c("UMIs", NA))
 ```

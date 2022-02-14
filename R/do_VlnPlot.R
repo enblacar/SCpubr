@@ -136,14 +136,14 @@ do_VlnPlot <- function(sample,
     list.plots <- list()
     for (feature in features) {
       counter <- counter + 1
-      if (!is.null(y_cut) & length(features) > 1){
-        y_cut_select <- y_cut[counter]
-      } else {
-        y_cut_select <- y_cut
-      }
-      # Check the value for y_cut_select is on range.
-      if (y_cut_select != FALSE){check_limits(sample = sample, feature = feature, value_name = "y_cut", value = y_cut_select)}
+      if (!is.null(y_cut)){y_cut_select <- y_cut[counter]}
 
+      # Check the value for y_cut_select is on range.
+      if (!(is.null(y_cut))){
+        if (!(is.na(y_cut_select))){
+          check_limits(sample = sample, feature = feature, value_name = "y_cut", value = y_cut_select)
+        }
+      }
       plot <- Seurat::VlnPlot(sample,
                               features = feature,
                               cols = colors.use,
@@ -176,13 +176,15 @@ do_VlnPlot <- function(sample,
       }
 
 
-      if (!(is.null(y_cut)) & y_cut_select != FALSE){
+      if (!(is.null(y_cut))){
+          if (!(is.na(y_cut_select))){
             plot <- plot &
               ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
+          }
       }
 
       if (!(is.null(individual.titles))){
-        if (individual.titles[counter] != FALSE){
+        if (!(is.na(individual.titles[counter]))){
           plot <- plot + ggplot2::ggtitle(individual.titles[counter])
         }
       }

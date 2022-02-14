@@ -39,6 +39,11 @@ fig:unnamed-chunk-42
 fig:unnamed-chunk-43
 fig:unnamed-chunk-44
 fig:unnamed-chunk-45
+fig:unnamed-chunk-46
+fig:unnamed-chunk-47
+fig:unnamed-chunk-48
+fig:unnamed-chunk-49
+fig:unnamed-chunk-50
 aim-of-the-package
 installation-guide
 a-section
@@ -56,3 +61,5 @@ nebulosa-plots
 bee-swarm-plots
 using-categorical-variables
 using-continuous-variables
+violin-plots
+violin-plots-as-a-means-of-qc
