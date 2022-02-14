@@ -1,9 +1,5 @@
 # Dim plots
 
-
-```{r echo = F}
-sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
-```
 DimPlots are, probably, one of the most iconic visualizations from `Seurat`. It allows the user to visualize the cells in a dimensional reduction embedding such as `PCA` or `UMAP`. The cells can be, then, colored by any desired groups. In short, this visualization allows the user to plot **any kind of categorical data** onto the cells in the dimesional reduction embedding. This is achieved by using `Seurat::DimPlot()` funtion:
 
 ```{r, fig.cap = "Default DimPlot."}

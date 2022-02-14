@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
-
+^.mailmap$
 ^docs$
 ^book$
-^SCpubr_manual\.Rmd$
+

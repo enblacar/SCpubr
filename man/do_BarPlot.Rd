@@ -6,38 +6,40 @@
 \usage{
 do_BarPlot(
   sample,
-  var.to.plot,
+  features,
   group.by = NULL,
   labels.order = NULL,
   order.by = NULL,
   position = "stack",
-  xlab = "",
-  ylab = "",
-  plot.title = "",
-  legend.position = "bottom",
+  xlab = NULL,
+  ylab = NULL,
+  plot.title = NULL,
+  legend = TRUE,
+  legend.position = "right",
   legend.title = FALSE,
   legend.ncol = 1,
-  legend.text.size = 22,
-  legend.title.size = 22,
-  axis.text.size = 22,
-  axis.title.size = 22,
-  plot.title.size = 24,
+  legend.text.size = 12,
+  legend.title.size = 12,
+  axis.text.size = 16,
+  axis.title.size = 16,
+  plot.title.size = 18,
   legend.icon.size = 4,
   legend.byrow = FALSE,
   colors.use = NULL,
-  horizontal = TRUE
+  horizontal = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{var.to.plot}{Main variable in the bar plot. Example: seurat_clusters}
+\item{features}{Main variable in the bar plot - This will define the height of the bars. Must be a metadata variable stored in \code{object@meta.data}.}
 
-\item{group.by}{Secondary variable to group the bar plot for. Example: orig.ident}
+\item{group.by}{Secondary variable to group the bar plot for - This will define the total number of bars. Must be a metadata variable stored in \code{object@meta.data}.}
 
-\item{labels.order}{Vector of labels to explicitly state the order or the bars.}
+\item{labels.order}{Vector of labels to explicitly state the order or the bars. Better fed after knowing the order. This is meant to be used to tweak the end plot if needed.}
 
-\item{order.by}{Value in var.to.plot to order the items in group.by for.}
+\item{order.by}{One of the unique values in group.by that will be used to reorder the bars according to its descending proportion.}
 
 \item{position}{Either "fill" or "stack." Position "fill" will generate a bar plot with one column and the proportions of values for each group inside, while "stack" plots the bars together.}
 
@@ -46,6 +48,8 @@ do_BarPlot(
 \item{ylab}{Title for the Y axis.}
 
 \item{plot.title}{Title to use in the plot.}
+
+\item{legend}{Whether to plot the legend.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -70,6 +74,8 @@ do_BarPlot(
 \item{colors.use}{Palette of colors to use. It must match the group.by variable in terms of length and names.}
 
 \item{horizontal}{Whether to plot the Bar plot horizontally.}
+
+\item{verbose}{Use warnings.}
 }
 \value{
 A ggplot2 object containing a Bar plot.

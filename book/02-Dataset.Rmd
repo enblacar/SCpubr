@@ -1,16 +1,6 @@
 # Dataset
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  fig.align = 'center'
-)
-```
 
-Through this vignette, a dataset containing 10K raw cells is used, which can be downloaded [here](https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-ht-v3-1-chromium-x-3-1-high).
-
-The following code is used to generate a Seurat object ready for plotting.
+Through this manual we are going to use a [publicly available dataset](https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-ht-v3-1-chromium-x-3-1-high) containing 10K raw cells. The following code is used to generate a Seurat object ready for plotting.
 
 ```{r, eval = F}
 counts_path <- "path_to_count_matrix"

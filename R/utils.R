@@ -146,29 +146,42 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' \dontrun{
 #' TBD
 #' }
-check_feature <- function(sample, features, dump_reduction_names = FALSE){
+check_feature <- function(sample, features, dump_reduction_names = FALSE, enforce_check = NULL, enforce_parameter = NULL){
   if (is.list(features)){
     features <- unlist(features)
   }
+  check_enforcers <- list()
   for (feature in features){
     check <- 0
     if (!(feature %in% rownames(sample))){
       check <- check + 1
+      check_enforcers[["gene"]] <- FALSE
     }
+    check_enforcers[["gene"]] <- TRUE
     if (!(feature %in% colnames(sample@meta.data))){
       check <- check + 1
+      check_enforcers[["metadata"]] <- FALSE
     }
+    check_enforcers[["metadata"]] <- TRUE
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
       dim_colnames <- c(dim_colnames, colnames(sample@reductions[[red]][[]]))
     }
-
     if (!(feature %in% dim_colnames)){
       check <- check + 1
+      check_enforcers[["reductions"]] <- FALSE
     }
+    check_enforcers[["reductions"]] <- TRUE
     if (check == 3) {
       stop(paste0("The requested feature (", feature, ") could not be found:\n", "    - Not matching any gene name (rownames of the provided object).\n",
                   "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in any of the following reductions: ", Seurat::Reductions(object = sample), "."))
+    }
+  }
+  if (!(enforce_check %in% names(check_enforcers))){
+    stop("The variable enforcer is not in the current list of checked variable types.")
+  } else {
+    if (isFALSE(check_enforcers[[enforce_check]])){
+      stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".")
     }
   }
   if (dump_reduction_names == TRUE){return(dim_colnames)}
@@ -365,4 +378,58 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
   if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
     stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".")
   }
+}
+
+#' Compute the order of the plotted bars for do_BarPlot.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to plot.
+#' @param group.by Feature to group the output by.
+#' @param order.by Unique value in group.by to reorder labels in descending order.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = NULL){
+  `%>%` <- purrr::`%>%`
+  if (is.null(order.by) & !(is.null(group.by))){
+    factor_levels <- rev(sort(unique(sample@meta.data[,feature])))
+  } else if (!(is.null(order.by)) & !(is.null(group.by))){
+    # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
+    factor_levels <- sample@meta.data %>% # Obtain metadata
+      dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
+      dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+      dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
+      dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
+      dplyr::filter(.data$x_value == order.by) %>% # Filter only the values equal to the value we want to reorder the bars.
+      # Compute the total number of cells for each unique group in feature.
+      dplyr::mutate(num_cells = {sample@meta.data %>% # Obtain metadata.
+          dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%  # Select the feature to plot.
+          dplyr::group_by(!!rlang::sym(feature)) %>% # Group the values by feature.
+          dplyr::summarise(n = dplyr::n()) %>% # Compute the total counts.
+          # This line basically removes any row for which the value of order.by is 0. This avoids mismatches.
+          dplyr::filter(!!rlang::sym(feature) %in% unique(sample@meta.data[, c(group.by, feature)][sample@meta.data[, c(group.by, feature)][, group.by] == order.by, ][, feature])) %>%
+          dplyr::pull(.data$n)}) %>% # Retrieve the number of cells.
+      dplyr::mutate(frac = .data$n/.data$num_cells) %>% # Compute the fraction that represent n out of the total number of cells in the group.
+      dplyr::arrange(dplyr::desc(.data$frac)) %>% # Arrange it in descending order.
+      dplyr::pull(!!rlang::sym(feature)) # Retrieve this order.
+    # Retrieve the total number of unique values.
+    total_levels <- unique(sample[[]][, feature])
+    # If some are missing, add them back.
+    if (length(factor_levels) != length(total_levels)){
+      factor_levels <- c(factor_levels, total_levels[!(total_levels %in% factor_levels)])
+    }
+    factor_levels <- rev(factor_levels)
+  } else if (is.null(order.by) & is.null(group.by)){
+    factor_levels <- sample@meta.data %>% # Obtain metadata
+      dplyr::select(!!rlang::sym(feature)) %>% # Select the feature and group.by columns.
+      dplyr::group_by(!!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+      dplyr::summarise(n = dplyr::n()) %>%
+      dplyr::arrange(dplyr::desc(.data$n)) %>%
+      dplyr::pull(!!rlang::sym(feature))
+  }
+  return(factor_levels)
 }
