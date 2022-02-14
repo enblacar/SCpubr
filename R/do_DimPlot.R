@@ -96,9 +96,9 @@ do_DimPlot <- function(sample,
     # Checks to ensure proper function.
     if (!(is.null(split.by)) & !(is.null(group.by))){"Either group.by or split.by has to be NULL."}
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
-    if (!(is.null(group.by)) & !(is.null(colors.use))){check_consistency_colors_and_names(sample = sample, colors = colors.use, groping_variable = group.by)}
+    if (!(is.null(group.by)) & !(is.null(colors.use))){check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)}
     # Check whether the names of colors.split match the unique values in split.by or whether the number of colors is lower to the number of unique values in split.by.
-    if (!(is.null(split.by)) & colors.split != "#0A305F" & length(colors.split) > 1){check_consistency_colors_and_names(sample = sample, colors = colors.split, groping_variable = split.by)}
+    if (!(is.null(split.by)) & colors.split != "#0A305F" & length(colors.split) > 1){check_consistency_colors_and_names(sample = sample, colors = colors.split, grouping_variable = split.by)}
     # Check for colors.highlight.
     if (colors.highlight != "#0A305F" & !(is.null(colors.highlight))){check_colors(colors.highlight, parameter_name = "colors.highlight")}
     # Check for colors.use.

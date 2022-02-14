@@ -55,18 +55,18 @@ check_colors <- function(colors, parameter_name = "") {
 #'
 #' @param sample Seurat object.
 #' @param colors Named vector of colors.
-#' @param groping_variable Metadata variable in sample to obtain its unique values.
+#' @param grouping_variable Metadata variable in sample to obtain its unique values.
 #' @return
 #' @noRd
 #' @examples
 #' \dontrun{
 #' TBD
 #' }
-check_consistency_colors_and_names <- function(sample, colors, groping_variable = NULL){
+check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL){
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
-    check_values <- unique(sample[[]][, groping_variable])
+    check_values <- unique(sample[[]][, grouping_variable])
   }
   if (sum(names(colors) %in% check_values) != length(check_values)){
     stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).')
@@ -106,7 +106,19 @@ generate_color_scale <- function(names_use){
 #' \dontrun{
 #' TBD
 #' }
-compute_scale_limits <- function(sample, feature, assay, reduction){
+compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL){
+  if (is.null(assay)){
+    assay <- Seurat::DefaultAssay(sample)
+  }
+  if (is.null(reduction)){
+    dim_colnames <- c()
+    for(red in Seurat::Reductions(object = sample)){
+      if (feature %in% colnames(sample@reductions[[red]][[]])){
+        reduction <- red
+      }
+    }
+  }
+
   if (feature %in% rownames(sample)){
     scale.begin <- min(sample@assays[[assay]]@data[feature,])
     scale.end <- max(sample@assays[[assay]]@data[feature,])
@@ -327,4 +339,27 @@ check_and_set_slot <- function(slot){
     stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.")
   }
   return(slot)
+}
+
+#' Check if a value is in the range of the values.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to plot.
+#' @param assay Assay used.
+#' @param reduction Reduction used.
+#' @param value Value to check.
+#' @param value_name Name of the value.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
+  limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
+
+  if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
+    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".")
+  }
 }

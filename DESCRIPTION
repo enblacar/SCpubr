@@ -32,6 +32,5 @@ Suggests:
   rmarkdown,
   knitr,
   purrr,
-  utils,
-  scales
+  utils
 VignetteBuilder: knitr

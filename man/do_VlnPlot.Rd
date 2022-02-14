@@ -7,26 +7,26 @@
 do_VlnPlot(
   sample,
   features,
+  assay = NULL,
+  slot = NULL,
   group.by = NULL,
   split.by = NULL,
-  legend = TRUE,
-  cols = NULL,
-  cols.group = NULL,
-  cols.split = NULL,
+  legend = FALSE,
+  colors.use = NULL,
   pt.size = 0,
   y_cut = NULL,
   plot_boxplot = TRUE,
   legend.position = "bottom",
-  plot.title = "",
-  xlab = "",
-  ylab = "",
-  axis.text.fonsize = 28,
-  axis.title.fonsize = 28,
-  plot.title.fonsize = 30,
-  legend.text.fontsize = 20,
-  legend.title.fontsize = 24,
-  remove_x_axis = TRUE,
-  remove_y_axis = FALSE,
+  plot.title = NULL,
+  individual.titles = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  axis.text.fonsize = 16,
+  axis.title.fonsize = 16,
+  plot.title.fonsize = 18,
+  legend.text.fontsize = 16,
+  legend.title.fontsize = 16,
+  ncol = NULL,
   legend.ncol = 3
 )
 }
@@ -35,17 +35,17 @@ do_VlnPlot(
 
 \item{features}{Features to represent.}
 
+\item{assay}{Assay to use. Defauls to the current assay.}
+
+\item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
+
 \item{group.by}{Variable you want the cells to be colored for.}
 
-\item{split.by}{Split into as many plots as unique values in the variable provided.}
+\item{split.by}{CURRENTLY NOT WORKING. Split into as many plots as unique values in the variable provided.}
 
 \item{legend}{Whether to plot the legend or not.}
 
-\item{cols}{From \link[Seurat]{DotPlot}: Colors to plot: the name of a palette from \code{RColorBrewer::brewer.pal.info}, a pair of colors defining a gradient, or 3+ colors defining multiple gradients (if split.by is set).}
-
-\item{cols.group}{Vector of colors matching the unique values in group.by.}
-
-\item{cols.split}{Vector of colors matching the unique values in split.by.}
+\item{colors.use}{Named vector of colors matching the unique values in either the current identities in the seurat object of the unique values in group.by or split.by.}
 
 \item{pt.size}{Size of points in the VlnPlot.}
 
@@ -57,6 +57,8 @@ do_VlnPlot(
 
 \item{plot.title}{Title to use in the plot.}
 
+\item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
+
 \item{xlab}{Title for the X axis.}
 
 \item{ylab}{Title for the Y axis.}
@@ -67,13 +69,11 @@ do_VlnPlot(
 
 \item{plot.title.fonsize}{Modify the fontsize for the plot title.}
 
-\item{legend.text.fontsize}{Modify the fontsize for the legend text.}
+\item{legend.text.fontsize}{Modify the fontsize for the legend text.remove_x_axis}
 
 \item{legend.title.fontsize}{Modify the fontsize for the legend title.}
 
-\item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
-
-\item{remove_y_axis}{Remove Y axis labels and ticks from the plot.}
+\item{ncol}{Numeric. Number of columns to arrange multiple plots into.}
 
 \item{legend.ncol}{Number of columns in the legend.}
 }
