@@ -82,23 +82,31 @@ do_BarPlot <- function(sample,
     axis.title.fontsize <- fontsize + 1
     legend.text.fontsize <- fontsize - 5
     legend.title.fontsize <- fontsize - 4
-    # If no color scale is provided, generate a custom one.
-    if (is.null(colors.use)){
-      if (is.null(group.by)){
-        # Generate a color palette equal to the number of identities in the seurat object.
-        colors.use <- generate_color_scale(names_use = unique(sample[[]][, feature]))
-      } else if (!is.null(group.by)) {
-        # Generate a color palette equal to the number of unique values in group.by variable.
-        colors.use <- generate_color_scale(names_use = unique(sample[[]][, group.by]))
-      }
-    }
 
     for (feature in features){
       # Enforce the features to be part of the metadata.
       check_feature(sample = sample, features = feature, enforce_check = "metadata", enforce_parameter = "features")
 
+      # If no color scale is provided, generate a custom one.
+      if (is.null(colors.use)){
+        if (is.null(group.by)){
+          # Generate a color palette equal to the number of identities in the seurat object.
+          names.use <- unique(sample@meta.data[, feature])
+          if (is.factor(names.use)){names.use <- levels(names.use)}
+          colors.use <- generate_color_scale(names_use = names.use)
+        } else if (!is.null(group.by)) {
+          # Generate a color palette equal to the number of unique values in group.by variable.
+          names.use <- unique(sample@meta.data[, group.by])
+          if (is.factor(names.use)){names.use <- levels(names.use)}
+          colors.use <- generate_color_scale(names_use = names.use)
+        }
+      }
+
       if (is.null(group.by)){
-        factor_levels <- compute_factor_levels(sample = sample, feature = feature)
+        factor_levels <- compute_factor_levels(sample = sample, feature = feature, position = position)
+        if (is.null(labels.order) & position == "fill"){factor_levels <- rev(factor_levels)}
+        # Reorder the colors according to the factor levels.
+        colors.use <- colors.use[factor_levels]
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
         if (verbose){
           if (isTRUE(legend)){warning("Recommended settings without using group.by is to set legend to FALSE.")}
@@ -136,11 +144,14 @@ do_BarPlot <- function(sample,
             if (!(order.by %in% unique(sample@meta.data[, group.by]))){
               stop("Parameter order.by (", order.by, ") not present in the unique values of parameter group.by (", group.by, ").")
             }
-            factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, order.by = order.by)
+            factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, order.by = order.by, position = position)
           } else {
-            factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by)
+            factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, position = position)
           }
         }
+        # Reorder the colors according to the factor levels.
+        #colors.use <- colors.use[factor_levels]
+        if (is.null(labels.order) & position == "fill"){factor_levels <- rev(factor_levels)}
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
         if (verbose){
           if (isFALSE(legend)){warning("Recommended settings when using group.by is to set legend to TRUE.")}

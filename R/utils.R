@@ -393,10 +393,21 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 #' \dontrun{
 #' TBD
 #' }
-compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = NULL){
+compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = NULL, position = NULL){
   `%>%` <- purrr::`%>%`
   if (is.null(order.by) & !(is.null(group.by))){
-    factor_levels <- rev(sort(unique(sample@meta.data[,feature])))
+    if (is.null(position)){stop("Position parameter needs to be provided.")}
+    if (position == "fill"){
+      factor_levels <- as.character(rev(sort(unique(sample@meta.data[, feature]))))
+    } else if (position == "stack"){
+      factor_levels <- sample@meta.data %>% # Obtain metadata
+        dplyr::select(!!rlang::sym(feature)) %>% # Select the feature and group.by columns.
+        dplyr::group_by(!!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+        dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
+        dplyr::arrange(dplyr::desc(.data$n)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
+        dplyr::pull(!!rlang::sym(feature)) %>%
+        as.character()
+    }
   } else if (!(is.null(order.by)) & !(is.null(group.by))){
     # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
     factor_levels <- sample@meta.data %>% # Obtain metadata
@@ -424,12 +435,17 @@ compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = N
     }
     factor_levels <- rev(factor_levels)
   } else if (is.null(order.by) & is.null(group.by)){
-    factor_levels <- sample@meta.data %>% # Obtain metadata
-      dplyr::select(!!rlang::sym(feature)) %>% # Select the feature and group.by columns.
-      dplyr::group_by(!!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
-      dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::arrange(dplyr::desc(.data$n)) %>%
-      dplyr::pull(!!rlang::sym(feature))
+    if (position == "fill"){
+      factor_levels = as.character(rev(sort(unique(sample@meta.data[, feature]))))
+    } else if (position == "stack"){
+      factor_levels <- sample@meta.data %>% # Obtain metadata
+        dplyr::select(!!rlang::sym(feature)) %>% # Select the feature and group.by columns.
+        dplyr::group_by(!!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+        dplyr::summarise(n = dplyr::n()) %>%
+        dplyr::arrange(dplyr::desc(.data$n)) %>%
+        dplyr::pull(!!rlang::sym(feature)) %>%
+        as.character()
+    }
   }
   return(factor_levels)
 }
