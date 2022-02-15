@@ -66,7 +66,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
-    check_values <- unique(sample[[]][, grouping_variable])
+    check_values <- unique(sample@meta.data[, grouping_variable])
   }
   if (sum(names(colors) %in% check_values) != length(check_values)){
     stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).')
@@ -409,24 +409,39 @@ compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = N
         as.character()
     }
   } else if (!(is.null(order.by)) & !(is.null(group.by))){
-    # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
-    factor_levels <- sample@meta.data %>% # Obtain metadata
-      dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
-      dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
-      dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
-      dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
-      dplyr::filter(.data$x_value == order.by) %>% # Filter only the values equal to the value we want to reorder the bars.
-      # Compute the total number of cells for each unique group in feature.
-      dplyr::mutate(num_cells = {sample@meta.data %>% # Obtain metadata.
-          dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%  # Select the feature to plot.
-          dplyr::group_by(!!rlang::sym(feature)) %>% # Group the values by feature.
-          dplyr::summarise(n = dplyr::n()) %>% # Compute the total counts.
-          # This line basically removes any row for which the value of order.by is 0. This avoids mismatches.
-          dplyr::filter(!!rlang::sym(feature) %in% unique(sample@meta.data[, c(group.by, feature)][sample@meta.data[, c(group.by, feature)][, group.by] == order.by, ][, feature])) %>%
-          dplyr::pull(.data$n)}) %>% # Retrieve the number of cells.
-      dplyr::mutate(frac = .data$n/.data$num_cells) %>% # Compute the fraction that represent n out of the total number of cells in the group.
-      dplyr::arrange(dplyr::desc(.data$frac)) %>% # Arrange it in descending order.
-      dplyr::pull(!!rlang::sym(feature)) # Retrieve this order.
+    if (position == "fill"){
+      # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
+      factor_levels <- sample@meta.data %>% # Obtain metadata
+        dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
+        dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+        dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
+        dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
+        dplyr::filter(.data$x_value == order.by) %>% # Filter only the values equal to the value we want to reorder the bars.
+        # Compute the total number of cells for each unique group in feature.
+        dplyr::mutate(num_cells = {sample@meta.data %>% # Obtain metadata.
+            dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%  # Select the feature to plot.
+            dplyr::group_by(!!rlang::sym(feature)) %>% # Group the values by feature.
+            dplyr::summarise(n = dplyr::n()) %>% # Compute the total counts.
+            # This line basically removes any row for which the value of order.by is 0. This avoids mismatches.
+            dplyr::filter(!!rlang::sym(feature) %in% unique(sample@meta.data[, c(group.by, feature)][sample@meta.data[, c(group.by, feature)][, group.by] == order.by, ][, feature])) %>%
+            dplyr::pull(.data$n)}) %>% # Retrieve the number of cells.
+        dplyr::mutate(frac = .data$n/.data$num_cells) %>% # Compute the fraction that represent n out of the total number of cells in the group.
+        dplyr::arrange(dplyr::desc(.data$frac)) %>% # Arrange it in descending order.
+        dplyr::pull(!!rlang::sym(feature))  %>%
+        as.character()
+    } else if (position == "stack"){
+      # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
+      factor_levels <- sample@meta.data %>% # Obtain metadata
+        dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
+        dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
+        dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
+        dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
+        dplyr::filter(.data$x_value == order.by) %>%
+        dplyr::arrange(dplyr::desc(.data$n)) %>% # Arrange it in descending order.
+        dplyr::pull(!!rlang::sym(feature))  %>%
+        as.character()
+    }
+
     # Retrieve the total number of unique values.
     total_levels <- unique(sample[[]][, feature])
     # If some are missing, add them back.

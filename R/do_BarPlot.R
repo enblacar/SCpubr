@@ -45,7 +45,7 @@ do_BarPlot <- function(sample,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        colors.use = NULL,
-                       horizontal = TRUE,
+                       horizontal = FALSE,
                        verbose = TRUE){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
@@ -91,16 +91,23 @@ do_BarPlot <- function(sample,
       if (is.null(colors.use)){
         if (is.null(group.by)){
           # Generate a color palette equal to the number of identities in the seurat object.
-          names.use <- unique(sample@meta.data[, feature])
+          names.use <- sort(unique(sample@meta.data[, feature]))
           if (is.factor(names.use)){names.use <- levels(names.use)}
           colors.use <- generate_color_scale(names_use = names.use)
         } else if (!is.null(group.by)) {
           # Generate a color palette equal to the number of unique values in group.by variable.
-          names.use <- unique(sample@meta.data[, group.by])
+          names.use <- sort(unique(sample@meta.data[, group.by]))
           if (is.factor(names.use)){names.use <- levels(names.use)}
           colors.use <- generate_color_scale(names_use = names.use)
         }
+      } else{
+        if (is.null(group.by)){
+          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = feature)
+        } else {
+          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+        }
       }
+
 
       if (is.null(group.by)){
         factor_levels <- compute_factor_levels(sample = sample, feature = feature, position = position)
@@ -145,6 +152,7 @@ do_BarPlot <- function(sample,
               stop("Parameter order.by (", order.by, ") not present in the unique values of parameter group.by (", group.by, ").")
             }
             factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, order.by = order.by, position = position)
+            if (is.null(labels.order) & position == "stack"){factor_levels <- rev(factor_levels)}
           } else {
             factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, position = position)
           }
