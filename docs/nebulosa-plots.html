@@ -24,7 +24,7 @@
 <meta name="author" content="Enrique Blanco Carmona" />
 
 
-<meta name="date" content="2022-02-15" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,11 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
-<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="installation-guide.html"><a href="installation-guide.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a></li>
-<li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
 <li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
@@ -207,50 +203,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="nebulosa-plots" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Nebulosa plots</h1>
 <p>This plot comes straight from the <a href="http://bioconductor.org/packages/release/bioc/html/Nebulosa.html">Nebulosa package</a>. For more information, here is their <a href="http://bioconductor.org/packages/release/bioc/vignettes/Nebulosa/inst/doc/nebulosa_seurat.html">vignette</a>. In short, it computes a “density” of whether the surrounding cells (in the UMAP embedding) also express the variable that you provide to the function, same variables that one could feed to <code>Seurat::FeaturePlot()</code>. This is how their default plot looks like:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="nebulosa-plots.html#cb36-1" aria-hidden="true" tabindex="-1"></a>Nebulosa<span class="sc">::</span><span class="fu">plot_density</span>(sample, <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-39"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-39-1.png" alt="Nebulosa plot" width="576" />
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="nebulosa-plots.html#cb39-1" aria-hidden="true" tabindex="-1"></a>Nebulosa<span class="sc">::</span><span class="fu">plot_density</span>(sample, <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-42"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-42-1.png" alt="Nebulosa plot" width="576" />
 <p class="caption">
 Figure 6.1: Nebulosa plot
 </p>
 </div>
 <p>This way, not only we do know which clusters are enriched in CD14, we also know the regions of it with the hightest density of cells expressing it. Minor modifications, on the line of the rest of plots, are applied in <code>SCpubr</code>:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="nebulosa-plots.html#cb37-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-40"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-40-1.png" alt="SCpubr Nebulosa plot." width="576" />
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="nebulosa-plots.html#cb40-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-43"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-43-1.png" alt="SCpubr Nebulosa plot." width="576" />
 <p class="caption">
 Figure 6.2: SCpubr Nebulosa plot.
 </p>
 </div>
 <p>Then, this type visualization becomes a natural partner to `Seurat::FeaturePlot()’ as not only we are able to visualize the expression of a variable, but also query the density of the surrounding cells. Here is an example:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="nebulosa-plots.html#cb38-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-41"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-41-1.png" alt="SCpubr FeaturePlot and NebulosaPlot." width="768" />
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="nebulosa-plots.html#cb41-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>) <span class="sc">|</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-44"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-44-1.png" alt="SCpubr FeaturePlot and NebulosaPlot." width="768" />
 <p class="caption">
 Figure 6.3: SCpubr FeaturePlot and NebulosaPlot.
 </p>
 </div>
 <p><a href="https://github.com/powellgenomicslab/Nebulosa/blob/master/R/plotting.R">Nebulosa</a> package also offers the option to query multiple features at the same time:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="nebulosa-plots.html#cb39-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-42"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-42-1.png" alt="SCpubr Nebulosa plot with multiple features." width="960" />
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="nebulosa-plots.html#cb42-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-45"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-45-1.png" alt="SCpubr Nebulosa plot with multiple features." width="960" />
 <p class="caption">
 Figure 6.4: SCpubr Nebulosa plot with multiple features.
 </p>
 </div>
 <p>But, more intriguingly, it can also compute the <strong>joint</strong> density of the two features. This is achieved by parsing <code>joint = TRUE</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="nebulosa-plots.html#cb40-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>), <span class="at">joint =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-43"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-43-1.png" alt="SCpubr Nebulosa plot with joint density" width="1440" />
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="nebulosa-plots.html#cb43-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>), <span class="at">joint =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-46"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-46-1.png" alt="SCpubr Nebulosa plot with joint density" width="1440" />
 <p class="caption">
 Figure 6.5: SCpubr Nebulosa plot with joint density
 </p>
 </div>
 <p>If we were interested in retrieving only the joint density plot, we can accomplish it as:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="nebulosa-plots.html#cb41-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>), <span class="at">joint =</span> <span class="cn">TRUE</span>, <span class="at">combine =</span> F)</span>
-<span id="cb41-2"><a href="nebulosa-plots.html#cb41-2" aria-hidden="true" tabindex="-1"></a>p[[<span class="dv">3</span>]]</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-44"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-44-1.png" alt="SCpubr Nebulosa plot with joint density, selecting only the last plot" width="576" />
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="nebulosa-plots.html#cb44-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CD8A&quot;</span>), <span class="at">joint =</span> <span class="cn">TRUE</span>, <span class="at">combine =</span> F)</span>
+<span id="cb44-2"><a href="nebulosa-plots.html#cb44-2" aria-hidden="true" tabindex="-1"></a>p[[<span class="dv">3</span>]]</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-47"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-47-1.png" alt="SCpubr Nebulosa plot with joint density, selecting only the last plot" width="576" />
 <p class="caption">
 Figure 6.6: SCpubr Nebulosa plot with joint density, selecting only the last plot
 </p>
@@ -268,21 +264,21 @@ Figure 6.6: SCpubr Nebulosa plot with joint density, selecting only the last plo
 <li>G - mako color map.</li>
 <li>H - turbo color map.</li>
 </ul>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="nebulosa-plots.html#cb42-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;A&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Magma&quot;</span>)</span>
-<span id="cb42-2"><a href="nebulosa-plots.html#cb42-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;B&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Inferno&quot;</span>)</span>
-<span id="cb42-3"><a href="nebulosa-plots.html#cb42-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;C&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plasma&quot;</span>)</span>
-<span id="cb42-4"><a href="nebulosa-plots.html#cb42-4" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;D&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Viridis&quot;</span>)</span>
-<span id="cb42-5"><a href="nebulosa-plots.html#cb42-5" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;E&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Cividis&quot;</span>)</span>
-<span id="cb42-6"><a href="nebulosa-plots.html#cb42-6" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;F&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Rocket&quot;</span>)</span>
-<span id="cb42-7"><a href="nebulosa-plots.html#cb42-7" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;G&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Mako&quot;</span>)</span>
-<span id="cb42-8"><a href="nebulosa-plots.html#cb42-8" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;H&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Turbo&quot;</span>)</span>
-<span id="cb42-9"><a href="nebulosa-plots.html#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in check_viridis_color_map(viridis_color_map = viridis_color_map, : The</span></span>
-<span id="cb42-10"><a href="nebulosa-plots.html#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; selected option is not the most adequate for a continuous color scale.</span></span>
-<span id="cb42-11"><a href="nebulosa-plots.html#cb42-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-12"><a href="nebulosa-plots.html#cb42-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(<span class="fu">list</span>(p1, p2, p3, p4, p5, p6, p7, p8), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb42-13"><a href="nebulosa-plots.html#cb42-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-45"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-45-1.png" alt="SCpubr Nebulosa plot modifying viridis color maps." width="960" />
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="nebulosa-plots.html#cb45-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;A&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Magma&quot;</span>)</span>
+<span id="cb45-2"><a href="nebulosa-plots.html#cb45-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;B&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Inferno&quot;</span>)</span>
+<span id="cb45-3"><a href="nebulosa-plots.html#cb45-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;C&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plasma&quot;</span>)</span>
+<span id="cb45-4"><a href="nebulosa-plots.html#cb45-4" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;D&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Viridis&quot;</span>)</span>
+<span id="cb45-5"><a href="nebulosa-plots.html#cb45-5" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;E&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Cividis&quot;</span>)</span>
+<span id="cb45-6"><a href="nebulosa-plots.html#cb45-6" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;F&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Rocket&quot;</span>)</span>
+<span id="cb45-7"><a href="nebulosa-plots.html#cb45-7" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;G&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Mako&quot;</span>)</span>
+<span id="cb45-8"><a href="nebulosa-plots.html#cb45-8" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_NebulosaPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD8A&quot;</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;H&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Turbo&quot;</span>)</span>
+<span id="cb45-9"><a href="nebulosa-plots.html#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in check_viridis_color_map(viridis_color_map = viridis_color_map, : The</span></span>
+<span id="cb45-10"><a href="nebulosa-plots.html#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; selected option is not the most adequate for a continuous color scale.</span></span>
+<span id="cb45-11"><a href="nebulosa-plots.html#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-12"><a href="nebulosa-plots.html#cb45-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(<span class="fu">list</span>(p1, p2, p3, p4, p5, p6, p7, p8), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-13"><a href="nebulosa-plots.html#cb45-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-48"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-48-1.png" alt="SCpubr Nebulosa plot modifying viridis color maps." width="960" />
 <p class="caption">
 Figure 6.7: SCpubr Nebulosa plot modifying viridis color maps.
 </p>

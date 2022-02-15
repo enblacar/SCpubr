@@ -24,7 +24,7 @@
 <meta name="author" content="Enrique Blanco Carmona" />
 
 
-<meta name="date" content="2022-02-15" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,11 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
-<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="installation-guide.html"><a href="installation-guide.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a></li>
-<li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
 <li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
@@ -207,29 +203,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dataset" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Dataset</h1>
 <p>Through this manual we are going to use a <a href="https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-ht-v3-1-chromium-x-3-1-high">publicly available dataset</a> containing 10K raw cells. The following code is used to generate a Seurat object ready for plotting.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="dataset.html#cb1-1" aria-hidden="true" tabindex="-1"></a>counts_path <span class="ot">&lt;-</span> <span class="st">&quot;path_to_count_matrix&quot;</span></span>
-<span id="cb1-2"><a href="dataset.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="dataset.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Path count matrix.</span></span>
-<span id="cb1-4"><a href="dataset.html#cb1-4" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">Read10X</span>(counts_path)</span>
-<span id="cb1-5"><a href="dataset.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object.</span></span>
-<span id="cb1-6"><a href="dataset.html#cb1-6" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> counts, <span class="at">project =</span> <span class="st">&quot;10K_pbmc&quot;</span>)</span>
-<span id="cb1-7"><a href="dataset.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute percentage of mithochondrial RNA.</span></span>
-<span id="cb1-8"><a href="dataset.html#cb1-8" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">PercentageFeatureSet</span>(sample, <span class="at">pattern =</span> <span class="st">&quot;^MT-&quot;</span>, <span class="at">col.name =</span> <span class="st">&quot;percent.mt&quot;</span>)</span>
-<span id="cb1-9"><a href="dataset.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute QC.</span></span>
-<span id="cb1-10"><a href="dataset.html#cb1-10" aria-hidden="true" tabindex="-1"></a>mask1 <span class="ot">&lt;-</span> sample<span class="sc">$</span>nCount_RNA <span class="sc">&gt;=</span> <span class="dv">1000</span></span>
-<span id="cb1-11"><a href="dataset.html#cb1-11" aria-hidden="true" tabindex="-1"></a>mask2 <span class="ot">&lt;-</span> sample<span class="sc">$</span>nFeature_RNA <span class="sc">&gt;=</span> <span class="dv">500</span></span>
-<span id="cb1-12"><a href="dataset.html#cb1-12" aria-hidden="true" tabindex="-1"></a>mask3 <span class="ot">&lt;-</span> sample<span class="sc">$</span>percent.mt <span class="sc">&lt;=</span> <span class="dv">20</span></span>
-<span id="cb1-13"><a href="dataset.html#cb1-13" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> mask1 <span class="sc">&amp;</span> mask2 <span class="sc">&amp;</span> mask3</span>
-<span id="cb1-14"><a href="dataset.html#cb1-14" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> sample[, mask]</span>
-<span id="cb1-15"><a href="dataset.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize.</span></span>
-<span id="cb1-16"><a href="dataset.html#cb1-16" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">SCTransform</span>(sample)</span>
-<span id="cb1-17"><a href="dataset.html#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="dataset.html#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensional reduction.</span></span>
-<span id="cb1-19"><a href="dataset.html#cb1-19" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">RunPCA</span>(sample)</span>
-<span id="cb1-20"><a href="dataset.html#cb1-20" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">RunUMAP</span>(sample, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb1-21"><a href="dataset.html#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Find clusters.</span></span>
-<span id="cb1-22"><a href="dataset.html#cb1-22" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">FindNeighbors</span>(sample, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb1-23"><a href="dataset.html#cb1-23" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">FindClusters</span>(sample, <span class="at">resolution =</span> <span class="fl">0.2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="dataset.html#cb4-1" aria-hidden="true" tabindex="-1"></a>counts_path <span class="ot">&lt;-</span> <span class="st">&quot;path_to_count_matrix&quot;</span></span>
+<span id="cb4-2"><a href="dataset.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="dataset.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Path count matrix.</span></span>
+<span id="cb4-4"><a href="dataset.html#cb4-4" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">Read10X</span>(counts_path)</span>
+<span id="cb4-5"><a href="dataset.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object.</span></span>
+<span id="cb4-6"><a href="dataset.html#cb4-6" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> counts, <span class="at">project =</span> <span class="st">&quot;10K_pbmc&quot;</span>)</span>
+<span id="cb4-7"><a href="dataset.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute percentage of mithochondrial RNA.</span></span>
+<span id="cb4-8"><a href="dataset.html#cb4-8" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">PercentageFeatureSet</span>(sample, <span class="at">pattern =</span> <span class="st">&quot;^MT-&quot;</span>, <span class="at">col.name =</span> <span class="st">&quot;percent.mt&quot;</span>)</span>
+<span id="cb4-9"><a href="dataset.html#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute QC.</span></span>
+<span id="cb4-10"><a href="dataset.html#cb4-10" aria-hidden="true" tabindex="-1"></a>mask1 <span class="ot">&lt;-</span> sample<span class="sc">$</span>nCount_RNA <span class="sc">&gt;=</span> <span class="dv">1000</span></span>
+<span id="cb4-11"><a href="dataset.html#cb4-11" aria-hidden="true" tabindex="-1"></a>mask2 <span class="ot">&lt;-</span> sample<span class="sc">$</span>nFeature_RNA <span class="sc">&gt;=</span> <span class="dv">500</span></span>
+<span id="cb4-12"><a href="dataset.html#cb4-12" aria-hidden="true" tabindex="-1"></a>mask3 <span class="ot">&lt;-</span> sample<span class="sc">$</span>percent.mt <span class="sc">&lt;=</span> <span class="dv">20</span></span>
+<span id="cb4-13"><a href="dataset.html#cb4-13" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> mask1 <span class="sc">&amp;</span> mask2 <span class="sc">&amp;</span> mask3</span>
+<span id="cb4-14"><a href="dataset.html#cb4-14" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> sample[, mask]</span>
+<span id="cb4-15"><a href="dataset.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize.</span></span>
+<span id="cb4-16"><a href="dataset.html#cb4-16" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">SCTransform</span>(sample)</span>
+<span id="cb4-17"><a href="dataset.html#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="dataset.html#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensional reduction.</span></span>
+<span id="cb4-19"><a href="dataset.html#cb4-19" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">RunPCA</span>(sample)</span>
+<span id="cb4-20"><a href="dataset.html#cb4-20" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">RunUMAP</span>(sample, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb4-21"><a href="dataset.html#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Find clusters.</span></span>
+<span id="cb4-22"><a href="dataset.html#cb4-22" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">FindNeighbors</span>(sample, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb4-23"><a href="dataset.html#cb4-23" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">FindClusters</span>(sample, <span class="at">resolution =</span> <span class="fl">0.2</span>)</span></code></pre></div>
 
 </div>
             </section>

@@ -1,6 +1,3 @@
-fig:unnamed-chunk-5
-fig:unnamed-chunk-6
-fig:unnamed-chunk-7
 fig:unnamed-chunk-8
 fig:unnamed-chunk-9
 fig:unnamed-chunk-10
@@ -57,15 +54,16 @@ fig:unnamed-chunk-60
 fig:unnamed-chunk-61
 fig:unnamed-chunk-62
 fig:unnamed-chunk-63
+fig:unnamed-chunk-64
 fig:unnamed-chunk-65
 fig:unnamed-chunk-66
-fig:unnamed-chunk-67
 fig:unnamed-chunk-68
 fig:unnamed-chunk-69
+fig:unnamed-chunk-70
+fig:unnamed-chunk-71
+fig:unnamed-chunk-72
 aim-of-the-package
 installation-guide
-a-section
-another-section
 dataset
 dim-plots
 regular-dimplots

@@ -24,7 +24,7 @@
 <meta name="author" content="Enrique Blanco Carmona" />
 
 
-<meta name="date" content="2022-02-15" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,11 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
-<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="installation-guide.html"><a href="installation-guide.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a></li>
-<li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
 <li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
@@ -206,14 +202,68 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="installation-guide" class="section level1" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Installation guide</h1>
-<p>TBD</p>
-<div id="a-section" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> A section</h2>
-</div>
-<div id="another-section" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Another section</h2>
+<p>This package can be installed using the following commands:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="installation-guide.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From CRAN:</span></span>
+<span id="cb1-2"><a href="installation-guide.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Future sumission to CRAN.</span></span>
+<span id="cb1-3"><a href="installation-guide.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="installation-guide.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># From GitHub.</span></span>
+<span id="cb1-5"><a href="installation-guide.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;devtools&quot;</span>, <span class="at">quietly =</span> T)){</span>
+<span id="cb1-6"><a href="installation-guide.html#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>) <span class="co"># If not installed.</span></span>
+<span id="cb1-7"><a href="installation-guide.html#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="installation-guide.html#cb1-8" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;enblacar/SCpubr&quot;</span>)</span></code></pre></div>
+<p>Further packages are needed in order to run the different functions:</p>
+<ul>
+<li><a href="https://github.com/gastonstat/colortools">colortools</a></li>
+<li><a href="https://dplyr.tidyverse.org/">dplyr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/ggbeeswarm/index.html">ggbeeswarm</a></li>
+<li><a href="https://ggplot2.tidyverse.org/">ggplot2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/ggpubr/index.html">ggpubr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/Matrix/index.html">Matrix</a></li>
+<li><a href="http://bioconductor.org/packages/release/bioc/html/Nebulosa.html">Nebulosa</a></li>
+<li><a href="https://patchwork.data-imaginist.com/">patchwork</a></li>
+<li><a href="https://cran.rstudio.com/web/packages/pbapply/index.html">pbapply</a></li>
+<li><a href="https://purrr.tidyverse.org/">purrr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/rlang/index.html">rlang</a></li>
+<li><a href="https://cran.r-project.org/web/packages/scales/index.html">scales</a></li>
+<li><a href="https://satijalab.org/seurat/index.html">Seurat</a></li>
+<li><a href="https://cran.r-project.org/web/packages/stringr/index.html">stringr</a></li>
+<li><a href="https://tidyr.tidyverse.org/">tidyr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/viridis/index.html">viridis</a></li>
+</ul>
+<p>All packages can be installed using the following commands:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="installation-guide.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install CRAN packages.</span></span>
+<span id="cb2-2"><a href="installation-guide.html#cb2-2" aria-hidden="true" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;colortools&quot;</span>,</span>
+<span id="cb2-3"><a href="installation-guide.html#cb2-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;dplyr&quot;</span>,</span>
+<span id="cb2-4"><a href="installation-guide.html#cb2-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;ggbeeswarm&quot;</span>,</span>
+<span id="cb2-5"><a href="installation-guide.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;ggplot2&quot;</span>,</span>
+<span id="cb2-6"><a href="installation-guide.html#cb2-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;ggpubr&quot;</span>,</span>
+<span id="cb2-7"><a href="installation-guide.html#cb2-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Matrix&quot;</span>,</span>
+<span id="cb2-8"><a href="installation-guide.html#cb2-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;patchwork&quot;</span>,</span>
+<span id="cb2-9"><a href="installation-guide.html#cb2-9" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;purrr&quot;</span>,</span>
+<span id="cb2-10"><a href="installation-guide.html#cb2-10" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rlang&quot;</span>,</span>
+<span id="cb2-11"><a href="installation-guide.html#cb2-11" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;scales&quot;</span>,</span>
+<span id="cb2-12"><a href="installation-guide.html#cb2-12" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Seurat&quot;</span>,</span>
+<span id="cb2-13"><a href="installation-guide.html#cb2-13" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;stringr&quot;</span>,</span>
+<span id="cb2-14"><a href="installation-guide.html#cb2-14" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;tidyr&quot;</span>,</span>
+<span id="cb2-15"><a href="installation-guide.html#cb2-15" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;viridis&quot;</span>)</span>
+<span id="cb2-16"><a href="installation-guide.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(cran_packages)</span>
+<span id="cb2-17"><a href="installation-guide.html#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="installation-guide.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Install bioconductor packages.</span></span>
+<span id="cb2-19"><a href="installation-guide.html#cb2-19" aria-hidden="true" tabindex="-1"></a>bioconductor_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nebulosa&quot;</span>)</span>
+<span id="cb2-20"><a href="installation-guide.html#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-21"><a href="installation-guide.html#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
+<span id="cb2-22"><a href="installation-guide.html#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="installation-guide.html#cb2-23" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(bioconductor_packages)</span></code></pre></div>
+<p>If interested in running only a subset of functions, <code>SCpubr::state_dependencies()</code> outputs the different packages and their sources needed for each of the functions.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="installation-guide.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Will return the package dependencies for all functions.</span></span>
+<span id="cb3-2"><a href="installation-guide.html#cb3-2" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">state_dependencies</span>()</span>
+<span id="cb3-3"><a href="installation-guide.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="installation-guide.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Will return the package dependencies for selected functions.</span></span>
+<span id="cb3-5"><a href="installation-guide.html#cb3-5" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">state_dependencies</span>(<span class="at">func_name =</span> <span class="fu">c</span>(<span class="st">&quot;do_DimPlot&quot;</span>, <span class="st">&quot;do_Feature_Plot&quot;</span>))</span>
+<span id="cb3-6"><a href="installation-guide.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="installation-guide.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Will return the package dependencies of a single function.</span></span>
+<span id="cb3-8"><a href="installation-guide.html#cb3-8" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">state_dependencies</span>(<span class="at">func_name =</span> <span class="st">&quot;do_DimPlot&quot;</span>)</span></code></pre></div>
 
-</div>
 </div>
             </section>
 

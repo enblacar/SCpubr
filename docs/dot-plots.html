@@ -24,7 +24,7 @@
 <meta name="author" content="Enrique Blanco Carmona" />
 
 
-<meta name="date" content="2022-02-15" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,11 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
-<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="installation-guide.html"><a href="installation-guide.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a></li>
-<li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
 <li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
@@ -207,21 +203,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dot-plots" class="section level1" number="9">
 <h1><span class="header-section-number">Chapter 9</span> Dot plots</h1>
 <p>Dot plots are a very nice data representation technique. It involves the use of two scales. One scale is color-based while the second one is size-based. In the context of <code>Seurat::DotPlot()</code>, these scales are pre-defined to contain the average expression values on the color scale and the percentage of cells within the group expressing the feature on the size, increasing it as this percentage grows bigger. It is heavily implied that the features need to be genes, otherwise the color scale will be lost. This is the output from <code>Seurat</code>:</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="dot-plots.html#cb54-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">DotPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span>
-<span id="cb54-2"><a href="dot-plots.html#cb54-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">DotPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span>
-<span id="cb54-3"><a href="dot-plots.html#cb54-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-57"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-57-1.png" alt="Seurat DotPlot" width="960" />
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="dot-plots.html#cb57-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">DotPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span>
+<span id="cb57-2"><a href="dot-plots.html#cb57-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">DotPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span>
+<span id="cb57-3"><a href="dot-plots.html#cb57-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-60"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-60-1.png" alt="Seurat DotPlot" width="960" />
 <p class="caption">
 Figure 9.1: Seurat DotPlot
 </p>
 </div>
 <p>As can be seen, if we try to plot other type of variables, the resulting plot will not contain a color scale. <code>SCpubr::do_DimPlot()</code> focuses on enhancing the overall appearance of the plots. Implementation using other types of features is not currently supported. This is how it looks using <code>SCpubr::do_DimPlot()</code>:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="dot-plots.html#cb55-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span>
-<span id="cb55-2"><a href="dot-plots.html#cb55-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nFeature_RNA&quot;</span>)</span>
-<span id="cb55-3"><a href="dot-plots.html#cb55-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-58"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-58-1.png" alt="SCpubr DotPlot" width="960" />
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="dot-plots.html#cb58-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;CD14&quot;</span>)</span>
+<span id="cb58-2"><a href="dot-plots.html#cb58-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nFeature_RNA&quot;</span>)</span>
+<span id="cb58-3"><a href="dot-plots.html#cb58-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-61"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-61-1.png" alt="SCpubr DotPlot" width="960" />
 <p class="caption">
 Figure 9.2: SCpubr DotPlot
 </p>
@@ -229,29 +225,29 @@ Figure 9.2: SCpubr DotPlot
 <div id="querying-multiple-features-at-once." class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Querying multiple features at once.</h2>
 <p>The true power of this data visualization relies on querying multiple genes at once. Let’s query the ones described in this <a href="https://satijalab.org/seurat/articles/pbmc3k_tutorial.html#assigning-cell-type-identity-to-clusters-1">Seurat vignette</a>:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="dot-plots.html#cb56-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>, <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>, <span class="st">&quot;S100A4&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>, <span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>, <span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>, <span class="st">&quot;PPBP&quot;</span>)</span>
-<span id="cb56-2"><a href="dot-plots.html#cb56-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes)</span>
-<span id="cb56-3"><a href="dot-plots.html#cb56-3" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-59"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-59-1.png" alt="SCpubr DotPlot using multiple genes" width="960" />
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="dot-plots.html#cb59-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>, <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>, <span class="st">&quot;S100A4&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>, <span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>, <span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>, <span class="st">&quot;PPBP&quot;</span>)</span>
+<span id="cb59-2"><a href="dot-plots.html#cb59-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes)</span>
+<span id="cb59-3"><a href="dot-plots.html#cb59-3" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-62"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-62-1.png" alt="SCpubr DotPlot using multiple genes" width="960" />
 <p class="caption">
 Figure 9.3: SCpubr DotPlot using multiple genes
 </p>
 </div>
 <p>Here, we can clearly distinguish which clusters are highly enriched in which given genes. This proves to be a very interesting way to query for cluster identities. It is highly dependent, though, on the accuracy of the selected genes for the queried dataset. If we actually provide the list of genes as a named list, we can facet the plot in the different list of genes provided:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="dot-plots.html#cb57-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Naive CD4+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>),</span>
-<span id="cb57-2"><a href="dot-plots.html#cb57-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD14+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>),</span>
-<span id="cb57-3"><a href="dot-plots.html#cb57-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Memory CD4+&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;S100A4&quot;</span>),</span>
-<span id="cb57-4"><a href="dot-plots.html#cb57-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;B&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MS4A1&quot;</span>),</span>
-<span id="cb57-5"><a href="dot-plots.html#cb57-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD8+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD8A&quot;</span>),</span>
-<span id="cb57-6"><a href="dot-plots.html#cb57-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;FCGR3A+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>),</span>
-<span id="cb57-7"><a href="dot-plots.html#cb57-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;NK&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>),</span>
-<span id="cb57-8"><a href="dot-plots.html#cb57-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;DC&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>),</span>
-<span id="cb57-9"><a href="dot-plots.html#cb57-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Platelet&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PPBP&quot;</span>))</span>
-<span id="cb57-10"><a href="dot-plots.html#cb57-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes)</span>
-<span id="cb57-11"><a href="dot-plots.html#cb57-11" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-60"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-60-1.png" alt="SCpubr DotPlot using multiple genes" width="1728" />
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="dot-plots.html#cb60-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Naive CD4+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>),</span>
+<span id="cb60-2"><a href="dot-plots.html#cb60-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD14+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>),</span>
+<span id="cb60-3"><a href="dot-plots.html#cb60-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Memory CD4+&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;S100A4&quot;</span>),</span>
+<span id="cb60-4"><a href="dot-plots.html#cb60-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;B&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MS4A1&quot;</span>),</span>
+<span id="cb60-5"><a href="dot-plots.html#cb60-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD8+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD8A&quot;</span>),</span>
+<span id="cb60-6"><a href="dot-plots.html#cb60-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;FCGR3A+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>),</span>
+<span id="cb60-7"><a href="dot-plots.html#cb60-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;NK&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>),</span>
+<span id="cb60-8"><a href="dot-plots.html#cb60-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;DC&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>),</span>
+<span id="cb60-9"><a href="dot-plots.html#cb60-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Platelet&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PPBP&quot;</span>))</span>
+<span id="cb60-10"><a href="dot-plots.html#cb60-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes)</span>
+<span id="cb60-11"><a href="dot-plots.html#cb60-11" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-63"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-63-1.png" alt="SCpubr DotPlot using multiple genes" width="1728" />
 <p class="caption">
 Figure 9.4: SCpubr DotPlot using multiple genes
 </p>
@@ -260,20 +256,20 @@ Figure 9.4: SCpubr DotPlot using multiple genes
 <div id="clustering-the-identities." class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> Clustering the identities.</h2>
 <p>One really cool feature from <code>Seurat::DotPlot()</code> is that it lets you cluster the identities in the Y axis depending on how similar they are between them across the values on the X axis. This is achieved by using <code>cluster.idents = TRUE</code>, parameter also implemented in <code>SCpubr::do_DotPlot()</code>:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="dot-plots.html#cb58-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Naive CD4+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>),</span>
-<span id="cb58-2"><a href="dot-plots.html#cb58-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD14+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>),</span>
-<span id="cb58-3"><a href="dot-plots.html#cb58-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Memory CD4+&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;S100A4&quot;</span>),</span>
-<span id="cb58-4"><a href="dot-plots.html#cb58-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;B&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MS4A1&quot;</span>),</span>
-<span id="cb58-5"><a href="dot-plots.html#cb58-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD8+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD8A&quot;</span>),</span>
-<span id="cb58-6"><a href="dot-plots.html#cb58-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;FCGR3A+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>),</span>
-<span id="cb58-7"><a href="dot-plots.html#cb58-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;NK&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>),</span>
-<span id="cb58-8"><a href="dot-plots.html#cb58-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;DC&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>),</span>
-<span id="cb58-9"><a href="dot-plots.html#cb58-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Platelet&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PPBP&quot;</span>))</span>
-<span id="cb58-10"><a href="dot-plots.html#cb58-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">plot.title =</span> <span class="st">&quot;Not clustered&quot;</span>)</span>
-<span id="cb58-11"><a href="dot-plots.html#cb58-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">cluster.idents =</span> <span class="cn">TRUE</span>, <span class="at">plot.title =</span> <span class="st">&quot;Clustered&quot;</span>)</span>
-<span id="cb58-12"><a href="dot-plots.html#cb58-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">/</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-61"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-61-1.png" alt="SCpubr DotPlot using multiple genes and clustering the identities" width="1728" />
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="dot-plots.html#cb61-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Naive CD4+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>),</span>
+<span id="cb61-2"><a href="dot-plots.html#cb61-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD14+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>),</span>
+<span id="cb61-3"><a href="dot-plots.html#cb61-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Memory CD4+&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;S100A4&quot;</span>),</span>
+<span id="cb61-4"><a href="dot-plots.html#cb61-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;B&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MS4A1&quot;</span>),</span>
+<span id="cb61-5"><a href="dot-plots.html#cb61-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;CD8+ T&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CD8A&quot;</span>),</span>
+<span id="cb61-6"><a href="dot-plots.html#cb61-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;FCGR3A+ Mono&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>),</span>
+<span id="cb61-7"><a href="dot-plots.html#cb61-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;NK&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>),</span>
+<span id="cb61-8"><a href="dot-plots.html#cb61-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;DC&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>),</span>
+<span id="cb61-9"><a href="dot-plots.html#cb61-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Platelet&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PPBP&quot;</span>))</span>
+<span id="cb61-10"><a href="dot-plots.html#cb61-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">plot.title =</span> <span class="st">&quot;Not clustered&quot;</span>)</span>
+<span id="cb61-11"><a href="dot-plots.html#cb61-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">cluster.idents =</span> <span class="cn">TRUE</span>, <span class="at">plot.title =</span> <span class="st">&quot;Clustered&quot;</span>)</span>
+<span id="cb61-12"><a href="dot-plots.html#cb61-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">/</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-64"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-64-1.png" alt="SCpubr DotPlot using multiple genes and clustering the identities" width="1728" />
 <p class="caption">
 Figure 9.5: SCpubr DotPlot using multiple genes and clustering the identities
 </p>
@@ -282,12 +278,12 @@ Figure 9.5: SCpubr DotPlot using multiple genes and clustering the identities
 <div id="inverting-the-axes." class="section level2" number="9.3">
 <h2><span class="header-section-number">9.3</span> Inverting the axes.</h2>
 <p>In <code>SCpubr::do_DotPlot()</code>, we can also invert the axes, so that the groups are in the X axis and the genes in the Y axis. This is achieved by using <code>flip = TRUE</code>. Note, however, that this does not work when using a named list of genes as input, as it completelyl distort the way facets are computed. Given this, this combination of parameters is currently blocked by <code>SCpubr</code>.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="dot-plots.html#cb59-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>, <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>, <span class="st">&quot;S100A4&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>, <span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>, <span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>, <span class="st">&quot;PPBP&quot;</span>)</span>
-<span id="cb59-2"><a href="dot-plots.html#cb59-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">plot.title =</span> <span class="st">&quot;Not clustered&quot;</span>, <span class="at">flip =</span> T)</span>
-<span id="cb59-3"><a href="dot-plots.html#cb59-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">cluster.idents =</span> <span class="cn">TRUE</span>, <span class="at">plot.title =</span> <span class="st">&quot;Clustered&quot;</span>, <span class="at">flip =</span> T)</span>
-<span id="cb59-4"><a href="dot-plots.html#cb59-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-62"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-62-1.png" alt="SCpubr DotPlot using multiple genes and clustering the identities flipping axes" width="1344" />
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="dot-plots.html#cb62-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;IL7R&quot;</span>, <span class="st">&quot;CCR7&quot;</span>, <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>, <span class="st">&quot;S100A4&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;FCGR3A&quot;</span>, <span class="st">&quot;MS4A7&quot;</span>, <span class="st">&quot;GNLY&quot;</span>, <span class="st">&quot;NKG7&quot;</span>, <span class="st">&quot;FCER1A&quot;</span>, <span class="st">&quot;CST3&quot;</span>, <span class="st">&quot;PPBP&quot;</span>)</span>
+<span id="cb62-2"><a href="dot-plots.html#cb62-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">plot.title =</span> <span class="st">&quot;Not clustered&quot;</span>, <span class="at">flip =</span> T)</span>
+<span id="cb62-3"><a href="dot-plots.html#cb62-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DotPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> genes, <span class="at">cluster.idents =</span> <span class="cn">TRUE</span>, <span class="at">plot.title =</span> <span class="st">&quot;Clustered&quot;</span>, <span class="at">flip =</span> T)</span>
+<span id="cb62-4"><a href="dot-plots.html#cb62-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-65"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-65-1.png" alt="SCpubr DotPlot using multiple genes and clustering the identities flipping axes" width="1344" />
 <p class="caption">
 Figure 9.6: SCpubr DotPlot using multiple genes and clustering the identities flipping axes
 </p>

@@ -1,12 +1,12 @@
 # Installation guide
 
 This package can be installed using the following commands:
-```{r}
+```{r, eval = F}
 # From CRAN:
 # Future sumission to CRAN.
 
 # From GitHub.
-if(!requireNamespace(pkg, quietly = T)){
+if(!requireNamespace("devtools", quietly = T)){
   install.packages("devtools") # If not installed.
 }
 devtools::install_github("enblacar/SCpubr")
@@ -36,7 +36,7 @@ Further packages are needed in order to run the different functions:
 
 All packages can be installed using the following commands:
 
-```{r}
+```{r, eval = F}
 # Install CRAN packages.
 cran_packages <- c("colortools",
                    "dplyr",

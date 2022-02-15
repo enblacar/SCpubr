@@ -89,7 +89,7 @@ do_VlnPlot <- function(sample,
     legend.title.fontsize <- fontsize - 4
 
     # Disable split.by.
-    if (!(is.null(split.by))){stop("This options is currently not available.", call. = F)}
+    if (!(is.null(split.by))){stop("This option is currently not available.", call. = F)}
     # Check for y_cut and only having 1 feature.
     if (!(is.null(y_cut))){
       if(length(features) != length(y_cut)){

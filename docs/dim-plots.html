@@ -24,7 +24,7 @@
 <meta name="author" content="Enrique Blanco Carmona" />
 
 
-<meta name="date" content="2022-02-15" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,11 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Aim of the package</a></li>
-<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="installation-guide.html"><a href="installation-guide.html#a-section"><i class="fa fa-check"></i><b>2.1</b> A section</a></li>
-<li class="chapter" data-level="2.2" data-path="installation-guide.html"><a href="installation-guide.html#another-section"><i class="fa fa-check"></i><b>2.2</b> Another section</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i><b>2</b> Installation guide</a></li>
 <li class="chapter" data-level="3" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i><b>3</b> Dataset</a></li>
 <li class="chapter" data-level="4" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>4</b> Dim plots</a>
 <ul>
@@ -207,145 +203,145 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dim-plots" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Dim plots</h1>
 <p>DimPlots are, probably, one of the most iconic visualizations from <code>Seurat</code>. It allows the user to visualize the cells in a dimensional reduction embedding such as <code>PCA</code> or <code>UMAP</code>. The cells can be, then, colored by any desired groups. In short, this visualization allows the user to plot <strong>any kind of categorical data</strong> onto the cells in the dimesional reduction embedding. This is achieved by using <code>Seurat::DimPlot()</code> funtion:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="dim-plots.html#cb2-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-5-1.png" alt="Default DimPlot." width="576" />
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="dim-plots.html#cb5-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-8-1.png" alt="Default DimPlot." width="576" />
 <p class="caption">
 Figure 4.1: Default DimPlot.
 </p>
 </div>
 <p>Overall, this is a pretty neat visualization, but there are quite some changes that one would like to implement. For instance, shuffling the cells so that there is no overlap of cells just due to the cluster names.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="dim-plots.html#cb3-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-6-1.png" alt="DimPlot with the cells shuffled." width="576" />
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="dim-plots.html#cb6-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-9-1.png" alt="DimPlot with the cells shuffled." width="576" />
 <p class="caption">
 Figure 4.2: DimPlot with the cells shuffled.
 </p>
 </div>
 <p>Furthermore, one would think about the <em>need</em> of the axes. If, by consensus, UMAPs are shown plotting the first UMAP component on the X axis and the second on the Y axis, then showing them becomes redundant, specially when one can not truly rely on the numbers shown by the scales.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="dim-plots.html#cb4-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T) <span class="sc">+</span> Seurat<span class="sc">::</span><span class="fu">NoAxes</span>()</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-7-1.png" alt="DimPlot without axes." width="576" />
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="dim-plots.html#cb7-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T) <span class="sc">+</span> Seurat<span class="sc">::</span><span class="fu">NoAxes</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-10"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-10-1.png" alt="DimPlot without axes." width="576" />
 <p class="caption">
 Figure 4.3: DimPlot without axes.
 </p>
 </div>
 <p>Right now, we can observe a couple of things. First, is that the dot size is rather small. Let’s set it to 0.5.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="dim-plots.html#cb5-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> Seurat<span class="sc">::</span><span class="fu">NoAxes</span>()</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-8-1.png" alt="DimPlot with increased dot size." width="576" />
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="dim-plots.html#cb8-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> Seurat<span class="sc">::</span><span class="fu">NoAxes</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-11-1.png" alt="DimPlot with increased dot size." width="576" />
 <p class="caption">
 Figure 4.4: DimPlot with increased dot size.
 </p>
 </div>
 <p>Still, the legend seems rather small. Let’s increase it’s font size and set it to bold so that it can better read.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="dim-plots.html#cb6-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb6-2"><a href="dim-plots.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb6-3"><a href="dim-plots.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb6-4"><a href="dim-plots.html#cb6-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-9-1.png" alt="DimPlot with increased font size." width="576" />
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="dim-plots.html#cb9-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb9-2"><a href="dim-plots.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="dim-plots.html#cb9-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb9-4"><a href="dim-plots.html#cb9-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-12-1.png" alt="DimPlot with increased font size." width="576" />
 <p class="caption">
 Figure 4.5: DimPlot with increased font size.
 </p>
 </div>
 <p>We would also like to add a title to our plot, to best describe it.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="dim-plots.html#cb7-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb7-2"><a href="dim-plots.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb7-3"><a href="dim-plots.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="dim-plots.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb7-5"><a href="dim-plots.html#cb7-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-10"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-10-1.png" alt="DimPlot with title." width="576" />
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="dim-plots.html#cb10-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb10-2"><a href="dim-plots.html#cb10-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="dim-plots.html#cb10-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="dim-plots.html#cb10-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb10-5"><a href="dim-plots.html#cb10-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-13-1.png" alt="DimPlot with title." width="576" />
 <p class="caption">
 Figure 4.6: DimPlot with title.
 </p>
 </div>
 <p>And, naturally, we would like to increase the font size of the title and put it in bold and centered.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="dim-plots.html#cb8-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb8-2"><a href="dim-plots.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb8-3"><a href="dim-plots.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="dim-plots.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb8-5"><a href="dim-plots.html#cb8-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb8-6"><a href="dim-plots.html#cb8-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-11-1.png" alt="DimPlot with bigger and bold title." width="576" />
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="dim-plots.html#cb11-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="dim-plots.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="dim-plots.html#cb11-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="dim-plots.html#cb11-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb11-5"><a href="dim-plots.html#cb11-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb11-6"><a href="dim-plots.html#cb11-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-14"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-14-1.png" alt="DimPlot with bigger and bold title." width="576" />
 <p class="caption">
 Figure 4.7: DimPlot with bigger and bold title.
 </p>
 </div>
 <p>Now, we would like to modify the color palette. This palette has too bright colors, and we want something more toned down.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="dim-plots.html#cb9-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb9-2"><a href="dim-plots.html#cb9-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
-<span id="cb9-3"><a href="dim-plots.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb9-4"><a href="dim-plots.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="dim-plots.html#cb9-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
-<span id="cb9-6"><a href="dim-plots.html#cb9-6" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb9-7"><a href="dim-plots.html#cb9-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-8"><a href="dim-plots.html#cb9-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb9-9"><a href="dim-plots.html#cb9-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb9-10"><a href="dim-plots.html#cb9-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-12-1.png" alt="DimPlot with custom color scale." width="576" />
-<p class="caption">
-Figure 4.8: DimPlot with custom color scale.
-</p>
-</div>
-<p>The legend on the right side seems off, what if we were to have long cluster names? It would inevitable take a lot of space from the actual plot. Let’s better put it on the bottom.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="dim-plots.html#cb10-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb10-2"><a href="dim-plots.html#cb10-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
-<span id="cb10-3"><a href="dim-plots.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb10-4"><a href="dim-plots.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="dim-plots.html#cb10-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
-<span id="cb10-6"><a href="dim-plots.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="dim-plots.html#cb10-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb10-8"><a href="dim-plots.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb10-9"><a href="dim-plots.html#cb10-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb10-10"><a href="dim-plots.html#cb10-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb10-11"><a href="dim-plots.html#cb10-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-13-1.png" alt="DimPlot with legend at the bottom." width="576" />
-<p class="caption">
-Figure 4.9: DimPlot with legend at the bottom.
-</p>
-</div>
-<p>Still, there are too many columns in the legend. Let’s rearrange it into four columns.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="dim-plots.html#cb11-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb11-2"><a href="dim-plots.html#cb11-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
-<span id="cb11-3"><a href="dim-plots.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
-<span id="cb11-4"><a href="dim-plots.html#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="dim-plots.html#cb11-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
-<span id="cb11-6"><a href="dim-plots.html#cb11-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
-<span id="cb11-7"><a href="dim-plots.html#cb11-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb11-8"><a href="dim-plots.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb11-9"><a href="dim-plots.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb11-10"><a href="dim-plots.html#cb11-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb11-11"><a href="dim-plots.html#cb11-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb11-12"><a href="dim-plots.html#cb11-12" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">guides</span>(<span class="at">color =</span> ggplot2<span class="sc">::</span><span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">4</span>,</span>
-<span id="cb11-13"><a href="dim-plots.html#cb11-13" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">byrow =</span> F))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-14"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-14-1.png" alt="DimPlot with legend at the bottom in four columns." width="576" />
-<p class="caption">
-Figure 4.10: DimPlot with legend at the bottom in four columns.
-</p>
-</div>
-<p>But now the legend icon sizes are too small! We have to fix this.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="dim-plots.html#cb12-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
 <span id="cb12-2"><a href="dim-plots.html#cb12-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
 <span id="cb12-3"><a href="dim-plots.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
 <span id="cb12-4"><a href="dim-plots.html#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-5"><a href="dim-plots.html#cb12-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
-<span id="cb12-6"><a href="dim-plots.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
-<span id="cb12-7"><a href="dim-plots.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
-<span id="cb12-8"><a href="dim-plots.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="dim-plots.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb12-10"><a href="dim-plots.html#cb12-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb12-11"><a href="dim-plots.html#cb12-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb12-12"><a href="dim-plots.html#cb12-12" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">guides</span>(<span class="at">color =</span> ggplot2<span class="sc">::</span><span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">4</span>,</span>
-<span id="cb12-13"><a href="dim-plots.html#cb12-13" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">byrow =</span> F,</span>
-<span id="cb12-14"><a href="dim-plots.html#cb12-14" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">4</span>)))</span></code></pre></div>
+<span id="cb12-6"><a href="dim-plots.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb12-7"><a href="dim-plots.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="dim-plots.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb12-9"><a href="dim-plots.html#cb12-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb12-10"><a href="dim-plots.html#cb12-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-15-1.png" alt="DimPlot with legend at the bottom in four columns." width="576" />
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-15-1.png" alt="DimPlot with custom color scale." width="576" />
+<p class="caption">
+Figure 4.8: DimPlot with custom color scale.
+</p>
+</div>
+<p>The legend on the right side seems off, what if we were to have long cluster names? It would inevitable take a lot of space from the actual plot. Let’s better put it on the bottom.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="dim-plots.html#cb13-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb13-2"><a href="dim-plots.html#cb13-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
+<span id="cb13-3"><a href="dim-plots.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb13-4"><a href="dim-plots.html#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="dim-plots.html#cb13-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="dim-plots.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="dim-plots.html#cb13-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb13-8"><a href="dim-plots.html#cb13-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="dim-plots.html#cb13-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb13-10"><a href="dim-plots.html#cb13-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb13-11"><a href="dim-plots.html#cb13-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-16-1.png" alt="DimPlot with legend at the bottom." width="576" />
+<p class="caption">
+Figure 4.9: DimPlot with legend at the bottom.
+</p>
+</div>
+<p>Still, there are too many columns in the legend. Let’s rearrange it into four columns.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="dim-plots.html#cb14-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb14-2"><a href="dim-plots.html#cb14-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
+<span id="cb14-3"><a href="dim-plots.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb14-4"><a href="dim-plots.html#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="dim-plots.html#cb14-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
+<span id="cb14-6"><a href="dim-plots.html#cb14-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="dim-plots.html#cb14-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb14-8"><a href="dim-plots.html#cb14-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="dim-plots.html#cb14-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb14-10"><a href="dim-plots.html#cb14-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb14-11"><a href="dim-plots.html#cb14-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb14-12"><a href="dim-plots.html#cb14-12" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">guides</span>(<span class="at">color =</span> ggplot2<span class="sc">::</span><span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb14-13"><a href="dim-plots.html#cb14-13" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">byrow =</span> F))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-17-1.png" alt="DimPlot with legend at the bottom in four columns." width="576" />
+<p class="caption">
+Figure 4.10: DimPlot with legend at the bottom in four columns.
+</p>
+</div>
+<p>But now the legend icon sizes are too small! We have to fix this.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="dim-plots.html#cb15-1" aria-hidden="true" tabindex="-1"></a>num_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb15-2"><a href="dim-plots.html#cb15-2" aria-hidden="true" tabindex="-1"></a>color_scale <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;#457b9d&quot;</span>, num_clusters)</span>
+<span id="cb15-3"><a href="dim-plots.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(color_scale) <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(sample<span class="sc">$</span>seurat_clusters))</span>
+<span id="cb15-4"><a href="dim-plots.html#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="dim-plots.html#cb15-5" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">shuffle =</span> T, <span class="at">pt.size =</span> <span class="fl">0.5</span>, <span class="at">cols =</span> color_scale) <span class="sc">+</span> </span>
+<span id="cb15-6"><a href="dim-plots.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>(<span class="at">legend =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="dim-plots.html#cb15-7" aria-hidden="true" tabindex="-1"></a>  Seurat<span class="sc">::</span><span class="fu">NoAxes</span>() <span class="sc">+</span></span>
+<span id="cb15-8"><a href="dim-plots.html#cb15-8" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;My awesome SC dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="dim-plots.html#cb15-9" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb15-10"><a href="dim-plots.html#cb15-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb15-11"><a href="dim-plots.html#cb15-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb15-12"><a href="dim-plots.html#cb15-12" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">guides</span>(<span class="at">color =</span> ggplot2<span class="sc">::</span><span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb15-13"><a href="dim-plots.html#cb15-13" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">byrow =</span> F,</span>
+<span id="cb15-14"><a href="dim-plots.html#cb15-14" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">4</span>)))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-18"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-18-1.png" alt="DimPlot with legend at the bottom in four columns." width="576" />
 <p class="caption">
 Figure 4.11: DimPlot with legend at the bottom in four columns.
 </p>
@@ -354,28 +350,28 @@ Figure 4.11: DimPlot with legend at the bottom in four columns.
 <div id="regular-dimplots" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> Regular DimPlots</h2>
 <p>This is the default output from <code>SCpubr::do_DimPlot()</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="dim-plots.html#cb13-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-16-1.png" alt="SCpubr DimPlot." width="576" />
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="dim-plots.html#cb16-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-19"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-19-1.png" alt="SCpubr DimPlot." width="576" />
 <p class="caption">
 Figure 4.12: SCpubr DimPlot.
 </p>
 </div>
 <p>We can add a title with the <code>plot.title</code> parameter.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="dim-plots.html#cb14-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">plot.title =</span> <span class="st">&quot;My awesome SC data set&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-17-1.png" alt="SCpubr DimPlot with title." width="576" />
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="dim-plots.html#cb17-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">plot.title =</span> <span class="st">&quot;My awesome SC data set&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-20"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-20-1.png" alt="SCpubr DimPlot with title." width="576" />
 <p class="caption">
 Figure 4.13: SCpubr DimPlot with title.
 </p>
 </div>
 <p>We can change the legend location and number of columns with <code>legend.position</code> and <code>legend.ncol</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="dim-plots.html#cb15-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, </span>
-<span id="cb15-2"><a href="dim-plots.html#cb15-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">plot.title =</span> <span class="st">&quot;My awesome SC data set&quot;</span>, </span>
-<span id="cb15-3"><a href="dim-plots.html#cb15-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">legend.position =</span> <span class="st">&quot;left&quot;</span>, </span>
-<span id="cb15-4"><a href="dim-plots.html#cb15-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">legend.ncol =</span> <span class="dv">4</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-18"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-18-1.png" alt="SCpubr DimPlot with legend to the left." width="576" />
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="dim-plots.html#cb18-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, </span>
+<span id="cb18-2"><a href="dim-plots.html#cb18-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">plot.title =</span> <span class="st">&quot;My awesome SC data set&quot;</span>, </span>
+<span id="cb18-3"><a href="dim-plots.html#cb18-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">legend.position =</span> <span class="st">&quot;left&quot;</span>, </span>
+<span id="cb18-4"><a href="dim-plots.html#cb18-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">legend.ncol =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-21"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-21-1.png" alt="SCpubr DimPlot with legend to the left." width="576" />
 <p class="caption">
 Figure 4.14: SCpubr DimPlot with legend to the left.
 </p>
@@ -384,31 +380,31 @@ Figure 4.14: SCpubr DimPlot with legend to the left.
 <div id="highlighting-cells" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Highlighting cells</h2>
 <p>One of the nice features of <code>Seurat::DimPlot()</code> is the possibility of highlighting a certain group of cells in the DimPlot. This is achieved by using the <code>cells.highligh</code> parameter. This is how the default plot looks like.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="dim-plots.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
-<span id="cb16-2"><a href="dim-plots.html#cb16-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
-<span id="cb16-3"><a href="dim-plots.html#cb16-3" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-19"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-19-1.png" alt="Seurat DimPlot highlighting cells." width="576" />
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="dim-plots.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
+<span id="cb19-2"><a href="dim-plots.html#cb19-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
+<span id="cb19-3"><a href="dim-plots.html#cb19-3" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-22"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-22-1.png" alt="Seurat DimPlot highlighting cells." width="576" />
 <p class="caption">
 Figure 4.15: Seurat DimPlot highlighting cells.
 </p>
 </div>
 <p>This is how SCpubr returns this plot. For this, the same parameter has to be set up.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="dim-plots.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
-<span id="cb17-2"><a href="dim-plots.html#cb17-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
-<span id="cb17-3"><a href="dim-plots.html#cb17-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-20"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-20-1.png" alt="SCpubr DimPlot highlighting cells." width="576" />
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="dim-plots.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
+<span id="cb20-2"><a href="dim-plots.html#cb20-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
+<span id="cb20-3"><a href="dim-plots.html#cb20-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-23"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-23-1.png" alt="SCpubr DimPlot highlighting cells." width="576" />
 <p class="caption">
 Figure 4.16: SCpubr DimPlot highlighting cells.
 </p>
 </div>
 <p>By default, the size of all cells in <code>SCpubr::do_DimPlot()</code> is the same. However, the size of the highlighted dots can be modified with the parameter <code>sizes.highlight</code> from Seurat.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="dim-plots.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
-<span id="cb18-2"><a href="dim-plots.html#cb18-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
-<span id="cb18-3"><a href="dim-plots.html#cb18-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use, <span class="at">sizes.highlight =</span> <span class="dv">2</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-21"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-21-1.png" alt="SCpubr DimPlot highlighting cells bigger dot size." width="576" />
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="dim-plots.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 random cells out of clusters 1, 5 and 7.</span></span>
+<span id="cb21-2"><a href="dim-plots.html#cb21-2" aria-hidden="true" tabindex="-1"></a>cells.use <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">colnames</span>(sample[, sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>)]), <span class="dv">1000</span>)</span>
+<span id="cb21-3"><a href="dim-plots.html#cb21-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">cells.highlight =</span> cells.use, <span class="at">sizes.highlight =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-24"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-24-1.png" alt="SCpubr DimPlot highlighting cells bigger dot size." width="576" />
 <p class="caption">
 Figure 4.17: SCpubr DimPlot highlighting cells bigger dot size.
 </p>
@@ -417,40 +413,40 @@ Figure 4.17: SCpubr DimPlot highlighting cells bigger dot size.
 <div id="splitting-by-a-category" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Splitting by a category</h2>
 <p>Another useful paramter of <code>Seurat::DimPlot</code> is <code>split.by</code>, which allows you to split your DimPlot into multiple panels, each one containing a different unique value of the metadata variable you have provided to the argument. One can understand this as using the <code>group.by</code> parameter and then splitting the resulting DimPlot into different panels. In this example, we are going to use the different clusters as an example This is how it looks by default:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="dim-plots.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions. </span></span>
-<span id="cb19-2"><a href="dim-plots.html#cb19-2" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-22"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-22-1.png" alt="Seurat DimPlot using split.by." width="960" />
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="dim-plots.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions. </span></span>
+<span id="cb22-2"><a href="dim-plots.html#cb22-2" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-25"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-25-1.png" alt="Seurat DimPlot using split.by." width="960" />
 <p class="caption">
 Figure 4.18: Seurat DimPlot using split.by.
 </p>
 </div>
 <p>As can be observed, this plots accomplish the task of separating the cells into each panel, but the approach followed actually makes interpretation difficult. Clusters such as Cluster 9, with fewer cells, tell pretty much nothing. Not knowing how the original UMAP looked like is a major downside of this approach. This is where <code>SCpubr</code> focus. Instead of using <code>Seurat</code>’s <code>split.by</code> parameter, it generates as many plots as unique values in the metadata to split the plot by, but uses <code>cells.highlight</code> instead, which keeps the rest of cells greyed out. This is how it looks:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="dim-plots.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
-<span id="cb20-2"><a href="dim-plots.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
-<span id="cb20-3"><a href="dim-plots.html#cb20-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-23"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-23-1.png" alt="SCpubr DimPlot using split.by." width="960" />
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="dim-plots.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
+<span id="cb23-2"><a href="dim-plots.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
+<span id="cb23-3"><a href="dim-plots.html#cb23-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-26"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-26-1.png" alt="SCpubr DimPlot using split.by." width="960" />
 <p class="caption">
 Figure 4.19: SCpubr DimPlot using split.by.
 </p>
 </div>
 <p>This way, we can see that clusters such as Cluster 7 are way more disperse than the rest, accounting not only for standalone groups of cells but also blending in other bigger clusters. Actually, the user might want to change the color of the highlighted cells in this split DimPlot. This is achieved by using <code>colors.split</code> parameter and providing either a color name recognized by <code>ggplot2</code> or (recommended) a HEX code.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="dim-plots.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
-<span id="cb21-2"><a href="dim-plots.html#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
-<span id="cb21-3"><a href="dim-plots.html#cb21-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F, <span class="at">colors.split =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-24"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-24-1.png" alt="SCpubr DimPlot using split.by with a changed color" width="960" />
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dim-plots.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
+<span id="cb24-2"><a href="dim-plots.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
+<span id="cb24-3"><a href="dim-plots.html#cb24-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F, <span class="at">colors.split =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-27-1.png" alt="SCpubr DimPlot using split.by with a changed color" width="960" />
 <p class="caption">
 Figure 4.20: SCpubr DimPlot using split.by with a changed color
 </p>
 </div>
 <p>Furthermore, one might also want to color each cluster by the original color. This can be achieved by using the argument <code>colorss.split</code>, either providing a named vector of each cluster (or metadata variable unique value) as names and color hex codes as values or <code>TRUE</code>, thus resorting to the default <code>SCpubr</code> categorical coloring.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="dim-plots.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
-<span id="cb22-2"><a href="dim-plots.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
-<span id="cb22-3"><a href="dim-plots.html#cb22-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F, <span class="at">colors.split =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-25"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-25-1.png" alt="SCpubr DimPlot using split.by with default SCpubr colors" width="960" />
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="dim-plots.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using ncol = 5 to maintain some of the proportions.</span></span>
+<span id="cb25-2"><a href="dim-plots.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Using legend = F to remove unwanted repeated legends.</span></span>
+<span id="cb25-3"><a href="dim-plots.html#cb25-3" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">split.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">legend =</span> F, <span class="at">colors.split =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-28"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-28-1.png" alt="SCpubr DimPlot using split.by with default SCpubr colors" width="960" />
 <p class="caption">
 Figure 4.21: SCpubr DimPlot using split.by with default SCpubr colors
 </p>
