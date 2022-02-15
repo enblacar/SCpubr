@@ -17,6 +17,8 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
+#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param verbose Whether to show warnings.
 #' @param ... Extra parameters used in \link[Seurat]{FeaturePlot}.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
@@ -41,6 +43,8 @@ do_FeaturePlot <- function(sample,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2),
+                           viridis_color_map = "D",
+                           verbose = TRUE,
                            ...){
     # Checks for packages.
     check_suggests(function_name = "do_FeaturePlot")
@@ -53,7 +57,8 @@ do_FeaturePlot <- function(sample,
     # Check the dimensions.
     dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
     # Check logical parameters.
-    logical_list <- list("legend" = legend)
+    logical_list <- list("legend" = legend,
+                         "verbose" = verbose)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("pt.size" = pt.size,
@@ -67,7 +72,8 @@ do_FeaturePlot <- function(sample,
                            "slot" = slot,
                            "split.by" = split.by,
                            "plot.title" = plot.title,
-                           "split.by.idents" = split.by.idents)
+                           "split.by.idents" = split.by.idents,
+                           "viridis_color_map" = viridis_color_map)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check slot.
@@ -79,6 +85,9 @@ do_FeaturePlot <- function(sample,
         stop("Could not find '", split.by, "' in metadata columns.")
       }
     }
+
+    # Check viridis_color_map.
+    check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
     # Define fontsize parameters.
     plot.title.fontsize <- fontsize + 2
@@ -101,7 +110,7 @@ do_FeaturePlot <- function(sample,
                                  ncol = ncol,
                                  ...) &
             Seurat::NoAxes() &
-            viridis::scale_color_viridis(na.value = "grey75") &
+            viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold", hjust = 1),
                            legend.position = legend.position)
@@ -175,7 +184,7 @@ do_FeaturePlot <- function(sample,
                                                            fill = "NS"),
                                     alpha = 0) +
                 Seurat::NoAxes() +
-                viridis::scale_color_viridis(na.value = "grey75") +
+                viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) +
                 ggplot2::ggtitle(feature) +
                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                                legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
@@ -219,7 +228,7 @@ do_FeaturePlot <- function(sample,
                                                              fill = "NS"),
                                       alpha = 0) +
                   Seurat::NoAxes() +
-                  ggplot2::scale_color_viridis_c(limits = limits, na.value = "grey75") +
+                  ggplot2::scale_color_viridis_c(limits = limits, na.value = "grey75", option = viridis_color_map) +
                   ggplot2::ggtitle(feature) +
                   ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
                   ggplot2::ylab(ifelse(count_plot == 1, feature, "")) +

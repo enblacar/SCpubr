@@ -18,6 +18,8 @@
 #' @param remove_y_axis Remove Y axis labels and ticks from the plot.
 #' @param fontsize Base fontsize of the plot.
 #' @param flip Whether to flip the axis.
+#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param verbose Whether to show warnings.
 #'
 #' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
@@ -41,7 +43,9 @@ do_BeeSwarmPlot <- function(sample,
                        fontsize = 14,
                        remove_x_axis = FALSE,
                        remove_y_axis = FALSE,
-                       flip = FALSE){
+                       flip = FALSE,
+                       viridis_color_map = "D",
+                       verbose = TRUE){
     # Checks for packages.
     check_suggests(function_name = "do_BeeSwarmPlot")
     # Check the assay.
@@ -54,7 +58,8 @@ do_BeeSwarmPlot <- function(sample,
     logical_list <- list("continuous_feature" = continuous_feature,
                          "remove_x_axis" = remove_x_axis,
                          "remove_y_axis" = remove_y_axis,
-                         "flip" = flip)
+                         "flip" = flip,
+                         "verbose" = verbose)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("fontsize" = fontsize)
@@ -66,10 +71,14 @@ do_BeeSwarmPlot <- function(sample,
                            "group.by" = group.by,
                            "ylab" = ylab,
                            "xlab" = xlab,
-                           "slot" = slot)
+                           "slot" = slot,
+                           "viridis_color_map" = viridis_color_map)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
     # Check slot.
     slot <- check_and_set_slot(slot = slot)
+
+    # Check viridis_color_map.
+    check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
     # Define fontsize parameters.
     plot.title.fontsize <- fontsize + 2
@@ -116,7 +125,7 @@ do_BeeSwarmPlot <- function(sample,
                        legend.text = ggplot2::element_text(size = 10, face = "bold", hjust = 1))
 
     if (continuous_feature == TRUE){
-        plot <- plot + viridis::scale_color_viridis()
+        plot <- plot + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
     } else if (continuous_feature == FALSE) {
         if (is.null(colors.use)){colors.use <- generate_color_scale(levels(sample))}
         plot <- plot +

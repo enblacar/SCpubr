@@ -15,11 +15,12 @@ do_NebulosaPlot(
   method = c("ks", "wkde"),
   joint = FALSE,
   plot.title = NULL,
-  pal = "viridis",
   shape = 16,
   legend = TRUE,
   fontsize = 14,
-  legend.position = "right"
+  legend.position = "right",
+  viridis_color_map = "D",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -43,8 +44,6 @@ do_NebulosaPlot(
 
 \item{plot.title}{Title to use in the plot.}
 
-\item{pal}{Viridis palette to use. Use the names.}
-
 \item{shape}{Shape of the geometry (ggplot number).}
 
 \item{legend}{Whether to plot the legend or not. Logical.}
@@ -52,6 +51,10 @@ do_NebulosaPlot(
 \item{fontsize}{Base fontsize of the plot.}
 
 \item{legend.position}{Position of the legend in the plot.}
+
+\item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{verbose}{Whether to show warnings.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.

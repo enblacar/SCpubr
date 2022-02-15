@@ -1,8 +1,8 @@
 bookdown::gitbook:
   split_by: chapter
   css: style.css
-  fig_width: 8
-  fig_height: 8
+  fig_width: 6
+  fig_height: 6
   fig_caption: true
   lib_dir: assets
   config:

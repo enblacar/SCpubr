@@ -21,6 +21,8 @@ do_FeaturePlot(
   cells.highlight = NULL,
   idents.highlight = NULL,
   dims = c(1, 2),
+  viridis_color_map = "D",
+  verbose = TRUE,
   ...
 )
 }
@@ -56,6 +58,10 @@ do_FeaturePlot(
 \item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
 
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
+
+\item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{verbose}{Whether to show warnings.}
 
 \item{...}{Extra parameters used in \link[Seurat]{FeaturePlot}.}
 }

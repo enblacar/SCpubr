@@ -10,12 +10,13 @@
 #' @param method Kernel density estimation method. Either "ks" or "wkde" or both. See \link[Nebulosa]{plot_density} for more details.
 #' @param dims Vector of 2 dims to plot the data. By default, first and second from the specified reduction.
 #' @param joint Whether to plot different features as joint density.
-#' @param pal Viridis palette to use. Use the names.
 #' @param shape Shape of the geometry (ggplot number).
 #' @param legend Whether to plot the legend or not. Logical.
 #' @param legend.position Position of the legend in the plot.
 #' @param fontsize Base fontsize of the plot.
 #' @param plot.title Title to use in the plot.
+#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param verbose Whether to show warnings.
 #'
 #' @return  A ggplot2 object containing a Nebulosa plot.
 #' @export
@@ -34,11 +35,12 @@ do_NebulosaPlot <- function(sample,
                              method = c("ks", "wkde"),
                              joint = FALSE,
                              plot.title = NULL,
-                             pal = "viridis",
                              shape = 16,
                              legend = TRUE,
                              fontsize = 14,
-                             legend.position = "right"){
+                             legend.position = "right",
+                             viridis_color_map = "D",
+                             verbose = TRUE){
   # Checks for packages.
   check_suggests(function_name = "do_Nebulosa_plot")
   # Check the reduction.
@@ -57,7 +59,6 @@ do_NebulosaPlot <- function(sample,
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
                          "features" = features,
-                         "pal" = pal,
                          "method" = method,
                          "plot.title" = plot.title,
                          "slot" = slot)
@@ -67,6 +68,9 @@ do_NebulosaPlot <- function(sample,
 
   # Check if the feature is actually in the object.
   check_feature(sample = sample, features = features)
+
+  # Check viridis_color_map.
+  check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2
@@ -84,7 +88,8 @@ do_NebulosaPlot <- function(sample,
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           legend.position = legend.position)
+                           legend.position = legend.position) &
+            viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
 
     # Remove legend.
     if (legend == FALSE){

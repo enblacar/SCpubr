@@ -20,7 +20,9 @@ do_BeeSwarmPlot(
   fontsize = 14,
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
-  flip = FALSE
+  flip = FALSE,
+  viridis_color_map = "D",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -55,6 +57,10 @@ do_BeeSwarmPlot(
 \item{remove_y_axis}{Remove Y axis labels and ticks from the plot.}
 
 \item{flip}{Whether to flip the axis.}
+
+\item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{verbose}{Whether to show warnings.}
 
 \item{legend}{Whether to plot the legend or not.}
 }

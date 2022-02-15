@@ -467,3 +467,22 @@ compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = N
   }
   return(factor_levels)
 }
+
+#' Check viridis color map.
+#'
+#' @param viridis_color_map Viridis color map provided.
+#' @param verbose Verbosity choice.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_viridis_color_map <- function(viridis_color_map, verbose){
+  viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
+  if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "))}
+  if (verbose){
+    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.")}
+  }
+}
