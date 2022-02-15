@@ -56,14 +56,14 @@ do_PTEA <- function(sample,
 
       group.by_values <- levels(sample)
       if (names(colors.use) != unique(sample@meta.data[, group.by])){
-        stop(paste0("The color list provided does not contain all possible unique values stored in the Seurat object identities."))
+        stop(paste0("The color list provided does not contain all possible unique values stored in the Seurat object identities."), call. = F)
       }
     } else if (check_group.by == TRUE) {
       # Reduce the color list to contain only values included in the sample.
       colors.use <- colors.use[names(colors.use) %in% unique(sample@meta.data[, group.by])]
 
       if (names(colors.use) != unique(sample@meta.data[, group.by])){
-        stop(paste0("The color list provided does not contain all possible unique values stored in ", group.by, " metadata variable."))
+        stop(paste0("The color list provided does not contain all possible unique values stored in ", group.by, " metadata variable."), call. = F)
       }
     }
   }

@@ -64,7 +64,7 @@ do_ButterflyPlot <- function(sample,
 
     # Check.
     if (categorical == TRUE & continuous == TRUE){
-        stop("Either select categorical or continuous coloring.")
+        stop("Either select categorical or continuous coloring.", call. = F)
     }
 
     # 3-variable plot.

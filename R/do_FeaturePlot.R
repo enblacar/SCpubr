@@ -79,12 +79,8 @@ do_FeaturePlot <- function(sample,
     # Check slot.
     slot <- check_and_set_slot(slot = slot)
 
-    # Check split.by.
-    if (!(is.null(split.by))){
-      if (!(split.by %in% colnames(sample@meta.data))){
-        stop("Could not find '", split.by, "' in metadata columns.")
-      }
-    }
+    # Check split.by is on metadata.
+    if (!(is.null(split.by))){check_feature(sample = sample, features = split.by, enforce_check = "metadata", enforce_parameter = "split.by")}
 
     # Check viridis_color_map.
     check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
@@ -207,7 +203,9 @@ do_FeaturePlot <- function(sample,
               list.plots.split.by <- list()
               count_plot <- 0
               count_iteration <- count_iteration + 1
-              if (legend.position != "right"){"Using split.by parameter will force the legend of each individual plot to the right."}
+              if (legend.position != "right"){
+                if (verbose){warning("Using split.by parameter will force the legend of each individual plot to the right.")}
+              }
               limits <- c(min(sample$dummy), max(sample$dummy))
               for (iteration in plot_order){
                 count_plot <- count_plot + 1

@@ -31,6 +31,5 @@ Suggests:
   BiocStyle, 
   rmarkdown,
   knitr,
-  purrr,
-  utils
+  purrr
 VignetteBuilder: knitr

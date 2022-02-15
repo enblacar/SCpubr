@@ -103,7 +103,7 @@ do_BeeSwarmPlot <- function(sample,
         }
       }
     } else {
-        stop(paste0("The following feature was not found: ", feature_to_rank, "\n Please check whether it is a metadata variable, a gene name, or the name of a dimension reduction component (and specified it correctly in the reduction parameter)."))
+        stop(paste0("The following feature was not found: ", feature_to_rank, "\n Please check whether it is a metadata variable, a gene name, or the name of a dimension reduction component (and specified it correctly in the reduction parameter)."), call. = F)
     }
     # Compute the ranking
     sample$ranked_groups <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))

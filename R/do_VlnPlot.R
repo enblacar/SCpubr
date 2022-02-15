@@ -89,11 +89,11 @@ do_VlnPlot <- function(sample,
     legend.title.fontsize <- fontsize - 4
 
     # Disable split.by.
-    if (!(is.null(split.by))){stop("This options is currently not available.")}
+    if (!(is.null(split.by))){stop("This options is currently not available.", call. = F)}
     # Check for y_cut and only having 1 feature.
     if (!(is.null(y_cut))){
       if(length(features) != length(y_cut)){
-      stop('Total number of y_cut values does not match the number of features provided.')
+      stop('Total number of y_cut values does not match the number of features provided.', call. = F)
     }
     }
 
@@ -122,10 +122,10 @@ do_VlnPlot <- function(sample,
       } else {
         check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
       }
-    } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
+    } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.", call. = F)}
 
     if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
-      stop("The length of individual titles has to be equal to the number of features.")
+      stop("The length of individual titles has to be equal to the number of features.", call. = F)
     }
     counter <- 0
     list.plots <- list()

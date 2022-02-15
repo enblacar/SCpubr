@@ -149,7 +149,7 @@ do_BarPlot <- function(sample,
         } else {
           if (!is.null(order.by)){
             if (!(order.by %in% unique(sample@meta.data[, group.by]))){
-              stop("Parameter order.by (", order.by, ") not present in the unique values of parameter group.by (", group.by, ").")
+              stop("Parameter order.by (", order.by, ") not present in the unique values of parameter group.by (", group.by, ").", call. = F)
             }
             factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, order.by = order.by, position = position)
             if (is.null(labels.order) & position == "stack"){factor_levels <- rev(factor_levels)}

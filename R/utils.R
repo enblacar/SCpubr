@@ -9,19 +9,19 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "utils", "rlang"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "utils", "rlang"),
-                   "do_DimPlot" = c("grDevices", "colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang"),
+                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
-                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "stats", "purrr", "utils", "rlang"),
+                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
-      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."))
+      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = F)
     }
   }
 }
@@ -47,7 +47,7 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   if (sum(check) != length(colors)){
-    stop(paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."))
+    stop(paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."), call. = F)
   }
 }
 
@@ -69,10 +69,10 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
     check_values <- unique(sample@meta.data[, grouping_variable])
   }
   if (sum(names(colors) %in% check_values) != length(check_values)){
-    stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).')
+    stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
   if (length(colors) != length(check_values)){
-    stop('The number of colors provided is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).')
+    stop('The number of colors provided is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
 }
 
@@ -174,15 +174,15 @@ check_feature <- function(sample, features, dump_reduction_names = FALSE, enforc
     check_enforcers[["reductions"]] <- TRUE
     if (check == 3) {
       stop(paste0("The requested feature (", feature, ") could not be found:\n", "    - Not matching any gene name (rownames of the provided object).\n",
-                  "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in any of the following reductions: ", Seurat::Reductions(object = sample), "."))
+                  "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in any of the following reductions: ", Seurat::Reductions(object = sample), "."), call. = F)
     }
   }
   if (!(is.null(enforce_check))){
     if (!(enforce_check %in% names(check_enforcers))){
-      stop("The variable enforcer is not in the current list of checked variable types.")
+      stop("The variable enforcer is not in the current list of checked variable types.", call. = F)
     } else {
       if (isFALSE(check_enforcers[[enforce_check]])){
-        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".")
+        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".", call. = F)
       }
     }
   }
@@ -204,7 +204,7 @@ check_feature <- function(sample, features, dump_reduction_names = FALSE, enforc
 check_identity <- function(sample, identities){
   for (identity in identities){
     if (!(identity %in% levels(sample))){
-      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."))
+      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."), call. = F)
     }
   }
 }
@@ -222,7 +222,7 @@ check_identity <- function(sample, identities){
 #' }
 check_and_set_reduction <- function(sample, reduction){
   # Check if the object has a reduction computed.
-  if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!")}
+  if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!", call. = F)}
   # If no reduction was provided by the user.
   if (is.null(reduction)){
     # Select umap if computed.
@@ -235,7 +235,7 @@ check_and_set_reduction <- function(sample, reduction){
   # If the user provided a value for reduction.
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
-    if (!(reduction %in% Seurat::Reductions(sample))){stop("The provided reduction could not be found in the object: ", reduction)}
+    if (!(reduction %in% Seurat::Reductions(sample))){stop("The provided reduction could not be found in the object: ", reduction, call. = F)}
   }
   return(reduction)
 }
@@ -255,19 +255,19 @@ check_and_set_reduction <- function(sample, reduction){
 check_and_set_dimensions <- function(sample, reduction, dims){
   # Check that the dimensions is a 2 item vector.
   if (!(is.null(dims)) & length(dims) != 2){
-    stop("Provided dimensions need to be a 2-item vector.")
+    stop("Provided dimensions need to be a 2-item vector.", call. = F)
   }
   # Check that the dimensions are integers.
   null_check <- is.null(dims[1]) & is.null(dims[2])
   integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
   if (!(is.null(dims)) & integer_check == FALSE){
-    stop("Provied dimensions need to be numerics.")
+    stop("Provied dimensions need to be numerics.", call. = F)
   }
   # Check that the dimensions are in the requested embedding.
   aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
   if (!(is.null(dims))){
     if (!(dims[1] %in% seq_len(aval_dims)) | !(dims[2] %in% seq_len(aval_dims))){
-      stop("Dimension could not be found in the following reduction: ", reduction, ".")
+      stop("Dimension could not be found in the following reduction: ", reduction, ".", call. = F)
     }
   }
   # Check that at least 2 dimensions are present.
@@ -299,16 +299,16 @@ check_and_set_assay <- function(sample, assay){
   } else {
     # Check if the assay is a character.
     if (!(is.character(assay))){
-      stop("The value for assay has to be a character.")
+      stop("The value for assay has to be a character.", call. = F)
     }
     # Check that at least one assay is computed.
     if (length(Seurat::Assays(sample)) == 0){
-      stop("There must be at least one computed assay in the object.")
+      stop("There must be at least one computed assay in the object.", call. = F)
     }
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
     if (!(assay %in% aval_assays)){
-      stop("The following assay could not be found: ", assay, ".")
+      stop("The following assay could not be found: ", assay, ".", call. = F)
     }
   }
   # Set up the assay the user has defined.
@@ -336,7 +336,7 @@ check_type <- function(parameters, required_type, test_function){
   for(parameter_name in names(parameters)){
     parameter <- parameters[[parameter_name]]
     if (!(is.null(parameter)) & !(test_function(parameter))){
-      stop("Parameter ", parameter_name, " needs to be a ", required_type, ".")
+      stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
     }
   }
 }
@@ -355,7 +355,7 @@ check_and_set_slot <- function(slot){
   if (is.null(slot)){
     slot <- "data"
   } else if (!(slot %in% c("counts", "data", "scale.data"))){
-    stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.")
+    stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.", call. = F)
   }
   return(slot)
 }
@@ -379,7 +379,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
   limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
 
   if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
-    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".")
+    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = F)
   }
 }
 
@@ -399,7 +399,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = NULL, position = NULL){
   `%>%` <- purrr::`%>%`
   if (is.null(order.by) & !(is.null(group.by))){
-    if (is.null(position)){stop("Position parameter needs to be provided.")}
+    if (is.null(position)){stop("Position parameter needs to be provided.", call. = F)}
     if (position == "fill"){
       factor_levels <- as.character(rev(sort(unique(sample@meta.data[, feature]))))
     } else if (position == "stack"){
@@ -481,8 +481,72 @@ compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = N
 #' }
 check_viridis_color_map <- function(viridis_color_map, verbose){
   viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
-  if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "))}
+  if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)}
   if (verbose){
     if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.")}
   }
 }
+
+
+#' State SCpubr current function dependencies.
+#'
+#' @param func_name Name of an exported function from SCpubr. If NULL, return all functions.
+#' @return None
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+state_dependencies <- function(func_name = NULL){
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang"),
+                   #"do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
+                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
+                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
+                   #"do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
+                   "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"))
+
+  cran_packages <- c("colortools",
+                     "dplyr",
+                     "ggbeeswarm",
+                     "ggplot2",
+                     "ggpubr",
+                     "Matrix",
+                     "patchwork",
+                     "purrr",
+                     "rlang",
+                     "scales",
+                     "Seurat",
+                     "stringr",
+                     "tidyr",
+                     "viridis")
+
+  bioconductor_packages <- c("Nebulosa")
+
+  func_list <- sort(names(pkg_list))
+  if (!(is.null(func_name))){
+    for (func in func_name){
+      if (!(func %in% func_list)){
+        stop("Function name provided (", func, ") not part of SCpubr current functions.", call. = F)
+      }
+    }
+    func_list <- func_name
+  }
+
+  message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
+  for (func in func_list){
+    packages <- pkg_list[[func]]
+    cran_packages_individual <- sort(packages[packages %in% cran_packages])
+    bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
+      message("Dependencies for ", func, ":")
+      if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
+      if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
+      message("")
+  }
+}
+
+
+
