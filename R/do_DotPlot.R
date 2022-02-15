@@ -12,11 +12,7 @@
 #' @param plot.title Title to use in the plot.
 #' @param xlab Title for the X axis.
 #' @param ylab Title for the Y axis.
-#' @param axis.text.fonsize Modify the font size for axis texts.
-#' @param axis.title.fonsize Modify the font size for axis titles.
-#' @param plot.title.fonsize Modify the font size for the plot title.
-#' @param legend.text.fontsize Modify the font size for the legend text.
-#' @param legend.title.fontsize Modify the font size for the legend title.
+#' @param fontsize Base fontsize of the plot.
 #' @param flip Whether to flip the axis.
 #' @param dot.scale Scale the size of the dots.
 #' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
@@ -40,11 +36,7 @@ do_DotPlot <- function(sample,
                        plot.title = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       axis.text.fonsize = 16,
-                       axis.title.fonsize = 16,
-                       plot.title.fonsize = 18,
-                       legend.text.fontsize = 12,
-                       legend.title.fontsize = 12,
+                       fontsize = 14,
                        cluster.idents = FALSE,
                        flip = FALSE){
     # Checks for packages.
@@ -61,11 +53,7 @@ do_DotPlot <- function(sample,
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
-                         "axis.text.fonsize" = axis.text.fonsize,
-                         "axis.title.fonsize" = axis.title.fonsize,
-                         "plot.title.fonsize" = plot.title.fonsize,
-                         "legend.text.fontsize" = legend.text.fontsize,
-                         "legend.title.fontsize" = legend.title.fontsize)
+                         "fontsize" = fontsize)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -80,6 +68,13 @@ do_DotPlot <- function(sample,
 
     # Check the features.
     check_feature(sample = sample, features = features)
+
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 2
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize + 1
+    legend.text.fontsize <- fontsize - 5
+    legend.title.fontsize <- fontsize - 4
 
     # Check that flip is not set to TRUE and features is not a named list.
     if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.")}
@@ -103,12 +98,12 @@ do_DotPlot <- function(sample,
                             dot.scale = dot.scale,
                             cluster.idents = cluster.idents) +
             ggpubr::theme_pubr(legend = legend.position) +
-            ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                           axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
-                           axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
+            ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
+                           axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                           axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 1),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5))
+                           plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5))
 
     if (!is.null(xlab)){
       plot <- plot & ggplot2::xlab(xlab)

@@ -14,6 +14,7 @@
 #' @param shape Shape of the geometry (ggplot number).
 #' @param legend Whether to plot the legend or not. Logical.
 #' @param legend.position Position of the legend in the plot.
+#' @param fontsize Base fontsize of the plot.
 #' @param plot.title Title to use in the plot.
 #'
 #' @return  A ggplot2 object containing a Nebulosa plot.
@@ -36,6 +37,7 @@ do_NebulosaPlot <- function(sample,
                              pal = "viridis",
                              shape = 16,
                              legend = TRUE,
+                             fontsize = 14,
                              legend.position = "right"){
   # Checks for packages.
   check_suggests(function_name = "do_Nebulosa_plot")
@@ -66,15 +68,22 @@ do_NebulosaPlot <- function(sample,
   # Check if the feature is actually in the object.
   check_feature(sample = sample, features = features)
 
+  # Define fontsize parameters.
+  plot.title.fontsize <- fontsize + 2
+  axis.text.fontsize <- fontsize
+  axis.title.fontsize <- fontsize + 1
+  legend.text.fontsize <- fontsize - 5
+  legend.title.fontsize <- fontsize - 4
+
   # Plot a density plot using Nebulosa package.
     plot <- Nebulosa::plot_density(object = sample,
                                    features = features,
                                    joint = joint,
                                    reduction = reduction) &
             Seurat::NoAxes() &
-            ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = 10, face = "bold"),
-                           legend.title = ggplot2::element_text(size = 12, face = "bold"),
+            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                            legend.position = legend.position)
 
     # Remove legend.
@@ -87,7 +96,7 @@ do_NebulosaPlot <- function(sample,
             plot <- plot + ggplot2::ggtitle(plot.title)
         } else {
             plot <- plot + patchwork::plot_annotation(title = plot.title,
-                                                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18,
+                                                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
                                                                                                                 face = "bold",
                                                                                                                 hjust = 0.5)))
         }

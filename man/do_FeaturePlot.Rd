@@ -16,6 +16,7 @@ do_FeaturePlot(
   slot = NULL,
   legend.position = "right",
   plot.title = NULL,
+  fontsize = 10,
   ncol = NULL,
   cells.highlight = NULL,
   idents.highlight = NULL,
@@ -45,6 +46,8 @@ do_FeaturePlot(
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
 \item{plot.title}{Title for the plot.}
+
+\item{fontsize}{Base fontsize of the figure.}
 
 \item{ncol}{Number of columns to use in the arrangement of the output if more than one feature is queried to the function.}
 

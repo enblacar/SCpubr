@@ -21,11 +21,7 @@ do_VlnPlot(
   individual.titles = NULL,
   xlab = NULL,
   ylab = NULL,
-  axis.text.fonsize = 16,
-  axis.title.fonsize = 16,
-  plot.title.fonsize = 18,
-  legend.text.fontsize = 16,
-  legend.title.fontsize = 16,
+  fontsize = 16,
   ncol = NULL,
   legend.ncol = 3
 )
@@ -63,15 +59,7 @@ do_VlnPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{axis.text.fonsize}{Modify the fontsize for axis texts.}
-
-\item{axis.title.fonsize}{Modify the fontsize for axis titles.}
-
-\item{plot.title.fonsize}{Modify the fontsize for the plot title.}
-
-\item{legend.text.fontsize}{Modify the fontsize for the legend text.remove_x_axis}
-
-\item{legend.title.fontsize}{Modify the fontsize for the legend title.}
+\item{fontsize}{Base fontsize for the figure.}
 
 \item{ncol}{Numeric. Number of columns to arrange multiple plots into.}
 

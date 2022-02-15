@@ -9,17 +9,13 @@
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
 #' @param colors.use  Palette of colors to use. It must match the group.by variable in terms of length and names.
+#' @param fontsize Base fontsize of the figure.
 #' @param legend Whether to plot the legend.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.position  Position of the legend in the plot.
 #' @param legend.ncol  Number of columns in the legend.
-#' @param legend.text.size  Font size of the legend labels.
-#' @param legend.title.size  Fantasize of the legend title.
 #' @param legend.icon.size  Size of the icons in legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param axis.text.size  Font size for axis text.
-#' @param axis.title.size  Font size for axis title.
-#' @param plot.title.size  Font size for the plot title.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
 #' @param plot.title  Title to use in the plot.
 #' @param horizontal Whether to plot the Bar plot horizontally.
@@ -45,11 +41,7 @@ do_BarPlot <- function(sample,
                        legend.position = "right",
                        legend.title = FALSE,
                        legend.ncol = 1,
-                       legend.text.size = 12,
-                       legend.title.size = 12,
-                       axis.text.size = 16,
-                       axis.title.size = 16,
-                       plot.title.size = 18,
+                       fontsize = 14,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        colors.use = NULL,
@@ -69,11 +61,7 @@ do_BarPlot <- function(sample,
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("legend.icon.size" = legend.icon.size,
-                         "axis.text.size" = axis.text.size,
-                         "axis.title.size" = axis.title.size,
-                         "plot.title.size" = plot.title.size,
-                         "legend.text.size" = legend.text.size,
-                         "legend.title.size" = legend.title.size,
+                         "fontsize" = fontsize,
                          "legend.ncol" = legend.ncol)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
@@ -88,6 +76,12 @@ do_BarPlot <- function(sample,
                            "position" = position)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 2
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize + 1
+    legend.text.fontsize <- fontsize - 5
+    legend.title.fontsize <- fontsize - 4
     # If no color scale is provided, generate a custom one.
     if (is.null(colors.use)){
       if (is.null(group.by)){
@@ -123,12 +117,12 @@ do_BarPlot <- function(sample,
                             size = 1) +
           ggpubr::theme_pubr(legend = legend.position) +
           ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.size, face = "bold"),
-                         axis.title.y = ggplot2::element_text(size = axis.title.size, face = "bold"),
-                         axis.text = ggplot2::element_text(size = axis.text.size, face = "bold"),
-                         legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                         legend.title = ggplot2::element_text(size = legend.title.size, face = "bold"),
-                         plot.title = ggplot2::element_text(size = plot.title.size, face = "bold", hjust = 0.5)) +
+          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                         axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                         plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                         byrow = legend.byrow,
                                                         override.aes = list(size = legend.icon.size)))
@@ -166,12 +160,12 @@ do_BarPlot <- function(sample,
                             size = 1) +
           ggpubr::theme_pubr(legend = legend.position) +
           ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.size, face = "bold"),
-                         axis.title.y = ggplot2::element_text(size = axis.title.size, face = "bold"),
-                         axis.text = ggplot2::element_text(size = axis.text.size, face = "bold"),
-                         legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                         legend.title = ggplot2::element_text(size = legend.title.size, face = "bold"),
-                         plot.title = ggplot2::element_text(size = plot.title.size, face = "bold", hjust = 0.5)) +
+          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                         axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                         plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                         byrow = legend.byrow,
                                                         override.aes = list(size = legend.icon.size)))

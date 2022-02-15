@@ -17,11 +17,7 @@ do_BeeSwarmPlot(
   plot.title = "",
   xlab = NULL,
   ylab = "",
-  axis.text.fonsize = 15,
-  axis.title.fonsize = 15,
-  plot.title.fonsize = 15,
-  legend.text.fontsize = 10,
-  legend.title.fontsize = 12,
+  fontsize = 14,
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
   flip = FALSE
@@ -52,15 +48,7 @@ do_BeeSwarmPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{axis.text.fonsize}{Modify the font size for axis texts.}
-
-\item{axis.title.fonsize}{Modify the font size for axis titles.}
-
-\item{plot.title.fonsize}{Modify the font size for the plot title.}
-
-\item{legend.text.fontsize}{Modify the font size for the legend text.}
-
-\item{legend.title.fontsize}{Modify the font size for the legend title.}
+\item{fontsize}{Base fontsize of the plot.}
 
 \item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
 

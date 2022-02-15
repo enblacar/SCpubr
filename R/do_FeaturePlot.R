@@ -12,6 +12,7 @@
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title Title for the plot.
+#' @param fontsize Base fontsize of the figure.
 #' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
@@ -35,6 +36,7 @@ do_FeaturePlot <- function(sample,
                            slot = NULL,
                            legend.position = "right",
                            plot.title = NULL,
+                           fontsize = 10,
                            ncol = NULL,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
@@ -78,6 +80,13 @@ do_FeaturePlot <- function(sample,
       }
     }
 
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 2
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize + 1
+    legend.text.fontsize <- fontsize - 5
+    legend.title.fontsize <- fontsize - 4
+
     # Regular FeaturePlot.
     check <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
     if (check){
@@ -93,8 +102,8 @@ do_FeaturePlot <- function(sample,
                                  ...) &
             Seurat::NoAxes() &
             viridis::scale_color_viridis(na.value = "grey75") &
-            ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = 10, face = "bold", hjust = 1),
+            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold", hjust = 1),
                            legend.position = legend.position)
         # Special patches for diffusion maps: Adding "DC" labels to the axis.
         if (reduction == "diffusion"){
@@ -168,8 +177,8 @@ do_FeaturePlot <- function(sample,
                 Seurat::NoAxes() +
                 viridis::scale_color_viridis(na.value = "grey75") +
                 ggplot2::ggtitle(feature) +
-                ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                               legend.text = ggplot2::element_text(size = 10, face = "bold"),
+                ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                               legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                                legend.position = legend.position,
                                legend.spacing = ggplot2::unit(0.01, "cm")) +
                 # Override aesthetic of the legend, providing the desired gray color.
@@ -214,9 +223,9 @@ do_FeaturePlot <- function(sample,
                   ggplot2::ggtitle(feature) +
                   ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
                   ggplot2::ylab(ifelse(count_plot == 1, feature, "")) +
-                  ggplot2::theme(plot.title = ggplot2::element_text(size = 12, face = "bold", hjust = 0.5),
-                                 axis.title.y = ggplot2::element_text(size = 12, face = "bold", vjust = 0.5),
-                                 legend.text = ggplot2::element_text(size = 10, face = "bold"),
+                  ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                                 axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", vjust = 0.5),
+                                 legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                                  legend.position = ifelse(legend.position != "right", "right", legend.position),
                                  legend.spacing = ggplot2::unit(0.01, "cm")) +
                   # Override aesthetic of the legend, providing the desired gray color.
@@ -260,7 +269,7 @@ do_FeaturePlot <- function(sample,
     if (!is.null(plot.title)){
         if (length(features) > 1){
             p <- p + patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 18,
+                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
                                                                                                           face = "bold",
                                                                                                           hjust = 0.5)))
         } else {
@@ -285,7 +294,7 @@ do_FeaturePlot <- function(sample,
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
             ggpubr::rremove("ticks") &
-            ggplot2::theme(axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
+            ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                                                                                                                                                                                                                                                                                                                                                                                                                                                             axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
             ggplot2::theme(axis.title.y = ggplot2::element_text(angle = 90))
     }

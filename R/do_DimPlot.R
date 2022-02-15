@@ -16,6 +16,7 @@
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
 #' @param legend.ncol Number of columns in the legend.
+#' @param fontsize Base fontsize of the figure.
 #' @param legend.text.size Font size of the legend labels.
 #' @param legend.title.size Font size of the legend title.
 #' @param legend.icon.size Size of the icons in legend.
@@ -82,8 +83,7 @@ do_DimPlot <- function(sample,
     numeric_list <- list("pt.size" = pt.size,
                          "sizes.highlight" = sizes.highlight,
                          "legend.ncol" = legend.ncol,
-                         "legend.text.size" = legend.text.size,
-                         "legend.title.size" = legend.title.size,
+                         "fontsize" = fontsize,
                          "legend.icon.size" = legend.icon.size,
                          "ncol" = ncol)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -123,6 +123,12 @@ do_DimPlot <- function(sample,
       colors.split <- generate_color_scale(names.use)
     }
 
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 2
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize + 1
+    legend.text.fontsize <- fontsize - 5
+    legend.title.fontsize <- fontsize - 4
 
     # If the UMAP does not need to be split in multiple panes (default case).
     if (is.null(split.by)){
@@ -142,9 +148,9 @@ do_DimPlot <- function(sample,
                                   ...) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::ggtitle(plot.title) +
-            ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
+            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
@@ -183,9 +189,9 @@ do_DimPlot <- function(sample,
                 ggpubr::theme_pubr(legend = legend.position) +
                 ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
                                             values = c("grey75", ifelse(multiple_colors == TRUE, colors.split[[iteration]], colors.split)))  +
-                ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                               legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                               legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
+                ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                               legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                               legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
                 ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                               byrow = legend.byrow,
                                                               override.aes = list(size = legend.icon.size)))
@@ -211,9 +217,9 @@ do_DimPlot <- function(sample,
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
                                         values = c("grey", colors.highlight))  +
-            ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.size, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.size, face = "bold")) +
+            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
@@ -245,8 +251,8 @@ do_DimPlot <- function(sample,
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
             ggpubr::rremove("ticks") &
-            ggplot2::theme(axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
-                           axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
+            ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold")) &
             ggplot2::xlab(paste0(prefix, dims[1])) & ggplot2::ylab(paste0(prefix, dims[2]))
     }
     # Label treatment.

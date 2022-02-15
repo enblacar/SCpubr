@@ -17,11 +17,7 @@ do_DotPlot(
   plot.title = NULL,
   xlab = NULL,
   ylab = NULL,
-  axis.text.fonsize = 16,
-  axis.title.fonsize = 16,
-  plot.title.fonsize = 18,
-  legend.text.fontsize = 12,
-  legend.title.fontsize = 12,
+  fontsize = 14,
   cluster.idents = FALSE,
   flip = FALSE
 )
@@ -51,15 +47,7 @@ do_DotPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{axis.text.fonsize}{Modify the font size for axis texts.}
-
-\item{axis.title.fonsize}{Modify the font size for axis titles.}
-
-\item{plot.title.fonsize}{Modify the font size for the plot title.}
-
-\item{legend.text.fontsize}{Modify the font size for the legend text.}
-
-\item{legend.title.fontsize}{Modify the font size for the legend title.}
+\item{fontsize}{Base fontsize of the plot.}
 
 \item{cluster.idents}{Logical. Whether to cluster the identities based on the expression of the features.}
 

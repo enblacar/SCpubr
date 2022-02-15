@@ -18,11 +18,7 @@ do_BarPlot(
   legend.position = "right",
   legend.title = FALSE,
   legend.ncol = 1,
-  legend.text.size = 12,
-  legend.title.size = 12,
-  axis.text.size = 16,
-  axis.title.size = 16,
-  plot.title.size = 18,
+  fontsize = 14,
   legend.icon.size = 4,
   legend.byrow = FALSE,
   colors.use = NULL,
@@ -57,15 +53,7 @@ do_BarPlot(
 
 \item{legend.ncol}{Number of columns in the legend.}
 
-\item{legend.text.size}{Font size of the legend labels.}
-
-\item{legend.title.size}{Fantasize of the legend title.}
-
-\item{axis.text.size}{Font size for axis text.}
-
-\item{axis.title.size}{Font size for axis title.}
-
-\item{plot.title.size}{Font size for the plot title.}
+\item{fontsize}{Base fontsize of the figure.}
 
 \item{legend.icon.size}{Size of the icons in legend.}
 

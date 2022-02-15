@@ -88,6 +88,8 @@ do_DimPlot(
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
 \item{...}{Other parameters for \link[Seurat]{DimPlot}.}
+
+\item{fontsize}{Base fontsize of the figure.}
 }
 \value{
 A ggplot2 object containing a DimPlot.

@@ -18,6 +18,7 @@ do_NebulosaPlot(
   pal = "viridis",
   shape = 16,
   legend = TRUE,
+  fontsize = 14,
   legend.position = "right"
 )
 }
@@ -47,6 +48,8 @@ do_NebulosaPlot(
 \item{shape}{Shape of the geometry (ggplot number).}
 
 \item{legend}{Whether to plot the legend or not. Logical.}
+
+\item{fontsize}{Base fontsize of the plot.}
 
 \item{legend.position}{Position of the legend in the plot.}
 }

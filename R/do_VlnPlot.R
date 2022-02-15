@@ -16,11 +16,7 @@
 #' @param pt.size  Size of points in the VlnPlot.
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
-#' @param axis.text.fonsize  Modify the fontsize for axis texts.
-#' @param axis.title.fonsize  Modify the fontsize for axis titles.
-#' @param plot.title.fonsize  Modify the fontsize for the plot title.
-#' @param legend.text.fontsize  Modify the fontsize for the legend text.remove_x_axis
-#' @param legend.title.fontsize  Modify the fontsize for the legend title.
+#' @param fontsize Base fontsize for the figure.
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.
@@ -49,11 +45,7 @@ do_VlnPlot <- function(sample,
                        individual.titles = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       axis.text.fonsize = 16,
-                       axis.title.fonsize = 16,
-                       plot.title.fonsize = 18,
-                       legend.text.fontsize = 16,
-                       legend.title.fontsize = 16,
+                       fontsize = 16,
                        ncol = NULL,
                        legend.ncol = 3){
     # Checks for packages.
@@ -71,11 +63,7 @@ do_VlnPlot <- function(sample,
     # Check numeric parameters.
     numeric_list <- list("pt.size" = pt.size,
                          "y_cut" = y_cut,
-                         "axis.text.fonsize" = axis.text.fonsize,
-                         "axis.title.fonsize" = axis.title.fonsize,
-                         "plot.title.fonsize" = plot.title.fonsize,
-                         "legend.text.fontsize" = legend.text.fontsize,
-                         "legend.title.fontsize" = legend.title.fontsize,
+                         "fontsize" = fontsize,
                          "legend.ncol" = legend.ncol,
                          "ncol" = ncol)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -92,6 +80,13 @@ do_VlnPlot <- function(sample,
 
     # Check the feature.
     check_feature(sample = sample, features = features)
+
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 2
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize + 1
+    legend.text.fontsize <- fontsize - 5
+    legend.title.fontsize <- fontsize - 4
 
     # Disable split.by.
     if (!(is.null(split.by))){stop("This options is currently not available.")}
@@ -152,12 +147,12 @@ do_VlnPlot <- function(sample,
                               pt.size = pt.size) &
         ggpubr::theme_pubr(legend = legend.position) &
         ggpubr::rremove("x.title") &
-        ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fonsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                       axis.text.y = ggplot2::element_text(size = axis.text.fonsize, face = "bold"),
-                       axis.title = ggplot2::element_text(face = "bold", size = axis.title.fonsize),
+        ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
+                       axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                       axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
                        legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                       plot.title = ggplot2::element_text(size = plot.title.fonsize, face = "bold", hjust = 0.5)) &
+                       plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
         ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
 
       if (!is.null(xlab)){
@@ -194,7 +189,7 @@ do_VlnPlot <- function(sample,
 
     if (!(is.null(plot.title))){
       plot <- plot + patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fonsize + 2,
+                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
                                                                                                           face = "bold",
                                                                                                           hjust = 0.5)))
     }
