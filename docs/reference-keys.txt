@@ -50,6 +50,12 @@ fig:unnamed-chunk-53
 fig:unnamed-chunk-54
 fig:unnamed-chunk-55
 fig:unnamed-chunk-56
+fig:unnamed-chunk-57
+fig:unnamed-chunk-59
+fig:unnamed-chunk-60
+fig:unnamed-chunk-61
+fig:unnamed-chunk-62
+fig:unnamed-chunk-63
 aim-of-the-package
 installation-guide
 a-section
@@ -73,3 +79,7 @@ dot-plots
 querying-multiple-features-at-once.
 clustering-the-identities.
 inverting-the-axes.
+bar-plots
+introducing-a-second-variable-to-group-the-feature-by
+reordering-columns-based-on-a-single-entity
+adding-custom-color-scales.

@@ -177,14 +177,17 @@ check_feature <- function(sample, features, dump_reduction_names = FALSE, enforc
                   "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in any of the following reductions: ", Seurat::Reductions(object = sample), "."))
     }
   }
-  if (!(enforce_check %in% names(check_enforcers))){
-    stop("The variable enforcer is not in the current list of checked variable types.")
-  } else {
-    if (isFALSE(check_enforcers[[enforce_check]])){
-      stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".")
+  if (!(is.null(enforce_check))){
+    if (!(enforce_check %in% names(check_enforcers))){
+      stop("The variable enforcer is not in the current list of checked variable types.")
+    } else {
+      if (isFALSE(check_enforcers[[enforce_check]])){
+        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".")
+      }
     }
   }
-  if (dump_reduction_names == TRUE){return(dim_colnames)}
+
+  if (isTRUE(dump_reduction_names)){return(dim_colnames)}
 }
 
 #' Check if the identity provided is in the current Seurat identities.

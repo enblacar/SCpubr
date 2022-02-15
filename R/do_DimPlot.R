@@ -63,6 +63,7 @@ do_DimPlot <- function(sample,
                        ncol = NULL,
                        raster = FALSE,
                        dims = c(1, 2),
+                       fontsize = 14,
                        ...){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")

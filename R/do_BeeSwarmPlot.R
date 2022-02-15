@@ -106,11 +106,11 @@ do_BeeSwarmPlot <- function(sample,
         ggpubr::theme_pubr(legend = legend.position) +
         ggplot2::ggtitle(plot.title) +
         ggpubr::rremove("legend.title") +
-        ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fonsize,
+        ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
                                                          face = "bold"),
-                       axis.title = ggplot2::element_text(size = axis.title.fonsize,
+                       axis.title = ggplot2::element_text(size = axis.title.fontsize,
                                                           face = "bold"),
-                       plot.title = ggplot2::element_text(size = plot.title.fonsize,
+                       plot.title = ggplot2::element_text(size = plot.title.fontsize,
                                                           face = "bold",
                                                           hjust = 0.5),
                        legend.text = ggplot2::element_text(size = 10, face = "bold", hjust = 1))

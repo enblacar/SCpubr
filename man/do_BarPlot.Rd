@@ -22,7 +22,7 @@ do_BarPlot(
   legend.icon.size = 4,
   legend.byrow = FALSE,
   colors.use = NULL,
-  horizontal = TRUE,
+  horizontal = FALSE,
   verbose = TRUE
 )
 }
