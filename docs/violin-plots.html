@@ -156,12 +156,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="feature-plots.html"><a href="feature-plots.html#multiple-features"><i class="fa fa-check"></i><b>5.1</b> Multiple features</a></li>
 <li class="chapter" data-level="5.2" data-path="feature-plots.html"><a href="feature-plots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>5.2</b> Working with subsets of cells</a></li>
 <li class="chapter" data-level="5.3" data-path="feature-plots.html"><a href="feature-plots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>5.3</b> Splitting the FeaturePlot by a variable</a></li>
+<li class="chapter" data-level="5.4" data-path="feature-plots.html"><a href="feature-plots.html#modify-color-maps"><i class="fa fa-check"></i><b>5.4</b> Modify color maps</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>6</b> Nebulosa plots</a></li>
+<li class="chapter" data-level="6" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>6</b> Nebulosa plots</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html#modify-color-maps-1"><i class="fa fa-check"></i><b>6.1</b> Modify color maps</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html"><i class="fa fa-check"></i><b>7</b> Bee Swarm plots</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-categorical-variables"><i class="fa fa-check"></i><b>7.1</b> Using categorical variables</a></li>
 <li class="chapter" data-level="7.2" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-continuous-variables"><i class="fa fa-check"></i><b>7.2</b> Using continuous variables</a></li>
+<li class="chapter" data-level="7.3" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#modify-color-maps-for-continuous-variables"><i class="fa fa-check"></i><b>7.3</b> Modify color maps for continuous variables</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="violin-plots.html"><a href="violin-plots.html"><i class="fa fa-check"></i><b>8</b> Violin plots</a>
 <ul>
@@ -202,28 +207,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="violin-plots" class="section level1" number="8">
 <h1><span class="header-section-number">Chapter 8</span> Violin plots</h1>
 <p>Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different groups. As such, it is also included in <code>Seurat</code> under <code>Seurat::VlnPlot()</code> function. The very first time a new user encounters this function is likely going to be when querying for different QC paramters, such as the number of UMIs, the number of genes or the percentage of mitochondrial RNA. This is how it looks for the number of UMIs:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="violin-plots.html#cb43-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-46"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-46-1.png" alt="Seurat's violin plot." width="768" />
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="violin-plots.html#cb49-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-52"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-52-1.png" alt="Seurat's violin plot." width="576" />
 <p class="caption">
 Figure 8.1: Seurat’s violin plot.
 </p>
 </div>
 <p>The one thing that really stands out here is, indeed, the extra dots that are being plotted alongside the violin plot. Since each dot represent a cell, it quickly becomes the dominant feature of the figure. One can play with the alpha of the dots to reduce their presence:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="violin-plots.html#cb44-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span>
-<span id="cb44-2"><a href="violin-plots.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Surgically&quot; add the alpha parameter in the ggplot2 object.</span></span>
-<span id="cb44-3"><a href="violin-plots.html#cb44-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>layers[[<span class="dv">2</span>]]<span class="sc">$</span>aes_params<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb44-4"><a href="violin-plots.html#cb44-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-47"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-47-1.png" alt="Seurat's violin plot with transparent dots." width="768" />
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="violin-plots.html#cb50-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span>
+<span id="cb50-2"><a href="violin-plots.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Surgically&quot; add the alpha parameter in the ggplot2 object.</span></span>
+<span id="cb50-3"><a href="violin-plots.html#cb50-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>layers[[<span class="dv">2</span>]]<span class="sc">$</span>aes_params<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb50-4"><a href="violin-plots.html#cb50-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-53"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-53-1.png" alt="Seurat's violin plot with transparent dots." width="576" />
 <p class="caption">
 Figure 8.2: Seurat’s violin plot with transparent dots.
 </p>
 </div>
 <p>But still, by making the dots almost invisible, we still observe their dominance on the bigger clusters. Therefore, it’s better to remove it. This, together with other modifications are the basis of <code>SCpubr::do_VlnPlot()</code>. This is how the default plot looks like:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="violin-plots.html#cb45-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-48"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-48-1.png" alt="SCpubr's violin plot." width="768" />
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="violin-plots.html#cb51-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-54"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-54-1.png" alt="SCpubr's violin plot." width="576" />
 <p class="caption">
 Figure 8.3: SCpubr’s violin plot.
 </p>
@@ -232,17 +237,17 @@ Figure 8.3: SCpubr’s violin plot.
 <div id="violin-plots-as-a-means-of-qc" class="section level2" number="8.1">
 <h2><span class="header-section-number">8.1</span> Violin plots as a means of QC</h2>
 <p>For QC analyses, users might want to also add some other features such as a line indicating where to put the cutoff. This can be achieved by using <code>y_cut</code> parameter. Currently, only one value per plot for <code>y_cut</code> can be used.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="violin-plots.html#cb46-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">y_cut =</span> <span class="dv">30000</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-49"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-49-1.png" alt="SCpubr's violin plot with horizontal line." width="768" />
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="violin-plots.html#cb52-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">y_cut =</span> <span class="dv">30000</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-55"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-55-1.png" alt="SCpubr's violin plot with horizontal line." width="576" />
 <p class="caption">
 Figure 8.4: SCpubr’s violin plot with horizontal line.
 </p>
 </div>
 <p>When multiple features are queried, the user can set up different horizontal lines parsing them as a vector to <code>y_cut</code>. Also, the same can be achieved for the individual plot titles by using the <code>individual.titles</code> parameter. The only restriction, is that the vector has to be of the same length as the number of features. If for a particular plot, we do not want to modify anything, use <code>NA</code> instead.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="violin-plots.html#cb47-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;nFeature_RNA&quot;</span>), <span class="at">y_cut =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">5000</span>), <span class="at">individual.titles =</span> <span class="fu">c</span>(<span class="st">&quot;UMIs&quot;</span>, <span class="cn">NA</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-50"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-50-1.png" alt="SCpubr's violin plot with multiple features." width="960" />
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="violin-plots.html#cb53-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;nFeature_RNA&quot;</span>), <span class="at">y_cut =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">5000</span>), <span class="at">individual.titles =</span> <span class="fu">c</span>(<span class="st">&quot;UMIs&quot;</span>, <span class="cn">NA</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-56"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-56-1.png" alt="SCpubr's violin plot with multiple features." width="960" />
 <p class="caption">
 Figure 8.5: SCpubr’s violin plot with multiple features.
 </p>

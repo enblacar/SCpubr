@@ -156,12 +156,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="feature-plots.html"><a href="feature-plots.html#multiple-features"><i class="fa fa-check"></i><b>5.1</b> Multiple features</a></li>
 <li class="chapter" data-level="5.2" data-path="feature-plots.html"><a href="feature-plots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>5.2</b> Working with subsets of cells</a></li>
 <li class="chapter" data-level="5.3" data-path="feature-plots.html"><a href="feature-plots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>5.3</b> Splitting the FeaturePlot by a variable</a></li>
+<li class="chapter" data-level="5.4" data-path="feature-plots.html"><a href="feature-plots.html#modify-color-maps"><i class="fa fa-check"></i><b>5.4</b> Modify color maps</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>6</b> Nebulosa plots</a></li>
+<li class="chapter" data-level="6" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>6</b> Nebulosa plots</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html#modify-color-maps-1"><i class="fa fa-check"></i><b>6.1</b> Modify color maps</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html"><i class="fa fa-check"></i><b>7</b> Bee Swarm plots</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-categorical-variables"><i class="fa fa-check"></i><b>7.1</b> Using categorical variables</a></li>
 <li class="chapter" data-level="7.2" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-continuous-variables"><i class="fa fa-check"></i><b>7.2</b> Using continuous variables</a></li>
+<li class="chapter" data-level="7.3" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#modify-color-maps-for-continuous-variables"><i class="fa fa-check"></i><b>7.3</b> Modify color maps for continuous variables</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="violin-plots.html"><a href="violin-plots.html"><i class="fa fa-check"></i><b>8</b> Violin plots</a>
 <ul>
@@ -202,25 +207,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="bar-plots" class="section level1" number="10">
 <h1><span class="header-section-number">Chapter 10</span> Bar plots</h1>
 <p>Bar plots are another well known data representation. They are a very handy resource to plot summary statistics for the QC part of any single-cell analysis. Consequently, they are part of <code>SCpubr</code>, available on <code>SCpubr::do_BarPlot()</code>. Let’s say we are interested into plotting the different number of cells in each cluster.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="bar-plots.html#cb54-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>)</span>
-<span id="cb54-2"><a href="bar-plots.html#cb54-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>, <span class="at">horizontal =</span> T)</span>
-<span id="cb54-3"><a href="bar-plots.html#cb54-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-57"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-57-1.png" alt="SCpubr Bar plots, plotting single variables" width="1152" />
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="bar-plots.html#cb60-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>)</span>
+<span id="cb60-2"><a href="bar-plots.html#cb60-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>, <span class="at">horizontal =</span> T)</span>
+<span id="cb60-3"><a href="bar-plots.html#cb60-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-63"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-63-1.png" alt="SCpubr Bar plots, plotting single variables" width="1152" />
 <p class="caption">
 Figure 10.1: SCpubr Bar plots, plotting single variables
 </p>
 </div>
-<p>Using <code>SCpubr::do_BarPlot()</code> with only <code>features</code> yields a simple bar plot which is ordered by descending value. We can also set up the direction of the bars with <code>horizontal = TRUE/FALSE</code>, which by default is set to be vertical There are some underlying assumptions that are being taken to generate these plots:
-- The values in <code>features</code> need to be metadata variables, stored in <code>object@meta.data</code>. This a design choice, as data need to be grouped using <code>dplyr</code> and <code>tidyr</code>. This will also later apply to values provided to <code>group.by</code>.
-- The feature provided need to have a clear and rather small number of groups. A good estimate on how to assess this is by querying the feature with <code>table</code>, as in:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="bar-plots.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sample<span class="sc">@</span>meta.data[, feature])</span></code></pre></div>
+<p>Using <code>SCpubr::do_BarPlot()</code> with only <code>features</code> yields a simple bar plot which is ordered by descending value. We can also set up the direction of the bars with <code>horizontal = TRUE/FALSE</code>, which by default is set to be vertical There are some underlying assumptions that are being taken to generate these plots:</p>
+<ul>
+<li>The values in <code>features</code> need to be metadata variables, stored in <code>object@meta.data</code>. This a design choice, as data need to be grouped using <code>dplyr</code> and <code>tidyr</code>. This will also later apply to values provided to <code>group.by</code>.</li>
+<li>The feature provided need to have a clear and rather small number of groups. A good estimate on how to assess this is by querying the feature with <code>table</code>, as in:</li>
+</ul>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="bar-plots.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sample<span class="sc">@</span>meta.data[, feature])</span></code></pre></div>
 <p>Focusing on the last point, this would happen if we were to choose a feature with a high number of unique values:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="bar-plots.html#cb56-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-2"><a href="bar-plots.html#cb56-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of UMIs?&quot;</span>, <span class="at">horizontal =</span> F)</span>
-<span id="cb56-3"><a href="bar-plots.html#cb56-3" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-59"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-59-1.png" alt="SCpubr Bar plots, choosing the wrong variable" width="1152" />
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="bar-plots.html#cb62-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-2"><a href="bar-plots.html#cb62-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of UMIs?&quot;</span>, <span class="at">horizontal =</span> F)</span>
+<span id="cb62-3"><a href="bar-plots.html#cb62-3" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-65"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-65-1.png" alt="SCpubr Bar plots, choosing the wrong variable" width="1152" />
 <p class="caption">
 Figure 10.2: SCpubr Bar plots, choosing the wrong variable
 </p>
@@ -229,87 +236,89 @@ Figure 10.2: SCpubr Bar plots, choosing the wrong variable
 <div id="introducing-a-second-variable-to-group-the-feature-by" class="section level2" number="10.1">
 <h2><span class="header-section-number">10.1</span> Introducing a second variable to group the feature by</h2>
 <p>Let’s expand on the previous example on the number of cells per cluster. What if we were interested not only on that, but we would like to profile <strong>how many cells from each cluster are present in each of the unique samples present in the Seurat object</strong>? For this, we need to provide <code>SCpubr::do_BarPlot()</code> with a second parameter, <code>group.by</code>, that tackles how we want the feature to be grouped:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="bar-plots.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We only have one value in orig.ident. Let&#39;s modify it so that it resembles a multi-sample Seurat object.</span></span>
-<span id="cb57-2"><a href="bar-plots.html#cb57-2" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_orig.ident <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Sample_A&quot;</span>, <span class="st">&quot;Sample_B&quot;</span>, <span class="st">&quot;Sample_C&quot;</span>), <span class="fu">ncol</span>(sample), <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>))</span>
-<span id="cb57-3"><a href="bar-plots.html#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-4"><a href="bar-plots.html#cb57-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb57-5"><a href="bar-plots.html#cb57-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb57-6"><a href="bar-plots.html#cb57-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per sample&quot;</span>,</span>
-<span id="cb57-7"><a href="bar-plots.html#cb57-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
-<span id="cb57-8"><a href="bar-plots.html#cb57-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb57-9"><a href="bar-plots.html#cb57-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb57-10"><a href="bar-plots.html#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
-<span id="cb57-11"><a href="bar-plots.html#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Number of cells per sample&quot;, : Recommended settings without using</span></span>
-<span id="cb57-12"><a href="bar-plots.html#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; group.by is to set legend to FALSE.</span></span>
-<span id="cb57-13"><a href="bar-plots.html#cb57-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-14"><a href="bar-plots.html#cb57-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb57-15"><a href="bar-plots.html#cb57-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>, </span>
-<span id="cb57-16"><a href="bar-plots.html#cb57-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
-<span id="cb57-17"><a href="bar-plots.html#cb57-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster and sample&quot;</span>,</span>
-<span id="cb57-18"><a href="bar-plots.html#cb57-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
-<span id="cb57-19"><a href="bar-plots.html#cb57-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb57-20"><a href="bar-plots.html#cb57-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb57-21"><a href="bar-plots.html#cb57-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
-<span id="cb57-22"><a href="bar-plots.html#cb57-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;seurat_clusters&quot;, : Recommended settings when using group.by is to set</span></span>
-<span id="cb57-23"><a href="bar-plots.html#cb57-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; position to &#39;fill&#39;.</span></span>
-<span id="cb57-24"><a href="bar-plots.html#cb57-24" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-60"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-60-1.png" alt="SCpubr Bar plots, introducing a variable to group values by" width="1152" />
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="bar-plots.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We only have one value in orig.ident. Let&#39;s modify it so that it resembles a multi-sample Seurat object.</span></span>
+<span id="cb63-2"><a href="bar-plots.html#cb63-2" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_orig.ident <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Sample_A&quot;</span>, <span class="st">&quot;Sample_B&quot;</span>, <span class="st">&quot;Sample_C&quot;</span>), <span class="fu">ncol</span>(sample), <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>))</span>
+<span id="cb63-3"><a href="bar-plots.html#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="bar-plots.html#cb63-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb63-5"><a href="bar-plots.html#cb63-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb63-6"><a href="bar-plots.html#cb63-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per sample&quot;</span>,</span>
+<span id="cb63-7"><a href="bar-plots.html#cb63-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
+<span id="cb63-8"><a href="bar-plots.html#cb63-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb63-9"><a href="bar-plots.html#cb63-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb63-10"><a href="bar-plots.html#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
+<span id="cb63-11"><a href="bar-plots.html#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Number of cells per sample&quot;, : Recommended settings without using</span></span>
+<span id="cb63-12"><a href="bar-plots.html#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; group.by is to set legend to FALSE.</span></span>
+<span id="cb63-13"><a href="bar-plots.html#cb63-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-14"><a href="bar-plots.html#cb63-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb63-15"><a href="bar-plots.html#cb63-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>, </span>
+<span id="cb63-16"><a href="bar-plots.html#cb63-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
+<span id="cb63-17"><a href="bar-plots.html#cb63-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster and sample&quot;</span>,</span>
+<span id="cb63-18"><a href="bar-plots.html#cb63-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
+<span id="cb63-19"><a href="bar-plots.html#cb63-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb63-20"><a href="bar-plots.html#cb63-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb63-21"><a href="bar-plots.html#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
+<span id="cb63-22"><a href="bar-plots.html#cb63-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;seurat_clusters&quot;, : Recommended settings when using group.by is to set</span></span>
+<span id="cb63-23"><a href="bar-plots.html#cb63-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; position to &#39;fill&#39;.</span></span>
+<span id="cb63-24"><a href="bar-plots.html#cb63-24" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-66"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-66-1.png" alt="SCpubr Bar plots, introducing a variable to group values by" width="1152" />
 <p class="caption">
 Figure 10.3: SCpubr Bar plots, introducing a variable to group values by
 </p>
 </div>
-<p>As we can see, this nicely yields as many number of bars as unique values in the <code>feature</code>, and this bars are segmented by as many times as unique values in <code>group.by</code>. At first, this is hard to grasp, but it helps thinking of these two parameters, when used together, as:
-- <code>feature</code>: What I want to show as different bars.
-- <code>group.by</code>: Secondary variable on which the bars generated by <code>feature</code> can be further subdivided.</p>
+<p>As we can see, this nicely yields as many number of bars as unique values in the <code>feature</code>, and this bars are segmented by as many times as unique values in <code>group.by</code>. At first, this is hard to grasp, but it helps thinking of these two parameters, when used together, as:</p>
+<ul>
+<li><code>feature</code>: What I want to show as different bars.</li>
+<li><code>group.by</code>: Secondary variable on which the bars generated by <code>feature</code> can be further subdivided.</li>
+</ul>
 <p>Another interesting parameter introduced in the last example is <code>position</code>. Position can be either <code>stack</code> or <code>fill</code>. The difference between them is that <code>position = "stack"</code> will yield the total number of cells for each of the unique values in <code>feature</code>, while <code>position = "fill"</code> will bring all bars to the same height and will split each bar into the proportions within each bar of the different groups (only one if <code>group.by = NULL</code> and as many groups if <code>group.by</code> is used). Therefore, it becomes highly recommended to use <code>position = "stack"</code> when <code>group.by</code> is not used and <code>position = "fill"</code> otherwise. This is also warned by the package. If you want to silence the warnings, use <code>verbose = FALSE</code>.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="bar-plots.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We are going to use the previously generated sample assignment.</span></span>
-<span id="cb58-2"><a href="bar-plots.html#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-3"><a href="bar-plots.html#cb58-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb58-4"><a href="bar-plots.html#cb58-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb58-5"><a href="bar-plots.html#cb58-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Without group.by - position = stack&quot;</span>,</span>
-<span id="cb58-6"><a href="bar-plots.html#cb58-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
-<span id="cb58-7"><a href="bar-plots.html#cb58-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb58-8"><a href="bar-plots.html#cb58-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb58-9"><a href="bar-plots.html#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
-<span id="cb58-10"><a href="bar-plots.html#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = stack&quot;, : Recommended settings</span></span>
-<span id="cb58-11"><a href="bar-plots.html#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set legend to FALSE.</span></span>
-<span id="cb58-12"><a href="bar-plots.html#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-13"><a href="bar-plots.html#cb58-13" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb58-14"><a href="bar-plots.html#cb58-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb58-15"><a href="bar-plots.html#cb58-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Without group.by - position = fill&quot;</span>,</span>
-<span id="cb58-16"><a href="bar-plots.html#cb58-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
-<span id="cb58-17"><a href="bar-plots.html#cb58-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb58-18"><a href="bar-plots.html#cb58-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb58-19"><a href="bar-plots.html#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
-<span id="cb58-20"><a href="bar-plots.html#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = fill&quot;, : Recommended settings</span></span>
-<span id="cb58-21"><a href="bar-plots.html#cb58-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set legend to FALSE.</span></span>
-<span id="cb58-22"><a href="bar-plots.html#cb58-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
-<span id="cb58-23"><a href="bar-plots.html#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = fill&quot;, : Recommended settings</span></span>
-<span id="cb58-24"><a href="bar-plots.html#cb58-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set position to &#39;stack&#39;.</span></span>
-<span id="cb58-25"><a href="bar-plots.html#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-26"><a href="bar-plots.html#cb58-26" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb58-27"><a href="bar-plots.html#cb58-27" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb58-28"><a href="bar-plots.html#cb58-28" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
-<span id="cb58-29"><a href="bar-plots.html#cb58-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = stack&quot;</span>,</span>
-<span id="cb58-30"><a href="bar-plots.html#cb58-30" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
-<span id="cb58-31"><a href="bar-plots.html#cb58-31" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb58-32"><a href="bar-plots.html#cb58-32" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb58-33"><a href="bar-plots.html#cb58-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
-<span id="cb58-34"><a href="bar-plots.html#cb58-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;seurat_clusters&quot;, : Recommended settings when using group.by is to set</span></span>
-<span id="cb58-35"><a href="bar-plots.html#cb58-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; position to &#39;fill&#39;.</span></span>
-<span id="cb58-36"><a href="bar-plots.html#cb58-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-37"><a href="bar-plots.html#cb58-37" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb58-38"><a href="bar-plots.html#cb58-38" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb58-39"><a href="bar-plots.html#cb58-39" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
-<span id="cb58-40"><a href="bar-plots.html#cb58-40" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = fill&quot;</span>,</span>
-<span id="cb58-41"><a href="bar-plots.html#cb58-41" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
-<span id="cb58-42"><a href="bar-plots.html#cb58-42" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb58-43"><a href="bar-plots.html#cb58-43" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb58-44"><a href="bar-plots.html#cb58-44" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> (p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)</span>
-<span id="cb58-45"><a href="bar-plots.html#cb58-45" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-61"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-61-1.png" alt="SCpubr Bar plots, difference between position" width="1152" />
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="bar-plots.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We are going to use the previously generated sample assignment.</span></span>
+<span id="cb64-2"><a href="bar-plots.html#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="bar-plots.html#cb64-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb64-4"><a href="bar-plots.html#cb64-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb64-5"><a href="bar-plots.html#cb64-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Without group.by - position = stack&quot;</span>,</span>
+<span id="cb64-6"><a href="bar-plots.html#cb64-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
+<span id="cb64-7"><a href="bar-plots.html#cb64-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb64-8"><a href="bar-plots.html#cb64-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb64-9"><a href="bar-plots.html#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
+<span id="cb64-10"><a href="bar-plots.html#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = stack&quot;, : Recommended settings</span></span>
+<span id="cb64-11"><a href="bar-plots.html#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set legend to FALSE.</span></span>
+<span id="cb64-12"><a href="bar-plots.html#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="bar-plots.html#cb64-13" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb64-14"><a href="bar-plots.html#cb64-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb64-15"><a href="bar-plots.html#cb64-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Without group.by - position = fill&quot;</span>,</span>
+<span id="cb64-16"><a href="bar-plots.html#cb64-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
+<span id="cb64-17"><a href="bar-plots.html#cb64-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb64-18"><a href="bar-plots.html#cb64-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb64-19"><a href="bar-plots.html#cb64-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
+<span id="cb64-20"><a href="bar-plots.html#cb64-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = fill&quot;, : Recommended settings</span></span>
+<span id="cb64-21"><a href="bar-plots.html#cb64-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set legend to FALSE.</span></span>
+<span id="cb64-22"><a href="bar-plots.html#cb64-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;,</span></span>
+<span id="cb64-23"><a href="bar-plots.html#cb64-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; plot.title = &quot;Without group.by - position = fill&quot;, : Recommended settings</span></span>
+<span id="cb64-24"><a href="bar-plots.html#cb64-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; without using group.by is to set position to &#39;stack&#39;.</span></span>
+<span id="cb64-25"><a href="bar-plots.html#cb64-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-26"><a href="bar-plots.html#cb64-26" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb64-27"><a href="bar-plots.html#cb64-27" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb64-28"><a href="bar-plots.html#cb64-28" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
+<span id="cb64-29"><a href="bar-plots.html#cb64-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = stack&quot;</span>,</span>
+<span id="cb64-30"><a href="bar-plots.html#cb64-30" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
+<span id="cb64-31"><a href="bar-plots.html#cb64-31" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb64-32"><a href="bar-plots.html#cb64-32" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb64-33"><a href="bar-plots.html#cb64-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
+<span id="cb64-34"><a href="bar-plots.html#cb64-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;seurat_clusters&quot;, : Recommended settings when using group.by is to set</span></span>
+<span id="cb64-35"><a href="bar-plots.html#cb64-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; position to &#39;fill&#39;.</span></span>
+<span id="cb64-36"><a href="bar-plots.html#cb64-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-37"><a href="bar-plots.html#cb64-37" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb64-38"><a href="bar-plots.html#cb64-38" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb64-39"><a href="bar-plots.html#cb64-39" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
+<span id="cb64-40"><a href="bar-plots.html#cb64-40" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = fill&quot;</span>,</span>
+<span id="cb64-41"><a href="bar-plots.html#cb64-41" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
+<span id="cb64-42"><a href="bar-plots.html#cb64-42" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb64-43"><a href="bar-plots.html#cb64-43" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb64-44"><a href="bar-plots.html#cb64-44" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> (p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)</span>
+<span id="cb64-45"><a href="bar-plots.html#cb64-45" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-67"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-67-1.png" alt="SCpubr Bar plots, difference between position" width="1152" />
 <p class="caption">
 Figure 10.4: SCpubr Bar plots, difference between position
 </p>
@@ -318,33 +327,33 @@ Figure 10.4: SCpubr Bar plots, difference between position
 <div id="reordering-columns-based-on-a-single-entity" class="section level2" number="10.2">
 <h2><span class="header-section-number">10.2</span> Reordering columns based on a single entity</h2>
 <p>One advanced use of bar plots, but a very useful one is to reorder the columns based on a single entity in a descending order. This works only when <code>group.by</code> is set up and best when <code>position = "fill"</code>. For instance, imagine the scenario in which we are heavily interested in cluster 1, and want to reorder the columns based on it. This is achieved by providing <code>order.by</code> parameter to <code>SCpubr::do_BarPlot()</code>. The value in <code>order.by</code> has to be necessary one of the unique values in <code>group.by</code>. Therefore, as a best practice, one would want to generate the bar plots without using <code>order.by</code> and then decide. Let’s also, for the sake of this example, modify the proportions of cluster 1 so that it becomes really evident. This is how it looks:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="bar-plots.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify proportions. </span></span>
-<span id="cb59-2"><a href="bar-plots.html#cb59-2" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_seurat_clusters <span class="ot">&lt;-</span> <span class="fu">as.character</span>(sample<span class="sc">$</span>seurat_clusters)</span>
-<span id="cb59-3"><a href="bar-plots.html#cb59-3" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_seurat_clusters[sample<span class="sc">$</span>modified_orig.ident <span class="sc">==</span> <span class="st">&quot;Sample_A&quot;</span> <span class="sc">&amp;</span> sample<span class="sc">$</span>modified_seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="st">&quot;7&quot;</span>)] <span class="ot">&lt;-</span> <span class="st">&quot;1&quot;</span></span>
-<span id="cb59-4"><a href="bar-plots.html#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-5"><a href="bar-plots.html#cb59-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb59-6"><a href="bar-plots.html#cb59-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb59-7"><a href="bar-plots.html#cb59-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;modified_seurat_clusters&quot;</span>,</span>
-<span id="cb59-8"><a href="bar-plots.html#cb59-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per sample&quot;</span>,</span>
-<span id="cb59-9"><a href="bar-plots.html#cb59-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order.by =</span> <span class="st">&quot;1&quot;</span>,</span>
-<span id="cb59-10"><a href="bar-plots.html#cb59-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
-<span id="cb59-11"><a href="bar-plots.html#cb59-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb59-12"><a href="bar-plots.html#cb59-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb59-13"><a href="bar-plots.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
-<span id="cb59-14"><a href="bar-plots.html#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;modified_seurat_clusters&quot;, : Recommended settings when using group.by is to</span></span>
-<span id="cb59-15"><a href="bar-plots.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; set position to &#39;fill&#39;.</span></span>
-<span id="cb59-16"><a href="bar-plots.html#cb59-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-17"><a href="bar-plots.html#cb59-17" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb59-18"><a href="bar-plots.html#cb59-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>, </span>
-<span id="cb59-19"><a href="bar-plots.html#cb59-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;modified_seurat_clusters&quot;</span>,</span>
-<span id="cb59-20"><a href="bar-plots.html#cb59-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster and sample&quot;</span>,</span>
-<span id="cb59-21"><a href="bar-plots.html#cb59-21" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order.by =</span> <span class="st">&quot;1&quot;</span>,</span>
-<span id="cb59-22"><a href="bar-plots.html#cb59-22" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
-<span id="cb59-23"><a href="bar-plots.html#cb59-23" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb59-24"><a href="bar-plots.html#cb59-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
-<span id="cb59-25"><a href="bar-plots.html#cb59-25" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-62"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-62-1.png" alt="SCpubr Bar plots, reordering the colums using order.by" width="1152" />
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="bar-plots.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify proportions. </span></span>
+<span id="cb65-2"><a href="bar-plots.html#cb65-2" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_seurat_clusters <span class="ot">&lt;-</span> <span class="fu">as.character</span>(sample<span class="sc">$</span>seurat_clusters)</span>
+<span id="cb65-3"><a href="bar-plots.html#cb65-3" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>modified_seurat_clusters[sample<span class="sc">$</span>modified_orig.ident <span class="sc">==</span> <span class="st">&quot;Sample_A&quot;</span> <span class="sc">&amp;</span> sample<span class="sc">$</span>modified_seurat_clusters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="st">&quot;7&quot;</span>)] <span class="ot">&lt;-</span> <span class="st">&quot;1&quot;</span></span>
+<span id="cb65-4"><a href="bar-plots.html#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="bar-plots.html#cb65-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb65-6"><a href="bar-plots.html#cb65-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb65-7"><a href="bar-plots.html#cb65-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;modified_seurat_clusters&quot;</span>,</span>
+<span id="cb65-8"><a href="bar-plots.html#cb65-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per sample&quot;</span>,</span>
+<span id="cb65-9"><a href="bar-plots.html#cb65-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order.by =</span> <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb65-10"><a href="bar-plots.html#cb65-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;stack&quot;</span>,</span>
+<span id="cb65-11"><a href="bar-plots.html#cb65-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb65-12"><a href="bar-plots.html#cb65-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb65-13"><a href="bar-plots.html#cb65-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in SCpubr::do_BarPlot(sample, feature = &quot;modified_orig.ident&quot;, group.by</span></span>
+<span id="cb65-14"><a href="bar-plots.html#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = &quot;modified_seurat_clusters&quot;, : Recommended settings when using group.by is to</span></span>
+<span id="cb65-15"><a href="bar-plots.html#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; set position to &#39;fill&#39;.</span></span>
+<span id="cb65-16"><a href="bar-plots.html#cb65-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-17"><a href="bar-plots.html#cb65-17" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb65-18"><a href="bar-plots.html#cb65-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>, </span>
+<span id="cb65-19"><a href="bar-plots.html#cb65-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;modified_seurat_clusters&quot;</span>,</span>
+<span id="cb65-20"><a href="bar-plots.html#cb65-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster and sample&quot;</span>,</span>
+<span id="cb65-21"><a href="bar-plots.html#cb65-21" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order.by =</span> <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb65-22"><a href="bar-plots.html#cb65-22" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
+<span id="cb65-23"><a href="bar-plots.html#cb65-23" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb65-24"><a href="bar-plots.html#cb65-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F)</span>
+<span id="cb65-25"><a href="bar-plots.html#cb65-25" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-68"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-68-1.png" alt="SCpubr Bar plots, reordering the colums using order.by" width="1152" />
 <p class="caption">
 Figure 10.5: SCpubr Bar plots, reordering the colums using order.by
 </p>
@@ -353,30 +362,30 @@ Figure 10.5: SCpubr Bar plots, reordering the colums using order.by
 <div id="adding-custom-color-scales." class="section level2" number="10.3">
 <h2><span class="header-section-number">10.3</span> Adding custom color scales.</h2>
 <p>If necesary, the colors of the plots can be easily changed using the <code>colors.use</code> parameter, which requires a <strong>named vector</strong> containing the HEX codes of the colors to show and the names of the unique values that are being used as color groups. Here is one example:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="bar-plots.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a color scale for the unique values in seurat clusters.</span></span>
-<span id="cb60-2"><a href="bar-plots.html#cb60-2" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;#001219&quot;</span>,</span>
-<span id="cb60-3"><a href="bar-plots.html#cb60-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#005f73&quot;</span>,</span>
-<span id="cb60-4"><a href="bar-plots.html#cb60-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#0a9396&quot;</span>,</span>
-<span id="cb60-5"><a href="bar-plots.html#cb60-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#94d2bd&quot;</span>,</span>
-<span id="cb60-6"><a href="bar-plots.html#cb60-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;#e9d8a6&quot;</span>,</span>
-<span id="cb60-7"><a href="bar-plots.html#cb60-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ee9b00&quot;</span>,</span>
-<span id="cb60-8"><a href="bar-plots.html#cb60-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ca6702&quot;</span>,</span>
-<span id="cb60-9"><a href="bar-plots.html#cb60-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;#bb3e03&quot;</span>,</span>
-<span id="cb60-10"><a href="bar-plots.html#cb60-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ae2012&quot;</span>,</span>
-<span id="cb60-11"><a href="bar-plots.html#cb60-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;#9b2226&quot;</span>)</span>
-<span id="cb60-12"><a href="bar-plots.html#cb60-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-13"><a href="bar-plots.html#cb60-13" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>, <span class="at">horizontal =</span> T, <span class="at">colors.use =</span> colors)</span>
-<span id="cb60-14"><a href="bar-plots.html#cb60-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
-<span id="cb60-15"><a href="bar-plots.html#cb60-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
-<span id="cb60-16"><a href="bar-plots.html#cb60-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
-<span id="cb60-17"><a href="bar-plots.html#cb60-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = fill&quot;</span>,</span>
-<span id="cb60-18"><a href="bar-plots.html#cb60-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
-<span id="cb60-19"><a href="bar-plots.html#cb60-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
-<span id="cb60-20"><a href="bar-plots.html#cb60-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F,</span>
-<span id="cb60-21"><a href="bar-plots.html#cb60-21" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colors.use =</span> colors)</span>
-<span id="cb60-22"><a href="bar-plots.html#cb60-22" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-63"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-63-1.png" alt="SCpubr, modifying colors" width="1152" />
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="bar-plots.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a color scale for the unique values in seurat clusters.</span></span>
+<span id="cb66-2"><a href="bar-plots.html#cb66-2" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;#001219&quot;</span>,</span>
+<span id="cb66-3"><a href="bar-plots.html#cb66-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#005f73&quot;</span>,</span>
+<span id="cb66-4"><a href="bar-plots.html#cb66-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#0a9396&quot;</span>,</span>
+<span id="cb66-5"><a href="bar-plots.html#cb66-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#94d2bd&quot;</span>,</span>
+<span id="cb66-6"><a href="bar-plots.html#cb66-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;#e9d8a6&quot;</span>,</span>
+<span id="cb66-7"><a href="bar-plots.html#cb66-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ee9b00&quot;</span>,</span>
+<span id="cb66-8"><a href="bar-plots.html#cb66-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ca6702&quot;</span>,</span>
+<span id="cb66-9"><a href="bar-plots.html#cb66-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;#bb3e03&quot;</span>,</span>
+<span id="cb66-10"><a href="bar-plots.html#cb66-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;#ae2012&quot;</span>,</span>
+<span id="cb66-11"><a href="bar-plots.html#cb66-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;#9b2226&quot;</span>)</span>
+<span id="cb66-12"><a href="bar-plots.html#cb66-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-13"><a href="bar-plots.html#cb66-13" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, <span class="at">feature =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">legend =</span> F, <span class="at">plot.title =</span> <span class="st">&quot;Number of cells per cluster&quot;</span>, <span class="at">horizontal =</span> T, <span class="at">colors.use =</span> colors)</span>
+<span id="cb66-14"><a href="bar-plots.html#cb66-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BarPlot</span>(sample, </span>
+<span id="cb66-15"><a href="bar-plots.html#cb66-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">feature =</span> <span class="st">&quot;modified_orig.ident&quot;</span>,</span>
+<span id="cb66-16"><a href="bar-plots.html#cb66-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>,</span>
+<span id="cb66-17"><a href="bar-plots.html#cb66-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot.title =</span> <span class="st">&quot;With group.by - position = fill&quot;</span>,</span>
+<span id="cb66-18"><a href="bar-plots.html#cb66-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>,</span>
+<span id="cb66-19"><a href="bar-plots.html#cb66-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">legend =</span> T,</span>
+<span id="cb66-20"><a href="bar-plots.html#cb66-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">horizontal =</span> F,</span>
+<span id="cb66-21"><a href="bar-plots.html#cb66-21" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colors.use =</span> colors)</span>
+<span id="cb66-22"><a href="bar-plots.html#cb66-22" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-69"></span>
+<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-69-1.png" alt="SCpubr, modifying colors" width="1152" />
 <p class="caption">
 Figure 10.6: SCpubr, modifying colors
 </p>
