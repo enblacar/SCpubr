@@ -95,7 +95,7 @@ do_DimPlot <- function(sample,
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks to ensure proper function.
-    if (!(is.null(split.by)) & !(is.null(group.by))){"Either group.by or split.by has to be NULL."}
+    if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
     # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
     if (!(is.null(group.by)) & !(is.null(colors.use))){check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)}
     # Check whether the names of colors.split match the unique values in split.by or whether the number of colors is lower to the number of unique values in split.by.

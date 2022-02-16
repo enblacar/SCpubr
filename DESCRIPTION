@@ -13,23 +13,24 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 biocViews:
 Suggests:
-  rlang,
-  Seurat,
-  ggplot2,
-  ggpubr,
-  tidyr,
-  dplyr,
-  colortools,
-  viridis,
-  pbapply,
-  patchwork,
-  Nebulosa,
-  ggbeeswarm,
-  scales,
-  stringr,
-  Matrix,
-  BiocStyle, 
-  rmarkdown,
-  knitr,
-  purrr
+    rlang,
+    Seurat,
+    ggplot2,
+    ggpubr,
+    tidyr,
+    dplyr,
+    colortools,
+    viridis,
+    pbapply,
+    patchwork,
+    Nebulosa,
+    ggbeeswarm,
+    scales,
+    stringr,
+    Matrix,
+    rmarkdown,
+    knitr,
+    purrr,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
