@@ -1,7 +1,7 @@
 --- 
 title: "SCpubr - Complete reference"
 author: "Enrique Blanco Carmona"
-date: false
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 site: bookdown::bookdown_site
 documentclass: book
 cover-image: images/SCpubr_logo_big.png
