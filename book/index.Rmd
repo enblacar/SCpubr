@@ -15,6 +15,8 @@ github-repo: enblacar/SCpubr
 # Aim of the package
 This package aims to provide a streamlined way of generating publication ready figures for known single-cell visualizations. As subjective as the term "aesthetically pleasant" can be, this a set of theme modifications implemented across different plot types. This package also serves as a personal project, with future prospects of growth.
 
+Include figure here.
+
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
