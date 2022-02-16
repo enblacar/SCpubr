@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/enblacar/SCpubr/workflows/R-CMD-check/badge.svg)](https://github.com/enblacar/SCpubr/actions)
+<!-- badges: end -->
+  
 # SCpubr
 <img src="man/figures/SCpubr_logo.png" align="right" height="280"/>
 
