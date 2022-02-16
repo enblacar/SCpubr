@@ -1,5 +1,6 @@
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/enblacar/SCpubr/workflows/R-CMD-check/badge.svg)](https://github.com/enblacar/SCpubr/actions)
+[![R-CMD-check](https://github.com/enblacar/SCpubr/workflows/R-CMD-check/badge.svg)](https://github.com/enblacar/SCpubr/actions)
 <!-- badges: end -->
   
 # SCpubr
