@@ -12,3 +12,7 @@ pre {
 pre code {
   white-space: inherit;
 }
+
+.author,.title{
+    display: none;
+}

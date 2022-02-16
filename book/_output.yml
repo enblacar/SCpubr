@@ -1,8 +1,6 @@
 bookdown::gitbook:
   split_by: chapter
   css: style.css
-  fig_width: 6
-  fig_height: 6
   fig_caption: true
   lib_dir: assets
   config:
@@ -19,7 +17,7 @@ bookdown::gitbook:
     toolbar:
       position: fixed
     toc:
-      collapse: subsection
+      collapse: section
       scroll_highlight: true
       before: |
         <li><a href="./"><b>SCpubr - Complete reference guide</b></a></li>

@@ -62,9 +62,6 @@ fig:unnamed-chunk-69
 fig:unnamed-chunk-70
 fig:unnamed-chunk-71
 fig:unnamed-chunk-72
-aim-of-the-package
-installation-guide
-dataset
 dim-plots
 regular-dimplots
 highlighting-cells

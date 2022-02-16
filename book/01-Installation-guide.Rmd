@@ -1,4 +1,4 @@
-# Installation guide
+# Installation guide {-}
 
 This package can be installed using the following commands:
 ```{r, eval = F}
