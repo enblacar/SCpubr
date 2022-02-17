@@ -4,5 +4,5 @@
 ^.mailmap$
 ^docs$
 ^book$
-
+^bs4_book$
 ^\.github$

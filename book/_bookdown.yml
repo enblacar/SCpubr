@@ -1,7 +1,0 @@
-delete_merged_file: true
-repo: https://github.com/enblacar/SCpubr
-output_dir: "../docs"
-book_filename: "SCPubr_reference_guide.html"
-language:
-  ui:
-    chapter_name: "Chapter "
