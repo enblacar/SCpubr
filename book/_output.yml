@@ -1,4 +1,8 @@
-bookdown::gitbook:
+bookdown::bs4_book:
+  theme:
+    primary: "#982a31"
+    fg: "#2b2121"
+    bg: "#ffffff"
   split_by: chapter
   css: style.css
   fig_caption: true

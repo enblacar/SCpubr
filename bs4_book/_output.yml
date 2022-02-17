@@ -1,0 +1,10 @@
+bookdown::bs4_book:
+  css: style.css
+  theme:
+    primary: "#096B72"
+    fg: "#000000"
+    bg: "#ffffff"
+  repo: 
+    base: https://github.com/enblacar/SCpubr/tree/main/docs
+    branch: NULL
+  fig_caption: true

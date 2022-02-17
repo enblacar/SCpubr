@@ -1,316 +1,127 @@
 <!DOCTYPE html>
-<html lang="" xml:lang="">
+<html lang="en">
 <head>
-
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 Violin plots | SCpubr - Complete reference</title>
-  <meta name="description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
-
-  <meta property="og:title" content="Chapter 5 Violin plots | SCpubr - Complete reference" />
-  <meta property="og:type" content="book" />
-  
-  <meta property="og:image" content="/images/SCpubr_logo_big.png" />
-  <meta property="og:description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="github-repo" content="enblacar/SCpubr" />
-
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 Violin plots | SCpubr - Complete reference" />
-  
-  <meta name="twitter:description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="twitter:image" content="/images/SCpubr_logo_big.png" />
-
-<meta name="author" content="Enrique Blanco Carmona" />
-
-
-
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  
-  
-<link rel="prev" href="bee-swarm-plots.html"/>
-<link rel="next" href="dot-plots.html"/>
-<script src="assets/header-attrs-2.11/header-attrs.js"></script>
-<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
-<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
-
-
-
-
-
-
-
-<link href="assets/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="assets/anchor-sections-1.0.1/anchor-sections.js"></script>
-
-
-<style type="text/css">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 5 Violin plots | SCpubr - Complete reference</title>
+<meta name="author" content="Enrique Blanco Carmona">
+<meta name="description" content="Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different...">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 5 Violin plots | SCpubr - Complete reference">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://enblacar.github.io/SCpubr/violin-plots.html">
+<meta property="og:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<meta property="og:description" content="Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 5 Violin plots | SCpubr - Complete reference">
+<meta name="twitter:description" content="Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different...">
+<meta name="twitter:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="style.css">
 </head>
+<body data-spy="scroll" data-target="#toc">
 
-<body>
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">SCpubr - Complete reference</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
 
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
 
-  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
-
-    <div class="book-summary">
-      <nav role="navigation">
-
-<ul class="summary">
-<li><a href="./"><b>SCpubr - Complete reference guide</b></a></li>
-<li><a href="https://github.com/enblacar/SCpubr" target="blank"><b>Link to Github repository</b></a></li>
-
-<li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this package</a></li>
-<li class="chapter" data-level="" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i>Installation guide</a></li>
-<li class="chapter" data-level="" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="1" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>1</b> Dim plots</a>
-<ul>
-<li class="chapter" data-level="1.1" data-path="dim-plots.html"><a href="dim-plots.html#regular-dimplots"><i class="fa fa-check"></i><b>1.1</b> Regular DimPlots</a></li>
-<li class="chapter" data-level="1.2" data-path="dim-plots.html"><a href="dim-plots.html#highlighting-cells"><i class="fa fa-check"></i><b>1.2</b> Highlighting cells</a></li>
-<li class="chapter" data-level="1.3" data-path="dim-plots.html"><a href="dim-plots.html#splitting-by-a-category"><i class="fa fa-check"></i><b>1.3</b> Splitting by a category</a></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="feature-plots.html"><a href="feature-plots.html"><i class="fa fa-check"></i><b>2</b> Feature plots</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="feature-plots.html"><a href="feature-plots.html#multiple-features"><i class="fa fa-check"></i><b>2.1</b> Multiple features</a></li>
-<li class="chapter" data-level="2.2" data-path="feature-plots.html"><a href="feature-plots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>2.2</b> Working with subsets of cells</a></li>
-<li class="chapter" data-level="2.3" data-path="feature-plots.html"><a href="feature-plots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>2.3</b> Splitting the FeaturePlot by a variable</a></li>
-<li class="chapter" data-level="2.4" data-path="feature-plots.html"><a href="feature-plots.html#modify-color-maps"><i class="fa fa-check"></i><b>2.4</b> Modify color maps</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>3</b> Nebulosa plots</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html#modify-color-maps-1"><i class="fa fa-check"></i><b>3.1</b> Modify color maps</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html"><i class="fa fa-check"></i><b>4</b> Bee Swarm plots</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-categorical-variables"><i class="fa fa-check"></i><b>4.1</b> Using categorical variables</a></li>
-<li class="chapter" data-level="4.2" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-continuous-variables"><i class="fa fa-check"></i><b>4.2</b> Using continuous variables</a></li>
-<li class="chapter" data-level="4.3" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#modify-color-maps-for-continuous-variables"><i class="fa fa-check"></i><b>4.3</b> Modify color maps for continuous variables</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="violin-plots.html"><a href="violin-plots.html"><i class="fa fa-check"></i><b>5</b> Violin plots</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="violin-plots.html"><a href="violin-plots.html#violin-plots-as-a-means-of-qc"><i class="fa fa-check"></i><b>5.1</b> Violin plots as a means of QC</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="dot-plots.html"><a href="dot-plots.html"><i class="fa fa-check"></i><b>6</b> Dot plots</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="dot-plots.html"><a href="dot-plots.html#querying-multiple-features-at-once."><i class="fa fa-check"></i><b>6.1</b> Querying multiple features at once.</a></li>
-<li class="chapter" data-level="6.2" data-path="dot-plots.html"><a href="dot-plots.html#clustering-the-identities."><i class="fa fa-check"></i><b>6.2</b> Clustering the identities.</a></li>
-<li class="chapter" data-level="6.3" data-path="dot-plots.html"><a href="dot-plots.html#inverting-the-axes."><i class="fa fa-check"></i><b>6.3</b> Inverting the axes.</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="bar-plots.html"><a href="bar-plots.html"><i class="fa fa-check"></i><b>7</b> Bar plots</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="bar-plots.html"><a href="bar-plots.html#introducing-a-second-variable-to-group-the-feature-by"><i class="fa fa-check"></i><b>7.1</b> Introducing a second variable to group the feature by</a></li>
-<li class="chapter" data-level="7.2" data-path="bar-plots.html"><a href="bar-plots.html#reordering-columns-based-on-a-single-entity"><i class="fa fa-check"></i><b>7.2</b> Reordering columns based on a single entity</a></li>
-<li class="chapter" data-level="7.3" data-path="bar-plots.html"><a href="bar-plots.html#adding-custom-color-scales."><i class="fa fa-check"></i><b>7.3</b> Adding custom color scales.</a></li>
-</ul></li>
-<li class="divider"></li>
-<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">About this package</a></li>
+<li><a class="" href="installation-guide.html">Installation guide</a></li>
+<li><a class="" href="dataset.html">Dataset</a></li>
+<li><a class="" href="dim-plots.html"><span class="header-section-number">1</span> Dim plots</a></li>
+<li><a class="" href="feature-plots.html"><span class="header-section-number">2</span> Feature plots</a></li>
+<li><a class="" href="nebulosa-plots.html"><span class="header-section-number">3</span> Nebulosa plots</a></li>
+<li><a class="" href="bee-swarm-plots.html"><span class="header-section-number">4</span> Bee Swarm plots</a></li>
+<li><a class="active" href="violin-plots.html"><span class="header-section-number">5</span> Violin plots</a></li>
+<li><a class="" href="dot-plots.html"><span class="header-section-number">6</span> Dot plots</a></li>
+<li><a class="" href="bar-plots.html"><span class="header-section-number">7</span> Bar plots</a></li>
 </ul>
 
-      </nav>
-    </div>
-
-    <div class="book-body">
-      <div class="body-inner">
-        <div class="book-header" role="navigation">
-          <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SCpubr - Complete reference</a>
-          </h1>
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/enblacar/SCpubr/tree/main/docs">View book source <i class="fab fa-github"></i></a></p>
         </div>
-
-        <div class="page-wrapper" tabindex="-1" role="main">
-          <div class="page-inner">
-
-            <section class="normal" id="section-">
-<div id="violin-plots" class="section level1" number="5">
-<h1><span class="header-section-number">Chapter 5</span> Violin plots</h1>
-<p>Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different groups. As such, it is also included in <code>Seurat</code> under <code>Seurat::VlnPlot()</code> function. The very first time a new user encounters this function is likely going to be when querying for different QC paramters, such as the number of UMIs, the number of genes or the percentage of mitochondrial RNA. This is how it looks for the number of UMIs:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="violin-plots.html#cb52-1" aria-hidden="true" tabindex="-1"></a>Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-55"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-55-1.png" alt="Seurat's violin plot." width="576" />
-<p class="caption">
-Figure 5.1: Seurat’s violin plot.
-</p>
+      </nav>
 </div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="violin-plots" class="section level1" number="5">
+<h1>
+<span class="header-section-number">5</span> Violin plots<a class="anchor" aria-label="anchor" href="#violin-plots"><i class="fas fa-link"></i></a>
+</h1>
+<p>Violin plots require very little description. They are a depiction of the distribution of a variable. It makes it ideal in order to show differential enrichment patterns alongside different groups. As such, it is also included in <code>Seurat</code> under <code><a href="https://satijalab.org/seurat/reference/VlnPlot.html">Seurat::VlnPlot()</a></code> function. The very first time a new user encounters this function is likely going to be when querying for different QC paramters, such as the number of UMIs, the number of genes or the percentage of mitochondrial RNA. This is how it looks for the number of UMIs:</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">sample</span>, features <span class="op">=</span> <span class="st">"nCount_RNA"</span><span class="op">)</span></code></pre></div>
 <p>The one thing that really stands out here is, indeed, the extra dots that are being plotted alongside the violin plot. Since each dot represent a cell, it quickly becomes the dominant feature of the figure. One can play with the alpha of the dots to reduce their presence:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="violin-plots.html#cb53-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">VlnPlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span>
-<span id="cb53-2"><a href="violin-plots.html#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Surgically&quot; add the alpha parameter in the ggplot2 object.</span></span>
-<span id="cb53-3"><a href="violin-plots.html#cb53-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>layers[[<span class="dv">2</span>]]<span class="sc">$</span>aes_params<span class="sc">$</span>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb53-4"><a href="violin-plots.html#cb53-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-56"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-56-1.png" alt="Seurat's violin plot with transparent dots." width="576" />
-<p class="caption">
-Figure 5.2: Seurat’s violin plot with transparent dots.
-</p>
-</div>
-<p>But still, by making the dots almost invisible, we still observe their dominance on the bigger clusters. Therefore, it’s better to remove it. This, together with other modifications are the basis of <code>SCpubr::do_VlnPlot()</code>. This is how the default plot looks like:</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="violin-plots.html#cb54-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-57"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-57-1.png" alt="SCpubr's violin plot." width="576" />
-<p class="caption">
-Figure 5.3: SCpubr’s violin plot.
-</p>
-</div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">sample</span>, features <span class="op">=</span> <span class="st">"nCount_RNA"</span><span class="op">)</span>
+<span class="co"># "Surgically" add the alpha parameter in the ggplot2 object.</span>
+<span class="va">p</span><span class="op">$</span><span class="va">layers</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">aes_params</span><span class="op">$</span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.05</span>
+<span class="va">p</span></code></pre></div>
+<p>But still, by making the dots almost invisible, we still observe their dominance on the bigger clusters. Therefore, it’s better to remove it. This, together with other modifications are the basis of <code><a href="https://rdrr.io/pkg/SCpubr/man/do_VlnPlot.html">SCpubr::do_VlnPlot()</a></code>. This is how the default plot looks like:</p>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_VlnPlot.html">do_VlnPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, features <span class="op">=</span> <span class="st">"nCount_RNA"</span><span class="op">)</span></code></pre></div>
 <p>In addition to removing the dots, a boxplot is added to each violin shape, to get a better sense of the quantiles of the distribution. This effect can be removed by using <code>plot_boxplot = FALSE</code>. Also, legend is by default removed, as the groups are being displayed already in the X axis.</p>
 <div id="violin-plots-as-a-means-of-qc" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Violin plots as a means of QC</h2>
+<h2>
+<span class="header-section-number">5.1</span> Violin plots as a means of QC<a class="anchor" aria-label="anchor" href="#violin-plots-as-a-means-of-qc"><i class="fas fa-link"></i></a>
+</h2>
 <p>For QC analyses, users might want to also add some other features such as a line indicating where to put the cutoff. This can be achieved by using <code>y_cut</code> parameter. Currently, only one value per plot for <code>y_cut</code> can be used.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="violin-plots.html#cb55-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="st">&quot;nCount_RNA&quot;</span>, <span class="at">y_cut =</span> <span class="dv">30000</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-58"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-58-1.png" alt="SCpubr's violin plot with horizontal line." width="576" />
-<p class="caption">
-Figure 5.4: SCpubr’s violin plot with horizontal line.
-</p>
-</div>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_VlnPlot.html">do_VlnPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, features <span class="op">=</span> <span class="st">"nCount_RNA"</span>, y_cut <span class="op">=</span> <span class="fl">30000</span><span class="op">)</span></code></pre></div>
 <p>When multiple features are queried, the user can set up different horizontal lines parsing them as a vector to <code>y_cut</code>. Also, the same can be achieved for the individual plot titles by using the <code>individual.titles</code> parameter. The only restriction, is that the vector has to be of the same length as the number of features. If for a particular plot, we do not want to modify anything, use <code>NA</code> instead.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="violin-plots.html#cb56-1" aria-hidden="true" tabindex="-1"></a>SCpubr<span class="sc">::</span><span class="fu">do_VlnPlot</span>(<span class="at">sample =</span> sample, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nCount_RNA&quot;</span>, <span class="st">&quot;nFeature_RNA&quot;</span>), <span class="at">y_cut =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">5000</span>), <span class="at">individual.titles =</span> <span class="fu">c</span>(<span class="st">&quot;UMIs&quot;</span>, <span class="cn">NA</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-59"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-59-1.png" alt="SCpubr's violin plot with multiple features." width="960" />
-<p class="caption">
-Figure 5.5: SCpubr’s violin plot with multiple features.
-</p>
-</div>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_VlnPlot.html">do_VlnPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"nCount_RNA"</span>, <span class="st">"nFeature_RNA"</span><span class="op">)</span>, y_cut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">5000</span><span class="op">)</span>, individual.titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UMIs"</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 
 </div>
 </div>
-            </section>
+  <div class="chapter-nav">
+<div class="prev"><a href="bee-swarm-plots.html"><span class="header-section-number">4</span> Bee Swarm plots</a></div>
+<div class="next"><a href="dot-plots.html"><span class="header-section-number">6</span> Dot plots</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#violin-plots"><span class="header-section-number">5</span> Violin plots</a></li>
+<li><a class="nav-link" href="#violin-plots-as-a-means-of-qc"><span class="header-section-number">5.1</span> Violin plots as a means of QC</a></li>
+</ul>
 
-          </div>
-        </div>
-      </div>
-<a href="bee-swarm-plots.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="dot-plots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
-    </div>
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/enblacar/SCpubr/tree/main/docs/blob//07-ViolinPlots.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/enblacar/SCpubr/tree/main/docs/edit//07-ViolinPlots.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>SCpubr - Complete reference</strong>" was written by Enrique Blanco Carmona. It was last built on 17 February, 2022.</p>
   </div>
-<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
-<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
-<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
-<script>
-gitbook.require(["gitbook"], function(gitbook) {
-gitbook.start({
-"sharing": {
-"github": true,
-"facebook": true,
-"twitter": true,
-"linkedin": true,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": true,
-"all": ["facebook", "github", "twitter", "linkedin", "whatsapp"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": null,
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": ["SCPubr_reference_guide.html.pdf", "SCPubr_reference_guide.html.epub"],
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "section",
-"scroll_highlight": true
-},
-"toolbar": {
-"position": "fixed"
-}
-});
-});
-</script>
 
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
 </body>
-
 </html>

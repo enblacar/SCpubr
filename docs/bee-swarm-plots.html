@@ -1,301 +1,144 @@
 <!DOCTYPE html>
-<html lang="" xml:lang="">
+<html lang="en">
 <head>
-
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Bee Swarm plots | SCpubr - Complete reference</title>
-  <meta name="description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
-
-  <meta property="og:title" content="Chapter 4 Bee Swarm plots | SCpubr - Complete reference" />
-  <meta property="og:type" content="book" />
-  
-  <meta property="og:image" content="/images/SCpubr_logo_big.png" />
-  <meta property="og:description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="github-repo" content="enblacar/SCpubr" />
-
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Bee Swarm plots | SCpubr - Complete reference" />
-  
-  <meta name="twitter:description" content="General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments." />
-  <meta name="twitter:image" content="/images/SCpubr_logo_big.png" />
-
-<meta name="author" content="Enrique Blanco Carmona" />
-
-
-
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  
-  
-<link rel="prev" href="nebulosa-plots.html"/>
-<link rel="next" href="violin-plots.html"/>
-<script src="assets/header-attrs-2.11/header-attrs.js"></script>
-<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
-<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
-<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
-
-
-
-
-
-
-
-<link href="assets/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="assets/anchor-sections-1.0.1/anchor-sections.js"></script>
-
-
-<style type="text/css">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 4 Bee Swarm plots | SCpubr - Complete reference</title>
+<meta name="author" content="Enrique Blanco Carmona">
+<meta name="description" content="This one is a very interesting plot. It stems from the idea that we can order (rank) the cells in a given variable. This variable has to be a continuous variable, for a better representation. The...">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 4 Bee Swarm plots | SCpubr - Complete reference">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://enblacar.github.io/SCpubr/bee-swarm-plots.html">
+<meta property="og:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<meta property="og:description" content="This one is a very interesting plot. It stems from the idea that we can order (rank) the cells in a given variable. This variable has to be a continuous variable, for a better representation. The...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 4 Bee Swarm plots | SCpubr - Complete reference">
+<meta name="twitter:description" content="This one is a very interesting plot. It stems from the idea that we can order (rank) the cells in a given variable. This variable has to be a continuous variable, for a better representation. The...">
+<meta name="twitter:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="style.css">
 </head>
+<body data-spy="scroll" data-target="#toc">
 
-<body>
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
-
-
-  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
-
-    <div class="book-summary">
-      <nav role="navigation">
-
-<ul class="summary">
-<li><a href="./"><b>SCpubr - Complete reference guide</b></a></li>
-<li><a href="https://github.com/enblacar/SCpubr" target="blank"><b>Link to Github repository</b></a></li>
-
-<li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this package</a></li>
-<li class="chapter" data-level="" data-path="installation-guide.html"><a href="installation-guide.html"><i class="fa fa-check"></i>Installation guide</a></li>
-<li class="chapter" data-level="" data-path="dataset.html"><a href="dataset.html"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="1" data-path="dim-plots.html"><a href="dim-plots.html"><i class="fa fa-check"></i><b>1</b> Dim plots</a>
-<ul>
-<li class="chapter" data-level="1.1" data-path="dim-plots.html"><a href="dim-plots.html#regular-dimplots"><i class="fa fa-check"></i><b>1.1</b> Regular DimPlots</a></li>
-<li class="chapter" data-level="1.2" data-path="dim-plots.html"><a href="dim-plots.html#highlighting-cells"><i class="fa fa-check"></i><b>1.2</b> Highlighting cells</a></li>
-<li class="chapter" data-level="1.3" data-path="dim-plots.html"><a href="dim-plots.html#splitting-by-a-category"><i class="fa fa-check"></i><b>1.3</b> Splitting by a category</a></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="feature-plots.html"><a href="feature-plots.html"><i class="fa fa-check"></i><b>2</b> Feature plots</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="feature-plots.html"><a href="feature-plots.html#multiple-features"><i class="fa fa-check"></i><b>2.1</b> Multiple features</a></li>
-<li class="chapter" data-level="2.2" data-path="feature-plots.html"><a href="feature-plots.html#working-with-subsets-of-cells"><i class="fa fa-check"></i><b>2.2</b> Working with subsets of cells</a></li>
-<li class="chapter" data-level="2.3" data-path="feature-plots.html"><a href="feature-plots.html#splitting-the-featureplot-by-a-variable"><i class="fa fa-check"></i><b>2.3</b> Splitting the FeaturePlot by a variable</a></li>
-<li class="chapter" data-level="2.4" data-path="feature-plots.html"><a href="feature-plots.html#modify-color-maps"><i class="fa fa-check"></i><b>2.4</b> Modify color maps</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html"><i class="fa fa-check"></i><b>3</b> Nebulosa plots</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="nebulosa-plots.html"><a href="nebulosa-plots.html#modify-color-maps-1"><i class="fa fa-check"></i><b>3.1</b> Modify color maps</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html"><i class="fa fa-check"></i><b>4</b> Bee Swarm plots</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-categorical-variables"><i class="fa fa-check"></i><b>4.1</b> Using categorical variables</a></li>
-<li class="chapter" data-level="4.2" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#using-continuous-variables"><i class="fa fa-check"></i><b>4.2</b> Using continuous variables</a></li>
-<li class="chapter" data-level="4.3" data-path="bee-swarm-plots.html"><a href="bee-swarm-plots.html#modify-color-maps-for-continuous-variables"><i class="fa fa-check"></i><b>4.3</b> Modify color maps for continuous variables</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="violin-plots.html"><a href="violin-plots.html"><i class="fa fa-check"></i><b>5</b> Violin plots</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="violin-plots.html"><a href="violin-plots.html#violin-plots-as-a-means-of-qc"><i class="fa fa-check"></i><b>5.1</b> Violin plots as a means of QC</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="dot-plots.html"><a href="dot-plots.html"><i class="fa fa-check"></i><b>6</b> Dot plots</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="dot-plots.html"><a href="dot-plots.html#querying-multiple-features-at-once."><i class="fa fa-check"></i><b>6.1</b> Querying multiple features at once.</a></li>
-<li class="chapter" data-level="6.2" data-path="dot-plots.html"><a href="dot-plots.html#clustering-the-identities."><i class="fa fa-check"></i><b>6.2</b> Clustering the identities.</a></li>
-<li class="chapter" data-level="6.3" data-path="dot-plots.html"><a href="dot-plots.html#inverting-the-axes."><i class="fa fa-check"></i><b>6.3</b> Inverting the axes.</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="bar-plots.html"><a href="bar-plots.html"><i class="fa fa-check"></i><b>7</b> Bar plots</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="bar-plots.html"><a href="bar-plots.html#introducing-a-second-variable-to-group-the-feature-by"><i class="fa fa-check"></i><b>7.1</b> Introducing a second variable to group the feature by</a></li>
-<li class="chapter" data-level="7.2" data-path="bar-plots.html"><a href="bar-plots.html#reordering-columns-based-on-a-single-entity"><i class="fa fa-check"></i><b>7.2</b> Reordering columns based on a single entity</a></li>
-<li class="chapter" data-level="7.3" data-path="bar-plots.html"><a href="bar-plots.html#adding-custom-color-scales."><i class="fa fa-check"></i><b>7.3</b> Adding custom color scales.</a></li>
-</ul></li>
-<li class="divider"></li>
-<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-
-</ul>
-
-      </nav>
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">SCpubr - Complete reference</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
     </div>
 
-    <div class="book-body">
-      <div class="body-inner">
-        <div class="book-header" role="navigation">
-          <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SCpubr - Complete reference</a>
-          </h1>
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">About this package</a></li>
+<li><a class="" href="installation-guide.html">Installation guide</a></li>
+<li><a class="" href="dataset.html">Dataset</a></li>
+<li><a class="" href="dim-plots.html"><span class="header-section-number">1</span> Dim plots</a></li>
+<li><a class="" href="feature-plots.html"><span class="header-section-number">2</span> Feature plots</a></li>
+<li><a class="" href="nebulosa-plots.html"><span class="header-section-number">3</span> Nebulosa plots</a></li>
+<li><a class="active" href="bee-swarm-plots.html"><span class="header-section-number">4</span> Bee Swarm plots</a></li>
+<li><a class="" href="violin-plots.html"><span class="header-section-number">5</span> Violin plots</a></li>
+<li><a class="" href="dot-plots.html"><span class="header-section-number">6</span> Dot plots</a></li>
+<li><a class="" href="bar-plots.html"><span class="header-section-number">7</span> Bar plots</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/enblacar/SCpubr/tree/main/docs">View book source <i class="fab fa-github"></i></a></p>
         </div>
-
-        <div class="page-wrapper" tabindex="-1" role="main">
-          <div class="page-inner">
-
-            <section class="normal" id="section-">
-<div id="bee-swarm-plots" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> Bee Swarm plots</h1>
-<p>This one is a very interesting plot. It stems from the idea that we can order (rank) the cells in a given variable. This variable has to be a continuous variable, for a better representation. The order goes from lowest to maximum value. Then, the cells are grouped into any other variable of interest and displayed in a scatter plot fashion. This is achieved by using the <a href="https://github.com/eclarke/ggbeeswarm">ggbeeswarm package</a>. The idea of using the <code>ggbeeswarm::geom_quasirandom()</code> geometry provided by this package and implement it for single-cell analyses came from <a href="https://broadinstitute.github.io/2019_scWorkshop/functional-pseudotime-analysis.html#diffusion-map-pseudotime">this tutorial from the Broad Institute</a>.</p>
-<div id="using-categorical-variables" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Using categorical variables</h2>
-<p>Let’s say we want to focus on how much each cluster is driven by the PC_1 and PC_2. The first thought is to just use <code>SCpubr::do_Dimplot()</code> to plot the PCA embedding instead of the UMAP. We also query PC_3 and PC_4 to have a not-so-clear example.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="bee-swarm-plots.html#cb46-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)) </span>
-<span id="cb46-2"><a href="bee-swarm-plots.html#cb46-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)) </span>
-<span id="cb46-3"><a href="bee-swarm-plots.html#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="bee-swarm-plots.html#cb46-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-49"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-49-1.png" alt="Plotting PCA embeddings with SCpubr::do_DimPlot()" width="960" />
-<p class="caption">
-Figure 4.1: Plotting PCA embeddings with SCpubr::do_DimPlot()
-</p>
+      </nav>
 </div>
-<p>With this, we get right away a decent overview. Clusters 0, 5, 7 and 8 separate on PC_1 from the rest. However, in many cases this will not be clear, such as the image on the right. This is where Bee Swarm plots come in handy. This is implemented in <code>SCpubr::do_BeeSwarmPlot()</code>. This function needs the user to provide:
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="bee-swarm-plots" class="section level1" number="4">
+<h1>
+<span class="header-section-number">4</span> Bee Swarm plots<a class="anchor" aria-label="anchor" href="#bee-swarm-plots"><i class="fas fa-link"></i></a>
+</h1>
+<p>This one is a very interesting plot. It stems from the idea that we can order (rank) the cells in a given variable. This variable has to be a continuous variable, for a better representation. The order goes from lowest to maximum value. Then, the cells are grouped into any other variable of interest and displayed in a scatter plot fashion. This is achieved by using the <a href="https://github.com/eclarke/ggbeeswarm">ggbeeswarm package</a>. The idea of using the <code><a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_quasirandom.html">ggbeeswarm::geom_quasirandom()</a></code> geometry provided by this package and implement it for single-cell analyses came from <a href="https://broadinstitute.github.io/2019_scWorkshop/functional-pseudotime-analysis.html#diffusion-map-pseudotime">this tutorial from the Broad Institute</a>.</p>
+<div id="using-categorical-variables" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Using categorical variables<a class="anchor" aria-label="anchor" href="#using-categorical-variables"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s say we want to focus on how much each cluster is driven by the PC_1 and PC_2. The first thought is to just use <code>SCpubr::do_Dimplot()</code> to plot the PCA embedding instead of the UMAP. We also query PC_3 and PC_4 to have a not-so-clear example.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> 
+
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
+<p>With this, we get right away a decent overview. Clusters 0, 5, 7 and 8 separate on PC_1 from the rest. However, in many cases this will not be clear, such as the image on the right. This is where Bee Swarm plots come in handy. This is implemented in <code><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">SCpubr::do_BeeSwarmPlot()</a></code>. This function needs the user to provide:
 - The variable to rank to <code>feature_to_rank</code>.
 - The groups to divide the plot into to <code>group.by</code>.
 - Whether the output should be colored with a categorical or continuous scale, with <code>continuous_feature</code>.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="bee-swarm-plots.html#cb47-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb47-2"><a href="bee-swarm-plots.html#cb47-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;PC_1&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> F)</span>
-<span id="cb47-3"><a href="bee-swarm-plots.html#cb47-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)) </span>
-<span id="cb47-4"><a href="bee-swarm-plots.html#cb47-4" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;PC_4&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> F)</span>
-<span id="cb47-5"><a href="bee-swarm-plots.html#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-6"><a href="bee-swarm-plots.html#cb47-6" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-50"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-50-1.png" alt="SCpubr Bee Swarm plots with categorical variables." width="960" />
-<p class="caption">
-Figure 4.2: SCpubr Bee Swarm plots with categorical variables.
-</p>
-</div>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"PC_1"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"PC_4"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p3</span> <span class="op">|</span> <span class="va">p4</span><span class="op">)</span></code></pre></div>
 <p>Here, we have selected PC_1 and PC_4. We can observe how the X axis of the Bee Swarm plot displays the ordering (rank) of all of the cells across the selected feature. Focusing on PC_1, we can see that cluster 0 is completely shifted to the right on PC_1, with is nicely displayed in the Bee Swarm plot by having all of the cells also ranked high (the higher the rank, the bigger the “value” of the feature to rank, in this case, the PC_1 value). In the case of PC_4, the Bee Swarm plot nicely shows which clusters lay on the upper, lower or middle part of the PC_4.</p>
 <p>A very important thing to note in these kind of plots is that no cells will have the same rank. This is, imagine a scenario like PC_4, but we artificially remove clusters 0, 3, 5, 7, 8, 9, leaving only those forming a “straight line” in PC_4. The nature of this plot will also separate the remaining clusters:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="bee-swarm-plots.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clusters to exclude.</span></span>
-<span id="cb48-2"><a href="bee-swarm-plots.html#cb48-2" aria-hidden="true" tabindex="-1"></a>clusters_exclude <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>, <span class="st">&quot;8&quot;</span>, <span class="st">&quot;9&quot;</span>)</span>
-<span id="cb48-3"><a href="bee-swarm-plots.html#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="bee-swarm-plots.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the original coloring.</span></span>
-<span id="cb48-5"><a href="bee-swarm-plots.html#cb48-5" aria-hidden="true" tabindex="-1"></a>cols.use <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;steelblue&quot;</span>, <span class="fu">length</span>(<span class="fu">levels</span>(sample)))</span>
-<span id="cb48-6"><a href="bee-swarm-plots.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cols.use) <span class="ot">&lt;-</span> <span class="fu">levels</span>(sample)</span>
-<span id="cb48-7"><a href="bee-swarm-plots.html#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="bee-swarm-plots.html#cb48-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> clusters_exclude)], <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">colors.use =</span> cols.use) </span>
-<span id="cb48-9"><a href="bee-swarm-plots.html#cb48-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> clusters_exclude)], <span class="at">feature_to_rank =</span> <span class="st">&quot;PC_4&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> F, <span class="at">colors.use =</span> cols.use)</span>
-<span id="cb48-10"><a href="bee-swarm-plots.html#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-11"><a href="bee-swarm-plots.html#cb48-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-51"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-51-1.png" alt="SCpubr Bee Swarm plots with similar values." width="960" />
-<p class="caption">
-Figure 4.3: SCpubr Bee Swarm plots with similar values.
-</p>
-</div>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Clusters to exclude.</span>
+<span class="va">clusters_exclude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="st">"3"</span>, <span class="st">"5"</span>, <span class="st">"7"</span>, <span class="st">"8"</span>, <span class="st">"9"</span><span class="op">)</span>
+
+<span class="co"># Keep the original coloring.</span>
+<span class="va">cols.use</span> <span class="op">&lt;-</span> <span class="fu">colortools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colortools/man/setColors.html">setColors</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">cols.use</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span><span class="op">[</span>, <span class="op">!</span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">seurat_clusters</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">clusters_exclude</span><span class="op">)</span><span class="op">]</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>, colors.use <span class="op">=</span> <span class="va">cols.use</span><span class="op">)</span> 
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span><span class="op">[</span>, <span class="op">!</span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">seurat_clusters</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">clusters_exclude</span><span class="op">)</span><span class="op">]</span>, feature_to_rank <span class="op">=</span> <span class="st">"PC_4"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">F</span>, colors.use <span class="op">=</span> <span class="va">cols.use</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
 <p>See, we still clearly see two groups, formed by clusters 1 and 2, and clusters 4 and 6. We could even remove clusters 1 and 2 and still see a similar effect.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="bee-swarm-plots.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clusters to exclude.</span></span>
-<span id="cb49-2"><a href="bee-swarm-plots.html#cb49-2" aria-hidden="true" tabindex="-1"></a>clusters_exclude <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;7&quot;</span>, <span class="st">&quot;8&quot;</span>, <span class="st">&quot;9&quot;</span>)</span>
-<span id="cb49-3"><a href="bee-swarm-plots.html#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="bee-swarm-plots.html#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the original coloring.</span></span>
-<span id="cb49-5"><a href="bee-swarm-plots.html#cb49-5" aria-hidden="true" tabindex="-1"></a>cols.use <span class="ot">&lt;-</span> colortools<span class="sc">::</span><span class="fu">setColors</span>(<span class="st">&quot;steelblue&quot;</span>, <span class="fu">length</span>(<span class="fu">levels</span>(sample)))</span>
-<span id="cb49-6"><a href="bee-swarm-plots.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cols.use) <span class="ot">&lt;-</span> <span class="fu">levels</span>(sample)</span>
-<span id="cb49-7"><a href="bee-swarm-plots.html#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-8"><a href="bee-swarm-plots.html#cb49-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> clusters_exclude)], <span class="at">reduction =</span> <span class="st">&quot;pca&quot;</span>, <span class="at">label =</span> T, <span class="at">legend =</span> F, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">colors.use =</span> cols.use) </span>
-<span id="cb49-9"><a href="bee-swarm-plots.html#cb49-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample[, <span class="sc">!</span>(sample<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> clusters_exclude)], <span class="at">feature_to_rank =</span> <span class="st">&quot;PC_4&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> F, <span class="at">colors.use =</span> cols.use)</span>
-<span id="cb49-10"><a href="bee-swarm-plots.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-11"><a href="bee-swarm-plots.html#cb49-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-52"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-52-1.png" alt="SCpubr Bee Swarm plots with almost identical values." width="960" />
-<p class="caption">
-Figure 4.4: SCpubr Bee Swarm plots with almost identical values.
-</p>
-</div>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Clusters to exclude.</span>
+<span class="va">clusters_exclude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"5"</span>, <span class="st">"7"</span>, <span class="st">"8"</span>, <span class="st">"9"</span><span class="op">)</span>
+
+<span class="co"># Keep the original coloring.</span>
+<span class="va">cols.use</span> <span class="op">&lt;-</span> <span class="fu">colortools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colortools/man/setColors.html">setColors</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">cols.use</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span><span class="op">[</span>, <span class="op">!</span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">seurat_clusters</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">clusters_exclude</span><span class="op">)</span><span class="op">]</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>, colors.use <span class="op">=</span> <span class="va">cols.use</span><span class="op">)</span> 
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span><span class="op">[</span>, <span class="op">!</span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">seurat_clusters</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">clusters_exclude</span><span class="op">)</span><span class="op">]</span>, feature_to_rank <span class="op">=</span> <span class="st">"PC_4"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">F</span>, colors.use <span class="op">=</span> <span class="va">cols.use</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
 <p>As can be seen here, both clusters now span all X axis. The cells have still ranked, therefore showing a cloud of dots. With this, we would just want that, as with any data visualization technique, each plot comes with a set of benefits and caveats. This visualization suffers from trying to plot highly similar values. Therefore, it is key to <strong>understand the nature of the variable you want to rank</strong> beforehand.</p>
 </div>
 <div id="using-continuous-variables" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Using continuous variables</h2>
+<h2>
+<span class="header-section-number">4.2</span> Using continuous variables<a class="anchor" aria-label="anchor" href="#using-continuous-variables"><i class="fas fa-link"></i></a>
+</h2>
 <p>There are also scenarios in which we want to rank the cells to a continuous variable, but instead of showing colors for each group (which is anyway depicted in the Y axis), we want to introduce a continuous color scale. This is specially interesting to assess enrichment of clusters towards a given set of features.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="bee-swarm-plots.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up list of a genes to compute enrichment. Let&#39;s use a monocyte signature.</span></span>
-<span id="cb50-2"><a href="bee-swarm-plots.html#cb50-2" aria-hidden="true" tabindex="-1"></a>genes.use <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;LYZ&quot;</span>)</span>
-<span id="cb50-3"><a href="bee-swarm-plots.html#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="bee-swarm-plots.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute enrichment and rename the output.</span></span>
-<span id="cb50-5"><a href="bee-swarm-plots.html#cb50-5" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">AddModuleScore</span>(sample, <span class="at">features =</span> genes.use, <span class="at">name =</span> <span class="st">&quot;Monocyte_signature&quot;</span>)</span>
-<span id="cb50-6"><a href="bee-swarm-plots.html#cb50-6" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>Monocyte_signature <span class="ot">&lt;-</span> sample<span class="sc">$</span>Monocyte_signature1</span>
-<span id="cb50-7"><a href="bee-swarm-plots.html#cb50-7" aria-hidden="true" tabindex="-1"></a>sample<span class="sc">$</span>Monocyte_signature1 <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb50-8"><a href="bee-swarm-plots.html#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-9"><a href="bee-swarm-plots.html#cb50-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_DimPlot</span>(sample, <span class="at">label =</span> T, <span class="at">legend =</span> F)</span>
-<span id="cb50-10"><a href="bee-swarm-plots.html#cb50-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_FeaturePlot</span>(sample, <span class="at">features =</span> <span class="st">&quot;Monocyte_signature&quot;</span>) </span>
-<span id="cb50-11"><a href="bee-swarm-plots.html#cb50-11" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> T)</span>
-<span id="cb50-12"><a href="bee-swarm-plots.html#cb50-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-53"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-53-1.png" alt="Using continuous color scale in SCpubr::do_BeeSwarmPlot()." width="1440" />
-<p class="caption">
-Figure 4.5: Using continuous color scale in SCpubr::do_BeeSwarmPlot().
-</p>
-</div>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Set up list of a genes to compute enrichment. Let's use a monocyte signature.</span>
+<span class="va">genes.use</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD14"</span>, <span class="st">"LYZ"</span><span class="op">)</span>
+
+<span class="co"># Compute enrichment and rename the output.</span>
+<span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/AddModuleScore.html">AddModuleScore</a></span><span class="op">(</span><span class="va">sample</span>, features <span class="op">=</span> <span class="va">genes.use</span>, name <span class="op">=</span> <span class="st">"Monocyte_signature"</span><span class="op">)</span>
+<span class="va">sample</span><span class="op">$</span><span class="va">Monocyte_signature</span> <span class="op">&lt;-</span> <span class="va">sample</span><span class="op">$</span><span class="va">Monocyte_signature1</span>
+<span class="va">sample</span><span class="op">$</span><span class="va">Monocyte_signature1</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_DimPlot.html">do_DimPlot</a></span><span class="op">(</span><span class="va">sample</span>, label <span class="op">=</span> <span class="cn">T</span>, legend <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_FeaturePlot.html">do_FeaturePlot</a></span><span class="op">(</span><span class="va">sample</span>, features <span class="op">=</span> <span class="st">"Monocyte_signature"</span><span class="op">)</span> 
+<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span><span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span> <span class="op">|</span> <span class="va">p3</span></code></pre></div>
 <p>By using this combination of figures, we can also assess that the monocyte signature seems to be predominantly enriched in clusters 0 and 7.</p>
 </div>
 <div id="modify-color-maps-for-continuous-variables" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Modify color maps for continuous variables</h2>
-<p>Same as in <code>SCpubr::do_FeaturePlot()</code>, it is also change the color map of the plot to one of the eight possible ones defined in <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a>. This is achieved by using <code>viridis_color_map</code> parameter and the color map name or code (capital letter). Options are:</p>
+<h2>
+<span class="header-section-number">4.3</span> Modify color maps for continuous variables<a class="anchor" aria-label="anchor" href="#modify-color-maps-for-continuous-variables"><i class="fas fa-link"></i></a>
+</h2>
+<p>Same as in <code><a href="https://rdrr.io/pkg/SCpubr/man/do_FeaturePlot.html">SCpubr::do_FeaturePlot()</a></code>, it is also change the color map of the plot to one of the eight possible ones defined in <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a>. This is achieved by using <code>viridis_color_map</code> parameter and the color map name or code (capital letter). Options are:</p>
 <ul>
 <li>A - magma color map.</li>
 <li>B - inferno color map.</li>
@@ -306,89 +149,56 @@ Figure 4.5: Using continuous color scale in SCpubr::do_BeeSwarmPlot().
 <li>G - mako color map.</li>
 <li>H - turbo color map.</li>
 </ul>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="bee-swarm-plots.html#cb51-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;A&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Magma&quot;</span>)</span>
-<span id="cb51-2"><a href="bee-swarm-plots.html#cb51-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;B&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Inferno&quot;</span>)</span>
-<span id="cb51-3"><a href="bee-swarm-plots.html#cb51-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;C&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Plasma&quot;</span>)</span>
-<span id="cb51-4"><a href="bee-swarm-plots.html#cb51-4" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;D&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Viridis&quot;</span>)</span>
-<span id="cb51-5"><a href="bee-swarm-plots.html#cb51-5" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;E&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Cividis&quot;</span>)</span>
-<span id="cb51-6"><a href="bee-swarm-plots.html#cb51-6" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;F&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Rocket&quot;</span>)</span>
-<span id="cb51-7"><a href="bee-swarm-plots.html#cb51-7" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;G&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Mako&quot;</span>)</span>
-<span id="cb51-8"><a href="bee-swarm-plots.html#cb51-8" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> SCpubr<span class="sc">::</span><span class="fu">do_BeeSwarmPlot</span>(<span class="at">sample =</span> sample, <span class="at">feature_to_rank =</span> <span class="st">&quot;Monocyte_signature&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">continuous_feature =</span> <span class="cn">TRUE</span>, <span class="at">fontsize =</span> <span class="dv">10</span>, <span class="at">viridis_color_map =</span> <span class="st">&quot;H&quot;</span>, <span class="at">plot.title =</span> <span class="st">&quot;Turbo&quot;</span>)</span>
-<span id="cb51-9"><a href="bee-swarm-plots.html#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in check_viridis_color_map(viridis_color_map = viridis_color_map, : The</span></span>
-<span id="cb51-10"><a href="bee-swarm-plots.html#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; selected option is not the most adequate for a continuous color scale.</span></span>
-<span id="cb51-11"><a href="bee-swarm-plots.html#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-12"><a href="bee-swarm-plots.html#cb51-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(<span class="fu">list</span>(p1, p2, p3, p4, p5, p6, p7, p8), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb51-13"><a href="bee-swarm-plots.html#cb51-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-54"></span>
-<img src="SCPubr_reference_guide.html_files/figure-html/unnamed-chunk-54-1.png" alt="SCpubr Nebulosa plot modifying viridis color maps." width="960" />
-<p class="caption">
-Figure 4.6: SCpubr Nebulosa plot modifying viridis color maps.
-</p>
-</div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"A"</span>, plot.title <span class="op">=</span> <span class="st">"Magma"</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"B"</span>, plot.title <span class="op">=</span> <span class="st">"Inferno"</span><span class="op">)</span>
+<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"C"</span>, plot.title <span class="op">=</span> <span class="st">"Plasma"</span><span class="op">)</span>
+<span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"D"</span>, plot.title <span class="op">=</span> <span class="st">"Viridis"</span><span class="op">)</span>
+<span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"E"</span>, plot.title <span class="op">=</span> <span class="st">"Cividis"</span><span class="op">)</span>
+<span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"F"</span>, plot.title <span class="op">=</span> <span class="st">"Rocket"</span><span class="op">)</span>
+<span class="va">p7</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"G"</span>, plot.title <span class="op">=</span> <span class="st">"Mako"</span><span class="op">)</span>
+<span class="va">p8</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BeeSwarmPlot.html">do_BeeSwarmPlot</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">sample</span>, feature_to_rank <span class="op">=</span> <span class="st">"Monocyte_signature"</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, continuous_feature <span class="op">=</span> <span class="cn">TRUE</span>, fontsize <span class="op">=</span> <span class="fl">10</span>, viridis_color_map <span class="op">=</span> <span class="st">"H"</span>, plot.title <span class="op">=</span> <span class="st">"Turbo"</span><span class="op">)</span>
+
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, <span class="va">p5</span>, <span class="va">p6</span>, <span class="va">p7</span>, <span class="va">p8</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">p</span></code></pre></div>
 
 </div>
 </div>
-            </section>
+  <div class="chapter-nav">
+<div class="prev"><a href="nebulosa-plots.html"><span class="header-section-number">3</span> Nebulosa plots</a></div>
+<div class="next"><a href="violin-plots.html"><span class="header-section-number">5</span> Violin plots</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#bee-swarm-plots"><span class="header-section-number">4</span> Bee Swarm plots</a></li>
+<li><a class="nav-link" href="#using-categorical-variables"><span class="header-section-number">4.1</span> Using categorical variables</a></li>
+<li><a class="nav-link" href="#using-continuous-variables"><span class="header-section-number">4.2</span> Using continuous variables</a></li>
+<li><a class="nav-link" href="#modify-color-maps-for-continuous-variables"><span class="header-section-number">4.3</span> Modify color maps for continuous variables</a></li>
+</ul>
 
-          </div>
-        </div>
-      </div>
-<a href="nebulosa-plots.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="violin-plots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
-    </div>
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/enblacar/SCpubr/tree/main/docs/blob//06-BeeSwarmPlots.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/enblacar/SCpubr/tree/main/docs/edit//06-BeeSwarmPlots.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>SCpubr - Complete reference</strong>" was written by Enrique Blanco Carmona. It was last built on 17 February, 2022.</p>
   </div>
-<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
-<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
-<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
-<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
-<script>
-gitbook.require(["gitbook"], function(gitbook) {
-gitbook.start({
-"sharing": {
-"github": true,
-"facebook": true,
-"twitter": true,
-"linkedin": true,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": true,
-"all": ["facebook", "github", "twitter", "linkedin", "whatsapp"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": null,
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": ["SCPubr_reference_guide.html.pdf", "SCPubr_reference_guide.html.epub"],
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "section",
-"scroll_highlight": true
-},
-"toolbar": {
-"position": "fixed"
-}
-});
-});
-</script>
 
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
 </body>
-
 </html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 7 Bar plots | SCpubr - Complete reference</title>
+<meta name="author" content="Enrique Blanco Carmona">
+<meta name="description" content="Bar plots are another well known data representation. They are a very handy resource to plot summary statistics for the QC part of any single-cell analysis. Consequently, they are part of SCpubr,...">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 7 Bar plots | SCpubr - Complete reference">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://enblacar.github.io/SCpubr/bar-plots.html">
+<meta property="og:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<meta property="og:description" content="Bar plots are another well known data representation. They are a very handy resource to plot summary statistics for the QC part of any single-cell analysis. Consequently, they are part of SCpubr,...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 7 Bar plots | SCpubr - Complete reference">
+<meta name="twitter:description" content="Bar plots are another well known data representation. They are a very handy resource to plot summary statistics for the QC part of any single-cell analysis. Consequently, they are part of SCpubr,...">
+<meta name="twitter:image" content="https://enblacar.github.io/SCpubr/images/SCpubr_logo_big.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">SCpubr - Complete reference</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">About this package</a></li>
+<li><a class="" href="installation-guide.html">Installation guide</a></li>
+<li><a class="" href="dataset.html">Dataset</a></li>
+<li><a class="" href="dim-plots.html"><span class="header-section-number">1</span> Dim plots</a></li>
+<li><a class="" href="feature-plots.html"><span class="header-section-number">2</span> Feature plots</a></li>
+<li><a class="" href="nebulosa-plots.html"><span class="header-section-number">3</span> Nebulosa plots</a></li>
+<li><a class="" href="bee-swarm-plots.html"><span class="header-section-number">4</span> Bee Swarm plots</a></li>
+<li><a class="" href="violin-plots.html"><span class="header-section-number">5</span> Violin plots</a></li>
+<li><a class="" href="dot-plots.html"><span class="header-section-number">6</span> Dot plots</a></li>
+<li><a class="active" href="bar-plots.html"><span class="header-section-number">7</span> Bar plots</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/enblacar/SCpubr/tree/main/docs">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="bar-plots" class="section level1" number="7">
+<h1>
+<span class="header-section-number">7</span> Bar plots<a class="anchor" aria-label="anchor" href="#bar-plots"><i class="fas fa-link"></i></a>
+</h1>
+<p>Bar plots are another well known data representation. They are a very handy resource to plot summary statistics for the QC part of any single-cell analysis. Consequently, they are part of <code>SCpubr</code>, available on <code><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">SCpubr::do_BarPlot()</a></code>. Let’s say we are interested into plotting the different number of cells in each cluster.</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, feature <span class="op">=</span> <span class="st">"seurat_clusters"</span>, legend <span class="op">=</span> <span class="cn">F</span>, plot.title <span class="op">=</span> <span class="st">"Number of cells per cluster"</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, feature <span class="op">=</span> <span class="st">"seurat_clusters"</span>, legend <span class="op">=</span> <span class="cn">F</span>, plot.title <span class="op">=</span> <span class="st">"Number of cells per cluster"</span>, horizontal <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
+<p>Using <code><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">SCpubr::do_BarPlot()</a></code> with only <code>features</code> yields a simple bar plot which is ordered by descending value. We can also set up the direction of the bars with <code>horizontal = TRUE/FALSE</code>, which by default is set to be vertical There are some underlying assumptions that are being taken to generate these plots:</p>
+<ul>
+<li>The values in <code>features</code> need to be metadata variables, stored in <code>object@meta.data</code>. This a design choice, as data need to be grouped using <code>dplyr</code> and <code>tidyr</code>. This will also later apply to values provided to <code>group.by</code>.</li>
+<li>The feature provided need to have a clear and rather small number of groups. A good estimate on how to assess this is by querying the feature with <code>table</code>, as in:</li>
+</ul>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">sample</span><span class="op">@</span><span class="va">meta.data</span><span class="op">[</span>, <span class="va">feature</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<p>Focusing on the last point, this would happen if we were to choose a feature with a high number of unique values:</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>, legend <span class="op">=</span> <span class="cn">F</span>, plot.title <span class="op">=</span> <span class="st">"Number of UMIs?"</span>, horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p</span></code></pre></div>
+<p>This happens, precisely, because of the high amount of unique values for <code>nCount_RNA</code>. These type of continuous values is best suited for other data visualizations like a <code>histogram</code>.</p>
+<div id="introducing-a-second-variable-to-group-the-feature-by" class="section level2" number="7.1">
+<h2>
+<span class="header-section-number">7.1</span> Introducing a second variable to group the feature by<a class="anchor" aria-label="anchor" href="#introducing-a-second-variable-to-group-the-feature-by"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s expand on the previous example on the number of cells per cluster. What if we were interested not only on that, but we would like to profile <strong>how many cells from each cluster are present in each of the unique samples present in the Seurat object</strong>? For this, we need to provide <code><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">SCpubr::do_BarPlot()</a></code> with a second parameter, <code>group.by</code>, that tackles how we want the feature to be grouped:</p>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># We only have one value in orig.ident. Let's modify it so that it resembles a multi-sample Seurat object.</span>
+<span class="va">sample</span><span class="op">$</span><span class="va">modified_orig.ident</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sample_A"</span>, <span class="st">"Sample_B"</span>, <span class="st">"Sample_C"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">T</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Number of cells per sample"</span>,
+                        position <span class="op">=</span> <span class="st">"stack"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>, 
+                        group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Number of cells per cluster and sample"</span>,
+                        position <span class="op">=</span> <span class="st">"stack"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
+<p>As we can see, this nicely yields as many number of bars as unique values in the <code>feature</code>, and this bars are segmented by as many times as unique values in <code>group.by</code>. At first, this is hard to grasp, but it helps thinking of these two parameters, when used together, as:</p>
+<ul>
+<li>
+<code>feature</code>: What I want to show as different bars.</li>
+<li>
+<code>group.by</code>: Secondary variable on which the bars generated by <code>feature</code> can be further subdivided.</li>
+</ul>
+<p>Another interesting parameter introduced in the last example is <code>position</code>. Position can be either <code>stack</code> or <code>fill</code>. The difference between them is that <code>position = "stack"</code> will yield the total number of cells for each of the unique values in <code>feature</code>, while <code>position = "fill"</code> will bring all bars to the same height and will split each bar into the proportions within each bar of the different groups (only one if <code>group.by = NULL</code> and as many groups if <code>group.by</code> is used). Therefore, it becomes highly recommended to use <code>position = "stack"</code> when <code>group.by</code> is not used and <code>position = "fill"</code> otherwise. This is also warned by the package. If you want to silence the warnings, use <code>verbose = FALSE</code>.</p>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># We are going to use the previously generated sample assignment.</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Without group.by - position = stack"</span>,
+                        position <span class="op">=</span> <span class="st">"stack"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Without group.by - position = fill"</span>,
+                        position <span class="op">=</span> <span class="st">"fill"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"With group.by - position = stack"</span>,
+                        position <span class="op">=</span> <span class="st">"stack"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"With group.by - position = fill"</span>,
+                        position <span class="op">=</span> <span class="st">"fill"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p3</span> <span class="op">|</span> <span class="va">p4</span><span class="op">)</span>
+<span class="va">p</span></code></pre></div>
+</div>
+<div id="reordering-columns-based-on-a-single-entity" class="section level2" number="7.2">
+<h2>
+<span class="header-section-number">7.2</span> Reordering columns based on a single entity<a class="anchor" aria-label="anchor" href="#reordering-columns-based-on-a-single-entity"><i class="fas fa-link"></i></a>
+</h2>
+<p>One advanced use of bar plots, but a very useful one is to reorder the columns based on a single entity in a descending order. This works only when <code>group.by</code> is set up and best when <code>position = "fill"</code>. For instance, imagine the scenario in which we are heavily interested in cluster 1, and want to reorder the columns based on it. This is achieved by providing <code>order.by</code> parameter to <code><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">SCpubr::do_BarPlot()</a></code>. The value in <code>order.by</code> has to be necessary one of the unique values in <code>group.by</code>. Therefore, as a best practice, one would want to generate the bar plots without using <code>order.by</code> and then decide. Let’s also, for the sake of this example, modify the proportions of cluster 1 so that it becomes really evident. This is how it looks:</p>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Modify proportions. </span>
+<span class="va">sample</span><span class="op">$</span><span class="va">modified_seurat_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span>
+<span class="va">sample</span><span class="op">$</span><span class="va">modified_seurat_clusters</span><span class="op">[</span><span class="va">sample</span><span class="op">$</span><span class="va">modified_orig.ident</span> <span class="op">==</span> <span class="st">"Sample_A"</span> <span class="op">&amp;</span> <span class="va">sample</span><span class="op">$</span><span class="va">modified_seurat_clusters</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>, <span class="st">"6"</span>, <span class="st">"7"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"1"</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        group.by <span class="op">=</span> <span class="st">"modified_seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Number of cells per sample"</span>,
+                        order.by <span class="op">=</span> <span class="st">"1"</span>,
+                        position <span class="op">=</span> <span class="st">"stack"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>, 
+                        group.by <span class="op">=</span> <span class="st">"modified_seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"Number of cells per cluster and sample"</span>,
+                        order.by <span class="op">=</span> <span class="st">"1"</span>,
+                        position <span class="op">=</span> <span class="st">"fill"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
+</div>
+<div id="adding-custom-color-scales." class="section level2" number="7.3">
+<h2>
+<span class="header-section-number">7.3</span> Adding custom color scales.<a class="anchor" aria-label="anchor" href="#adding-custom-color-scales."><i class="fas fa-link"></i></a>
+</h2>
+<p>If necesary, the colors of the plots can be easily changed using the <code>colors.use</code> parameter, which requires a <strong>named vector</strong> containing the HEX codes of the colors to show and the names of the unique values that are being used as color groups. Here is one example:</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a color scale for the unique values in seurat clusters.</span>
+<span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"0"</span> <span class="op">=</span> <span class="st">"#001219"</span>,
+            <span class="st">"1"</span> <span class="op">=</span> <span class="st">"#005f73"</span>,
+            <span class="st">"2"</span> <span class="op">=</span> <span class="st">"#0a9396"</span>,
+            <span class="st">"3"</span> <span class="op">=</span> <span class="st">"#94d2bd"</span>,
+            <span class="st">"4"</span> <span class="op">=</span> <span class="st">"#e9d8a6"</span>,
+            <span class="st">"5"</span> <span class="op">=</span> <span class="st">"#ee9b00"</span>,
+            <span class="st">"6"</span> <span class="op">=</span> <span class="st">"#ca6702"</span>,
+            <span class="st">"7"</span> <span class="op">=</span> <span class="st">"#bb3e03"</span>,
+            <span class="st">"8"</span> <span class="op">=</span> <span class="st">"#ae2012"</span>,
+            <span class="st">"9"</span> <span class="op">=</span> <span class="st">"#9b2226"</span><span class="op">)</span>
+
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, feature <span class="op">=</span> <span class="st">"seurat_clusters"</span>, legend <span class="op">=</span> <span class="cn">F</span>, plot.title <span class="op">=</span> <span class="st">"Number of cells per cluster"</span>, horizontal <span class="op">=</span> <span class="cn">T</span>, colors.use <span class="op">=</span> <span class="va">colors</span><span class="op">)</span>
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">SCpubr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SCpubr/man/do_BarPlot.html">do_BarPlot</a></span><span class="op">(</span><span class="va">sample</span>, 
+                        feature <span class="op">=</span> <span class="st">"modified_orig.ident"</span>,
+                        group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,
+                        plot.title <span class="op">=</span> <span class="st">"With group.by - position = fill"</span>,
+                        position <span class="op">=</span> <span class="st">"fill"</span>,
+                        legend <span class="op">=</span> <span class="cn">T</span>,
+                        horizontal <span class="op">=</span> <span class="cn">F</span>,
+                        colors.use <span class="op">=</span> <span class="va">colors</span><span class="op">)</span>
+<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="dot-plots.html"><span class="header-section-number">6</span> Dot plots</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#bar-plots"><span class="header-section-number">7</span> Bar plots</a></li>
+<li><a class="nav-link" href="#introducing-a-second-variable-to-group-the-feature-by"><span class="header-section-number">7.1</span> Introducing a second variable to group the feature by</a></li>
+<li><a class="nav-link" href="#reordering-columns-based-on-a-single-entity"><span class="header-section-number">7.2</span> Reordering columns based on a single entity</a></li>
+<li><a class="nav-link" href="#adding-custom-color-scales."><span class="header-section-number">7.3</span> Adding custom color scales.</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/enblacar/SCpubr/tree/main/docs/blob/master/09-BarPlots.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/enblacar/SCpubr/tree/main/docs/edit/master/09-BarPlots.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>SCpubr - Complete reference</strong>" was written by Enrique Blanco Carmona. It was last built on 17 February, 2022.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
