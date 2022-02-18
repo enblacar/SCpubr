@@ -24,7 +24,7 @@ do_VlnPlot(
   fontsize = 16,
   ncol = NULL,
   legend.ncol = 3,
-  rotate_x_labels = FALSE
+  rotate_x_labels = NULL
 )
 }
 \arguments{
