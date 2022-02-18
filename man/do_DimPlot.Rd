@@ -20,10 +20,8 @@ do_DimPlot(
   colors.highlight = "#0A305F",
   legend = TRUE,
   legend.title = FALSE,
-  legend.position = "bottom",
-  legend.ncol = 4,
-  legend.text.size = 12,
-  legend.title.size = 12,
+  legend.position = "right",
+  legend.ncol = 1,
   legend.icon.size = 4,
   legend.byrow = FALSE,
   colors.use = NULL,
@@ -69,10 +67,6 @@ do_DimPlot(
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
 \item{legend.ncol}{Number of columns in the legend.}
-
-\item{legend.text.size}{Font size of the legend labels.}
-
-\item{legend.title.size}{Font size of the legend title.}
 
 \item{legend.icon.size}{Size of the icons in legend.}
 

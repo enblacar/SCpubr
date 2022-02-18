@@ -17,8 +17,6 @@
 #' @param legend.title Logical stating whether the legend title is shown or not.
 #' @param legend.ncol Number of columns in the legend.
 #' @param fontsize Base fontsize of the figure.
-#' @param legend.text.size Font size of the legend labels.
-#' @param legend.title.size Font size of the legend title.
 #' @param legend.icon.size Size of the icons in legend.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.
@@ -52,10 +50,8 @@ do_DimPlot <- function(sample,
                        colors.highlight = "#0A305F",
                        legend = TRUE,
                        legend.title = FALSE,
-                       legend.position = "bottom",
-                       legend.ncol = 4,
-                       legend.text.size = 12,
-                       legend.title.size = 12,
+                       legend.position = "right",
+                       legend.ncol = 1,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        colors.use = NULL,
@@ -128,11 +124,11 @@ do_DimPlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
-    legend.title.fontsize <- fontsize - 4
+    legend.text.fontsize <- fontsize - 2
+    legend.title.fontsize <- fontsize - 2
 
     # If the UMAP does not need to be split in multiple panes (default case).
-    if (is.null(split.by)){
+    if (is.null(cells.highlight) & is.null(split.by)){
         p.umap <- Seurat::DimPlot(sample,
                                   reduction = reduction,
                                   label = label,
@@ -162,7 +158,7 @@ do_DimPlot <- function(sample,
 
     }
     # If the UMAP has to be split in multiple panes.
-    else if (!(is.null(split.by))){
+    else if (is.null(cells.highlight) & !(is.null(split.by))){
         # If the user provided multiple highlighting colors.
         multiple_colors <- ifelse(length(colors.split) > 1, TRUE, FALSE)
         # List to store each individual plots.

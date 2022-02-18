@@ -38,7 +38,7 @@ do_FeaturePlot <- function(sample,
                            slot = NULL,
                            legend.position = "right",
                            plot.title = NULL,
-                           fontsize = 10,
+                           fontsize = 14,
                            ncol = NULL,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
@@ -89,7 +89,7 @@ do_FeaturePlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
+    legend.text.fontsize <- fontsize - 4
     legend.title.fontsize <- fontsize - 4
 
     # Regular FeaturePlot.

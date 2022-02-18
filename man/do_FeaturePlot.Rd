@@ -16,7 +16,7 @@ do_FeaturePlot(
   slot = NULL,
   legend.position = "right",
   plot.title = NULL,
-  fontsize = 10,
+  fontsize = 14,
   ncol = NULL,
   cells.highlight = NULL,
   idents.highlight = NULL,
