@@ -20,6 +20,7 @@
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.
+#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logicals of the same length.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -47,7 +48,8 @@ do_VlnPlot <- function(sample,
                        ylab = NULL,
                        fontsize = 16,
                        ncol = NULL,
-                       legend.ncol = 3){
+                       legend.ncol = 3,
+                       rotate_x_labels = NULL){
     # Checks for packages.
     check_suggests(function_name = "do_VlnPlot")
     # Check the assay.
@@ -58,7 +60,8 @@ do_VlnPlot <- function(sample,
     slot <- check_and_set_slot(slot = slot)
     # Check logical parameters.
     logical_list <- list("legend" = legend,
-                         "plot_boxplot" = plot_boxplot)
+                         "plot_boxplot" = plot_boxplot,
+                         "rotate_x_labels" = rotate_x_labels)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("pt.size" = pt.size,
@@ -94,7 +97,14 @@ do_VlnPlot <- function(sample,
     if (!(is.null(y_cut))){
       if(length(features) != length(y_cut)){
       stop('Total number of y_cut values does not match the number of features provided.', call. = F)
+      }
     }
+
+    # Check for y_cut and only having 1 feature.
+    if (!(is.null(rotate_x_labels))){
+      if(length(features) != length(rotate_x_labels)){
+        stop('Total number of rotate_x_labels values does not match the number of features provided.', call. = F)
+      }
     }
 
     # If group.by and split.by are NULL.
@@ -132,7 +142,7 @@ do_VlnPlot <- function(sample,
     for (feature in features) {
       counter <- counter + 1
       if (!is.null(y_cut)){y_cut_select <- y_cut[counter]}
-
+      if (!is.null(rotate_x_labels)){x_label_select <- rotate_x_labels[counter]}
       # Check the value for y_cut_select is on range.
       if (!(is.null(y_cut))){
         if (!(is.na(y_cut_select))){
@@ -170,6 +180,11 @@ do_VlnPlot <- function(sample,
         plot <- plot & Seurat::NoLegend()
       }
 
+      if (!(is.null(rotate_x_labels))){
+        if (isTRUE(x_label_select)){
+          plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
+        }
+      }
 
       if (!(is.null(y_cut))){
           if (!(is.na(y_cut_select))){
