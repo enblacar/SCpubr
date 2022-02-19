@@ -1,5 +1,4 @@
-library(Seurat)
-sample <- SCpubr.testing::testing_data
+sample <- testing_data
 
 
 # CHECK COLORS
