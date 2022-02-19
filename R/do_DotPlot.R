@@ -6,7 +6,7 @@
 #' @param assay Assay to use. Defaults to the current assay.
 #' @param group.by Variable you want the cells to be colored for.
 #' @param split.by Split into as many plots as unique values in the variable provided.
-#' @param cols Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
+#' @param colors.use Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title Title to use in the plot.
@@ -32,7 +32,7 @@ do_DotPlot <- function(sample,
                        split.by = NULL,
                        legend = TRUE,
                        dot.scale = 6,
-                       cols = c("grey75", "#014f86"),
+                       colors.use = c("grey75", "#014f86"),
                        legend.position = "right",
                        plot.title = NULL,
                        xlab = NULL,
@@ -64,7 +64,7 @@ do_DotPlot <- function(sample,
                            "features" = unlist(features),
                            "xlab" = xlab,
                            "ylab" = ylab,
-                           "cols" = cols,
+                           "colors.use" = colors.use,
                            "group.by" = group.by,
                            "split.by" = split.by)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -83,19 +83,19 @@ do_DotPlot <- function(sample,
     if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = F)}
     # Check that split.by is set and the user has not provided a correct vector of colors.
     if (!(is.null(split.by))){
-      if (length(cols) != length(as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1])))){
+      if (length(colors.use) != length(as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1])))){
         names.use <- if (is.factor(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))){
           levels(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))
         } else {
           as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))
         }
-        cols <- generate_color_scale(names.use)
+        colors.use <- generate_color_scale(names.use)
       }
     }
 
     plot <- Seurat::DotPlot(sample,
                             features = features,
-                            cols = cols,
+                            cols = colors.use,
                             group.by = group.by,
                             split.by = split.by,
                             dot.scale = dot.scale,

@@ -12,7 +12,7 @@ do_DotPlot(
   split.by = NULL,
   legend = TRUE,
   dot.scale = 6,
-  cols = c("grey75", "#014f86"),
+  colors.use = c("grey75", "#014f86"),
   legend.position = "right",
   plot.title = NULL,
   xlab = NULL,
@@ -38,7 +38,7 @@ do_DotPlot(
 
 \item{dot.scale}{Scale the size of the dots.}
 
-\item{cols}{Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.}
+\item{colors.use}{Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
