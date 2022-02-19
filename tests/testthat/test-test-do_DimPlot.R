@@ -1,4 +1,5 @@
-sample <- testing_data
+library(Seurat)
+sample <- SCpubr.testing::testing_data
 
 testthat::test_that("do_DimPlot: PASS - sample", {
   p <- SCpubr::do_DimPlot(sample = sample)
