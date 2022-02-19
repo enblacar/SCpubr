@@ -80,8 +80,8 @@ do_BarPlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
-    legend.title.fontsize <- fontsize - 4
+    legend.text.fontsize <- fontsize - 2
+    legend.title.fontsize <- fontsize - 2
 
     for (feature in features){
       # Enforce the features to be part of the metadata.

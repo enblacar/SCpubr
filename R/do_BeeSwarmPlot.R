@@ -84,7 +84,7 @@ do_BeeSwarmPlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
+    legend.text.fontsize <- fontsize - 4
     legend.title.fontsize <- fontsize - 4
 
     dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)

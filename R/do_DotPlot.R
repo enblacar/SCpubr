@@ -16,6 +16,7 @@
 #' @param flip Whether to flip the axis.
 #' @param dot.scale Scale the size of the dots.
 #' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
+#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -38,7 +39,8 @@ do_DotPlot <- function(sample,
                        ylab = NULL,
                        fontsize = 14,
                        cluster.idents = FALSE,
-                       flip = FALSE){
+                       flip = FALSE,
+                       rotate_x_labels = NULL){
     # Checks for packages.
     check_suggests(function_name = "do_DotPlot")
     # Check the assay.
@@ -49,7 +51,8 @@ do_DotPlot <- function(sample,
     # Check logical parameters.
     logical_list <- list("legend" = legend,
                          "flip" = flip,
-                         "cluster.idents" = cluster.idents)
+                         "cluster.idents" = cluster.idents,
+                         "rotate_x_labels" = rotate_x_labels)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -73,8 +76,8 @@ do_DotPlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
-    legend.title.fontsize <- fontsize - 4
+    legend.text.fontsize <- fontsize - 2
+    legend.title.fontsize <- fontsize - 2
 
     # Check that flip is not set to TRUE and features is not a named list.
     if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = F)}
@@ -117,6 +120,12 @@ do_DotPlot <- function(sample,
     }
     if (!is.null(plot.title)){
       plot <- plot + ggplot2::ggtitle(plot.title)
+    }
+
+    if (!(is.null(rotate_x_labels))){
+      if (isTRUE(rotate_x_labels)){
+        plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
+      }
     }
 
     if (is.list(features)){

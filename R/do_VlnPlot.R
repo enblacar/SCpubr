@@ -3,12 +3,12 @@
 #'
 #' @param sample  Seurat object.
 #' @param features Features to represent.
-#' @param assay Assay to use. Defauls to the current assay.
+#' @param assay Assay to use. Defaults to the current assay.
 #' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param group.by  Variable you want the cells to be colored for.
 #' @param split.by  CURRENTLY NOT WORKING. Split into as many plots as unique values in the variable provided.
-#' @param colors.use  Named vector of colors matching the unique values in either the current identities in the seurat object of the unique values in group.by or split.by.
-#' @param plot_boxplot Logical. Whether to plot a boxplot inside the violin or not.
+#' @param colors.use  Named vector of colors matching the unique values in either the current identities in the Seurat object of the unique values in group.by or split.by.
+#' @param plot_boxplot Logical. Whether to plot a Box plot inside the violin or not.
 #' @param legend  Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param plot.title  Title to use in the plot.
@@ -20,7 +20,7 @@
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.
-#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logicals of the same length.
+#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -46,7 +46,7 @@ do_VlnPlot <- function(sample,
                        individual.titles = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       fontsize = 16,
+                       fontsize = 14,
                        ncol = NULL,
                        legend.ncol = 3,
                        rotate_x_labels = NULL){
@@ -88,8 +88,8 @@ do_VlnPlot <- function(sample,
     plot.title.fontsize <- fontsize + 2
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 5
-    legend.title.fontsize <- fontsize - 4
+    legend.text.fontsize <- fontsize - 2
+    legend.title.fontsize <- fontsize - 2
 
     # Disable split.by.
     if (!(is.null(split.by))){stop("This option is currently not available.", call. = F)}

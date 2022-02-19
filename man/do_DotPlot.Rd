@@ -19,7 +19,8 @@ do_DotPlot(
   ylab = NULL,
   fontsize = 14,
   cluster.idents = FALSE,
-  flip = FALSE
+  flip = FALSE,
+  rotate_x_labels = NULL
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ do_DotPlot(
 \item{cluster.idents}{Logical. Whether to cluster the identities based on the expression of the features.}
 
 \item{flip}{Whether to flip the axis.}
+
+\item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.

@@ -76,7 +76,7 @@ do_NebulosaPlot <- function(sample,
   plot.title.fontsize <- fontsize + 2
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1
-  legend.text.fontsize <- fontsize - 5
+  legend.text.fontsize <- fontsize - 4
   legend.title.fontsize <- fontsize - 4
 
   # Plot a density plot using Nebulosa package.
