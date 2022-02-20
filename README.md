@@ -9,6 +9,8 @@ Collection of functions aimed to streamline quality figure generation for Single
 
 For installation and tutorials, please use the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
+**SCpubr is still under development. A near future CRAN release of v1.0.0 is planned.**
+
 
 ## Contact
 e.blancocarmona@kitz-heidelberg.de
