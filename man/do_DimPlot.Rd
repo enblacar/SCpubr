@@ -7,24 +7,24 @@
 do_DimPlot(
   sample,
   reduction = NULL,
+  group.by = NULL,
+  split.by = NULL,
+  colors.use = NULL,
+  shuffle = TRUE,
+  pt.size = 0.5,
   label = FALSE,
   label.color = "black",
   repel = TRUE,
-  shuffle = TRUE,
-  pt.size = 0.5,
-  sizes.highlight = 0.5,
-  group.by = NULL,
-  split.by = NULL,
   cells.highlight = NULL,
+  sizes.highlight = 0.5,
   legend = TRUE,
+  ncol = NULL,
+  plot.title = NULL,
   legend.title = FALSE,
   legend.position = "right",
   legend.ncol = 1,
   legend.icon.size = 4,
   legend.byrow = FALSE,
-  colors.use = NULL,
-  plot.title = "",
-  ncol = NULL,
   raster = FALSE,
   dims = c(1, 2),
   fontsize = 14
@@ -35,25 +35,31 @@ do_DimPlot(
 
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
+\item{group.by}{Variable you want the cells to be colored for.}
+
+\item{split.by}{Split into as many plots as unique values in the variable provided.}
+
+\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.}
+
+\item{shuffle}{Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
+
+\item{pt.size}{Point size of the cells.}
+
 \item{label}{Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
 \item{label.color}{HEX code for the color of the text in the labels if label is set to TRUE.}
 
 \item{repel}{Whether to repel the labels if label is set to TRUE.}
 
-\item{shuffle}{Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
-
-\item{pt.size}{Point size of the cells.}
+\item{cells.highlight}{Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.}
 
 \item{sizes.highlight}{Point size of highlighted cells using cells.highlight parameter.}
 
-\item{group.by}{Variable you want the cells to be colored for.}
-
-\item{split.by}{Split into as many plots as unique values in the variable provided.}
-
-\item{cells.highlight}{Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.}
-
 \item{legend}{Whether to plot the legend or not.}
+
+\item{ncol}{Number of columns used in the arrangement of the output plot using "split.by" parameter.}
+
+\item{plot.title}{Title to use in the plot.}
 
 \item{legend.title}{Logical stating whether the legend title is shown or not.}
 
@@ -64,12 +70,6 @@ do_DimPlot(
 \item{legend.icon.size}{Size of the icons in legend.}
 
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
-
-\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.}
-
-\item{plot.title}{Title to use in the plot.}
-
-\item{ncol}{Number of columns used in the arrangement of the output plot using "split.by" parameter.}
 
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
@@ -85,6 +85,72 @@ Wrapper for \link[Seurat]{DimPlot}.
 }
 \examples{
 \dontrun{
-TBD
+# Your Seurat object.
+sample <- my_seurat_object
+
+# Basic DimPlot.
+p <- SCpubr::do_DimPlot(sample = sample)
+
+# Include a plot title.
+p <- SCpubr::do_DimPlot(sample = sample,
+                        plot.title = "My awesome SC data set")
+
+# Control legend position and number of columns.
+p <- SCpubr::do_DimPlot(sample = sample,
+                        plot.title = "My awesome SC data set",
+                        legend.position = "left",
+                        legend.ncol = 2)
+
+# Use labels instead of legend.
+p <- SCpubr::do_DimPlot(sample = sample,
+                        label = TRUE,
+                        legend = FALSE)
+
+# Group by another variable rather than `Seurat::Idents(sample)`
+p <- SCpubr::do_DimPlot(sample = sample,
+                        group.by = "orig.ident")
+
+# Split the output in as many plots as unique identities.
+p <- SCpubr::do_DimPlot(sample = sample,
+                        split.by = "orig.ident")
+
+# Modify default colors.
+# Colors need to a named vector of the same length as the identities.
+colors <- c("0" = "#001219",
+            "1" = "#005f73",
+            "2" = "#0a9396",
+            "3" = "#94d2bd",
+            "4" = "#e9d8a6",
+            "5" = "#ee9b00",
+            "6" = "#ca6702",
+            "7" = "#bb3e03",
+            "8" = "#ae2012",
+            "9" = "#9b2226")
+
+p <- SCpubr::do_DimPlot(sample = sample,
+                        colors.use = colors)
+
+# Highlight cells.
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters \%in\% c("1", "5", "7")]), 1000)
+p <- Seurat::DimPlot(sample,
+                     cells.highlight = cells.use)
+
+# Highlight cells and use custom color.
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters \%in\% c("1", "5", "7")]), 1000)
+p <- Seurat::DimPlot(sample,
+                     cells.highlight = cells.use,
+                     colors.use = "black")
+
+# Change the size of the highlighted cells.
+# Select 1000 random cells out of clusters 1, 5 and 7.
+cells.use <- sample(colnames(sample[, sample$seurat_clusters \%in\% c("1", "5", "7")]), 1000)
+p <- Seurat::DimPlot(sample,
+                     cells.highlight = cells.use,
+                     colors.use = "black",
+                     sizes.highlight = 1)
+
+
 }
 }

@@ -6,12 +6,12 @@
 \usage{
 do_FeaturePlot(
   sample,
-  assay = NULL,
   features,
+  assay = NULL,
   reduction = NULL,
+  split.by = NULL,
   pt.size = 0.5,
   legend = TRUE,
-  split.by = NULL,
   split.by.idents = NULL,
   slot = NULL,
   legend.position = "right",
@@ -29,17 +29,17 @@ do_FeaturePlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{assay}{Assay to use. Defauls to the current assay.}
-
 \item{features}{Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.}
 
+\item{assay}{Assay to use. Defauls to the current assay.}
+
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
+
+\item{split.by}{Split the plot in as many unique values stored in the provided metadata column.}
 
 \item{pt.size}{Point size.}
 
 \item{legend}{Whether to plot the legend or not.}
-
-\item{split.by}{Split the plot in as many unique values stored in the provided metadata column.}
 
 \item{split.by.idents}{Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.}
 

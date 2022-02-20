@@ -28,12 +28,12 @@
 #' TBD
 #' }
 do_FeaturePlot <- function(sample,
-                           assay = NULL,
                            features,
+                           assay = NULL,
                            reduction = NULL,
+                           split.by = NULL,
                            pt.size = 0.5,
                            legend = TRUE,
-                           split.by = NULL,
                            split.by.idents = NULL,
                            slot = NULL,
                            legend.position = "right",
