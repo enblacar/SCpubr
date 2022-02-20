@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^.mailmap$
-^docs$
-^book$
-^bs4_book$
 ^\.github$
+^doc$
+^Meta$
