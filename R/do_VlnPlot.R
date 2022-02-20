@@ -78,7 +78,8 @@ do_VlnPlot <- function(sample,
                            "colors.use" = colors.use,
                            "plot.title" = plot.title,
                            "xlab" = xlab,
-                           "ylab" = ylab)
+                           "ylab" = ylab,
+                           "individual.titles" = individual.titles)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the feature.

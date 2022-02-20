@@ -334,9 +334,15 @@ check_and_set_assay <- function(sample, assay){
 #' }
 check_type <- function(parameters, required_type, test_function){
   for(parameter_name in names(parameters)){
+    # Get each individual parameter from the list.
     parameter <- parameters[[parameter_name]]
-    if (!(is.null(parameter)) & !(test_function(parameter))){
-      stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+    # Cases in which the user has to provide a vector.
+    for (item in parameter){
+      if (!(is.null(item))){
+        if (!(is.na(item)) & !(test_function(item))){
+          stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+        }
+      }
     }
   }
 }
@@ -548,5 +554,22 @@ state_dependencies <- function(func_name = NULL){
   }
 }
 
-
+#' Check length of parameters compared to features.
+#'
+#' @param vector_of_parameters Vector of parameters to test.
+#' @param vector_of_features  Vector of features to test against.
+#' @param parameters_name Name of the parameters variable.
+#' @param features_name Name of the features variable.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_length <- function(vector_of_parameters, vector_of_features, parameters_name, features_name){
+  if (length(vector_of_parameters) != length(vector_of_features)){
+    stop("Length of ", parameters_name, " not equal to ", features_name, ".", call. = F)
+  }
+}
 

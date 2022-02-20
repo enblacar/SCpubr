@@ -23,7 +23,7 @@ do_FeaturePlot(
   dims = c(1, 2),
   viridis_color_map = "D",
   verbose = TRUE,
-  ...
+  individual.titles = NULL
 )
 }
 \arguments{
@@ -63,7 +63,7 @@ do_FeaturePlot(
 
 \item{verbose}{Whether to show warnings.}
 
-\item{...}{Extra parameters used in \link[Seurat]{FeaturePlot}.}
+\item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

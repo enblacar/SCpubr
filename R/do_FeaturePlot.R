@@ -19,7 +19,7 @@
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
-#' @param ... Extra parameters used in \link[Seurat]{FeaturePlot}.
+#' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -45,7 +45,7 @@ do_FeaturePlot <- function(sample,
                            dims = c(1, 2),
                            viridis_color_map = "D",
                            verbose = TRUE,
-                           ...){
+                           individual.titles = NULL){
     # Checks for packages.
     check_suggests(function_name = "do_FeaturePlot")
     # Check the assay.
@@ -62,7 +62,8 @@ do_FeaturePlot <- function(sample,
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("pt.size" = pt.size,
-                         "ncol" = ncol)
+                         "ncol" = ncol,
+                         "fontsize" = fontsize)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -73,7 +74,8 @@ do_FeaturePlot <- function(sample,
                            "split.by" = split.by,
                            "plot.title" = plot.title,
                            "split.by.idents" = split.by.idents,
-                           "viridis_color_map" = viridis_color_map)
+                           "viridis_color_map" = viridis_color_map,
+                           "individual.titles" = individual.titles)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check slot.
@@ -81,6 +83,13 @@ do_FeaturePlot <- function(sample,
 
     # Check split.by is on metadata.
     if (!(is.null(split.by))){check_feature(sample = sample, features = split.by, enforce_check = "metadata", enforce_parameter = "split.by")}
+
+    # Check individual titles.
+    if (!(is.null(individual.titles))){
+      if(length(features) != length(individual.titles)){
+        stop('Total number of individual titles does not match the number of features provided.', call. = F)
+      }
+    }
 
     # Check viridis_color_map.
     check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
@@ -103,8 +112,7 @@ do_FeaturePlot <- function(sample,
                                  order = T,
                                  dims = dims,
                                  pt.size = pt.size,
-                                 ncol = ncol,
-                                 ...) &
+                                 ncol = ncol) &
             Seurat::NoAxes() &
             viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
@@ -172,8 +180,7 @@ do_FeaturePlot <- function(sample,
                                             reduction = reduction,
                                             order = T,
                                             dims = dims,
-                                            pt.size = pt.size,
-                                            ...) +
+                                            pt.size = pt.size) +
                 # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
                 ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
                                                            y = min(Seurat::Embeddings(sample, reduction)[, 2]),
@@ -218,8 +225,7 @@ do_FeaturePlot <- function(sample,
                                               reduction = reduction,
                                               order = T,
                                               dims = dims,
-                                              pt.size = pt.size,
-                                              ...) +
+                                              pt.size = pt.size) +
                   # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
                   ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
                                                              y = min(Seurat::Embeddings(sample, reduction)[, 2]),
@@ -282,6 +288,15 @@ do_FeaturePlot <- function(sample,
         } else {
             p <- p + ggplot2::ggtitle(plot.title)
         }
+    }
+
+    # Add individual titles.
+    if (!is.null(individual.titles)){
+      for (counter in seq(1,length(features))){
+        if (!(is.na(individual.titles[counter]))){
+          p[[counter]]$labels$title <- individual.titles[counter]
+        }
+      }
     }
 
     # Remove legend.

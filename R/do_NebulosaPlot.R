@@ -15,6 +15,7 @@
 #' @param legend.position Position of the legend in the plot.
 #' @param fontsize Base fontsize of the plot.
 #' @param plot.title Title to use in the plot.
+#' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
 #'
@@ -35,6 +36,7 @@ do_NebulosaPlot <- function(sample,
                              method = c("ks", "wkde"),
                              joint = FALSE,
                              plot.title = NULL,
+                             individual.titles = NULL,
                              shape = 16,
                              legend = TRUE,
                              fontsize = 14,
@@ -61,7 +63,8 @@ do_NebulosaPlot <- function(sample,
                          "features" = features,
                          "method" = method,
                          "plot.title" = plot.title,
-                         "slot" = slot)
+                         "slot" = slot,
+                         "individual.titles" = individual.titles)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -69,6 +72,19 @@ do_NebulosaPlot <- function(sample,
   # Check if the feature is actually in the object.
   check_feature(sample = sample, features = features)
 
+  # Check individual titles.
+  if (!(is.null(individual.titles))){
+    # If joint is set up.
+    if (isTRUE(joint)){
+      if(length(features) + 1 != length(individual.titles)){
+        stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = F)
+      }
+    } else {
+      if(length(features) != length(individual.titles)){
+        stop('Total number of individual titles does not match the number of features provided.', call. = F)
+      }
+    }
+  }
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
@@ -105,6 +121,17 @@ do_NebulosaPlot <- function(sample,
                                                                                                                 face = "bold",
                                                                                                                 hjust = 0.5)))
         }
+    }
+
+    # Add individual titles.
+    if (!is.null(individual.titles)){
+      times <- length(features)
+      if (isTRUE(joint)){times <- times + 1}
+      for (counter in seq(1, times)){
+        if (!(is.na(individual.titles[counter]))){
+          plot[[counter]]$labels$title <- individual.titles[counter]
+        }
+      }
     }
     return(plot)
 }

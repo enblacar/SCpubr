@@ -15,6 +15,7 @@ do_NebulosaPlot(
   method = c("ks", "wkde"),
   joint = FALSE,
   plot.title = NULL,
+  individual.titles = NULL,
   shape = 16,
   legend = TRUE,
   fontsize = 14,
@@ -43,6 +44,8 @@ do_NebulosaPlot(
 \item{joint}{Whether to plot different features as joint density.}
 
 \item{plot.title}{Title to use in the plot.}
+
+\item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{shape}{Shape of the geometry (ggplot number).}
 
