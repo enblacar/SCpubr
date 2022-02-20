@@ -15,9 +15,7 @@ do_DimPlot(
   sizes.highlight = 0.5,
   group.by = NULL,
   split.by = NULL,
-  colors.split = "#0A305F",
   cells.highlight = NULL,
-  colors.highlight = "#0A305F",
   legend = TRUE,
   legend.title = FALSE,
   legend.position = "right",
@@ -29,8 +27,7 @@ do_DimPlot(
   ncol = NULL,
   raster = FALSE,
   dims = c(1, 2),
-  fontsize = 14,
-  ...
+  fontsize = 14
 )
 }
 \arguments{
@@ -54,11 +51,7 @@ do_DimPlot(
 
 \item{split.by}{Split into as many plots as unique values in the variable provided.}
 
-\item{colors.split}{Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.}
-
 \item{cells.highlight}{Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.}
-
-\item{colors.highlight}{HEX color code to use with the highlighted cells.}
 
 \item{legend}{Whether to plot the legend or not.}
 
@@ -72,7 +65,7 @@ do_DimPlot(
 
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
-\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by variable.}
+\item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.}
 
 \item{plot.title}{Title to use in the plot.}
 
@@ -83,8 +76,6 @@ do_DimPlot(
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
 \item{fontsize}{Base fontsize of the figure.}
-
-\item{...}{Other parameters for \link[Seurat]{DimPlot}.}
 }
 \value{
 A ggplot2 object containing a DimPlot.

@@ -5,11 +5,9 @@
 #' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param group.by Variable you want the cells to be colored for.
 #' @param split.by Split into as many plots as unique values in the variable provided.
-#' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by variable.
-#' @param colors.split Vector of named HEX values to color the cells in a split DimPlot. It has to match the unique values in split.by parameter.
+#' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.
 #' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param cells.highlight Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
-#' @param colors.highlight HEX color code to use with the highlighted cells.
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param pt.size Point size of the cells.
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
@@ -26,7 +24,6 @@
 #' @param repel Whether to repel the labels if label is set to TRUE.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
-#' @param ... Other parameters for \link[Seurat]{DimPlot}.
 #'
 #' @return  A ggplot2 object containing a DimPlot.
 #' @export
@@ -45,9 +42,7 @@ do_DimPlot <- function(sample,
                        sizes.highlight = 0.5,
                        group.by = NULL,
                        split.by = NULL,
-                       colors.split = "#0A305F",
                        cells.highlight = NULL,
-                       colors.highlight = "#0A305F",
                        legend = TRUE,
                        legend.title = FALSE,
                        legend.position = "right",
@@ -59,8 +54,7 @@ do_DimPlot <- function(sample,
                        ncol = NULL,
                        raster = FALSE,
                        dims = c(1, 2),
-                       fontsize = 14,
-                       ...){
+                       fontsize = 14){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
     # Check the reduction.
@@ -92,32 +86,48 @@ do_DimPlot <- function(sample,
 
     # Checks to ensure proper function.
     if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
-    # Check whether the names of colors.use match the unique values in group.by or whether the number of colors is lower to the number of unique values in group.by.
-    if (!(is.null(group.by)) & !(is.null(colors.use))){check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)}
-    # Check whether the names of colors.split match the unique values in split.by or whether the number of colors is lower to the number of unique values in split.by.
-    if (!(is.null(split.by)) & colors.split != "#0A305F" & length(colors.split) > 1){check_consistency_colors_and_names(sample = sample, colors = colors.split, grouping_variable = split.by)}
-    # Check for colors.highlight.
-    if (colors.highlight != "#0A305F" & !(is.null(colors.highlight))){check_colors(colors.highlight, parameter_name = "colors.highlight")}
-    # Check for colors.use.
-    if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
-    # Check for colors.split.
-    if (!(is.null(colors.split)) & colors.split != "#0A305F" & colors.split != TRUE){check_colors(colors.split, parameter_name = "colors.split")}
+    if (!(is.null(cells.highlight)) & !(is.null(group.by))){stop("Either group.by or cells.highlight has to be NULL.")}
+    if (!(is.null(cells.highlight)) & !(is.null(split.by))){stop("Either split.by or cells.highlight has to be NULL.")}
+
     # Check for label.color.
     check_colors(label.color, parameter_name = "label.color")
 
-    # Automatically generate color palettes when the user has not defined one.
-    # If the user does not want to highlight any cells (Regular case.).
-    if (is.null(cells.highlight) & is.null(colors.use)){
-        # If no special grouping is set up, DimPlot defaults back to Seurat::Idents(sample) or levels(sample).
-        if (is.null(group.by)){colors.use <- generate_color_scale(levels(sample))} else {colors.use <- generate_color_scale(unique(sample[[]][, group.by]))}
-    }
-
-    # If the user wants different coloring but has not provided a vector of colors, then resort to the default coloring.
-    if (colors.split == TRUE){
-      # Generate a vector of colors equal to the number of identities in the sample.
-      data.use <- sample[[]][, split.by, drop = F]
-      names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-      colors.split <- generate_color_scale(names.use)
+    # Automatically generate colors.
+    if (is.null(colors.use)){
+      colors.use <- {
+        # When everything is NULL.
+        if (is.null(group.by) & is.null(split.by) & is.null(cells.highlight)){
+          generate_color_scale(levels(sample))
+        # When everything is NULL but group.by.
+        } else if (!(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight)){
+          data.use <- sample[[]][, group.by, drop = F]
+          names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+          generate_color_scale(names.use)
+        # When everything is NULL but split.by.
+        } else if (is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight)){
+          data.use <- sample[[]][, split.by, drop = F]
+          names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+          generate_color_scale(names.use)
+        } else if (is.null(group.by) & is.null(split.by) & !(is.null(cells.highlight))){
+          colors.use <- "#0A305F"
+        }
+      }
+    # But, if the user has provided some.
+    } else{
+      # Check that the provided values are valid color representations.
+      check_colors(colors.use, parameter_name = "colors.use")
+      # When everything is NULL.
+      if (is.null(group.by) & is.null(split.by) & is.null(cells.highlight)){
+        check_consistency_colors_and_names(sample = sample, colors = colors.use)
+        # When everything is NULL but group.by.
+      } else if (!(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight)){
+        check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+        # When everything is NULL but split.by.
+      } else if (is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight)){
+        if (length(colors.use) != 1){
+          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+        }
+      }
     }
 
     # Define fontsize parameters.
@@ -141,8 +151,7 @@ do_DimPlot <- function(sample,
                                   group.by = group.by,
                                   cols = colors.use,
                                   raster = raster,
-                                  ncol = ncol,
-                                  ...) +
+                                  ncol = ncol) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::ggtitle(plot.title) +
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
@@ -151,16 +160,12 @@ do_DimPlot <- function(sample,
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
-        # If a custom color scale is provided, this line's aim is to reorder the legend labels into alphabetical order.
-        if (!(is.null(colors.use))){
-            p.umap <- p.umap + ggplot2::scale_color_manual(values = colors.use, breaks = sort(names(colors.use)))
-        }
 
     }
     # If the UMAP has to be split in multiple panes.
     else if (is.null(cells.highlight) & !(is.null(split.by))){
         # If the user provided multiple highlighting colors.
-        multiple_colors <- ifelse(length(colors.split) > 1, TRUE, FALSE)
+        multiple_colors <- ifelse(length(colors.use) > 1, TRUE, FALSE)
         # List to store each individual plots.
         list.plots <- list()
         # Recover all metadata.
@@ -180,12 +185,11 @@ do_DimPlot <- function(sample,
                                       sizes.highlight = sizes.highlight,
                                       pt.size = pt.size,
                                       raster = raster,
-                                      ncol = ncol,
-                                      ...) +
+                                      ncol = ncol) +
                 ggplot2::ggtitle(iteration) +
                 ggpubr::theme_pubr(legend = legend.position) +
                 ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                            values = c("grey75", ifelse(multiple_colors == TRUE, colors.split[[iteration]], colors.split)))  +
+                                            values = c("grey75", ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use)))  +
                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                                legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                                legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
@@ -208,12 +212,11 @@ do_DimPlot <- function(sample,
                                   dims = dims,
                                   pt.size = pt.size,
                                   raster = raster,
-                                  ncol = ncol,
-                                  ...) +
+                                  ncol = ncol) +
             ggplot2::ggtitle(plot.title) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                        values = c("grey", colors.highlight))  +
+                                        values = c("grey", colors.use))  +
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
