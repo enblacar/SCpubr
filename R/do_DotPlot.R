@@ -21,10 +21,7 @@
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example man/examples/examples_do_DotPlot.R
 do_DotPlot <- function(sample,
                        features,
                        assay = NULL,

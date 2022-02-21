@@ -24,10 +24,7 @@
 #' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_BeeSwarmPlot.R
 do_BeeSwarmPlot <- function(sample,
                             feature_to_rank,
                             group.by,

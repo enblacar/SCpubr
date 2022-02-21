@@ -24,10 +24,7 @@
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_BarPlot.R
 do_BarPlot <- function(sample,
                        features,
                        group.by = NULL,

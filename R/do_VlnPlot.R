@@ -26,10 +26,7 @@
 #' @return A ggplot2 object containing a Violin Plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example man/examples/examples_do_VlnPlot.R
 do_VlnPlot <- function(sample,
                        features,
                        assay = NULL,

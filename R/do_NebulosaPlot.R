@@ -10,6 +10,7 @@
 #' @param method Kernel density estimation method. Either "ks" or "wkde" or both. See \link[Nebulosa]{plot_density} for more details.
 #' @param dims Vector of 2 dims to plot the data. By default, first and second from the specified reduction.
 #' @param joint Whether to plot different features as joint density.
+#' @param return_only_joint Whether to only return the joint density panel. Logical.
 #' @param shape Shape of the geometry (ggplot number).
 #' @param legend Whether to plot the legend or not. Logical.
 #' @param legend.position Position of the legend in the plot.
@@ -22,10 +23,7 @@
 #' @return  A ggplot2 object containing a Nebulosa plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_NebulosaPlot.R
 do_NebulosaPlot <- function(sample,
                              features,
                              slot = NULL,
@@ -35,6 +33,7 @@ do_NebulosaPlot <- function(sample,
                              combine = TRUE,
                              method = c("ks", "wkde"),
                              joint = FALSE,
+                             return_only_joint = NULL,
                              plot.title = NULL,
                              individual.titles = NULL,
                              shape = 16,
@@ -52,7 +51,8 @@ do_NebulosaPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("legend" = legend,
                        "combine" = combine,
-                       "joint" = joint)
+                       "joint" = joint,
+                       "return_only_joint" = return_only_joint)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("size" = size,
@@ -76,8 +76,12 @@ do_NebulosaPlot <- function(sample,
   if (!(is.null(individual.titles))){
     # If joint is set up.
     if (isTRUE(joint)){
-      if(length(features) + 1 != length(individual.titles)){
-        stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = F)
+      if (!(is.null(return_only_joint)) & isTRUE(return_only_joint)){
+        stop("If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.", call. = F)
+      } else {
+        if(length(features) + 1 != length(individual.titles)){
+          stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = F)
+        }
       }
     } else {
       if(length(features) != length(individual.titles)){
@@ -113,8 +117,13 @@ do_NebulosaPlot <- function(sample,
     }
     # Add a title.
     if (!(is.null(plot.title))){
-        if (length(features) == 1){
-            plot <- plot + ggplot2::ggtitle(plot.title)
+        if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
+            if (isTRUE(return_only_joint)){
+              plot <- plot[[length(features) + 1]]
+              plot <- plot + ggplot2::ggtitle(plot.title)
+            } else {
+              plot <- plot + ggplot2::ggtitle(plot.title)
+            }
         } else {
             plot <- plot + patchwork::plot_annotation(title = plot.title,
                                                       theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
@@ -133,5 +142,6 @@ do_NebulosaPlot <- function(sample,
         }
       }
     }
+
     return(plot)
 }
