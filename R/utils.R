@@ -560,9 +560,9 @@ state_dependencies <- function(func_name = NULL){
 #' @param vector_of_features  Vector of features to test against.
 #' @param parameters_name Name of the parameters variable.
 #' @param features_name Name of the features variable.
-#'
-#' @export
-#'
+
+#' @return
+#' @noRd
 #' @examples
 #' \dontrun{
 #' TBD

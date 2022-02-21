@@ -126,7 +126,6 @@ colors <- c("0" = "#001219",
             "7" = "#bb3e03",
             "8" = "#ae2012",
             "9" = "#9b2226")
-
 p <- SCpubr::do_DimPlot(sample = sample,
                         colors.use = colors)
 
@@ -150,7 +149,5 @@ p <- Seurat::DimPlot(sample,
                      cells.highlight = cells.use,
                      colors.use = "black",
                      sizes.highlight = 1)
-
-
 }
 }

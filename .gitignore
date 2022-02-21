@@ -6,3 +6,5 @@ inst/doc
 SCpubr.Rproj
 /doc/
 /Meta/
+R/do_PTEA.R
+R/do_ButteflyPlot.R

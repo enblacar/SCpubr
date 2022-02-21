@@ -2,7 +2,7 @@
 #'
 #'
 #' @param sample Seurat object.
-#' @param assay Assay to use. Defauls to the current assay.
+#' @param assay Assay to use. Defaults to the current assay.
 #' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param features Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
@@ -23,10 +23,7 @@
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_FeaturePlot.R
 do_FeaturePlot <- function(sample,
                            features,
                            assay = NULL,
