@@ -107,11 +107,10 @@ do_BeeSwarmPlot <- function(sample,
 
   color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-  plot <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
+  p <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
     ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
     ggpubr::theme_pubr(legend = legend.position) +
     ggplot2::ggtitle(plot.title) +
-    ggpubr::rremove("legend.title") +
     ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
                                                      face = "bold"),
                    axis.title = ggplot2::element_text(size = axis.title.fontsize,
@@ -119,36 +118,42 @@ do_BeeSwarmPlot <- function(sample,
                    plot.title = ggplot2::element_text(size = plot.title.fontsize,
                                                       face = "bold",
                                                       hjust = 0.5),
-                   legend.text = ggplot2::element_text(size = 10, face = "bold", hjust = 1))
+                   legend.text = ggplot2::element_text(size = legend.text.fontsize,
+                                                       face = "bold",
+                                                       hjust = 1),
+                   legend.title = ggplot2::element_text(size = legend.title.fontsize,
+                                                        face = "bold"))
 
   if (continuous_feature == TRUE){
-    plot <- plot + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
+    p <- p + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
   } else if (continuous_feature == FALSE) {
     if (is.null(colors.use)){colors.use <- generate_color_scale(levels(sample))}
-    plot <- plot +
+    p <- p +
       ggplot2::scale_color_manual(values = colors.use) +
       ggpubr::rremove("legend")
   }
 
   if (remove_x_axis == TRUE){
-    plot <- plot + ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
+    p <- p + ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
   }
   if (remove_y_axis == TRUE){
-    plot <- plot + ggpubr::rremove("y.text") + ggpubr::rremove("y.ticks")
+    p <- p + ggpubr::rremove("y.text") + ggpubr::rremove("y.ticks")
   }
   if (flip == TRUE){
-    plot <- plot + ggplot2::coord_flip() + ggpubr::rremove("y.ticks") +
+    p <- p + ggplot2::coord_flip() + ggpubr::rremove("y.ticks") +
       ggpubr::rremove("y.text") +
       ggplot2::xlab(ifelse(is.null(ylab), paste0("Ranking for ", feature_to_rank), ylab)) +
       ggplot2::ylab(xlab)
 
   } else {
-    plot <- plot + ggpubr::rremove("x.ticks") +
+    p <- p + ggpubr::rremove("x.ticks") +
       ggpubr::rremove("x.text") +
       ggplot2::xlab(ifelse(is.null(xlab), paste0("Ranking for ", feature_to_rank), xlab)) +
       ggplot2::ylab(ylab)
 
   }
-  return(plot)
+  p <- p + ggpubr::rremove("legend.title")
+
+  return(p)
 
 }
