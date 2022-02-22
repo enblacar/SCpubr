@@ -136,7 +136,7 @@ do_DimPlot <- function(sample,
 
     # If the UMAP does not need to be split in multiple panes (default case).
     if (is.null(cells.highlight) & is.null(split.by)){
-        p.umap <- Seurat::DimPlot(sample,
+        p <- Seurat::DimPlot(sample,
                                   reduction = reduction,
                                   label = label,
                                   dims = dims,
@@ -174,7 +174,7 @@ do_DimPlot <- function(sample,
         for (iteration in plot_order){
             # Retrieve the cells that do belong to the iteration's split.by value.
             cells.highlight <- rownames(data.use)[which(data.use == iteration)]
-            p.umap <- Seurat::DimPlot(sample,
+            p <- Seurat::DimPlot(sample,
                                       reduction = reduction,
                                       dims = dims,
                                       cells.highlight = cells.highlight,
@@ -192,16 +192,16 @@ do_DimPlot <- function(sample,
                 ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                               byrow = legend.byrow,
                                                               override.aes = list(size = legend.icon.size)))
-            list.plots[[iteration]] <- p.umap
+            list.plots[[iteration]] <- p
         }
         # Assemble individual plots as a patch.
-        p.umap <- patchwork::wrap_plots(list.plots, ncol = ncol)
+        p <- patchwork::wrap_plots(list.plots, ncol = ncol)
     }
 
 
     # If the user wants to highlight some of the cells.
     else if (!(is.null(cells.highlight))) {
-        p.umap <- Seurat::DimPlot(sample,
+        p <- Seurat::DimPlot(sample,
                                   reduction = reduction,
                                   cells.highlight = cells.highlight,
                                   sizes.highlight = sizes.highlight,
@@ -234,37 +234,45 @@ do_DimPlot <- function(sample,
     }
     # Legend treatment.
     if (legend == FALSE){
-        p.umap <- p.umap & ggpubr::rremove("legend.title") & ggpubr::rremove("legend")
+        p <- p & ggpubr::rremove("legend.title") & ggpubr::rremove("legend")
     } else if (legend == TRUE) {
-        p.umap <- p.umap &  ggpubr::rremove("legend.title")
+        p <- p &  ggpubr::rremove("legend.title")
     }
 
     if (legend.title == FALSE) {
-        p.umap <- p.umap & ggpubr::rremove("legend.title")
+        p <- p & ggpubr::rremove("legend.title")
     }
-    # For embeddings that are not diffusion maps, we remove all axes..
-    if (!(reduction %in% c("diffusion", "pca"))){
-        p.umap <- p.umap & Seurat::NoAxes()
-    # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
-    } else {
-        if (reduction == "pca"){
-          prefix <- "PC_"
-        } else if (reduction == "diffusion"){
-          prefix <- "DC_"
-        }
-        p.umap <- p.umap &
+    # For embeddings that are umap of tsne, we remove all axes..
+    if (reduction %in% c("umap", "tsne")){
+        # if dims is first and then second.
+        if (sum(dims == c(1, 2)) == 2){
+          p <- p & Seurat::NoAxes()
+        } else {
+          labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+          p <- p &
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
             ggpubr::rremove("ticks") &
             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold")) &
-            ggplot2::xlab(paste0(prefix, dims[1])) & ggplot2::ylab(paste0(prefix, dims[2]))
+                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+            ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
+        }
+    # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
+    } else {
+        labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+        p <- p &
+            ggpubr::rremove("axis") &
+            ggpubr::rremove("axis.text") &
+            ggpubr::rremove("ticks") &
+            ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+            ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
     }
     # Label treatment.
     if (label == TRUE && is.null(cells.highlight)){
-        p.umap$layers[[2]]$aes_params$fontface <- "bold"
+        p$layers[[2]]$aes_params$fontface <- "bold"
     }
     # Return the final plot.
-    return(p.umap)
+    return(p)
 }
 

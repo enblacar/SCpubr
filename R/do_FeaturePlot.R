@@ -183,7 +183,6 @@ do_FeaturePlot <- function(sample,
                                                            y = min(Seurat::Embeddings(sample, reduction)[, 2]),
                                                            fill = "NS"),
                                     alpha = 0) +
-                Seurat::NoAxes() +
                 viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) +
                 ggplot2::ggtitle(feature) +
                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
@@ -228,7 +227,6 @@ do_FeaturePlot <- function(sample,
                                                              y = min(Seurat::Embeddings(sample, reduction)[, 2]),
                                                              fill = "NS"),
                                       alpha = 0) +
-                  Seurat::NoAxes() +
                   ggplot2::scale_color_viridis_c(limits = limits, na.value = "grey75", option = viridis_color_map) +
                   ggplot2::ggtitle(feature) +
                   ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
@@ -254,6 +252,8 @@ do_FeaturePlot <- function(sample,
             if (reduction == "diffusion"){
                 # Add "DC" labels.
                 p.loop <- p.loop & ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
+            } else if (reduction == "pca"){
+                p.loop <- p.loop & ggplot2::xlab(paste0("PC_", dims[1])) & ggplot2::ylab(paste0("PC_", dims[2]))
             }
             # Add the plot to the list.
             list.plots[[feature]] <- p.loop
@@ -299,6 +299,33 @@ do_FeaturePlot <- function(sample,
     # Remove legend.
     if (legend == FALSE){
         p <- p + ggpubr::rremove("legend")
+    }
+
+    # For embeddings that are umap of tsne, we remove all axes..
+    if (reduction %in% c("umap", "tsne")){
+      # if dims is first and then second.
+      if (sum(dims == c(1, 2)) == 2){
+        p <- p & Seurat::NoAxes()
+      } else {
+        labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+        p <- p &
+          ggpubr::rremove("axis") &
+          ggpubr::rremove("axis.text") &
+          ggpubr::rremove("ticks") &
+          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+          ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
+      }
+      # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
+    } else {
+      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+      p <- p &
+        ggpubr::rremove("axis") &
+        ggpubr::rremove("axis.text") &
+        ggpubr::rremove("ticks") &
+        ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                       axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+        ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
     }
 
     # Further patch for diffusion maps.
