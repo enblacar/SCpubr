@@ -113,8 +113,8 @@ do_BarPlot <- function(sample,
         colors.use <- colors.use[factor_levels]
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
         if (verbose){
-          if (isTRUE(legend)){warning("Recommended settings without using group.by is to set legend to FALSE.")}
-          if (position != "stack"){warning("Recommended settings without using group.by is to set position to 'stack'.")}
+          if (isTRUE(legend)){warning("Recommended settings without using group.by is to set legend to FALSE.", call. = F)}
+          if (position != "stack"){warning("Recommended settings without using group.by is to set position to 'stack'.", call. = F)}
         }
         p <- sample@meta.data %>%
           dplyr::select(!!rlang::sym(feature)) %>%
@@ -159,8 +159,8 @@ do_BarPlot <- function(sample,
         if (is.null(labels.order) & position == "fill"){factor_levels <- rev(factor_levels)}
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
         if (verbose){
-          if (isFALSE(legend)){warning("Recommended settings when using group.by is to set legend to TRUE.")}
-          if (position != "fill"){warning("Recommended settings when using group.by is to set position to 'fill'.")}
+          if (isFALSE(legend)){warning("Recommended settings when using group.by is to set legend to TRUE.", call. = F)}
+          if (position != "fill"){warning("Recommended settings when using group.by is to set position to 'fill'.", call. = F)}
         }
 
         p <- sample@meta.data %>%

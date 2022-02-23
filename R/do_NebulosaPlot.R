@@ -100,35 +100,44 @@ do_NebulosaPlot <- function(sample,
   legend.title.fontsize <- fontsize - 4
 
   # Plot a density plot using Nebulosa package.
-    plot <- Nebulosa::plot_density(object = sample,
-                                   features = features,
-                                   joint = joint,
-                                   reduction = reduction) &
-            Seurat::NoAxes() &
-            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           legend.position = legend.position) &
-            viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
-
+    p <- Nebulosa::plot_density(object = sample,
+                                features = features,
+                                joint = joint,
+                                reduction = reduction) &
+         Seurat::NoAxes() &
+         ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                        legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                        legend.position = legend.position)
+    # Compute the total number of plots according to whether joint is set to TRUE or not.
+    if (isTRUE(joint)){
+      num_plots <- length(features) + 1
+    } else {
+      num_plots <- length(features)
+    }
+    p <- add_scale(p = p,
+                   num_plots = num_plots,
+                   scale = "color",
+                   function_use = viridis::scale_color_viridis(na.value = "grey75",
+                                                               option = viridis_color_map))
     # Remove legend.
     if (legend == FALSE){
-      plot <- plot + Seurat::NoLegend()
+      p <- p + Seurat::NoLegend()
     }
     # Add a title.
     if (!(is.null(plot.title))){
         if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
             if (isTRUE(return_only_joint)){
-              plot <- plot[[length(features) + 1]]
-              plot <- plot + ggplot2::ggtitle(plot.title)
+              p <- p[[length(features) + 1]]
+              p <- p & ggplot2::ggtitle(plot.title)
             } else {
-              plot <- plot + ggplot2::ggtitle(plot.title)
+              p <- p & ggplot2::ggtitle(plot.title)
             }
         } else {
-            plot <- plot + patchwork::plot_annotation(title = plot.title,
-                                                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
-                                                                                                                face = "bold",
-                                                                                                                hjust = 0.5)))
+            p <- p & patchwork::plot_annotation(title = plot.title,
+                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
+                                                                                                          face = "bold",
+                                                                                                          hjust = 0.5)))
         }
     }
 
@@ -138,10 +147,10 @@ do_NebulosaPlot <- function(sample,
       if (isTRUE(joint)){times <- times + 1}
       for (counter in seq(1, times)){
         if (!(is.na(individual.titles[counter]))){
-          plot[[counter]]$labels$title <- individual.titles[counter]
+          p[[counter]]$labels$title <- individual.titles[counter]
         }
       }
     }
 
-    return(plot)
+    return(p)
 }

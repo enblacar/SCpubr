@@ -489,7 +489,7 @@ check_viridis_color_map <- function(viridis_color_map, verbose){
   viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
   if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)}
   if (verbose){
-    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.")}
+    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.", call. = F)}
   }
 }
 
@@ -573,3 +573,72 @@ check_length <- function(vector_of_parameters, vector_of_features, parameters_na
   }
 }
 
+
+#' Return a SC count matrix
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+use_dataset <- function(){
+
+  sample <- CHETAH::headneck_ref
+  sample <- Seurat::as.Seurat(sample, counts = "counts", data = NULL)
+  sample <- SeuratObject::RenameAssays(sample, originalexp = "RNA")
+  sample <- Seurat::PercentageFeatureSet(sample, pattern = "^MT-", col.name = "percent.mt")
+  # Compute QC.
+  mask1 <- sample$nCount_RNA >= 1000
+  mask2 <- sample$nFeature_RNA >= 500
+  mask3 <- sample$percent.mt <= 20
+  mask <- mask1 & mask2 & mask3
+  sample <- sample[, mask]
+  # Normalize.
+  sample <- Seurat::SCTransform(sample)
+
+  # Dimensional reduction.
+  sample <- Seurat::RunPCA(sample)
+  sample <- Seurat::RunUMAP(sample, dims = 1:30)
+  # Find clusters.
+  sample <- Seurat::FindNeighbors(sample, dims = 1:30)
+  sample <- Seurat::FindClusters(sample, resolution = 0.5)
+  return(sample)
+}
+
+#' Add viridis color scale while suppressing the warning that comes with adding a second scale.
+#'
+#' @param p GGplot2 plot.
+#' @param num_plots Number of plots.
+#' @param function_use Coloring function to use.
+#' @param scale Name of the scale. Either fill or color.
+#' @param limits Whether to put limits.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
+  if (scale == "color"){scale <- "colour"}
+  # Compute the number of plots in this object (maybe a more efficient solution exists).
+  if (num_plots == 1){
+    # Find the index in which the scale is stored.
+    # Adapted from: https://stackoverflow.com/a/46003178
+    x <- which(sapply(p$scales$scales, function(x) scale %in% x$aesthetics))
+    # Remove it.
+    p$scales$scales[[x]] <- NULL
+  } else {
+    for (i in seq(1, num_plots)){
+      # Find the index in which the scale is stored.
+      # Adapted from: https://stackoverflow.com/a/46003178
+      x <- which(sapply(p[[i]]$scales$scales, function(x) scale %in% x$aesthetics))
+      # Remove it.
+      p[[i]]$scales$scales[[x]] <- NULL
+    }
+  }
+  # Add the scale and now it will now show up a warning since we removed the previous scale.
+  p <- p & function_use
+  return(p)
+}

@@ -110,11 +110,16 @@ do_FeaturePlot <- function(sample,
                                  dims = dims,
                                  pt.size = pt.size,
                                  ncol = ncol) &
-            Seurat::NoAxes() &
-            viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) &
-            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold", hjust = 1),
-                           legend.position = legend.position)
+            Seurat::NoAxes()
+        # Add viridis and supress warnings.
+        p <- add_scale(p = p,
+                       num_plots = length(features),
+                       function_use = viridis::scale_color_viridis(na.value = "grey75",
+                                                                   option = viridis_color_map),
+                       scale = "color") &
+             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold", hjust = 1),
+                            legend.position = legend.position)
         # Special patches for diffusion maps: Adding "DC" labels to the axis.
         if (reduction == "diffusion"){
             p <- p & ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
@@ -172,26 +177,31 @@ do_FeaturePlot <- function(sample,
             sample$dummy[!(names(sample$dummy) %in% cells.use)] <- NA
 
             if (is.null(split.by)){
+              feature <- "dummy"
               p.loop <- Seurat::FeaturePlot(sample,
-                                            "dummy",
+                                            feature,
                                             reduction = reduction,
                                             order = T,
                                             dims = dims,
-                                            pt.size = pt.size) +
+                                            pt.size = pt.size) &
                 # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
                 ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
                                                            y = min(Seurat::Embeddings(sample, reduction)[, 2]),
                                                            fill = "NS"),
-                                    alpha = 0) +
-                viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) +
-                ggplot2::ggtitle(feature) +
-                ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                               legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                               legend.position = legend.position,
-                               legend.spacing = ggplot2::unit(0.01, "cm")) +
-                # Override aesthetic of the legend, providing the desired gray color.
-                ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
-                                                                                     alpha = 1)))
+                                    alpha = 0)
+              p.loop <- add_scale(p = p.loop,
+                                  num_plots = length(feature),
+                                  function_use = viridis::scale_color_viridis(na.value = "grey75",
+                                                                              option = viridis_color_map),
+                                  scale = "color") &
+                        ggplot2::ggtitle(feature) &
+                        ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                                       legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                                       legend.position = legend.position,
+                                       legend.spacing = ggplot2::unit(0.01, "cm")) &
+                        # Override aesthetic of the legend, providing the desired gray color.
+                        ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
+                                                                                             alpha = 1)))
             } else {
               # Recover all metadata.
               data <- sample[[]]
@@ -211,34 +221,40 @@ do_FeaturePlot <- function(sample,
               }
               limits <- c(min(sample$dummy), max(sample$dummy))
               for (iteration in plot_order){
+                feature <- "dummy2"
                 count_plot <- count_plot + 1
                 # Create a second dummy variable.
                 sample$dummy2 <- sample$dummy
                 cells.iteration <- sample[[]][, split.by] == iteration
                 sample$dummy2[!(cells.iteration)] <- NA
                 p.loop <- Seurat::FeaturePlot(sample,
-                                              "dummy2",
+                                              feature,
                                               reduction = reduction,
                                               order = T,
                                               dims = dims,
-                                              pt.size = pt.size) +
+                                              pt.size = pt.size) &
                   # This is actually a "fake cell" with alpha 0 (invisible) sitting in the left-down corner, which helps adding a new legend label for the grayed out not selected (NS) cells.
                   ggplot2::geom_point(mapping = ggplot2::aes(x = min(Seurat::Embeddings(sample, reduction)[, 1]),
                                                              y = min(Seurat::Embeddings(sample, reduction)[, 2]),
                                                              fill = "NS"),
-                                      alpha = 0) +
-                  ggplot2::scale_color_viridis_c(limits = limits, na.value = "grey75", option = viridis_color_map) +
-                  ggplot2::ggtitle(feature) +
-                  ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
-                  ggplot2::ylab(ifelse(count_plot == 1, feature, "")) +
-                  ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                                 axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", vjust = 0.5),
-                                 legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                                 legend.position = ifelse(legend.position != "right", "right", legend.position),
-                                 legend.spacing = ggplot2::unit(0.01, "cm")) +
-                  # Override aesthetic of the legend, providing the desired gray color.
-                  ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
-                                                                                       alpha = 1)))
+                                      alpha = 0)
+                p.loop <- add_scale(p = p.loop,
+                                    num_plots = length(feature),
+                                    function_use = viridis::scale_color_viridis(na.value = "grey75",
+                                                                                option = viridis_color_map,
+                                                                                limits = limits),
+                                    scale = "color") &
+                          ggplot2::ggtitle(feature) &
+                          ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) &
+                          ggplot2::ylab(ifelse(count_plot == 1, feature, "")) &
+                          ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", vjust = 0.5),
+                                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                                         legend.position = ifelse(legend.position != "right", "right", legend.position),
+                                         legend.spacing = ggplot2::unit(0.01, "cm")) &
+                          # Override aesthetic of the legend, providing the desired gray color.
+                          ggplot2::guides(fill = ggplot2::guide_legend("", override.aes = list(color = "grey75",
+                                                                                               alpha = 1)))
                 # Only keep the legend of the last plot, as we are setting the same color scale.
                 if (count_plot != length(plot_order)) {p.loop <- p.loop + Seurat::NoLegend()}
 
@@ -298,7 +314,7 @@ do_FeaturePlot <- function(sample,
 
     # Remove legend.
     if (legend == FALSE){
-        p <- p + ggpubr::rremove("legend")
+        p <- p & ggpubr::rremove("legend")
     }
 
     # For embeddings that are umap of tsne, we remove all axes..

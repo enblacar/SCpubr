@@ -1,5 +1,4 @@
-sample <- testing_data
-
+suppressWarnings(sample <- SCpubr:::use_dataset())
 
 # CHECK COLORS
 testthat::test_that("utils: check_colors - FAIL - wrong color", {

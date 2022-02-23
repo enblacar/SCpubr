@@ -99,13 +99,10 @@ Wrapper for Nebulosa::plot_density in Seurat.
                                plot.title = "Density analysis")
 
   # Modify viridis color maps.
-  p1 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "A", plot.title = "Magma")
-  p2 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "B", plot.title = "Inferno")
-  p3 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "C", plot.title = "Plasma")
-  p4 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "D", plot.title = "Viridis")
-  p5 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "E", plot.title = "Cividis")
-  p6 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "F", plot.title = "Rocket")
-  p7 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "G", plot.title = "Mako")
-  p8 <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD8A", viridis_color_map = "H", plot.title = "Turbo")
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = "CD8A",
+                               viridis_color_map = "A",
+                               plot.title = "Magma")
+
 }
 }

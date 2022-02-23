@@ -36,31 +36,32 @@
                               cells.highlight = cells.plot,
                               features = c("CD14"))
 
-  # FeaturePlot with a subset of identities (in Seurat::Idents(sample)) maintaining the original UMAP shape.
+  # FeaturePlot with a subset of identities
+  # (in Seurat::Idents(sample)) maintaining the original UMAP shape.
+  idents.use <- levels(sample)[!(levels(sample) %in% c("2", "5", "8"))]
   p <- SCpubr::do_FeaturePlot(sample = sample,
-                              idents.highlight = levels(sample)[!(levels(sample) %in% c("2", "5", "8"))],
+                              idents.highlight = idents.use,
                               features = c("CD14"))
 
-  # Splitting the FeaturePlot by a variable and maintaining the color scale and the UMAP shape.
+  # Splitting the FeaturePlot by a variable and
+  # maintaining the color scale and the UMAP shape.
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "LYN",
                               split.by = "new_clusters")
 
-  # Splitting the FeaturePlot by a variable and subset only some of the unique groups.
+  # Splitting the FeaturePlot by a variable
+  # and subset only some of the unique groups.
   p <- SCpubr::do_FeaturePlot(sample,
                               features = c("LYN", "nCount_RNA", "PC_1"),
                               split.by = "seurat_clusters",
                               split.by.idents = c("2", "5"))
 
   # Modify the viridis color maps.
-  p1 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "A", plot.title = "Magma")
-  p2 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "B", plot.title = "Inferno")
-  p3 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "C", plot.title = "Plasma")
-  p4 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "D", plot.title = "Viridis")
-  p5 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "E", plot.title = "Cividis")
-  p6 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "F", plot.title = "Rocket")
-  p7 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "G", plot.title = "Mako")
-  p8 <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", viridis_color_map = "H", plot.title = "Turbo")
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "CD14",
+                              viridis_color_map = "A",
+                              plot.title = "Magma")
+
 
 
 }

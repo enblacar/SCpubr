@@ -193,7 +193,7 @@ do_VlnPlot <- function(sample,
 
       if (!(is.null(individual.titles))){
         if (!(is.na(individual.titles[counter]))){
-          plot <- plot + ggplot2::ggtitle(individual.titles[counter])
+          plot <- plot & ggplot2::ggtitle(individual.titles[counter])
         }
       }
       list.plots[[feature]] <- plot
@@ -201,7 +201,7 @@ do_VlnPlot <- function(sample,
     plot <- patchwork::wrap_plots(list.plots, ncol = ncol)
 
     if (!(is.null(plot.title))){
-      plot <- plot + patchwork::plot_annotation(title = plot.title,
+      plot <- plot & patchwork::plot_annotation(title = plot.title,
                                                 theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
                                                                                                           face = "bold",
                                                                                                           hjust = 0.5)))

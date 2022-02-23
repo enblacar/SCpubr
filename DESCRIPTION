@@ -32,6 +32,9 @@ Suggests:
     rmarkdown,
     knitr,
     purrr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    CHETAH,
+    SeuratObject,
+    qpdf
 VignetteBuilder: knitr
 Config/testthat/edition: 3

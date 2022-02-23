@@ -148,11 +148,11 @@ do_DimPlot <- function(sample,
                                   group.by = group.by,
                                   cols = colors.use,
                                   raster = raster,
-                                  ncol = ncol) +
-            ggpubr::theme_pubr(legend = legend.position) +
+                                  ncol = ncol) &
+            ggpubr::theme_pubr(legend = legend.position) &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
@@ -181,14 +181,16 @@ do_DimPlot <- function(sample,
                                       sizes.highlight = sizes.highlight,
                                       pt.size = pt.size,
                                       raster = raster,
-                                      ncol = ncol) +
-                ggplot2::ggtitle(iteration) +
-                ggpubr::theme_pubr(legend = legend.position) +
-                ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                            values = c("grey75", ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use)))  +
+                                      ncol = ncol) &
+                ggplot2::ggtitle(iteration) &
+                ggpubr::theme_pubr(legend = legend.position)
+            p <- add_scale(p = p,
+                           function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                                                      values = c("grey75", ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
+                           scale = "color") &
                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                                legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                               legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
+                               legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
                 ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                               byrow = legend.byrow,
                                                               override.aes = list(size = legend.icon.size)))
@@ -208,13 +210,15 @@ do_DimPlot <- function(sample,
                                   dims = dims,
                                   pt.size = pt.size,
                                   raster = raster,
-                                  ncol = ncol) +
-            ggpubr::theme_pubr(legend = legend.position) +
-            ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
-                                        values = c("grey", colors.use))  +
+                                  ncol = ncol) &
+            ggpubr::theme_pubr(legend = legend.position)
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                                                                  values = c("grey", colors.use)),
+                       scale = "color") &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
@@ -224,12 +228,12 @@ do_DimPlot <- function(sample,
     # General additions to all kind of plots.
     if (!is.null(plot.title)){
       if (!(is.null(split.by))){
-        p <- p + patchwork::plot_annotation(title = plot.title,
+        p <- p & patchwork::plot_annotation(title = plot.title,
                                             theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
                                                                                                       face = "bold",
                                                                                                       hjust = 0.5)))
       } else {
-        p <- p + ggplot2::ggtitle(plot.title)
+        p <- p & ggplot2::ggtitle(plot.title)
       }
     }
     # Legend treatment.
