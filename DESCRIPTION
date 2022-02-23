@@ -2,8 +2,7 @@ Package: SCpubr
 Type: Package
 Title: Generate clean visualizations of Single Cell data
 Version: 0.1.0
-Author: Enrique Blanco Carmona
-Maintainer: Enrique Blanco Carmona <enblacar1996@gmail.com>
+Authors@R: person(given = "Enrique", family = "Blanco-Carmona", email = "e.blancocarmona@kitz-heidelberg.de", role = "cre", comment = c(ORCID = "0000-0002-1208-1691"))
 Description: General wrapper of known functions of Seurat, alongside other common visualizations in Single Cell experiments.
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
@@ -12,6 +11,8 @@ Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 biocViews:
+URL: https://github.com/enblacar/SCpubr, https://enblacar.github.io/SCpubr-book/
+BugReports: https://github.com/enblacar/SCpubr/issues
 Suggests:
     rlang,
     Seurat,
