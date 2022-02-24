@@ -1,6 +1,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/enblacar/SCpubr/workflows/R-CMD-check/badge.svg)](https://github.com/enblacar/SCpubr/actions)
-[![test-coverage](https://github.com/enblacar/SCpubr/workflows/test-coverage/badge.svg)](https://github.com/enblacar/SCpubr/actions)
+[![codecov](https://codecov.io/gh/enblacar/SCpubr/branch/main/graph/badge.svg?token=HK7JB08VFD)](https://codecov.io/gh/enblacar/SCpubr)
+
 <!-- badges: end -->
   
 # SCpubr
