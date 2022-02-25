@@ -36,6 +36,8 @@ Suggests:
     CHETAH,
     SeuratObject,
     qpdf,
-    covr
+    covr,
+    circlize,
+    ComplexHeatmap
 VignetteBuilder: knitr
 Config/testthat/edition: 3

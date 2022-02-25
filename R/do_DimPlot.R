@@ -156,7 +156,10 @@ do_DimPlot <- function(sample,
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
-
+        if (!(is.null(group.by))){
+          # Remove automatic title.
+          p <- p & ggplot2::ggtitle("")
+        }
     }
     # If the UMAP has to be split in multiple panes.
     else if (is.null(cells.highlight) & !(is.null(split.by))){
