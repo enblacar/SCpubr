@@ -47,164 +47,164 @@ do_VlnPlot <- function(sample,
                        ncol = NULL,
                        legend.ncol = 3,
                        rotate_x_labels = NULL){
-    # Checks for packages.
-    check_suggests(function_name = "do_VlnPlot")
-    # Check the assay.
-    out <- check_and_set_assay(sample = sample, assay = assay)
-    sample <- out[["sample"]]
-    assay <- out[["assay"]]
-    # Check slot.
-    slot <- check_and_set_slot(slot = slot)
-    # Check logical parameters.
-    logical_list <- list("legend" = legend,
-                         "plot_boxplot" = plot_boxplot,
-                         "rotate_x_labels" = rotate_x_labels)
-    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
-    # Check numeric parameters.
-    numeric_list <- list("pt.size" = pt.size,
-                         "y_cut" = y_cut,
-                         "fontsize" = fontsize,
-                         "legend.ncol" = legend.ncol,
-                         "ncol" = ncol)
-    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
-    # Check character parameters.
-    character_list <- list("legend.position" = legend.position,
-                           "features" = features,
-                           "group.by" = group.by,
-                           "split.by" = split.by,
-                           "colors.use" = colors.use,
-                           "plot.title" = plot.title,
-                           "xlab" = xlab,
-                           "ylab" = ylab,
-                           "individual.titles" = individual.titles)
-    check_type(parameters = character_list, required_type = "character", test_function = is.character)
+  # Checks for packages.
+  check_suggests(function_name = "do_VlnPlot")
+  # Check the assay.
+  out <- check_and_set_assay(sample = sample, assay = assay)
+  sample <- out[["sample"]]
+  assay <- out[["assay"]]
+  # Check slot.
+  slot <- check_and_set_slot(slot = slot)
+  # Check logical parameters.
+  logical_list <- list("legend" = legend,
+                       "plot_boxplot" = plot_boxplot,
+                       "rotate_x_labels" = rotate_x_labels)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  # Check numeric parameters.
+  numeric_list <- list("pt.size" = pt.size,
+                       "y_cut" = y_cut,
+                       "fontsize" = fontsize,
+                       "legend.ncol" = legend.ncol,
+                       "ncol" = ncol)
+  check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+  # Check character parameters.
+  character_list <- list("legend.position" = legend.position,
+                         "features" = features,
+                         "group.by" = group.by,
+                         "split.by" = split.by,
+                         "colors.use" = colors.use,
+                         "plot.title" = plot.title,
+                         "xlab" = xlab,
+                         "ylab" = ylab,
+                         "individual.titles" = individual.titles)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-    # Check the feature.
-    check_feature(sample = sample, features = features)
+  # Check the feature.
+  check_feature(sample = sample, features = features)
 
-    # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 2
-    axis.text.fontsize <- fontsize
-    axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 2
-    legend.title.fontsize <- fontsize - 2
+  # Define fontsize parameters.
+  plot.title.fontsize <- fontsize + 2
+  axis.text.fontsize <- fontsize
+  axis.title.fontsize <- fontsize + 1
+  legend.text.fontsize <- fontsize - 2
+  legend.title.fontsize <- fontsize - 2
 
-    # Disable split.by.
-    if (!(is.null(split.by))){stop("This option is currently not available.", call. = F)}
-    # Check for y_cut and only having 1 feature.
-    if (!(is.null(y_cut))){
-      if(length(features) != length(y_cut)){
+  # Disable split.by.
+  if (!(is.null(split.by))){stop("This option is currently not available.", call. = F)}
+  # Check for y_cut and only having 1 feature.
+  if (!(is.null(y_cut))){
+    if(length(features) != length(y_cut)){
       stop('Total number of y_cut values does not match the number of features provided.', call. = F)
-      }
     }
+  }
 
-    # Check for y_cut and only having 1 feature.
-    if (!(is.null(rotate_x_labels))){
-      if(length(features) != length(rotate_x_labels)){
-        stop('Total number of rotate_x_labels values does not match the number of features provided.', call. = F)
-      }
+  # Check for y_cut and only having 1 feature.
+  if (!(is.null(rotate_x_labels))){
+    if(length(features) != length(rotate_x_labels)){
+      stop('Total number of rotate_x_labels values does not match the number of features provided.', call. = F)
     }
+  }
 
-    # If group.by and split.by are NULL.
-    if (is.null(group.by) & is.null(split.by)){
-      if (is.null(colors.use)){
-        colors.use <- generate_color_scale(levels(sample))
-      } else {
-        check_consistency_colors_and_names(sample = sample, colors = colors.use)
-      }
+  # If group.by and split.by are NULL.
+  if (is.null(group.by) & is.null(split.by)){
+    if (is.null(colors.use)){
+      colors.use <- generate_color_scale(levels(sample))
+    } else {
+      check_consistency_colors_and_names(sample = sample, colors = colors.use)
+    }
     # If group.by is not NULL but split.by is NULL.
-    } else if (!(is.null(group.by)) & is.null(split.by)){
-      if (is.null(colors.use)){
-        names.use <- sort(unique(sample@meta.data[, group.by]))
-        if (is.factor(names.use)){names.use <- levels(names.use)}
-        colors.use <- generate_color_scale(names.use)
-      } else {
-        check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
-      }
+  } else if (!(is.null(group.by)) & is.null(split.by)){
+    if (is.null(colors.use)){
+      names.use <- sort(unique(sample@meta.data[, group.by]))
+      if (is.factor(names.use)){names.use <- levels(names.use)}
+      colors.use <- generate_color_scale(names.use)
+    } else {
+      check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    }
     # If group by is NULL but split.by is not NULL.
-    } else if (!(is.null(split.by)) & is.null(group.by)){
-      if (is.null(colors.use)){
-        names.use <- sort(unique(sample@meta.data[, split.by]))
-        if (is.factor(names.use)){names.use <- levels(names.use)}
-        colors.use <- generate_color_scale(names.use)
-      } else {
-        check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
-      }
-    } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.", call. = F)}
-
-    if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
-      stop("The length of individual titles has to be equal to the number of features.", call. = F)
+  } else if (!(is.null(split.by)) & is.null(group.by)){
+    if (is.null(colors.use)){
+      names.use <- sort(unique(sample@meta.data[, split.by]))
+      if (is.factor(names.use)){names.use <- levels(names.use)}
+      colors.use <- generate_color_scale(names.use)
+    } else {
+      check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
     }
-    counter <- 0
-    list.plots <- list()
-    for (feature in features) {
-      counter <- counter + 1
-      if (!is.null(y_cut)){y_cut_select <- y_cut[counter]}
-      if (!is.null(rotate_x_labels)){x_label_select <- rotate_x_labels[counter]}
-      # Check the value for y_cut_select is on range.
-      if (!(is.null(y_cut))){
-        if (!(is.na(y_cut_select))){
-          check_limits(sample = sample, feature = feature, value_name = "y_cut", value = y_cut_select)
-        }
-      }
-      plot <- Seurat::VlnPlot(sample,
-                              features = feature,
-                              cols = colors.use,
-                              group.by = group.by,
-                              split.by = split.by,
-                              pt.size = pt.size) &
-        ggpubr::theme_pubr(legend = legend.position) &
-        ggpubr::rremove("x.title") &
-        ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                       axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                       axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
-                       legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
-                       legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                       plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
-        ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
+  } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.", call. = F)}
 
-      if (!is.null(xlab)){
-        plot <- plot & ggplot2::xlab(xlab)
+  if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
+    stop("The length of individual titles has to be equal to the number of features.", call. = F)
+  }
+  counter <- 0
+  list.plots <- list()
+  for (feature in features) {
+    counter <- counter + 1
+    if (!is.null(y_cut)){y_cut_select <- y_cut[counter]}
+    if (!is.null(rotate_x_labels)){x_label_select <- rotate_x_labels[counter]}
+    # Check the value for y_cut_select is on range.
+    if (!(is.null(y_cut))){
+      if (!(is.na(y_cut_select))){
+        check_limits(sample = sample, feature = feature, value_name = "y_cut", value = y_cut_select)
       }
-      if (!is.null(ylab)){
-        plot <- plot & ggplot2::ylab(ylab)
+    }
+    plot <- Seurat::VlnPlot(sample,
+                            features = feature,
+                            cols = colors.use,
+                            group.by = group.by,
+                            split.by = split.by,
+                            pt.size = pt.size) &
+      ggpubr::theme_pubr(legend = legend.position) &
+      ggpubr::rremove("x.title") &
+      ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
+                     axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                     axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
+                     legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
+                     legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                     plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
+      ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
+
+    if (!is.null(xlab)){
+      plot <- plot & ggplot2::xlab(xlab)
+    }
+    if (!is.null(ylab)){
+      plot <- plot & ggplot2::ylab(ylab)
+    }
+    if (plot_boxplot == TRUE){
+      plot <- plot &
+        ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
+    }
+
+    if (legend == FALSE){
+      plot <- plot & Seurat::NoLegend()
+    }
+
+    if (!(is.null(rotate_x_labels))){
+      if (isTRUE(x_label_select)){
+        plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
       }
-      if (plot_boxplot == TRUE){
+    }
+
+    if (!(is.null(y_cut))){
+      if (!(is.na(y_cut_select))){
         plot <- plot &
-          ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
+          ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
       }
-
-      if (legend == FALSE){
-        plot <- plot & Seurat::NoLegend()
-      }
-
-      if (!(is.null(rotate_x_labels))){
-        if (isTRUE(x_label_select)){
-          plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
-        }
-      }
-
-      if (!(is.null(y_cut))){
-          if (!(is.na(y_cut_select))){
-            plot <- plot &
-              ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
-          }
-      }
-
-      if (!(is.null(individual.titles))){
-        if (!(is.na(individual.titles[counter]))){
-          plot <- plot & ggplot2::ggtitle(individual.titles[counter])
-        }
-      }
-      list.plots[[feature]] <- plot
     }
-    plot <- patchwork::wrap_plots(list.plots, ncol = ncol)
 
-    if (!(is.null(plot.title))){
-      plot <- plot & patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
-                                                                                                          face = "bold",
-                                                                                                          hjust = 0.5)))
+    if (!(is.null(individual.titles))){
+      if (!(is.na(individual.titles[counter]))){
+        plot <- plot & ggplot2::ggtitle(individual.titles[counter])
+      }
     }
-    return(plot)
+    list.plots[[feature]] <- plot
+  }
+  plot <- patchwork::wrap_plots(list.plots, ncol = ncol)
+
+  if (!(is.null(plot.title))){
+    plot <- plot & patchwork::plot_annotation(title = plot.title,
+                                              theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
+                                                                                                        face = "bold",
+                                                                                                        hjust = 0.5)))
+  }
+  return(plot)
 }
