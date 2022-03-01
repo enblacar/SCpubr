@@ -19,11 +19,11 @@ do_BarPlot(
   legend.title = FALSE,
   legend.ncol = 1,
   fontsize = 14,
-  legend.icon.size = 4,
   legend.byrow = FALSE,
   colors.use = NULL,
   horizontal = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  add.labels = FALSE
 )
 }
 \arguments{
@@ -55,8 +55,6 @@ do_BarPlot(
 
 \item{fontsize}{Base fontsize of the figure.}
 
-\item{legend.icon.size}{Size of the icons in legend.}
-
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
 \item{colors.use}{Palette of colors to use. It must match the group.by variable in terms of length and names.}
@@ -64,6 +62,8 @@ do_BarPlot(
 \item{horizontal}{Whether to plot the Bar plot horizontally.}
 
 \item{verbose}{Use warnings.}
+
+\item{add.labels}{Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.}
 }
 \value{
 A ggplot2 object containing a Bar plot.

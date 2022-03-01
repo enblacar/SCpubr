@@ -14,12 +14,15 @@
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.position  Position of the legend in the plot.
 #' @param legend.ncol  Number of columns in the legend.
-#' @param legend.icon.size  Size of the icons in legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
 #' @param plot.title  Title to use in the plot.
 #' @param horizontal Whether to plot the Bar plot horizontally.
 #' @param verbose Use warnings.
+#' @param add.labels Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.
+#' @param repel.labels Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.
+#' @param repel.summary_labels Logical. Whether to repel summary labels (the ones summarising the total number of observations) to avoid overplotting. This will result in labels not being aligned anymore.
+#' @param size.labels Numeric. Modify the size of the labels.
 #'
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
@@ -39,11 +42,14 @@ do_BarPlot <- function(sample,
                        legend.title = FALSE,
                        legend.ncol = 1,
                        fontsize = 14,
-                       legend.icon.size = 4,
                        legend.byrow = FALSE,
                        colors.use = NULL,
                        horizontal = FALSE,
-                       verbose = TRUE){
+                       verbose = TRUE,
+                       add.labels = FALSE,
+                       repel.labels = FALSE,
+                       repel.summary_labels = FALSE,
+                       size.labels = 3){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
 
@@ -54,12 +60,15 @@ do_BarPlot <- function(sample,
     logical_list <- list("legend" = legend,
                          "legend.title" = legend.title,
                          "legend.byrow" = legend.byrow,
-                         "horizontal" = horizontal)
+                         "horizontal" = horizontal,
+                         "add.labels" = add.labels,
+                         "repel.labels" = repel.labels,
+                         "repel.summary_labels" = repel.summary_labels)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
-    numeric_list <- list("legend.icon.size" = legend.icon.size,
-                         "fontsize" = fontsize,
-                         "legend.ncol" = legend.ncol)
+    numeric_list <- list("fontsize" = fontsize,
+                         "legend.ncol" = legend.ncol,
+                         "size.labels" = size.labels)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -79,6 +88,9 @@ do_BarPlot <- function(sample,
     axis.title.fontsize <- fontsize + 1
     legend.text.fontsize <- fontsize - 2
     legend.title.fontsize <- fontsize - 2
+
+    # Checks.
+    if (!(position %in% c("fill", "stack"))){stop("Position '", position, "' not supported. Please use either fill or stack.")}
 
     for (feature in features){
       # Enforce the features to be part of the metadata.
@@ -112,32 +124,29 @@ do_BarPlot <- function(sample,
         # Reorder the colors according to the factor levels.
         colors.use <- colors.use[factor_levels]
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
-        if (verbose){
-          if (isTRUE(legend)){warning("Recommended settings without using group.by is to set legend to FALSE.", call. = F)}
-          if (position != "stack"){warning("Recommended settings without using group.by is to set position to 'stack'.", call. = F)}
-        }
-        p <- sample@meta.data %>%
-          dplyr::select(!!rlang::sym(feature)) %>%
-          dplyr::group_by(!!rlang::sym(feature)) %>%
-          dplyr::summarise(n = dplyr::n()) %>%
-          dplyr::arrange(dplyr::desc(.data$n)) %>%
-          dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
-          dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels)) %>%
-          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = .data$x_values)) +
-          ggplot2::geom_bar(position = position, stat="identity", width = 1,
-                            colour="black",
-                            size = 1) +
-          ggpubr::theme_pubr(legend = legend.position) +
-          ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                         axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                         plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
-          ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                        byrow = legend.byrow,
-                                                        override.aes = list(size = legend.icon.size)))
+        data <- sample@meta.data %>%
+                dplyr::select(!!rlang::sym(feature)) %>%
+                dplyr::group_by(!!rlang::sym(feature)) %>%
+                dplyr::summarise(n = dplyr::n()) %>%
+                dplyr::arrange(dplyr::desc(.data$n)) %>%
+                dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
+                dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
+
+        p <- data %>%
+             ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = .data$x_values)) +
+             ggplot2::geom_bar(position = position, stat="identity", width = 1,
+                               colour="black",
+                               size = 1) +
+             ggpubr::theme_pubr(legend = legend.position) +
+             ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
+             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                            axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                            axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                            plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
+             ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          byrow = legend.byrow))
       } else {
         check_feature(sample = sample, features = group.by, enforce_check = "metadata", enforce_parameter = "group.by")
         # Check the order of labels.
@@ -158,35 +167,102 @@ do_BarPlot <- function(sample,
         #colors.use <- colors.use[factor_levels]
         if (is.null(labels.order) & position == "fill"){factor_levels <- rev(factor_levels)}
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
-        if (verbose){
-          if (isFALSE(legend)){warning("Recommended settings when using group.by is to set legend to TRUE.", call. = F)}
-          if (position != "fill"){warning("Recommended settings when using group.by is to set position to 'fill'.", call. = F)}
-        }
 
-        p <- sample@meta.data %>%
-          dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%
-          dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>%
-          dplyr::summarise(n = dplyr::n()) %>%
-          dplyr::arrange(dplyr::desc(.data$n)) %>%
-          dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
-          dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels)) %>%
-          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = !!rlang::sym(group.by))) +
-          ggplot2::geom_bar(position = position, stat="identity", width = 1,
-                            colour="black",
-                            size = 1) +
-          ggpubr::theme_pubr(legend = legend.position) +
-          ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                         axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                         plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
-          ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                        byrow = legend.byrow,
-                                                        override.aes = list(size = legend.icon.size)))
+        data <- sample@meta.data %>%
+                dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%
+                dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>%
+                dplyr::summarise(n = dplyr::n()) %>%
+                dplyr::arrange(dplyr::desc(.data$n)) %>%
+                dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
+                dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
+        p <- data %>%
+             ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = !!rlang::sym(group.by))) +
+             ggplot2::geom_bar(position = position, stat="identity", width = 1,
+                               colour="black",
+                               size = 1) +
+             ggpubr::theme_pubr(legend = legend.position) +
+             ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
+             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                            axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                            axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                            plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
+             ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          byrow = legend.byrow))
       }
 
+      # Add labels on top of bars.
+      if (isTRUE(add.labels)){
+        func_use <- ifelse(isTRUE(repel.labels), ggrepel::geom_label_repel, ggplot2::geom_label)
+        func_use_summary <- ifelse(isTRUE(repel.summary_labels), ggrepel::geom_label_repel, ggplot2::geom_label)
+        if (is.null(group.by)){
+          if (position == "stack"){
+            p <- p +
+              func_use_summary(data = data,
+                               mapping = ggplot2::aes(label = n,
+                                                      group = x_values),
+                               label.size = 1,
+                               size = size.labels,
+                               color = "black",
+                               fill = "white",
+                               vjust = 0.5,
+                               hjust = 0.5,
+                               fontface = "bold",
+                               show.legend = FALSE) +
+              ggplot2::scale_color_manual(values = colors.use)
+          } else if (position == "fill"){
+            p <- p +
+                 func_use(data = data,
+                          mapping = ggplot2::aes(label = n,
+                                                 group = x_values,
+                                                 color = x_values),
+                          fill = "white",
+                          fontface = "bold",
+                          label.size = 1,
+                          size = size.labels,
+                          position = ggplot2::position_fill(vjust = 0.5),
+                          show.legend = FALSE)
+          }
+        } else if (!(is.null(group.by))){
+          if (position == "stack"){
+            # Get the values plotted on top.
+            totals <- sample@meta.data %>%
+              dplyr::select(!!rlang::sym(feature)) %>%
+              dplyr::group_by(!!rlang::sym(feature)) %>%
+              dplyr::summarise(n = dplyr::n()) %>%
+              dplyr::arrange(dplyr::desc(.data$n)) %>%
+              dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
+              dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
+
+            p <- p +
+              func_use(data = data,
+                       mapping = ggplot2::aes(label = n,
+                                              group = !!rlang::sym(group.by),
+                                              color = !!rlang::sym(group.by)),
+                       fill = "white",
+                       fontface = "bold",
+                       label.size = 1,
+                       size = size.labels,
+                       position = ggplot2::position_stack(vjust = 0.5),
+                       show.legend = FALSE) +
+              ggplot2::scale_color_manual(values = colors.use) +
+              func_use_summary(data = totals,
+                               mapping = ggplot2::aes(label = n,
+                                                      group = x_values),
+                               label.size = 1,
+                               size = size.labels,
+                               color = "black",
+                               fill = "white",
+                               vjust = 0.5,
+                               hjust = 0.5,
+                               fontface = "bold",
+                               show.legend = FALSE)
+          } else if (position == "fill"){
+
+          }
+        }
+      }
       # Add X axis label.
       if (!is.null(xlab)){
         p <- p & ggplot2::xlab(xlab)
