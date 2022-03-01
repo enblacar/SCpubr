@@ -23,7 +23,11 @@ do_BarPlot(
   colors.use = NULL,
   horizontal = FALSE,
   verbose = TRUE,
-  add.labels = FALSE
+  add.summary_labels = FALSE,
+  add.subgroup_labels = FALSE,
+  repel.subgroup_labels = FALSE,
+  repel.summary_labels = FALSE,
+  size.labels = 3
 )
 }
 \arguments{
@@ -63,7 +67,13 @@ do_BarPlot(
 
 \item{verbose}{Use warnings.}
 
-\item{add.labels}{Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.}
+\item{add.summary_labels}{Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.}
+
+\item{add.subgroup_labels}{Logical. Whether to add the total number of values for each group in the bar. Only works with position = stack.}
+
+\item{repel.subgroup_labels, repel.summary_labels}{Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.}
+
+\item{size.labels}{Numeric. Modify the size of the labels.}
 }
 \value{
 A ggplot2 object containing a Bar plot.

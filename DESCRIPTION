@@ -38,6 +38,7 @@ Suggests:
     qpdf,
     covr,
     circlize,
-    ComplexHeatmap
+    ComplexHeatmap,
+    ggrepel
 VignetteBuilder: knitr
 Config/testthat/edition: 3

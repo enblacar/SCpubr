@@ -9,7 +9,7 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
                    "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
                    "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),

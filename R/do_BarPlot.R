@@ -19,9 +19,9 @@
 #' @param plot.title  Title to use in the plot.
 #' @param horizontal Whether to plot the Bar plot horizontally.
 #' @param verbose Use warnings.
-#' @param add.labels Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.
-#' @param repel.labels Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.
-#' @param repel.summary_labels Logical. Whether to repel summary labels (the ones summarising the total number of observations) to avoid overplotting. This will result in labels not being aligned anymore.
+#' @param add.summary_labels Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.
+#' @param add.subgroup_labels Logical. Whether to add the total number of values for each group in the bar. Only works with position = stack.
+#' @param repel.subgroup_labels,repel.summary_labels Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.
 #' @param size.labels Numeric. Modify the size of the labels.
 #'
 #' @return A ggplot2 object containing a Bar plot.
@@ -46,8 +46,9 @@ do_BarPlot <- function(sample,
                        colors.use = NULL,
                        horizontal = FALSE,
                        verbose = TRUE,
-                       add.labels = FALSE,
-                       repel.labels = FALSE,
+                       add.summary_labels = FALSE,
+                       add.subgroup_labels = FALSE,
+                       repel.subgroup_labels = FALSE,
                        repel.summary_labels = FALSE,
                        size.labels = 3){
     # Checks for packages.
@@ -61,8 +62,9 @@ do_BarPlot <- function(sample,
                          "legend.title" = legend.title,
                          "legend.byrow" = legend.byrow,
                          "horizontal" = horizontal,
-                         "add.labels" = add.labels,
-                         "repel.labels" = repel.labels,
+                         "add.subgroup_labels" = add.subgroup_labels,
+                         "add.summary_labels" = add.summary_labels,
+                         "repel.subgroup_labels" = repel.subgroup_labels,
                          "repel.summary_labels" = repel.summary_labels)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
@@ -193,36 +195,48 @@ do_BarPlot <- function(sample,
       }
 
       # Add labels on top of bars.
-      if (isTRUE(add.labels)){
-        func_use <- ifelse(isTRUE(repel.labels), ggrepel::geom_label_repel, ggplot2::geom_label)
+      if (isTRUE(add.subgroup_labels) | isTRUE(add.summary_labels)){
+        func_use <- ifelse(isTRUE(repel.subgroup_labels), ggrepel::geom_label_repel, ggplot2::geom_label)
         func_use_summary <- ifelse(isTRUE(repel.summary_labels), ggrepel::geom_label_repel, ggplot2::geom_label)
         if (is.null(group.by)){
           if (position == "stack"){
-            p <- p +
-              func_use_summary(data = data,
-                               mapping = ggplot2::aes(label = n,
-                                                      group = x_values),
-                               label.size = 1,
-                               size = size.labels,
-                               color = "black",
-                               fill = "white",
-                               vjust = 0.5,
-                               hjust = 0.5,
-                               fontface = "bold",
-                               show.legend = FALSE) +
-              ggplot2::scale_color_manual(values = colors.use)
+            if (isTRUE(add.summary_labels)){
+              p <- p +
+                func_use_summary(data = data,
+                                 mapping = ggplot2::aes(label = .data$n,
+                                                        group = .data$x_values),
+                                 label.size = 1,
+                                 size = size.labels,
+                                 color = "black",
+                                 fill = "white",
+                                 vjust = 0.5,
+                                 hjust = 0.5,
+                                 position = ggplot2::position_stack(vjust = 1,
+                                                                    reverse = ifelse(horizontal == TRUE, TRUE, FALSE)),
+                                 fontface = "bold",
+                                 show.legend = FALSE) +
+                ggplot2::scale_color_manual(values = colors.use)
+            }
+            if (isTRUE(add.subgroup_labels)){
+              p <- p +
+                   func_use_summary(data = data,
+                                    mapping = ggplot2::aes(label = .data$n,
+                                                           group = .data$x_values,
+                                                           color = .data$x_values),
+                                    label.size = 1,
+                                    size = size.labels,
+                                    fill = "white",
+                                    vjust = 0.5,
+                                    hjust = 0.5,
+                                    position = ggplot2::position_stack(vjust = 1,
+                                                                       reverse = ifelse(horizontal == TRUE, TRUE, FALSE)),
+                                    fontface = "bold",
+                                    show.legend = FALSE) +
+                   ggplot2::scale_color_manual(values = colors.use)
+            }
+
           } else if (position == "fill"){
-            p <- p +
-                 func_use(data = data,
-                          mapping = ggplot2::aes(label = n,
-                                                 group = x_values,
-                                                 color = x_values),
-                          fill = "white",
-                          fontface = "bold",
-                          label.size = 1,
-                          size = size.labels,
-                          position = ggplot2::position_fill(vjust = 0.5),
-                          show.legend = FALSE)
+            warning("labels.use is not yet implemented with position = fill.", call. = F)
           }
         } else if (!(is.null(group.by))){
           if (position == "stack"){
@@ -235,31 +249,36 @@ do_BarPlot <- function(sample,
               dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
               dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
 
-            p <- p +
-              func_use(data = data,
-                       mapping = ggplot2::aes(label = n,
-                                              group = !!rlang::sym(group.by),
-                                              color = !!rlang::sym(group.by)),
-                       fill = "white",
-                       fontface = "bold",
-                       label.size = 1,
-                       size = size.labels,
-                       position = ggplot2::position_stack(vjust = 0.5),
-                       show.legend = FALSE) +
-              ggplot2::scale_color_manual(values = colors.use) +
-              func_use_summary(data = totals,
-                               mapping = ggplot2::aes(label = n,
-                                                      group = x_values),
-                               label.size = 1,
-                               size = size.labels,
-                               color = "black",
-                               fill = "white",
-                               vjust = 0.5,
-                               hjust = 0.5,
-                               fontface = "bold",
-                               show.legend = FALSE)
+            if (isTRUE(add.subgroup_labels)){
+              p <- p +
+                   func_use(data = data,
+                            mapping = ggplot2::aes(label = .data$n,
+                                                   group = !!rlang::sym(group.by),
+                                                   color = !!rlang::sym(group.by)),
+                            fill = "white",
+                            fontface = "bold",
+                            label.size = 1,
+                            size = size.labels,
+                            position = ggplot2::position_stack(vjust = 0.5),
+                            show.legend = FALSE) +
+                   ggplot2::scale_color_manual(values = colors.use)
+            }
+            if (isTRUE(add.summary_labels)){
+              p <- p +
+                   func_use_summary(data = totals,
+                                    mapping = ggplot2::aes(label = .data$n,
+                                                           group = .data$x_values),
+                                    label.size = 1,
+                                    size = size.labels,
+                                    color = "black",
+                                    fill = "white",
+                                    vjust = 0.5,
+                                    hjust = 0.5,
+                                    fontface = "bold",
+                                    show.legend = FALSE)
+            }
           } else if (position == "fill"){
-
+            warning("labels.use is not yet implemented with position = fill.", call. = F)
           }
         }
       }
