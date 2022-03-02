@@ -59,6 +59,10 @@ do_NebulosaPlot <- function(sample,
                        "shape" = shape)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
+  if (is.list(features)){
+    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = F)
+    features <- unique(unlist(features))
+  }
   character_list <- list("legend.position" = legend.position,
                          "features" = features,
                          "method" = method,
@@ -70,7 +74,8 @@ do_NebulosaPlot <- function(sample,
   slot <- check_and_set_slot(slot = slot)
 
   # Check if the feature is actually in the object.
-  check_feature(sample = sample, features = features)
+  features <- check_feature(sample = sample, features = features, permissive = TRUE)
+  features <- remove_duplicated_features(features = features)
 
   # Check individual titles.
   if (!(is.null(individual.titles))){

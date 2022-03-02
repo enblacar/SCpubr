@@ -63,6 +63,11 @@ do_FeaturePlot <- function(sample,
                        "fontsize" = fontsize)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
+  # Workaround for features.
+  if (is.list(features)){
+    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = F)
+    features <- unique(unlist(features))
+  }
   character_list <- list("legend.position" = legend.position,
                          "features" = features,
                          "cells.highlight" = cells.highlight,
@@ -102,7 +107,8 @@ do_FeaturePlot <- function(sample,
   check <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
   if (check){
     # Check if the feature is actually in the object.
-    check_feature(sample = sample, features = features)
+    features <- check_feature(sample = sample, features = features, permissive = TRUE)
+    features <- remove_duplicated_features(features = features)
     p <- Seurat::FeaturePlot(sample,
                              features,
                              reduction = reduction,
@@ -129,7 +135,10 @@ do_FeaturePlot <- function(sample,
     # Modified FeaturePlot including only a subset of cells.
   } else {
     # Check if the feature is actually in the object.
-    dim_colnames <- check_feature(sample = sample, features = features, dump_reduction_names = TRUE)
+    output_list <- check_feature(sample = sample, features = features, dump_reduction_names = TRUE, permissive = TRUE)
+    features <- output_list[["features"]]
+    features <- remove_duplicated_features(features = features)
+    dim_colnames <- output_list[["reduction_names"]]
     # Get the subset of wanted cells according to the combination of idents.highlight and cells.highlight parameters.
     if (is.null(idents.highlight) & !(is.null(cells.highlight))){
       # Only if cells.highlight parameters is used.

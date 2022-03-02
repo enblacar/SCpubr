@@ -139,6 +139,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' @param sample Seurat object.
 #' @param features Feature to plot.
 #' @param dump_reduction_names Whether to return the reduction colnames.
+#' @param permissive Throw a warning or directly stops if the feature is not found.
 #'
 #' @return
 #' @noRd
@@ -146,12 +147,14 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' \dontrun{
 #' TBD
 #' }
-check_feature <- function(sample, features, dump_reduction_names = FALSE, enforce_check = NULL, enforce_parameter = NULL){
+check_feature <- function(sample, features, permissive = FALSE, dump_reduction_names = FALSE, enforce_check = NULL, enforce_parameter = NULL){
   if (is.list(features)){
-    features <- unlist(features)
+    features_check <- unlist(features)
   }
-  check_enforcers <- list()
-  for (feature in features){
+  check_enforcers <- list() # Store the results of the checks.
+  not_found_features <- c() # Store the features not found.
+  # Check each of the features.
+  for (feature in features_check){
     check <- 0
     if (!(feature %in% rownames(sample))){
       check <- check + 1
@@ -173,10 +176,38 @@ check_feature <- function(sample, features, dump_reduction_names = FALSE, enforc
     }
     check_enforcers[["reductions"]] <- TRUE
     if (check == 3) {
-      stop(paste0("The requested feature (", feature, ") could not be found:\n", "    - Not matching any gene name (rownames of the provided object).\n",
-                  "    - Not matching any metadata column (in sample@meta.data).\n", "    - Not part of the dimension names in any of the following reductions: ", Seurat::Reductions(object = sample), "."), call. = F)
+      not_found_features <- c(not_found_features, feature)
     }
   }
+  # Return the error logs if there were features not found.
+  if (length(not_found_features) > 0){
+    if (isTRUE(permissive)){
+      warning(paste0("The requested features (",
+                     not_found_features,
+                     ") could not be found:\n",
+                     "    - Not matching any gene name (rownames of the provided object).\n",
+                     "    - Not matching any metadata column (in sample@meta.data).\n",
+                     "    - Not part of the dimension names in any of the following reductions: ",
+                     paste(Seurat::Reductions(object = sample), collapse = ", "),
+                     "."), call. = F)
+      features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
+      if (length(unlist(not_found_features)) == length(unlist(features))){
+        stop("Neither of the provided features are found.", call. = F)
+      }
+    } else if (isFALSE(permissive)){
+      stop(paste0("The requested features (",
+                  not_found_features,
+                  ") could not be found:\n",
+                  "    - Not matching any gene name (rownames of the provided object).\n",
+                  "    - Not matching any metadata column (in sample@meta.data).\n",
+                  "    - Not part of the dimension names in any of the following reductions: ",
+                  paste(Seurat::Reductions(object = sample), collapse = ", "),
+                  "."), call. = F)
+    }
+  } else {
+    features_out <- features
+  }
+  # If we are enforcing a given check (i.e: the feature being in the metadata).
   if (!(is.null(enforce_check))){
     if (!(enforce_check %in% names(check_enforcers))){
       stop("The variable enforcer is not in the current list of checked variable types.", call. = F)
@@ -187,7 +218,76 @@ check_feature <- function(sample, features, dump_reduction_names = FALSE, enforc
     }
   }
 
+  # Return options.
   if (isTRUE(dump_reduction_names)){return(dim_colnames)}
+  if (isTRUE(permissive)){return(features_out)}
+  if (isTRUE(dump_reduction_names) && isTRUE(permissive)){return(list("features" = features_out, "reduction_names" = dim_colnames))}
+}
+
+#' Remove not found features
+#'
+#' @param features Features to check.
+#' @param not_found_features Features to exclude.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+remove_not_found_features <- function(features, not_found_features){
+  if (is.character(features)){
+    features_out <- features[!(features %in% not_found_features)]
+  } else if (is.list(features)){
+    features_out <- list()
+    for (list_name in names(features)){
+      genes <- features[[list_name]]
+      genes_out <- genes[!(genes %in% not_found_features)]
+      features_out[[list_name]] <- genes_out
+    }
+  }
+  return(features_out)
+}
+
+#' Remove duplicated features.
+#'
+#' @param features Features to check.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+remove_duplicated_features <- function(features){
+  if (is.character(features)){
+    check <- sum(duplicated(features))
+    if (check > 0){
+      warning("Found duplicated features (", paste(features[duplicated(features)], collapse = ", "), "). Excluding them from the analysis.", call. = F)
+      features <- features[!(duplicated(features))]
+    }
+  } else if (is.list(features)){
+    features_out <- list()
+    all_genes <- c() # Will update with the genes as they iterate to check duplicates.
+    for (list_name in names(features)){
+      genes <- features[[list_name]]
+      # Remove genes duplicated within the list.
+      if (sum(duplicated(genes)) > 0){
+        warning("Found duplicated features (", paste(genes[duplicated(genes)], collapse = ", "), ") in the list '", list_name, "'. Excluding them from the analysis.", call. = F)
+      }
+      genes <- genes[!(duplicated(genes))]
+      # Remove genes duplicated in the vector of all genes.
+      duplicated_features <- genes[genes %in% all_genes]
+      all_genes <- c(all_genes, genes[!(genes %in% all_genes)])
+      genes <- genes[!(genes %in% duplicated_features)]
+      if (length(duplicated_features) > 0){
+        warning("Found duplicated features (", paste(duplicated_features, collapse = ", "), ") in list '", list_name, "' with regard to lists. Excluding them from the analysis.", call. = F)
+      }
+      features_out[[list_name]] <- genes
+    }
+    features <- features_out
+  }
+  return(features)
 }
 
 #' Check if the identity provided is in the current Seurat identities.

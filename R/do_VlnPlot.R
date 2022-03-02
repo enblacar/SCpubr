@@ -68,6 +68,10 @@ do_VlnPlot <- function(sample,
                        "ncol" = ncol)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
+  if (is.list(features)){
+    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = F)
+    features <- unique(unlist(features))
+  }
   character_list <- list("legend.position" = legend.position,
                          "features" = features,
                          "group.by" = group.by,
@@ -80,7 +84,8 @@ do_VlnPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check the feature.
-  check_feature(sample = sample, features = features)
+  features <- check_feature(sample = sample, features = features, permissive = TRUE)
+  features <- remove_duplicated_features(features = features)
 
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2

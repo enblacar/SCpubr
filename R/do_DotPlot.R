@@ -67,7 +67,9 @@ do_DotPlot <- function(sample,
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
-    check_feature(sample = sample, features = features)
+    features <- check_feature(sample = sample, features = features, permissive = TRUE)
+    features <- remove_duplicated_features(features = features)
+
 
     # Define fontsize parameters.
     plot.title.fontsize <- fontsize + 2
