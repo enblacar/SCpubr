@@ -150,6 +150,8 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 check_feature <- function(sample, features, permissive = FALSE, dump_reduction_names = FALSE, enforce_check = NULL, enforce_parameter = NULL){
   if (is.list(features)){
     features_check <- unlist(features)
+  } else {
+    features_check <- features
   }
   check_enforcers <- list() # Store the results of the checks.
   not_found_features <- c() # Store the features not found.
@@ -219,9 +221,9 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   }
 
   # Return options.
-  if (isTRUE(dump_reduction_names)){return(dim_colnames)}
-  if (isTRUE(permissive)){return(features_out)}
-  if (isTRUE(dump_reduction_names) && isTRUE(permissive)){return(list("features" = features_out, "reduction_names" = dim_colnames))}
+  if (isTRUE(dump_reduction_names) & isFALSE(permissive)){return(dim_colnames)}
+  if (isTRUE(permissive) & isFALSE(dump_reduction_names)){return(features_out)}
+  if (isTRUE(dump_reduction_names) & isTRUE(permissive)){return(list("features" = features_out, "reduction_names" = dim_colnames))}
 }
 
 #' Remove not found features
