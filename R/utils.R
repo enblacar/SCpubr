@@ -123,6 +123,9 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
     scale.begin <- min(sample@assays[[assay]]@data[feature,])
     scale.end <- max(sample@assays[[assay]]@data[feature,])
   } else if (feature %in% colnames(sample@meta.data)){
+    if (is.factor(sample@meta.data[, feature])){
+      sample@meta.data[, feature] <- as.character(sample@meta.data[, feature])
+    }
     scale.begin <- min(sample@meta.data[, feature])
     scale.end <- max(sample@meta.data[, feature])
   } else if (feature %in% colnames(sample@reductions[[reduction]][[]])){
@@ -184,6 +187,10 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   # Return the error logs if there were features not found.
   if (length(not_found_features) > 0){
     if (isTRUE(permissive)){
+      # Stop if neither of the features are found.
+      if (length(unlist(not_found_features)) == length(unlist(features))){
+        stop("Neither of the provided features are found.", call. = F)
+      }
       warning(paste0("The requested features (",
                      not_found_features,
                      ") could not be found:\n",
@@ -193,9 +200,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                      paste(Seurat::Reductions(object = sample), collapse = ", "),
                      "."), call. = F)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
-      if (length(unlist(not_found_features)) == length(unlist(features))){
-        stop("Neither of the provided features are found.", call. = F)
-      }
+
     } else if (isFALSE(permissive)){
       stop(paste0("The requested features (",
                   not_found_features,
@@ -685,26 +690,29 @@ check_length <- function(vector_of_parameters, vector_of_features, parameters_na
 #' TBD
 #' }
 use_dataset <- function(){
+  # We want this function to be completely silent.
+  suppressWarnings({
+    sample <- CHETAH::headneck_ref
+    sample <- Seurat::as.Seurat(sample, counts = "counts", data = NULL)
+    sample <- suppressMessages(SeuratObject::RenameAssays(sample, originalexp = "RNA"))
+    sample <- Seurat::PercentageFeatureSet(sample, pattern = "^MT-", col.name = "percent.mt")
+    # Compute QC.
+    mask1 <- sample$nCount_RNA >= 1000
+    mask2 <- sample$nFeature_RNA >= 500
+    mask3 <- sample$percent.mt <= 20
+    mask <- mask1 & mask2 & mask3
+    sample <- sample[, mask]
+    # Normalize.
+    sample <- Seurat::SCTransform(sample, verbose = FALSE)
 
-  sample <- CHETAH::headneck_ref
-  sample <- Seurat::as.Seurat(sample, counts = "counts", data = NULL)
-  sample <- SeuratObject::RenameAssays(sample, originalexp = "RNA")
-  sample <- Seurat::PercentageFeatureSet(sample, pattern = "^MT-", col.name = "percent.mt")
-  # Compute QC.
-  mask1 <- sample$nCount_RNA >= 1000
-  mask2 <- sample$nFeature_RNA >= 500
-  mask3 <- sample$percent.mt <= 20
-  mask <- mask1 & mask2 & mask3
-  sample <- sample[, mask]
-  # Normalize.
-  sample <- Seurat::SCTransform(sample)
+    # Dimensional reduction.
+    sample <- Seurat::RunPCA(sample, verbose = FALSE)
+    sample <- Seurat::RunUMAP(sample, dims = 1:30, verbose = FALSE)
+    # Find clusters.
+    sample <- Seurat::FindNeighbors(sample, dims = 1:30, verbose = FALSE)
+    sample <- Seurat::FindClusters(sample, resolution = 0.5, verbose = FALSE)
+  })
 
-  # Dimensional reduction.
-  sample <- Seurat::RunPCA(sample)
-  sample <- Seurat::RunUMAP(sample, dims = 1:30)
-  # Find clusters.
-  sample <- Seurat::FindNeighbors(sample, dims = 1:30)
-  sample <- Seurat::FindClusters(sample, resolution = 0.5)
   return(sample)
 }
 
