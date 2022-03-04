@@ -9,6 +9,7 @@
 #' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param cells.highlight Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
+#' @param order Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param pt.size Point size of the cells.
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
 #' @param legend Whether to plot the legend or not.
@@ -35,6 +36,7 @@ do_DimPlot <- function(sample,
                        split.by = NULL,
                        colors.use = NULL,
                        shuffle = TRUE,
+                       order = NULL,
                        pt.size = 0.5,
                        label = FALSE,
                        label.color = "black",
@@ -78,16 +80,18 @@ do_DimPlot <- function(sample,
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
                            "plot.title" = plot.title,
-                           "cells.highlight" = cells.highlight)
+                           "cells.highlight" = cells.highlight,
+                           "order" = order)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks to ensure proper function.
     if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
     if (!(is.null(cells.highlight)) & !(is.null(group.by))){stop("Either group.by or cells.highlight has to be NULL.")}
     if (!(is.null(cells.highlight)) & !(is.null(split.by))){stop("Either split.by or cells.highlight has to be NULL.")}
-
+    if (!(is.null(order)) & isTRUE(shuffle)){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
     # Check for label.color.
     check_colors(label.color, parameter_name = "label.color")
+
 
     # Automatically generate colors.
     if (is.null(colors.use)){
@@ -143,7 +147,8 @@ do_DimPlot <- function(sample,
                                   repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.color = ifelse(is.null(label) == TRUE, NULL, "black"),
-                                  shuffle = TRUE,
+                                  shuffle = shuffle,
+                                  order = order,
                                   pt.size = pt.size,
                                   group.by = group.by,
                                   cols = colors.use,
@@ -178,25 +183,25 @@ do_DimPlot <- function(sample,
             # Retrieve the cells that do belong to the iteration's split.by value.
             cells.highlight <- rownames(data.use)[which(data.use == iteration)]
             p <- Seurat::DimPlot(sample,
-                                      reduction = reduction,
-                                      dims = dims,
-                                      cells.highlight = cells.highlight,
-                                      sizes.highlight = sizes.highlight,
-                                      pt.size = pt.size,
-                                      raster = raster,
-                                      ncol = ncol) &
-                ggplot2::ggtitle(iteration) &
-                ggpubr::theme_pubr(legend = legend.position)
+                                 reduction = reduction,
+                                 dims = dims,
+                                 cells.highlight = cells.highlight,
+                                 sizes.highlight = sizes.highlight,
+                                 pt.size = pt.size,
+                                 raster = raster,
+                                 ncol = ncol) &
+                  ggplot2::ggtitle(iteration) &
+                  ggpubr::theme_pubr(legend = legend.position)
             p <- add_scale(p = p,
                            function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
                                                                       values = c("grey75", ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
                            scale = "color") &
-                ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                               legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                               legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
-                ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                              byrow = legend.byrow,
-                                                              override.aes = list(size = legend.icon.size)))
+                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                                legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                                legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
+                 ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                               byrow = legend.byrow,
+                                                               override.aes = list(size = legend.icon.size)))
             list.plots[[iteration]] <- p
         }
         # Assemble individual plots as a patch.
@@ -207,24 +212,24 @@ do_DimPlot <- function(sample,
     # If the user wants to highlight some of the cells.
     else if (!(is.null(cells.highlight))) {
         p <- Seurat::DimPlot(sample,
-                                  reduction = reduction,
-                                  cells.highlight = cells.highlight,
-                                  sizes.highlight = sizes.highlight,
-                                  dims = dims,
-                                  pt.size = pt.size,
-                                  raster = raster,
-                                  ncol = ncol) &
-            ggpubr::theme_pubr(legend = legend.position)
+                             reduction = reduction,
+                             cells.highlight = cells.highlight,
+                             sizes.highlight = sizes.highlight,
+                             dims = dims,
+                             pt.size = pt.size,
+                             raster = raster,
+                             ncol = ncol) &
+             ggpubr::theme_pubr(legend = legend.position)
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
                                                                   values = c("grey", colors.use)),
                        scale = "color") &
-            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
-            ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                          byrow = legend.byrow,
-                                                          override.aes = list(size = legend.icon.size)))
+             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
+             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                           byrow = legend.byrow,
+                                                           override.aes = list(size = legend.icon.size)))
     }
 
 

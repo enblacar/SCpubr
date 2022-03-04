@@ -11,6 +11,7 @@ do_DimPlot(
   split.by = NULL,
   colors.use = NULL,
   shuffle = TRUE,
+  order = NULL,
   pt.size = 0.5,
   label = FALSE,
   label.color = "black",
@@ -42,6 +43,8 @@ do_DimPlot(
 \item{colors.use}{Vector of named HEX values to color the cells. It has to match the number of unique values in either \code{Seurat::Idents(sample)} or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.}
 
 \item{shuffle}{Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
+
+\item{order}{Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.}
 
 \item{pt.size}{Point size of the cells.}
 
