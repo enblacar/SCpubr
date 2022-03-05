@@ -17,7 +17,8 @@ do_BarPlot(
   legend = TRUE,
   legend.position = "right",
   legend.title = FALSE,
-  legend.ncol = 1,
+  legend.ncol = NULL,
+  legend.nrow = NULL,
   fontsize = 14,
   legend.byrow = FALSE,
   colors.use = NULL,
@@ -55,7 +56,7 @@ do_BarPlot(
 
 \item{legend.title}{Logical stating whether the legend title is shown or not.}
 
-\item{legend.ncol}{Number of columns in the legend.}
+\item{legend.ncol, legend.nrow}{Number of columns/rows in the legend.}
 
 \item{fontsize}{Base fontsize of the figure.}
 

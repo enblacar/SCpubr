@@ -23,7 +23,8 @@ do_DimPlot(
   plot.title = NULL,
   legend.title = FALSE,
   legend.position = "right",
-  legend.ncol = 1,
+  legend.ncol = NULL,
+  legend.nrow = NULL,
   legend.icon.size = 4,
   legend.byrow = FALSE,
   raster = FALSE,
@@ -68,7 +69,7 @@ do_DimPlot(
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
-\item{legend.ncol}{Number of columns in the legend.}
+\item{legend.ncol, legend.nrow}{Number of columns/rows in the legend.}
 
 \item{legend.icon.size}{Size of the icons in legend.}
 

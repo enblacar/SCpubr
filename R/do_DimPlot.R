@@ -14,7 +14,7 @@
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
-#' @param legend.ncol Number of columns in the legend.
+#' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
 #' @param fontsize Base fontsize of the figure.
 #' @param legend.icon.size Size of the icons in legend.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -48,7 +48,8 @@ do_DimPlot <- function(sample,
                        plot.title = NULL,
                        legend.title = FALSE,
                        legend.position = "right",
-                       legend.ncol = 1,
+                       legend.ncol = NULL,
+                       legend.nrow = NULL,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        raster = FALSE,
@@ -73,6 +74,7 @@ do_DimPlot <- function(sample,
     numeric_list <- list("pt.size" = pt.size,
                          "sizes.highlight" = sizes.highlight,
                          "legend.ncol" = legend.ncol,
+                         "legend.nrow" = legend.nrow,
                          "fontsize" = fontsize,
                          "legend.icon.size" = legend.icon.size,
                          "ncol" = ncol)
@@ -147,6 +149,7 @@ do_DimPlot <- function(sample,
                                   repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.color = ifelse(is.null(label) == TRUE, NULL, "black"),
+                                  na.value = "grey75",
                                   shuffle = shuffle,
                                   order = order,
                                   pt.size = pt.size,
@@ -159,6 +162,7 @@ do_DimPlot <- function(sample,
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          nrow = legend.nrow,
                                                           byrow = legend.byrow,
                                                           override.aes = list(size = legend.icon.size)))
         if (!(is.null(group.by))){
@@ -193,13 +197,14 @@ do_DimPlot <- function(sample,
                   ggplot2::ggtitle(iteration) &
                   ggpubr::theme_pubr(legend = legend.position)
             p <- add_scale(p = p,
-                           function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                           function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
                                                                       values = c("grey75", ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
                            scale = "color") &
                  ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                                 legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                                 legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
                  ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                               nrwo = legend.nrow,
                                                                byrow = legend.byrow,
                                                                override.aes = list(size = legend.icon.size)))
             list.plots[[iteration]] <- p
@@ -221,13 +226,14 @@ do_DimPlot <- function(sample,
                              ncol = ncol) &
              ggpubr::theme_pubr(legend = legend.position)
         p <- add_scale(p = p,
-                       function_use = ggplot2::scale_color_manual(labels = c("Unselected", "Selected"),
+                       function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected cells"),
                                                                   values = c("grey", colors.use)),
                        scale = "color") &
              ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                             legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                             legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
              ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                           nrow = legend.nrow,
                                                            byrow = legend.byrow,
                                                            override.aes = list(size = legend.icon.size)))
     }

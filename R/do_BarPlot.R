@@ -13,7 +13,7 @@
 #' @param legend Whether to plot the legend.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.position  Position of the legend in the plot.
-#' @param legend.ncol  Number of columns in the legend.
+#' @param legend.ncol,legend.nrow  Number of columns/rows in the legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
 #' @param plot.title  Title to use in the plot.
@@ -40,7 +40,8 @@ do_BarPlot <- function(sample,
                        legend = TRUE,
                        legend.position = "right",
                        legend.title = FALSE,
-                       legend.ncol = 1,
+                       legend.ncol = NULL,
+                       legend.nrow = NULL,
                        fontsize = 14,
                        legend.byrow = FALSE,
                        colors.use = NULL,
@@ -70,6 +71,7 @@ do_BarPlot <- function(sample,
     # Check numeric parameters.
     numeric_list <- list("fontsize" = fontsize,
                          "legend.ncol" = legend.ncol,
+                         "legend.nrow" = legend.nrow,
                          "size.labels" = size.labels)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
@@ -148,6 +150,7 @@ do_BarPlot <- function(sample,
                             legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                             plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          nrow = legend.nrow,
                                                           byrow = legend.byrow))
       } else {
         check_feature(sample = sample, features = group.by, enforce_check = "metadata", enforce_parameter = "group.by")
@@ -191,6 +194,7 @@ do_BarPlot <- function(sample,
                             legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                             plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
+                                                          nrow = legend.nrow,
                                                           byrow = legend.byrow))
       }
 

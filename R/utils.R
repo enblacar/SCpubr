@@ -68,6 +68,8 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   } else {
     check_values <- unique(sample@meta.data[, grouping_variable])
   }
+  # Remove NAs.
+  check_values <- check_values[!(is.na(check_values))]
   if (sum(names(colors) %in% check_values) != length(check_values)){
     stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
