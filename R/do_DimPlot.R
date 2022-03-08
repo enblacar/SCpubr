@@ -8,6 +8,7 @@
 #' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.
 #' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param cells.highlight Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.
+#' @param idents.keep Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param order Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param pt.size Point size of the cells.
@@ -43,6 +44,7 @@ do_DimPlot <- function(sample,
                        label.color = "black",
                        repel = TRUE,
                        cells.highlight = NULL,
+                       idents.keep = NULL,
                        sizes.highlight = 0.5,
                        legend = TRUE,
                        ncol = NULL,
@@ -85,6 +87,7 @@ do_DimPlot <- function(sample,
     character_list <- list("legend.position" = legend.position,
                            "plot.title" = plot.title,
                            "cells.highlight" = cells.highlight,
+                           "idents.keep" = idents.keep,
                            "order" = order,
                            "na.value" = na.value)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -134,6 +137,26 @@ do_DimPlot <- function(sample,
         if (length(colors.use) != 1){
           colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
         }
+      }
+    }
+    # Set cells to NA according to idents.keep.
+    if (is.null(cells.highlight) & is.null(split.by) & !(is.null(idents.keep))){
+      if (is.null(group.by)){
+        # Check that idents.keep matches the values.
+        if (isFALSE(length(idents.keep) == sum(idents.keep %in% levels(sample)))){
+          stop("All the values in idents.keep must be available either in levels(sample) or in the group.by variable provided.", call. = F)
+        }
+        Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
+        # Generate the new color scale
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
+      } else {
+        # Check that idents.keep matches the values.
+        if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by])))){
+          stop("All the values in idents.keep must be available either in levels(sample) or in the group.by variable provided.", call. = F)
+        }
+        sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
+        # Generate the new color scale
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
       }
     }
 

@@ -17,6 +17,7 @@ do_DimPlot(
   label.color = "black",
   repel = TRUE,
   cells.highlight = NULL,
+  idents.keep = NULL,
   sizes.highlight = 0.5,
   legend = TRUE,
   ncol = NULL,
@@ -57,6 +58,8 @@ do_DimPlot(
 \item{repel}{Whether to repel the labels if label is set to TRUE.}
 
 \item{cells.highlight}{Vector of cells for which the DimPlot should focus into. The rest of the cells will be grayed out.}
+
+\item{idents.keep}{Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.}
 
 \item{sizes.highlight}{Point size of highlighted cells using cells.highlight parameter.}
 
