@@ -115,9 +115,9 @@ do_BarPlot <- function(sample,
         }
       } else{
         if (is.null(group.by)){
-          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = feature)
+          colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = feature)
         } else {
-          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+          colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
         }
       }
 

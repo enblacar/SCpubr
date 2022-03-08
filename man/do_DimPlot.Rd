@@ -29,7 +29,8 @@ do_DimPlot(
   legend.byrow = FALSE,
   raster = FALSE,
   dims = c(1, 2),
-  fontsize = 14
+  fontsize = 14,
+  na.value = "grey75"
 )
 }
 \arguments{
@@ -80,6 +81,8 @@ do_DimPlot(
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
 \item{fontsize}{Base fontsize of the figure.}
+
+\item{na.value}{Color value for NA.}
 }
 \value{
 A ggplot2 object containing a DimPlot.

@@ -115,7 +115,7 @@ do_VlnPlot <- function(sample,
     if (is.null(colors.use)){
       colors.use <- generate_color_scale(levels(sample))
     } else {
-      check_consistency_colors_and_names(sample = sample, colors = colors.use)
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
     }
     # If group.by is not NULL but split.by is NULL.
   } else if (!(is.null(group.by)) & is.null(split.by)){
@@ -124,7 +124,7 @@ do_VlnPlot <- function(sample,
       if (is.factor(names.use)){names.use <- levels(names.use)}
       colors.use <- generate_color_scale(names.use)
     } else {
-      check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }
     # If group by is NULL but split.by is not NULL.
   } else if (!(is.null(split.by)) & is.null(group.by)){
@@ -133,7 +133,7 @@ do_VlnPlot <- function(sample,
       if (is.factor(names.use)){names.use <- levels(names.use)}
       colors.use <- generate_color_scale(names.use)
     } else {
-      check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
     }
   } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.", call. = F)}
 

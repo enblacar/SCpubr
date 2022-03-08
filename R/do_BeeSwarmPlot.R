@@ -127,7 +127,11 @@ do_BeeSwarmPlot <- function(sample,
   if (continuous_feature == TRUE){
     p <- p + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
   } else if (continuous_feature == FALSE) {
-    if (is.null(colors.use)){colors.use <- generate_color_scale(levels(sample))}
+    if (is.null(colors.use)){
+      colors.use <- generate_color_scale(levels(sample))
+    } else {
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    }
     p <- p +
       ggplot2::scale_color_manual(values = colors.use) +
       ggpubr::rremove("legend")

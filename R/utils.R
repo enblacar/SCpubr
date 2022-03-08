@@ -70,12 +70,19 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   }
   # Remove NAs.
   check_values <- check_values[!(is.na(check_values))]
+
+  # Remove values that are not in the vector.
+  if (sum(names(colors) %in% check_values) == length(check_values) & length(names(colors)) > length(check_values)){
+    colors <- colors[names(colors) %in% check_values]
+  }
+
   if (sum(names(colors) %in% check_values) != length(check_values)){
-    stop('The names of the colors in the vector provided do not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
+    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
   if (length(colors) != length(check_values)){
-    stop('The number of colors provided is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
+    stop('The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
+  return(colors)
 }
 
 #' Generate custom color scale.
@@ -89,7 +96,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 #' }
 generate_color_scale <- function(names_use){
   # Generate a vector of colors equal to the number of identities in the sample.
-  colors <- colortools::setColors("#457b9d", length(names_use))
+  colors <- colortools::setColors("#0084a9", length(names_use))
   names(colors) <- names_use
   return(colors)
 }

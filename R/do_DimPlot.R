@@ -25,6 +25,7 @@
 #' @param repel Whether to repel the labels if label is set to TRUE.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
+#' @param na.value Color value for NA.
 #'
 #' @return  A ggplot2 object containing a DimPlot.
 #' @export
@@ -54,7 +55,8 @@ do_DimPlot <- function(sample,
                        legend.byrow = FALSE,
                        raster = FALSE,
                        dims = c(1, 2),
-                       fontsize = 14){
+                       fontsize = 14,
+                       na.value = "grey75"){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
     # Check the reduction.
@@ -83,7 +85,8 @@ do_DimPlot <- function(sample,
     character_list <- list("legend.position" = legend.position,
                            "plot.title" = plot.title,
                            "cells.highlight" = cells.highlight,
-                           "order" = order)
+                           "order" = order,
+                           "na.value" = na.value)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks to ensure proper function.
@@ -93,7 +96,8 @@ do_DimPlot <- function(sample,
     if (!(is.null(order)) & isTRUE(shuffle)){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
     # Check for label.color.
     check_colors(label.color, parameter_name = "label.color")
-
+    check_colors(na.value, parameter_name = "na.value")
+    if (length(na.value) != 1){stop("Please provide only one color to na.value.", call. = FALSE)}
 
     # Automatically generate colors.
     if (is.null(colors.use)){
@@ -121,14 +125,14 @@ do_DimPlot <- function(sample,
       check_colors(colors.use, parameter_name = "colors.use")
       # When everything is NULL.
       if (is.null(group.by) & is.null(split.by) & is.null(cells.highlight)){
-        check_consistency_colors_and_names(sample = sample, colors = colors.use)
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
         # When everything is NULL but group.by.
       } else if (!(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight)){
-        check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
         # When everything is NULL but split.by.
       } else if (is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight)){
         if (length(colors.use) != 1){
-          check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+          colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
         }
       }
     }
@@ -149,7 +153,7 @@ do_DimPlot <- function(sample,
                                   repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
                                   label.color = ifelse(is.null(label) == TRUE, NULL, "black"),
-                                  na.value = "grey75",
+                                  na.value = na.value,
                                   shuffle = shuffle,
                                   order = order,
                                   pt.size = pt.size,
