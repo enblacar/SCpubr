@@ -95,10 +95,14 @@ do_DimPlot <- function(sample,
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks to ensure proper function.
-    if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.")}
-    if (!(is.null(cells.highlight)) & !(is.null(group.by))){stop("Either group.by or cells.highlight has to be NULL.")}
-    if (!(is.null(cells.highlight)) & !(is.null(split.by))){stop("Either split.by or cells.highlight has to be NULL.")}
-    if (!(is.null(order)) & isTRUE(shuffle)){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
+    group_by_and_split_by_used <- !(is.null(split.by)) & !(is.null(group.by))
+    group_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(group.by))
+    split_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(split.by))
+    order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
+    if (group_by_and_split_by_used){stop("Either group.by or split.by has to be NULL.", call. = F)}
+    if (group_by_and_highlighting_cells){stop("Either group.by or cells.highlight has to be NULL.", call. = F)}
+    if (split_by_and_highlighting_cells){stop("Either split.by or cells.highlight has to be NULL.", call. = F)}
+    if (order_and_shuffle_used){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
     # Check for label.color.
     check_colors(label.color, parameter_name = "label.color")
     check_colors(na.value, parameter_name = "na.value")
@@ -109,51 +113,51 @@ do_DimPlot <- function(sample,
     if (is.null(colors.use)){
       colors.use <- {
         # Default parameters.
-        mask_1 <- is.null(group.by) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
+        default_parameters <- is.null(group.by) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
         # Group.by was used.
-        mask_2 <- !(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
+        group_by_is_used <- !(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
         # Split.by was used.
-        mask_3 <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
+        split_by_is_used <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
         # Cells.highlight or idents.highlight was used.
-        mask_4 <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
-        if (mask_1){
+        highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
+        if (default_parameters){
           generate_color_scale(levels(sample))
-        } else if (mask_2){
+        } else if (group_by_is_used){
           data.use <- sample[[]][, group.by, drop = F]
           names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
           generate_color_scale(names.use)
-        } else if (mask_3){
+        } else if (split_by_is_used){
           data.use <- sample[[]][, split.by, drop = F]
           names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
           generate_color_scale(names.use)
-        } else if (mask_4){
+        } else if (highlighting_cells){
           colors.use <- "#0A305F"
         }
       }
     # But, if the user has provided some.
-    } else{
+    } else {
       # Check that the provided values are valid color representations.
       check_colors(colors.use, parameter_name = "colors.use")
       # All set to null.
-      mask_1 <- is.null(group.by) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
+      default_parameters <- is.null(group.by) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
       # Group.by was used.
-      mask_2 <- !(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
+      group_by_is_used <- !(is.null(group.by)) & is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
       # Split.by was used.
-      mask_3 <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
+      split_by_is_used <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
       # When either cells.highlight or idents.highlight was used.
-      mask_4 <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
+      highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
       # When everything is NULL.
-      if (mask_1){
+      if (default_parameters){
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
         # When everything is NULL but group.by.
-      } else if (mask_2){
+      } else if (group_by_is_used){
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
         # When everything is NULL but split.by.
-      } else if (mask_3){
+      } else if (split_by_is_used){
         if (length(colors.use) != 1){
           colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
         }
-      } else if (mask_4){
+      } else if (highlighting_cells){
         if (length(colors.use) > 1){
           stop("Provide only one color if cells.highlight or idents.highlight is used.", call. = F)
         }
@@ -162,10 +166,15 @@ do_DimPlot <- function(sample,
 
     # Set cells to NA according to idents.keep.
     # If the user does not want to highlight cells or split by identities but wants to remove some identities.
-    mask <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(idents.keep))
-    if (mask){
-      # If group.by is not used, check the identities of the sample.
-      if (is.null(group.by) & is.null(split.by)){
+    idents_keep_used <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(idents.keep))
+    if (idents_keep_used){
+      # If both group.by and split.by are not used.
+      group_by_and_split_by_are_null <- is.null(group.by) & is.null(split.by)
+      # If group.by is used.
+      group_by_is_used <- !(is.null(group.by)) & is.null(split.by)
+      # If
+      split_by_is_used <- is.null(group.by) & !(is.null(split.by))
+      if (group_by_and_split_by_are_null){
         # Check that idents.keep matches the values.
         if (isFALSE(length(idents.keep) == sum(idents.keep %in% levels(sample)))){
           stop("All the values in idents.keep must be in levels(sample).", call. = F)
@@ -174,7 +183,7 @@ do_DimPlot <- function(sample,
         # Generate the new color scale
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
       # If not, check with the values in group.by.
-      } else if (!(is.null(group.by)) & is.null(split.by)) {
+      } else if (group_by_is_used) {
         # Check that idents.keep matches the values.
         if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by])))){
           stop("All the values in idents.keep must be in the group.by variable provided.", call. = F)
@@ -183,7 +192,7 @@ do_DimPlot <- function(sample,
         # Generate the new color scale
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
       # If split.by is used intead.
-      } else if (is.null(group.by) & !(is.null(split.by))){
+      } else if (split_by_is_used){
         if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by])))){
           stop("All the values in idents.keep must be in the split.by variable provided.", call. = F)
         }
@@ -198,7 +207,10 @@ do_DimPlot <- function(sample,
     legend.title.fontsize <- fontsize - 2
 
     # If the UMAP does not need to be split in multiple panes (default case).
-    if (is.null(cells.highlight) & is.null(idents.highlight) & is.null(split.by)){
+    not_highlighting_and_not_split_by <- is.null(cells.highlight) & is.null(idents.highlight) & is.null(split.by)
+    split_by_used <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(split.by))
+    highlighting_cells <- !(is.null(cells.highlight)) | !(is.null(idents.highlight))
+    if (not_highlighting_and_not_split_by){
         p <- Seurat::DimPlot(sample,
                                   reduction = reduction,
                                   label = label,
@@ -228,7 +240,7 @@ do_DimPlot <- function(sample,
         }
     }
     # If the UMAP has to be split in multiple panes.
-    else if (is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(split.by))){
+    else if (split_by_used){
         # If the user provided multiple highlighting colors.
         multiple_colors <- ifelse(length(colors.use) > 1, TRUE, FALSE)
         # List to store each individual plots.
@@ -278,7 +290,7 @@ do_DimPlot <- function(sample,
 
 
     # If the user wants to highlight some of the cells.
-    else if (!(is.null(cells.highlight)) | !(is.null(idents.highlight))){
+    else if (highlighting_cells){
       # Compute the cells to highlight.
       if (is.null(idents.highlight) & !(is.null(cells.highlight))){
         # Only if cells.highlight parameters is used.

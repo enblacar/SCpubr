@@ -152,64 +152,69 @@ do_VlnPlot <- function(sample,
         check_limits(sample = sample, feature = feature, value_name = "y_cut", value = y_cut_select)
       }
     }
-    plot <- Seurat::VlnPlot(sample,
-                            features = feature,
-                            cols = colors.use,
-                            group.by = group.by,
-                            split.by = split.by,
-                            pt.size = pt.size) &
-      ggpubr::theme_pubr(legend = legend.position) &
-      ggpubr::rremove("x.title") &
-      ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                     axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                     axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
-                     legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
-                     legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                     plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
-      ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
+    p <- Seurat::VlnPlot(sample,
+                         features = feature,
+                         cols = colors.use,
+                         group.by = group.by,
+                         split.by = split.by,
+                         pt.size = pt.size) &
+         ggpubr::theme_pubr(legend = legend.position) &
+         ggpubr::rremove("x.title") &
+         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 0, vjust = 0.5, hjust = 1, face = "bold"),
+                        axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                        axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
+                        legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
+                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                        plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
+         ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
 
     if (!is.null(xlab)){
-      plot <- plot & ggplot2::xlab(xlab)
+      p <- p & ggplot2::xlab(xlab)
     }
     if (!is.null(ylab)){
-      plot <- plot & ggplot2::ylab(ylab)
+      p <- p & ggplot2::ylab(ylab)
     }
     if (plot_boxplot == TRUE){
-      plot <- plot &
-        ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
+      p <- p &
+           ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
     }
 
     if (legend == FALSE){
-      plot <- plot & Seurat::NoLegend()
+      p <- p & Seurat::NoLegend()
     }
 
     if (!(is.null(rotate_x_labels))){
       if (isTRUE(x_label_select)){
-        plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
+        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
       }
     }
 
     if (!(is.null(y_cut))){
       if (!(is.na(y_cut_select))){
-        plot <- plot &
-          ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
+        p <- p &
+             ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
       }
     }
 
     if (!(is.null(individual.titles))){
       if (!(is.na(individual.titles[counter]))){
-        plot <- plot & ggplot2::ggtitle(individual.titles[counter])
+        p <- p & ggplot2::ggtitle(individual.titles[counter])
       }
     }
-    list.plots[[feature]] <- plot
+    list.plots[[feature]] <- p
   }
-  plot <- patchwork::wrap_plots(list.plots, ncol = ncol)
+  p <- patchwork::wrap_plots(list.plots, ncol = ncol)
 
   if (!(is.null(plot.title))){
-    plot <- plot & patchwork::plot_annotation(title = plot.title,
-                                              theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
-                                                                                                        face = "bold",
-                                                                                                        hjust = 0.5)))
+    if (length(features) > 1){
+      p <- p & patchwork::plot_annotation(title = plot.title,
+                                          theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
+                                                                                                    face = "bold",
+                                                                                                    hjust = 0.5)))
+    } else {
+      p <- p & ggplot2::ggtitle(plot.title)
+    }
+
   }
-  return(plot)
+  return(p)
 }
