@@ -14,8 +14,10 @@ do_VlnPlot(
   legend = FALSE,
   colors.use = NULL,
   pt.size = 0,
+  line_width = 1,
   y_cut = NULL,
   plot_boxplot = TRUE,
+  boxplot_width = 0.2,
   legend.position = "bottom",
   plot.title = NULL,
   individual.titles = NULL,
@@ -46,9 +48,13 @@ do_VlnPlot(
 
 \item{pt.size}{Size of points in the VlnPlot.}
 
+\item{line_width}{Integer. Width of the lines drawn in the plot. Defaults to 1.}
+
 \item{y_cut}{Vector with the values in which the Violins should be cut. Only works for one feature.}
 
 \item{plot_boxplot}{Logical. Whether to plot a Box plot inside the violin or not.}
+
+\item{boxplot_width}{Integer. Width of the boxplots. Defaults to 0.2.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 

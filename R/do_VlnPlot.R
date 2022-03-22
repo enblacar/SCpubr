@@ -21,6 +21,8 @@
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
+#' @param line_width Integer. Width of the lines drawn in the plot. Defaults to 1.
+#' @param boxplot_width Integer. Width of the boxplots. Defaults to 0.2.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -36,8 +38,10 @@ do_VlnPlot <- function(sample,
                        legend = FALSE,
                        colors.use = NULL,
                        pt.size = 0,
+                       line_width = 1,
                        y_cut = NULL,
                        plot_boxplot = TRUE,
+                       boxplot_width = 0.2,
                        legend.position = "bottom",
                        plot.title = NULL,
                        individual.titles = NULL,
@@ -65,7 +69,9 @@ do_VlnPlot <- function(sample,
                        "y_cut" = y_cut,
                        "fontsize" = fontsize,
                        "legend.ncol" = legend.ncol,
-                       "ncol" = ncol)
+                       "ncol" = ncol,
+                       "line_width" = line_width,
+                       "boxplot_width" = boxplot_width)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -167,6 +173,10 @@ do_VlnPlot <- function(sample,
                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                         plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
          ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
+    # Modify line width of violin plots.
+    p$layers[[1]]$aes_params$size <- line_width
+    # Modify color of the line.
+    p$layers[[1]]$aes_params$colour <- "black"
 
     if (!is.null(xlab)){
       p <- p & ggplot2::xlab(xlab)
@@ -176,7 +186,7 @@ do_VlnPlot <- function(sample,
     }
     if (plot_boxplot == TRUE){
       p <- p &
-           ggplot2::geom_boxplot(width = 0.2, fill = "white", outlier.colour = NA)
+           ggplot2::geom_boxplot(lwd = line_width, width = boxplot_width, fill = "white", outlier.colour = NA, color = "black", fatten = 1)
     }
 
     if (legend == FALSE){
@@ -203,7 +213,12 @@ do_VlnPlot <- function(sample,
     }
     list.plots[[feature]] <- p
   }
-  p <- patchwork::wrap_plots(list.plots, ncol = ncol)
+  # Do not create a patchwork object if only one feature is passed.
+  if (length(features) > 1){
+    p <- patchwork::wrap_plots(list.plots, ncol = ncol)
+  } else {
+    p <- list.plots[[1]]
+  }
 
   if (!(is.null(plot.title))){
     if (length(features) > 1){
