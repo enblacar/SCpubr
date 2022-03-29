@@ -12,6 +12,7 @@
 #' @param fontsize Base fontsize of the figure.
 #' @param legend Whether to plot the legend.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
+#' @param legend.title.position Character stating where to place the title of the legend.
 #' @param legend.position  Position of the legend in the plot.
 #' @param legend.ncol,legend.nrow  Number of columns/rows in the legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -39,6 +40,7 @@ do_BarPlot <- function(sample,
                        plot.title = NULL,
                        legend = TRUE,
                        legend.position = "right",
+                       legend.title.position = "top",
                        legend.title = FALSE,
                        legend.ncol = NULL,
                        legend.nrow = NULL,
@@ -83,7 +85,8 @@ do_BarPlot <- function(sample,
                            "xlab" = xlab,
                            "ylab" = ylab,
                            "order.by" = order.by,
-                           "position" = position)
+                           "position" = position,
+                           "legend.title.position" = legend.title.position)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Define fontsize parameters.
@@ -151,7 +154,8 @@ do_BarPlot <- function(sample,
                             plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
-                                                          byrow = legend.byrow))
+                                                          byrow = legend.byrow,
+                                                          title.position = legend.title.position))
       } else {
         check_feature(sample = sample, features = group.by, enforce_check = "metadata", enforce_parameter = "group.by")
         # Check the order of labels.
@@ -168,10 +172,11 @@ do_BarPlot <- function(sample,
             factor_levels <- compute_factor_levels(sample = sample, feature = feature, group.by = group.by, position = position)
           }
         }
-        # Reorder the colors according to the factor levels.
-        #colors.use <- colors.use[factor_levels]
+
         if (is.null(labels.order) & position == "fill"){factor_levels <- rev(factor_levels)}
         if (isTRUE(horizontal)){factor_levels <- rev(factor_levels)}
+        # Reorder the colors according to the factor levels.
+        #colors.use <- colors.use[factor_levels]
 
         data <- sample@meta.data %>%
                 dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%
@@ -195,7 +200,8 @@ do_BarPlot <- function(sample,
                             plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
-                                                          byrow = legend.byrow))
+                                                          byrow = legend.byrow,
+                                                          title.position = legend.title.position))
       }
 
       # Add labels on top of bars.

@@ -15,6 +15,7 @@
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
+#' @param legend.title.position Character stating where to place the title of the legend.
 #' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
 #' @param fontsize Base fontsize of the figure.
 #' @param legend.icon.size Size of the icons in legend.
@@ -52,6 +53,7 @@ do_DimPlot <- function(sample,
                        plot.title = NULL,
                        legend.title = FALSE,
                        legend.position = "right",
+                       legend.title.position = "top",
                        legend.ncol = NULL,
                        legend.nrow = NULL,
                        legend.icon.size = 4,
@@ -91,7 +93,8 @@ do_DimPlot <- function(sample,
                            "idents.keep" = idents.keep,
                            "order" = order,
                            "na.value" = na.value,
-                           "idents.highlight" = idents.highlight)
+                           "idents.highlight" = idents.highlight,
+                           "legend.title.position" = legend.title.position)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks to ensure proper function.
@@ -233,7 +236,8 @@ do_DimPlot <- function(sample,
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
-                                                          override.aes = list(size = legend.icon.size)))
+                                                          override.aes = list(size = legend.icon.size),
+                                                          title.position = legend.title.position))
         if (!(is.null(group.by))){
           # Remove automatic title.
           p <- p & ggplot2::ggtitle("")
@@ -281,7 +285,8 @@ do_DimPlot <- function(sample,
                  ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                                nrwo = legend.nrow,
                                                                byrow = legend.byrow,
-                                                               override.aes = list(size = legend.icon.size)))
+                                                               override.aes = list(size = legend.icon.size),
+                                                               title.position = legend.title.position))
             list.plots[[iteration]] <- p
         }
         # Assemble individual plots as a patch.
@@ -327,7 +332,8 @@ do_DimPlot <- function(sample,
              ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                            nrow = legend.nrow,
                                                            byrow = legend.byrow,
-                                                           override.aes = list(size = legend.icon.size)))
+                                                           override.aes = list(size = legend.icon.size),
+                                                           title.position = legend.title.position))
     }
 
 
