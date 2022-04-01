@@ -24,7 +24,8 @@
 #' @param add.subgroup_labels Logical. Whether to add the total number of values for each group in the bar. Only works with position = stack.
 #' @param repel.subgroup_labels,repel.summary_labels Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.
 #' @param size.labels Numeric. Modify the size of the labels.
-#'
+#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
+
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
@@ -53,7 +54,8 @@ do_BarPlot <- function(sample,
                        add.subgroup_labels = FALSE,
                        repel.subgroup_labels = FALSE,
                        repel.summary_labels = FALSE,
-                       size.labels = 3){
+                       size.labels = 3,
+                       rotate_x_labels = NULL){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
 
@@ -68,7 +70,8 @@ do_BarPlot <- function(sample,
                          "add.subgroup_labels" = add.subgroup_labels,
                          "add.summary_labels" = add.summary_labels,
                          "repel.subgroup_labels" = repel.subgroup_labels,
-                         "repel.summary_labels" = repel.summary_labels)
+                         "repel.summary_labels" = repel.summary_labels,
+                         "rotate_x_labels" = rotate_x_labels)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("fontsize" = fontsize,
@@ -99,10 +102,19 @@ do_BarPlot <- function(sample,
     # Checks.
     if (!(position %in% c("fill", "stack"))){stop("Position '", position, "' not supported. Please use either fill or stack.")}
 
+    if (!(is.null(rotate_x_labels))){
+      if(length(features) != length(rotate_x_labels)){
+        stop('Total number of rotate_x_labels values does not match the number of features provided.', call. = F)
+      }
+    }
+
+    counter <- 0
+    list.plots <- list()
     for (feature in features){
+      counter <- counter + 1
       # Enforce the features to be part of the metadata.
       check_feature(sample = sample, features = feature, enforce_check = "metadata", enforce_parameter = "features")
-
+      if (!is.null(rotate_x_labels)){x_label_select <- rotate_x_labels[counter]}
       # If no color scale is provided, generate a custom one.
       if (is.null(colors.use)){
         if (is.null(group.by)){
@@ -292,6 +304,12 @@ do_BarPlot <- function(sample,
           }
         }
       }
+
+      if (!(is.null(rotate_x_labels))){
+        if (isTRUE(x_label_select)){
+          p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1))
+        }
+      }
       # Add X axis label.
       if (!is.null(xlab)){
         p <- p & ggplot2::xlab(xlab)
@@ -320,8 +338,14 @@ do_BarPlot <- function(sample,
       if (isFALSE(legend.title)){
         p <- p + ggpubr::rremove("legend.title")
       }
+    list.plots[[counter]] <- p
     }
     # Return the plot.
+    if (length(features) > 1){
+      p <- patchwork::wrap_plots(list.plots)
+    } else {
+      p <- list.plots[[1]]
+    }
     return(p)
 
 }

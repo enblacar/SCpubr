@@ -29,7 +29,8 @@ do_BarPlot(
   add.subgroup_labels = FALSE,
   repel.subgroup_labels = FALSE,
   repel.summary_labels = FALSE,
-  size.labels = 3
+  size.labels = 3,
+  rotate_x_labels = NULL
 )
 }
 \arguments{
@@ -78,6 +79,8 @@ do_BarPlot(
 \item{repel.subgroup_labels, repel.summary_labels}{Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.}
 
 \item{size.labels}{Numeric. Modify the size of the labels.}
+
+\item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
 }
 \value{
 A ggplot2 object containing a Bar plot.
