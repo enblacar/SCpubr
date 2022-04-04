@@ -17,7 +17,8 @@ check_suggests <- function(function_name){
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"))
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
