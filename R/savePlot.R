@@ -19,10 +19,7 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_savePlot.R
 savePlot <- function(plot,
                      figure_path = NULL,
                      create_path = TRUE,
@@ -60,23 +57,25 @@ savePlot <- function(plot,
     }
   }
 
-  # Create directory.
-  if (!(dir.exists(figure_path))){
-    if (isTRUE(create_path)){dir.create(figure_path, recursive = T)}
-  }
-
   # Null file name?
   if (is.null(file_name)){file_name <- stringr::str_replace_all(Sys.time(), " ", "_")}
   # Null figure path?
   if (is.null(figure_path)){figure_path <- getwd()}
 
+  # Create directory.
+  if (!(dir.exists(figure_path))){
+    if (isTRUE(create_path)){dir.create(figure_path, recursive = T)}
+  }
+
+
+
 
   # Handle devices:
   output_options <- c("all", "publication", "pdf", "png", "jpeg", "svg", "tiff")
   if (!(output_format %in% output_options)){stop("Please select a valid output format from the available options.", call. = F)}
-  if (output_options == "publication"){
+  if (output_format == "publication"){
     devices_use <- c("pdf", "png", "svg")
-  } else if (output_options == "all"){
+  } else if (output_format == "all"){
     devices_use <- c("pdf", "png", "jpeg", "svg", "tiff")
   } else {
     devices_use <- output_options
