@@ -31,7 +31,7 @@ savePlot <- function(plot,
 
 
   # Checks for packages.
-  check_suggests(function_name = "save_plot")
+  check_suggests(function_name = "savePlot")
 
   # Check logical parameters.
   logical_list <- list("create_path" = create_path)

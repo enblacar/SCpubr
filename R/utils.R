@@ -18,7 +18,8 @@ check_suggests <- function(function_name){
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"))
+                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+                   "do_EnrichedTermPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -630,7 +631,9 @@ state_dependencies <- function(func_name = NULL){
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
                    #"do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"))
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+                   "do_EnrichedTermPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
 
   cran_packages <- c("colortools",
                      "dplyr",
@@ -1105,4 +1108,20 @@ heatmap_inner <- function(data,
 }
 
 
+#' Modify a string to wrap it around the middle point.
+#'
+#' @param string_to_modify
+#'
+#' @return
+#' @export
+#'
+#' @examples
+modify_string <- function(string_to_modify){
+  words <- stringr::str_split(string_to_modify, " ")[[1]]
+  num_words <- length(words)
+  middle_point <- round(num_words / 2, 0)
+  string_to_modify <- paste(paste(words[1:middle_point], collapse = " "), "\n",
+                            paste(words[(middle_point + 1):num_words], collapse = " "))
+  return(string_to_modify)
+}
 

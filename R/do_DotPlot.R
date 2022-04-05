@@ -91,6 +91,8 @@ do_DotPlot <- function(sample,
         colors.use <- generate_color_scale(names.use)
       }
     }
+    # Check colors.
+    check_colors(colors.use)
 
     plot <- Seurat::DotPlot(sample,
                             features = features,
