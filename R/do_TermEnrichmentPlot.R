@@ -16,16 +16,16 @@
 #' @return A ggplot2 object with enriched terms.
 #' @export
 #'
-#' @examples
-do_EnrichedTermPlot <- function(genes,
-                                dbs_use = NULL,
-                                ncol = NULL,
-                                nchar_wrap = 60,
-                                nterms = 5,
-                                size = 4,
-                                fontsize = 14,
-                                site = "Enrichr",
-                                colors.use = c("#001FA9", "#00A6A9")){
+#' @example man/examples/examples_do_TermEnrichmentPlot.R
+do_TermEnrichmentPlot <- function(genes,
+                                  dbs_use = NULL,
+                                  ncol = NULL,
+                                  nchar_wrap = 60,
+                                  nterms = 5,
+                                  size = 4,
+                                  fontsize = 14,
+                                  site = "Enrichr",
+                                  colors.use = NULL){
 
   sink(tempfile())
   on.exit(sink())
@@ -47,7 +47,8 @@ do_EnrichedTermPlot <- function(genes,
     # Check character parameters.
     character_list <- list("genes" = genes,
                            "dbs_use" = dbs_use,
-                           "site" = site)
+                           "site" = site,
+                           "colors.use" = colors.use)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Define fontsize parameters.
@@ -58,7 +59,15 @@ do_EnrichedTermPlot <- function(genes,
     legend.title.fontsize <- fontsize - 2
 
     # Check colors.
-    check_colors(colors.use)
+    if (!is.null(colors.use)){
+      check_colors(colors.use)
+      if (length(colors.use) != 2){
+        stop("Provide only 2 colors.", call. = F)
+      }
+    } else {
+      colors.use <- c("#bdc3c7", "#2c3e50")
+    }
+
 
     # Set necessary enrichR global options. This is copied from EnrichR code to avoid having to load the package.
     suppressMessages({
@@ -128,26 +137,30 @@ do_EnrichedTermPlot <- function(genes,
         dplyr::rowwise() %>%
         dplyr::mutate(Count = {length(unlist(stringr::str_split(.data$Genes, ";")))}) %>%
         dplyr::ungroup() %>%
-        dplyr::arrange(Adjusted.P.value) %>%
+        dplyr::arrange(.data$Adjusted.P.value) %>%
         dplyr::select(c("Adjusted.P.value", "Term", "Count")) %>%
         dplyr::slice_head(n = nterms) %>%
-        dplyr::mutate(Term = ifelse(nchar(Term) >= nchar_wrap, modify_string(Term), Term)) %>%
-        dplyr::mutate(Term = factor(Term, levels = rev(Term)))
+        dplyr::rowwise() %>% # Apply changes row-wise.
+        dplyr::distinct(.data$Term, .keep_all = TRUE) %>% # Remove duplicated entries.
+        dplyr::mutate(Term = ifelse(nchar(.data$Term) >= nchar_wrap, modify_string(.data$Term), .data$Term)) %>%
+        dplyr::mutate(Term = factor(.data$Term, levels = .data$Term))
 
       # Generate the plot.
-      p <- ggplot2::ggplot(data, mapping = ggplot2::aes(x = .data$Count, y = .data$Term, color = .data$Adjusted.P.value))  +
-           ggplot2::scale_color_gradient(low = colors.use[1], colors.use[2], trans = 'reverse') +
+      p <- ggplot2::ggplot(data, mapping = ggplot2::aes(x = .data$Count, y = forcats::fct_rev(.data$Term), color = .data$Adjusted.P.value)) +
+
            ggpubr::theme_pubr(legend = "right") +
            ggplot2::geom_point(size = size) +
-           ggplot2::geom_point(shape = 1, size = size, colour = "black") +
-           ggplot2::xlab("Genes supporting the Term") +
+           ggplot2::scale_color_gradient(low = colors.use[1], high = colors.use[2], trans = 'reverse') +
+           ggplot2::xlab("Number of Genes") +
            ggplot2::ylab("Enriched Term") +
            ggplot2::ggtitle(database) +
            ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
                           axis.title = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                           plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                          legend.title =  ggplot2::element_text(size = legend.title.fontsize, face = "bold")) +
-           ggplot2::guides(size = ggplot2::guide_legend(title = "Adj. P-value"))
+                          legend.title =  ggplot2::element_text(size = legend.title.fontsize, face = "bold"))
+
+      # Modify legend title.
+      p$scales$scales[[1]]$name <- "Adj. P-value"
 
       # Store in the list.
       list_enrichr[[database]] <- p

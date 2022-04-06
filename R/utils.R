@@ -19,7 +19,7 @@ check_suggests <- function(function_name){
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_EnrichedTermPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -633,7 +633,7 @@ state_dependencies <- function(func_name = NULL){
                    "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_EnrichedTermPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork"))
 
   cran_packages <- c("colortools",
                      "dplyr",
@@ -1113,9 +1113,11 @@ heatmap_inner <- function(data,
 #' @param string_to_modify
 #'
 #' @return
-#' @export
-#'
+#' @noRd
 #' @examples
+#' \dontrun{
+#' TBD
+#' }
 modify_string <- function(string_to_modify){
   words <- stringr::str_split(string_to_modify, " ")[[1]]
   num_words <- length(words)
