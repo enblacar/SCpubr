@@ -79,7 +79,6 @@ do_TermEnrichmentPlot <- function(genes,
       if (getOption("modEnrichR.use")) {
         enrichR::listEnrichrSites()
       } else {
-        enrichR::getEnrichr(url=paste0(getOption("enrichR.base.address"), "datasetStatistics"))
         packageStartupMessage("Enrichr ... ", appendLF = FALSE)
         if (getOption("enrichR.live")) packageStartupMessage("Connection is Live!")
       }

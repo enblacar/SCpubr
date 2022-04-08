@@ -20,6 +20,8 @@ savePlot(
 
 \item{figure_path}{Path where the figure will be stored.}
 
+\item{create_path}{Logical. Whether to create the path.}
+
 \item{file_name}{Name of the file (without extension, it will be added automatically).}
 
 \item{dpi}{Dpi to use.}
@@ -36,11 +38,9 @@ savePlot(
 }}
 
 \item{width, height}{Width and height of the figure (inches).}
-
-\item{create_folder}{Logical. Whether to create the path.}
 }
 \value{
-
+Nothing.
 }
 \description{
 Save a plot as png, pdf and svg.

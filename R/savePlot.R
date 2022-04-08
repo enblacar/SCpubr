@@ -3,7 +3,7 @@
 #'
 #' @param plot Plot to save.
 #' @param figure_path Path where the figure will be stored.
-#' @param create_folder Logical. Whether to create the path.
+#' @param create_path Logical. Whether to create the path.
 #' @param file_name Name of the file (without extension, it will be added automatically).
 #' @param output_format Character. One of the following:
 #' - pdf.
@@ -16,7 +16,7 @@
 #' @param dpi Dpi to use.
 #' @param width,height Width and height of the figure (inches).
 #'
-#' @return
+#' @return Nothing.
 #' @export
 #'
 #' @example /man/examples/examples_savePlot.R
@@ -97,37 +97,37 @@ savePlot <- function(plot,
         })
     }
   # Is it a heatmap?
-  } else {
+  } else if (sum(class(plot) %in% c("HeatmapList", "ComplexHeatmap")) >= 1) {
     suppressMessages({
       filename <- paste0(figure_path, file_name)
       if ("png" %in% devices_use){
-        grDevices::png(filename = paste0(file_name, ".png"), units = "in", height = height, width = width, res = dpi)
-        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = unit(c(20, 20, 2, 20), "mm"))
-        dev.off()
+        grDevices::png(filename = paste0(filename, ".png"), units = "in", height = height, width = width, res = dpi)
+        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
+        grDevices::dev.off()
       }
 
       if ("pdf" %in% devices_use){
-        grDevices::pdf(file = paste0(file_name, ".pdf"), height = height, width = width)
-        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = unit(c(20, 20, 2, 20), "mm"))
-        dev.off()
+        grDevices::pdf(file = paste0(filename, ".pdf"), height = height, width = width)
+        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
+        grDevices::dev.off()
       }
 
       if ("jpeg" %in% devices_use){
-        grDevices::jpeg(file = paste0(file_name, ".jpeg"), units = "in", height = height, width = width, res = dpi)
-        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = unit(c(20, 20, 2, 20), "mm"))
-        dev.off()
+        grDevices::jpeg(file = paste0(filename, ".jpeg"), units = "in", height = height, width = width, res = dpi)
+        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
+        grDevices::dev.off()
       }
 
       if ("tiff" %in% devices_use){
-        grDevices::jpeg(file = paste0(file_name, ".tiff"), units = "in", height = height, width = width, res = dpi)
-        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = unit(c(20, 20, 2, 20), "mm"))
-        dev.off()
+        grDevices::jpeg(file = paste0(filename, ".tiff"), units = "in", height = height, width = width, res = dpi)
+        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
+        grDevices::dev.off()
       }
 
       if ("svg" %in% devices_use){
-        svglite::svglite(filename = paste0(file_name, ".svg"), height = height, width = width)
-        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = unit(c(20, 20, 2, 20), "mm"))
-        dev.off()
+        svglite::svglite(filename = paste0(filename, ".svg"), height = height, width = width)
+        ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
+        grDevices::dev.off()
       }
 
     })

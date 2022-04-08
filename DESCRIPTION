@@ -39,6 +39,9 @@ Suggests:
     covr,
     circlize,
     ComplexHeatmap,
-    ggrepel
+    ggrepel,
+    enrichR,
+    forcats,
+    svglite
 VignetteBuilder: knitr
 Config/testthat/edition: 3
