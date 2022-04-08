@@ -25,7 +25,7 @@
 #' @param repel.subgroup_labels,repel.summary_labels Logical. Whether to repel labels to avoid overplotting. This will result in labels not being aligned anymore.
 #' @param size.labels Numeric. Modify the size of the labels.
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
-
+#' @param return_data_matrix Logical. Whether to also output the data matrix used to generate the bar plot. This is useful to report it for supplementary data.
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
@@ -55,7 +55,8 @@ do_BarPlot <- function(sample,
                        repel.subgroup_labels = FALSE,
                        repel.summary_labels = FALSE,
                        size.labels = 3,
-                       rotate_x_labels = NULL){
+                       rotate_x_labels = NULL,
+                       return_data_matrix = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
 
@@ -71,7 +72,8 @@ do_BarPlot <- function(sample,
                          "add.summary_labels" = add.summary_labels,
                          "repel.subgroup_labels" = repel.subgroup_labels,
                          "repel.summary_labels" = repel.summary_labels,
-                         "rotate_x_labels" = rotate_x_labels)
+                         "rotate_x_labels" = rotate_x_labels,
+                         "return_data_matrix" = return_data_matrix)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("fontsize" = fontsize,
@@ -110,6 +112,7 @@ do_BarPlot <- function(sample,
 
     counter <- 0
     list.plots <- list()
+    list.data <- list()
     for (feature in features){
       counter <- counter + 1
       # Enforce the features to be part of the metadata.
@@ -150,6 +153,14 @@ do_BarPlot <- function(sample,
                 dplyr::arrange(dplyr::desc(.data$n)) %>%
                 dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
                 dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
+        data.out <- data %>%
+                    dplyr::select(!!(rlang::sym(feature)), .data$n)
+        data.out.wide <- data.out %>%
+                         tidyr::pivot_wider(names_from = !!(rlang::sym(feature)),
+                                            values_from = .data$n)
+        data.report <- list("long" = data.out,
+                            "wide" = data.out.wide)
+        list.data[[feature]] <- data.report
 
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = .data$x_values)) +
@@ -197,6 +208,14 @@ do_BarPlot <- function(sample,
                 dplyr::arrange(dplyr::desc(.data$n)) %>%
                 dplyr::mutate(x_values = as.factor(!!(rlang::sym(feature)))) %>%
                 dplyr::mutate(x_values = factor(.data$x_values, levels = factor_levels))
+        data.out <- data %>%
+                    dplyr::select(!!(rlang::sym(feature)), !!(rlang::sym(group.by)), .data$n)
+        data.out.wide <- data.out %>%
+                         tidyr::pivot_wider(names_from = !!(rlang::sym(feature)),
+                                            values_from = .data$n)
+        data.report <- list("long" = data.out,
+                            "wide" = data.out.wide)
+        list.data[[feature]] <- data.report
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x_values, y = .data$n, fill = !!rlang::sym(group.by))) +
              ggplot2::geom_bar(position = position, stat="identity", width = 1,
@@ -346,6 +365,12 @@ do_BarPlot <- function(sample,
     } else {
       p <- list.plots[[1]]
     }
-    return(p)
 
+    # Return also the data?
+    if (isTRUE(return_data_matrix)){
+      return(list("plot" = p,
+                  "data" = list.data))
+    } else {
+      return(p)
+    }
 }
