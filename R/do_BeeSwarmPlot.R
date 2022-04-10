@@ -20,7 +20,8 @@
 #' @param flip Whether to flip the axis.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
-#'
+#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
+#' @param raster.dpi Numeric. Resolution in dots per inch. Defaults to 5.
 #' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
 #'
@@ -42,7 +43,9 @@ do_BeeSwarmPlot <- function(sample,
                             remove_y_axis = FALSE,
                             flip = FALSE,
                             viridis_color_map = "D",
-                            verbose = TRUE){
+                            verbose = TRUE,
+                            raster = FALSE,
+                            raster.dpi = 300){
   # Checks for packages.
   check_suggests(function_name = "do_BeeSwarmPlot")
   # Check the assay.
@@ -56,10 +59,12 @@ do_BeeSwarmPlot <- function(sample,
                        "remove_x_axis" = remove_x_axis,
                        "remove_y_axis" = remove_y_axis,
                        "flip" = flip,
-                       "verbose" = verbose)
+                       "verbose" = verbose,
+                       "raster" = raster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
-  numeric_list <- list("fontsize" = fontsize)
+  numeric_list <- list("fontsize" = fontsize,
+                       "raster.dpi" = raster.dpi)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -107,22 +112,31 @@ do_BeeSwarmPlot <- function(sample,
 
   color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-  p <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by))) +
-    ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
-    ggpubr::theme_pubr(legend = legend.position) +
-    ggplot2::ggtitle(plot.title) +
-    ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
-                                                     face = "bold"),
-                   axis.title = ggplot2::element_text(size = axis.title.fontsize,
-                                                      face = "bold"),
-                   plot.title = ggplot2::element_text(size = plot.title.fontsize,
-                                                      face = "bold",
-                                                      hjust = 0.5),
-                   legend.text = ggplot2::element_text(size = legend.text.fontsize,
-                                                       face = "bold",
-                                                       hjust = 1),
-                   legend.title = ggplot2::element_text(size = legend.title.fontsize,
-                                                        face = "bold"))
+  p <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by)))
+
+  # Add raster layer if desired.
+  if (isTRUE(raster)){
+    p <- p + ggrastr::geom_quasirandom_rast(groupOnX = FALSE, raster.dpi = raster.dpi)
+  } else {
+    p <- p + ggbeeswarm::geom_quasirandom(groupOnX = FALSE)
+  }
+
+  p <- p +
+       ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
+       ggpubr::theme_pubr(legend = legend.position) +
+       ggplot2::ggtitle(plot.title) +
+       ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
+                                                        face = "bold"),
+                      axis.title = ggplot2::element_text(size = axis.title.fontsize,
+                                                         face = "bold"),
+                      plot.title = ggplot2::element_text(size = plot.title.fontsize,
+                                                         face = "bold",
+                                                         hjust = 0.5),
+                      legend.text = ggplot2::element_text(size = legend.text.fontsize,
+                                                          face = "bold",
+                                                          hjust = 1),
+                      legend.title = ggplot2::element_text(size = legend.title.fontsize,
+                                                           face = "bold"))
 
   if (continuous_feature == TRUE){
     p <- p + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)

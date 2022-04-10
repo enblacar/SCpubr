@@ -22,7 +22,9 @@ do_BeeSwarmPlot(
   remove_y_axis = FALSE,
   flip = FALSE,
   viridis_color_map = "D",
-  verbose = TRUE
+  verbose = TRUE,
+  raster = FALSE,
+  raster.dpi = 300
 )
 }
 \arguments{
@@ -61,6 +63,10 @@ do_BeeSwarmPlot(
 \item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{verbose}{Whether to show warnings.}
+
+\item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
+
+\item{raster.dpi}{Numeric. Resolution in dots per inch. Defaults to 5.}
 
 \item{legend}{Whether to plot the legend or not.}
 }

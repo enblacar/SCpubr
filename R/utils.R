@@ -16,7 +16,7 @@ check_suggests <- function(function_name){
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_RankPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"))
@@ -624,7 +624,7 @@ check_viridis_color_map <- function(viridis_color_map, verbose){
 #' }
 state_dependencies <- function(func_name = NULL){
   pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang", "ggrastr"),
                    "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
