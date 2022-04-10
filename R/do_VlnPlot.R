@@ -166,7 +166,7 @@ do_VlnPlot <- function(sample,
                          pt.size = pt.size) &
          ggpubr::theme_pubr(legend = legend.position) &
          ggpubr::rremove("x.title") &
-         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 0, vjust = 0.5, hjust = 1, face = "bold"),
+         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 0, vjust = 1, hjust = 0.5, face = "bold"),
                         axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
                         axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
                         legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
@@ -195,8 +195,10 @@ do_VlnPlot <- function(sample,
 
     if (!(is.null(rotate_x_labels))){
       if (isTRUE(x_label_select)){
-        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
+        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1))
       }
+    } else {
+
     }
 
     if (!(is.null(y_cut))){
