@@ -20,6 +20,8 @@
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
 #' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
+#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
+#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -42,7 +44,9 @@ do_FeaturePlot <- function(sample,
                            dims = c(1, 2),
                            viridis_color_map = "D",
                            verbose = TRUE,
-                           individual.titles = NULL){
+                           individual.titles = NULL,
+                           raster = FALSE,
+                           raster.dpi = 512){
   # Checks for packages.
   check_suggests(function_name = "do_FeaturePlot")
   # Check the assay.
@@ -55,12 +59,14 @@ do_FeaturePlot <- function(sample,
   dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
   logical_list <- list("legend" = legend,
-                       "verbose" = verbose)
+                       "verbose" = verbose,
+                       "raster" = raster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
                        "ncol" = ncol,
-                       "fontsize" = fontsize)
+                       "fontsize" = fontsize,
+                       "raster.dpi" = raster.dpi)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -115,7 +121,9 @@ do_FeaturePlot <- function(sample,
                              order = T,
                              dims = dims,
                              pt.size = pt.size,
-                             ncol = ncol) &
+                             ncol = ncol,
+                             raster = raster,
+                             raster.dpi = c(raster.dpi, raster.dpi)) &
       Seurat::NoAxes()
     # Add viridis and supress warnings.
     p <- add_scale(p = p,
@@ -193,7 +201,9 @@ do_FeaturePlot <- function(sample,
                                       reduction = reduction,
                                       order = T,
                                       dims = dims,
-                                      pt.size = pt.size)
+                                      pt.size = pt.size,
+                                      raster = raster,
+                                      raster.dpi = c(raster.dpi, raster.dpi))
         p.loop <- add_scale(p = p.loop,
                             num_plots = length(feature),
                             function_use = viridis::scale_color_viridis(na.value = "grey75",
@@ -236,7 +246,9 @@ do_FeaturePlot <- function(sample,
                                         reduction = reduction,
                                         order = T,
                                         dims = dims,
-                                        pt.size = pt.size)
+                                        pt.size = pt.size,
+                                        raster = raster,
+                                        raster.dpi = c(raster.dpi, raster.dpi))
           p.loop <- add_scale(p = p.loop,
                               num_plots = length(feature),
                               function_use = viridis::scale_color_viridis(na.value = "grey75",

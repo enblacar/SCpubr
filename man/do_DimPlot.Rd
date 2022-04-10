@@ -31,6 +31,7 @@ do_DimPlot(
   legend.icon.size = 4,
   legend.byrow = FALSE,
   raster = FALSE,
+  raster.dpi = 512,
   dims = c(1, 2),
   fontsize = 14,
   na.value = "grey75"
@@ -84,6 +85,8 @@ do_DimPlot(
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
+
+\item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::DimPlot()} behavior.}
 
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 

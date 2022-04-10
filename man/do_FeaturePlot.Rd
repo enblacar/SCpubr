@@ -23,7 +23,9 @@ do_FeaturePlot(
   dims = c(1, 2),
   viridis_color_map = "D",
   verbose = TRUE,
-  individual.titles = NULL
+  individual.titles = NULL,
+  raster = FALSE,
+  raster.dpi = 512
 )
 }
 \arguments{
@@ -64,6 +66,10 @@ do_FeaturePlot(
 \item{verbose}{Whether to show warnings.}
 
 \item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
+
+\item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
+
+\item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::DimPlot()} behavior.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

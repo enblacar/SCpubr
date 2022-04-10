@@ -26,6 +26,7 @@
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param repel Whether to repel the labels if label is set to TRUE.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
+#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
 #' @param na.value Color value for NA.
 #'
@@ -59,6 +60,7 @@ do_DimPlot <- function(sample,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        raster = FALSE,
+                       raster.dpi = 512,
                        dims = c(1, 2),
                        fontsize = 14,
                        na.value = "grey75"){
@@ -84,7 +86,8 @@ do_DimPlot <- function(sample,
                          "legend.nrow" = legend.nrow,
                          "fontsize" = fontsize,
                          "legend.icon.size" = legend.icon.size,
-                         "ncol" = ncol)
+                         "ncol" = ncol,
+                         "raster.dpi" = raster.dpi)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -228,6 +231,7 @@ do_DimPlot <- function(sample,
                                   group.by = group.by,
                                   cols = colors.use,
                                   raster = raster,
+                                  raster.dpi = c(raster.dpi, raster.dpi),
                                   ncol = ncol) &
             ggpubr::theme_pubr(legend = legend.position) &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
@@ -272,6 +276,7 @@ do_DimPlot <- function(sample,
                                  sizes.highlight = sizes.highlight,
                                  pt.size = pt.size,
                                  raster = raster,
+                                 raster.dpi = c(raster.dpi, raster.dpi),
                                  ncol = ncol) &
                   ggplot2::ggtitle(iteration) &
                   ggpubr::theme_pubr(legend = legend.position)
@@ -320,6 +325,7 @@ do_DimPlot <- function(sample,
                              dims = dims,
                              pt.size = pt.size,
                              raster = raster,
+                             raster.dpi = c(raster.dpi, raster.dpi),
                              ncol = ncol) &
              ggpubr::theme_pubr(legend = legend.position)
         p <- add_scale(p = p,
