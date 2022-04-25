@@ -60,7 +60,7 @@ do_DimPlot <- function(sample,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
                        raster = FALSE,
-                       raster.dpi = 512,
+                       raster.dpi = 2048,
                        dims = c(1, 2),
                        fontsize = 14,
                        na.value = "grey75"){
@@ -114,6 +114,10 @@ do_DimPlot <- function(sample,
     check_colors(na.value, parameter_name = "na.value")
     if (length(na.value) != 1){stop("Please provide only one color to na.value.", call. = FALSE)}
 
+    # Check for raster and pt.size.
+    if (isTRUE(raster) & pt.size < 1){
+      warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
+    }
     # Automatically generate colors.
     # If the user has provided some colors.
     if (is.null(colors.use)){

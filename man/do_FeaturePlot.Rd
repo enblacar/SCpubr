@@ -25,7 +25,7 @@ do_FeaturePlot(
   verbose = TRUE,
   individual.titles = NULL,
   raster = FALSE,
-  raster.dpi = 512
+  raster.dpi = 2048
 )
 }
 \arguments{

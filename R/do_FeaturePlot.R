@@ -46,7 +46,7 @@ do_FeaturePlot <- function(sample,
                            verbose = TRUE,
                            individual.titles = NULL,
                            raster = FALSE,
-                           raster.dpi = 512){
+                           raster.dpi = 2048){
   # Checks for packages.
   check_suggests(function_name = "do_FeaturePlot")
   # Check the assay.
@@ -108,6 +108,11 @@ do_FeaturePlot <- function(sample,
   axis.title.fontsize <- fontsize + 1
   legend.text.fontsize <- fontsize - 4
   legend.title.fontsize <- fontsize - 4
+
+  # Check for raster and pt.size.
+  if (isTRUE(raster) & pt.size < 1){
+    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
+  }
 
   # Regular FeaturePlot.
   check <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)

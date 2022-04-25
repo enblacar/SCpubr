@@ -132,5 +132,39 @@ savePlot <- function(plot,
 
     })
 
+  } else if (sum(class(plot) %in% c("pheatmap")) >= 1){
+    suppressMessages({
+      filename <- paste0(figure_path, file_name)
+      if ("png" %in% devices_use){
+        grDevices::png(filename = paste0(filename, ".png"), units = "in", height = height, width = width, res = dpi)
+        print(plot)
+        grDevices::dev.off()
+
+      }
+
+      if ("pdf" %in% devices_use){
+        grDevices::pdf(file = paste0(filename, ".pdf"), height = height, width = width)
+        print(plot)
+        grDevices::dev.off()
+      }
+
+      if ("jpeg" %in% devices_use){
+        grDevices::jpeg(file = paste0(filename, ".jpeg"), units = "in", height = height, width = width, res = dpi)
+        print(plot)
+        grDevices::dev.off()
+      }
+
+      if ("tiff" %in% devices_use){
+        grDevices::jpeg(file = paste0(filename, ".tiff"), units = "in", height = height, width = width, res = dpi)
+        print(plot)
+        grDevices::dev.off()
+      }
+
+      if ("svg" %in% devices_use){
+        svglite::svglite(filename = paste0(filename, ".svg"), height = height, width = width)
+        print(plot)
+        grDevices::dev.off()
+      }
+    })
   }
 }

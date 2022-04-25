@@ -981,7 +981,7 @@ compute_bar_annotation <- function(data,
 #' @param row_dendogram,column_dendogram Logical. Whether to plot row and column dendograms.
 #' @param row_annotation,column_annotation Logical. Whether to place the annotation in the rows or the columns.
 #' @param row_annotation_side,column_annotation_side Where to place the annotation. "top", "bottom", "left", "right".
-#'
+#' @param row_title,column_title Titles for the axes.
 #' @return
 #' @noRd
 #' @examples
@@ -995,6 +995,8 @@ heatmap_inner <- function(data,
                           grid_color = "grey50",
                           fontsize = 12,
                           cell_size = 5,
+                          column_title = NULL,
+                          row_title = NULL,
                           row_names_side = "left",
                           column_names_side = "bottom",
                           cluster_columns = TRUE,
@@ -1076,6 +1078,7 @@ heatmap_inner <- function(data,
   h <- ComplexHeatmap::Heatmap(matrix = data,
                                name = legend_name,
                                col = col_fun,
+
                                show_heatmap_legend = FALSE,
                                cluster_rows = cluster_rows,
                                cluster_columns = cluster_columns,
@@ -1093,7 +1096,13 @@ heatmap_inner <- function(data,
                                                          fontface = "bold"),
                                row_names_side = row_names_side,
                                column_names_side = column_names_side,
+                               column_title = column_title,
+                               column_title_side = column_names_side,
+                               row_title_side = row_names_side,
+                               row_title = row_title,
                                column_title_gp = grid::gpar(fontsize = fontsize,
+                                                            fontface = "bold"),
+                               row_title_gp = grid::gpar(fontsize = fontsize,
                                                             fontface = "bold"),
                                border = border,
                                rect_gp = grid::gpar(col= grid_color),

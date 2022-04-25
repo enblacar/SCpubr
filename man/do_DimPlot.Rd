@@ -31,7 +31,7 @@ do_DimPlot(
   legend.icon.size = 4,
   legend.byrow = FALSE,
   raster = FALSE,
-  raster.dpi = 512,
+  raster.dpi = 2048,
   dims = c(1, 2),
   fontsize = 14,
   na.value = "grey75"
