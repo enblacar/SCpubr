@@ -122,7 +122,6 @@ do_BeeSwarmPlot <- function(sample,
   }
 
   p <- p +
-       ggbeeswarm::geom_quasirandom(groupOnX = FALSE) +
        ggpubr::theme_pubr(legend = legend.position) +
        ggplot2::ggtitle(plot.title) +
        ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
