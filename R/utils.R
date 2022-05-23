@@ -973,6 +973,8 @@ compute_bar_annotation <- function(data,
 #' - "only_neg": Will compute a color scale based only on the negative values. Will take the negative end of colors.use as well. Use when the values to plot are only negative
 #' @param colors.use Vector of 2 colors defining a gradient. White color will be inserted in the middle.
 #' @param grid_color Color for the grid.
+#' @param range.data Numeric. Max value that will determine the span of the color scale.
+#' @param outlier.data Logical. Whether there is outlier data to take into account.
 #' @param fontsize General fontsize of the plot.
 #' @param cell_size Size of each of the cells in the heatmap.
 #' @param row_names_side,column_names_side Where to place the column or row names. "top", "bottom", "left", "right".
@@ -982,6 +984,9 @@ compute_bar_annotation <- function(data,
 #' @param row_annotation,column_annotation Logical. Whether to place the annotation in the rows or the columns.
 #' @param row_annotation_side,column_annotation_side Where to place the annotation. "top", "bottom", "left", "right".
 #' @param row_title,column_title Titles for the axes.
+#' @param column_title_side,row_title_side Side for the titles.
+#' @param column_title_rotation,row_title_rotation Angle of rotation of the titles.
+#' @param row_names_rot,column_names_rot Angle of rotation of the text.
 #' @return
 #' @noRd
 #' @examples
@@ -995,6 +1000,8 @@ heatmap_inner <- function(data,
                           grid_color = "grey50",
                           fontsize = 12,
                           cell_size = 5,
+                          range.data = NULL,
+                          outlier.data = FALSE,
                           column_title = NULL,
                           row_title = NULL,
                           row_names_side = "left",
@@ -1004,6 +1011,12 @@ heatmap_inner <- function(data,
                           border = TRUE,
                           row_dendogram = FALSE,
                           column_dendogram = FALSE,
+                          column_title_side = "top",
+                          row_title_rotation = 90,
+                          column_title_rotation = 0,
+                          row_names_rot = 0,
+                          column_names_rot = 90,
+                          row_title_side = "left",
                           row_annotation = NULL,
                           row_annotation_side = "right",
                           column_annotation = NULL,
@@ -1012,7 +1025,9 @@ heatmap_inner <- function(data,
   min_value <- min(data)
   max_value <- max(data)
   abs_value <- max(c(abs(min_value), abs(max_value)))
-
+  if (!is.null(range.data)){
+    abs_value <- range.data
+  }
   if (is.null(colors.use)){
     colors.use <- c("#023f73", "white", "#7a0213")
   } else {
@@ -1022,21 +1037,43 @@ heatmap_inner <- function(data,
     breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
+    if (isTRUE(outlier.data) & !is.null(range.data)){
+      blue_color <- "#02294b"
+      red_color <- "#4b010b"
+      breaks <- c(-abs_value - 0.00001, breaks, abs_value + 0.00001)
+      colors.use <- c(blue_color, colors.use, red_color)
+      labels <- c(paste0("< ", -abs_value), labels, paste0("> ", abs_value))
+    }
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_neg"){
     breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(1, 2)])(length(breaks))
+    if (isTRUE(outlier.data) & !is.null(range.data)){
+      blue_color <- "#02294b"
+      breaks <- c(-abs_value - 0.00001, breaks)
+      colors.use <- c(blue_color, colors.use)
+      labels <- c(paste0("< ", -abs_value), labels)
+    }
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use[c(1, 2)])
   } else if (data_range == "only_pos"){
     breaks <-  round(c(0, (abs_value / 2), abs_value), 1)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(2, 3)])(length(breaks))
+    if (isTRUE(outlier.data) & !is.null(range.data)){
+      red_color <- "#4b010b"
+      breaks <- c(breaks, abs_value + 0.00001)
+      colors.use <- c(colors.use, red_color)
+      labels <- c(labels, paste0("> ", abs_value))
+    }
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use[c(2, 3)])
   }
+
+
+
   lgd = ComplexHeatmap::Legend(at = breaks,
                                labels = labels,
                                col_fun = col_fun,
@@ -1097,9 +1134,13 @@ heatmap_inner <- function(data,
                                row_names_side = row_names_side,
                                column_names_side = column_names_side,
                                column_title = column_title,
-                               column_title_side = column_names_side,
-                               row_title_side = row_names_side,
+                               column_title_side = column_title_side,
+                               row_title_side = row_title_side,
                                row_title = row_title,
+                               column_title_rot = column_title_rotation,
+                               row_title_rot = row_title_rotation,
+                               column_names_rot = column_names_rot,
+                               row_names_rot = row_names_rot,
                                column_title_gp = grid::gpar(fontsize = fontsize,
                                                             fontface = "bold"),
                                row_title_gp = grid::gpar(fontsize = fontsize,
@@ -1107,7 +1148,7 @@ heatmap_inner <- function(data,
                                border = border,
                                rect_gp = grid::gpar(col= grid_color),
                                cell_fun = function(j, i, x, y, w, h, fill) {
-                                 grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0.25))
+                                 grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
                                })
 
   return_list <- list("heatmap" = h,
