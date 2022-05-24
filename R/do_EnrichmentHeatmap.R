@@ -36,6 +36,7 @@ do_EnrichmentHeatmap <- function(sample,
 
 
   `%v%` <- ComplexHeatmap::`%v%`
+  `%>%` <- purrr::`%>%`
 
   if (is.character(list_genes)){
     # If list_genes is a character of genes.
@@ -178,7 +179,7 @@ do_EnrichmentHeatmap <- function(sample,
     dev.off()
 
 
-  return(h)
+    return(h)
   }  else {
     # Get the maximum range of the data.
     scoring <- data.frame("rownames" = aggr_entities) # This is to compute the overall maximum.
@@ -192,11 +193,11 @@ do_EnrichmentHeatmap <- function(sample,
       # Iterate over each cluster.
       for (cluster_name in aggr_entities){
         # Retrieve which cells are assigned to the cluster.
-        scores_seurat <- metadata[metadata[, group.by] == cluster_name, celltype]
+        scores_seurat <- metadata %>% dplyr::filter(!!rlang::sym(group.by) == cluster_name) %>% dplyr::select(!!rlang::sym(celltype))
 
 
         # Append to the vector the mean for each cell type.
-        list_score_seurat <- append(list_score_seurat, mean(scores_seurat))
+        list_score_seurat <- append(list_score_seurat, mean(scores_seurat[,1]))
       }
       # Get the name of the column together with the number of genes used for the enrichment scoring.
       scoring[celltype] <- list_score_seurat
@@ -219,7 +220,8 @@ do_EnrichmentHeatmap <- function(sample,
     for (split.value in split.values){
       scoring.split <- data.frame("rownames" = aggr_entities) # This is the actual heatmap.
 
-      metadata.split <- sample@meta.data[sample@meta.data[, split.by] == split.value, ]
+      metadata.split <- sample@meta.data %>% dplyr::filter(!!rlang::sym(split.by) == split.value)
+
       # Iterate over each marker gene list.
       for (celltype in names(input_list)){
         # Generate empty vectors for the aggregated scores.
@@ -228,10 +230,10 @@ do_EnrichmentHeatmap <- function(sample,
         # Iterate over each cluster.
         for (cluster_name in aggr_entities){
           # Retrieve which cells are assigned to the cluster.
-          scores_seurat_split <- metadata.split[metadata.split[, group.by] == cluster_name, celltype]
+          scores_seurat_split <- metadata.split %>% dplyr::filter(!!rlang::sym(group.by) == cluster_name) %>% dplyr::select(!!rlang::sym(celltype))
 
           # Append to the vector the mean for each cell type.
-          list_score_seurat_split <- append(list_score_seurat_split, mean(scores_seurat_split))
+          list_score_seurat_split <- append(list_score_seurat_split, mean(scores_seurat_split[, 1]))
         }
         # Get the name of the column together with the number of genes used for the enrichment scoring.
         scoring.split[celltype] <- list_score_seurat_split
@@ -261,9 +263,9 @@ do_EnrichmentHeatmap <- function(sample,
         }}
 
       if (isTRUE(transpose)){
-        data <- t(scoring)
+        data <- t(scoring.split)
       } else {
-        data <- scoring
+        data <- scoring.split
       }
 
       if (isTRUE(split.horizontal)){
