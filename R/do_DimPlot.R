@@ -66,6 +66,8 @@ do_DimPlot <- function(sample,
                        na.value = "grey75"){
     # Checks for packages.
     check_suggests(function_name = "do_DimPlot")
+    # Check if the sample provided is a Seurat object.
+    check_Seurat(sample = sample)
     # Check the reduction.
     reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
     # Check the dimensions.

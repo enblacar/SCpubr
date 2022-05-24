@@ -2,6 +2,7 @@
 
 export(do_BarPlot)
 export(do_BeeSwarmPlot)
+export(do_CorrelationPlot)
 export(do_DimPlot)
 export(do_DotPlot)
 export(do_EnrichmentHeatmap)

@@ -17,7 +17,7 @@
 #' @return A ComplexHeatmap object.
 #' @export
 #'
-#' @examples
+#' @example /man/examples/examples_do_EnrichmentHeatmap.R
 do_EnrichmentHeatmap <- function(sample,
                                  list_genes,
                                  group.by = NULL,
@@ -33,7 +33,29 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_names_rot = 0,
                                  column_names_rot = 90,
                                  colors.use = NULL){
+  # Checks for packages.
+  check_suggests(function_name = "do_EnrichmentHeatmap")
+  # Check if the sample provided is a Seurat object.
+  check_Seurat(sample = sample)
 
+  # Check logical parameters.
+  logical_list <- list("split.horizontal" = split.horizontal,
+                       "cluster_cols" = cluster_cols,
+                       "cluster_rows" = cluster_rows)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  # Check numeric parameters.
+  numeric_list <- list("row_names_rot" = row_names_rot,
+                       "column_names_rot" = column_names_rot)
+  check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+  # Check character parameters.
+  character_list <- list("list_genes" = list_genes,
+                         "column_title" = column_title,
+                         "row_title" = row_title,
+                         "legend_name" = legend_name,
+                         "colors.use" = colors.use,
+                         "group.by" = group.by,
+                         "split.by" = split.by)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- purrr::`%>%`
@@ -107,37 +129,40 @@ do_EnrichmentHeatmap <- function(sample,
     cluster_rows <- FALSE
   }
 
-  if (is.null(split.by)){
-    scoring <- data.frame("rownames" = aggr_entities)
+  # Get the maximum range of the data.
+  scoring <- data.frame("rownames" = aggr_entities) # This is to compute the overall maximum.
+
+  metadata <-  sample@meta.data
+  # Iterate over each marker gene list.
+  for (celltype in names(input_list)){
+    # Generate empty vectors for the aggregated scores.
+    list_score_seurat <- c()
+
+    # Iterate over each cluster.
+    for (cluster_name in aggr_entities){
+      # Retrieve which cells are assigned to the cluster.
+      scores_seurat <- metadata %>% dplyr::filter(!!rlang::sym(group.by) == cluster_name) %>% dplyr::select(!!rlang::sym(celltype))
 
 
-    # Iterate over each marker gene list.
-    for (celltype in names(input_list)){
-      # Generate empty vectors for the aggregated scores.
-      list_score_seurat <- c()
-
-      # Iterate over each cluster.
-      for (cluster_name in aggr_entities){
-        # Retrieve which cells are assigned to the cluster.
-        scores_seurat <- sample@meta.data[sample@meta.data[, group.by] == cluster_name, celltype]
-
-        # Append to the vector the mean for each cell type.
-        list_score_seurat <- append(list_score_seurat, mean(scores_seurat))
-      }
-      # Get the name of the column together with the number of genes used for the enrichment scoring.
-      scoring[celltype] <- list_score_seurat
+      # Append to the vector the mean for each cell type.
+      list_score_seurat <- append(list_score_seurat, mean(scores_seurat[,1]))
     }
+    # Get the name of the column together with the number of genes used for the enrichment scoring.
+    scoring[celltype] <- list_score_seurat
+  }
 
 
-    # Remove the rownames column in the object, since you set them to be the rownames of the dataframe.
-    rownames(scoring) <- scoring$rownames
-    scoring$rownames <- NULL
+  # Remove the rownames column in the object, since you set them to be the rownames of the dataframe.
+  rownames(scoring) <- scoring$rownames
+  scoring$rownames <- NULL
 
-    # Transform the data frames into a Matrix object.
-    scoring <- as.matrix(scoring)
+  # Transform the data frames into a Matrix object.
+  scoring <- as.matrix(scoring)
 
-    range <- max(abs(scoring))
+  # Get the maximum range.
+  range <- max(abs(scoring))
 
+  if (is.null(split.by)){
     row_title <- {
       if (!(is.null(row_title))){
         row_title
@@ -157,65 +182,33 @@ do_EnrichmentHeatmap <- function(sample,
       data <- scoring
     }
 
-    out <- SCpubr:::heatmap_inner(data,
-                                  legend_name = legend_name,
-                                  column_title = column_title,
-                                  row_title = row_title,
-                                  cluster_columns = cluster_cols,
-                                  cluster_rows = cluster_rows,
-                                  column_names_rot = column_names_rot,
-                                  row_names_rot = row_names_rot,
-                                  colors.use = colors.use
+
+    out <- heatmap_inner(data,
+                         legend_name = legend_name,
+                         column_title = column_title,
+                         row_title = row_title,
+                         cluster_columns = cluster_cols,
+                         cluster_rows = cluster_rows,
+                         column_names_rot = column_names_rot,
+                         row_names_rot = row_names_rot,
+                         colors.use = colors.use
     )
     h <- out[["heatmap"]]
     h_legend <- out[["legend"]]
-
     ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
-
-    grDevices::pdf(NULL)
-    h <- ComplexHeatmap::draw(h,
-                              heatmap_legend_list = h_legend,
-                              padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-    dev.off()
+    suppressWarnings({
+      grDevices::pdf(NULL)
+      h <- ComplexHeatmap::draw(h,
+                                heatmap_legend_list = h_legend,
+                                padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+      grDevices::dev.off()
+    })
 
 
     return(h)
   }  else {
-    # Get the maximum range of the data.
-    scoring <- data.frame("rownames" = aggr_entities) # This is to compute the overall maximum.
-
-    metadata <-  sample@meta.data
-    # Iterate over each marker gene list.
-    for (celltype in names(input_list)){
-      # Generate empty vectors for the aggregated scores.
-      list_score_seurat <- c()
-
-      # Iterate over each cluster.
-      for (cluster_name in aggr_entities){
-        # Retrieve which cells are assigned to the cluster.
-        scores_seurat <- metadata %>% dplyr::filter(!!rlang::sym(group.by) == cluster_name) %>% dplyr::select(!!rlang::sym(celltype))
-
-
-        # Append to the vector the mean for each cell type.
-        list_score_seurat <- append(list_score_seurat, mean(scores_seurat[,1]))
-      }
-      # Get the name of the column together with the number of genes used for the enrichment scoring.
-      scoring[celltype] <- list_score_seurat
-    }
-
-
-    # Remove the rownames column in the object, since you set them to be the rownames of the dataframe.
-    rownames(scoring) <- scoring$rownames
-    scoring$rownames <- NULL
-
-    # Transform the data frames into a Matrix object.
-    scoring <- as.matrix(scoring)
-
-    # Get the maximum range.
-    range <- max(abs(scoring))
-
     # Compute heatmaps for split values.
-    split.values <- sort(unique(sample@meta.data[, split.by]))
+    split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
     list.heatmaps <- list()
     for (split.value in split.values){
       scoring.split <- data.frame("rownames" = aggr_entities) # This is the actual heatmap.
@@ -277,18 +270,18 @@ do_EnrichmentHeatmap <- function(sample,
       }
 
 
-      out <- SCpubr:::heatmap_inner(data,
-                                    legend_name = legend_name,
-                                    column_title = column_title,
-                                    row_title = row_title,
-                                    row_title_side = "right",
-                                    row_title_rotation = 0,
-                                    column_names_rot = column_names_rot,
-                                    row_names_rot = row_names_rot,
-                                    range.data = range,
-                                    cluster_columns = cluster_cols,
-                                    cluster_rows = cluster_rows,
-                                    colors.use = colors.use)
+      out <- heatmap_inner(data,
+                           legend_name = legend_name,
+                           column_title = column_title,
+                           row_title = row_title,
+                           row_title_side = "right",
+                           row_title_rotation = 0,
+                           column_names_rot = column_names_rot,
+                           row_names_rot = row_names_rot,
+                           range.data = range,
+                           cluster_columns = cluster_cols,
+                           cluster_rows = cluster_rows,
+                           colors.use = colors.use)
       h <- out[["heatmap"]]
       h_legend <- out[["legend"]]
 
@@ -308,7 +301,7 @@ do_EnrichmentHeatmap <- function(sample,
       h <- ComplexHeatmap::draw(ht_list,
                                 heatmap_legend_list = h_legend,
                                 padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-      dev.off()
+      grDevices::dev.off()
     })
 
     return(h)

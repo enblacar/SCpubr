@@ -59,7 +59,8 @@ do_BarPlot <- function(sample,
                        return_data_matrix = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
-
+    # Check if the sample provided is a Seurat object.
+    check_Seurat(sample = sample)
     # Define pipe operator internally.
     `%>%` <- purrr::`%>%`
 

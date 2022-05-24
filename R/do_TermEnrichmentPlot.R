@@ -33,6 +33,7 @@ do_TermEnrichmentPlot <- function(genes,
     # Checks for packages.
     check_suggests(function_name = "do_EnrichedTermPlot")
 
+
     # Define pipe operator internally.
     `%>%` <- purrr::`%>%`
 

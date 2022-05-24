@@ -19,7 +19,9 @@ check_suggests <- function(function_name){
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"))
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
+                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -28,7 +30,92 @@ check_suggests <- function(function_name){
   }
 }
 
+#' State SCpubr current function dependencies.
+#'
+#' @param func_name Name of an exported function from SCpubr. If NULL, return all functions.
+#' @return None
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+state_dependencies <- function(func_name = NULL){
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
+                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
+                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
+                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
+                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
+                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
 
+  cran_packages <- c("colortools",
+                     "dplyr",
+                     "enrichR",
+                     "forcats",
+                     "ggbeeswarm",
+                     "ggplot2",
+                     "ggpubr",
+                     "ggrepel",
+                     "Matrix",
+                     "patchwork",
+                     "purrr",
+                     "rlang",
+                     "scales",
+                     "Seurat",
+                     "stringr",
+                     "svglite",
+                     "tidyr",
+                     "viridis")
+
+  bioconductor_packages <- c("Nebulosa")
+
+  func_list <- sort(names(pkg_list))
+  if (!(is.null(func_name))){
+    for (func in func_name){
+      if (!(func %in% func_list)){
+        stop("Function name provided (", func, ") not part of SCpubr current functions.", call. = F)
+      }
+    }
+    func_list <- func_name
+  }
+
+  message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
+  for (func in func_list){
+    packages <- pkg_list[[func]]
+    cran_packages_individual <- sort(packages[packages %in% cran_packages])
+    bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
+    message("Dependencies for ", func, ":")
+    if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
+    if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
+    message("")
+  }
+}
+
+
+
+#' Check for Seurat class.
+#'
+#' @param sample Seurat object.
+#'
+#' @noRd
+#' @return None
+#'
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_Seurat <- function(sample){
+  if (isFALSE("Seurat" %in% class(sample))){
+    stop("Object provided is not a Seurat object.", call. = F)
+  }
+}
 
 #' Internal check for colors.
 #'
@@ -612,67 +699,7 @@ check_viridis_color_map <- function(viridis_color_map, verbose){
 }
 
 
-#' State SCpubr current function dependencies.
-#'
-#' @param func_name Name of an exported function from SCpubr. If NULL, return all functions.
-#' @return None
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
-state_dependencies <- function(func_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
-                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
-                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
-                   "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"))
 
-  cran_packages <- c("colortools",
-                     "dplyr",
-                     "ggbeeswarm",
-                     "ggplot2",
-                     "ggpubr",
-                     "Matrix",
-                     "patchwork",
-                     "purrr",
-                     "rlang",
-                     "scales",
-                     "Seurat",
-                     "stringr",
-                     "tidyr",
-                     "viridis")
-
-  bioconductor_packages <- c("Nebulosa")
-
-  func_list <- sort(names(pkg_list))
-  if (!(is.null(func_name))){
-    for (func in func_name){
-      if (!(func %in% func_list)){
-        stop("Function name provided (", func, ") not part of SCpubr current functions.", call. = F)
-      }
-    }
-    func_list <- func_name
-  }
-
-  message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
-  for (func in func_list){
-    packages <- pkg_list[[func]]
-    cran_packages_individual <- sort(packages[packages %in% cran_packages])
-    bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
-      message("Dependencies for ", func, ":")
-      if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
-      if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
-      message("")
-  }
-}
 
 #' Check length of parameters compared to features.
 #'
@@ -1149,7 +1176,9 @@ heatmap_inner <- function(data,
                                rect_gp = grid::gpar(col= grid_color),
                                cell_fun = function(j, i, x, y, w, h, fill) {
                                  grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
-                               })
+                               },
+                               column_names_centered = TRUE,
+                               row_names_centered = TRUE)
 
   return_list <- list("heatmap" = h,
                       "legend" = lgd)

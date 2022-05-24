@@ -48,6 +48,8 @@ do_BeeSwarmPlot <- function(sample,
                             raster.dpi = 300){
   # Checks for packages.
   check_suggests(function_name = "do_BeeSwarmPlot")
+  # Check if the sample provided is a Seurat object.
+  check_Seurat(sample = sample)
   # Check the assay.
   out <- check_and_set_assay(sample, assay = assay)
   sample <- out[["sample"]]

@@ -42,6 +42,9 @@ do_NebulosaPlot <- function(sample,
                              legend.position = "right",
                              viridis_color_map = "D",
                              verbose = TRUE){
+  # Check if the sample provided is a Seurat object.
+  check_Seurat(sample = sample)
+
   # Checks for packages.
   check_suggests(function_name = "do_Nebulosa_plot")
   # Check the reduction.

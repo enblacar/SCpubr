@@ -53,6 +53,9 @@ do_VlnPlot <- function(sample,
                        rotate_x_labels = NULL){
   # Checks for packages.
   check_suggests(function_name = "do_VlnPlot")
+  # Check if the sample provided is a Seurat object.
+  check_Seurat(sample = sample)
+
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]

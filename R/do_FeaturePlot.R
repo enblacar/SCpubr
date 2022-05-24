@@ -49,6 +49,8 @@ do_FeaturePlot <- function(sample,
                            raster.dpi = 2048){
   # Checks for packages.
   check_suggests(function_name = "do_FeaturePlot")
+  # Check if the sample provided is a Seurat object.
+  check_Seurat(sample = sample)
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
