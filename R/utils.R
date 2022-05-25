@@ -1177,8 +1177,8 @@ heatmap_inner <- function(data,
                                cell_fun = function(j, i, x, y, w, h, fill) {
                                  grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
                                },
-                               column_names_centered = TRUE,
-                               row_names_centered = TRUE)
+                               column_names_centered = F,
+                               row_names_centered = F)
 
   return_list <- list("heatmap" = h,
                       "legend" = lgd)
