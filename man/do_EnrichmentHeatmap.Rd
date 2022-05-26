@@ -19,7 +19,8 @@ do_EnrichmentHeatmap(
   legend_name = "Enrichment",
   row_names_rot = 0,
   column_names_rot = 90,
-  colors.use = NULL
+  colors.use = NULL,
+  cell_size = 5
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ do_EnrichmentHeatmap(
 \item{column_names_rot, row_names_rot}{Numeric. Degree in which to}
 
 \item{colors.use}{Vector of 2 colors to use to generate the color scale.}
+
+\item{cell_size}{Numeric. Size of each cell in the heatmap.}
 }
 \value{
 A ComplexHeatmap object.

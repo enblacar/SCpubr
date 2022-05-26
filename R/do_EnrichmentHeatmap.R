@@ -14,6 +14,7 @@
 #' @param column_names_rot,row_names_rot Numeric. Degree in which to
 #' @param legend_name Text for the legend title.
 #' @param colors.use Vector of 2 colors to use to generate the color scale.
+#' @param cell_size Numeric. Size of each cell in the heatmap.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -32,7 +33,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  legend_name = "Enrichment",
                                  row_names_rot = 0,
                                  column_names_rot = 90,
-                                 colors.use = NULL){
+                                 colors.use = NULL,
+                                 cell_size = 5){
   # Checks for packages.
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
@@ -45,7 +47,8 @@ do_EnrichmentHeatmap <- function(sample,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
-                       "column_names_rot" = column_names_rot)
+                       "column_names_rot" = column_names_rot,
+                       "cell_size" = cell_size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("list_genes" = list_genes,
@@ -191,8 +194,8 @@ do_EnrichmentHeatmap <- function(sample,
                          cluster_rows = cluster_rows,
                          column_names_rot = column_names_rot,
                          row_names_rot = row_names_rot,
-                         colors.use = colors.use
-    )
+                         colors.use = colors.use,
+                         cell_size = cell_size)
     h <- out[["heatmap"]]
     h_legend <- out[["legend"]]
     ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
@@ -281,7 +284,8 @@ do_EnrichmentHeatmap <- function(sample,
                            range.data = range,
                            cluster_columns = cluster_cols,
                            cluster_rows = cluster_rows,
-                           colors.use = colors.use)
+                           colors.use = colors.use,
+                           cell_size = cell_size)
       h <- out[["heatmap"]]
       h_legend <- out[["legend"]]
 
