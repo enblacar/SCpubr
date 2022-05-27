@@ -57,6 +57,17 @@
                                     split.horizontal = F)
   p
 
+  # Modifying the tile size.
+  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                    list_genes = genes,
+                                    transpose = TRUE,
+                                    column_names_rot = 0,
+                                    cluster_cols = F,
+                                    cluster_rows = T,
+                                    split.by = "custom_group",
+                                    cell_size = 7)
+  p
+
   # Modifying the color scale.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     list_genes = genes,
