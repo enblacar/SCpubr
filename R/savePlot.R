@@ -20,14 +20,14 @@
 #' @export
 #'
 #' @example /man/examples/examples_savePlot.R
-savePlot <- function(plot,
-                     figure_path = NULL,
-                     create_path = TRUE,
-                     file_name = NULL,
-                     dpi = 300,
-                     output_format = "publication",
-                     width = 8,
-                     height = 8){
+save_Plot <- function(plot,
+                      figure_path = NULL,
+                      create_path = TRUE,
+                      file_name = NULL,
+                      dpi = 300,
+                      output_format = "publication",
+                      width = 8,
+                      height = 8){
 
 
   # Checks for packages.

@@ -18,7 +18,7 @@ check_suggests <- function(function_name){
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
@@ -50,7 +50,7 @@ state_dependencies <- function(func_name = NULL){
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "savePlot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
@@ -732,9 +732,18 @@ check_length <- function(vector_of_parameters, vector_of_features, parameters_na
 use_dataset <- function(){
   # We want this function to be completely silent.
   suppressWarnings({
-    sample <- CHETAH::headneck_ref
-    sample <- Seurat::as.Seurat(sample, counts = "counts", data = NULL)
-    sample <- suppressMessages(SeuratObject::RenameAssays(sample, originalexp = "RNA"))
+    genes <- SCpubr:::genes
+    values <- seq(0, 15, 0.1)
+    counts <- matrix(ncol = 180, nrow = length(genes))
+    cols <- c()
+    for (i in seq(1, 180)){
+      cts <- sample(values, size = length(genes), replace = T, prob = c(0.66, rep((0.34 / 150), length(values) - 1)))
+      counts[, i] <- cts
+      cols <- c(cols, paste0("Cell_", i))
+    }
+    rownames(counts) <- genes
+    colnames(counts) <- cols
+    sample <- Seurat::CreateSeuratObject(counts)
     sample <- Seurat::PercentageFeatureSet(sample, pattern = "^MT-", col.name = "percent.mt")
     # Compute QC.
     mask1 <- sample$nCount_RNA >= 1000
@@ -743,7 +752,7 @@ use_dataset <- function(){
     mask <- mask1 & mask2 & mask3
     sample <- sample[, mask]
     # Normalize.
-    sample <- Seurat::SCTransform(sample, verbose = FALSE)
+    sample <- suppressWarnings({Seurat::SCTransform(sample, verbose = FALSE)})
 
     # Dimensional reduction.
     sample <- Seurat::RunPCA(sample, verbose = FALSE)
@@ -751,6 +760,17 @@ use_dataset <- function(){
     # Find clusters.
     sample <- Seurat::FindNeighbors(sample, dims = 1:30, verbose = FALSE)
     sample <- Seurat::FindClusters(sample, resolution = 0.5, verbose = FALSE)
+    sample$seurat_clusters <- as.character(sample$seurat_clusters)
+    sample$seurat_clusters[1:20] <- "0"
+    sample$seurat_clusters[21:40] <- "1"
+    sample$seurat_clusters[41:60] <- "2"
+    sample$seurat_clusters[61:80] <- "3"
+    sample$seurat_clusters[81:100] <- "4"
+    sample$seurat_clusters[101:120] <- "5"
+    sample$seurat_clusters[121:140] <- "6"
+    sample$seurat_clusters[141:160] <- "7"
+    sample$seurat_clusters[161:180] <- "8"
+    Seurat::Idents(sample) <- sample$seurat_clusters
   })
 
   return(sample)
