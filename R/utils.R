@@ -10,7 +10,7 @@
 check_suggests <- function(function_name){
 
   pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
                    "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
@@ -42,7 +42,7 @@ check_suggests <- function(function_name){
 #' }
 state_dependencies <- function(func_name = NULL){
   pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
-                   "do_ButterflyPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
                    "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
@@ -1224,5 +1224,51 @@ modify_string <- function(string_to_modify){
   string_to_modify <- paste(paste(words[1:middle_point], collapse = " "), "\n",
                             paste(words[(middle_point + 1):num_words], collapse = " "))
   return(string_to_modify)
+}
+
+
+#' Compute Enrichment scores using Seurat::AddModuleScore()
+#'
+#' @param sample  Seurat object.
+#' @param list_genes  Named list of genes to compute enrichment for.
+#' @param verbose  Verbose output.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+compute_enrichment_scores <- function(sample, list_genes, verbose = F){
+  for (celltype in names(list_genes)){
+    list_markers <- list(list_genes[[celltype]])
+
+    # Compute Seurat AddModuleScore as well.
+    if (verbose){
+      sample <- Seurat::AddModuleScore(sample,
+                                       list_markers,
+                                       name = celltype,
+                                       search = TRUE,
+                                       verbose = T)
+    } else {
+      sample <- suppressMessages(suppressWarnings(Seurat::AddModuleScore(sample,
+                                                                         list_markers,
+                                                                         name = celltype,
+                                                                         search = TRUE,
+                                                                         verbose = F)))
+    }
+
+
+    # Retrieve the scores.
+    col_name <- stringr::str_replace_all(paste0(celltype, "1"), " ", ".")
+    col_name <- stringr::str_replace_all(col_name, "-", ".")
+    col_name <- stringr::str_replace_all(col_name, "\\+", ".")
+
+    # Modify the name that Seurat::AddModuleScore gives by default.
+    sample@meta.data[, celltype] <- sample@meta.data[, col_name]
+    # Remove old metadata.
+    sample@meta.data[, col_name] <- NULL
+  }
+  return(sample)
 }
 

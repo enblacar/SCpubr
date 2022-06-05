@@ -75,43 +75,7 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   # Compute the enrichment scores.
-  for (celltype in names(input_list)){
-    list_markers <- list(input_list[[celltype]])
-
-    # Compute Seurat AddModuleScore as well.
-
-    control_genes <- 100
-    number_bin <- 24
-
-    if (verbose){
-      sample <- Seurat::AddModuleScore(sample,
-                                       list_markers,
-                                       name = celltype,
-                                       search = TRUE,
-                                       ctrl = control_genes,
-                                       nbin = number_bin,
-                                       verbose = T)
-    } else {
-      sample <- suppressMessages(suppressWarnings(Seurat::AddModuleScore(sample,
-                                                                         list_markers,
-                                                                         name = celltype,
-                                                                         search = TRUE,
-                                                                         ctrl = control_genes,
-                                                                         nbin = number_bin,
-                                                                         verbose = F)))
-    }
-
-
-    # Retrieve the scores.
-    col_name <- stringr::str_replace_all(paste0(celltype, "1"), " ", ".")
-    col_name <- stringr::str_replace_all(col_name, "-", ".")
-    col_name <- stringr::str_replace_all(col_name, "\\+", ".")
-
-    # Modify the name that Seurat::AddModuleScore gives by default.
-    sample@meta.data[, celltype] <- sample@meta.data[, col_name]
-    # Remove old metadata.
-    sample@meta.data[, col_name] <- NULL
-  }
+  sample <- compute_enrichment_scores(sample = sample, list_genes = list_genes, verbose = verbose)
 
   # Start the process.
   if (is.null(group.by)){

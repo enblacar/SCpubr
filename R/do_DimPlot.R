@@ -121,7 +121,7 @@ do_DimPlot <- function(sample,
       warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
     }
     # Automatically generate colors.
-    # If the user has provided some colors.
+    # If the user has not provided colors.
     if (is.null(colors.use)){
       colors.use <- {
         # Default parameters.

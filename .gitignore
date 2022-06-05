@@ -7,5 +7,4 @@ SCpubr.Rproj
 /doc/
 /Meta/
 R/do_PTEA.R
-R/do_ButterflyPlot.R
 R/do_Heatmap.R

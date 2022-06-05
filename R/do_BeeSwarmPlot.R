@@ -118,9 +118,11 @@ do_BeeSwarmPlot <- function(sample,
 
   # Add raster layer if desired.
   if (isTRUE(raster)){
-    p <- p + ggrastr::geom_quasirandom_rast(groupOnX = FALSE, raster.dpi = raster.dpi)
+    p <- p +
+         ggrastr::geom_quasirandom_rast(groupOnX = FALSE, raster.dpi = raster.dpi)
   } else {
-    p <- p + ggbeeswarm::geom_quasirandom(groupOnX = FALSE)
+    p <- p +
+         ggbeeswarm::geom_quasirandom(groupOnX = FALSE)
   }
 
   p <- p +
@@ -148,30 +150,38 @@ do_BeeSwarmPlot <- function(sample,
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }
     p <- p +
-      ggplot2::scale_color_manual(values = colors.use) +
-      ggpubr::rremove("legend")
+         ggplot2::scale_color_manual(values = colors.use) +
+         ggpubr::rremove("legend")
   }
 
   if (remove_x_axis == TRUE){
-    p <- p + ggpubr::rremove("x.text") + ggpubr::rremove("x.ticks")
+    p <- p +
+         ggpubr::rremove("x.text") +
+         ggpubr::rremove("x.ticks")
   }
   if (remove_y_axis == TRUE){
-    p <- p + ggpubr::rremove("y.text") + ggpubr::rremove("y.ticks")
+    p <- p +
+         ggpubr::rremove("y.text") +
+         ggpubr::rremove("y.ticks")
   }
   if (flip == TRUE){
-    p <- p + ggplot2::coord_flip() + ggpubr::rremove("y.ticks") +
-      ggpubr::rremove("y.text") +
-      ggplot2::xlab(ifelse(is.null(ylab), paste0("Ranking for ", feature_to_rank), ylab)) +
-      ggplot2::ylab(xlab)
+    p <- p +
+         ggplot2::coord_flip() +
+         ggpubr::rremove("y.ticks") +
+         ggpubr::rremove("y.text") +
+         ggplot2::xlab(ifelse(is.null(ylab), paste0("Ranking for ", feature_to_rank), ylab)) +
+         ggplot2::ylab(xlab)
 
   } else {
-    p <- p + ggpubr::rremove("x.ticks") +
-      ggpubr::rremove("x.text") +
-      ggplot2::xlab(ifelse(is.null(xlab), paste0("Ranking for ", feature_to_rank), xlab)) +
-      ggplot2::ylab(ylab)
+    p <- p +
+         ggpubr::rremove("x.ticks") +
+         ggpubr::rremove("x.text") +
+         ggplot2::xlab(ifelse(is.null(xlab), paste0("Ranking for ", feature_to_rank), xlab)) +
+         ggplot2::ylab(ylab)
 
   }
-  p <- p + ggpubr::rremove("legend.title")
+  p <- p +
+       ggpubr::rremove("legend.title")
 
   return(p)
 
