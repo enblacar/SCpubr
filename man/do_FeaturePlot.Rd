@@ -14,8 +14,16 @@ do_FeaturePlot(
   legend = TRUE,
   split.by.idents = NULL,
   slot = NULL,
-  legend.position = "right",
+  legend.position = "bottom",
+  legend.framewidth = 1.5,
+  legend.tickwidth = 1.5,
+  legend.length = 20,
+  legend.width = 1,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   fontsize = 14,
   ncol = NULL,
   cells.highlight = NULL,
@@ -24,6 +32,8 @@ do_FeaturePlot(
   viridis_color_map = "D",
   verbose = TRUE,
   individual.titles = NULL,
+  individual.subtitles = NULL,
+  individual.captions = NULL,
   raster = FALSE,
   raster.dpi = 2048
 )
@@ -49,7 +59,13 @@ do_FeaturePlot(
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
-\item{plot.title}{Title for the plot.}
+\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+
+\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+
+\item{plot.title, plot.subtitle, plot.caption}{Title for the plot or subtitle or caption.}
 
 \item{fontsize}{Base fontsize of the figure.}
 
@@ -65,7 +81,7 @@ do_FeaturePlot(
 
 \item{verbose}{Whether to show warnings.}
 
-\item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
+\item{individual.titles, individual.subtitles, individual.captions}{Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
@@ -81,13 +97,25 @@ Wrapper for \link[Seurat]{FeaturePlot}.
 \dontrun{
   # Regular FeaturePlot.
   p <- SCpubr::do_FeaturePlot(sample = sample,
-                              features = "nCount_RNA",
-                              plot.title = "Number of UMIs")
+                              features = "nCount_RNA")
 
   # Add a title.
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "nCount_RNA",
                               plot.title = "Number of UMIs")
+
+  # Add a subtitle.
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              plot.title = "Number of UMIs",
+                              plot.subtitle = "Number of unique mRNAs per cell.")
+
+  # Add a caption
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              plot.title = "Number of UMIs",
+                              plot.subtitle = "Number of unique mRNAs per cell.",
+                              plot.caption = "Plot generated using SCpubr.")
 
   # Plot multiple features and control the output columns.
   p <- SCpubr::do_FeaturePlot(sample, features = c("nCount_RNA",
@@ -126,13 +154,13 @@ Wrapper for \link[Seurat]{FeaturePlot}.
   # Splitting the FeaturePlot by a variable and
   # maintaining the color scale and the UMAP shape.
   p <- SCpubr::do_FeaturePlot(sample = sample,
-                              features = "LYN",
-                              split.by = "new_clusters")
+                              features = "CD14",
+                              split.by = "seurat_clusters")
 
   # Splitting the FeaturePlot by a variable
   # and subset only some of the unique groups.
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("LYN", "nCount_RNA", "PC_1"),
+                              features = c("CD14", "nCount_RNA", "PC_1"),
                               split.by = "seurat_clusters",
                               split.by.idents = c("2", "5"))
 

@@ -239,10 +239,10 @@ do_DimPlot <- function(sample,
                                   raster = raster,
                                   raster.dpi = c(raster.dpi, raster.dpi),
                                   ncol = ncol) &
-            ggpubr::theme_pubr(legend = legend.position) &
             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
+                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
+                           legend.position = legend.position) &
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
@@ -285,7 +285,7 @@ do_DimPlot <- function(sample,
                                  raster.dpi = c(raster.dpi, raster.dpi),
                                  ncol = ncol) &
                   ggplot2::ggtitle(iteration) &
-                  ggpubr::theme_pubr(legend = legend.position)
+                  ggplot2::theme(legend.position = legend.position)
             p <- add_scale(p = p,
                            function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
                                                                       values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
@@ -333,7 +333,7 @@ do_DimPlot <- function(sample,
                              raster = raster,
                              raster.dpi = c(raster.dpi, raster.dpi),
                              ncol = ncol) &
-             ggpubr::theme_pubr(legend = legend.position)
+             ggplot2::theme(legend.position = legend.position)
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected cells"),
                                                                   values = c(na.value, colors.use)),

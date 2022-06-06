@@ -1,13 +1,25 @@
 \dontrun{
   # Regular FeaturePlot.
   p <- SCpubr::do_FeaturePlot(sample = sample,
-                              features = "nCount_RNA",
-                              plot.title = "Number of UMIs")
+                              features = "nCount_RNA")
 
   # Add a title.
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "nCount_RNA",
                               plot.title = "Number of UMIs")
+
+  # Add a subtitle.
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              plot.title = "Number of UMIs",
+                              plot.subtitle = "Number of unique mRNAs per cell.")
+
+  # Add a caption
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              plot.title = "Number of UMIs",
+                              plot.subtitle = "Number of unique mRNAs per cell.",
+                              plot.caption = "Plot generated using SCpubr.")
 
   # Plot multiple features and control the output columns.
   p <- SCpubr::do_FeaturePlot(sample, features = c("nCount_RNA",
@@ -46,13 +58,13 @@
   # Splitting the FeaturePlot by a variable and
   # maintaining the color scale and the UMAP shape.
   p <- SCpubr::do_FeaturePlot(sample = sample,
-                              features = "LYN",
-                              split.by = "new_clusters")
+                              features = "CD14",
+                              split.by = "seurat_clusters")
 
   # Splitting the FeaturePlot by a variable
   # and subset only some of the unique groups.
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("LYN", "nCount_RNA", "PC_1"),
+                              features = c("CD14", "nCount_RNA", "PC_1"),
                               split.by = "seurat_clusters",
                               split.by.idents = c("2", "5"))
 

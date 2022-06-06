@@ -11,7 +11,11 @@
 #' @param split.by.idents Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title Title for the plot.
+#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
+#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
+#' @param plot.title,plot.subtitle,plot.caption Title for the plot or subtitle or caption.
+#' @param individual.titles,individual.subtitles,individual.captions Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param fontsize Base fontsize of the figure.
 #' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
@@ -19,7 +23,6 @@
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
-#' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
 #' @return  A ggplot2 object containing a Feature Plot.
@@ -35,8 +38,16 @@ do_FeaturePlot <- function(sample,
                            legend = TRUE,
                            split.by.idents = NULL,
                            slot = NULL,
-                           legend.position = "right",
+                           legend.position = "bottom",
+                           legend.framewidth = 1.5,
+                           legend.tickwidth = 1.5,
+                           legend.length = 20,
+                           legend.width = 1,
+                           legend.framecolor = "grey50",
+                           legend.tickcolor = "white",
                            plot.title = NULL,
+                           plot.subtitle = NULL,
+                           plot.caption = NULL,
                            fontsize = 14,
                            ncol = NULL,
                            cells.highlight = NULL,
@@ -45,8 +56,12 @@ do_FeaturePlot <- function(sample,
                            viridis_color_map = "D",
                            verbose = TRUE,
                            individual.titles = NULL,
+                           individual.subtitles = NULL,
+                           individual.captions = NULL,
                            raster = FALSE,
                            raster.dpi = 2048){
+
+
   # Checks for packages.
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
@@ -68,7 +83,11 @@ do_FeaturePlot <- function(sample,
   numeric_list <- list("pt.size" = pt.size,
                        "ncol" = ncol,
                        "fontsize" = fontsize,
-                       "raster.dpi" = raster.dpi)
+                       "raster.dpi" = raster.dpi,
+                       "legend.framewidth" = legend.framewidth,
+                       "legend.tickwidth" = legend.tickwidth,
+                       "legend.length" = legend.length,
+                       "legend.width" = legend.width)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -83,9 +102,15 @@ do_FeaturePlot <- function(sample,
                          "slot" = slot,
                          "split.by" = split.by,
                          "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
                          "split.by.idents" = split.by.idents,
                          "viridis_color_map" = viridis_color_map,
-                         "individual.titles" = individual.titles)
+                         "individual.titles" = individual.titles,
+                         "individual.subtitles" = individual.subtitles,
+                         "individual.captions" = individual.captions,
+                         "legend.framecolor" = legend.framecolor,
+                         "legend.tickcolor" = legend.tickcolor)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -101,11 +126,40 @@ do_FeaturePlot <- function(sample,
     }
   }
 
+  # Check individual subtitles.
+  if (!(is.null(individual.subtitles))){
+    if(length(features) != length(individual.subtitles)){
+      stop('Total number of individual subtitles does not match the number of features provided.', call. = F)
+    }
+  }
+
+  # Check individual captions
+  if (!(is.null(individual.captions))){
+    if(length(features) != length(individual.captions)){
+      stop('Total number of individual captions does not match the number of features provided.', call. = F)
+    }
+  }
+
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
+  # Check the colors.
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
+  # Define legend parameters.
+  if (legend.position %in% c("top", "bottom")){
+    legend.barwidth <- legend.length
+    legend.barheight <- legend.width
+  } else if (legend.position %in% c("left", "right")){
+    legend.barwidth <- legend.width
+    legend.barheight <- legend.length
+  }
+
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2
+  plot.subtitle.fontsize <- fontsize - 4
+  plot.caption.fontsize <- fontsize -4
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1
   legend.text.fontsize <- fontsize - 4
@@ -131,7 +185,8 @@ do_FeaturePlot <- function(sample,
                              ncol = ncol,
                              raster = raster,
                              raster.dpi = c(raster.dpi, raster.dpi)) &
-      Seurat::NoAxes()
+          ggplot2::ggtitle("") &
+          Seurat::NoAxes()
     # Add viridis and supress warnings.
     p <- add_scale(p = p,
                    num_plots = length(features),
@@ -139,9 +194,15 @@ do_FeaturePlot <- function(sample,
                                                                option = viridis_color_map),
                    scale = "color")
     p <- p &
-      ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                     legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold", hjust = 1),
-                     legend.position = legend.position)
+         ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
+                        legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                        legend.position = legend.position,
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center")
     # Special patches for diffusion maps: Adding "DC" labels to the axis.
     if (reduction == "diffusion"){
       p <- p & ggplot2::xlab(paste0("DC_", dims[1])) & ggplot2::ylab(paste0("DC_", dims[2]))
@@ -217,11 +278,16 @@ do_FeaturePlot <- function(sample,
                                                                         option = viridis_color_map),
                             scale = "color")
         p.loop <- p.loop +
-          ggplot2::ggtitle(feature) +
-          ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                         legend.position = legend.position,
-                         legend.spacing = ggplot2::unit(0.01, "cm"))
+                  ggplot2::ggtitle("") +
+                  ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                                 plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                                 plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                                 plot.title.position = "plot",
+                                 plot.caption.position = "plot",
+                                 legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                                 legend.position = legend.position,
+                                 legend.title = ggplot2::element_text(face = "bold"),
+                                 legend.justification = "center")
 
       } else {
         # Recover all metadata.
@@ -237,9 +303,7 @@ do_FeaturePlot <- function(sample,
         list.plots.split.by <- list()
         count_plot <- 0 # Will update for each plot in each iteration.
         count_iteration <- count_iteration + 1 # Will update for each feature.
-        if (legend.position != "right"){
-          if (verbose){warning("Using split.by parameter will force the legend of each individual plot to the right.")}
-        }
+
         limits <- c(min(sample$dummy), max(sample$dummy))
         for (iteration in plot_order){
           feature.use <- "dummy2"
@@ -263,39 +327,56 @@ do_FeaturePlot <- function(sample,
                                                                           limits = limits),
                               scale = "color")
           p.loop <- p.loop +
-            ggplot2::ggtitle(ifelse(count_iteration == 1, iteration, "")) +
-            ggplot2::ylab(ifelse(count_plot == 1, feature, "")) +
-            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", vjust = 0.5),
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.position = ifelse(legend.position != "right", "right", legend.position))
-          # Only keep the legend of the last plot, as we are setting the same color scale.
-          if (count_plot != length(plot_order)) {p.loop <- p.loop + Seurat::NoLegend()}
+                    ggplot2::ggtitle(iteration) +
+                    ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+                                   plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                                   plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                                   plot.title.position = "plot",
+                                   plot.caption.position = "plot",
+                                   axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", vjust = 0.5),
+                                   legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                                   legend.title = ggplot2::element_text(face = "bold"),
+                                   legend.justification = "center",
+                                   legend.position = legend.position) +
+                    ggplot2::guides(color = ggplot2::guide_colorbar(title = feature,
+                                                                    title.position = "top",
+                                                                    barwidth = legend.barwidth,
+                                                                    barheight = legend.barheight,
+                                                                    title.hjust = 0.5,
+                                                                    ticks.linewidth = legend.tickwidth,
+                                                                    frame.linewidth = legend.framewidth,
+                                                                    frame.colour = legend.framecolor,
+                                                                    ticks.colour = legend.tickcolor))
+          if (iteration != plot_order[length(plot_order)]){
+            p.loop <- p.loop & Seurat::NoLegend()
+          }
 
           list.plots.split.by[[iteration]] <- p.loop
         }
-        # Assemble individual plots as a patch.
-        p.loop <- patchwork::wrap_plots(list.plots.split.by, ncol = length(plot_order))
+        p.loop <- patchwork::wrap_plots(list.plots.split.by,
+                                        ncol = ncol,
+                                        guides = "collect") +
+                  patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
+
       }
 
       # Patch for diffusion maps.
       if (reduction == "diffusion"){
         # Add "DC" labels.
-        p.loop <- p.loop + ggplot2::xlab(paste0("DC_", dims[1])) + ggplot2::ylab(paste0("DC_", dims[2]))
+        p.loop <- p.loop +
+                  ggplot2::xlab(paste0("DC_", dims[1])) +
+                  ggplot2::ylab(paste0("DC_", dims[2]))
       } else if (reduction == "pca"){
-        p.loop <- p.loop + ggplot2::xlab(paste0("PC_", dims[1])) + ggplot2::ylab(paste0("PC_", dims[2]))
+        p.loop <- p.loop +
+                  ggplot2::xlab(paste0("PC_", dims[1])) +
+                  ggplot2::ylab(paste0("PC_", dims[2]))
       }
       # Add the plot to the list.
       list.plots[[feature]] <- p.loop
     }
-    # Generate the final plot with patchwork and use the "ncol" parameter value for the number of columns.
-    if (is.null(split.by)){
-      p <- patchwork::wrap_plots(list.plots, ncol = ncol)
-    } else {
-      if (!(is.null(ncol))){message("Ignoring 'ncol' parameter as split.by parameter is used. Number of columns equal to each unique value in split.by.")}
-      p <- patchwork::wrap_plots(list.plots, ncol = 1)
-    }
 
+    # Generate the final plot with patchwork and use the "ncol" parameter value for the number of columns.
+    p <- patchwork::wrap_plots(list.plots, nrow = 1)
 
     # Patch for the case in which features only contains one element and a custom plot title is provided.
     # Basically, as this is a "patchwork" object, the way the title has to be set is different than using "ggplot2::ggtitle()".
@@ -308,12 +389,37 @@ do_FeaturePlot <- function(sample,
   # Add custom title.
   if (!is.null(plot.title)){
     if (length(features) > 1){
-      p <- p + patchwork::plot_annotation(title = plot.title,
-                                          theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
-                                                                                                    face = "bold",
-                                                                                                    hjust = 0.5)))
+      p <- p +
+           patchwork::plot_annotation(title = plot.title,
+                                      theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
+                                                                                                   face = "bold")))
     } else {
-      p <- p + ggplot2::ggtitle(plot.title)
+      p <- p +
+           ggplot2::labs(title = plot.title)
+    }
+  }
+
+  # Add custom subtitle.
+  if (!is.null(plot.subtitle)){
+    if (length(features) > 1){
+      p <- p +
+           patchwork::plot_annotation(subtitle = plot.subtitle,
+                                      theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+    } else {
+      p <- p +
+           ggplot2::labs(subtitle = plot.subtitle)
+    }
+  }
+
+  # Add custom caption
+  if (!is.null(plot.caption)){
+    if (length(features) > 1){
+      p <- p +
+           patchwork::plot_annotation(caption = plot.caption,
+                                      theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+    } else {
+      p <- p +
+           ggplot2::labs(caption = plot.caption)
     }
   }
 
@@ -326,65 +432,104 @@ do_FeaturePlot <- function(sample,
     }
   }
 
+  # Add individual subtitles.
+  if (!is.null(individual.subtitles)){
+    for (counter in seq(1,length(features))){
+      if (!(is.na(individual.subtitles[counter]))){
+        p[[counter]]$labels$subtitle <- individual.subtitles[counter]
+      }
+    }
+  }
+
+  # Add individual captions
+  if (!is.null(individual.captions)){
+    for (counter in seq(1,length(features))){
+      if (!(is.na(individual.captions[counter]))){
+        p[[counter]]$labels$caption <- individual.captions[counter]
+      }
+    }
+  }
+
+
+
   # Remove legend.
   if (legend == FALSE){
-    p <- p & ggpubr::rremove("legend")
+    p <- p &
+         ggpubr::rremove("legend")
   }
 
   # For embeddings that are umap of tsne, we remove all axes..
   if (reduction %in% c("umap", "tsne")){
     # if dims is first and then second.
     if (sum(dims == c(1, 2)) == 2){
-      # Split.by has to preserve the y axis title on the first plot.
-      if (is.null(split.by)){
-        p <- p & Seurat::NoAxes()
-      } else {
-        p <- p &
-          ggpubr::rremove("axis") &
-          ggpubr::rremove("ticks") &
-          ggpubr::rremove("axis.text") &
-          ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                         axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
-          ggplot2::xlab("")
-      }
+      p <- p & Seurat::NoAxes()
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggpubr::rremove("axis") &
-        ggpubr::rremove("axis.text") &
-        ggpubr::rremove("ticks") &
-        ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                       axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
-        ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
+           ggpubr::rremove("axis") &
+           ggpubr::rremove("axis.text") &
+           ggpubr::rremove("ticks") &
+           ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                          axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+           ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
     }
     # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
   } else {
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     p <- p &
-      ggpubr::rremove("axis") &
-      ggpubr::rremove("axis.text") &
-      ggpubr::rremove("ticks") &
-      ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                     axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
-      ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
+         ggpubr::rremove("axis") &
+         ggpubr::rremove("axis.text") &
+         ggpubr::rremove("ticks") &
+         ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                        axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+         ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
   }
 
   # Further patch for diffusion maps.
   if (reduction == "diffusion"){
     # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
     p <- p &
-      ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
-                      max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
-      ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
-                      max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
-      # Remove axis elements so that the axis title is the only thing left.
-      ggpubr::rremove("axis") &
-      ggpubr::rremove("axis.text") &
-      ggpubr::rremove("ticks") &
-      ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                     axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
-      ggplot2::theme(axis.title.y = ggplot2::element_text(angle = 90))
+         ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
+                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
+         ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
+                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
+         # Remove axis elements so that the axis title is the only thing left.
+         ggpubr::rremove("axis") &
+         ggpubr::rremove("axis.text") &
+         ggpubr::rremove("ticks") &
+         ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                        axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
+         ggplot2::theme(axis.title.y = ggplot2::element_text(angle = 90))
   }
+
+  # Add theme to the legends for all plots.
+  if (is.null(split.by)){
+    p <- p &
+      ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
+                                                      barwidth = legend.barwidth,
+                                                      barheight = legend.barheight,
+                                                      title.hjust = 0.5,
+                                                      ticks.linewidth = legend.tickwidth,
+                                                      frame.linewidth = legend.framewidth,
+                                                      frame.colour = legend.framecolor,
+                                                      ticks.colour = legend.tickcolor))
+  }
+
+  # Add legend titles.
+  if (is.null(split.by)){
+    counter <- 0
+    for (feature in features){
+      counter <- counter + 1
+      p[[counter]]$guides$colour$title <- feature
+    }
+  }
+
+
+  # Fix the extra space.
+  p <- p &
+       ggplot2::coord_cartesian(expand = FALSE) &
+       ggplot2::theme(plot.margin = ggplot2::margin(t = 5, r = 5, b = 5, l = 5))
+
   # Return the plot.
   return(p)
 }
