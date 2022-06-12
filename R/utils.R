@@ -9,17 +9,17 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
                    "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
-                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
-                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
+                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
+                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales", "ggtext"),
+                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr", "ggtext"),
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
   pkgs <- pkg_list[[function_name]]
@@ -41,15 +41,15 @@ check_suggests <- function(function_name){
 #' TBD
 #' }
 state_dependencies <- function(func_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
                    "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
-                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork"),
-                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork"),
+                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
+                   "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales", "ggtext"),
+                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr", "ggtext"),
+                   "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),

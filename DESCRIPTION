@@ -42,6 +42,7 @@ Suggests:
     enrichR,
     forcats,
     svglite,
-    ggrastr
+    ggrastr,
+    ggtext
 VignetteBuilder: knitr
 Config/testthat/edition: 3
