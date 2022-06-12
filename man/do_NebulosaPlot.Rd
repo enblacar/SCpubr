@@ -16,7 +16,11 @@ do_NebulosaPlot(
   joint = FALSE,
   return_only_joint = NULL,
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   individual.titles = NULL,
+  individual.subtitles = NULL,
+  individual.captions = NULL,
   shape = 16,
   legend = TRUE,
   fontsize = 14,
@@ -46,9 +50,9 @@ do_NebulosaPlot(
 
 \item{return_only_joint}{Whether to only return the joint density panel. Logical.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 
-\item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
+\item{individual.titles, individual.subtitles, individual.captions}{Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{shape}{Shape of the geometry (ggplot number).}
 

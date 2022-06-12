@@ -20,7 +20,7 @@
 #' @param colors.use Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.
 #' @param legend.position  Position of the legend in the plot. One of: top, bottom, left, right.
 #' @param group.by Metadata variable to color the cells by. Defaults to current identities.
-#' @param plot.title  Title to use in the plot.
+#' @param plot.title,plot.subtitle,plot.caption  Title to use in the plot.
 #' @param xlab  Title for the X axis. Only works if y2 is not set up.
 #' @param ylab  Title for the Y axis. Only works if y2 is not set up.
 #' @param axis.ticks  Whether to show axis ticks.
@@ -43,6 +43,8 @@ do_CellularStatesPlot <- function(sample,
                                   colors.use = NULL,
                                   legend.position = NULL,
                                   plot.title = "",
+                                  plot.subtitle = NULL,
+                                  plot.caption = NULL,
                                   xlab = NULL,
                                   ylab = NULL,
                                   axis.ticks = TRUE,

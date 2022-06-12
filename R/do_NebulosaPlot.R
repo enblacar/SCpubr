@@ -15,8 +15,8 @@
 #' @param legend Whether to plot the legend or not. Logical.
 #' @param legend.position Position of the legend in the plot.
 #' @param fontsize Base fontsize of the plot.
-#' @param plot.title Title to use in the plot.
-#' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
+#' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
+#' @param individual.titles,individual.subtitles,individual.captions Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
 #'
@@ -35,7 +35,11 @@ do_NebulosaPlot <- function(sample,
                              joint = FALSE,
                              return_only_joint = NULL,
                              plot.title = NULL,
+                             plot.subtitle = NULL,
+                             plot.caption = NULL,
                              individual.titles = NULL,
+                             individual.subtitles = NULL,
+                             individual.captions = NULL,
                              shape = 16,
                              legend = TRUE,
                              fontsize = 14,
@@ -70,6 +74,8 @@ do_NebulosaPlot <- function(sample,
                          "features" = features,
                          "method" = method,
                          "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
                          "slot" = slot,
                          "individual.titles" = individual.titles)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -102,6 +108,8 @@ do_NebulosaPlot <- function(sample,
 
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2
+  plot.subtitle.fontsize <- fontsize - 4
+  plot.caption.fontsize <- fontsize - 4
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1
   legend.text.fontsize <- fontsize - 4
@@ -113,7 +121,11 @@ do_NebulosaPlot <- function(sample,
                                 joint = joint,
                                 reduction = reduction) &
          Seurat::NoAxes() &
-         ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+         ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                         legend.position = legend.position)
@@ -137,17 +149,53 @@ do_NebulosaPlot <- function(sample,
         if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
             if (isTRUE(return_only_joint)){
               p <- p[[length(features) + 1]]
-              p <- p & ggplot2::ggtitle(plot.title)
+              p <- p &
+                     ggplot2::labs(title = plot.title)
             } else {
-              p <- p & ggplot2::ggtitle(plot.title)
+              p <- p &
+                   ggplot2::labs(title = plot.title)
             }
         } else {
             p <- p & patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
-                                                                                                          face = "bold",
-                                                                                                          hjust = 0.5)))
+                                                theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
+                                                                                                             face = "bold")))
         }
     }
+
+    # Add a subtitle.
+    if (!(is.null(plot.subtitle))){
+      if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
+        if (isTRUE(return_only_joint)){
+          p <- p[[length(features) + 1]]
+          p <- p &
+            ggplot2::labs(subtitle = plot.subtitle)
+        } else {
+          p <- p &
+            ggplot2::labs(subtitle = plot.subtitle)
+        }
+      } else {
+        p <- p & patchwork::plot_annotation(subtitle = plot.subtitle,
+                                            theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+      }
+    }
+
+    # Add a caption
+    if (!(is.null(plot.caption))){
+      if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
+        if (isTRUE(return_only_joint)){
+          p <- p[[length(features) + 1]]
+          p <- p &
+            ggplot2::labs(caption = plot.caption)
+        } else {
+          p <- p &
+            ggplot2::labs(caption = plot.caption)
+        }
+      } else {
+        p <- p & patchwork::plot_annotation(caption = plot.caption,
+                                            theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+      }
+    }
+
 
     # Add individual titles.
     if (!is.null(individual.titles)){
@@ -156,6 +204,28 @@ do_NebulosaPlot <- function(sample,
       for (counter in seq(1, times)){
         if (!(is.na(individual.titles[counter]))){
           p[[counter]]$labels$title <- individual.titles[counter]
+        }
+      }
+    }
+
+    # Add individual subtitles.
+    if (!is.null(individual.subtitles)){
+      times <- length(features)
+      if (isTRUE(joint)){times <- times + 1}
+      for (counter in seq(1, times)){
+        if (!(is.na(individual.subtitles[counter]))){
+          p[[counter]]$labels$subtitle <- individual.subtitles[counter]
+        }
+      }
+    }
+
+    # Add individual titles.
+    if (!is.null(individual.captions)){
+      times <- length(features)
+      if (isTRUE(joint)){times <- times + 1}
+      for (counter in seq(1, times)){
+        if (!(is.na(individual.captions[counter]))){
+          p[[counter]]$labels$caption <- individual.captions[counter]
         }
       }
     }

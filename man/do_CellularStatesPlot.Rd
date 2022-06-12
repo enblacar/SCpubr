@@ -15,6 +15,8 @@ do_CellularStatesPlot(
   colors.use = NULL,
   legend.position = NULL,
   plot.title = "",
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   xlab = NULL,
   ylab = NULL,
   axis.ticks = TRUE,
@@ -41,7 +43,7 @@ do_CellularStatesPlot(
 
 \item{legend.position}{Position of the legend in the plot. One of: top, bottom, left, right.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 
 \item{xlab}{Title for the X axis. Only works if y2 is not set up.}
 
