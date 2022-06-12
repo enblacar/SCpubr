@@ -15,12 +15,15 @@ do_DotPlot(
   colors.use = c("grey75", "#014f86"),
   legend.position = "right",
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   xlab = NULL,
   ylab = NULL,
   fontsize = 14,
   cluster.idents = FALSE,
   flip = FALSE,
-  rotate_x_labels = NULL
+  rotate_x_labels = NULL,
+  scale.by = "size"
 )
 }
 \arguments{
@@ -42,7 +45,7 @@ do_DotPlot(
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 
 \item{xlab}{Title for the X axis.}
 
@@ -55,6 +58,8 @@ do_DotPlot(
 \item{flip}{Whether to flip the axis.}
 
 \item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
+
+\item{scale.by}{Whether to scale the size of the dots by radius or size aesthetic.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.

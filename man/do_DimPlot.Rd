@@ -23,6 +23,8 @@ do_DimPlot(
   legend = TRUE,
   ncol = NULL,
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   legend.title = FALSE,
   legend.position = "right",
   legend.title.position = "top",
@@ -70,7 +72,7 @@ do_DimPlot(
 
 \item{ncol}{Number of columns used in the arrangement of the output plot using "split.by" parameter.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title, subtitle or caption to use in the plot.}
 
 \item{legend.title}{Logical stating whether the legend title is shown or not.}
 

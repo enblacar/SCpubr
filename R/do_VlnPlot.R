@@ -11,7 +11,7 @@
 #' @param plot_boxplot Logical. Whether to plot a Box plot inside the violin or not.
 #' @param legend  Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title  Title to use in the plot.
+#' @param plot.title,plot.subtitle,plot.caption  Title,subtitle or caption to use in the plot.
 #' @param individual.titles Titles for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param pt.size  Size of points in the VlnPlot.
 #' @param xlab  Title for the X axis.
@@ -44,6 +44,8 @@ do_VlnPlot <- function(sample,
                        boxplot_width = 0.2,
                        legend.position = "bottom",
                        plot.title = NULL,
+                       plot.subtitle = NULL,
+                       plot.caption = NULL,
                        individual.titles = NULL,
                        xlab = NULL,
                        ylab = NULL,
@@ -87,6 +89,8 @@ do_VlnPlot <- function(sample,
                          "split.by" = split.by,
                          "colors.use" = colors.use,
                          "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
                          "xlab" = xlab,
                          "ylab" = ylab,
                          "individual.titles" = individual.titles)
@@ -98,6 +102,8 @@ do_VlnPlot <- function(sample,
 
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2
+  plot.subtitle.fontsize <- fontsize - 4
+  plot.caption.fontsize <- fontsize -4
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1
   legend.text.fontsize <- fontsize - 2
@@ -174,7 +180,12 @@ do_VlnPlot <- function(sample,
                         axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
                         legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
                         legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                        plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) &
+                        plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
+                        legend.justification = "center") &
          ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
     # Modify line width of violin plots.
     p$layers[[1]]$aes_params$size <- line_width
@@ -225,16 +236,42 @@ do_VlnPlot <- function(sample,
     p <- list.plots[[1]]
   }
 
-  if (!(is.null(plot.title))){
-    if (length(features) > 1){
-      p <- p & patchwork::plot_annotation(title = plot.title,
-                                          theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 2,
-                                                                                                    face = "bold",
-                                                                                                    hjust = 0.5)))
-    } else {
-      p <- p & ggplot2::ggtitle(plot.title)
-    }
 
+  if (!is.null(plot.title)){
+    if (length(features) > 1){
+      p <- p +
+           patchwork::plot_annotation(title = plot.title,
+                                      theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
+                                                                                                face = "bold")))
+    } else {
+      p <- p &
+           ggplot2::labs(title = plot.title)
+    }
+  }
+
+
+  # Add custom subtitle.
+  if (!is.null(plot.subtitle)){
+    if (length(features) > 1){
+      p <- p +
+           patchwork::plot_annotation(subtitle = plot.subtitle,
+                                      theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+    } else {
+      p <- p +
+           ggplot2::labs(subtitle = plot.subtitle)
+    }
+  }
+
+  # Add custom caption
+  if (!is.null(plot.caption)){
+    if (length(features) > 1){
+      p <- p +
+           patchwork::plot_annotation(caption = plot.caption,
+                                      theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+    } else {
+      p <- p +
+           ggplot2::labs(caption = plot.caption)
+    }
   }
   return(p)
 }

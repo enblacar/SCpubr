@@ -9,7 +9,7 @@
 #' @param colors.use Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title Title to use in the plot.
+#' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param xlab Title for the X axis.
 #' @param ylab Title for the Y axis.
 #' @param fontsize Base fontsize of the plot.
@@ -17,6 +17,7 @@
 #' @param dot.scale Scale the size of the dots.
 #' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
+#' @param scale.by Whether to scale the size of the dots by radius or size aesthetic.
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -32,12 +33,15 @@ do_DotPlot <- function(sample,
                        colors.use = c("grey75", "#014f86"),
                        legend.position = "right",
                        plot.title = NULL,
+                       plot.subtitle = NULL,
+                       plot.caption = NULL,
                        xlab = NULL,
                        ylab = NULL,
                        fontsize = 14,
                        cluster.idents = FALSE,
                        flip = FALSE,
-                       rotate_x_labels = NULL){
+                       rotate_x_labels = NULL,
+                       scale.by = "size"){
     # Checks for packages.
     check_suggests(function_name = "do_DotPlot")
     # Check the assay.
@@ -63,7 +67,8 @@ do_DotPlot <- function(sample,
                            "ylab" = ylab,
                            "colors.use" = colors.use,
                            "group.by" = group.by,
-                           "split.by" = split.by)
+                           "split.by" = split.by,
+                           "scale.by" = scale.by)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -73,6 +78,8 @@ do_DotPlot <- function(sample,
 
     # Define fontsize parameters.
     plot.title.fontsize <- fontsize + 2
+    plot.subtitle.fontsize <- fontsize - 4
+    plot.caption.fontsize <- fontsize - 4
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
     legend.text.fontsize <- fontsize - 2
@@ -94,48 +101,68 @@ do_DotPlot <- function(sample,
     # Check colors.
     check_colors(colors.use)
 
-    plot <- Seurat::DotPlot(sample,
+    p <- Seurat::DotPlot(sample,
                             features = features,
                             cols = colors.use,
                             group.by = group.by,
                             split.by = split.by,
                             dot.scale = dot.scale,
-                            cluster.idents = cluster.idents) +
+                            cluster.idents = cluster.idents,
+                            scale.by = scale.by) +
             ggpubr::theme_pubr(legend = legend.position) +
             ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
                            axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
                            axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 1),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5))
+                           plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                           plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                           plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                           plot.title.position = "plot",
+                           plot.caption.position = "plot",
+                           legend.justification = "center")
 
     if (!is.null(xlab)){
-      plot <- plot & ggplot2::xlab(xlab)
+      p <- p & ggplot2::xlab(xlab)
     } else {
-      plot <- plot & ggplot2::xlab("")
+      p <- p & ggplot2::xlab("")
     }
     if (!is.null(ylab)){
-      plot <- plot & ggplot2::ylab(ylab)
+      p <- p & ggplot2::ylab(ylab)
     } else {
-      plot <- plot & ggplot2::ylab("")
+      p <- p & ggplot2::ylab("")
     }
     if (!is.null(plot.title)){
-      plot <- plot + ggplot2::ggtitle(plot.title)
+      p <- p &
+          ggplot2::labs(title = plot.title)
     }
+
+
+    # Add custom subtitle.
+    if (!is.null(plot.subtitle)){
+      p <- p +
+          ggplot2::labs(subtitle = plot.subtitle)
+    }
+
+    # Add custom caption
+    if (!is.null(plot.caption)){
+      p <- p +
+          ggplot2::labs(caption = plot.caption)
+      }
 
     if (!(is.null(rotate_x_labels))){
       if (isTRUE(rotate_x_labels)){
-        plot <- plot & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
+        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
       }
     }
 
     if (is.list(features)){
-      plot <- plot + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'black', fill = 'white'),
+      p <- p + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'black', fill = 'white'),
                                     strip.text = ggplot2::element_text(face = "bold", size = legend.text.fontsize - 2, color = "black"))
     }
     if (flip == TRUE){
-        plot <- plot + ggplot2::coord_flip()
+        p <- p + ggplot2::coord_flip()
     }
-    return(plot)
+    return(p)
 
 }

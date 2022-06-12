@@ -20,6 +20,8 @@ do_VlnPlot(
   boxplot_width = 0.2,
   legend.position = "bottom",
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   individual.titles = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -58,7 +60,7 @@ do_VlnPlot(
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title,subtitle or caption to use in the plot.}
 
 \item{individual.titles}{Titles for each feature if needed. Either NULL or a vector of equal length of features.}
 

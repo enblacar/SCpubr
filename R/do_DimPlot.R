@@ -21,7 +21,7 @@
 #' @param legend.icon.size Size of the icons in legend.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.
-#' @param plot.title Title to use in the plot.
+#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
 #' @param ncol Number of columns used in the arrangement of the output plot using "split.by" parameter.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param repel Whether to repel the labels if label is set to TRUE.
@@ -52,6 +52,8 @@ do_DimPlot <- function(sample,
                        legend = TRUE,
                        ncol = NULL,
                        plot.title = NULL,
+                       plot.subtitle = NULL,
+                       plot.caption = NULL,
                        legend.title = FALSE,
                        legend.position = "right",
                        legend.title.position = "top",
@@ -94,6 +96,8 @@ do_DimPlot <- function(sample,
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
                            "plot.title" = plot.title,
+                           "plot.subtitle" = plot.subtitle,
+                           "plot.caption" = plot.caption,
                            "cells.highlight" = cells.highlight,
                            "idents.keep" = idents.keep,
                            "order" = order,
@@ -213,6 +217,8 @@ do_DimPlot <- function(sample,
 
     # Define fontsize parameters.
     plot.title.fontsize <- fontsize + 2
+    plot.subtitle.fontsize <- fontsize - 4
+    plot.caption.fontsize <- fontsize -4
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
     legend.text.fontsize <- fontsize - 2
@@ -239,7 +245,12 @@ do_DimPlot <- function(sample,
                                   raster = raster,
                                   raster.dpi = c(raster.dpi, raster.dpi),
                                   ncol = ncol) &
-            ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+            ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                           plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                           plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                           plot.title.position = "plot",
+                           plot.caption.position = "plot",
+                           legend.justification = "center",
                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
                            legend.position = legend.position) &
@@ -285,7 +296,8 @@ do_DimPlot <- function(sample,
                                  raster.dpi = c(raster.dpi, raster.dpi),
                                  ncol = ncol) &
                   ggplot2::ggtitle(iteration) &
-                  ggplot2::theme(legend.position = legend.position)
+                  ggplot2::theme(legend.position = legend.position,
+                                 legend.justification = "center")
             p <- add_scale(p = p,
                            function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
                                                                       values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
@@ -333,12 +345,17 @@ do_DimPlot <- function(sample,
                              raster = raster,
                              raster.dpi = c(raster.dpi, raster.dpi),
                              ncol = ncol) &
-             ggplot2::theme(legend.position = legend.position)
+             ggplot2::theme(legend.position = legend.position,
+                            legend.justification = "center")
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected cells"),
                                                                   values = c(na.value, colors.use)),
                        scale = "color") &
-             ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
+             ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                            plot.title.position = "plot",
+                            plot.caption.position = "plot",
                             legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
                             legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
              ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
@@ -352,14 +369,41 @@ do_DimPlot <- function(sample,
     # General additions to all kind of plots.
     if (!is.null(plot.title)){
       if (!(is.null(split.by))){
-        p <- p & patchwork::plot_annotation(title = plot.title,
-                                            theme = ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize + 1,
-                                                                                                      face = "bold",
-                                                                                                      hjust = 0.5)))
+        p <- p +
+             patchwork::plot_annotation(title = plot.title,
+                                        theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
+                                                                                                     face = "bold")))
       } else {
-        p <- p & ggplot2::ggtitle(plot.title)
+        p <- p &
+             ggplot2::labs(title = plot.title)
       }
     }
+
+
+    # Add custom subtitle.
+    if (!is.null(plot.subtitle)){
+      if (!(is.null(split.by))){
+        p <- p +
+             patchwork::plot_annotation(subtitle = plot.subtitle,
+                                        theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+      } else {
+        p <- p +
+             ggplot2::labs(subtitle = plot.subtitle)
+      }
+    }
+
+    # Add custom caption
+    if (!is.null(plot.caption)){
+      if (!(is.null(split.by))){
+        p <- p +
+             patchwork::plot_annotation(caption = plot.caption,
+                                        theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+      } else {
+        p <- p +
+             ggplot2::labs(caption = plot.caption)
+      }
+    }
+
     # Legend treatment.
     if (legend == FALSE){
         p <- p & ggpubr::rremove("legend.title") & ggpubr::rremove("legend")
