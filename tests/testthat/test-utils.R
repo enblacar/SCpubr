@@ -299,3 +299,212 @@ testthat::test_that("utils: remove_duplicated_features - WARNING - having duplic
   testthat::expect_type(output, "list")
 
 })
+
+
+# CHECK IDENTITY
+
+testthat::test_that("utils: check_identity - FAIL - wrong identity", {
+  testthat::expect_error(check_identity(sample, "wrong_identity"))
+})
+
+testthat::test_that("utils: check_identity - PASS - right identity", {
+  testthat::expect_silent(check_identity(sample, "0"))
+})
+
+
+# CHECK AND SET REDUCTION
+
+testthat::test_that("utils: check_and_set_reduction - FAIL - no reductions", {
+  test <- sample
+  test@reductions[["pca"]] <- NULL
+  test@reductions[["umap"]] <- NULL
+  testthat::expect_error(check_and_set_reduction(sample = test, reduction = "umap"))
+})
+
+testthat::test_that("utils: check_and_set_reduction - FAIL - wrong reductions", {
+  testthat::expect_error(check_and_set_reduction(sample = sample, reduction = "wrong_reduction"))
+})
+
+testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, check that the output is the last computed reduction", {
+  output <- check_and_set_reduction(sample = sample)
+  last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
+  testthat::expect_equal(output, last_reduction)
+})
+
+testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction", {
+  output <- check_and_set_reduction(sample = sample, reduction = "umap")
+  reduction_check <- "umap"
+  testthat::expect_equal(output, reduction_check)
+})
+
+
+# CHECK AND SET DIMENSIONS
+
+testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being a pair of values", {
+  testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = "wrong_input"))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being a pair of integers", {
+  testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, "wrong_input")))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being in the available list of dims", {
+  testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, 20)))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - FAIL - reduction only having 1 dim", {
+  test <- sample
+  test@reductions$umap <- test@reductions$umap[[]][, "UMAP_1", drop = F]
+  testthat::expect_error(check_and_set_dimensions(sample = test, reduction = "umap", dims = c(1, 2)))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - PASS - NULL parameters", {
+  output <- check_and_set_dimensions(sample = sample)
+  testthat::expect_equal(output, c(1, 2))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - PASS - NULL dimension but provided dims", {
+  output <- check_and_set_dimensions(sample = sample, dims = c(2, 1))
+  testthat::expect_equal(output, c(2, 1))
+})
+
+testthat::test_that("utils: check_and_set_dimensions - PASS - provided dimension and dims", {
+  output <- check_and_set_dimensions(sample = sample, reduction = "pca", dims = c(20, 11))
+  testthat::expect_equal(output, c(20, 11))
+})
+
+
+# CHECK AND SET ASSAY
+testthat::test_that("utils: check_and_set_assay - FAIL - wrong assay type", {
+  testthat::expect_error(check_and_set_assay(sample = sample, assay = FALSE))
+})
+
+testthat::test_that("utils: check_and_set_assay - FAIL - no assays in object", {
+  test <- sample
+  test@assays$RNA <- NULL
+  test@assays$SCT <- NULL
+  testthat::expect_error(check_and_set_assay(sample = test))
+})
+
+testthat::test_that("utils: check_and_set_assay - FAIL - assay not present", {
+  testthat::expect_error(check_and_set_assay(sample = sample, assay = "ATAC"))
+})
+
+testthat::test_that("utils: check_and_set_assay - PASS - null parameters", {
+  output <- check_and_set_assay(sample = sample)
+  testthat::expect_true(class(output$sample) == "Seurat")
+  testthat::expect_equal(output$assay, Seurat::DefaultAssay(sample))
+})
+
+testthat::test_that("utils: check_and_set_assay - PASS - providind assay", {
+  output <- check_and_set_assay(sample = sample, assay = "SCT")
+  testthat::expect_true(class(output$sample) == "Seurat")
+  testthat::expect_equal(output$assay, "SCT")
+})
+
+
+# CHECK TYPE
+
+testthat::test_that("utils: check_type - FAIL - wrong type", {
+  parameters <- c("first" = 1,
+                  "second" = 2,
+                  "third" = "a")
+  testthat::expect_error(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+})
+
+testthat::test_that("utils: check_type - PASS - numeric", {
+  parameters <- c("first" = 1,
+                  "second" = 2)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+})
+
+testthat::test_that("utils: check_type - PASS - numeric with NULL", {
+  parameters <- c("first" = 1,
+                  "second" = 2,
+                  "third" = NULL)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+})
+
+testthat::test_that("utils: check_type - PASS - character", {
+  parameters <- c("first" = "a",
+                  "second" = "b")
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "character", test_function = is.character))
+})
+
+testthat::test_that("utils: check_type - PASS - character with NULL", {
+  parameters <- c("first" = "a",
+                  "second" = "b",
+                  "third" = NULL)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "character", test_function = is.character))
+})
+
+testthat::test_that("utils: check_type - PASS - logical", {
+  parameters <- c("first" = TRUE,
+                  "second" = FALSE)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
+})
+
+testthat::test_that("utils: check_type - PASS - logical with NULL", {
+  parameters <- c("first" = TRUE,
+                  "second" = FALSE,
+                  "third" = NULL)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
+})
+
+testthat::test_that("utils: check_type - PASS - list", {
+  parameters <- c("first" = list(),
+                  "second" = list())
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "list", test_function = is.list))
+})
+
+testthat::test_that("utils: check_type - PASS - list with NULL", {
+  parameters <- c("first" = list(),
+                  "second" = list(),
+                  "third" = NULL)
+  testthat::expect_silent(check_type(parameters = parameters, required_type = "list", test_function = is.list))
+})
+
+
+# CHECK AND SET THE SLOT
+
+testthat::test_that("utils: check_and_set_slot - FAIL - wrong slot", {
+  testthat::expect_error(check_and_set_slot("wrong_slot"))
+})
+
+testthat::test_that("utils: check_and_set_slot - PASS - counts", {
+  output <- check_and_set_slot("counts")
+  testthat::expect_equal(output, "counts")
+})
+
+testthat::test_that("utils: check_and_set_slot - PASS - data", {
+  output <- check_and_set_slot("data")
+  testthat::expect_equal(output, "data")
+})
+
+testthat::test_that("utils: check_and_set_slot - PASS - scale.data", {
+  output <- check_and_set_slot("scale.data")
+  testthat::expect_equal(output, "scale.data")
+})
+
+
+# CHECK LIMITS
+testthat::test_that("utils: check_and_set_slot - FAIL - wrong limit", {
+  testthat::expect_error(check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 30))
+})
+
+testthat::test_that("utils: check_and_set_slot - PASS - good limit", {
+  testthat::expect_silent(check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 2))
+})
+
+
+# COMPUTE FACTOR LEVELS
+
+testthat::test_that("utils: compute_factor_levels - FAIL - wrong position", {
+  testthat::expect_error(compute_factor_levels(sample = sample, feature = "seurat_clusters", position = "upper"))
+})
+
+
+
+
+
+

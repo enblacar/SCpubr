@@ -248,6 +248,28 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
               "scale.end" = scale.end))
 }
 
+#' Check if a value is in the range of the values.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to plot.
+#' @param assay Assay used.
+#' @param reduction Reduction used.
+#' @param value Value to check.
+#' @param value_name Name of the value.
+#'
+#' @return
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
+  limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
+
+  if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
+    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = F)
+  }
+}
 
 #' Check if the feature to plot is in the Seurat object.
 #'
@@ -439,7 +461,7 @@ check_identity <- function(sample, identities){
 #' \dontrun{
 #' TBD
 #' }
-check_and_set_reduction <- function(sample, reduction){
+check_and_set_reduction <- function(sample, reduction = NULL){
   # Check if the object has a reduction computed.
   if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!", call. = F)}
   # If no reduction was provided by the user.
@@ -471,11 +493,17 @@ check_and_set_reduction <- function(sample, reduction){
 #' \dontrun{
 #' TBD
 #' }
-check_and_set_dimensions <- function(sample, reduction, dims){
+check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   # Check that the dimensions is a 2 item vector.
   if (!(is.null(dims)) & length(dims) != 2){
     stop("Provided dimensions need to be a 2-item vector.", call. = F)
   }
+
+  # If reduction is null, select the last computed one.
+  if (is.null(reduction)){
+    reduction <- Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]
+  }
+
   # Check that the dimensions are integers.
   null_check <- is.null(dims[1]) & is.null(dims[2])
   integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
@@ -511,7 +539,11 @@ check_and_set_dimensions <- function(sample, reduction, dims){
 #' \dontrun{
 #' TBD
 #' }
-check_and_set_assay <- function(sample, assay){
+check_and_set_assay <- function(sample, assay = NULL){
+  # Check that at least one assay is computed.
+  if (length(Seurat::Assays(sample)) == 0){
+    stop("There must be at least one computed assay in the object.", call. = F)
+  }
   # If assay is null, set it to the active one.
   if (is.null(assay)){
     assay <- Seurat::DefaultAssay(sample)
@@ -519,10 +551,6 @@ check_and_set_assay <- function(sample, assay){
     # Check if the assay is a character.
     if (!(is.character(assay))){
       stop("The value for assay has to be a character.", call. = F)
-    }
-    # Check that at least one assay is computed.
-    if (length(Seurat::Assays(sample)) == 0){
-      stop("There must be at least one computed assay in the object.", call. = F)
     }
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
@@ -556,10 +584,16 @@ check_type <- function(parameters, required_type, test_function){
     # Get each individual parameter from the list.
     parameter <- parameters[[parameter_name]]
     # Cases in which the user has to provide a vector.
-    for (item in parameter){
-      if (!(is.null(item))){
-        if (!(is.na(item)) & !(test_function(item))){
-          stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+    # Check if the parameter is not NULL already.
+    if (!(is.null(parameter))){
+      # For each parameter in the vector.
+      for (item in parameter){
+        # If not null.
+        if (!(is.null(item))){
+          # If not NA, if the testing function fails, report it.
+          if (!(is.na(item)) & !(test_function(item))){
+            stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+          }
         }
       }
     }
@@ -585,28 +619,6 @@ check_and_set_slot <- function(slot){
   return(slot)
 }
 
-#' Check if a value is in the range of the values.
-#'
-#' @param sample Seurat object.
-#' @param feature Feature to plot.
-#' @param assay Assay used.
-#' @param reduction Reduction used.
-#' @param value Value to check.
-#' @param value_name Name of the value.
-#'
-#' @return
-#' @noRd
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
-check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
-  limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
-
-  if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
-    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = F)
-  }
-}
 
 #' Compute the order of the plotted bars for do_BarPlot.
 #'
@@ -621,10 +633,10 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 #' \dontrun{
 #' TBD
 #' }
-compute_factor_levels <- function(sample, feature, group.by = NULL, order.by = NULL, position = NULL){
+compute_factor_levels <- function(sample, feature, position, group.by = NULL, order.by = NULL){
   `%>%` <- purrr::`%>%`
+  if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = F)}
   if (is.null(order.by) & !(is.null(group.by))){
-    if (is.null(position)){stop("Position parameter needs to be provided.", call. = F)}
     if (position == "fill"){
       factor_levels <- as.character(rev(sort(unique(sample@meta.data[, feature]))))
     } else if (position == "stack"){
