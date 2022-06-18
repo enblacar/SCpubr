@@ -22,6 +22,10 @@ check_suggests <- function(function_name){
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
+  # The function is not in the current list of possibilities.
+  if (!(function_name %in% names(pkg_list))){
+    stop(paste0(function_name, " is not an accepted function name.", call. = FALSE))
+  }
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = T)){
@@ -54,6 +58,14 @@ state_dependencies <- function(func_name = NULL){
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
+  # The function is not in the current list of possibilities.
+  if (!(is.null(func_name))){
+    for (func in func_name){
+      if (!(func %in% names(pkg_list))){
+        stop(paste0(func_name, " is not an accepted function name.", call. = FALSE))
+      }
+    }
+  }
 
   cran_packages <- c("colortools",
                      "dplyr",
@@ -84,6 +96,8 @@ state_dependencies <- function(func_name = NULL){
       }
     }
     func_list <- func_name
+  } else {
+    func_list <- names(pkg_list)
   }
 
   message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
