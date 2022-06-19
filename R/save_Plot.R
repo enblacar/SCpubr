@@ -31,7 +31,7 @@ save_Plot <- function(plot,
 
 
   # Checks for packages.
-  check_suggests(function_name = "savePlot")
+  check_suggests(function_name = "save_Plot")
 
   # Check logical parameters.
   logical_list <- list("create_path" = create_path)
@@ -78,7 +78,11 @@ save_Plot <- function(plot,
   } else if (output_format == "all"){
     devices_use <- c("pdf", "png", "jpeg", "svg", "tiff")
   } else {
-    devices_use <- output_options
+    options <- c("pdf", "png", "jpeg", "svg", "tiff")
+    devices_use <- output_format[output_format %in% options]
+    if (length(devices_use) == 0){
+      stop("Output format provided is invalid.", call. = F)
+    }
   }
 
   # is ggplot?
