@@ -1,4 +1,4 @@
-
+sample <- use_dataset()
 testthat::test_that("do_DimPlot: PASS - sample", {
   p <- SCpubr::do_DimPlot(sample = sample)
   testthat::expect_type(p, "list")

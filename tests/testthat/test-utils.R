@@ -1,3 +1,5 @@
+sample <- use_dataset()
+
 # CHECK SUGGESTS
 testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
   testthat::expect_error(check_suggests("wrong_name"))
