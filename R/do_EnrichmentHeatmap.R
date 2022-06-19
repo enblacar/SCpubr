@@ -122,7 +122,6 @@ do_EnrichmentHeatmap <- function(sample,
   # Remove the rownames column in the object, since you set them to be the rownames of the dataframe.
   rownames(scoring) <- scoring$rownames
   scoring$rownames <- NULL
-
   # Transform the data frames into a Matrix object.
   scoring <- as.matrix(scoring)
 

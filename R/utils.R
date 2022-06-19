@@ -591,8 +591,10 @@ check_type <- function(parameters, required_type, test_function){
         # If not null.
         if (!(is.null(item))){
           # If not NA, if the testing function fails, report it.
-          if (!(is.na(item)) & !(test_function(item))){
-            stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+          if (sum(!(is.na(item))) > 0){
+            if (sum(!(test_function(item))) > 0){
+              stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+            }
           }
         }
       }
@@ -958,7 +960,7 @@ heatmap_inner <- function(data,
     colors.use <- c(colors.use[1], "white", colors.use[2])
   }
   if (data_range == "both"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
+    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 2)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
@@ -971,7 +973,7 @@ heatmap_inner <- function(data,
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_neg"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1)
+    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 2)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(1, 2)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
@@ -983,7 +985,7 @@ heatmap_inner <- function(data,
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_pos"){
-    breaks <-  round(c(0, (abs_value / 2), abs_value), 1)
+    breaks <-  round(c(0, (abs_value / 2), abs_value), 2)
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(2, 3)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
