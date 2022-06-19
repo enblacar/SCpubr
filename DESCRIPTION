@@ -43,6 +43,7 @@ Suggests:
     forcats,
     svglite,
     ggrastr,
-    ggtext
+    ggtext,
+    pheatmap
 VignetteBuilder: knitr
 Config/testthat/edition: 3
