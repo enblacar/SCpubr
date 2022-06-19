@@ -152,7 +152,7 @@ do_DotPlot <- function(sample,
 
     if (!(is.null(rotate_x_labels))){
       if (isTRUE(rotate_x_labels)){
-        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0))
+        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5))
       }
     }
 

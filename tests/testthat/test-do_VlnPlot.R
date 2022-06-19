@@ -1,45 +1,45 @@
 sample <- use_dataset()
-testthat::test_that("do_BeeSwarmPlot: PASS - one variable", {
+testthat::test_that("do_VlnPlot: PASS - one variable", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = "CD14")
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - without boxplot", {
+testthat::test_that("do_VlnPlot: PASS - without boxplot", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = "CD14",
                           plot_boxplot = F)
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - rotate axis", {
+testthat::test_that("do_VlnPlot: PASS - rotate axis", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = "CD14",
                           rotate_x_labels = T)
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - several features", {
+testthat::test_that("do_VlnPlot: PASS - several features", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14", "nCount_RNA"))
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - several features plot boxplots", {
+testthat::test_that("do_VlnPlot: PASS - several features plot boxplots", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14", "nCount_RNA"),
                           plot_boxplot = F)
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - several features rotate labels", {
+testthat::test_that("do_VlnPlot: PASS - several features rotate labels", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14", "nCount_RNA"),
                           rotate_x_labels = c(T, F))
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - several features ycut", {
+testthat::test_that("do_VlnPlot: PASS - several features ycut", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14", "nCount_RNA"),
                           rotate_x_labels = c(T, F),
@@ -47,7 +47,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - several features ycut", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - one feature ycut", {
+testthat::test_that("do_VlnPlot: PASS - one feature ycut", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14"),
                           rotate_x_labels = T,
@@ -56,7 +56,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - one feature ycut", {
 })
 
 
-testthat::test_that("do_BeeSwarmPlot: PASS - one feature line width", {
+testthat::test_that("do_VlnPlot: PASS - one feature line width", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14"),
                           rotate_x_labels = T,
@@ -65,7 +65,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - one feature line width", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - one feature boxplot width", {
+testthat::test_that("do_VlnPlot: PASS - one feature boxplot width", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14"),
                           rotate_x_labels = T,
@@ -74,7 +74,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - one feature boxplot width", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_BeeSwarmPlot: PASS - change colors", {
+testthat::test_that("do_VlnPlot: PASS - change colors", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14"),
                           rotate_x_labels = T,

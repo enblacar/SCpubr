@@ -332,7 +332,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                      "    - Not matching any metadata column (in sample@meta.data).\n",
                      "    - Not part of the dimension names in any of the following reductions: ",
                      paste(Seurat::Reductions(object = sample), collapse = ", "),
-                     "."), call. = F)
+                     ".\n\n"), call. = F)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
     } else if (isFALSE(permissive)){
@@ -343,7 +343,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                   "    - Not matching any metadata column (in sample@meta.data).\n",
                   "    - Not part of the dimension names in any of the following reductions: ",
                   paste(Seurat::Reductions(object = sample), collapse = ", "),
-                  "."), call. = F)
+                  ".\n\n"), call. = F)
     }
   } else {
     features_out <- features
