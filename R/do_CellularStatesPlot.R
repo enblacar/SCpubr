@@ -1,4 +1,4 @@
-#' Butterfly plot.
+#' Cellular States plot.
 #'
 #' This plot aims to show the relationships between distinct enrichment scores. If 3 variables are provided, the relationship is between the Y axis and the dual X axis.
 #' If 4 variables are provided, each corner of the plot represents how enriched the cells are in that given list. How to interpret this? In a 3-variable plot, the Y axis
@@ -51,7 +51,7 @@ do_CellularStatesPlot <- function(sample,
                                   axis.text = TRUE,
                                   verbose = FALSE){
     # Checks for packages.
-    check_suggests(function_name = "do_ButterflyPlot")
+    check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
     # Define pipe operator internally.
