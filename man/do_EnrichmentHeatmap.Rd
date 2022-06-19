@@ -95,7 +95,10 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
 
 
   # Splitting by a second metadata variable.
-  sample$custom_group <- ifelse(sample$seurat_clusters \%in\% c("1", "3", "5", "7", "9"), "Group A", "Group B")
+  clusters <- c("1", "3", "5", "7", "9")
+  sample$custom_group <- ifelse(sample$seurat_clusters \%in\% clusters,
+                                "Group A",
+                                "Group B")
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     list_genes = genes,
                                     transpose = TRUE,

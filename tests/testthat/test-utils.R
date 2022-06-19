@@ -505,6 +505,213 @@ testthat::test_that("utils: compute_factor_levels - FAIL - wrong position", {
 
 
 
+# CHECK VIRIDIS COLOR MAP
+
+testthat::test_that("utils: check_viridis_color_map - FAIL - wrong color map", {
+  testthat::expect_error(check_viridis_color_map("wrong_color_map"))
+})
+
+testthat::test_that("utils: check_viridis_color_map - WARNING - using turbo", {
+  testthat::expect_warning(check_viridis_color_map("turbo", verbose = T))
+})
+
+testthat::test_that("utils: check_viridis_color_map - PASS - using turbo with verbose = F", {
+  testthat::expect_silent(check_viridis_color_map("turbo"))
+})
+
+
+# CHECK LENGTH
+
+testthat::test_that("utils: check_length - FAIL - distinct length", {
+  vector_parameters <- c(1, 2)
+  vector_features <- c(1)
+  parameters_name <- "A"
+  features_name <- "B"
+  testthat::expect_error(check_length(vector_of_parameters = vector_parameters,
+                                      vector_of_features = vector_features,
+                                      parameters_name = parameters_name,
+                                      features_name = features_name))
+})
+
+testthat::test_that("utils: check_length - PASS - correct length", {
+  vector_parameters <- c(1, 2)
+  vector_features <- c(1, 2)
+  parameters_name <- "A"
+  features_name <- "B"
+  testthat::expect_silent(check_length(vector_of_parameters = vector_parameters,
+                                       vector_of_features = vector_features,
+                                       parameters_name = parameters_name,
+                                       features_name = features_name))
+})
+
+
+# USE DATASET
+testthat::test_that("utils: use_dataset - PASS - checks", {
+  output <- use_dataset()
+  testthat::expect_true(class(output) == "Seurat")
+  testthat::expect_equal(length(colnames(output)), 180)
+  testthat::expect_equal(length(rownames(output)), 7761)
+  testthat::expect_equal(Seurat::Assays(output), c("RNA", "SCT"))
+  testthat::expect_equal(Seurat::Reductions(output), c("pca", "umap"))
+})
+
+
+# ADD SCALE
+testthat::test_that("utils: add_scale - PASS - checks", {
+  p <- do_FeaturePlot(sample, features = "CD14")
+  output <- add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
+  testthat::expect_true("ggplot" %in% class(output))
+})
+
+
+# COMPUTE BARPLOT ANNOTATION
+
+testthat::test_that("utils: compute_barplot_annotation - PASS - checks", {
+  out <- compute_barplot_annotation(sample = sample, group.by = "seurat_clusters", annotation = "orig.ident")
+  testthat::expect_true("tbl" %in% class(out))
+})
+
+
+# HEATMAP INNER
+
+testthat::test_that("utils: heatmap_inner - PASS - checks", {
+  `%>%`<- purrr::`%>%`
+  data <- as.matrix({
+    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::pull(n)
+  })
+  out <- heatmap_inner(data)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, colors.use = c("red", "yellow"))
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  data.modified <- data
+  data.modified[data.modified > 0] <- -20
+  out <- heatmap_inner(data.modified, data_range = "only_neg")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  testthat::expect_error(heatmap_inner(data.modified, data_range = "only_pos"))
+  testthat::expect_error(heatmap_inner(data, data_range = "only_neg"))
+
+  out <- heatmap_inner(data, data_range = "only_pos")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, outlier.data = TRUE, range.data = 15)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_title = "test")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_title = "test")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_names_side = "left")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_names_side = "right")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_names_side = "bottom")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_names_side = "top")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, cluster_columns = T)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, cluster_columns = F)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, cluster_rows = T)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, cluster_rows = F)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, border = T)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, border = F)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_dendogram = T)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_dendogram = F)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_dendogram = T)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_dendogram = F)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_title_side = "top")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, column_title_side = "bottom")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_title_side = "left")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- heatmap_inner(data, row_title_side = "right")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+})
+
+
+# MODIFY STRING
+
+testthat::test_that("utils: modify_string - PASS - checks", {
+  output <- modify_string("This is a string to cut")
+  testthat::expect_type(output, "character")
+})
+
+
+# COMPUTE ENRICHMENT SCORES
+
+testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
+  output <- compute_enrichment_scores(sample = sample, list_genes = list("test" = c("CD14")))
+  testthat::expect_true("Seurat" %in% class(output))
+  testthat::expect_true("test" %in% colnames(output@meta.data))
+
+  output <- compute_enrichment_scores(sample = sample, list_genes = c("CD14"))
+  testthat::expect_true("Seurat" %in% class(output))
+  testthat::expect_true("Input" %in% colnames(output@meta.data))
+})
+
+
+
+
+
+
+
 
 
 

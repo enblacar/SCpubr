@@ -716,7 +716,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' \dontrun{
 #' TBD
 #' }
-check_viridis_color_map <- function(viridis_color_map, verbose){
+check_viridis_color_map <- function(viridis_color_map, verbose = F){
   viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
   if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)}
   if (verbose){
@@ -740,7 +740,10 @@ check_viridis_color_map <- function(viridis_color_map, verbose){
 #' \dontrun{
 #' TBD
 #' }
-check_length <- function(vector_of_parameters, vector_of_features, parameters_name, features_name){
+check_length <- function(vector_of_parameters,
+                         vector_of_features,
+                         parameters_name,
+                         features_name){
   if (length(vector_of_parameters) != length(vector_of_features)){
     stop("Length of ", parameters_name, " not equal to ", features_name, ".", call. = F)
   }
@@ -758,7 +761,7 @@ check_length <- function(vector_of_parameters, vector_of_features, parameters_na
 use_dataset <- function(){
   # We want this function to be completely silent.
   suppressWarnings({
-    genes <- SCpubr:::genes
+    genes <- get0("genes", envir = asNamespace("SCpubr"))
     values <- seq(0, 15, 0.1)
     counts <- matrix(ncol = 180, nrow = length(genes))
     cols <- c()
@@ -840,75 +843,6 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
 }
 
 
-#' Compute a heatmap matrix out of expression data.
-#'
-#' @param sample Seurat object.
-#' @param features Genes to retrieve the values from.
-#' @param group.by Grouping variable to average the expression values by.
-#' @param scale_features Whether to re-scale the features.
-#' @param from_gene_expression Whether to retrieve values from gene expression.
-#' @param from_metadata Whether to retrieve values from metadata.
-#' @param feature_cutoff Whether to use a cutoff.
-#' @param assay Assay to use.
-#'
-#' @return
-#' @noRd
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
-produce_heatmap_matrix <- function(sample,
-                                   features,
-                                   group.by,
-                                   scale_features,
-                                   from_gene_expression = F,
-                                   from_metadata = F,
-                                   feature_cutoff = NULL,
-                                   assay){
-  `%>%`<- purrr::`%>%`
-  if (isTRUE(from_gene_expression)){
-    # Subset sample.
-    sample <- sample[features, ]
-
-    sample <- Seurat::ScaleData(sample, features = features, assay = assay)
-
-    # Add scaled values as metadata.
-    for (feature in features){
-      sample@meta.data[, feature] <- sample@assays[[assay]]@scale.data[feature, ]
-    }
-
-    # Get the summarized Z-scores per gene per cluster.
-    data <- sample@meta.data %>%
-      dplyr::select(!!rlang::sym(group.by), dplyr::all_of(features)) %>%
-      dplyr::group_by(!!rlang::sym(group.by)) %>%
-      dplyr::summarise_at(dplyr::vars(dplyr::all_of(features)), list(mean))
-
-
-
-    # Apply a cutoff if needed.
-    if (!(is.null(feature_cutoff))){
-      # Turn it into long format.
-      data.long <- data %>%
-                   tidyr::pivot_longer(cols = !(!!rlang::sym(group.by)), names_to = "gene") %>%
-                   dplyr::arrange(dplyr::desc(.data$value))
-
-      genes.keep <- data.long %>% dplyr::filter(.data$value >= feature_cutoff) %>% dplyr::pull(.data$gene)
-      data.long <- data.long %>% dplyr::filter(.data$gene %in% unique(genes.keep)) %>% dplyr::arrange(.data$gene)
-
-      # Turn it back to wide as this is the input for Hetmaps.
-      data <- data.long %>%
-              tidyr::pivot_wider(names_from = .data$gene, values_from = .data$value)
-    }
-
-    # Final formatting.
-    data <- as.data.frame(data)
-    rownames(data) <- data[, group.by]
-    data[, group.by] <- NULL
-    data <- as.matrix(data)
-  }
-
-  return(data)
-}
 
 
 #' Compute the data frame of the annotation for barplot annotation in heatmaps.
@@ -942,101 +876,9 @@ compute_barplot_annotation <- function(sample,
 }
 
 
-#' Compute bar annotations for Heatmaps.
-#'
-#' @param data Data to plot.
-#' @param annotation_use Data frame with the annotation values.
-#' @param annotation_row Whether to plot row annotation.
-#' @param annotation_column Wheter to plot column annotation.
-#' @param cluster_columns,cluster_rows Logical. Whether to cluster the rows or the columns of the heatmap.
-#' @param colors.annotation Vector of named colors to use it in the annotation.
-#' @param fontsize General fontsize of the plot.
-#' @param annotation_name Name for the legend annotation.
-#'
-#' @return
-#' @noRd
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
-compute_bar_annotation <- function(data,
-                                   annotation_use,
-                                   annotation_row = FALSE,
-                                   annotation_column = FALSE,
-                                   cluster_columns,
-                                   cluster_rows,
-                                   colors.annotation,
-                                   fontsize,
-                                   annotation_name){
-  `%>%`<- purrr::`%>%`
-  if (isTRUE(annotation_row)){
-    # Transform cluster column into level to rearrange it.
-    annotation_use <- annotation_use %>%
-                      dplyr::mutate(cluster = factor(.data$cluster, levels = rownames(data))) %>%
-                      dplyr::arrange(.data$cluster)
-    # Compute a test heatmap to retrieve row/cluster ordering if needed.
-    return_list <- heatmap_inner(data = data,
-                                 legend_name = "Z-Scores",
-                                 cluster_columns = cluster_columns,
-                                 cluster_rows = cluster_rows)
-    h <- ComplexHeatmap::draw(return_list[["heatmap"]])
-    order.rows.use <- rownames(data)[ComplexHeatmap::row_order(h)]
-    order.cols.use <- colnames(data)[ComplexHeatmap::column_order(h)]
-
-    # Row annotation.
-    annotation_use <- as.data.frame(annotation_use)
-    rownames(annotation_use) <- annotation_use$cluster
-    annotation_use$cluster <- NULL
-    annotation_use[is.na(annotation_use)] <- 0
-
-    # Apply the reordering of the dataset according to the user's input.
-    if (isTRUE(cluster_columns) & isFALSE(cluster_rows)){
-      data <- data[, order.cols.use]
-    } else if (isFALSE(cluster_columns) & isTRUE(cluster_rows)){
-      data <- data[order.rows.use, ]
-    } else if (isTRUE(cluster_columns) & isTRUE(cluster_rows)){
-      data <- data[order.rows.use, order.cols.use]
-    } else if (isFALSE(cluster_columns) & isFALSE(cluster_rows)){
-      data <- data
-    }
-    # Reorder annotation.
-    # Columns are reordered based on the color vector provided.
-    # Rows are reordered if the rows were clusters.
-    annotation_use <- annotation_use[, names(colors.annotation), drop = F]
-    if (isTRUE(cluster_rows)){
-      annotation_use <- annotation_use[order.rows.use, ]
-    }
-
-    # Compute row annotation legend.
-    row_anno <- ComplexHeatmap::rowAnnotation(" " = ComplexHeatmap::anno_barplot(as.matrix(annotation_use),
-                                                                                 gp = grid::gpar(fill = colors.annotation),
-                                                                                 which = "row",
-                                                                                 bar_width = 1,
-                                                                                 height = grid::unit(1, "cm")))
-    # Compute annotation legend.
-    lgd_anno_row = ComplexHeatmap::Legend(labels = names(colors.annotation),
-                                          labels_gp = grid::gpar(fontsize = fontsize,
-                                                                 fontface = "bold"),
-                                          title_gp = grid::gpar(fontsize = fontsize,
-                                                                fontface = "bold"),
-                                          legend_gp = grid::gpar(fill = colors.annotation),
-                                          title = annotation_name)
-    col_anno <- NULL
-    lgd_anno_col <- NULL
-  } else if (isTRUE(annotation_column)){
-    # TBD
-  }
-
-  output_list <- list("data" = data,
-                      "annotation_object_row" = row_anno,
-                      "annotation_object_column" = col_anno,
-                      "legend_object_row" = lgd_anno_row,
-                      "legend_object_column" = lgd_anno_col)
-  return(output_list)
-}
 
 
-#' Inner helper of \link[SCpubr]{do_Heatmap}
+#' Inner helper for heatmaps
 #'
 #' @param data Matrix ready to be plotted. Use it alongside from_matrix.
 #' @param legend_name Name of the general legend.
@@ -1054,7 +896,7 @@ compute_bar_annotation <- function(data,
 #' @param cluster_columns,cluster_rows Logical. Whether to cluster the rows or the columns of the heatmap.
 #' @param border Logical. Whether to draw the border of the heatmap.
 #' @param row_dendogram,column_dendogram Logical. Whether to plot row and column dendograms.
-#' @param row_annotation,column_annotation Logical. Whether to place the annotation in the rows or the columns.
+#' @param row_annotation,column_annotation Annotation objects.
 #' @param row_annotation_side,column_annotation_side Where to place the annotation. "top", "bottom", "left", "right".
 #' @param row_title,column_title Titles for the axes.
 #' @param column_title_side,row_title_side Side for the titles.
@@ -1098,6 +940,15 @@ heatmap_inner <- function(data,
   min_value <- min(data)
   max_value <- max(data)
   abs_value <- max(c(abs(min_value), abs(max_value)))
+  # Checks.
+  if (data_range == "only_neg" & min_value >= 0){
+    stop("There are no negative values in the matrix.")
+  }
+
+  if (data_range == "only_pos" & max_value < 0){
+    stop("There are no positive values in the matrix.")
+  }
+
   if (!is.null(range.data)){
     abs_value <- range.data
   }
@@ -1130,7 +981,7 @@ heatmap_inner <- function(data,
       labels <- c(paste0("< ", -abs_value), labels)
     }
     names(colors.use) <- labels
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use[c(1, 2)])
+    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_pos"){
     breaks <-  round(c(0, (abs_value / 2), abs_value), 1)
     labels <- as.character(breaks)
@@ -1142,7 +993,7 @@ heatmap_inner <- function(data,
       labels <- c(labels, paste0("> ", abs_value))
     }
     names(colors.use) <- labels
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use[c(2, 3)])
+    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   }
 
 
@@ -1266,6 +1117,9 @@ modify_string <- function(string_to_modify){
 #' TBD
 #' }
 compute_enrichment_scores <- function(sample, list_genes, verbose = F){
+  if (class(list_genes) != "list" & class(list_genes) == "character"){
+    list_genes <- list("Input" = list_genes)
+  }
   for (celltype in names(list_genes)){
     list_markers <- list(list_genes[[celltype]])
 
