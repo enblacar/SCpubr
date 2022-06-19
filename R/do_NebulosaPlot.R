@@ -50,7 +50,7 @@ do_NebulosaPlot <- function(sample,
   check_Seurat(sample = sample)
 
   # Checks for packages.
-  check_suggests(function_name = "do_Nebulosa_plot")
+  check_suggests(function_name = "do_NebulosaPlot")
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
@@ -144,17 +144,16 @@ do_NebulosaPlot <- function(sample,
     if (legend == FALSE){
       p <- p + Seurat::NoLegend()
     }
+
+    if (isTRUE(return_only_joint)){
+      p <- p[[length(features) + 1]]
+    }
+
     # Add a title.
     if (!(is.null(plot.title))){
-        if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
-            if (isTRUE(return_only_joint)){
-              p <- p[[length(features) + 1]]
-              p <- p &
-                     ggplot2::labs(title = plot.title)
-            } else {
-              p <- p &
-                   ggplot2::labs(title = plot.title)
-            }
+        if (length(features) == 1 | (isTRUE(return_only_joint))){
+          p <- p +
+               ggplot2::labs(title = plot.title)
         } else {
             p <- p & patchwork::plot_annotation(title = plot.title,
                                                 theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
@@ -164,15 +163,9 @@ do_NebulosaPlot <- function(sample,
 
     # Add a subtitle.
     if (!(is.null(plot.subtitle))){
-      if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
-        if (isTRUE(return_only_joint)){
-          p <- p[[length(features) + 1]]
-          p <- p &
-            ggplot2::labs(subtitle = plot.subtitle)
-        } else {
-          p <- p &
-            ggplot2::labs(subtitle = plot.subtitle)
-        }
+      if (length(features) == 1 | (isTRUE(return_only_joint))){
+        p <- p &
+             ggplot2::labs(subtitle = plot.subtitle)
       } else {
         p <- p & patchwork::plot_annotation(subtitle = plot.subtitle,
                                             theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
@@ -181,15 +174,9 @@ do_NebulosaPlot <- function(sample,
 
     # Add a caption
     if (!(is.null(plot.caption))){
-      if (length(features) == 1 | (!(is.null(return_only_joint)) & isTRUE(return_only_joint))){
-        if (isTRUE(return_only_joint)){
-          p <- p[[length(features) + 1]]
-          p <- p &
-            ggplot2::labs(caption = plot.caption)
-        } else {
-          p <- p &
-            ggplot2::labs(caption = plot.caption)
-        }
+      if (length(features) == 1 | (isTRUE(return_only_joint))){
+        p <- p &
+             ggplot2::labs(caption = plot.caption)
       } else {
         p <- p & patchwork::plot_annotation(caption = plot.caption,
                                             theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
@@ -198,7 +185,7 @@ do_NebulosaPlot <- function(sample,
 
 
     # Add individual titles.
-    if (!is.null(individual.titles)){
+    if (!is.null(individual.titles) & !(isTRUE(return_only_joint))){
       times <- length(features)
       if (isTRUE(joint)){times <- times + 1}
       for (counter in seq(1, times)){
@@ -209,7 +196,7 @@ do_NebulosaPlot <- function(sample,
     }
 
     # Add individual subtitles.
-    if (!is.null(individual.subtitles)){
+    if (!is.null(individual.subtitles) & !(isTRUE(return_only_joint))){
       times <- length(features)
       if (isTRUE(joint)){times <- times + 1}
       for (counter in seq(1, times)){
@@ -220,7 +207,7 @@ do_NebulosaPlot <- function(sample,
     }
 
     # Add individual titles.
-    if (!is.null(individual.captions)){
+    if (!is.null(individual.captions) & !(isTRUE(return_only_joint))){
       times <- length(features)
       if (isTRUE(joint)){times <- times + 1}
       for (counter in seq(1, times)){
@@ -229,6 +216,7 @@ do_NebulosaPlot <- function(sample,
         }
       }
     }
+
 
     return(p)
 }
