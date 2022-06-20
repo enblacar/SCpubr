@@ -114,7 +114,9 @@ do_BarPlot <- function(sample,
     counter <- 0
     list.plots <- list()
     list.data <- list()
+    if (is.null(colors.use)){reset_colors.use <- TRUE}
     for (feature in features){
+      if (isTRUE(reset_colors.use)){colors.use <- NULL}
       counter <- counter + 1
       # Enforce the features to be part of the metadata.
       check_feature(sample = sample, features = feature, enforce_check = "metadata", enforce_parameter = "features")
@@ -256,8 +258,9 @@ do_BarPlot <- function(sample,
                                  position = ggplot2::position_stack(vjust = 1,
                                                                     reverse = ifelse(horizontal == TRUE, TRUE, FALSE)),
                                  fontface = "bold",
-                                 show.legend = FALSE) +
-                ggplot2::scale_color_manual(values = colors.use)
+                                 show.legend = FALSE)
+              suppressMessages(p <- p + ggplot2::scale_color_manual(values = colors.use))
+
             }
             if (isTRUE(add.subgroup_labels)){
               p <- p +
@@ -273,8 +276,8 @@ do_BarPlot <- function(sample,
                                     position = ggplot2::position_stack(vjust = 1,
                                                                        reverse = ifelse(horizontal == TRUE, TRUE, FALSE)),
                                     fontface = "bold",
-                                    show.legend = FALSE) +
-                   ggplot2::scale_color_manual(values = colors.use)
+                                    show.legend = FALSE)
+              suppressMessages(p <- p + ggplot2::scale_color_manual(values = colors.use))
             }
 
           } else if (position == "fill"){
@@ -302,8 +305,8 @@ do_BarPlot <- function(sample,
                             label.size = 1,
                             size = size.labels,
                             position = ggplot2::position_stack(vjust = 0.5),
-                            show.legend = FALSE) +
-                   ggplot2::scale_color_manual(values = colors.use)
+                            show.legend = FALSE)
+              suppressMessages(p <- p + ggplot2::scale_color_manual(values = colors.use))
             }
             if (isTRUE(add.summary_labels)){
               p <- p +
