@@ -189,6 +189,22 @@ testthat::test_that("do_FeaturePlot: PASS - split.by and plot.title", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_FeaturePlot: PASS - split.by and pca", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              split.by = "seurat_clusters",
+                              reduction = "pca")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - split.by and diffusion", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              split.by = "seurat_clusters",
+                              reduction = "diffusion")
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_FeaturePlot: PASS - remove legend", {
   p <- SCpubr::do_FeaturePlot(sample,
                               features = c("PC_1"),

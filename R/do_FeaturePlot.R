@@ -371,12 +371,12 @@ do_FeaturePlot <- function(sample,
       # Patch for diffusion maps.
       if (reduction == "diffusion"){
         # Add "DC" labels.
-        p.loop <- p.loop +
-                  ggplot2::xlab(paste0("DC_", dims[1])) +
+        p.loop <- p.loop &
+                  ggplot2::xlab(paste0("DC_", dims[1])) &
                   ggplot2::ylab(paste0("DC_", dims[2]))
       } else if (reduction == "pca"){
-        p.loop <- p.loop +
-                  ggplot2::xlab(paste0("PC_", dims[1])) +
+        p.loop <- p.loop &
+                  ggplot2::xlab(paste0("PC_", dims[1])) &
                   ggplot2::ylab(paste0("PC_", dims[2]))
       }
       # Add the plot to the list.
