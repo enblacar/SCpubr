@@ -108,3 +108,22 @@ testthat::test_that("do_DotPlot: PASS - list of features cluster idents modify c
                                             colors.use = c("#001219", "#e9d8a6"))})
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_DotPlot: PASS - one variable split.by", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_DotPlot: PASS - one variable xlab, ylab, title, subtitle, caption", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          xlab = "A",
+                          ylab = "B",
+                          plot.title = "C",
+                          plot.subtitle = "D",
+                          plot.caption = "E")
+  testthat::expect_type(p, "list")
+})

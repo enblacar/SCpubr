@@ -160,3 +160,11 @@ testthat::test_that("do_VlnPlot: PASS - multiple variables plot.title, subtitle 
                           plot.caption = "C")
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_VlnPlot: PASS - multiple variables plot.title, subtitle and caption", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          c("CD14"),
+                          group.by = "orig.ident",
+                          colors.use = c("Cell" = "red"))
+  testthat::expect_type(p, "list")
+})
