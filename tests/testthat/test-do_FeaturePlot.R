@@ -114,3 +114,84 @@ testthat::test_that("do_FeaturePlot: PASS - modify color maps", {
                               viridis_color_map = "F")
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_FeaturePlot: WARNING - features as a list", {
+  testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
+                                                  features = list("A" = c("nCount_RNA"))))
+})
+
+testthat::test_that("do_FeaturePlot: FAIL - individual titles, subtitles or captions do not match with number of features", {
+  testthat::expect_error(SCpubr::do_FeaturePlot(sample,
+                                                features = c("nCount_RNA", "CD14"),
+                                                individual.titles = "A"))
+  testthat::expect_error(SCpubr::do_FeaturePlot(sample,
+                                                features = c("nCount_RNA", "CD14"),
+                                                individual.subtitles = "A"))
+  testthat::expect_error(SCpubr::do_FeaturePlot(sample,
+                                                features = c("nCount_RNA", "CD14"),
+                                                individual.captions = "A"))
+})
+
+testthat::test_that("do_FeaturePlot: PASS - legend position = right", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("nCount_RNA"),
+                              legend.position = "right")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: WARNING - raster and small point size", {
+  testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
+                                                  features = c("nCount_RNA"),
+                                                  raster = T,
+                                                  pt.size = 0.5))
+})
+
+testthat::test_that("do_FeaturePlot: PASS - ussing diffusion reduction", {
+  test <- sample@reductions$umap[[]]
+  colnames(test) <- c("DC_1", "DC_2")
+  obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
+  sample@reductions$diffusion <- obj
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("nCount_RNA"),
+                              reduction = "diffusion")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - duplicated split.by.idents", {
+  testthat::expect_message(SCpubr::do_FeaturePlot(sample,
+                                                  features = c("nCount_RNA"),
+                                                  split.by = "seurat_clusters",
+                                                  split.by.idents = c("2", "2")))
+})
+
+
+testthat::test_that("do_FeaturePlot: PASS - plotting a Dimensional reduction component", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - split.by factor", {
+  sample$factor_seurat_clusters <- factor(sample$seurat_clusters, levels = c("2", "0", "1", "3","4", "5", "6", "7", "8"))
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              split.by = "factor_seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - split.by and plot.title", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              split.by = "seurat_clusters",
+                              plot.title = "Title",
+                              plot.subtitle = "Subtitle",
+                              plot.caption = "Caption")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - remove legend", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend = F)
+  testthat::expect_type(p, "list")
+})

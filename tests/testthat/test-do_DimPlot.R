@@ -189,6 +189,13 @@ testthat::test_that("do_DimPlot: PASS - diffusion maps", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DimPlot: PASS - group.by + idents.keep", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          group.by = "seurat_clusters",
+                          idents.keep = "4")
+  testthat::expect_type(p, "list")
+})
+
 
 testthat::test_that("do_DimPlot: PASS - split.by + factor", {
   sample$seurat_clusters <- factor(sample$seurat_clusters)

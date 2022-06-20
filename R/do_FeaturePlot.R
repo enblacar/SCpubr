@@ -356,7 +356,15 @@ do_FeaturePlot <- function(sample,
         p.loop <- patchwork::wrap_plots(list.plots.split.by,
                                         ncol = ncol,
                                         guides = "collect") +
-                  patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
+                  patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
+                                                                    plot.title = ggplot2::element_text(size = plot.title.fontsize - 1, face = "bold", hjust = 0),
+                                                                    plot.subtitle =  ggplot2::element_text(size = plot.subtitle.fontsize - 1, hjust = 0),
+                                                                    plot.caption =  ggplot2::element_text(size = plot.caption.fontsize - 1, hjust = 1),
+                                                                    plot.title.position = "plot",
+                                                                    plot.caption.position = "plot",),
+                                             title = ifelse(typeof(individual.titles) == "character", individual.titles[[count_iteration]], ""),
+                                             subtitle = ifelse(typeof(individual.subtitles) == "character", individual.subtitles[[count_iteration]], ""),
+                                             caption = ifelse(typeof(individual.captions) == "character", individual.captions[[count_iteration]], ""))
 
       }
 
@@ -378,17 +386,11 @@ do_FeaturePlot <- function(sample,
     # Generate the final plot with patchwork and use the "ncol" parameter value for the number of columns.
     p <- patchwork::wrap_plots(list.plots, nrow = 1)
 
-    # Patch for the case in which features only contains one element and a custom plot title is provided.
-    # Basically, as this is a "patchwork" object, the way the title has to be set is different than using "ggplot2::ggtitle()".
-    if (!is.null(plot.title) & length(features) == 1){
-      p[[1]]$labels$title <- plot.title
-      p <- p[[1]]
-    }
   }
 
   # Add custom title.
   if (!is.null(plot.title)){
-    if (length(features) > 1){
+    if (length(features) > 1 | !(is.null(split.by))){
       p <- p +
            patchwork::plot_annotation(title = plot.title,
                                       theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
@@ -401,7 +403,7 @@ do_FeaturePlot <- function(sample,
 
   # Add custom subtitle.
   if (!is.null(plot.subtitle)){
-    if (length(features) > 1){
+    if (length(features) > 1 | !(is.null(split.by))){
       p <- p +
            patchwork::plot_annotation(subtitle = plot.subtitle,
                                       theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
@@ -413,7 +415,7 @@ do_FeaturePlot <- function(sample,
 
   # Add custom caption
   if (!is.null(plot.caption)){
-    if (length(features) > 1){
+    if (length(features) > 1 | !(is.null(split.by))){
       p <- p +
            patchwork::plot_annotation(caption = plot.caption,
                                       theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
@@ -427,7 +429,9 @@ do_FeaturePlot <- function(sample,
   if (!is.null(individual.titles)){
     for (counter in seq(1,length(features))){
       if (!(is.na(individual.titles[counter]))){
-        p[[counter]]$labels$title <- individual.titles[counter]
+        if (is.null(split.by)){
+          p[[counter]]$labels$title <- individual.titles[counter]
+        }
       }
     }
   }
@@ -436,7 +440,9 @@ do_FeaturePlot <- function(sample,
   if (!is.null(individual.subtitles)){
     for (counter in seq(1,length(features))){
       if (!(is.na(individual.subtitles[counter]))){
-        p[[counter]]$labels$subtitle <- individual.subtitles[counter]
+        if (is.null(split.by)){
+          p[[counter]]$labels$subtitle <- individual.subtitles[counter]
+        }
       }
     }
   }
@@ -445,7 +451,9 @@ do_FeaturePlot <- function(sample,
   if (!is.null(individual.captions)){
     for (counter in seq(1,length(features))){
       if (!(is.na(individual.captions[counter]))){
-        p[[counter]]$labels$caption <- individual.captions[counter]
+        if (is.null(split.by)){
+          p[[counter]]$labels$caption <- individual.captions[counter]
+        }
       }
     }
   }
@@ -488,18 +496,20 @@ do_FeaturePlot <- function(sample,
   # Further patch for diffusion maps.
   if (reduction == "diffusion"){
     # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
-    p <- p &
-         ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
-                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
-         ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
-                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
-         # Remove axis elements so that the axis title is the only thing left.
-         ggpubr::rremove("axis") &
-         ggpubr::rremove("axis.text") &
-         ggpubr::rremove("ticks") &
-         ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                        axis.title.y = ggplot2::element_text(size = 14, face = "bold")) &
-         ggplot2::theme(axis.title.y = ggplot2::element_text(angle = 90))
+    p <-  suppressMessages({
+           p &
+             ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
+                             max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
+             ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
+                             max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
+             # Remove axis elements so that the axis title is the only thing left.
+             ggpubr::rremove("axis") &
+             ggpubr::rremove("axis.text") &
+             ggpubr::rremove("ticks") &
+             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                            axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90))
+         })
+
   }
 
   # Add theme to the legends for all plots.
