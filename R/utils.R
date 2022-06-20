@@ -904,6 +904,7 @@ compute_barplot_annotation <- function(sample,
 #' @param column_title_side,row_title_side Side for the titles.
 #' @param column_title_rotation,row_title_rotation Angle of rotation of the titles.
 #' @param row_names_rot,column_names_rot Angle of rotation of the text.
+#' @param na.value Color for NAs
 #' @return
 #' @noRd
 #' @examples
@@ -937,7 +938,8 @@ heatmap_inner <- function(data,
                           row_annotation = NULL,
                           row_annotation_side = "right",
                           column_annotation = NULL,
-                          column_annotation_side = "top"){
+                          column_annotation_side = "top",
+                          na.value = "grey75"){
   `%>%`<- purrr::`%>%`
   min_value <- min(data)
   max_value <- max(data)
@@ -960,7 +962,12 @@ heatmap_inner <- function(data,
     colors.use <- c(colors.use[1], "white", colors.use[2])
   }
   if (data_range == "both"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 2)
+    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
+    counter <- 0
+    while (sum(duplicated(breaks)) > 0){
+      counter <- counter + 1
+      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1 + counter)
+    }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
@@ -973,7 +980,12 @@ heatmap_inner <- function(data,
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_neg"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 2)
+    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1)
+    counter <- 0
+    while (sum(duplicated(breaks)) > 0){
+      counter <- counter + 1
+      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1 + counter)
+    }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(1, 2)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
@@ -985,7 +997,12 @@ heatmap_inner <- function(data,
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_pos"){
-    breaks <-  round(c(0, (abs_value / 2), abs_value), 2)
+    breaks <-  round(c(0, (abs_value / 2), abs_value), 1)
+    counter <- 0
+    while (sum(duplicated(breaks)) > 0){
+      counter <- counter + 1
+      breaks <-  round(c(0, (abs_value / 2), abs_value), 1 + counter)
+    }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(2, 3)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
@@ -1041,7 +1058,7 @@ heatmap_inner <- function(data,
   h <- ComplexHeatmap::Heatmap(matrix = data,
                                name = legend_name,
                                col = col_fun,
-
+                               na_col = na.value,
                                show_heatmap_legend = FALSE,
                                cluster_rows = cluster_rows,
                                cluster_columns = cluster_columns,

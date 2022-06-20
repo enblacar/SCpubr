@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_CellularStatesPlot.R
 \name{do_CellularStatesPlot}
 \alias{do_CellularStatesPlot}
-\title{Butterfly plot.}
+\title{Cellular States plot.}
 \usage{
 do_CellularStatesPlot(
   sample,

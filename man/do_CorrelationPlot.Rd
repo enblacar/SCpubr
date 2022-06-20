@@ -17,7 +17,8 @@ do_CorrelationPlot(
   row_names_rot = 0,
   column_names_rot = 90,
   colors.use = NULL,
-  cell_size = 5
+  cell_size = 5,
+  na.value = "grey75"
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ do_CorrelationPlot(
 \item{colors.use}{Vector of 2 colors to use to generate the color scale.}
 
 \item{cell_size}{Numeric. Size of each cell in the heatmap.}
+
+\item{na.value}{Value for NAs.}
 }
 \value{
 A ComplexHeatmap object.

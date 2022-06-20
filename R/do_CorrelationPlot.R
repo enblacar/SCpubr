@@ -11,6 +11,7 @@
 #' @param legend_name Text for the legend title.
 #' @param colors.use Vector of 2 colors to use to generate the color scale.
 #' @param cell_size Numeric. Size of each cell in the heatmap.
+#' @param na.value Value for NAs.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -27,7 +28,8 @@ do_CorrelationPlot <- function(sample,
                                row_names_rot = 0,
                                column_names_rot = 90,
                                colors.use = NULL,
-                               cell_size = 5){
+                               cell_size = 5,
+                               na.value = "grey75"){
 
   # Checks for packages.
   check_suggests(function_name = "do_CorrelationPlot")
@@ -49,8 +51,10 @@ do_CorrelationPlot <- function(sample,
                          "row_title" = row_title,
                          "legend_name" = legend_name,
                          "colors.use" = colors.use,
-                         "group.by" = group.by)
+                         "group.by" = group.by,
+                         "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
+  check_colors(na.value)
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- purrr::`%>%`
@@ -125,7 +129,8 @@ do_CorrelationPlot <- function(sample,
                          cluster_columns = cluster_cols,
                          cluster_rows = cluster_rows,
                          colors.use = colors.use,
-                         cell_size = cell_size)
+                         cell_size = cell_size,
+                         na.value = na.value)
     h <- out[["heatmap"]]
     h_legend <- out[["legend"]]
     ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
