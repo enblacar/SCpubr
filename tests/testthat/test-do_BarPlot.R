@@ -285,3 +285,41 @@ testthat::test_that("do_BarPlot: PASS - return data", {
   testthat::expect_type(out$data$orig.ident$long, "list")
   testthat::expect_type(out$data$orig.ident$wide, "list")
 })
+
+testthat::test_that("do_BarPlot: PASS - group.by factor", {
+  sample$factor_seurat_clusters <- factor(sample$seurat_clusters)
+  p <- SCpubr::do_BarPlot(sample = sample,
+                          features = c("seurat_clusters"),
+                          group.by = "factor_seurat_clusters",
+                          position = "stack",
+                          legend = F)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BarPlot: PASS - group.by labels order", {
+  p <- SCpubr::do_BarPlot(sample = sample,
+                          features = c("seurat_clusters"),
+                          group.by = "orig.ident",
+                          labels.order = c("3", "0", "1", "2", "4", "5", "6", "7", "8"),
+                          position = "stack",
+                          legend = F)
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_BarPlot: WARNING - group.by fill", {
+  testthat::expect_warning(SCpubr::do_BarPlot(sample = sample,
+                                              features = c("seurat_clusters"),
+                                              group.by = "orig.ident",
+                                              add.summary_labels = T,
+                                              add.subgroup_labels = F,
+                                              position = "fill",
+                                              legend = F))
+  testthat::expect_warning(SCpubr::do_BarPlot(sample = sample,
+                                              features = c("seurat_clusters"),
+                                              group.by = "orig.ident",
+                                              add.summary_labels = F,
+                                              add.subgroup_labels = T,
+                                              position = "fill",
+                                              legend = F))
+})

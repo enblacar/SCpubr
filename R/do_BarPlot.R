@@ -281,7 +281,7 @@ do_BarPlot <- function(sample,
             }
 
           } else if (position == "fill"){
-            warning("labels.use is not yet implemented with position = fill.", call. = F)
+            warning("add.summary_labels and add.subgroup_labels are not yet implemented with position = fill.", call. = F)
           }
         } else if (!(is.null(group.by))){
           if (position == "stack"){
