@@ -150,6 +150,8 @@ testthat::test_that("do_BarPlot: PASS - rotate x labels with group.by", {
 
 
 testthat::test_that("do_BarPlot: PASS - colors.use and group.by", {
+  sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
+
   colors <- c("0" = "#001219",
               "1" = "#005f73",
               "2" = "#0a9396",
@@ -168,6 +170,8 @@ testthat::test_that("do_BarPlot: PASS - colors.use and group.by", {
 })
 
 testthat::test_that("do_BarPlot: PASS - colors.use ", {
+  sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
+
   colors <- c("0" = "#001219",
               "1" = "#005f73",
               "2" = "#0a9396",
@@ -185,6 +189,8 @@ testthat::test_that("do_BarPlot: PASS - colors.use ", {
 })
 
 testthat::test_that("do_BarPlot: PASS - labels.order ", {
+  sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
+
   colors <- c("0" = "#001219",
               "1" = "#005f73",
               "2" = "#0a9396",
