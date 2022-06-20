@@ -167,42 +167,22 @@ do_CellularStatesPlot <- function(sample,
         scores <- tidyr::tibble(scores)
 
         # Compute the scores for the X axis.
-        if (isTRUE(verbose)){
-          # Iterate over each cell.
-          x <- unlist(pbapply::pbsapply(1:nrow(scores), function(x) {
-            # For each cell, compute the X axis score as the log2 difference of enrichment scores. +1 to center the data around 0,
-            # as scores lower than 0 will end up in very different value ranges.
-            score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
-            score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-            d <- max(score_1, score_2)
-            # Modify the end score depending on which of the two was higher at the beggining, this will mark the direction on the X axis.
-            ifelse(score_1 > score_2, d, -d)
-          }))
-          y <- unlist(pbapply::pbsapply(1:nrow(scores), function(x) {
-            # For each cell, compute the X axis score as the log2 difference of enrichment scores. +1 to center the data around 0,
-            # as scores lower than 0 will end up in very different value ranges.
-            score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
-            score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-            d <- max(score_1, score_2)
-            y <- scores[x, y1] - d
-            y
-          }))
-          # If we want a silent function run.
-        } else if (isFALSE(verbose)){
-          x <- unlist(sapply(1:nrow(scores), function(x) {
-            score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
-            score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-            d <- max(score_1, score_2)
-            ifelse(score_1 > score_2, d, -d)
-          }))
-          y <- unlist(sapply(1:nrow(scores), function(x) {
-            score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
-            score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-            d <- max(score_1, score_2)
-            y <- scores[x, y1] - d
-            y
-          }))
-        }
+        x <- unlist(sapply(1:nrow(scores), function(x) {
+          score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
+          score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
+          d <- max(score_1, score_2)
+          ifelse(score_1 > score_2, d, -d)
+        }))
+
+        # Compute the scores for the Y axis.
+        y <- unlist(sapply(1:nrow(scores), function(x) {
+          score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
+          score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
+          d <- max(score_1, score_2)
+          y <- scores[x, y1] - d
+          y
+        }))
+
         names(x) <- scores$cell
         names(y) <- scores$cell
 
@@ -260,27 +240,15 @@ do_CellularStatesPlot <- function(sample,
         names(d) <- scores$cell
 
         # Compute X axis values.
-        if (isTRUE(verbose)){
-          x <- unlist(pbapply::pbsapply(1:length(d), function(x) {
-            if (d[x] > 0) {
-              d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
-              ifelse(scores[x, x1] > scores[x, x2], d, -d)
-            } else {
-              d <- log2(abs(scores[x, y1] - scores[x, y2]) + 1)
-              ifelse(scores[x, y1] > scores[x, y2], d, -d)
-            }
-          }))
-        } else if (isFALSE(verbose)){
-          x <- unlist(sapply(1:length(d), function(x) {
-            if (d[x] > 0) {
-              d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
-              ifelse(scores[x, x1] > scores[x, x2], d, -d)
-            } else {
-              d <- log2(abs(scores[x, y1] - scores[x, y2]) + 1)
-              ifelse(scores[x, y1] > scores[x, y2], d, -d)
-            }
-          }))
-        }
+        x <- unlist(sapply(1:length(d), function(x) {
+          if (d[x] > 0) {
+            d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
+            ifelse(scores[x, x1] > scores[x, x2], d, -d)
+          } else {
+            d <- log2(abs(scores[x, y1] - scores[x, y2]) + 1)
+            ifelse(scores[x, y1] > scores[x, y2], d, -d)
+          }
+        }))
 
         names(x) <- scores$cell
 

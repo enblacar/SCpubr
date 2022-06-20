@@ -91,15 +91,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_CellularStatesPlot: PASS - 3 variables, verbose", {
-  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
-                                      x1 = "A",
-                                      y1 = "B",
-                                      x2 = "C",
-                                      verbose = T)
-  testthat::expect_type(p, "list")
-})
+
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parameters", {
   testthat::expect_error(SCpubr:::do_CellularStatesPlot(sample = sample,
@@ -188,18 +180,4 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", 
                                                         y1 = "B",
                                                         x2 = "C",
                                                         y2 = "Not in list"))
-})
-
-testthat::test_that("do_CellularStatesPlot: PASS - 4 variables, verbose", {
-  sink(tempfile())
-  on.exit(sink())
-  invisible(force({p <- SCpubr:::do_CellularStatesPlot(sample = sample,
-                                                       gene_list = genes,
-                                                       x1 = "A",
-                                                       y1 = "B",
-                                                       x2 = "C",
-                                                       y2 = "D",
-                                                       verbose = T)
-  testthat::expect_type(p, "list")}))
-
 })
