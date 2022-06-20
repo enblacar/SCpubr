@@ -82,7 +82,7 @@ do_CellularStatesPlot <- function(sample,
       group.by <- "dummy"
       sample@meta.data$dummy <- sample@active.ident
     } else {
-      sample@meta.data$dummy <- sample@meta.data[, !!(rlang::sym(group.by))]
+      sample@meta.data$dummy <- sample@meta.data[, group.by]
       group.by <- "dummy"
     }
 
@@ -97,10 +97,10 @@ do_CellularStatesPlot <- function(sample,
       }
       # Check that the names provided match the marker genes.
       if (!(x1 %in% names(gene_list))){
-        stop(paste0(x1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        stop(paste0(x1, " is not a name of a list of genes provided to gene_list.", call. = FALSE), call. = F)
       }
       if (!(y1 %in% names(gene_list))){
-        stop(paste0(y1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        stop(paste0(y1, " is not a name of a list of genes provided to gene_list.", call. = FALSE), call. = F)
       }
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
