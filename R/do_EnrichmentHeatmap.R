@@ -29,7 +29,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_title = NULL,
                                  verbose = FALSE,
                                  transpose = FALSE,
-                                 cluster_cols = TRUE,
+                                 cluster_cols = FALSE,
                                  cluster_rows = FALSE,
                                  legend_name = "Enrichment",
                                  row_names_rot = 0,
@@ -93,11 +93,7 @@ do_EnrichmentHeatmap <- function(sample,
     }
   }
 
-  # If only 1 row or column, it can not be clustered.
-  if (length(aggr_entities) == 1){
-    cluster_cols <- FALSE
-    cluster_rows <- FALSE
-  }
+
 
   # Get the maximum range of the data.
   scoring <- data.frame("rownames" = aggr_entities) # This is to compute the overall maximum.

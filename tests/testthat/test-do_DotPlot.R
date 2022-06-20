@@ -116,6 +116,14 @@ testthat::test_that("do_DotPlot: PASS - one variable split.by", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DotPlot: PASS - one variable split.by factor", {
+  sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          split.by = "seurat_clusters.factor")
+  testthat::expect_type(p, "list")
+})
+
 
 testthat::test_that("do_DotPlot: PASS - one variable xlab, ylab, title, subtitle, caption", {
   p <- SCpubr::do_DotPlot(sample = sample,
