@@ -198,6 +198,10 @@ testthat::test_that("do_FeaturePlot: PASS - split.by and pca", {
 })
 
 testthat::test_that("do_FeaturePlot: PASS - split.by and diffusion", {
+  test <- sample@reductions$umap[[]]
+  colnames(test) <- c("DC_1", "DC_2")
+  obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
+  sample@reductions$diffusion <- obj
   p <- SCpubr::do_FeaturePlot(sample,
                               features = c("PC_1"),
                               split.by = "seurat_clusters",
