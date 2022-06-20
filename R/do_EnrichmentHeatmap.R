@@ -204,7 +204,7 @@ do_EnrichmentHeatmap <- function(sample,
 
 
       # Remove the rownames column in the object, since you set them to be the rownames of the dataframe.
-      scoring.split[is.na(scoring.split)] <- 0
+      scoring.split[is.na(scoring.split)] <- NA
       rownames(scoring.split) <- scoring.split$rownames
       scoring.split$rownames <- NULL
 
