@@ -14,7 +14,7 @@ do_EnrichmentHeatmap(
   row_title = NULL,
   verbose = FALSE,
   transpose = FALSE,
-  cluster_cols = TRUE,
+  cluster_cols = FALSE,
   cluster_rows = FALSE,
   legend_name = "Enrichment",
   row_names_rot = 0,

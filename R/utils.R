@@ -21,10 +21,11 @@ check_suggests <- function(function_name){
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
+                   "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
-    stop(paste0(function_name, " is not an accepted function name.", call. = FALSE))
+    stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
   }
   pkgs <- pkg_list[[function_name]]
   for (pkg in pkgs){
@@ -62,7 +63,7 @@ state_dependencies <- function(func_name = NULL){
   if (!(is.null(func_name))){
     for (func in func_name){
       if (!(func %in% names(pkg_list))){
-        stop(paste0(func_name, " is not an accepted function name.", call. = FALSE))
+        stop(paste0(func_name, " is not an accepted function name."), call. = FALSE)
       }
     }
   }
@@ -90,11 +91,6 @@ state_dependencies <- function(func_name = NULL){
 
   func_list <- sort(names(pkg_list))
   if (!(is.null(func_name))){
-    for (func in func_name){
-      if (!(func %in% func_list)){
-        stop("Function name provided (", func, ") not part of SCpubr current functions.", call. = F)
-      }
-    }
     func_list <- func_name
   } else {
     func_list <- names(pkg_list)
@@ -298,13 +294,17 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     if (!(feature %in% rownames(sample))){
       check <- check + 1
       check_enforcers[["gene"]] <- FALSE
+    } else {
+      check_enforcers[["gene"]] <- TRUE
     }
-    check_enforcers[["gene"]] <- TRUE
+
     if (!(feature %in% colnames(sample@meta.data))){
       check <- check + 1
       check_enforcers[["metadata"]] <- FALSE
+    } else {
+      check_enforcers[["metadata"]] <- TRUE
     }
-    check_enforcers[["metadata"]] <- TRUE
+
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
       dim_colnames <- c(dim_colnames, colnames(sample@reductions[[red]][[]]))
@@ -312,8 +312,10 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     if (!(feature %in% dim_colnames)){
       check <- check + 1
       check_enforcers[["reductions"]] <- FALSE
+    } else {
+      check_enforcers[["reductions"]] <- TRUE
     }
-    check_enforcers[["reductions"]] <- TRUE
+
     if (check == 3) {
       not_found_features <- c(not_found_features, feature)
     }
@@ -504,6 +506,12 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
     reduction <- Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]
   }
 
+  # Check that at least 2 dimensions are present.
+  aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
+  if (aval_dims < 2){
+    stop("There are less than 2 dimensions in the requested reduction: ", reduction, ".")
+  }
+
   # Check that the dimensions are integers.
   null_check <- is.null(dims[1]) & is.null(dims[2])
   integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
@@ -511,15 +519,10 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
     stop("Provied dimensions need to be numerics.", call. = F)
   }
   # Check that the dimensions are in the requested embedding.
-  aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
   if (!(is.null(dims))){
     if (!(dims[1] %in% seq_len(aval_dims)) | !(dims[2] %in% seq_len(aval_dims))){
       stop("Dimension could not be found in the following reduction: ", reduction, ".", call. = F)
     }
-  }
-  # Check that at least 2 dimensions are present.
-  if (aval_dims < 2){
-    stop("There are less than 2 dimensions in the requested reduction: ", reduction, ".")
   }
   # If no dimensions were provided, fall back to first and second.
   if (is.null(dims)){
@@ -954,7 +957,7 @@ heatmap_inner <- function(data,
   }
 
   if (!is.null(range.data)){
-    abs_value <- range.data
+    abs_value <- abs(range.data)
   }
   if (is.null(colors.use)){
     colors.use <- c("#023f73", "white", "#7a0213")
