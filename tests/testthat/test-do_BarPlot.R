@@ -1,4 +1,4 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           features = "seurat_clusters",
