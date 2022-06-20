@@ -46,17 +46,6 @@ save_Plot <- function(plot,
                          "file_name" = file_name)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-  # Does the figure_path end with a trailing / ?
-  if (.Platform$OS.type == "windows"){
-    if (isFALSE(stringr::str_detect(figure_path, "\\/$"))){
-      figure_path <- paste0(figure_path, "\\")
-    }
-  } else {
-    if (isFALSE(stringr::str_detect(figure_path, "\\/$"))){
-      figure_path <- paste0(figure_path, "/")
-    }
-  }
-
   # Null file name?
   if (is.null(file_name)){file_name <- stringr::str_replace_all(Sys.time(), " ", "_")}
   # Null figure path?

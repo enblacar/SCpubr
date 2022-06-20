@@ -175,12 +175,14 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
     colors <- colors[names(colors) %in% check_values]
   }
 
-  if (sum(names(colors) %in% check_values) != length(check_values)){
-    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
-  }
   if (length(colors) != length(check_values)){
     stop('The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
   }
+
+  if (sum(names(colors) %in% check_values) != length(check_values)){
+    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
+  }
+
   return(colors)
 }
 

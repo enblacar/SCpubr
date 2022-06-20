@@ -81,7 +81,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - FAIL - names of
 
 testthat::test_that("utils: check_consistency_colors_and_names - FAIL - less colors provided", {
   testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
-                                                                     colors = c("a" = "red"),
+                                                                     colors = c("1" = "red"),
                                                                      grouping_variable = "seurat_clusters"))
 })
 
