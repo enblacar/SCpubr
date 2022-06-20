@@ -6,7 +6,7 @@ testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
 })
 
 testthat::test_that("utils: check_suggests - FAIL - Package not installed", {
-  testthat::expect_error(SCpubr:::check_suggests("Testing"))
+  testthat::expect_error(SCpubr:::check_suggests("testing"))
 })
 
 testthat::test_that("utils: check_suggests - PASS - Correct function", {
@@ -740,6 +740,26 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
+  data <- as.matrix({
+    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::pull(n)
+  })
+  obj <- ComplexHeatmap::HeatmapAnnotation(orig.ident = data, col = list(orig.ident = c("20" = "red")), which = "row")
+  out <- SCpubr:::heatmap_inner(data, row_annotation = obj, row_annotation_side = "right")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(data, row_annotation = obj, row_annotation_side = "left")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  obj <- ComplexHeatmap::HeatmapAnnotation(orig.ident = data, col = list(orig.ident = c("20" = "red")), which = "column")
+  out <- SCpubr:::heatmap_inner(t(data), column_annotation = obj, column_annotation_side = "top")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(t(data), column_annotation = obj, column_annotation_side = "bottom")
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
 })
 

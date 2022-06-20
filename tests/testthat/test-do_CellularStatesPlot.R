@@ -166,8 +166,8 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated paramete
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", {
   testthat::expect_error(SCpubr:::do_CellularStatesPlot(sample = sample,
                                                         gene_list = genes,
-                                                        x1 = "A",
-                                                        y1 = "Not in list",
+                                                        x1 = "Not in list",
+                                                        y1 = "B",
                                                         x2 = "C",
                                                         y2 = "D"))
 })

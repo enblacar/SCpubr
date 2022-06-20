@@ -81,3 +81,11 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - ncol = NULL", {
                                      colors.use = c("#e9d8a6", "#9b2226"))
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - ncol = NULL one database", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "GO_Biological_Process_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"))
+  testthat::expect_type(p, "list")
+})
