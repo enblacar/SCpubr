@@ -86,3 +86,48 @@ testthat::test_that("do_NebulosaPlot: PASS - color map", {
                                viridis_color_map = "F")
   testthat::expect_type(p, "list")
 })
+
+
+testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
+  testthat::expect_warning(SCpubr::do_NebulosaPlot(sample = sample,
+                                                   features = list("CD14"),
+                                                   viridis_color_map = "F"))
+})
+
+testthat::test_that("do_NebulosaPlot: FAIL - individual titles + joint + return only joint", {
+  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
+                                                 features = c("CD14", "CD8A"),
+                                                 joint = T,
+                                                 return_only_joint = T,
+                                                 individual.titles = "A"))
+})
+
+testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles ", {
+  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
+                                                 features = c("CD14", "CD8A"),
+                                                 joint = F,
+                                                 individual.titles = "A"))
+})
+
+testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles for joint ", {
+  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
+                                                 features = c("CD14", "CD8A"),
+                                                 joint = T,
+                                                 individual.titles = "A"))
+})
+
+testthat::test_that("do_NebulosaPlot: PASS - no legend", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               legend = F)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_NebulosaPlot: PASS - patchwork title, subtitle and caption", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14", "CD8A"),
+                               plot.title = "A",
+                               plot.subtitle = "B",
+                               plot.caption = "C")
+  testthat::expect_type(p, "list")
+})
