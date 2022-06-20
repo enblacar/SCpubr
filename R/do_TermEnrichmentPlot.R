@@ -77,12 +77,7 @@ do_TermEnrichmentPlot <- function(genes,
       options(modEnrichR.use = TRUE)
       options(enrichR.sites.base.address = "https://maayanlab.cloud/")
       options(enrichR.sites = c("Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr"))
-      if (getOption("modEnrichR.use")) {
-        enrichR::listEnrichrSites()
-      } else {
-        packageStartupMessage("Enrichr ... ", appendLF = FALSE)
-        if (getOption("enrichR.live")) packageStartupMessage("Connection is Live!")
-      }
+
       # Set the search to Human genes.
       enrichR::setEnrichrSite(site = site)
 

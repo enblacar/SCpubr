@@ -58,3 +58,26 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database", {
                                      colors.use = c("#e9d8a6", "#9b2226"))
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_TermEnrichmentPlot: FAIL - provide more colors than needed", {
+  testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                                       dbs_use = "C",
+                                                       ncol = 2,
+                                                       nterms = 2,
+                                                       colors.use = c("#e9d8a6", "#9b2226", "red")))
+})
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - database = NULL", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     ncol = 2,
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - ncol = NULL", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"))
+  testthat::expect_type(p, "list")
+})
