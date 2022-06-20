@@ -91,3 +91,72 @@ testthat::test_that("do_VlnPlot: PASS - change colors", {
                                          "8" = "#ae2012"))
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_VlnPlot: WARNING - features as list", {
+  testthat::expect_warning(SCpubr::do_VlnPlot(sample = sample,
+                                              features = list("CD14")))
+})
+
+testthat::test_that("do_VlnPlot: FAIL - split.by", {
+  testthat::expect_error(SCpubr::do_VlnPlot(sample = sample,
+                                            features = c("CD14"),
+                                            split.by = "orig.ident"))
+})
+
+testthat::test_that("do_VlnPlot: FAIL - different number of y_cut values", {
+  testthat::expect_error(SCpubr::do_VlnPlot(sample = sample,
+                                            features = c("CD14", "nCount_RNA"),
+                                            y_cut = 2000))
+})
+
+testthat::test_that("do_VlnPlot: FAIL - different number of rotate_x_labels", {
+  testthat::expect_error(SCpubr::do_VlnPlot(sample = sample,
+                                            features = c("CD14", "nCount_RNA"),
+                                           rotate_x_labels = T))
+})
+
+testthat::test_that("do_VlnPlot: FAIL - different number of individual titles", {
+  testthat::expect_error(SCpubr::do_VlnPlot(sample = sample,
+                                            features = c("CD14", "nCount_RNA"),
+                                            individual.titles = c("A")))
+})
+
+testthat::test_that("do_VlnPlot: PASS - one variable, group by", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          features = "CD14",
+                          group.by = "orig.ident")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_VlnPlot: PASS - one variable, xlab y lab", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          features = "CD14",
+                          xlab = "y",
+                          ylab = "x")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_VlnPlot: PASS - individual titles", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          c("CD14", "nCount_RNA"),
+                          individual.titles = c("A", "B"))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_VlnPlot: PASS - one variable, plot.title, subtitle and caption", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          features = "CD14",
+                          plot.title = "A",
+                          plot.subtitle = "B",
+                          plot.caption = "C")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_VlnPlot: PASS - multiple variables plot.title, subtitle and caption", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          c("CD14", "nCount_RNA"),
+                          plot.title = "A",
+                          plot.subtitle = "B",
+                          plot.caption = "C")
+  testthat::expect_type(p, "list")
+})

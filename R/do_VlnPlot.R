@@ -141,16 +141,7 @@ do_VlnPlot <- function(sample,
     } else {
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }
-    # If group by is NULL but split.by is not NULL.
-  } else if (!(is.null(split.by)) & is.null(group.by)){
-    if (is.null(colors.use)){
-      names.use <- sort(unique(sample@meta.data[, split.by]))
-      if (is.factor(names.use)){names.use <- levels(names.use)}
-      colors.use <- generate_color_scale(names.use)
-    } else {
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
-    }
-  } else if (!(is.null(split.by)) & !(is.null(group.by))){stop("Either group.by or split.by has to be NULL.", call. = F)}
+  }
 
   if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
     stop("The length of individual titles has to be equal to the number of features.", call. = F)
