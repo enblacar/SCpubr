@@ -114,7 +114,7 @@ do_BarPlot <- function(sample,
     counter <- 0
     list.plots <- list()
     list.data <- list()
-    if (is.null(colors.use)){reset_colors.use <- TRUE}
+    if (is.null(colors.use)){reset_colors.use <- TRUE} else (reset_colors.use <- FALSE)
     for (feature in features){
       if (isTRUE(reset_colors.use)){colors.use <- NULL}
       counter <- counter + 1
