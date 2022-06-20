@@ -61,7 +61,8 @@ save_Plot <- function(plot,
 
   # Handle devices:
   output_options <- c("all", "publication", "pdf", "png", "jpeg", "svg", "tiff")
-  if (!(output_format %in% output_options)){stop("Please select a valid output format from the available options.", call. = F)}
+  if (sum(output_format %in% output_options) < 1){stop("Please select a valid output format from the available options.", call. = F)}
+  if ("all" %in% output_format & "publication" %in% output_format){stop("Please select either `all` or `publication`.", call. = F)}
   if (output_format == "publication"){
     devices_use <- c("pdf", "png", "svg")
   } else if (output_format == "all"){
@@ -69,9 +70,6 @@ save_Plot <- function(plot,
   } else {
     options <- c("pdf", "png", "jpeg", "svg", "tiff")
     devices_use <- output_format[output_format %in% options]
-    if (length(devices_use) == 0){
-      stop("Output format provided is invalid.", call. = F)
-    }
   }
 
   # is ggplot?

@@ -307,10 +307,14 @@ do_CellularStatesPlot <- function(sample,
                 ggplot2::ylab(y_lab1) +
                 ggplot2::ggtitle(plot.title) +
                 ggplot2::xlim(lim) +
-                ggplot2::ylim(lim) +
-                ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
-                ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
-                ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+                ggplot2::ylim(lim)
+        suppressMessages({
+          plot <- plot +
+                  ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
+                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
+                  ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+        })
+
 
     }
 

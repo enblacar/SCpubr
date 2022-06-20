@@ -31,6 +31,13 @@ testthat::test_that("save_Plot: FAIL - wrong output format", {
                                            output_format = "wrong"))
 })
 
+testthat::test_that("save_Plot: FAIL - all and publication at the same time.", {
+  testthat::expect_error(SCpubr::save_Plot(plot = p,
+                                           figure_path = figure_path,
+                                           file_name = "test",
+                                           output_format = c("all", "publication")))
+})
+
 testthat::test_that("save_Plot: PASS - all", {
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
