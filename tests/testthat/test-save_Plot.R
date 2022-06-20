@@ -3,7 +3,7 @@ p <- SCpubr::do_DimPlot(sample)
 p.heatmap <- SCpubr::do_CorrelationPlot(sample)
 data <- p.heatmap@ht_list$`Pearson coef.`@matrix
 p.pheatmap <- pheatmap::pheatmap(data)
-figure_path <- "./"
+figure_path <- if (.Platform$OS.type == "unix"){"./"} else {".\\"}
 
 testthat::test_that("save_Plot: PASS - no file", {
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
@@ -19,7 +19,7 @@ testthat::test_that("save_Plot: PASS - no file path", {
 
 testthat::test_that("save_Plot: PASS - no file path", {
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
-                                            figure_path = paste0(figure_path, "/deleteme"),
+                                            figure_path = paste0(figure_path, "deleteme"),
                                             file_name = "test",
                                             output_format = "svg"))
 })
