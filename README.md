@@ -1,6 +1,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/enblacar/SCpubr/workflows/R-CMD-check/badge.svg)](https://github.com/enblacar/SCpubr/actions)
 [![codecov](https://codecov.io/gh/enblacar/SCpubr/branch/main/graph/badge.svg?token=HK7JB08VFD)](https://codecov.io/gh/enblacar/SCpubr)
+[![coveralls](https://coveralls.io/repos/github/enblacar/SCpubr/badge.svg?branch=main)](https://coveralls.io/github/enblacar/SCpubr?branch=main)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
   
