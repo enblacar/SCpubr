@@ -779,6 +779,10 @@ testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, list_genes = list("test" = c("CD14")), verbose = T)
+  testthat::expect_true("Seurat" %in% class(output))
+  testthat::expect_true("test" %in% colnames(output@meta.data))
+
   output <- SCpubr:::compute_enrichment_scores(sample = sample, list_genes = c("CD14"))
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("Input" %in% colnames(output@meta.data))
