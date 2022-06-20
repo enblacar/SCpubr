@@ -191,14 +191,14 @@ testthat::test_that("do_DimPlot: PASS - diffusion maps", {
 
 
 testthat::test_that("do_DimPlot: PASS - split.by + factor", {
-  sample$orig.ident <- factor(sample$orig.ident)
-  p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", colors.use = colors)
+  sample$seurat_clusters <- factor(sample$seurat_clusters)
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", colors.use = colors)
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_DimPlot: PASS - split.by + factor + idents.keep", {
-  sample$orig.ident <- factor(sample$orig.ident)
-  p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", colors.use = colors, idents.keep = "Cell")
+  sample$seurat_clusters <- factor(sample$seurat_clusters)
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", colors.use = colors, idents.keep = "4")
   testthat::expect_type(p, "list")
 })
 
