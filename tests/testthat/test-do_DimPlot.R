@@ -99,3 +99,107 @@ testthat::test_that("do_DimPlot: PASS - idents.keep", {
   p <- SCpubr::do_DimPlot(sample = sample, idents.keep = "5")
   testthat::expect_type(p, "list")
 })
+
+
+testthat::test_that("do_DimPlot: FAIL - group.by and split.by used", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", split.by = "seurat_clusters"))
+})
+
+testthat::test_that("do_DimPlot: FAIL - group.by and cells.highlights used", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", cells.highlight = colnames(sample)))
+})
+
+testthat::test_that("do_DimPlot: FAIL - split.by and cells.highlights used", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", cells.highlight = colnames(sample)))
+})
+
+testthat::test_that("do_DimPlot: WARNING - order and shuffle used", {
+  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, order = "4", shuffle = T))
+})
+
+testthat::test_that("do_DimPlot: FAIL - more than one NA values", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, na.value = c("red", "blue")))
+})
+
+testthat::test_that("do_DimPlot: WARNING - raster = T and pt.size lower than 1", {
+  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, raster = T, pt.size = 0.5))
+})
+
+colors <- c("0" = "#001219",
+            "1" = "#005f73",
+            "2" = "#0a9396",
+            "3" = "#94d2bd",
+            "4" = "#e9d8a6",
+            "5" = "#ee9b00",
+            "6" = "#ca6702",
+            "7" = "#bb3e03",
+            "8" = "#ae2012")
+
+testthat::test_that("do_DimPlot: PASS - group.by + colors", {
+  p <- SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", colors.use = colors)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - split.by + colors", {
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", colors.use = colors)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: FAIL - more than 1 color with cells highlight", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, colors.use = colors, idents.highlight = "4"))
+})
+
+testthat::test_that("do_DimPlot: FAIL - idents.keep not in the levels of the sample", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, idents.keep = c("4", "Not an ident")))
+})
+
+testthat::test_that("do_DimPlot: FAIL - idents.keep not in the unique values of group.by", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "orig.ident", idents.keep = c("4", "Not an ident")))
+})
+
+testthat::test_that("do_DimPlot: FAIL - idents.keep not in the unique values of split.by", {
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", idents.keep = c("4", "Not an ident")))
+})
+
+
+testthat::test_that("do_DimPlot: PASS - split.by + plot.title, subtitle and caption", {
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident",
+                          plot.title = "Plot title",
+                          plot.subtitle = "Plot subtitle",
+                          plot.caption = "Plot caption")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - legend = F", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          legend = F)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - dims different", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          dims = c(2, 1))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - diffusion maps", {
+  sample@reductions$diffusion <- sample@reductions$umap
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          reduction = "diffusion")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_DimPlot: PASS - split.by + factor", {
+  sample$orig.ident <- factor(sample$orig.ident)
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", colors.use = colors)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - split.by + factor + idents.keep", {
+  sample$orig.ident <- factor(sample$orig.ident)
+  p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", colors.use = colors, idents.keep = "Cell")
+  testthat::expect_type(p, "list")
+})
+
+

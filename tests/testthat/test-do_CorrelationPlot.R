@@ -39,3 +39,23 @@ testthat::test_that("do_CorrelationPlot: PASS - group.by - colors", {
                                   colors.use = c("#e9d8a6", "#9b2226"))
   testthat::expect_true("HeatmapList" %in% class(p))
 })
+
+
+testthat::test_that("do_CorrelationPlot: PASS - row title and column title", {
+  p <- SCpubr::do_CorrelationPlot(sample = sample,
+                                  group.by = "orig.ident",
+                                  column_names_rot = 0,
+                                  cell_size = 7,
+                                  row_title = "Row title",
+                                  column_title = "Column title")
+  testthat::expect_true("HeatmapList" %in% class(p))
+})
+
+testthat::test_that("do_CorrelationPlot: PASS - group.by factor", {
+  sample$orig.ident <- factor(sample$orig.ident)
+  p <- SCpubr::do_CorrelationPlot(sample = sample,
+                                  group.by = "orig.ident",
+                                  column_names_rot = 0,
+                                  cell_size = 7)
+  testthat::expect_true("HeatmapList" %in% class(p))
+})
