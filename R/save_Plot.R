@@ -47,7 +47,7 @@ save_Plot <- function(plot,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Null file name?
-  if (is.null(file_name)){file_name <- stringr::str_replace_all(Sys.time(), " ", "_")}
+  if (is.null(file_name)){file_name <- "output_figure"}
   # Null figure path?
   if (is.null(figure_path)){figure_path <- paste0(".", .Platform$file.sep)}
 
