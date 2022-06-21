@@ -49,7 +49,7 @@ save_Plot <- function(plot,
   # Null file name?
   if (is.null(file_name)){file_name <- stringr::str_replace_all(Sys.time(), " ", "_")}
   # Null figure path?
-  if (is.null(figure_path)){figure_path <- getwd()}
+  if (is.null(figure_path)){figure_path <- paste0(".", .Platform$file.sep)}
 
   # Create directory.
   if (!(dir.exists(figure_path))){
