@@ -259,10 +259,10 @@ do_CellularStatesPlot <- function(sample,
         y_lab2 <- paste0(x1, "  <---->  ", y1)
 
         # Define limits of polots.
-        lim_1 <- min(min(d), min(x))
-        lim_2 <- max(max(d), max(x))
-        value <- max(abs(c(lim_1, lim_2)))
-        lim <- c(-value, value)
+        #lim_1 <- min(min(d), min(x))
+        #lim_2 <- max(max(d), max(x))
+        #value <- max(abs(c(lim_1, lim_2)))
+        #lim <- c(-value, value)
 
         # Plot.
         df <- data.frame("set_x" = x, "set_y" = d, "group.by" = scores$dummy)
@@ -273,14 +273,14 @@ do_CellularStatesPlot <- function(sample,
                 ggplot2::scale_color_manual(values = colors.use)  +
                 ggplot2::xlab(x_lab1) +
                 ggplot2::ylab(y_lab1) +
-                ggplot2::ggtitle(plot.title) +
-                ggplot2::xlim(lim) +
-                ggplot2::ylim(lim)
+                ggplot2::ggtitle(plot.title) #+
+                #ggplot2::xlim(lim) +
+                #ggplot2::ylim(lim)
         suppressMessages({
           plot <- plot +
                   ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
-                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
-                  ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) #+
+                  #ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
         })
 
 
