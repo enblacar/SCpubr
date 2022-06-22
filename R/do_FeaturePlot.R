@@ -157,8 +157,8 @@ do_FeaturePlot <- function(sample,
   }
 
   # Define fontsize parameters.
-  plot.title.fontsize <- fontsize + 2
-  plot.subtitle.fontsize <- fontsize - 4
+  plot.title.fontsize <- fontsize + 3
+  plot.subtitle.fontsize <- fontsize + 1
   plot.caption.fontsize <- fontsize -4
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1

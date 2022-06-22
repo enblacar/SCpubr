@@ -28,7 +28,7 @@
 #' @param verbose Verbose function?
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
-#'
+#' @export
 #' @examples
 #' \dontrun{
 #' TBD

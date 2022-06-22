@@ -14,7 +14,15 @@ do_BeeSwarmPlot(
   continuous_feature = FALSE,
   colors.use = NULL,
   legend.position = "right",
-  plot.title = "",
+  legend.framewidth = 1.5,
+  legend.tickwidth = 1.5,
+  legend.length = 20,
+  legend.width = 1,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
+  plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   xlab = NULL,
   ylab = "",
   fontsize = 14,
@@ -46,7 +54,13 @@ do_BeeSwarmPlot(
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+
+\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+
+\item{plot.title, plot.subtitle, plot.caption}{Title, subtitle or caption to use in the plot.}
 
 \item{xlab}{Title for the X axis.}
 

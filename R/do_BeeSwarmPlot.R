@@ -11,7 +11,10 @@
 #' @param colors.use Named vector with the color assignment.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param plot.title Title to use in the plot.
+#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
+#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
+#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
 #' @param xlab Title for the X axis.
 #' @param ylab Title for the Y axis.
 #' @param remove_x_axis Remove X axis labels and ticks from the plot.
@@ -35,7 +38,15 @@ do_BeeSwarmPlot <- function(sample,
                             continuous_feature = FALSE,
                             colors.use = NULL,
                             legend.position = "right",
-                            plot.title = "",
+                            legend.framewidth = 1.5,
+                            legend.tickwidth = 1.5,
+                            legend.length = 20,
+                            legend.width = 1,
+                            legend.framecolor = "grey50",
+                            legend.tickcolor = "white",
+                            plot.title = NULL,
+                            plot.subtitle = NULL,
+                            plot.caption = NULL,
                             xlab = NULL,
                             ylab = "",
                             fontsize = 14,
@@ -66,17 +77,25 @@ do_BeeSwarmPlot <- function(sample,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("fontsize" = fontsize,
-                       "raster.dpi" = raster.dpi)
+                       "raster.dpi" = raster.dpi,
+                       "legend.framewidth" = legend.framewidth,
+                       "legend.tickwidth" = legend.tickwidth,
+                       "legend.length" = legend.length,
+                       "legend.width" = legend.width)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
                          "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
                          "feature_to_rank" = feature_to_rank,
                          "group.by" = group.by,
                          "ylab" = ylab,
                          "xlab" = xlab,
                          "slot" = slot,
-                         "viridis_color_map" = viridis_color_map)
+                         "viridis_color_map" = viridis_color_map,
+                         "legend.framecolor" = legend.framecolor,
+                         "legend.tickcolor" = legend.tickcolor)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -84,10 +103,21 @@ do_BeeSwarmPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
+  # Define legend parameters.
+  if (legend.position %in% c("top", "bottom")){
+    legend.barwidth <- legend.length
+    legend.barheight <- legend.width
+  } else if (legend.position %in% c("left", "right")){
+    legend.barwidth <- legend.width
+    legend.barheight <- legend.length
+  }
+
   # Define fontsize parameters.
-  plot.title.fontsize <- fontsize + 2
+  plot.title.fontsize <- fontsize + 3
+  plot.subtitle.fontsize <- fontsize + 1
+  plot.caption.fontsize <- fontsize - 4
   axis.text.fontsize <- fontsize
-  axis.title.fontsize <- fontsize + 1
+  axis.title.fontsize <- fontsize
   legend.text.fontsize <- fontsize - 4
   legend.title.fontsize <- fontsize - 4
 
@@ -125,22 +155,33 @@ do_BeeSwarmPlot <- function(sample,
 
   p <- p +
        ggpubr::theme_pubr(legend = legend.position) +
-       ggplot2::ggtitle(plot.title) +
-       ggplot2::theme(axis.text = ggplot2::element_text(size = axis.text.fontsize,
-                                                        face = "bold"),
-                      axis.title = ggplot2::element_text(size = axis.title.fontsize,
-                                                         face = "bold"),
-                      plot.title = ggplot2::element_text(size = plot.title.fontsize,
-                                                         face = "bold",
-                                                         hjust = 0.5),
-                      legend.text = ggplot2::element_text(size = legend.text.fontsize,
-                                                          face = "bold",
-                                                          hjust = 1),
-                      legend.title = ggplot2::element_text(size = legend.title.fontsize,
-                                                           face = "bold"))
+       ggplot2::labs(title = plot.title,
+                     subtitle = plot.subtitle,
+                     caption = plot.caption) +
+       ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                      plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                      plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                      plot.title.position = "plot",
+                      plot.caption.position = "plot",
+                      axis.title = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                      axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                      legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                      legend.position = legend.position,
+                      legend.title = ggplot2::element_text(face = "bold"),
+                      legend.justification = "center")
 
   if (continuous_feature == TRUE){
-    p <- p + viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map)
+    p <- p +
+         viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) +
+         ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
+                                                         title.position = "top",
+                                                         barwidth = legend.barwidth,
+                                                         barheight = legend.barheight,
+                                                         title.hjust = 0.5,
+                                                         ticks.linewidth = legend.tickwidth,
+                                                         frame.linewidth = legend.framewidth,
+                                                         frame.colour = legend.framecolor,
+                                                         ticks.colour = legend.tickcolor))
   } else if (continuous_feature == FALSE) {
     if (is.null(colors.use)){
       colors.use <- generate_color_scale(levels(sample))
@@ -167,19 +208,17 @@ do_BeeSwarmPlot <- function(sample,
          ggplot2::coord_flip() +
          ggpubr::rremove("y.ticks") +
          ggpubr::rremove("y.text") +
-         ggplot2::xlab(ifelse(is.null(ylab), paste0("Ranking for ", feature_to_rank), ylab)) +
+         ggplot2::xlab(ifelse(is.null(ylab), ifelse(isTRUE(continuous_feature), "Ranking", paste0("Ranking for ", feature_to_rank)), ylab)) +
          ggplot2::ylab(xlab)
 
   } else {
     p <- p +
          ggpubr::rremove("x.ticks") +
          ggpubr::rremove("x.text") +
-         ggplot2::xlab(ifelse(is.null(xlab), paste0("Ranking for ", feature_to_rank), xlab)) +
+         ggplot2::xlab(ifelse(is.null(xlab), ifelse(isTRUE(continuous_feature), "Ranking", paste0("Ranking for ", feature_to_rank)), xlab)) +
          ggplot2::ylab(ylab)
 
   }
-  p <- p +
-       ggpubr::rremove("legend.title")
 
   return(p)
 

@@ -23,8 +23,14 @@ do_NebulosaPlot(
   individual.captions = NULL,
   shape = 16,
   legend = TRUE,
+  legend.framewidth = 1.5,
+  legend.tickwidth = 1.5,
+  legend.length = 20,
+  legend.width = 1,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
   fontsize = 14,
-  legend.position = "right",
+  legend.position = "bottom",
   viridis_color_map = "D",
   verbose = TRUE
 )
@@ -57,6 +63,12 @@ do_NebulosaPlot(
 \item{shape}{Shape of the geometry (ggplot number).}
 
 \item{legend}{Whether to plot the legend or not. Logical.}
+
+\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+
+\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
 
 \item{fontsize}{Base fontsize of the plot.}
 

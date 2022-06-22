@@ -14,6 +14,9 @@
 #' @param shape Shape of the geometry (ggplot number).
 #' @param legend Whether to plot the legend or not. Logical.
 #' @param legend.position Position of the legend in the plot.
+#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
+#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param fontsize Base fontsize of the plot.
 #' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param individual.titles,individual.subtitles,individual.captions Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.
@@ -42,8 +45,14 @@ do_NebulosaPlot <- function(sample,
                              individual.captions = NULL,
                              shape = 16,
                              legend = TRUE,
+                             legend.framewidth = 1.5,
+                             legend.tickwidth = 1.5,
+                             legend.length = 20,
+                             legend.width = 1,
+                             legend.framecolor = "grey50",
+                             legend.tickcolor = "white",
                              fontsize = 14,
-                             legend.position = "right",
+                             legend.position = "bottom",
                              viridis_color_map = "D",
                              verbose = TRUE){
   # Check if the sample provided is a Seurat object.
@@ -63,7 +72,11 @@ do_NebulosaPlot <- function(sample,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("size" = size,
-                       "shape" = shape)
+                       "shape" = shape,
+                       "legend.framewidth" = legend.framewidth,
+                       "legend.tickwidth" = legend.tickwidth,
+                       "legend.length" = legend.length,
+                       "legend.width" = legend.width)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -77,7 +90,9 @@ do_NebulosaPlot <- function(sample,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
                          "slot" = slot,
-                         "individual.titles" = individual.titles)
+                         "individual.titles" = individual.titles,
+                         "legend.framecolor" = legend.framecolor,
+                         "legend.tickcolor" = legend.tickcolor)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -106,9 +121,18 @@ do_NebulosaPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
+  # Define legend parameters.
+  if (legend.position %in% c("top", "bottom")){
+    legend.barwidth <- legend.length
+    legend.barheight <- legend.width
+  } else if (legend.position %in% c("left", "right")){
+    legend.barwidth <- legend.width
+    legend.barheight <- legend.length
+  }
+
   # Define fontsize parameters.
   plot.title.fontsize <- fontsize + 2
-  plot.subtitle.fontsize <- fontsize - 4
+  plot.subtitle.fontsize <- fontsize + 1
   plot.caption.fontsize <- fontsize - 4
   axis.text.fontsize <- fontsize
   axis.title.fontsize <- fontsize + 1
@@ -127,8 +151,17 @@ do_NebulosaPlot <- function(sample,
                         plot.title.position = "plot",
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                        legend.position = legend.position)
+                        legend.position = legend.position,
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center") &
+         ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
+                                                         barwidth = legend.barwidth,
+                                                         barheight = legend.barheight,
+                                                         title.hjust = 0.5,
+                                                         ticks.linewidth = legend.tickwidth,
+                                                         frame.linewidth = legend.framewidth,
+                                                         frame.colour = legend.framecolor,
+                                                         ticks.colour = legend.tickcolor))
     # Compute the total number of plots according to whether joint is set to TRUE or not.
     if (isTRUE(joint)){
       num_plots <- length(features) + 1
