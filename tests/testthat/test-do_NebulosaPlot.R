@@ -87,6 +87,12 @@ testthat::test_that("do_NebulosaPlot: PASS - color map", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_NebulosaPlot: PASS - legend top", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               legend = "top")
+  testthat::expect_type(p, "list")
+})
 
 testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
   testthat::expect_warning(SCpubr::do_NebulosaPlot(sample = sample,

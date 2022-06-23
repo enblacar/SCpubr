@@ -40,6 +40,15 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale",
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend position = top", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                               feature_to_rank = "PC_1",
+                               group.by = "seurat_clusters",
+                               continuous_feature = T,
+                               legend.position = "top")
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_BeeSwarmPlot: FAIL - feature not found", {
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "not_found",
