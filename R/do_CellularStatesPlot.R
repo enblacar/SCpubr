@@ -163,7 +163,6 @@ do_CellularStatesPlot <- function(sample,
         scores <- sample@meta.data[, variables_to_retrieve]
         scores$cell <- rownames(scores)
         # Shuffle the cells so that we accomplish a random plotting, not sample by sample.
-        scores <- scores[sample(scores$cell, nrow(scores)), ]
         scores <- tidyr::tibble(scores)
 
         # Compute the scores for the X axis.
@@ -227,45 +226,44 @@ do_CellularStatesPlot <- function(sample,
           stop(paste0(y2, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
         }
         # Retrieve metadata variables to plot.
-        variables_to_retrieve <- c(x1, x2, y1, y2, group.by)
+        variables_to_retrieve <- c(x1, x2, y1, y2)
         # And store them as a tibble.
         scores <- sample@meta.data[, variables_to_retrieve]
-        scores$cell <- rownames(scores)
         # Shuffle the cells so that we accomplish a random plotting, not sample by sample.
-        scores <- scores[sample(scores$cell, nrow(scores)), ]
-        scores <- tidyr::tibble(scores)
 
         # Compute Y axis values.
-        d <- apply(scores, 1, function(x){as.double(max(x[c(x1, x2)])) - as.double(max(x[c(y1, y2)]))})
-        names(d) <- scores$cell
+        d <- apply(scores, 1, function(x){max(x[c(x1, x2)]) - max(x[c(y1, y2)])})
 
         # Compute X axis values.
-        x <- unlist(sapply(1:length(d), function(x) {
+        x <- sapply(1:length(d), function(x) {
           if (d[x] > 0) {
             d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
-            ifelse(scores[x, x1] > scores[x, x2], d, -d)
+            ifelse(scores[x, x1] < scores[x, x2], d, -d)
           } else {
             d <- log2(abs(scores[x, y1] - scores[x, y2]) + 1)
-            ifelse(scores[x, y1] > scores[x, y2], d, -d)
+            ifelse(scores[x, y1] < scores[x, y2], d, -d)
           }
-        }))
+        })
 
-        names(x) <- scores$cell
+        names(x) <- rownames(scores)
 
         # Define titles for the axis.
-        x_lab1 <- paste0(y2, "  <---->  ", y1)
-        x_lab2 <- paste0(x2, "  <---->  ", x1)
-        y_lab1 <- paste0(y2, "  <---->  ", x2)
-        y_lab2 <- paste0(x1, "  <---->  ", y1)
+        x_lab1 <- paste0(y1, "  <---->  ", y2)
+        x_lab2 <- paste0(x1, "  <---->  ", x2)
+        y_lab1 <- paste0(y1, "  <---->  ", x1)
+        y_lab2 <- paste0(x2, "  <---->  ", y2)
 
         # Define limits of polots.
-        #lim_1 <- min(min(d), min(x))
-        #lim_2 <- max(max(d), max(x))
-        #value <- max(abs(c(lim_1, lim_2)))
-        #lim <- c(-value, value)
+        lim_1 <- min(min(d), min(x))
+        lim_2 <- max(max(d), max(x))
+        value <- max(abs(c(lim_1, lim_2)))
+        lim <- c(-value, value)
 
         # Plot.
-        df <- data.frame("set_x" = x, "set_y" = d, "group.by" = scores$dummy)
+        df <- data.frame(row.names = rownames(scores))
+        df$set_x <- x
+        df$set_y <- d
+        df$group.by <- sample@meta.data[, group.by]
         plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
                 ggplot2::geom_point() +
                 ggpubr::theme_pubr(legend = "bottom") +
@@ -273,14 +271,14 @@ do_CellularStatesPlot <- function(sample,
                 ggplot2::scale_color_manual(values = colors.use)  +
                 ggplot2::xlab(x_lab1) +
                 ggplot2::ylab(y_lab1) +
-                ggplot2::ggtitle(plot.title) #+
-                #ggplot2::xlim(lim) +
-                #ggplot2::ylim(lim)
+                ggplot2::ggtitle(plot.title) +
+                ggplot2::xlim(lim) +
+                ggplot2::ylim(lim)
         suppressMessages({
           plot <- plot +
                   ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
-                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) #+
-                  #ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
+                  ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
         })
 
 
