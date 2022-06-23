@@ -1,4 +1,4 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
 genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -11,6 +11,26 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
                                      gene_list = genes,
                                      x1 = "A",
                                      y1 = "B")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot.title = "A",
+                                      plot.subtitle = "B",
+                                      plot.caption = "C")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      enforce_simmetry = T)
   testthat::expect_type(p, "list")
 })
 
@@ -91,6 +111,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      x2 = "C",
+                                      enforce_simmetry = T)
+  testthat::expect_type(p, "list")
+})
 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parameters", {
@@ -132,6 +161,17 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      x2 = "C",
+                                      y2 = "D",
+                                      enforce_simmetry = T)
   testthat::expect_type(p, "list")
 })
 

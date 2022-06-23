@@ -25,7 +25,9 @@
 #' @param ylab  Title for the Y axis. Only works if y2 is not set up.
 #' @param axis.ticks  Whether to show axis ticks.
 #' @param axis.text  Whether to show axis text.
+#' @param enforce_simmetry Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
 #' @param verbose Verbose function?
+#' @param fontsize Overall fontsize of the plot.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -42,20 +44,57 @@ do_CellularStatesPlot <- function(sample,
                                   group.by = NULL,
                                   colors.use = NULL,
                                   legend.position = NULL,
-                                  plot.title = "",
+                                  plot.title = NULL,
                                   plot.subtitle = NULL,
                                   plot.caption = NULL,
+                                  fontsize = 14,
                                   xlab = NULL,
                                   ylab = NULL,
                                   axis.ticks = TRUE,
                                   axis.text = TRUE,
-                                  verbose = FALSE){
+                                  verbose = FALSE,
+                                  enforce_simmetry = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
+
+    # Check logical parameters.
+    logical_list <- list("axis.ticks" = axis.ticks,
+                         "axis.text" = axis.text,
+                         "verbose" = verbose,
+                         "enforce_simmetry" = enforce_simmetry)
+    check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+    # Check numeric parameters.
+    numeric_list <- list("fontsize" = fontsize)
+    check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+    # Check character parameters.
+    character_list <- list("gene_list" = gene_list,
+                           "x1" = x1,
+                           "x2" = x2,
+                           "y1" = y1,
+                           "y2" = y2,
+                           "group.by" = group.by,
+                           "ylab" = ylab,
+                           "xlab" = xlab,
+                           "legend.position" = legend.position,
+                           "plot.title" = plot.title,
+                           "plot.subtitle" = plot.subtitle,
+                           "plot.caption" = plot.caption)
+    check_type(parameters = character_list, required_type = "character", test_function = is.character)
+
+
     # Define pipe operator internally.
     `%>%` <- purrr::`%>%`
+
+    # Define fontsize parameters.
+    plot.title.fontsize <- fontsize + 3
+    plot.subtitle.fontsize <- fontsize + 1
+    plot.caption.fontsize <- fontsize - 4
+    axis.text.fontsize <- fontsize
+    axis.title.fontsize <- fontsize
+    legend.text.fontsize <- fontsize - 4
+    legend.title.fontsize <- fontsize - 4
 
     # Check the colors provided.
     if (is.null(colors.use)){
@@ -123,23 +162,30 @@ do_CellularStatesPlot <- function(sample,
       x_lab <- ifelse(is.null(xlab), x1, xlab)
       y_lab <- ifelse(is.null(ylab), y1, ylab)
 
-      # Define limits of polots.
-      lim1 <- min(min(x), min(y))
-      lim2 <- max(max(x), max(y))
-      lim_x <- c(lim1, lim2)
-      lim_y <- c(lim1, lim2)
 
       # Plot
       df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
-      plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-              ggplot2::geom_point() +
-              ggpubr::theme_pubr(legend = "bottom") +
-              ggpubr::rremove("legend.title") +
-              ggplot2::scale_color_manual(values = colors.use) +
-              ggplot2::xlab(x_lab) +
-              ggplot2::ylab(y_lab) +
-              ggplot2::ggtitle(plot.title) +
-              ggplot2::coord_fixed(xlim = lim_x, ylim = lim_y)
+      p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
+           ggplot2::geom_point() +
+           ggpubr::theme_pubr(legend = "bottom") +
+           ggpubr::rremove("legend.title") +
+           ggplot2::scale_color_manual(values = colors.use) +
+           ggplot2::xlab(x_lab) +
+           ggplot2::ylab(y_lab) +
+           ggplot2::labs(title = plot.title,
+                         subtitle = plot.subtitle,
+                         caption = plot.caption)
+
+      if (isTRUE(enforce_simmetry)){
+        # Define limits of polots.
+        lim1 <- min(min(x), min(y))
+        lim2 <- max(max(x), max(y))
+        lim_x <- c(lim1, lim2)
+        lim_y <- c(lim1, lim2)
+
+        p <- p  +
+             ggplot2::coord_fixed(xlim = lim_x, ylim = lim_y)
+      }
 
     # 3-variable plot.
     } else if (is.null(y2) & !(is.null(x2))){
@@ -189,22 +235,31 @@ do_CellularStatesPlot <- function(sample,
         x_lab <- ifelse(is.null(xlab), paste0(x2, "  <---->  ", x1), xlab)
         y_lab <- ifelse(is.null(ylab), y1, ylab)
 
-        # Define limits of polots.
-        lim <- max(abs(x))
-        lim_x <- c(-lim, lim)
-        lim_y <- NULL
+
 
         # Plot.
         df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
-        plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-                ggplot2::geom_point() +
-                ggpubr::theme_pubr(legend = "bottom") +
-                ggpubr::rremove("legend.title")  +
-                ggplot2::scale_color_manual(values = colors.use) +
-                ggplot2::xlab(x_lab) +
-                ggplot2::ylab(y_lab) +
-                ggplot2::ggtitle(plot.title) +
-                ggplot2::xlim(lim_x)
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
+             ggplot2::geom_point() +
+             ggpubr::theme_pubr(legend = "bottom") +
+             ggpubr::rremove("legend.title")  +
+             ggplot2::scale_color_manual(values = colors.use) +
+             ggplot2::xlab(x_lab) +
+             ggplot2::ylab(y_lab) +
+             ggplot2::labs(title = plot.title,
+                           subtitle = plot.subtitle,
+                           caption = plot.caption)
+
+        if (isTRUE(enforce_simmetry)){
+          # Define limits of polots.
+          lim <- max(abs(x))
+          lim_x <- c(-lim, lim)
+          lim_y <- NULL
+
+          p <- p +
+               ggplot2::xlim(lim_x)
+
+        }
 
     # 4-parameter plot.
     } else if (!is.null(y2) & !(is.null(x2))){
@@ -259,41 +314,65 @@ do_CellularStatesPlot <- function(sample,
         df$set_x <- x
         df$set_y <- d
         df$group.by <- sample@meta.data[, group.by]
-        plot <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-                ggplot2::geom_point() +
-                ggpubr::theme_pubr(legend = "bottom") +
-                ggpubr::rremove("legend.title")  +
-                ggplot2::scale_color_manual(values = colors.use)  +
-                ggplot2::xlab(x_lab1) +
-                ggplot2::ylab(y_lab1) +
-                ggplot2::ggtitle(plot.title)
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
+             ggplot2::geom_point() +
+             ggpubr::theme_pubr(legend = "bottom") +
+             ggpubr::rremove("legend.title")  +
+             ggplot2::scale_color_manual(values = colors.use)  +
+             ggplot2::xlab(x_lab1) +
+             ggplot2::ylab(y_lab1) +
+             ggplot2::labs(title = plot.title,
+                           subtitle = plot.subtitle,
+                           caption = plot.caption)
         suppressMessages({
-          plot <- plot +
-                  ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
-                  ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2))
+          p <- p +
+               ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
+               ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2))
         })
+    if (isTRUE(enforce_simmetry)){
+      # Define limits of polots.
+      lim_1 <- min(min(d), min(x))
+      lim_2 <- max(max(d), max(x))
+      value <- max(abs(c(lim_1, lim_2)))
+      lim <- c(-value, value)
 
+      suppressMessages({
+        p <- p +
+             ggplot2::xlim(lim) +
+             ggplot2::ylim(lim) +
+             ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
+             ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
+             ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+      })
+
+    }
 
     }
 
     # Overall formatting for the plot.
-    plot <- plot +
-            ggplot2::theme(axis.text = ggplot2::element_text(face = "bold"),
-                           axis.title = ggplot2::element_text(face = "bold"),
-                           plot.title = ggplot2::element_text(face = "bold",
-                                                              hjust = 0.5),
-                           legend.text = ggplot2::element_text(size = 10, face = "bold", hjust = 1))
+    p <- p +
+         ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
+                        axis.title = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
+                        axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                        legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                        legend.position = legend.position,
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center")
 
     # Remove axis ticks?
     if (axis.ticks == FALSE){
-        plot <- plot + ggpubr::rremove("ticks")
+        p <- p + ggpubr::rremove("ticks")
     }
 
     # Remove axis text?
     if (axis.text == FALSE){
-        plot <- plot + ggpubr::rremove("axis.text")
+        p <- p + ggpubr::rremove("axis.text")
     }
 
-    return(plot)
+    return(p)
 
 }

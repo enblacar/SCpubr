@@ -14,14 +14,16 @@ do_CellularStatesPlot(
   group.by = NULL,
   colors.use = NULL,
   legend.position = NULL,
-  plot.title = "",
+  plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
+  fontsize = 14,
   xlab = NULL,
   ylab = NULL,
   axis.ticks = TRUE,
   axis.text = TRUE,
-  verbose = FALSE
+  verbose = FALSE,
+  enforce_simmetry = FALSE
 )
 }
 \arguments{
@@ -45,6 +47,8 @@ do_CellularStatesPlot(
 
 \item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 
+\item{fontsize}{Overall fontsize of the plot.}
+
 \item{xlab}{Title for the X axis. Only works if y2 is not set up.}
 
 \item{ylab}{Title for the Y axis. Only works if y2 is not set up.}
@@ -54,6 +58,8 @@ do_CellularStatesPlot(
 \item{axis.text}{Whether to show axis text.}
 
 \item{verbose}{Verbose function?}
+
+\item{enforce_simmetry}{Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).}
 }
 \value{
 A ggplot2 object containing a butterfly plot.
