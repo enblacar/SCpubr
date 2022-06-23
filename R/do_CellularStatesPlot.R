@@ -167,9 +167,9 @@ do_CellularStatesPlot <- function(sample,
       df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
       p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
            ggplot2::geom_point() +
-           ggpubr::theme_pubr(legend = "bottom") +
-           ggpubr::rremove("legend.title") +
+           ggpubr::theme_pubr() +
            ggplot2::scale_color_manual(values = colors.use) +
+           ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
            ggplot2::xlab(x_lab) +
            ggplot2::ylab(y_lab) +
            ggplot2::labs(title = plot.title,
@@ -241,11 +241,11 @@ do_CellularStatesPlot <- function(sample,
         df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
              ggplot2::geom_point() +
-             ggpubr::theme_pubr(legend = "bottom") +
-             ggpubr::rremove("legend.title")  +
              ggplot2::scale_color_manual(values = colors.use) +
+             ggpubr::theme_pubr() +
              ggplot2::xlab(x_lab) +
              ggplot2::ylab(y_lab) +
+             ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
              ggplot2::labs(title = plot.title,
                            subtitle = plot.subtitle,
                            caption = plot.caption)
@@ -316,9 +316,9 @@ do_CellularStatesPlot <- function(sample,
         df$group.by <- sample@meta.data[, group.by]
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
              ggplot2::geom_point() +
-             ggpubr::theme_pubr(legend = "bottom") +
-             ggpubr::rremove("legend.title")  +
-             ggplot2::scale_color_manual(values = colors.use)  +
+             ggplot2::scale_color_manual(values = colors.use) +
+             ggpubr::theme_pubr() +
+             ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
              ggplot2::xlab(x_lab1) +
              ggplot2::ylab(y_lab1) +
              ggplot2::labs(title = plot.title,
