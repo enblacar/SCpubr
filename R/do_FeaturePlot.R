@@ -390,7 +390,7 @@ do_FeaturePlot <- function(sample,
 
   # Add custom title.
   if (!is.null(plot.title)){
-    if (length(features) > 1 | !(is.null(split.by))){
+    if (length(features) > 1 | !(is.null(split.by)) | !(is.null(cells.highlight)) | !(is.null(idents.highlight))){
       p <- p +
            patchwork::plot_annotation(title = plot.title,
                                       theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
@@ -403,7 +403,7 @@ do_FeaturePlot <- function(sample,
 
   # Add custom subtitle.
   if (!is.null(plot.subtitle)){
-    if (length(features) > 1 | !(is.null(split.by))){
+    if (length(features) > 1 | !(is.null(split.by)) | !(is.null(cells.highlight)) | !(is.null(idents.highlight))){
       p <- p +
            patchwork::plot_annotation(subtitle = plot.subtitle,
                                       theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
@@ -415,7 +415,7 @@ do_FeaturePlot <- function(sample,
 
   # Add custom caption
   if (!is.null(plot.caption)){
-    if (length(features) > 1 | !(is.null(split.by))){
+    if (length(features) > 1 | !(is.null(split.by)) | !(is.null(cells.highlight)) | !(is.null(idents.highlight))){
       p <- p +
            patchwork::plot_annotation(caption = plot.caption,
                                       theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))

@@ -17,7 +17,7 @@
 #' @param legend.ncol,legend.nrow  Number of columns/rows in the legend.
 #' @param legend.position  Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow  Logical stating whether the legend is filled by row or not.
-#' @param plot.title  Title to use in the plot.
+#' @param plot.title,plot.subtitle,plot.caption  Title, subtitle or caption to use in the plot.
 #' @param horizontal Whether to plot the Bar plot horizontally.
 #' @param verbose Use warnings.
 #' @param add.summary_labels Logical. Whether to add the total number of values on top of each bar. Only works with position = stack.
@@ -39,6 +39,8 @@ do_BarPlot <- function(sample,
                        xlab = NULL,
                        ylab = NULL,
                        plot.title = NULL,
+                       plot.subtitle = NULL,
+                       plot.caption = NULL,
                        legend = TRUE,
                        legend.position = "right",
                        legend.title.position = "top",
@@ -88,6 +90,8 @@ do_BarPlot <- function(sample,
                            "group.by" = group.by,
                            "colors.use" = colors.use,
                            "plot.title" = plot.title,
+                           "plot.subtitle" = plot.subtitle,
+                           "plot.caption" = plot.caption,
                            "xlab" = xlab,
                            "ylab" = ylab,
                            "order.by" = order.by,
@@ -96,11 +100,13 @@ do_BarPlot <- function(sample,
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 2
+    plot.title.fontsize <- fontsize + 3
+    plot.subtitle.fontsize <- fontsize + 1
+    plot.caption.fontsize <- fontsize -4
     axis.text.fontsize <- fontsize
     axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 2
-    legend.title.fontsize <- fontsize - 2
+    legend.text.fontsize <- fontsize - 4
+    legend.title.fontsize <- fontsize - 4
 
     # Checks.
     if (!(position %in% c("fill", "stack"))){stop("Position '", position, "' not supported. Please use either fill or stack.")}
@@ -175,9 +181,15 @@ do_BarPlot <- function(sample,
              ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                             axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                             axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                            plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                            plot.title.position = "plot",
+                            plot.caption.position = "plot",
                             legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                            plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
+                            legend.position = legend.position,
+                            legend.title = ggplot2::element_text(face = "bold"),
+                            legend.justification = "center") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
@@ -229,9 +241,15 @@ do_BarPlot <- function(sample,
              ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                             axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
                             axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
+                            plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
+                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
+                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                            plot.title.position = "plot",
+                            plot.caption.position = "plot",
                             legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                            plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5)) +
+                            legend.position = legend.position,
+                            legend.title = ggplot2::element_text(face = "bold"),
+                            legend.justification = "center") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
@@ -347,7 +365,17 @@ do_BarPlot <- function(sample,
       }
       # Add plot title.
       if (!is.null(plot.title)){
-        p <- p + ggplot2::ggtitle(plot.title)
+        p <- p + ggplot2::labs(title = plot.title)
+      }
+
+      # Add plot subtitle.
+      if (!is.null(plot.subtitle)){
+        p <- p + ggplot2::labs(subtitle = plot.subtitle)
+      }
+
+      # Add plot caption
+      if (!is.null(plot.caption)){
+        p <- p + ggplot2::labs(caption = plot.caption)
       }
       # Whether to flip the axis or not.
       if (isTRUE(horizontal)){

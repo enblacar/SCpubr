@@ -215,15 +215,6 @@ do_DimPlot <- function(sample,
       }
     }
 
-    # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 2
-    plot.subtitle.fontsize <- fontsize - 4
-    plot.caption.fontsize <- fontsize -4
-    axis.text.fontsize <- fontsize
-    axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 2
-    legend.title.fontsize <- fontsize - 2
-
     # If the UMAP does not need to be split in multiple panes (default case).
     not_highlighting_and_not_split_by <- is.null(cells.highlight) & is.null(idents.highlight) & is.null(split.by)
     split_by_used <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(split.by))
@@ -245,15 +236,6 @@ do_DimPlot <- function(sample,
                                   raster = raster,
                                   raster.dpi = c(raster.dpi, raster.dpi),
                                   ncol = ncol) &
-            ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                           plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                           plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
-                           plot.title.position = "plot",
-                           plot.caption.position = "plot",
-                           legend.justification = "center",
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           legend.position = legend.position) &
             ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
@@ -295,16 +277,11 @@ do_DimPlot <- function(sample,
                                  raster = raster,
                                  raster.dpi = c(raster.dpi, raster.dpi),
                                  ncol = ncol) &
-                  ggplot2::ggtitle(iteration) &
-                  ggplot2::theme(legend.position = legend.position,
-                                 legend.justification = "center")
+                  ggplot2::labs(title = iteration)
             p <- add_scale(p = p,
                            function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
                                                                       values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
                            scale = "color") &
-                 ggplot2::theme(plot.title = ggplot2::element_text(size = plot.title.fontsize, face = "bold", hjust = 0.5),
-                                legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                                legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
                  ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                                nrwo = legend.nrow,
                                                                byrow = legend.byrow,
@@ -344,35 +321,39 @@ do_DimPlot <- function(sample,
                              pt.size = pt.size,
                              raster = raster,
                              raster.dpi = c(raster.dpi, raster.dpi),
-                             ncol = ncol) &
-             ggplot2::theme(legend.position = legend.position,
-                            legend.justification = "center")
+                             ncol = ncol)
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected cells"),
                                                                   values = c(na.value, colors.use)),
                        scale = "color") &
-             ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
-                            plot.title.position = "plot",
-                            plot.caption.position = "plot",
-                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                            legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold")) &
              ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                            nrow = legend.nrow,
                                                            byrow = legend.byrow,
                                                            override.aes = list(size = legend.icon.size),
                                                            title.position = legend.title.position))
     }
-
+    hjust_use <- if(split_by_used){0.5} else {0}
+    # Add theme.
+    p <- p &
+      ggplot2::theme_minimal(base_size = fontsize) &
+      ggplot2::theme(plot.title = ggtext::element_markdown(face = "bold", hjust = hjust_use),
+                     plot.subtitle = ggtext::element_markdown(hjust = 0),
+                     plot.caption = ggtext::element_markdown(hjust = 1),
+                     plot.title.position = "plot",
+                     plot.caption.position = "plot",
+                     legend.justification = "center",
+                     legend.text = ggplot2::element_text(face = "bold"),
+                     legend.title = ggplot2::element_text(face = "bold"),
+                     legend.position = legend.position,
+                     axis.title.x = ggplot2::element_text(face = "bold"),
+                     axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
+                     panel.grid = ggplot2::element_blank())
 
     # General additions to all kind of plots.
     if (!is.null(plot.title)){
       if (!(is.null(split.by))){
         p <- p +
-             patchwork::plot_annotation(title = plot.title,
-                                        theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
-                                                                                                     face = "bold")))
+             patchwork::plot_annotation(title = plot.title)
       } else {
         p <- p &
              ggplot2::labs(title = plot.title)
@@ -384,8 +365,7 @@ do_DimPlot <- function(sample,
     if (!is.null(plot.subtitle)){
       if (!(is.null(split.by))){
         p <- p +
-             patchwork::plot_annotation(subtitle = plot.subtitle,
-                                        theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+             patchwork::plot_annotation(subtitle = plot.subtitle)
       } else {
         p <- p +
              ggplot2::labs(subtitle = plot.subtitle)
@@ -396,8 +376,7 @@ do_DimPlot <- function(sample,
     if (!is.null(plot.caption)){
       if (!(is.null(split.by))){
         p <- p +
-             patchwork::plot_annotation(caption = plot.caption,
-                                        theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+             patchwork::plot_annotation(caption = plot.caption)
       } else {
         p <- p +
              ggplot2::labs(caption = plot.caption)
@@ -425,8 +404,6 @@ do_DimPlot <- function(sample,
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
             ggpubr::rremove("ticks") &
-            ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
             ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
         }
     # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
@@ -435,15 +412,16 @@ do_DimPlot <- function(sample,
         p <- p &
             ggpubr::rremove("axis") &
             ggpubr::rremove("axis.text") &
-            ggpubr::rremove("ticks") &
-            ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                           axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold", angle = 90)) &
+            ggpubr::rremove("ticks")  &
             ggplot2::xlab(labels[1]) & ggplot2::ylab(labels[2])
     }
     # Label treatment.
     if (label == TRUE && is.null(cells.highlight)){
         p$layers[[2]]$aes_params$fontface <- "bold"
     }
+
+
+
     # Return the final plot.
     return(p)
 }

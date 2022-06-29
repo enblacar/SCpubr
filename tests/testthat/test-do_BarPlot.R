@@ -257,7 +257,9 @@ testthat::test_that("do_BarPlot: PASS - one variable - xlab, ylab and title", {
                           position = "stack",
                           xlab = "A",
                           ylab = "B",
-                          plot.title = "C")
+                          plot.title = "C",
+                          plot.subtitle = "D",
+                          plot.caption = "E")
   testthat::expect_type(p, "list")
 })
 
