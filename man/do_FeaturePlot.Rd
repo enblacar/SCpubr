@@ -9,11 +9,15 @@ do_FeaturePlot(
   features,
   assay = NULL,
   reduction = NULL,
-  split.by = NULL,
-  pt.size = 0.5,
-  legend = TRUE,
-  split.by.idents = NULL,
   slot = NULL,
+  split.by = NULL,
+  split.by.idents = NULL,
+  cells.highlight = NULL,
+  idents.highlight = NULL,
+  dims = c(1, 2),
+  pt.size = 0.5,
+  fontsize = 14,
+  legend = TRUE,
   legend.position = "bottom",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
@@ -24,18 +28,14 @@ do_FeaturePlot(
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  fontsize = 14,
-  ncol = NULL,
-  cells.highlight = NULL,
-  idents.highlight = NULL,
-  dims = c(1, 2),
-  viridis_color_map = "D",
-  verbose = TRUE,
   individual.titles = NULL,
   individual.subtitles = NULL,
   individual.captions = NULL,
+  ncol = NULL,
+  viridis_color_map = "D",
   raster = FALSE,
-  raster.dpi = 2048
+  raster.dpi = 1024,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -47,15 +47,23 @@ do_FeaturePlot(
 
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
+\item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
+
 \item{split.by}{Split the plot in as many unique values stored in the provided metadata column.}
-
-\item{pt.size}{Point size.}
-
-\item{legend}{Whether to plot the legend or not.}
 
 \item{split.by.idents}{Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.}
 
-\item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
+\item{cells.highlight}{Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.}
+
+\item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
+
+\item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
+
+\item{pt.size}{Point size.}
+
+\item{fontsize}{Base fontsize of the figure.}
+
+\item{legend}{Whether to plot the legend or not.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -67,25 +75,17 @@ do_FeaturePlot(
 
 \item{plot.title, plot.subtitle, plot.caption}{Title for the plot or subtitle or caption.}
 
-\item{fontsize}{Base fontsize of the figure.}
+\item{individual.titles, individual.subtitles, individual.captions}{Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{ncol}{Number of columns to use in the arrangement of the output if more than one feature is queried to the function.}
 
-\item{cells.highlight}{Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.}
-
-\item{idents.highlight}{Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in \code{Seurat::Idents(sample)}.}
-
-\item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
-
 \item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{verbose}{Whether to show warnings.}
-
-\item{individual.titles, individual.subtitles, individual.captions}{Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
-\item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::DimPlot()} behavior.}
+\item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::FeaturePlot()} behavior.}
+
+\item{verbose}{Whether to show warnings.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

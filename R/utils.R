@@ -9,14 +9,14 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
                    "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
-                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
+                   "do_DimPlot" = c("colorspace", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales", "ggtext"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr", "ggtext"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
@@ -46,14 +46,14 @@ check_suggests <- function(function_name){
 #' TBD
 #' }
 state_dependencies <- function(func_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colortools", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "ggpubr", "purrr", "rlang", "ggrepel", "ggtext"),
                    "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "ggpubr", "viridis", "purrr", "rlang"),
-                   "do_DimPlot" = c("colortools", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
+                   "do_DimPlot" = c("colorspace", "Seurat", "ggpubr", "ggplot2", "patchwork", "ggtext"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "ggpubr", "patchwork", "scales", "ggtext"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "ggpubr", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colortools", "ggbeeswarm", "ggrastr", "ggtext"),
+                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggpubr", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats"),
@@ -68,7 +68,7 @@ state_dependencies <- function(func_name = NULL){
     }
   }
 
-  cran_packages <- c("colortools",
+  cran_packages <- c("colorspace",
                      "dplyr",
                      "enrichR",
                      "forcats",
@@ -197,7 +197,16 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 #' }
 generate_color_scale <- function(names_use){
   # Generate a vector of colors equal to the number of identities in the sample.
-  colors <- colortools::setColors("#0084a9", length(names_use))
+  colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
+  colors <- grDevices::col2rgb(colors)
+  colors <- grDevices::rgb2hsv(colors)
+  colors["v",] <- colors["v", ] - 0.1
+  colors["s",] <- colors["s", ] + 0.2
+  colors["s",][colors["s",] > 1] <- 1
+  colors <- grDevices::hsv(h = colors["h", ],
+                           s = colors["s",],
+                           v = colors["v",],
+                           alpha = 1)
   names(colors) <- names_use
   return(colors)
 }

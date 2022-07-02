@@ -14,6 +14,8 @@ do_BarPlot(
   xlab = NULL,
   ylab = NULL,
   plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   legend = TRUE,
   legend.position = "right",
   legend.title.position = "top",
@@ -51,7 +53,7 @@ do_BarPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{plot.title}{Title to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{Title, subtitle or caption to use in the plot.}
 
 \item{legend}{Whether to plot the legend.}
 

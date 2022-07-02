@@ -20,7 +20,7 @@ Suggests:
     ggpubr,
     tidyr,
     dplyr,
-    colortools,
+    colorspace,
     viridis,
     pbapply,
     patchwork,

@@ -14,7 +14,7 @@ do_DimPlot(
   order = NULL,
   pt.size = 0.5,
   label = FALSE,
-  label.color = "black",
+  label.color = "white",
   repel = TRUE,
   cells.highlight = NULL,
   idents.highlight = NULL,
@@ -33,7 +33,7 @@ do_DimPlot(
   legend.icon.size = 4,
   legend.byrow = FALSE,
   raster = FALSE,
-  raster.dpi = 2048,
+  raster.dpi = 1024,
   dims = c(1, 2),
   fontsize = 14,
   na.value = "grey75"

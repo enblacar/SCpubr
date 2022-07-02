@@ -108,7 +108,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - PASS - Colors m
 # GENERATE COLOR SCALE
 testthat::test_that("utils: generate_color_scale - PASS - equal length of output", {
   names_use <- c("a", "b", "c")
-  colors <- colortools::setColors("#457b9d", length(names_use))
+  colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
   testthat::expect_length(colors, length(names_use))
 })
 
