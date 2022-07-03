@@ -76,7 +76,8 @@ do_NebulosaPlot <- function(sample,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
-                       "legend.width" = legend.width)
+                       "legend.width" = legend.width,
+                       "dims" = dims)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -130,30 +131,28 @@ do_NebulosaPlot <- function(sample,
     legend.barheight <- legend.length
   }
 
-  # Define fontsize parameters.
-  plot.title.fontsize <- fontsize + 2
-  plot.subtitle.fontsize <- fontsize + 1
-  plot.caption.fontsize <- fontsize - 4
-  axis.text.fontsize <- fontsize
-  axis.title.fontsize <- fontsize + 1
-  legend.text.fontsize <- fontsize - 4
-  legend.title.fontsize <- fontsize - 4
-
   # Plot a density plot using Nebulosa package.
     p <- Nebulosa::plot_density(object = sample,
                                 features = features,
                                 joint = joint,
-                                reduction = reduction) &
-         Seurat::NoAxes() &
-         ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+                                reduction = reduction,
+                                dims = dims) &
+         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme(axis.title = ggplot2::element_blank(),
+                        axis.text = ggplot2::element_blank(),
+                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(hjust = 0),
+                        plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
+                        panel.grid = ggplot2::element_blank(),
+                        text = ggplot2::element_text(family = "sans"),
                         plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                        legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,
                         legend.title = ggplot2::element_text(face = "bold"),
-                        legend.justification = "center") &
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        panel.grid.major = ggplot2::element_blank()) &
          ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
                                                          barwidth = legend.barwidth,
                                                          barheight = legend.barheight,
@@ -171,8 +170,8 @@ do_NebulosaPlot <- function(sample,
     p <- add_scale(p = p,
                    num_plots = num_plots,
                    scale = "color",
-                   function_use = viridis::scale_color_viridis(na.value = "grey75",
-                                                               option = viridis_color_map))
+                   function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
+                                                                 option = viridis_color_map))
     # Remove legend.
     if (legend == FALSE){
       p <- p + Seurat::NoLegend()
@@ -188,9 +187,7 @@ do_NebulosaPlot <- function(sample,
           p <- p +
                ggplot2::labs(title = plot.title)
         } else {
-            p <- p & patchwork::plot_annotation(title = plot.title,
-                                                theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
-                                                                                                             face = "bold")))
+            p <- p & patchwork::plot_annotation(title = plot.title)
         }
     }
 
@@ -200,8 +197,7 @@ do_NebulosaPlot <- function(sample,
         p <- p &
              ggplot2::labs(subtitle = plot.subtitle)
       } else {
-        p <- p & patchwork::plot_annotation(subtitle = plot.subtitle,
-                                            theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+        p <- p & patchwork::plot_annotation(subtitle = plot.subtitle)
       }
     }
 
@@ -211,8 +207,7 @@ do_NebulosaPlot <- function(sample,
         p <- p &
              ggplot2::labs(caption = plot.caption)
       } else {
-        p <- p & patchwork::plot_annotation(caption = plot.caption,
-                                            theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+        p <- p & patchwork::plot_annotation(caption = plot.caption)
       }
     }
 

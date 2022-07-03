@@ -33,7 +33,8 @@ do_BarPlot(
   repel.summary_labels = FALSE,
   size.labels = 3,
   rotate_x_labels = NULL,
-  return_data_matrix = FALSE
+  return_data_matrix = FALSE,
+  plot_line_guides = TRUE
 )
 }
 \arguments{
@@ -86,6 +87,8 @@ do_BarPlot(
 \item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
 
 \item{return_data_matrix}{Logical. Whether to also output the data matrix used to generate the bar plot. This is useful to report it for supplementary data.}
+
+\item{plot_line_guides}{Logical. Whether to plot line guides for position = "stack".}
 }
 \value{
 A ggplot2 object containing a Bar plot.
