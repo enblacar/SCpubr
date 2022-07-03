@@ -26,6 +26,7 @@
 #' @param size.labels Numeric. Modify the size of the labels.
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
 #' @param return_data_matrix Logical. Whether to also output the data matrix used to generate the bar plot. This is useful to report it for supplementary data.
+#' @param plot_line_guides Logical. Whether to plot line guides for position = "stack".
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
@@ -58,7 +59,8 @@ do_BarPlot <- function(sample,
                        repel.summary_labels = FALSE,
                        size.labels = 3,
                        rotate_x_labels = NULL,
-                       return_data_matrix = FALSE){
+                       return_data_matrix = FALSE,
+                       plot_line_guides = TRUE){
     # Checks for packages.
     check_suggests(function_name = "do_BarPlot")
     # Check if the sample provided is a Seurat object.
@@ -178,18 +180,6 @@ do_BarPlot <- function(sample,
                                size = 1) +
              ggpubr::theme_pubr(legend = legend.position) +
              ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                            axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                            axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                            plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
-                            plot.title.position = "plot",
-                            plot.caption.position = "plot",
-                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                            legend.position = legend.position,
-                            legend.title = ggplot2::element_text(face = "bold"),
-                            legend.justification = "center") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
@@ -238,23 +228,48 @@ do_BarPlot <- function(sample,
                                size = 1) +
              ggpubr::theme_pubr(legend = legend.position) +
              ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
-             ggplot2::theme(axis.title.x = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                            axis.title.y = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                            axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                            plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                            plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                            plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
-                            plot.title.position = "plot",
-                            plot.caption.position = "plot",
-                            legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
-                            legend.position = legend.position,
-                            legend.title = ggplot2::element_text(face = "bold"),
-                            legend.justification = "center") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
                                                           byrow = legend.byrow,
                                                           title.position = legend.title.position))
       }
+      # Add theme.
+      p <- p &
+        ggplot2::theme_minimal(base_size = fontsize) &
+        ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
+                       axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                       plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                       plot.subtitle = ggtext::element_markdown(hjust = 0),
+                       plot.caption = ggtext::element_markdown(hjust = 1),
+                       plot.title.position = "plot",
+                       panel.grid = ggplot2::element_blank(),
+                       text = ggplot2::element_text(family = "sans"),
+                       plot.caption.position = "plot",
+                       legend.text = ggplot2::element_text(face = "bold"),
+                       legend.position = legend.position,
+                       legend.title = ggplot2::element_text(face = "bold"),
+                       legend.justification = "center",
+                       plot.margin = ggplot2::margin(t = 10, r = 40, b = 10, l = 10),
+                       axis.ticks = ggplot2::element_line(color = "black"),
+                       axis.line = ggplot2::element_line(color = "black"))
+
+      # Whether to flip the axis or not.
+      if (isTRUE(horizontal)){
+        p <- p &
+             ggplot2::coord_flip()
+        if (position == "stack" & isTRUE(plot_line_guides)){
+          p <- p &
+               ggplot2::theme(panel.grid.major.x = ggplot2::element_line(color = "grey75", linetype = "dashed"))
+
+        }
+      } else if (isFALSE(horizontal)){
+        if (position == "stack" & isTRUE(plot_line_guides)){
+          p <- p &
+               ggplot2::theme(panel.grid.major.y = ggplot2::element_line(color = "grey75", linetype = "dashed"))
+
+        }
+      }
+
 
       # Add labels on top of bars.
       if (isTRUE(add.subgroup_labels) | isTRUE(add.summary_labels)){
@@ -377,10 +392,7 @@ do_BarPlot <- function(sample,
       if (!is.null(plot.caption)){
         p <- p + ggplot2::labs(caption = plot.caption)
       }
-      # Whether to flip the axis or not.
-      if (isTRUE(horizontal)){
-        p <- p + ggplot2::coord_flip()
-      }
+
       # Whether to plot the legend.
       if (isFALSE(legend)){
         p <- p + Seurat::NoLegend()

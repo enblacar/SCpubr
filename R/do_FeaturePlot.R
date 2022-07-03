@@ -377,7 +377,7 @@ do_FeaturePlot <- function(sample,
   p <- p &
     ggplot2::theme_minimal(base_size = fontsize) &
     ggplot2::coord_cartesian(expand = FALSE) &
-    ggplot2::theme(plot.margin = ggplot2::margin(t = 5, r = 5, b = 5, l = 5),
+    ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                    plot.title = ggtext::element_markdown(face = "bold",
                                                          hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
                    plot.subtitle = ggtext::element_markdown(hjust = 0),

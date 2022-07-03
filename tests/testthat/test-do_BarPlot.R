@@ -13,6 +13,14 @@ testthat::test_that("do_BarPlot: PASS - one variable - fill", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_BarPlot: PASS - one variable - remove guides", {
+  p <- SCpubr::do_BarPlot(sample = sample,
+                          features = "seurat_clusters",
+                          position = "stack",
+                          plot_line_guides = F)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_BarPlot: PASS - one variable - fill - horizontal", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           features = "seurat_clusters",

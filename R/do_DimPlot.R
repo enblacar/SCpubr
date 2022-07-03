@@ -381,7 +381,8 @@ do_DimPlot <- function(sample,
                    legend.position = legend.position,
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
-                   panel.grid = ggplot2::element_blank())
+                   panel.grid = ggplot2::element_blank(),
+                   plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10))
 
   # Add plot title to the plots.
   if (!is.null(plot.title)){
