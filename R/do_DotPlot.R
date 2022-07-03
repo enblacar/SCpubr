@@ -75,16 +75,6 @@ do_DotPlot <- function(sample,
     features <- check_feature(sample = sample, features = features, permissive = TRUE)
     features <- remove_duplicated_features(features = features)
 
-
-    # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 2
-    plot.subtitle.fontsize <- fontsize - 4
-    plot.caption.fontsize <- fontsize - 4
-    axis.text.fontsize <- fontsize
-    axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 2
-    legend.title.fontsize <- fontsize - 2
-
     # Check that flip is not set to TRUE and features is not a named list.
     if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = F)}
     # Check that split.by is set and the user has not provided a correct vector of colors.
@@ -102,25 +92,32 @@ do_DotPlot <- function(sample,
     check_colors(colors.use)
 
     p <- Seurat::DotPlot(sample,
-                            features = features,
-                            cols = colors.use,
-                            group.by = group.by,
-                            split.by = split.by,
-                            dot.scale = dot.scale,
-                            cluster.idents = cluster.idents,
-                            scale.by = scale.by) +
-            ggpubr::theme_pubr(legend = legend.position) +
-            ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 90, vjust = 0.5, hjust = 1, face = "bold"),
-                           axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                           axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
-                           legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 1),
-                           legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                           plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                           plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                           plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
-                           plot.title.position = "plot",
-                           plot.caption.position = "plot",
-                           legend.justification = "center")
+                         features = features,
+                         cols = colors.use,
+                         group.by = group.by,
+                         split.by = split.by,
+                         dot.scale = dot.scale,
+                         cluster.idents = cluster.idents,
+                         scale.by = scale.by) &
+         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, face = "bold", color = "black"),
+                        axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.line = ggplot2::element_line(color = "black"),
+                        axis.title = ggplot2::element_text(face = "bold"),
+                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(hjust = 0),
+                        plot.caption = ggtext::element_markdown(hjust = 1),
+                        plot.title.position = "plot",
+                        panel.grid = ggplot2::element_blank(),
+                        text = ggplot2::element_text(family = "sans"),
+                        plot.caption.position = "plot",
+                        legend.text = ggplot2::element_text(face = "bold"),
+                        legend.position = legend.position,
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        panel.grid.major = ggplot2::element_blank())
+
 
     if (!is.null(xlab)){
       p <- p & ggplot2::xlab(xlab)
@@ -158,7 +155,7 @@ do_DotPlot <- function(sample,
 
     if (is.list(features)){
       p <- p + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'black', fill = 'white'),
-                                    strip.text = ggplot2::element_text(face = "bold", size = legend.text.fontsize - 2, color = "black"))
+                                    strip.text = ggplot2::element_text(face = "bold", color = "black"))
     }
     if (flip == TRUE){
         p <- p + ggplot2::coord_flip()
