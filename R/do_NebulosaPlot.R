@@ -139,7 +139,7 @@ do_NebulosaPlot <- function(sample,
                                 dims = dims) &
          ggplot2::theme_minimal(base_size = fontsize) &
          ggplot2::theme(axis.title = ggplot2::element_blank(),
-                        axis.text = ggplot2::element_blank(color = "black", face = "bold"),
+                        axis.text = ggplot2::element_blank(),
                         plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
                         plot.subtitle = ggtext::element_markdown(hjust = 0),
                         plot.caption = ggtext::element_markdown(hjust = 1),
