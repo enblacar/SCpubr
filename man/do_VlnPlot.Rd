@@ -28,7 +28,8 @@ do_VlnPlot(
   fontsize = 14,
   ncol = NULL,
   legend.ncol = 3,
-  rotate_x_labels = NULL
+  rotate_x_labels = NULL,
+  show_y_axis_lines = FALSE
 )
 }
 \arguments{
@@ -75,6 +76,8 @@ do_VlnPlot(
 \item{legend.ncol}{Number of columns in the legend.}
 
 \item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
+
+\item{show_y_axis_lines}{Logical. Whether to draw Y axis lines.}
 }
 \value{
 A ggplot2 object containing a Violin Plot.

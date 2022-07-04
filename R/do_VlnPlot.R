@@ -23,6 +23,7 @@
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
 #' @param line_width Integer. Width of the lines drawn in the plot. Defaults to 1.
 #' @param boxplot_width Integer. Width of the boxplots. Defaults to 0.2.
+#' @param show_y_axis_lines Logical. Whether to draw Y axis lines.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -52,7 +53,8 @@ do_VlnPlot <- function(sample,
                        fontsize = 14,
                        ncol = NULL,
                        legend.ncol = 3,
-                       rotate_x_labels = NULL){
+                       rotate_x_labels = NULL,
+                       show_y_axis_lines = FALSE){
   # Checks for packages.
   check_suggests(function_name = "do_VlnPlot")
   # Check if the sample provided is a Seurat object.
@@ -67,7 +69,8 @@ do_VlnPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("legend" = legend,
                        "plot_boxplot" = plot_boxplot,
-                       "rotate_x_labels" = rotate_x_labels)
+                       "rotate_x_labels" = rotate_x_labels,
+                       "show_y_axis_lines" = show_y_axis_lines)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -164,19 +167,34 @@ do_VlnPlot <- function(sample,
                          group.by = group.by,
                          split.by = split.by,
                          pt.size = pt.size) &
-         ggpubr::theme_pubr(legend = legend.position) &
-         ggpubr::rremove("x.title") &
-         ggplot2::theme(axis.text.x = ggplot2::element_text(size = axis.text.fontsize, angle = 0, vjust = 1, hjust = 0.5, face = "bold"),
-                        axis.text.y = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                        axis.title = ggplot2::element_text(face = "bold", size = axis.title.fontsize),
-                        legend.text = ggplot2::element_text(size = legend.text.fontsize, hjust = 0, face = "bold"),
-                        legend.title = ggplot2::element_text(size = legend.title.fontsize, face = "bold"),
-                        plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 1, hjust = 0.5, face = "bold", color = "black"),
+                        axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.title.y = ggplot2::element_text(face = "bold"),
+                        axis.title.x = ggplot2::element_blank(),
+                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(hjust = 0),
+                        plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
+                        panel.grid.major.x = ggplot2::element_blank(),
+                        panel.grid.minor = ggplot2::element_blank(),
+                        panel.grid.major.y = {
+                          if (isTRUE(show_y_axis_lines)){
+                            ggplot2::element_line(color = "grey75",
+                                                  linetype = "dashed")
+                          } else if (isFALSE(show_y_axis_lines)){
+                            ggplot2::element_blank()
+                          }
+                        },
+                        text = ggplot2::element_text(family = "sans"),
                         plot.caption.position = "plot",
-                        legend.justification = "center") &
+                        legend.text = ggplot2::element_text(face = "bold"),
+                        legend.position = legend.position,
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        axis.ticks = ggplot2::element_line(color = "black"),
+                        axis.line = ggplot2::element_line(color = "black")) &
          ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
     # Modify line width of violin plots.
     p$layers[[1]]$aes_params$size <- line_width
@@ -195,12 +213,16 @@ do_VlnPlot <- function(sample,
     }
 
     if (legend == FALSE){
-      p <- p & Seurat::NoLegend()
+      p <- p &
+           ggplot2::theme(legend.position = "none")
     }
 
     if (!(is.null(rotate_x_labels))){
       if (isTRUE(x_label_select)){
-        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1))
+        p <- p &
+             ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
+                                                                vjust = 0.5,
+                                                                hjust = 1))
       }
     } else {
 
@@ -209,7 +231,11 @@ do_VlnPlot <- function(sample,
     if (!(is.null(y_cut))){
       if (!(is.na(y_cut_select))){
         p <- p &
-             ggplot2::geom_hline(yintercept = y_cut_select, linetype = "dashed", colour = "black", size = 1, alpha = 0.5)
+             ggplot2::geom_hline(yintercept = y_cut_select,
+                                 linetype = "dashed",
+                                 colour = "black",
+                                 size = 1,
+                                 alpha = 0.5)
       }
     }
 
@@ -231,9 +257,7 @@ do_VlnPlot <- function(sample,
   if (!is.null(plot.title)){
     if (length(features) > 1){
       p <- p +
-           patchwork::plot_annotation(title = plot.title,
-                                      theme = ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize + 1,
-                                                                                                face = "bold")))
+           patchwork::plot_annotation(title = plot.title)
     } else {
       p <- p &
            ggplot2::labs(title = plot.title)
@@ -245,8 +269,7 @@ do_VlnPlot <- function(sample,
   if (!is.null(plot.subtitle)){
     if (length(features) > 1){
       p <- p +
-           patchwork::plot_annotation(subtitle = plot.subtitle,
-                                      theme = ggplot2::theme(plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize + 1)))
+           patchwork::plot_annotation(subtitle = plot.subtitle)
     } else {
       p <- p +
            ggplot2::labs(subtitle = plot.subtitle)
@@ -257,8 +280,7 @@ do_VlnPlot <- function(sample,
   if (!is.null(plot.caption)){
     if (length(features) > 1){
       p <- p +
-           patchwork::plot_annotation(caption = plot.caption,
-                                      theme = ggplot2::theme(plot.caption = ggtext::element_markdown(size = plot.caption.fontsize + 1)))
+           patchwork::plot_annotation(caption = plot.caption)
     } else {
       p <- p +
            ggplot2::labs(caption = plot.caption)

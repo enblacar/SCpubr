@@ -32,6 +32,13 @@ testthat::test_that("do_VlnPlot: PASS - several features plot boxplots", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_VlnPlot: PASS - show_y_axis_lines", {
+  p <- SCpubr::do_VlnPlot(sample = sample,
+                          features = c("CD14"),
+                          show_y_axis_lines = TRUE)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_VlnPlot: PASS - several features rotate labels", {
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = c("CD14", "nCount_RNA"),
