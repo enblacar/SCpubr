@@ -13,7 +13,7 @@ do_BeeSwarmPlot(
   slot = NULL,
   continuous_feature = FALSE,
   colors.use = NULL,
-  legend.position = "right",
+  legend.position = "bottom",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   legend.length = 20,

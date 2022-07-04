@@ -37,7 +37,7 @@ do_BeeSwarmPlot <- function(sample,
                             slot = NULL,
                             continuous_feature = FALSE,
                             colors.use = NULL,
-                            legend.position = "right",
+                            legend.position = "bottom",
                             legend.framewidth = 1.5,
                             legend.tickwidth = 1.5,
                             legend.length = 20,
@@ -154,25 +154,31 @@ do_BeeSwarmPlot <- function(sample,
   }
 
   p <- p +
-       ggpubr::theme_pubr(legend = legend.position) +
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
                      caption = plot.caption) +
-       ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                      plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                      plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+       ggplot2::theme_minimal(base_size = fontsize) +
+       ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                      plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                      plot.subtitle = ggtext::element_markdown(hjust = 0),
+                      plot.caption = ggtext::element_markdown(hjust = 1),
+                      panel.grid = ggplot2::element_blank(),
                       plot.title.position = "plot",
                       plot.caption.position = "plot",
-                      axis.title = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                      axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                      legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                      text = ggplot2::element_text(family = "sans"),
+                      legend.text = ggplot2::element_text(face = "bold"),
                       legend.position = legend.position,
                       legend.title = ggplot2::element_text(face = "bold"),
-                      legend.justification = "center")
+                      legend.justification = "center",
+                      axis.title.x = ggplot2::element_text(face = "bold"),
+                      axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
+                      axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                      axis.line = ggplot2::element_line(color = "black"))
 
   if (continuous_feature == TRUE){
     p <- p +
-         viridis::scale_color_viridis(na.value = "grey75", option = viridis_color_map) +
+         ggplot2::scale_color_viridis_c(na.value = "grey75",
+                                        option = viridis_color_map) +
          ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
                                                          title.position = "top",
                                                          barwidth = legend.barwidth,
@@ -190,31 +196,31 @@ do_BeeSwarmPlot <- function(sample,
     }
     p <- p +
          ggplot2::scale_color_manual(values = colors.use) +
-         ggpubr::rremove("legend")
+         ggplot2::theme(legend.position = "none")
   }
 
   if (remove_x_axis == TRUE){
     p <- p +
-         ggpubr::rremove("x.text") +
-         ggpubr::rremove("x.ticks")
+         ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                        axis.ticks.x = ggplot2::element_blank())
   }
   if (remove_y_axis == TRUE){
     p <- p +
-         ggpubr::rremove("y.text") +
-         ggpubr::rremove("y.ticks")
+         ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                        axis.ticks.y = ggplot2::element_blank())
   }
   if (flip == TRUE){
     p <- p +
          ggplot2::coord_flip() +
-         ggpubr::rremove("y.ticks") +
-         ggpubr::rremove("y.text") +
+         ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                        axis.ticks.y = ggplot2::element_blank()) +
          ggplot2::xlab(ifelse(is.null(ylab), ifelse(isTRUE(continuous_feature), "Ranking", paste0("Ranking for ", feature_to_rank)), ylab)) +
          ggplot2::ylab(xlab)
 
   } else {
     p <- p +
-         ggpubr::rremove("x.ticks") +
-         ggpubr::rremove("x.text") +
+         ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                        axis.ticks.x = ggplot2::element_blank()) +
          ggplot2::xlab(ifelse(is.null(xlab), ifelse(isTRUE(continuous_feature), "Ranking", paste0("Ranking for ", feature_to_rank)), xlab)) +
          ggplot2::ylab(ylab)
 

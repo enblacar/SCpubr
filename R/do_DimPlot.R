@@ -420,11 +420,13 @@ do_DimPlot <- function(sample,
 
   # Whether to remove the legend or not.
   if (legend == FALSE){
-    p <- p & ggpubr::rremove("legend.title") & ggpubr::rremove("legend")
+    p <- p &
+         ggplot2::theme(legend.position = "none")
   } else if (legend == TRUE) {
     # Whether to remove the legend.title or not.
     if (isFALSE(legend.title)){
-      p <- p & ggpubr::rremove("legend.title")
+      p <- p &
+           ggplot2::theme(legend.title = ggplot2::element_blank())
     }
   }
 
@@ -433,16 +435,20 @@ do_DimPlot <- function(sample,
     # If dims is first and then second (most of the cases).
     if (sum(dims == c(1, 2)) == 2){
       # Remove axes completely.
-      p <- p & Seurat::NoAxes()
+      p <- p &
+        ggplot2::theme(axis.line = ggplot2::element_blank(),
+                       axis.text = ggplot2::element_blank(),
+                       axis.ticks = ggplot2::element_blank(),
+                       axis.title = ggplot2::element_blank())
       # If dims do not follow the usual order.
     } else {
       # Get the name of the selected dims.
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       # Remove everything in the axes but the axis titles.
       p <- p &
-        ggpubr::rremove("axis") &
-        ggpubr::rremove("axis.text") &
-        ggpubr::rremove("ticks") &
+           ggplot2::theme(axis.line = ggplot2::element_blank(),
+                          axis.text = ggplot2::element_blank(),
+                          axis.ticks = ggplot2::element_blank()) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -452,9 +458,9 @@ do_DimPlot <- function(sample,
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     # Remove everything in the axes but not the axis titles.
     p <- p &
-      ggpubr::rremove("axis") &
-      ggpubr::rremove("axis.text") &
-      ggpubr::rremove("ticks")  &
+      ggplot2::theme(axis.line = ggplot2::element_blank(),
+                     axis.text = ggplot2::element_blank(),
+                     axis.ticks = ggplot2::element_blank()) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }

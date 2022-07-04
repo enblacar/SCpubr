@@ -87,15 +87,6 @@ do_CellularStatesPlot <- function(sample,
     # Define pipe operator internally.
     `%>%` <- purrr::`%>%`
 
-    # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 3
-    plot.subtitle.fontsize <- fontsize + 1
-    plot.caption.fontsize <- fontsize - 4
-    axis.text.fontsize <- fontsize
-    axis.title.fontsize <- fontsize
-    legend.text.fontsize <- fontsize - 4
-    legend.title.fontsize <- fontsize - 4
-
     # Check the colors provided.
     if (is.null(colors.use)){
       colors.use <- {
@@ -167,7 +158,6 @@ do_CellularStatesPlot <- function(sample,
       df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
       p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
            ggplot2::geom_point() +
-           ggpubr::theme_pubr() +
            ggplot2::scale_color_manual(values = colors.use) +
            ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
            ggplot2::xlab(x_lab) +
@@ -242,7 +232,6 @@ do_CellularStatesPlot <- function(sample,
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
              ggplot2::geom_point() +
              ggplot2::scale_color_manual(values = colors.use) +
-             ggpubr::theme_pubr() +
              ggplot2::xlab(x_lab) +
              ggplot2::ylab(y_lab) +
              ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
@@ -317,7 +306,6 @@ do_CellularStatesPlot <- function(sample,
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
              ggplot2::geom_point() +
              ggplot2::scale_color_manual(values = colors.use) +
-             ggpubr::theme_pubr() +
              ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
              ggplot2::xlab(x_lab1) +
              ggplot2::ylab(y_lab1) +
@@ -351,26 +339,34 @@ do_CellularStatesPlot <- function(sample,
 
     # Overall formatting for the plot.
     p <- p +
-         ggplot2::theme(plot.title = ggtext::element_markdown(size = plot.title.fontsize, face = "bold", hjust = 0),
-                        plot.subtitle = ggtext::element_markdown(size = plot.subtitle.fontsize, hjust = 0),
-                        plot.caption = ggtext::element_markdown(size = plot.caption.fontsize, hjust = 1),
+         ggplot2::theme_minimal(base_size = fontsize) +
+         ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
+                        axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                        plot.subtitle = ggtext::element_markdown(hjust = 0),
+                        plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
+                        panel.grid = ggplot2::element_blank(),
+                        text = ggplot2::element_text(family = "sans"),
                         plot.caption.position = "plot",
-                        axis.title = ggplot2::element_text(size = axis.title.fontsize, face = "bold"),
-                        axis.text = ggplot2::element_text(size = axis.text.fontsize, face = "bold"),
-                        legend.text = ggplot2::element_text(size = legend.text.fontsize, face = "bold"),
+                        legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,
                         legend.title = ggplot2::element_text(face = "bold"),
-                        legend.justification = "center")
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        axis.ticks = ggplot2::element_line(color = "black"),
+                        axis.line = ggplot2::element_line(color = "black"))
 
     # Remove axis ticks?
     if (axis.ticks == FALSE){
-        p <- p + ggpubr::rremove("ticks")
+        p <- p +
+             ggplot2::theme(axis.ticks = ggplot2::element_blank())
     }
 
     # Remove axis text?
     if (axis.text == FALSE){
-        p <- p + ggpubr::rremove("axis.text")
+        p <- p +
+             ggplot2::theme(axis.text = ggplot2::element_blank())
     }
 
     return(p)
