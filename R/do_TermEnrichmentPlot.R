@@ -14,6 +14,7 @@
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
 #' @param legend.position Position of the legend in the plot.
+#' @param text_labels_size Numeric. Controls how big or small labels are in the plot.
 #' @return A ggplot2 object with enriched terms.
 #' @export
 #'
@@ -26,6 +27,7 @@ do_TermEnrichmentPlot <- function(genes,
                                   site = "Enrichr",
                                   legend.position = "bottom",
                                   colors.use = NULL,
+                                  text_labels_size = 4,
                                   legend.length = 30,
                                   legend.width = 1,
                                   legend.framewidth = 1.5,
@@ -51,7 +53,8 @@ do_TermEnrichmentPlot <- function(genes,
                          "legend.framewidth" = legend.framewidth,
                          "legend.tickwidth" = legend.tickwidth,
                          "legend.length" = legend.length,
-                         "legend.width" = legend.width)
+                         "legend.width" = legend.width,
+                         "text_labels_size" = text_labels_size)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check logical parameters.
     #logical_list <- list("joint_plot" = joint_plot)
@@ -198,6 +201,7 @@ do_TermEnrichmentPlot <- function(genes,
                             fontface = "bold",
                             alpha = 1,
                             angle = 0,
+                            size = text_labels_size,
                             inherit.aes = F) +
         # Add the number of genes in each term below y = 0.
         ggplot2::geom_text(data = label_data,
@@ -208,6 +212,7 @@ do_TermEnrichmentPlot <- function(genes,
                                                   vjust = 0.5),
                            color = "black",
                            fontface = "bold",
+                           size = text_labels_size,
                            alpha = 1,
                            angle = 0,
                            inherit.aes = F) +
@@ -221,7 +226,8 @@ do_TermEnrichmentPlot <- function(genes,
                           angle = 0,
                           hjust = 0.5,
                           vjust = 0.5,
-                          label = stringr::str_wrap("Number of genes in each term", 15),
+                          size = text_labels_size,
+                          label = stringr::str_wrap("Genes in each term", 9),
                           fontface = "bold")
       # Add fill scale.
       if (length(unique(data$Adjusted.P.value)) == 1) {
@@ -270,7 +276,7 @@ do_TermEnrichmentPlot <- function(genes,
                        legend.title = ggplot2::element_text(face = "bold"),
                        legend.justification = "center",
                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                       plot.margin = ggplot2::margin(t = 10, r = 60, b = 10, l = 60))
+                       plot.margin = ggplot2::margin(t = 10, r = 200, b = 10, l = 200))
 
     } else if (dbs_use == "A"){
       p <- list("Azimuth_Cell_Types_2021" = SCpubr::do_TermEnrichmentPlot(genes = genes,

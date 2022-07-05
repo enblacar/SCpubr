@@ -13,6 +13,7 @@ do_TermEnrichmentPlot(
   site = "Enrichr",
   legend.position = "bottom",
   colors.use = NULL,
+  text_labels_size = 4,
   legend.length = 30,
   legend.width = 1,
   legend.framewidth = 1.5,
@@ -42,6 +43,8 @@ do_TermEnrichmentPlot(
 \item{legend.position}{Position of the legend in the plot.}
 
 \item{colors.use}{Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
+
+\item{text_labels_size}{Numeric. Controls how big or small labels are in the plot.}
 
 \item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
 

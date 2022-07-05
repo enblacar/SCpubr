@@ -29,7 +29,6 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {
                                      dbs_use = "GO_Biological_Process_2021",
                                      legend.position = "right")
   testthat::expect_type(p, "list")
-  testthat::expect_equal(length(names(p)), 4)
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - number of terms", {

@@ -1150,7 +1150,7 @@ modify_string <- function(string_to_modify){
 #' TBD
 #' }
 compute_enrichment_scores <- function(sample, list_genes, verbose = F){
-  if (class(list_genes) != "list" & class(list_genes) == "character"){
+  if (!is.list(list_genes) & is.character(list_genes)){
     list_genes <- list("Input" = list_genes)
   }
   for (celltype in names(list_genes)){
