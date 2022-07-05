@@ -112,15 +112,6 @@ do_BeeSwarmPlot <- function(sample,
     legend.barheight <- legend.length
   }
 
-  # Define fontsize parameters.
-  plot.title.fontsize <- fontsize + 3
-  plot.subtitle.fontsize <- fontsize + 1
-  plot.caption.fontsize <- fontsize - 4
-  axis.text.fontsize <- fontsize
-  axis.title.fontsize <- fontsize
-  legend.text.fontsize <- fontsize - 4
-  legend.title.fontsize <- fontsize - 4
-
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {
     sample$rank_me <- sample@meta.data[, feature_to_rank]
@@ -173,7 +164,8 @@ do_BeeSwarmPlot <- function(sample,
                       axis.title.x = ggplot2::element_text(face = "bold"),
                       axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
                       axis.text = ggplot2::element_text(face = "bold", color = "black"),
-                      axis.line = ggplot2::element_line(color = "black"))
+                      axis.line = ggplot2::element_line(color = "black"),
+                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
 
   if (continuous_feature == TRUE){
     p <- p +

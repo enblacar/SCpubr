@@ -355,7 +355,8 @@ do_CellularStatesPlot <- function(sample,
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
-                        axis.line = ggplot2::element_line(color = "black"))
+                        axis.line = ggplot2::element_line(color = "black"),
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
 
     # Remove axis ticks?
     if (axis.ticks == FALSE){

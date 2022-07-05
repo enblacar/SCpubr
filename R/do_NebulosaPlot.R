@@ -152,7 +152,8 @@ do_NebulosaPlot <- function(sample,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                        panel.grid.major = ggplot2::element_blank()) &
+                        panel.grid.major = ggplot2::element_blank(),
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),) &
          ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
                                                          barwidth = legend.barwidth,
                                                          barheight = legend.barheight,

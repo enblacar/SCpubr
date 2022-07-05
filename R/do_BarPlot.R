@@ -101,15 +101,6 @@ do_BarPlot <- function(sample,
                            "legend.title.position" = legend.title.position)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-    # Define fontsize parameters.
-    plot.title.fontsize <- fontsize + 3
-    plot.subtitle.fontsize <- fontsize + 1
-    plot.caption.fontsize <- fontsize -4
-    axis.text.fontsize <- fontsize
-    axis.title.fontsize <- fontsize + 1
-    legend.text.fontsize <- fontsize - 4
-    legend.title.fontsize <- fontsize - 4
-
     # Checks.
     if (!(position %in% c("fill", "stack"))){stop("Position '", position, "' not supported. Please use either fill or stack.")}
 
@@ -178,7 +169,6 @@ do_BarPlot <- function(sample,
              ggplot2::geom_bar(position = position, stat="identity", width = 1,
                                colour="black",
                                size = 1) +
-             ggpubr::theme_pubr(legend = legend.position) +
              ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
@@ -226,7 +216,6 @@ do_BarPlot <- function(sample,
              ggplot2::geom_bar(position = position, stat="identity", width = 1,
                                colour="black",
                                size = 1) +
-             ggpubr::theme_pubr(legend = legend.position) +
              ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
              ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol,
                                                           nrow = legend.nrow,
@@ -251,7 +240,8 @@ do_BarPlot <- function(sample,
                        legend.justification = "center",
                        plot.margin = ggplot2::margin(t = 10, r = 40, b = 10, l = 10),
                        axis.ticks = ggplot2::element_line(color = "black"),
-                       axis.line = ggplot2::element_line(color = "black"))
+                       axis.line = ggplot2::element_line(color = "black"),
+                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
 
       # Whether to flip the axis or not.
       if (isTRUE(horizontal)){
@@ -395,11 +385,13 @@ do_BarPlot <- function(sample,
 
       # Whether to plot the legend.
       if (isFALSE(legend)){
-        p <- p + Seurat::NoLegend()
+        p <- p +
+             ggplot2::theme(legend.position = "none")
       }
       # Whether to remove legend title.
       if (isFALSE(legend.title)){
-        p <- p + ggpubr::rremove("legend.title")
+        p <- p +
+             ggplot2::theme(legend.title = ggplot2::element_blank())
       }
     list.plots[[counter]] <- p
     }

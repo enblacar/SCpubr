@@ -392,7 +392,8 @@ do_FeaturePlot <- function(sample,
                    legend.justification = "center",
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold",
-                                                        angle = 90))
+                                                        angle = 90),
+                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
   if (is.null(split.by)){
     p <- p &
       ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
@@ -476,20 +477,24 @@ do_FeaturePlot <- function(sample,
   # Remove legend.
   if (legend == FALSE){
     p <- p &
-      ggpubr::rremove("legend")
+         ggplot2::theme(legend.position = "none")
   }
 
   # For embeddings that are umap of tsne, we remove all axes..
   if (reduction %in% c("umap", "tsne")){
     # if dims is first and then second.
     if (sum(dims == c(1, 2)) == 2){
-      p <- p & Seurat::NoAxes()
+      p <- p &
+           ggplot2::theme(axis.title = ggplot2::element_blank(),
+                          axis.text = ggplot2::element_blank(),
+                          axis.ticks = ggplot2::element_blank(),
+                          axis.line = ggplot2::element_blank())
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggpubr::rremove("axis") &
-        ggpubr::rremove("axis.text") &
-        ggpubr::rremove("ticks") &
+        ggplot2::theme(axis.text = ggplot2::element_blank(),
+                       axis.ticks = ggplot2::element_blank(),
+                       axis.line = ggplot2::element_blank()) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -497,9 +502,9 @@ do_FeaturePlot <- function(sample,
   } else {
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     p <- p &
-      ggpubr::rremove("axis") &
-      ggpubr::rremove("axis.text") &
-      ggpubr::rremove("ticks") &
+      ggplot2::theme(axis.text = ggplot2::element_blank(),
+                     axis.ticks = ggplot2::element_blank(),
+                     axis.line = ggplot2::element_blank()) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }
@@ -514,9 +519,9 @@ do_FeaturePlot <- function(sample,
         ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
         # Remove axis elements so that the axis title is the only thing left.
-        ggpubr::rremove("axis") &
-        ggpubr::rremove("axis.text") &
-        ggpubr::rremove("ticks")
+        ggplot2::theme(axis.text = ggplot2::element_blank(),
+                       axis.ticks = ggplot2::element_blank(),
+                       axis.line = ggplot2::element_blank())
     })
 
   }
