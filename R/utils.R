@@ -19,7 +19,7 @@ check_suggests <- function(function_name){
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "testing" = c("Does_not_exist"))
@@ -56,7 +56,7 @@ state_dependencies <- function(func_name = NULL){
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "ggpubr", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
                    "do_VlnPlot" = c("Seurat", "ggplot2", "ggtext"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "ggpubr", "patchwork", "forcats", "ggtext"),
+                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
   # The function is not in the current list of possibilities.

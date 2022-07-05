@@ -6,14 +6,19 @@
 \usage{
 do_TermEnrichmentPlot(
   genes,
-  dbs_use = NULL,
-  ncol = NULL,
-  nchar_wrap = 60,
-  nterms = 5,
-  size = 4,
+  dbs_use,
+  nchar_wrap = 20,
+  nterms = 10,
   fontsize = 14,
   site = "Enrichr",
-  colors.use = NULL
+  legend.position = "bottom",
+  colors.use = NULL,
+  legend.length = 30,
+  legend.width = 1,
+  legend.framewidth = 1.5,
+  legend.tickwidth = 1.5,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white"
 )
 }
 \arguments{
@@ -26,19 +31,23 @@ do_TermEnrichmentPlot(
 \item "C": Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
 }}
 
-\item{ncol}{Number of columns to group the output plots. Defaults to a around half of the length of the databases provided, if this is more than 1.}
-
 \item{nchar_wrap}{Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.}
 
 \item{nterms}{Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.}
-
-\item{size}{Size of the dots. Defaults to 4.}
 
 \item{fontsize}{Base font size for the plot. Defaults to 14.}
 
 \item{site}{Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".}
 
+\item{legend.position}{Position of the legend in the plot.}
+
 \item{colors.use}{Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
+
+\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+
+\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
 }
 \value{
 A ggplot2 object with enriched terms.
