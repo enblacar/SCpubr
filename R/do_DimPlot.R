@@ -440,7 +440,8 @@ do_DimPlot <- function(sample,
         ggplot2::theme(axis.line = ggplot2::element_blank(),
                        axis.text = ggplot2::element_blank(),
                        axis.ticks = ggplot2::element_blank(),
-                       axis.title = ggplot2::element_blank())
+                       axis.title.x = ggplot2::element_blank(),
+                       axis.title.y = ggplot2::element_blank())
       # If dims do not follow the usual order.
     } else {
       # Get the name of the selected dims.

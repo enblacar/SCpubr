@@ -485,7 +485,8 @@ do_FeaturePlot <- function(sample,
     # if dims is first and then second.
     if (sum(dims == c(1, 2)) == 2){
       p <- p &
-           ggplot2::theme(axis.title = ggplot2::element_blank(),
+           ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                          axis.title.y = ggplot2::element_blank(),
                           axis.text = ggplot2::element_blank(),
                           axis.ticks = ggplot2::element_blank(),
                           axis.line = ggplot2::element_blank())

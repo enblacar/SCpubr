@@ -173,9 +173,61 @@ do_NebulosaPlot <- function(sample,
                    scale = "color",
                    function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
                                                                  option = viridis_color_map))
+
+    # For embeddings that are umap of tsne, we remove all axes..
+    if (reduction %in% c("umap", "tsne")){
+      # if dims is first and then second.
+      if (sum(dims == c(1, 2)) == 2){
+        p <- p &
+          ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                         axis.title.y = ggplot2::element_blank(),
+                         axis.text = ggplot2::element_blank(),
+                         axis.ticks = ggplot2::element_blank(),
+                         axis.line = ggplot2::element_blank())
+      } else {
+        labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+        p <- p &
+          ggplot2::theme(axis.text = ggplot2::element_blank(),
+                         axis.ticks = ggplot2::element_blank(),
+                         axis.line = ggplot2::element_blank(),
+                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5)) &
+          ggplot2::xlab(labels[1]) &
+          ggplot2::ylab(labels[2])
+      }
+      # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
+    } else {
+      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+      p <- p &
+        ggplot2::theme(axis.text = ggplot2::element_blank(),
+                       axis.ticks = ggplot2::element_blank(),
+                       axis.line = ggplot2::element_blank(),
+                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5)) &
+        ggplot2::xlab(labels[1]) &
+        ggplot2::ylab(labels[2])
+    }
+
+    # Further patch for diffusion maps.
+    if (reduction == "diffusion"){
+      # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
+      p <-  suppressMessages({
+        p &
+          ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
+                          max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
+          ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
+                          max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
+          # Remove axis elements so that the axis title is the only thing left.
+          ggplot2::theme(axis.text = ggplot2::element_blank(),
+                         axis.ticks = ggplot2::element_blank(),
+                         axis.line = ggplot2::element_blank(),
+                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5))
+      })
+
+    }
+
     # Remove legend.
     if (legend == FALSE){
-      p <- p + Seurat::NoLegend()
+      p <- p +
+           ggplot2::theme(legend.position = "none")
     }
 
     if (isTRUE(return_only_joint)){

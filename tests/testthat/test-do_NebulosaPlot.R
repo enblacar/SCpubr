@@ -5,6 +5,24 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_NebulosaPlot: PASS - single feature distinct dims", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               dims = c(2, 1))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - diffusion", {
+  test <- sample@reductions$umap[[]]
+  colnames(test) <- c("DC_1", "DC_2")
+  obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
+  sample@reductions$diffusion <- obj
+  p <- suppressWarnings(SCpubr::do_NebulosaPlot(sample,
+                               features = c("PC_1"),
+                               reduction = "diffusion"))
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_NebulosaPlot: PASS - several", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14", "CD8A"))
