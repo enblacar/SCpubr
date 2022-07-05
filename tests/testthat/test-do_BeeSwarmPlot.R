@@ -15,6 +15,15 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                               feature_to_rank = "CD14",
+                               group.by = "seurat_clusters",
+                               continuous_feature = F,
+                               legend.position = "right")
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable metadata", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "nCount_RNA",

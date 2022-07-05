@@ -24,6 +24,14 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - C", {
   testthat::expect_equal(length(names(p)), 4)
 })
 
+testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "GO_Biological_Process_2021",
+                                     legend.position = "right")
+  testthat::expect_type(p, "list")
+  testthat::expect_equal(length(names(p)), 4)
+})
+
 testthat::test_that("do_TermEnrichmentPlot: PASS - number of terms", {
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "C",
