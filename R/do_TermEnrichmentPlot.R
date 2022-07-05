@@ -119,10 +119,10 @@ do_TermEnrichmentPlot <- function(genes,
            dbs_use <- dbs_use
          }
       }
-      enriched <- enrichR::enrichr(genes, dbs_use)
     })
 
     if (!(dbs_use %in% c("A", "B", "C"))){
+      enriched <- enrichR::enrichr(genes, dbs_use)
       # Retrieve the data.
       data <- enriched[[dbs_use]] %>%
         dplyr::rowwise() %>%

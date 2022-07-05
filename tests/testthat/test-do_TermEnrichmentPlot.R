@@ -4,14 +4,16 @@ genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - A", {
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
-                                     dbs_use = "A")
+                                     dbs_use = "A",
+                                     nterms = 2)
   testthat::expect_type(p, "list")
   testthat::expect_equal(length(names(p)), 8)
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - B", {
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
-                                     dbs_use = "B")
+                                     dbs_use = "B",
+                                     nterms = 2)
   testthat::expect_type(p, "list")
   testthat::expect_equal(length(names(p)), 4)
 })
@@ -19,13 +21,15 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - B", {
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - C", {
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
-                                     dbs_use = "C")
+                                     dbs_use = "C",
+                                     nterms = 2)
   testthat::expect_type(p, "list")
   testthat::expect_equal(length(names(p)), 4)
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     nterms = 2,
                                      dbs_use = "GO_Biological_Process_2021",
                                      legend.position = "right")
   testthat::expect_type(p, "list")

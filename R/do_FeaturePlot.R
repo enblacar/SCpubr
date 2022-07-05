@@ -424,11 +424,11 @@ do_FeaturePlot <- function(sample,
                    plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
   if (is.null(split.by)){
     if (legend.type == "normal"){
-      p <- p +
+      p <- p &
            ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
                                                            title.hjust = 0.5))
     } else if (legend.type == "colorbar"){
-      p <- p +
+      p <- p &
            ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
                                                            barwidth = legend.barwidth,
                                                            barheight = legend.barheight,
@@ -438,7 +438,7 @@ do_FeaturePlot <- function(sample,
                                                            frame.colour = legend.framecolor,
                                                            ticks.colour = legend.tickcolor))
     } else if (legend.type == "colorsteps"){
-      p <- p +
+      p <- p &
            ggplot2::guides(color = ggplot2::guide_colorsteps(title.position = "top",
                                                              barwidth = legend.barwidth,
                                                              barheight = legend.barheight,
