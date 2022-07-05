@@ -215,3 +215,54 @@ testthat::test_that("do_FeaturePlot: PASS - remove legend", {
                               legend = F)
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_FeaturePlot: PASS - normal legend", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - colorbar legend", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - colorsteps legend", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - normal legend - split.by", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "normal",
+                              split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - colorbar legend - split.by", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "colorbar",
+                              split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - colorsteps legend - split.by", {
+  p <- SCpubr::do_FeaturePlot(sample,
+                              features = c("PC_1"),
+                              legend.type = "colorsteps",
+                              split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: FAIL - wrong legend type", {
+  testthat::expect_error(SCpubr::do_FeaturePlot(sample,
+                                                features = c("PC_1"),
+                                                legend.type = "wrong"))
+})

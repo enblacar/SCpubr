@@ -18,6 +18,7 @@ do_FeaturePlot(
   pt.size = 0.5,
   fontsize = 14,
   legend = TRUE,
+  legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
@@ -64,6 +65,8 @@ do_FeaturePlot(
 \item{fontsize}{Base fontsize of the figure.}
 
 \item{legend}{Whether to plot the legend or not.}
+
+\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
