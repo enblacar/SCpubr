@@ -13,6 +13,7 @@
 #' @param return_only_joint Whether to only return the joint density panel. Logical.
 #' @param shape Shape of the geometry (ggplot number).
 #' @param legend Whether to plot the legend or not. Logical.
+#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot.
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
@@ -45,6 +46,7 @@ do_NebulosaPlot <- function(sample,
                              individual.captions = NULL,
                              shape = 16,
                              legend = TRUE,
+                             legend.type = "colorbar",
                              legend.framewidth = 1.5,
                              legend.tickwidth = 1.5,
                              legend.length = 20,
@@ -93,7 +95,8 @@ do_NebulosaPlot <- function(sample,
                          "slot" = slot,
                          "individual.titles" = individual.titles,
                          "legend.framecolor" = legend.framecolor,
-                         "legend.tickcolor" = legend.tickcolor)
+                         "legend.tickcolor" = legend.tickcolor,
+                         "legend.type" = legend.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -121,6 +124,11 @@ do_NebulosaPlot <- function(sample,
   }
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
+
+  # Check the legend.type.
+  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
+    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+  }
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -153,15 +161,33 @@ do_NebulosaPlot <- function(sample,
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         panel.grid.major = ggplot2::element_blank(),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),) &
-         ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                         barwidth = legend.barwidth,
-                                                         barheight = legend.barheight,
-                                                         title.hjust = 0.5,
-                                                         ticks.linewidth = legend.tickwidth,
-                                                         frame.linewidth = legend.framewidth,
-                                                         frame.colour = legend.framecolor,
-                                                         ticks.colour = legend.tickcolor))
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"))
+
+    if (legend.type == "normal"){
+      p <- p &
+        ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
+                                                        title.hjust = 0.5))
+    } else if (legend.type == "colorbar"){
+      p <- p &
+        ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
+                                                        barwidth = legend.barwidth,
+                                                        barheight = legend.barheight,
+                                                        title.hjust = 0.5,
+                                                        ticks.linewidth = legend.tickwidth,
+                                                        frame.linewidth = legend.framewidth,
+                                                        frame.colour = legend.framecolor,
+                                                        ticks.colour = legend.tickcolor))
+    } else if (legend.type == "colorsteps"){
+      p <- p &
+        ggplot2::guides(color = ggplot2::guide_colorsteps(title.position = "top",
+                                                          barwidth = legend.barwidth,
+                                                          barheight = legend.barheight,
+                                                          title.hjust = 0.5,
+                                                          ticks.linewidth = legend.tickwidth,
+                                                          frame.linewidth = legend.framewidth,
+                                                          frame.colour = legend.framecolor,
+                                                          ticks.colour = legend.tickcolor))
+    }
     # Compute the total number of plots according to whether joint is set to TRUE or not.
     if (isTRUE(joint)){
       num_plots <- length(features) + 1

@@ -23,6 +23,7 @@ do_NebulosaPlot(
   individual.captions = NULL,
   shape = 16,
   legend = TRUE,
+  legend.type = "colorbar",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   legend.length = 20,
@@ -63,6 +64,8 @@ do_NebulosaPlot(
 \item{shape}{Shape of the geometry (ggplot number).}
 
 \item{legend}{Whether to plot the legend or not. Logical.}
+
+\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
 
 \item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
 
