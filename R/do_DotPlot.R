@@ -8,7 +8,12 @@
 #' @param split.by Split into as many plots as unique values in the variable provided.
 #' @param colors.use Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
 #' @param legend Whether to plot the legend or not.
+#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
+#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
+#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
 #' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param xlab Title for the X axis.
 #' @param ylab Title for the Y axis.
@@ -29,9 +34,16 @@ do_DotPlot <- function(sample,
                        group.by = NULL,
                        split.by = NULL,
                        legend = TRUE,
+                       legend.type = "colorbar",
+                       legend.position = "bottom",
+                       legend.framewidth = 1.5,
+                       legend.tickwidth = 1.5,
+                       legend.length = 20,
+                       legend.width = 1,
+                       legend.framecolor = "grey50",
+                       legend.tickcolor = "white",
                        dot.scale = 6,
-                       colors.use = c("grey75", "#014f86"),
-                       legend.position = "right",
+                       colors.use = c("#bdc3c7", "#2c3e50"),
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
@@ -57,7 +69,11 @@ do_DotPlot <- function(sample,
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
-                         "fontsize" = fontsize)
+                         "fontsize" = fontsize,
+                         "legend.framewidth" = legend.framewidth,
+                         "legend.tickwidth" = legend.tickwidth,
+                         "legend.length" = legend.length,
+                         "legend.width" = legend.width)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -68,7 +84,10 @@ do_DotPlot <- function(sample,
                            "colors.use" = colors.use,
                            "group.by" = group.by,
                            "split.by" = split.by,
-                           "scale.by" = scale.by)
+                           "scale.by" = scale.by,
+                           "legend.framecolor" = legend.framecolor,
+                           "legend.tickcolor" = legend.tickcolor,
+                           "legend.type" = legend.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -90,6 +109,30 @@ do_DotPlot <- function(sample,
     }
     # Check colors.
     check_colors(colors.use)
+
+    # Check the colors provided to legend.framecolor and legend.tickcolor.
+    check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+    check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
+    # Check the legend.type.
+    if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
+      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+    }
+
+    # Check the legend.position.
+    if (!(legend.position %in% c("top", "bottom", "left", "right"))){
+      stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
+    }
+
+    # Define legend parameters.
+    if (legend.position %in% c("top", "bottom")){
+      legend.barwidth <- legend.length
+      legend.barheight <- legend.width
+    } else if (legend.position %in% c("left", "right")){
+      legend.barwidth <- legend.width
+      legend.barheight <- round(legend.length / 2, 0)
+    }
+
 
     p <- Seurat::DotPlot(sample,
                          features = features,
@@ -118,7 +161,41 @@ do_DotPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+    # Add leyend modifiers.
+    if (legend.type == "normal"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = "Avg. Expression",
+                                                        title.position = "top",
+                                                        title.hjust = 0.5))
+    } else if (legend.type == "colorbar"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = "Avg. Expression",
+                                                        title.position = "top",
+                                                        barwidth = legend.barwidth,
+                                                        barheight = legend.barheight,
+                                                        title.hjust = 0.5,
+                                                        ticks.linewidth = legend.tickwidth,
+                                                        frame.linewidth = legend.framewidth,
+                                                        frame.colour = legend.framecolor,
+                                                        ticks.colour = legend.tickcolor))
+    } else if (legend.type == "colorsteps"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorsteps(title = "Avg. Expression",
+                                                          title.position = "top",
+                                                          barwidth = legend.barwidth,
+                                                          barheight = legend.barheight,
+                                                          title.hjust = 0.5,
+                                                          ticks.linewidth = legend.tickwidth,
+                                                          frame.linewidth = legend.framewidth,
+                                                          frame.colour = legend.framecolor,
+                                                          ticks.colour = legend.tickcolor))
+    }
 
+    # Modify size legend.
+    p <- p +
+         ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
+                                                      title.position = "top",
+                                                      title.hjust = 0.5))
 
     if (!is.null(xlab)){
       p <- p & ggplot2::xlab(xlab)

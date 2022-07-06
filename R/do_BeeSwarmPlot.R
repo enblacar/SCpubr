@@ -97,7 +97,8 @@ do_BeeSwarmPlot <- function(sample,
                          "slot" = slot,
                          "viridis_color_map" = viridis_color_map,
                          "legend.framecolor" = legend.framecolor,
-                         "legend.tickcolor" = legend.tickcolor)
+                         "legend.tickcolor" = legend.tickcolor,
+                         "legend.type" = legend.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -105,9 +106,18 @@ do_BeeSwarmPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
+  # Check the colors provided to legend.framecolor and legend.tickcolor.
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
   # Check the legend.type.
   if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
     stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+  }
+
+  # Check the legend.position.
+  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
+    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
   }
 
   # Define legend parameters.

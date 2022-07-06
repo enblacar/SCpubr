@@ -156,6 +156,11 @@ do_FeaturePlot <- function(sample,
     stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
   }
 
+  # Check the legend.position.
+  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
+    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
+  }
+
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
     legend.barwidth <- legend.length

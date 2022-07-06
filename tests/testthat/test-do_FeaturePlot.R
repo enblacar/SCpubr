@@ -266,3 +266,9 @@ testthat::test_that("do_FeaturePlot: FAIL - wrong legend type", {
                                                 features = c("PC_1"),
                                                 legend.type = "wrong"))
 })
+
+testthat::test_that("do_FeaturePlot: FAIL - wrong legend position", {
+  testthat::expect_error(SCpubr::do_FeaturePlot(sample,
+                                                features = c("PC_1"),
+                                                legend.position = "wrong"))
+})

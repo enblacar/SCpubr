@@ -5,6 +5,51 @@ testthat::test_that("do_DotPlot: PASS - one variable", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DotPlot: PASS - one variable legend normal", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: PASS - one variable legend colorbar", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps legend to the right", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          legend.type = "colorsteps",
+                          legend.position = "right")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: FAIL - wrong legend type", {
+  testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                                              features = "CD14",
+                                                              flip = T,
+                                                              legend.type = "wrong")}))
+
+})
+
+testthat::test_that("do_DotPlot: FAIL - wrong legend position", {
+  testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                                              features = "CD14",
+                                                              flip = T,
+                                                              legend.position = "wrong")}))
+
+})
+
 testthat::test_that("do_DotPlot: PASS - one variable flip", {
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14",

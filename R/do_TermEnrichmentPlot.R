@@ -13,6 +13,7 @@
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps. Colorsteps will default to colorbar if only one value is present for the scale.
 #' @param legend.position Position of the legend in the plot.
 #' @param text_labels_size Numeric. Controls how big or small labels are in the plot.
 #' @return A ggplot2 object with enriched terms.
@@ -26,6 +27,7 @@ do_TermEnrichmentPlot <- function(genes,
                                   fontsize = 14,
                                   site = "Enrichr",
                                   legend.position = "bottom",
+                                  legend.type = "colorsteps",
                                   colors.use = NULL,
                                   text_labels_size = 4,
                                   legend.length = 30,
@@ -66,7 +68,8 @@ do_TermEnrichmentPlot <- function(genes,
                            "colors.use" = colors.use,
                            "legend.position" = legend.position,
                            "legend.framecolor" = legend.framecolor,
-                           "legend.tickcolor" = legend.tickcolor)
+                           "legend.tickcolor" = legend.tickcolor,
+                           "legend.type" = legend.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check colors.
@@ -77,6 +80,16 @@ do_TermEnrichmentPlot <- function(genes,
       }
     } else {
       colors.use <- c("#bdc3c7", "#2c3e50")
+    }
+
+    # Check the legend.type.
+    if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
+      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+    }
+
+    # Check the legend.position.
+    if (!(legend.position %in% c("top", "bottom", "left", "right"))){
+      stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
     }
 
     # Define legend parameters. Width and height values will change depending on the legend orientation.
@@ -228,28 +241,19 @@ do_TermEnrichmentPlot <- function(genes,
                           vjust = 0.5,
                           size = text_labels_size,
                           label = stringr::str_wrap("Genes in each term", 9),
-                          fontface = "bold")
+                          fontface = "bold") +
+        ggplot2::scale_fill_gradient("Adj. P-value",
+                                     low = colors.use[1],
+                                     high = colors.use[2])
       # Add fill scale.
       if (length(unique(data$Adjusted.P.value)) == 1) {
-        p <- p +
-          ggplot2::scale_fill_gradient("Adj. P-value",
-                                       low = colors.use[1],
-                                       high = colors.use[2]) +
-          ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                         barwidth = legend.barwidth,
-                                                         barheight = legend.barheight,
-                                                         title.hjust = 0.5,
-                                                         ticks.linewidth = legend.tickwidth,
-                                                         frame.linewidth = legend.framewidth,
-                                                         frame.colour = legend.framecolor,
-                                                         ticks.colour = legend.tickcolor))
-      } else {
-        p <- p +
-          ggplot2::scale_fill_steps("Adj. P-value",
-                                    low = colors.use[1],
-                                    high = colors.use[2]) +
-          # Modify the legend.
-          ggplot2::guides(fill = ggplot2::guide_colorsteps(title.position = "top",
+        if (legend.type == "normal"){
+          p <- p +
+            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
+                                                           title.hjust = 0.5))
+        } else if (legend.type == "colorbar" | legend.type == "colorsteps"){
+          p <- p +
+            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
                                                            barwidth = legend.barwidth,
                                                            barheight = legend.barheight,
                                                            title.hjust = 0.5,
@@ -257,6 +261,33 @@ do_TermEnrichmentPlot <- function(genes,
                                                            frame.linewidth = legend.framewidth,
                                                            frame.colour = legend.framecolor,
                                                            ticks.colour = legend.tickcolor))
+        }
+      } else {
+        if (legend.type == "normal"){
+          p <- p +
+            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
+                                                           title.hjust = 0.5))
+        } else if (legend.type == "colorbar"){
+          p <- p +
+            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
+                                                           barwidth = legend.barwidth,
+                                                           barheight = legend.barheight,
+                                                           title.hjust = 0.5,
+                                                           ticks.linewidth = legend.tickwidth,
+                                                           frame.linewidth = legend.framewidth,
+                                                           frame.colour = legend.framecolor,
+                                                           ticks.colour = legend.tickcolor))
+        } else if (legend.type == "colorsteps"){
+          p <- p +
+            ggplot2::guides(fill = ggplot2::guide_colorsteps(title.position = "top",
+                                                             barwidth = legend.barwidth,
+                                                             barheight = legend.barheight,
+                                                             title.hjust = 0.5,
+                                                             ticks.linewidth = legend.tickwidth,
+                                                             frame.linewidth = legend.framewidth,
+                                                             frame.colour = legend.framecolor,
+                                                             ticks.colour = legend.tickcolor))
+        }
       }
       p <- p +
         ggplot2::theme_minimal(base_size = fontsize) +

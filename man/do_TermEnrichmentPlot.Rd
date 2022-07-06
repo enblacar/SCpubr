@@ -12,6 +12,7 @@ do_TermEnrichmentPlot(
   fontsize = 14,
   site = "Enrichr",
   legend.position = "bottom",
+  legend.type = "colorsteps",
   colors.use = NULL,
   text_labels_size = 4,
   legend.length = 30,
@@ -41,6 +42,8 @@ do_TermEnrichmentPlot(
 \item{site}{Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".}
 
 \item{legend.position}{Position of the legend in the plot.}
+
+\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps. Colorsteps will default to colorbar if only one value is present for the scale.}
 
 \item{colors.use}{Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
 

@@ -125,9 +125,19 @@ do_NebulosaPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
+  # Check the colors provided to legend.framecolor and legend.tickcolor.
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
+
   # Check the legend.type.
   if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
     stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+  }
+
+  # Check the legend.position.
+  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
+    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
   }
 
   # Define legend parameters.

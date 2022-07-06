@@ -11,9 +11,16 @@ do_DotPlot(
   group.by = NULL,
   split.by = NULL,
   legend = TRUE,
+  legend.type = "colorbar",
+  legend.position = "bottom",
+  legend.framewidth = 1.5,
+  legend.tickwidth = 1.5,
+  legend.length = 20,
+  legend.width = 1,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
   dot.scale = 6,
-  colors.use = c("grey75", "#014f86"),
-  legend.position = "right",
+  colors.use = c("#bdc3c7", "#2c3e50"),
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -39,11 +46,19 @@ do_DotPlot(
 
 \item{legend}{Whether to plot the legend or not.}
 
+\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
+
+\item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
+
+\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+
+\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+
 \item{dot.scale}{Scale the size of the dots.}
 
 \item{colors.use}{Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.}
-
-\item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
 \item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 

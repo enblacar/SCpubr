@@ -67,6 +67,76 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "GO_Biological_Process_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorbar", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "GO_Biological_Process_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorsteps", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "GO_Biological_Process_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.type", {
+  testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                                       dbs_use = "GO_Biological_Process_2021",
+                                                       nterms = 2,
+                                                       legend.type = "wrong"))
+})
+
+testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.position", {
+  testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                                       dbs_use = "GO_Biological_Process_2021",
+                                                       nterms = 2,
+                                                       legend.position = "wrong"))
+})
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal - one pvalue", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "Azimuth_Cell_Types_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorbar - one pvalue", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "Azimuth_Cell_Types_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorsteps - one pvalue", {
+  p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                     dbs_use = "Azimuth_Cell_Types_2021",
+                                     nterms = 2,
+                                     colors.use = c("#e9d8a6", "#9b2226"),
+                                     legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_TermEnrichmentPlot: FAIL - provide more colors than needed", {
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "C",
