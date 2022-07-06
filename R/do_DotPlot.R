@@ -112,7 +112,7 @@ do_DotPlot <- function(sample,
     }
     # Check font.type.
     if (!(font.type %in% c("sans", "serif", "mono"))){
-      message("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
     }
 
     # Check colors.
