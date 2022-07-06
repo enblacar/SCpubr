@@ -17,7 +17,8 @@ do_CellularStatesPlot(
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   xlab = NULL,
   ylab = NULL,
   axis.ticks = TRUE,
@@ -47,7 +48,9 @@ do_CellularStatesPlot(
 
 \item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 
-\item{fontsize}{Overall fontsize of the plot.}
+\item{font.size}{Overall font.size of the plot.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{xlab}{Title for the X axis. Only works if y2 is not set up.}
 

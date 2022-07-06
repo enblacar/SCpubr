@@ -16,7 +16,7 @@
 #' @param pt.size  Size of points in the VlnPlot.
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
-#' @param fontsize Base fontsize for the figure.
+#' @param font.size Base font.size for the figure.
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.
@@ -50,7 +50,8 @@ do_VlnPlot <- function(sample,
                        individual.titles = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       fontsize = 14,
+                       font.size = 14,
+                       font.type = "sans",
                        ncol = NULL,
                        legend.ncol = 3,
                        rotate_x_labels = NULL,
@@ -75,7 +76,7 @@ do_VlnPlot <- function(sample,
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
                        "y_cut" = y_cut,
-                       "fontsize" = fontsize,
+                       "font.size" = font.size,
                        "legend.ncol" = legend.ncol,
                        "ncol" = ncol,
                        "line_width" = line_width,
@@ -96,21 +97,13 @@ do_VlnPlot <- function(sample,
                          "plot.caption" = plot.caption,
                          "xlab" = xlab,
                          "ylab" = ylab,
-                         "individual.titles" = individual.titles)
+                         "individual.titles" = individual.titles,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check the feature.
   features <- check_feature(sample = sample, features = features, permissive = TRUE)
   features <- remove_duplicated_features(features = features)
-
-  # Define fontsize parameters.
-  plot.title.fontsize <- fontsize + 2
-  plot.subtitle.fontsize <- fontsize + 1
-  plot.caption.fontsize <- fontsize -4
-  axis.text.fontsize <- fontsize
-  axis.title.fontsize <- fontsize + 1
-  legend.text.fontsize <- fontsize - 2
-  legend.title.fontsize <- fontsize - 2
 
   # Disable split.by.
   if (!(is.null(split.by))){stop("This option is currently not available.", call. = F)}
@@ -146,6 +139,11 @@ do_VlnPlot <- function(sample,
     }
   }
 
+  # Check font.type.
+  if (!(font.type %in% c("sans", "serif", "mono"))){
+    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
+
   if (!(is.null(individual.titles)) & length(individual.titles) != length(features)){
     stop("The length of individual titles has to be equal to the number of features.", call. = F)
   }
@@ -167,7 +165,7 @@ do_VlnPlot <- function(sample,
                          group.by = group.by,
                          split.by = split.by,
                          pt.size = pt.size) &
-         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 1, hjust = 0.5, face = "bold", color = "black"),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
                         axis.title.y = ggplot2::element_text(face = "bold"),
@@ -186,7 +184,7 @@ do_VlnPlot <- function(sample,
                             ggplot2::element_blank()
                           }
                         },
-                        text = ggplot2::element_text(family = "sans"),
+                        text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,

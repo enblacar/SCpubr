@@ -18,7 +18,8 @@
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param fontsize Base fontsize of the plot.
+#' @param font.size Base font.size of the plot.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param individual.titles,individual.subtitles,individual.captions Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
@@ -53,7 +54,8 @@ do_NebulosaPlot <- function(sample,
                              legend.width = 1,
                              legend.framecolor = "grey50",
                              legend.tickcolor = "white",
-                             fontsize = 14,
+                             font.size = 14,
+                             font.type = "sans",
                              legend.position = "bottom",
                              viridis_color_map = "D",
                              verbose = TRUE){
@@ -96,7 +98,8 @@ do_NebulosaPlot <- function(sample,
                          "individual.titles" = individual.titles,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
-                         "legend.type" = legend.type)
+                         "legend.type" = legend.type,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -129,6 +132,10 @@ do_NebulosaPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
 
+  # Check font.type.
+  if (!(font.type %in% c("sans", "serif", "mono"))){
+    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
 
   # Check the legend.type.
   if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
@@ -155,7 +162,7 @@ do_NebulosaPlot <- function(sample,
                                 joint = joint,
                                 reduction = reduction,
                                 dims = dims) &
-         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.title = ggplot2::element_blank(),
                         axis.text = ggplot2::element_blank(),
                         plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
@@ -163,7 +170,7 @@ do_NebulosaPlot <- function(sample,
                         plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
-                        text = ggplot2::element_text(family = "sans"),
+                        text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,

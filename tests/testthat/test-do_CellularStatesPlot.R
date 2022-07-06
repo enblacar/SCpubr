@@ -221,3 +221,12 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", 
                                                         x2 = "C",
                                                         y2 = "Not in list"))
 })
+
+testthat::test_that("do_CellularStatesPlot: FAIL - wrong font.type", {
+  testthat::expect_error(SCpubr:::do_CellularStatesPlot(sample = sample,
+                                                        gene_list = genes,
+                                                        x1 = "A",
+                                                        y1 = "Not in list",
+                                                        x2 = "B",
+                                                        font.type = "wrong"))
+})

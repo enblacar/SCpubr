@@ -126,6 +126,13 @@ testthat::test_that("do_BarPlot: FAIL - wrong position", {
                                             position = "wrong"))
 })
 
+testthat::test_that("do_BarPlot: FAIL - wrong font.type", {
+  testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
+                                            features = "orig.ident",
+                                            group.by = "seurat_clusters",
+                                            font.type = "wrong"))
+})
+
 testthat::test_that("do_BarPlot: FAIL - wrong number of rotate x labels", {
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             features = c("orig.ident", "seurat_clusters"),

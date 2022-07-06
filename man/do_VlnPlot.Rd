@@ -25,7 +25,8 @@ do_VlnPlot(
   individual.titles = NULL,
   xlab = NULL,
   ylab = NULL,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   ncol = NULL,
   legend.ncol = 3,
   rotate_x_labels = NULL,
@@ -69,7 +70,7 @@ do_VlnPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{fontsize}{Base fontsize for the figure.}
+\item{font.size}{Base font.size for the figure.}
 
 \item{ncol}{Numeric. Number of columns to arrange multiple plots into.}
 

@@ -16,7 +16,8 @@ do_FeaturePlot(
   idents.highlight = NULL,
   dims = c(1, 2),
   pt.size = 0.5,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   legend = TRUE,
   legend.type = "colorbar",
   legend.position = "bottom",
@@ -62,7 +63,9 @@ do_FeaturePlot(
 
 \item{pt.size}{Point size.}
 
-\item{fontsize}{Base fontsize of the figure.}
+\item{font.size}{Base font.size of the figure.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{legend}{Whether to plot the legend or not.}
 

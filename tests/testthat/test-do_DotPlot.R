@@ -50,6 +50,14 @@ testthat::test_that("do_DotPlot: FAIL - wrong legend position", {
 
 })
 
+testthat::test_that("do_DotPlot: FAIL - wrong font.type", {
+  testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                                              features = "CD14",
+                                                              flip = T,
+                                                              font.type = "wrong")}))
+
+})
+
 testthat::test_that("do_DotPlot: PASS - one variable flip", {
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14",

@@ -9,7 +9,8 @@
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
 #' @param colors.use  Palette of colors to use. It must match the group.by variable in terms of length and names.
-#' @param fontsize Base fontsize of the figure.
+#' @param font.size Base font.size of the figure.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param legend Whether to plot the legend.
 #' @param legend.title  Logical stating whether the legend title is shown or not.
 #' @param legend.title.position Character stating where to place the title of the legend.
@@ -48,7 +49,8 @@ do_BarPlot <- function(sample,
                        legend.title = FALSE,
                        legend.ncol = NULL,
                        legend.nrow = NULL,
-                       fontsize = 14,
+                       font.size = 14,
+                       font.type = "sans",
                        legend.byrow = FALSE,
                        colors.use = NULL,
                        horizontal = FALSE,
@@ -81,7 +83,7 @@ do_BarPlot <- function(sample,
                          "return_data_matrix" = return_data_matrix)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
-    numeric_list <- list("fontsize" = fontsize,
+    numeric_list <- list("font.size" = font.size,
                          "legend.ncol" = legend.ncol,
                          "legend.nrow" = legend.nrow,
                          "size.labels" = size.labels)
@@ -98,7 +100,8 @@ do_BarPlot <- function(sample,
                            "ylab" = ylab,
                            "order.by" = order.by,
                            "position" = position,
-                           "legend.title.position" = legend.title.position)
+                           "legend.title.position" = legend.title.position,
+                           "font.type" = font.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Checks.
@@ -109,6 +112,13 @@ do_BarPlot <- function(sample,
         stop('Total number of rotate_x_labels values does not match the number of features provided.', call. = F)
       }
     }
+
+    # Check font.type.
+    if (!(font.type %in% c("sans", "serif", "mono"))){
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+    }
+
+
 
     counter <- 0
     list.plots <- list()
@@ -224,7 +234,7 @@ do_BarPlot <- function(sample,
       }
       # Add theme.
       p <- p &
-        ggplot2::theme_minimal(base_size = fontsize) &
+        ggplot2::theme_minimal(base_size = font.size) &
         ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
                        axis.text = ggplot2::element_text(face = "bold", color = "black"),
                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
@@ -232,7 +242,7 @@ do_BarPlot <- function(sample,
                        plot.caption = ggtext::element_markdown(hjust = 1),
                        plot.title.position = "plot",
                        panel.grid = ggplot2::element_blank(),
-                       text = ggplot2::element_text(family = "sans"),
+                       text = ggplot2::element_text(family = font.type),
                        plot.caption.position = "plot",
                        legend.text = ggplot2::element_text(face = "bold"),
                        legend.position = legend.position,

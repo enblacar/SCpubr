@@ -9,7 +9,8 @@ do_TermEnrichmentPlot(
   dbs_use,
   nchar_wrap = 20,
   nterms = 10,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   site = "Enrichr",
   legend.position = "bottom",
   legend.type = "colorsteps",
@@ -37,7 +38,9 @@ do_TermEnrichmentPlot(
 
 \item{nterms}{Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.}
 
-\item{fontsize}{Base font size for the plot. Defaults to 14.}
+\item{font.size}{Base font size for the plot. Defaults to 14.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{site}{Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".}
 

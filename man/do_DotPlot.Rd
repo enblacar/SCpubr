@@ -26,7 +26,8 @@ do_DotPlot(
   plot.caption = NULL,
   xlab = NULL,
   ylab = NULL,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   cluster.idents = FALSE,
   flip = FALSE,
   rotate_x_labels = NULL,
@@ -66,7 +67,9 @@ do_DotPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{fontsize}{Base fontsize of the plot.}
+\item{font.size}{Base font.size of the plot.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{cluster.idents}{Logical. Whether to cluster the identities based on the expression of the features.}
 

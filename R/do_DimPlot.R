@@ -13,7 +13,8 @@
 #' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param order Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param pt.size Point size of the cells.
-#' @param fontsize Base fontsize of the figure.
+#' @param font.size Base font.size of the figure.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.title Logical stating whether the legend title is shown or not.
@@ -64,7 +65,8 @@ do_DimPlot <- function(sample,
                        raster = FALSE,
                        raster.dpi = 1024,
                        dims = c(1, 2),
-                       fontsize = 14,
+                       font.size = 14,
+                       font.type = "sans",
                        na.value = "grey75"){
   # Checks for packages.
   check_suggests(function_name = "do_DimPlot")
@@ -88,7 +90,7 @@ do_DimPlot <- function(sample,
                        "sizes.highlight" = sizes.highlight,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
-                       "fontsize" = fontsize,
+                       "font.size" = font.size,
                        "legend.icon.size" = legend.icon.size,
                        "ncol" = ncol,
                        "raster.dpi" = raster.dpi)
@@ -103,7 +105,8 @@ do_DimPlot <- function(sample,
                          "order" = order,
                          "na.value" = na.value,
                          "idents.highlight" = idents.highlight,
-                         "legend.title.position" = legend.title.position)
+                         "legend.title.position" = legend.title.position,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Checks to ensure proper function.
@@ -241,6 +244,11 @@ do_DimPlot <- function(sample,
     }
   }
 
+  # Check font.type.
+  if (!(font.type %in% c("sans", "serif", "mono"))){
+    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
+
   # PLOTTING
 
   # If the UMAP does not need to be split in multiple panes (default case).
@@ -368,13 +376,13 @@ do_DimPlot <- function(sample,
   hjust_use <- if(split_by_used){0.5} else {0}
   # Add theme settings to all plots.
   p <- p &
-    ggplot2::theme_minimal(base_size = fontsize) &
+    ggplot2::theme_minimal(base_size = font.size) &
     ggplot2::theme(plot.title = ggtext::element_markdown(face = "bold", hjust = hjust_use),
                    plot.subtitle = ggtext::element_markdown(hjust = 0),
                    plot.caption = ggtext::element_markdown(hjust = 1),
                    plot.title.position = "plot",
                    plot.caption.position = "plot",
-                   text = ggplot2::element_text(family = "sans"),
+                   text = ggplot2::element_text(family = font.type),
                    legend.justification = "center",
                    legend.text = ggplot2::element_text(face = "bold"),
                    legend.title = ggplot2::element_text(face = "bold"),

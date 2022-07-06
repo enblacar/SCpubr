@@ -17,7 +17,8 @@
 #' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param xlab Title for the X axis.
 #' @param ylab Title for the Y axis.
-#' @param fontsize Base fontsize of the plot.
+#' @param font.size Base font.size of the plot.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param flip Whether to flip the axis.
 #' @param dot.scale Scale the size of the dots.
 #' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
@@ -49,7 +50,8 @@ do_DotPlot <- function(sample,
                        plot.caption = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       fontsize = 14,
+                       font.size = 14,
+                       font.type = "sans",
                        cluster.idents = FALSE,
                        flip = FALSE,
                        rotate_x_labels = NULL,
@@ -69,7 +71,7 @@ do_DotPlot <- function(sample,
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
-                         "fontsize" = fontsize,
+                         "font.size" = font.size,
                          "legend.framewidth" = legend.framewidth,
                          "legend.tickwidth" = legend.tickwidth,
                          "legend.length" = legend.length,
@@ -87,7 +89,8 @@ do_DotPlot <- function(sample,
                            "scale.by" = scale.by,
                            "legend.framecolor" = legend.framecolor,
                            "legend.tickcolor" = legend.tickcolor,
-                           "legend.type" = legend.type)
+                           "legend.type" = legend.type,
+                           "font.type" = font.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -107,6 +110,11 @@ do_DotPlot <- function(sample,
         colors.use <- generate_color_scale(names.use)
       }
     }
+    # Check font.type.
+    if (!(font.type %in% c("sans", "serif", "mono"))){
+      message("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+    }
+
     # Check colors.
     check_colors(colors.use)
 
@@ -142,7 +150,7 @@ do_DotPlot <- function(sample,
                          dot.scale = dot.scale,
                          cluster.idents = cluster.idents,
                          scale.by = scale.by) &
-         ggplot2::theme_minimal(base_size = fontsize) &
+         ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, face = "bold", color = "black"),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
@@ -152,7 +160,7 @@ do_DotPlot <- function(sample,
                         plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
-                        text = ggplot2::element_text(family = "sans"),
+                        text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,

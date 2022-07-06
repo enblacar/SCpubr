@@ -22,7 +22,8 @@ do_BarPlot(
   legend.title = FALSE,
   legend.ncol = NULL,
   legend.nrow = NULL,
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   legend.byrow = FALSE,
   colors.use = NULL,
   horizontal = FALSE,
@@ -66,7 +67,9 @@ do_BarPlot(
 
 \item{legend.ncol, legend.nrow}{Number of columns/rows in the legend.}
 
-\item{fontsize}{Base fontsize of the figure.}
+\item{font.size}{Base font.size of the figure.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 

@@ -35,7 +35,8 @@ do_DimPlot(
   raster = FALSE,
   raster.dpi = 1024,
   dims = c(1, 2),
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   na.value = "grey75"
 )
 }
@@ -92,7 +93,9 @@ do_DimPlot(
 
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
-\item{fontsize}{Base fontsize of the figure.}
+\item{font.size}{Base font.size of the figure.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{na.value}{Color value for NA.}
 }

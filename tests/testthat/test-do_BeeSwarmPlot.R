@@ -83,6 +83,14 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend position", {
                                                  legend.position = "wrong"))
 })
 
+testthat::test_that("do_BeeSwarmPlot: FAIL - wrong font.type", {
+  testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
+                                                 feature_to_rank = "PC_1",
+                                                 group.by = "seurat_clusters",
+                                                 continuous_feature = T,
+                                                 font.type = "wrong"))
+})
+
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",

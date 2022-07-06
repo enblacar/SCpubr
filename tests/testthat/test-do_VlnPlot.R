@@ -175,3 +175,9 @@ testthat::test_that("do_VlnPlot: PASS - multiple variables plot.title, subtitle 
                           colors.use = c("Cell" = "red"))
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_VlnPlot: FAIL - wrong font.type", {
+  testthat::expect_error(SCpubr::do_VlnPlot(sample = sample,
+                                            features = c("CD14"),
+                                            font.type = "wrong"))
+})

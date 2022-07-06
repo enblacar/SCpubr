@@ -20,7 +20,8 @@
 #' @param ylab Title for the Y axis.
 #' @param remove_x_axis Remove X axis labels and ticks from the plot.
 #' @param remove_y_axis Remove Y axis labels and ticks from the plot.
-#' @param fontsize Base fontsize of the plot.
+#' @param font.size Base font.size of the plot.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param flip Whether to flip the axis.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
@@ -51,7 +52,8 @@ do_BeeSwarmPlot <- function(sample,
                             plot.caption = NULL,
                             xlab = NULL,
                             ylab = "",
-                            fontsize = 14,
+                            font.size = 14,
+                            font.type = "sans",
                             remove_x_axis = FALSE,
                             remove_y_axis = FALSE,
                             flip = FALSE,
@@ -78,7 +80,7 @@ do_BeeSwarmPlot <- function(sample,
                        "raster" = raster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
-  numeric_list <- list("fontsize" = fontsize,
+  numeric_list <- list("font.size" = font.size,
                        "raster.dpi" = raster.dpi,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
@@ -98,7 +100,8 @@ do_BeeSwarmPlot <- function(sample,
                          "viridis_color_map" = viridis_color_map,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
-                         "legend.type" = legend.type)
+                         "legend.type" = legend.type,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -109,6 +112,11 @@ do_BeeSwarmPlot <- function(sample,
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
+  # Check font.type.
+  if (!(font.type %in% c("sans", "serif", "mono"))){
+    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
 
   # Check the legend.type.
   if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
@@ -165,7 +173,7 @@ do_BeeSwarmPlot <- function(sample,
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
                      caption = plot.caption) +
-       ggplot2::theme_minimal(base_size = fontsize) +
+       ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                       plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
                       plot.subtitle = ggtext::element_markdown(hjust = 0),
@@ -173,7 +181,7 @@ do_BeeSwarmPlot <- function(sample,
                       panel.grid = ggplot2::element_blank(),
                       plot.title.position = "plot",
                       plot.caption.position = "plot",
-                      text = ggplot2::element_text(family = "sans"),
+                      text = ggplot2::element_text(family = font.type),
                       legend.text = ggplot2::element_text(face = "bold"),
                       legend.position = legend.position,
                       legend.title = ggplot2::element_text(face = "bold"),

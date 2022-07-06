@@ -12,7 +12,8 @@
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param pt.size Point size.
-#' @param fontsize Base fontsize of the figure.
+#' @param font.size Base font.size of the figure.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param legend Whether to plot the legend or not.
 #' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -42,7 +43,8 @@ do_FeaturePlot <- function(sample,
                            idents.highlight = NULL,
                            dims = c(1, 2),
                            pt.size = 0.5,
-                           fontsize = 14,
+                           font.size = 14,
+                           font.type = "sans",
                            legend = TRUE,
                            legend.type = "colorbar",
                            legend.position = "bottom",
@@ -85,7 +87,7 @@ do_FeaturePlot <- function(sample,
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
                        "ncol" = ncol,
-                       "fontsize" = fontsize,
+                       "font.size" = font.size,
                        "raster.dpi" = raster.dpi,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
@@ -114,7 +116,8 @@ do_FeaturePlot <- function(sample,
                          "individual.captions" = individual.captions,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
-                         "legend.type" = legend.type)
+                         "legend.type" = legend.type,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -150,6 +153,11 @@ do_FeaturePlot <- function(sample,
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+
+  # Check font.type.
+  if (!(font.type %in% c("sans", "serif", "mono"))){
+    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
 
   # Check the legend.type.
   if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
@@ -409,7 +417,7 @@ do_FeaturePlot <- function(sample,
 
   # Fix the extra space and add theme parameters.
   p <- p &
-    ggplot2::theme_minimal(base_size = fontsize) &
+    ggplot2::theme_minimal(base_size = font.size) &
     ggplot2::coord_cartesian(expand = FALSE) &
     ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                    plot.title = ggtext::element_markdown(face = "bold",
@@ -419,7 +427,7 @@ do_FeaturePlot <- function(sample,
                    panel.grid = ggplot2::element_blank(),
                    plot.title.position = "plot",
                    plot.caption.position = "plot",
-                   text = ggplot2::element_text(family = "sans"),
+                   text = ggplot2::element_text(family = font.type),
                    legend.text = ggplot2::element_text(face = "bold"),
                    legend.position = legend.position,
                    legend.title = ggplot2::element_text(face = "bold"),

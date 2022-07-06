@@ -27,7 +27,8 @@
 #' @param axis.text  Whether to show axis text.
 #' @param enforce_simmetry Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
 #' @param verbose Verbose function?
-#' @param fontsize Overall fontsize of the plot.
+#' @param font.size Overall font.size of the plot.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -47,7 +48,8 @@ do_CellularStatesPlot <- function(sample,
                                   plot.title = NULL,
                                   plot.subtitle = NULL,
                                   plot.caption = NULL,
-                                  fontsize = 14,
+                                  font.size = 14,
+                                  font.type = "sans",
                                   xlab = NULL,
                                   ylab = NULL,
                                   axis.ticks = TRUE,
@@ -66,7 +68,7 @@ do_CellularStatesPlot <- function(sample,
                          "enforce_simmetry" = enforce_simmetry)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
-    numeric_list <- list("fontsize" = fontsize)
+    numeric_list <- list("font.size" = font.size)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("gene_list" = gene_list,
@@ -80,7 +82,8 @@ do_CellularStatesPlot <- function(sample,
                            "legend.position" = legend.position,
                            "plot.title" = plot.title,
                            "plot.subtitle" = plot.subtitle,
-                           "plot.caption" = plot.caption)
+                           "plot.caption" = plot.caption,
+                           "font.type" = font.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -116,6 +119,11 @@ do_CellularStatesPlot <- function(sample,
       group.by <- "dummy"
     }
 
+    # Check font.type.
+    if (!(font.type %in% c("sans", "serif", "mono"))){
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+    }
+
     # Compute the enrichment scores.
     sample <- compute_enrichment_scores(sample = sample, list_genes = gene_list, verbose = verbose)
 
@@ -127,10 +135,10 @@ do_CellularStatesPlot <- function(sample,
       }
       # Check that the names provided match the marker genes.
       if (!(x1 %in% names(gene_list))){
-        stop(paste0(x1, " is not a name of a list of genes provided to gene_list.", call. = FALSE), call. = F)
+        stop(paste0(x1, " is not a name of a list of genes provided to gene_list."), call. = F)
       }
       if (!(y1 %in% names(gene_list))){
-        stop(paste0(y1, " is not a name of a list of genes provided to gene_list.", call. = FALSE), call. = F)
+        stop(paste0(y1, " is not a name of a list of genes provided to gene_list."), call. = F)
       }
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
@@ -339,7 +347,7 @@ do_CellularStatesPlot <- function(sample,
 
     # Overall formatting for the plot.
     p <- p +
-         ggplot2::theme_minimal(base_size = fontsize) +
+         ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
                         axis.text = ggplot2::element_text(face = "bold", color = "black"),
                         plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
@@ -347,7 +355,7 @@ do_CellularStatesPlot <- function(sample,
                         plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
-                        text = ggplot2::element_text(family = "sans"),
+                        text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,

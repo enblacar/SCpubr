@@ -30,7 +30,8 @@ do_NebulosaPlot(
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   legend.position = "bottom",
   viridis_color_map = "D",
   verbose = TRUE
@@ -73,7 +74,9 @@ do_NebulosaPlot(
 
 \item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
 
-\item{fontsize}{Base fontsize of the plot.}
+\item{font.size}{Base font.size of the plot.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{legend.position}{Position of the legend in the plot.}
 

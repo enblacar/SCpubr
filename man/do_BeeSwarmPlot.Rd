@@ -26,7 +26,8 @@ do_BeeSwarmPlot(
   plot.caption = NULL,
   xlab = NULL,
   ylab = "",
-  fontsize = 14,
+  font.size = 14,
+  font.type = "sans",
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
   flip = FALSE,
@@ -69,7 +70,9 @@ do_BeeSwarmPlot(
 
 \item{ylab}{Title for the Y axis.}
 
-\item{fontsize}{Base fontsize of the plot.}
+\item{font.size}{Base font.size of the plot.}
+
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{remove_x_axis}{Remove X axis labels and ticks from the plot.}
 

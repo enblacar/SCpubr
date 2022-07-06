@@ -38,6 +38,12 @@ testthat::test_that("do_NebulosaPlot: FAIL - wrong legend position ", {
                                                  legend.position = "wrong"))
 })
 
+testthat::test_that("do_NebulosaPlot: FAIL - wrong font.type", {
+  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
+                                                 features = c("CD14"),
+                                                 font.type = "wrong"))
+})
+
 testthat::test_that("do_NebulosaPlot: PASS - single feature distinct dims", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14"),
