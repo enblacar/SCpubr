@@ -13,6 +13,7 @@ do_BeeSwarmPlot(
   slot = NULL,
   continuous_feature = FALSE,
   colors.use = NULL,
+  legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
@@ -51,6 +52,8 @@ do_BeeSwarmPlot(
 \item{continuous_feature}{Is the feature to rank and color for continuous? I.e: an enrichment score.}
 
 \item{colors.use}{Named vector with the color assignment.}
+
+\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 

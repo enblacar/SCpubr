@@ -5,6 +5,33 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_NebulosaPlot: PASS - single feature legend normal", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorbar", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorsteps", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                               features = c("CD14"),
+                               legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_NebulosaPlot: FAIL - wrong legend type ", {
+  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
+                                                 features = c("CD14"),
+                                                 legend.type = "wrong"))
+})
+
 testthat::test_that("do_NebulosaPlot: PASS - single feature distinct dims", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14"),

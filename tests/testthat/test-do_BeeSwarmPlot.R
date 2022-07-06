@@ -40,6 +40,41 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend normal", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                               feature_to_rank = "PC_1",
+                               group.by = "seurat_clusters",
+                               continuous_feature = T,
+                               legend.type = "normal")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorbar", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                               feature_to_rank = "PC_1",
+                               group.by = "seurat_clusters",
+                               continuous_feature = T,
+                               legend.type = "colorbar")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorsteps", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                               feature_to_rank = "PC_1",
+                               group.by = "seurat_clusters",
+                               continuous_feature = T,
+                               legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend type", {
+  testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
+                                                 feature_to_rank = "PC_1",
+                                                 group.by = "seurat_clusters",
+                                                 continuous_feature = T,
+                                                 legend.type = "wrong"))
+})
+
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",

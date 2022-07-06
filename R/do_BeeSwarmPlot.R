@@ -10,6 +10,7 @@
 #' @param group.by Variable you want the cells to be grouped for.
 #' @param colors.use Named vector with the color assignment.
 #' @param legend Whether to plot the legend or not.
+#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
@@ -37,6 +38,7 @@ do_BeeSwarmPlot <- function(sample,
                             slot = NULL,
                             continuous_feature = FALSE,
                             colors.use = NULL,
+                            legend.type = "colorbar",
                             legend.position = "bottom",
                             legend.framewidth = 1.5,
                             legend.tickwidth = 1.5,
@@ -102,6 +104,11 @@ do_BeeSwarmPlot <- function(sample,
 
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
+
+  # Check the legend.type.
+  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
+    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+  }
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -170,16 +177,35 @@ do_BeeSwarmPlot <- function(sample,
   if (continuous_feature == TRUE){
     p <- p +
          ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                        option = viridis_color_map) +
-         ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
-                                                         title.position = "top",
-                                                         barwidth = legend.barwidth,
-                                                         barheight = legend.barheight,
-                                                         title.hjust = 0.5,
-                                                         ticks.linewidth = legend.tickwidth,
-                                                         frame.linewidth = legend.framewidth,
-                                                         frame.colour = legend.framecolor,
-                                                         ticks.colour = legend.tickcolor))
+                                        option = viridis_color_map)
+    if (legend.type == "normal"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
+                                                        title.position = "top",
+                                                        title.hjust = 0.5))
+    } else if (legend.type == "colorbar"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
+                                                        title.position = "top",
+                                                        barwidth = legend.barwidth,
+                                                        barheight = legend.barheight,
+                                                        title.hjust = 0.5,
+                                                        ticks.linewidth = legend.tickwidth,
+                                                        frame.linewidth = legend.framewidth,
+                                                        frame.colour = legend.framecolor,
+                                                        ticks.colour = legend.tickcolor))
+    } else if (legend.type == "colorsteps"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorsteps(title = feature_to_rank,
+                                                          title.position = "top",
+                                                          barwidth = legend.barwidth,
+                                                          barheight = legend.barheight,
+                                                          title.hjust = 0.5,
+                                                          ticks.linewidth = legend.tickwidth,
+                                                          frame.linewidth = legend.framewidth,
+                                                          frame.colour = legend.framecolor,
+                                                          ticks.colour = legend.tickcolor))
+    }
   } else if (continuous_feature == FALSE) {
     if (is.null(colors.use)){
       colors.use <- generate_color_scale(levels(sample))
