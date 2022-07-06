@@ -17,6 +17,7 @@
 #' @param xlab  Title for the X axis.
 #' @param ylab  Title for the Y axis.
 #' @param font.size Base font.size for the figure.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param y_cut  Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param legend.ncol  Number of columns in the legend.
 #' @param ncol Numeric. Number of columns to arrange multiple plots into.

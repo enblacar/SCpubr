@@ -72,6 +72,8 @@ do_VlnPlot(
 
 \item{font.size}{Base font.size for the figure.}
 
+\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
+
 \item{ncol}{Numeric. Number of columns to arrange multiple plots into.}
 
 \item{legend.ncol}{Number of columns in the legend.}

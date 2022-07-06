@@ -210,5 +210,5 @@ testthat::test_that("do_DimPlot: PASS - split.by + factor + idents.keep", {
 })
 
 testthat::test_that("do_DimPlot: FAIL - wrong font.type", {
-  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, font.type = "wrong")
+  testthat::expect_error(SCpubr::do_DimPlot(sample = sample, font.type = "wrong"))
 })
