@@ -102,6 +102,13 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.type", {
                                                        legend.type = "wrong"))
 })
 
+testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.position", {
+  testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
+                                                       dbs_use = "GO_Biological_Process_2021",
+                                                       nterms = 2,
+                                                       legend.position = "wrong"))
+})
+
 testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong font.type", {
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "GO_Biological_Process_2021",
