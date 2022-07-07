@@ -9,6 +9,7 @@
 #' @param nterms Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.
 #' @param font.size Base font size for the plot. Defaults to 14.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
+#' @param plot.title,plot.subtitle,plot.caption  Title,subtitle or caption to use in the plot.
 #' @param site Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".
 #' @param colors.use Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
@@ -28,6 +29,9 @@ do_TermEnrichmentPlot <- function(genes,
                                   font.size = 14,
                                   font.type = "sans",
                                   site = "Enrichr",
+                                  plot.title = NULL,
+                                  plot.subtitle = NULL,
+                                  plot.caption = NULL,
                                   legend.position = "bottom",
                                   legend.type = "colorsteps",
                                   colors.use = NULL,
@@ -72,7 +76,10 @@ do_TermEnrichmentPlot <- function(genes,
                            "legend.framecolor" = legend.framecolor,
                            "legend.tickcolor" = legend.tickcolor,
                            "legend.type" = legend.type,
-                           "font.type" = font.type)
+                           "font.type" = font.type,
+                           "plot.title" = plot.title,
+                           "plot.subtitle" = plot.subtitle,
+                           "plot.caption" = plot.caption)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check colors.
@@ -207,8 +214,9 @@ do_TermEnrichmentPlot <- function(genes,
         ggplot2::coord_polar(clip = "off") +
         # Set up the y axis limits so that we have empty space in the middle.
         ggplot2::ylim(limits) +
-        ggplot2::ggtitle(stringr::str_replace_all(dbs_use, "_", " ")) +
-        ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5)) +
+        ggplot2::labs(title = ifelse(is.null(plot.title), stringr::str_replace_all(dbs_use, "_", " "), plot.title),
+                      subtitle = plot.subtitle,
+                      caption = plot.caption) +
         # Add the enriched terms as labels with white background at the outside of the plot.
         ggplot2::geom_label(data = label_data,
                             mapping = ggplot2::aes(x = .data$id,
@@ -304,9 +312,10 @@ do_TermEnrichmentPlot <- function(genes,
                        axis.text = ggplot2::element_blank(),
                        panel.grid.major = ggplot2::element_blank(),
                        plot.title.position = "plot",
-                       plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
-                       plot.subtitle = ggplot2::element_text(hjust = 0),
-                       plot.caption = ggplot2::element_text(hjust = 1),
+                       plot.title = ggtext::element_markdown(face = "bold",
+                                                             hjust = ifelse(is.null(plot.title), 0.5, 0)),
+                       plot.subtitle = ggtext::element_markdown(hjust = 0),
+                       plot.caption = ggtext::element_markdown(hjust = 1),
                        panel.grid = ggplot2::element_blank(),
                        text = ggplot2::element_text(family = font.type),
                        plot.caption.position = "plot",

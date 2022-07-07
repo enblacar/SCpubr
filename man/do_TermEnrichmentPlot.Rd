@@ -12,6 +12,9 @@ do_TermEnrichmentPlot(
   font.size = 14,
   font.type = "sans",
   site = "Enrichr",
+  plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
   legend.position = "bottom",
   legend.type = "colorsteps",
   colors.use = NULL,
@@ -43,6 +46,8 @@ do_TermEnrichmentPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{site}{Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".}
+
+\item{plot.title, plot.subtitle, plot.caption}{Title,subtitle or caption to use in the plot.}
 
 \item{legend.position}{Position of the legend in the plot.}
 
