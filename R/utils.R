@@ -10,7 +10,7 @@
 check_suggests <- function(function_name){
 
   pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel", "ggtext"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra"),
                    "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggtext"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext"),
@@ -47,7 +47,7 @@ check_suggests <- function(function_name){
 #' }
 state_dependencies <- function(func_name = NULL){
   pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel", "ggtext"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra"),
                    "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggtext"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext"),
@@ -74,6 +74,7 @@ state_dependencies <- function(func_name = NULL){
                      "forcats",
                      "ggbeeswarm",
                      "ggplot2",
+                     "ggExtra",
                      "ggrepel",
                      "Matrix",
                      "patchwork",

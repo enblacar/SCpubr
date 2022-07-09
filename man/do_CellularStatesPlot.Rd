@@ -24,7 +24,8 @@ do_CellularStatesPlot(
   axis.ticks = TRUE,
   axis.text = TRUE,
   verbose = FALSE,
-  enforce_simmetry = FALSE
+  enforce_simmetry = FALSE,
+  marginal_distributions = FALSE
 )
 }
 \arguments{
@@ -63,6 +64,8 @@ do_CellularStatesPlot(
 \item{verbose}{Verbose function?}
 
 \item{enforce_simmetry}{Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).}
+
+\item{marginal_distributions}{Logical. Whether to plot marginal distributions on the figure or not.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

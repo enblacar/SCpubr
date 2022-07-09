@@ -14,6 +14,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      marginal_distributions = TRUE)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
   p <- SCpubr:::do_CellularStatesPlot(sample = sample,
                                       gene_list = genes,
@@ -111,6 +120,16 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      x2 = "C",
+                                      marginal_distributions = TRUE)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
   p <- SCpubr:::do_CellularStatesPlot(sample = sample,
                                       gene_list = genes,
@@ -161,6 +180,17 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      x2 = "C",
+                                      y2 = "D",
+                                      marginal_distributions = TRUE)
   testthat::expect_type(p, "list")
 })
 

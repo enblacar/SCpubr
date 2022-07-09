@@ -29,6 +29,7 @@
 #' @param verbose Verbose function?
 #' @param font.size Overall font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
+#' @param marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -55,7 +56,8 @@ do_CellularStatesPlot <- function(sample,
                                   axis.ticks = TRUE,
                                   axis.text = TRUE,
                                   verbose = FALSE,
-                                  enforce_simmetry = FALSE){
+                                  enforce_simmetry = FALSE,
+                                  marginal_distributions = FALSE){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -65,7 +67,8 @@ do_CellularStatesPlot <- function(sample,
     logical_list <- list("axis.ticks" = axis.ticks,
                          "axis.text" = axis.text,
                          "verbose" = verbose,
-                         "enforce_simmetry" = enforce_simmetry)
+                         "enforce_simmetry" = enforce_simmetry,
+                         "marginal_distributions" = marginal_distributions)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("font.size" = font.size)
@@ -364,7 +367,15 @@ do_CellularStatesPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"))
+
+    if (isTRUE(marginal_distributions)){
+
+      p <- ggExtra::ggMarginal(p = p,
+                               groupColour = TRUE,
+                               groupFill = TRUE,
+                               type = "density")
+    }
 
     # Remove axis ticks?
     if (axis.ticks == FALSE){
