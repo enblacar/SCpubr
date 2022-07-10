@@ -19,9 +19,81 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
                                       gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
-                                      marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE)
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.size", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.size = 8)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.group FALSE", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.group = FALSE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribution types", {
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.type = "density")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.type = "histogram")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.type = "boxplot")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.type = "violin")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr:::do_CellularStatesPlot(sample = sample,
+                                      gene_list = genes,
+                                      x1 = "A",
+                                      y1 = "B",
+                                      plot_marginal_distributions = TRUE,
+                                      marginal.type = "densigram")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {
+  testthat::expect_error({SCpubr:::do_CellularStatesPlot(sample = sample,
+                                                         gene_list = genes,
+                                                         x1 = "A",
+                                                         y1 = "B",
+                                                         plot_marginal_distributions = TRUE,
+                                                         marginal.type = "wrong")})
+})
+
 
 testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
   p <- SCpubr:::do_CellularStatesPlot(sample = sample,
@@ -126,7 +198,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
-                                      marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -190,7 +262,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D",
-                                      marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE)
   testthat::expect_type(p, "list")
 })
 

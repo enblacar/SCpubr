@@ -29,7 +29,10 @@
 #' @param verbose Verbose function?
 #' @param font.size Overall font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
+#' @param plot_marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
+#' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
+#' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
+#' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -57,7 +60,10 @@ do_CellularStatesPlot <- function(sample,
                                   axis.text = TRUE,
                                   verbose = FALSE,
                                   enforce_simmetry = FALSE,
-                                  marginal_distributions = FALSE){
+                                  plot_marginal_distributions = FALSE,
+                                  marginal.type = "density",
+                                  marginal.size = 5,
+                                  marginal.group = TRUE){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -68,10 +74,12 @@ do_CellularStatesPlot <- function(sample,
                          "axis.text" = axis.text,
                          "verbose" = verbose,
                          "enforce_simmetry" = enforce_simmetry,
-                         "marginal_distributions" = marginal_distributions)
+                         "plot_marginal_distributions" = plot_marginal_distributions,
+                         "marginal.group" = marginal.group)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
-    numeric_list <- list("font.size" = font.size)
+    numeric_list <- list("font.size" = font.size,
+                         "marginal.size" = marginal.size)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("gene_list" = gene_list,
@@ -86,7 +94,8 @@ do_CellularStatesPlot <- function(sample,
                            "plot.title" = plot.title,
                            "plot.subtitle" = plot.subtitle,
                            "plot.caption" = plot.caption,
-                           "font.type" = font.type)
+                           "font.type" = font.type,
+                           "marginal.type" = marginal.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -125,6 +134,11 @@ do_CellularStatesPlot <- function(sample,
     # Check font.type.
     if (!(font.type %in% c("sans", "serif", "mono"))){
       stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+    }
+
+    # Check font.type.
+    if (!(marginal.type %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
+      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
     }
 
     # Compute the enrichment scores.
@@ -369,12 +383,12 @@ do_CellularStatesPlot <- function(sample,
                         axis.line = ggplot2::element_line(color = "black"),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"))
 
-    if (isTRUE(marginal_distributions)){
-
-      p <- ggExtra::ggMarginal(p = p,
-                               groupColour = TRUE,
-                               groupFill = TRUE,
-                               type = "density")
+    if (isTRUE(plot_marginal_distributions)){
+      p <- p %>%
+           ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
+                               groupFill = ifelse(isTRUE(marginal.group), T, F),
+                               type = marginal.type,
+                               size = marginal.size)
     }
 
     # Remove axis ticks?

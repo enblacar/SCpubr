@@ -25,7 +25,10 @@ do_CellularStatesPlot(
   axis.text = TRUE,
   verbose = FALSE,
   enforce_simmetry = FALSE,
-  marginal_distributions = FALSE
+  plot_marginal_distributions = FALSE,
+  marginal.type = "density",
+  marginal.size = 5,
+  marginal.group = TRUE
 )
 }
 \arguments{
@@ -65,7 +68,13 @@ do_CellularStatesPlot(
 
 \item{enforce_simmetry}{Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).}
 
-\item{marginal_distributions}{Logical. Whether to plot marginal distributions on the figure or not.}
+\item{plot_marginal_distributions}{Logical. Whether to plot marginal distributions on the figure or not.}
+
+\item{marginal.type}{Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.}
+
+\item{marginal.size}{Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.}
+
+\item{marginal.group}{Logical. Whether to group the marginal distribution by group.by or current identities.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.
