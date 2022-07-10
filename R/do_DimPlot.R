@@ -504,7 +504,7 @@ do_DimPlot <- function(sample,
                              groupFill = ifelse(isTRUE(marginal.group), T, F),
                              type = marginal.type,
                              size = marginal.size)
-  } else {
+  } else if (isTRUE(plot_marginal_distributions)) {
     stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells.", call. = F)
   }
 
