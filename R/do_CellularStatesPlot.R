@@ -136,7 +136,7 @@ do_CellularStatesPlot <- function(sample,
       stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
     }
 
-    # Check font.type.
+    # Check marginal.type.
     if (!(marginal.type %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
       stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
     }

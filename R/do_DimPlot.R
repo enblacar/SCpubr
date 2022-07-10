@@ -30,8 +30,12 @@
 #' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
 #' @param na.value Color value for NA.
-#'
+#' @param plot_marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
+#' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
+#' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
+#' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
 #' @return  A ggplot2 object containing a DimPlot.
+#'
 #' @export
 #'
 #' @example man/examples/examples_do_DimPlot.R
@@ -67,7 +71,11 @@ do_DimPlot <- function(sample,
                        dims = c(1, 2),
                        font.size = 14,
                        font.type = "sans",
-                       na.value = "grey75"){
+                       na.value = "grey75",
+                       plot_marginal_distributions = FALSE,
+                       marginal.type = "density",
+                       marginal.size = 5,
+                       marginal.group = TRUE){
   # Checks for packages.
   check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
@@ -83,7 +91,9 @@ do_DimPlot <- function(sample,
                        "legend" = legend,
                        "legend.title" = legend.title,
                        "legend.byrow" = legend.byrow,
-                       "raster" = raster)
+                       "raster" = raster,
+                       "plot_marginal_distributions" = plot_marginal_distributions,
+                       "marginal.group" = marginal.group)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -93,7 +103,8 @@ do_DimPlot <- function(sample,
                        "font.size" = font.size,
                        "legend.icon.size" = legend.icon.size,
                        "ncol" = ncol,
-                       "raster.dpi" = raster.dpi)
+                       "raster.dpi" = raster.dpi,
+                       "marginal.size" = marginal.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -106,7 +117,8 @@ do_DimPlot <- function(sample,
                          "na.value" = na.value,
                          "idents.highlight" = idents.highlight,
                          "legend.title.position" = legend.title.position,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "marginal.type" = marginal.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Checks to ensure proper function.
@@ -203,6 +215,11 @@ do_DimPlot <- function(sample,
         stop("Provide only one color if cells.highlight or idents.highlight is used.", call. = F)
       }
     }
+  }
+
+  # Check marginal.type.
+  if (!(marginal.type %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
+    stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
   }
 
   # Set cells to NA according to idents.keep.
@@ -478,6 +495,17 @@ do_DimPlot <- function(sample,
   # Turn the labels to bold, when label is set to TRUE.
   if (label == TRUE && is.null(cells.highlight)){
     p$layers[[2]]$aes_params$fontface <- "bold"
+  }
+
+  # Add marginal plots.
+  if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions)){
+    p <- ggExtra::ggMarginal(p = p,
+                             groupColour = ifelse(isTRUE(marginal.group), T, F),
+                             groupFill = ifelse(isTRUE(marginal.group), T, F),
+                             type = marginal.type,
+                             size = marginal.size)
+  } else {
+    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells.", call. = F)
   }
 
   # Return the final plot.

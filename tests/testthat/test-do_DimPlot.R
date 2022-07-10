@@ -4,6 +4,67 @@ testthat::test_that("do_DimPlot: PASS - sample", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DimPlot: PASS - sample marginal", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.type = "density")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.type = "histogram")
+  testthat::expect_type(p, "list")
+
+  p <- suppressWarnings({SCpubr::do_DimPlot(sample = sample,
+                                            plot_marginal_distributions = TRUE,
+                                            marginal.type = "violin")})
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.type = "boxplot")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.type = "densigram")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - sample marginal size", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.size = 9)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: PASS - sample marginal group", {
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          plot_marginal_distributions = TRUE,
+                          marginal.group = F)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DimPlot: FAIL - sample marginal wrong marginal.type", {
+  testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
+                                             plot_marginal_distributions = TRUE,
+                                             marginal.type = "wrong")})
+})
+
+testthat::test_that("do_DimPlot: FAIL - sample marginal used alongside split.by or cells.highlight", {
+  testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
+                                             plot_marginal_distributions = TRUE,
+                                             split.by = "seurat_clusters")})
+
+  testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
+                                             plot_marginal_distributions = TRUE,
+                                             cells.highlight =  colnames(sample))})
+
+  testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
+                                             plot_marginal_distributions = TRUE,
+                                             idents.highlight =  c("1"))})
+})
+
 testthat::test_that("do_DimPlot: PASS - title", {
   p <- SCpubr::do_DimPlot(sample = sample,
                           plot.title = "My awesome SC data set")

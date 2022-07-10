@@ -37,7 +37,11 @@ do_DimPlot(
   dims = c(1, 2),
   font.size = 14,
   font.type = "sans",
-  na.value = "grey75"
+  na.value = "grey75",
+  plot_marginal_distributions = FALSE,
+  marginal.type = "density",
+  marginal.size = 5,
+  marginal.group = TRUE
 )
 }
 \arguments{
@@ -98,6 +102,14 @@ do_DimPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{na.value}{Color value for NA.}
+
+\item{plot_marginal_distributions}{Logical. Whether to plot marginal distributions on the figure or not.}
+
+\item{marginal.type}{Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.}
+
+\item{marginal.size}{Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.}
+
+\item{marginal.group}{Logical. Whether to group the marginal distribution by group.by or current identities.}
 }
 \value{
 A ggplot2 object containing a DimPlot.
