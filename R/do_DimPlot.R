@@ -501,17 +501,17 @@ do_DimPlot <- function(sample,
   if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions)){
     # Remove annoying warnings when violin is used as marginal distribution.
     if (marginal.type == "violin"){
-      suppressWarnings({p <- p %>%
-        ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
-                            groupFill = ifelse(isTRUE(marginal.group), T, F),
-                            type = marginal.type,
-                            size = marginal.size)})
+      suppressWarnings({ggExtra::ggMarginal(p = p,
+                                            groupColour = ifelse(isTRUE(marginal.group), T, F),
+                                            groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                            type = marginal.type,
+                                            size = marginal.size)})
     } else {
-      p <- p %>%
-        ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
-                            groupFill = ifelse(isTRUE(marginal.group), T, F),
-                            type = marginal.type,
-                            size = marginal.size)
+      ggExtra::ggMarginal(p = p,
+                          groupColour = ifelse(isTRUE(marginal.group), T, F),
+                          groupFill = ifelse(isTRUE(marginal.group), T, F),
+                          type = marginal.type,
+                          size = marginal.size)
     }
     # Transform back to ggplot2 object.
     p <- ggplotify::as.ggplot(p)
