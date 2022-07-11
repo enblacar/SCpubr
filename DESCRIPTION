@@ -45,6 +45,7 @@ Suggests:
     ggrastr,
     ggtext,
     pheatmap,
-    ggExtra
+    ggExtra,
+    ggplotify
 VignetteBuilder: knitr
 Config/testthat/edition: 3

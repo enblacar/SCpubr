@@ -499,11 +499,24 @@ do_DimPlot <- function(sample,
 
   # Add marginal plots.
   if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions)){
-    p <- ggExtra::ggMarginal(p = p,
-                             groupColour = ifelse(isTRUE(marginal.group), T, F),
-                             groupFill = ifelse(isTRUE(marginal.group), T, F),
-                             type = marginal.type,
-                             size = marginal.size)
+    # Remove annoying warnings when violin is used as marginal distribution.
+    if (marginal.type == "violin"){
+      suppressWarnings({p <- p %>%
+        ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
+                            groupFill = ifelse(isTRUE(marginal.group), T, F),
+                            type = marginal.type,
+                            size = marginal.size)})
+    } else {
+      p <- p %>%
+        ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
+                            groupFill = ifelse(isTRUE(marginal.group), T, F),
+                            type = marginal.type,
+                            size = marginal.size)
+    }
+    # Transform back to ggplot2 object.
+    p <- ggplotify::as.ggplot(p)
+    # Remove an empty layer that is formed.
+    p$layers[[1]] <- NULL
   } else if (isTRUE(plot_marginal_distributions)) {
     stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells.", call. = F)
   }

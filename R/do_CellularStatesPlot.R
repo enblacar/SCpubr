@@ -384,11 +384,25 @@ do_CellularStatesPlot <- function(sample,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"))
 
     if (isTRUE(plot_marginal_distributions)){
-      p <- p %>%
-           ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
-                               groupFill = ifelse(isTRUE(marginal.group), T, F),
-                               type = marginal.type,
-                               size = marginal.size)
+      # Remove annoying warnings when violin is used as marginal distribution.
+      if (marginal.type == "violin"){
+        suppressWarnings({p <- p %>%
+                               ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
+                                                   groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                                   type = marginal.type,
+                                                   size = marginal.size)})
+      } else {
+        p <- p %>%
+             ggExtra::ggMarginal(groupColour = ifelse(isTRUE(marginal.group), T, F),
+                                 groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                 type = marginal.type,
+                                 size = marginal.size)
+      }
+
+      # Transform back to ggplot2 object.
+      p <- ggplotify::as.ggplot(p)
+      # Remove an empty layer that is formed.
+      p$layers[[1]] <- NULL
     }
 
     # Remove axis ticks?
@@ -402,7 +416,6 @@ do_CellularStatesPlot <- function(sample,
         p <- p +
              ggplot2::theme(axis.text = ggplot2::element_blank())
     }
-
     return(p)
 
 }
