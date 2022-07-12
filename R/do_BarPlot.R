@@ -251,7 +251,9 @@ do_BarPlot <- function(sample,
                        plot.margin = ggplot2::margin(t = 10, r = 40, b = 10, l = 10),
                        axis.ticks = ggplot2::element_line(color = "black"),
                        axis.line = ggplot2::element_line(color = "black"),
-                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
       # Whether to flip the axis or not.
       if (isTRUE(horizontal)){

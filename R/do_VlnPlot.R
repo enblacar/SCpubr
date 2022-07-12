@@ -194,7 +194,9 @@ do_VlnPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),) &
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white")) &
          ggplot2::guides(fill = ggplot2::guide_legend(ncol = legend.ncol))
     # Modify line width of violin plots.
     p$layers[[1]]$aes_params$size <- line_width

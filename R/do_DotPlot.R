@@ -168,7 +168,9 @@ do_DotPlot <- function(sample,
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         panel.grid.major = ggplot2::element_blank(),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
     # Add leyend modifiers.
     if (legend.type == "normal"){
       p <- p +

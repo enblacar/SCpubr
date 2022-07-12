@@ -323,8 +323,10 @@ do_TermEnrichmentPlot <- function(genes,
                        legend.position = legend.position,
                        legend.title = ggplot2::element_text(face = "bold"),
                        legend.justification = "center",
+                       plot.margin = ggplot2::margin(t = 10, r = 200, b = 10, l = 200),
                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                       plot.margin = ggplot2::margin(t = 10, r = 200, b = 10, l = 200))
+                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
     } else if (dbs_use == "A"){
       p <- list("Azimuth_Cell_Types_2021" = SCpubr::do_TermEnrichmentPlot(genes = genes,

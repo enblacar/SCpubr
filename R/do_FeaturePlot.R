@@ -435,7 +435,9 @@ do_FeaturePlot <- function(sample,
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold",
                                                         angle = 90),
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by)){
     if (legend.type == "normal"){
       p <- p &

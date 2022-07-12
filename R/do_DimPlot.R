@@ -407,8 +407,10 @@ do_DimPlot <- function(sample,
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
                    panel.grid = ggplot2::element_blank(),
-                   plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),)
+                   plot.margin = ggplot2::margin(t = 20, r = 10, b = 10, l = 10),
+                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
   # Add plot title to the plots.
   if (!is.null(plot.title)){
@@ -515,8 +517,11 @@ do_DimPlot <- function(sample,
     }
     # Transform back to ggplot2 object.
     p <- ggplotify::as.ggplot(p)
-    # Remove an empty layer that is formed.
-    p$layers[[1]] <- NULL
+
+    # Fix for the plot backgrounds after applying ggMarginal.
+    p$theme$plot.background <- ggplot2::element_rect(fill = "white", color = "white")
+    p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
+    p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
   } else if (isTRUE(plot_marginal_distributions)) {
     stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells.", call. = F)
   }

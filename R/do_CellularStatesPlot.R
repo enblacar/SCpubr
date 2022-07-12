@@ -372,12 +372,14 @@ do_CellularStatesPlot <- function(sample,
 
     }
 
+
+
     # Overall formatting for the plot.
-    p <- p +
-         ggplot2::theme_minimal(base_size = font.size) +
+    p <- p &
+         ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
                         axis.text = ggplot2::element_text(face = "bold", color = "black"),
-                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
+                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0, vjust = 0),
                         plot.subtitle = ggtext::element_markdown(hjust = 0),
                         plot.caption = ggtext::element_markdown(hjust = 1),
                         plot.title.position = "plot",
@@ -388,10 +390,12 @@ do_CellularStatesPlot <- function(sample,
                         legend.position = legend.position,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        plot.margin = ggplot2::margin(t = 30, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white")) +
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white")) &
          ggplot2::guides(color = ggplot2::guide_legend(title = "",
                                                        ncol = legend.ncol,
                                                        nrow = legend.nrow,
@@ -416,8 +420,11 @@ do_CellularStatesPlot <- function(sample,
 
       # Transform back to ggplot2 object.
       p <- ggplotify::as.ggplot(p)
-      # Remove an empty layer that is formed.
-      p$layers[[1]] <- NULL
+
+      # Fix for the plot backgrounds after applying ggMarginal.
+      p$theme$plot.background <- ggplot2::element_rect(fill = "white", color = "white")
+      p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
+      p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
     }
 
     # Remove axis ticks?
