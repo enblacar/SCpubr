@@ -14,6 +14,10 @@ do_CellularStatesPlot(
   group.by = NULL,
   colors.use = NULL,
   legend.position = NULL,
+  legend.icon.size = 4,
+  legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -49,6 +53,12 @@ do_CellularStatesPlot(
 \item{colors.use}{Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.}
 
 \item{legend.position}{Position of the legend in the plot. One of: top, bottom, left, right.}
+
+\item{legend.icon.size}{Numeric. Size of the icons in legend.}
+
+\item{legend.ncol, legend.nrow}{Number of columns/rows in the legend.}
+
+\item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
 \item{plot.title, plot.subtitle, plot.caption}{Title to use in the plot.}
 

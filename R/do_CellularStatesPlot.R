@@ -19,6 +19,9 @@
 #' @param y2  A name of a list from gene_list. Second feature on the Y axis. Will become the bottom-left quadrant if provided.
 #' @param colors.use Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.
 #' @param legend.position  Position of the legend in the plot. One of: top, bottom, left, right.
+#' @param legend.icon.size Numeric. Size of the icons in legend.
+#' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
+#' @param legend.byrow Logical stating whether the legend is filled by row or not.
 #' @param group.by Metadata variable to color the cells by. Defaults to current identities.
 #' @param plot.title,plot.subtitle,plot.caption  Title to use in the plot.
 #' @param xlab  Title for the X axis. Only works if y2 is not set up.
@@ -49,6 +52,10 @@ do_CellularStatesPlot <- function(sample,
                                   group.by = NULL,
                                   colors.use = NULL,
                                   legend.position = NULL,
+                                  legend.icon.size = 4,
+                                  legend.ncol = NULL,
+                                  legend.nrow = NULL,
+                                  legend.byrow = FALSE,
                                   plot.title = NULL,
                                   plot.subtitle = NULL,
                                   plot.caption = NULL,
@@ -75,11 +82,15 @@ do_CellularStatesPlot <- function(sample,
                          "verbose" = verbose,
                          "enforce_simmetry" = enforce_simmetry,
                          "plot_marginal_distributions" = plot_marginal_distributions,
-                         "marginal.group" = marginal.group)
+                         "marginal.group" = marginal.group,
+                         "legend.byrow" = legend.byrow)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("font.size" = font.size,
-                         "marginal.size" = marginal.size)
+                         "marginal.size" = marginal.size,
+                         "legend.icon.size" = legend.icon.size,
+                         "legend.ncol" = legend.ncol,
+                         "legend.nrow" = legend.nrow)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("gene_list" = gene_list,
@@ -331,7 +342,6 @@ do_CellularStatesPlot <- function(sample,
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
              ggplot2::geom_point() +
              ggplot2::scale_color_manual(values = colors.use) +
-             ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
              ggplot2::xlab(x_lab1) +
              ggplot2::ylab(y_lab1) +
              ggplot2::labs(title = plot.title,
@@ -381,7 +391,12 @@ do_CellularStatesPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"))
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white")) +
+         ggplot2::guides(color = ggplot2::guide_legend(title = "",
+                                                       ncol = legend.ncol,
+                                                       nrow = legend.nrow,
+                                                       byrow = legend.byrow,
+                                                       override.aes = list(size = legend.icon.size)))
 
     if (isTRUE(plot_marginal_distributions)){
       # Remove annoying warnings when violin is used as marginal distribution.

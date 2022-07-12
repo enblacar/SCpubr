@@ -20,7 +20,7 @@
 #' @param legend.title Logical stating whether the legend title is shown or not.
 #' @param legend.title.position Character stating where to place the title of the legend.
 #' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
-#' @param legend.icon.size Size of the icons in legend.
+#' @param legend.icon.size Numeric. Size of the icons in legend.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.byrow Logical stating whether the legend is filled by row or not.
 #' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.

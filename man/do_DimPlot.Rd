@@ -87,7 +87,7 @@ do_DimPlot(
 
 \item{legend.ncol, legend.nrow}{Number of columns/rows in the legend.}
 
-\item{legend.icon.size}{Size of the icons in legend.}
+\item{legend.icon.size}{Numeric. Size of the icons in legend.}
 
 \item{legend.byrow}{Logical stating whether the legend is filled by row or not.}
 
