@@ -28,7 +28,7 @@
 #' @param ylab  Title for the Y axis. Only works if y2 is not set up.
 #' @param axis.ticks  Whether to show axis ticks.
 #' @param axis.text  Whether to show axis text.
-#' @param enforce_simmetry Logical. Whether to enforce the plot to follow a simmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
+#' @param enforce_symmetry Logical. Whether to enforce the plot to follow a symmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
 #' @param verbose Verbose function?
 #' @param font.size Overall font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
@@ -39,10 +39,8 @@
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example man/examples/examples_do_CellularStatesPlot.R
+
 do_CellularStatesPlot <- function(sample,
                                   gene_list,
                                   x1,
@@ -66,7 +64,7 @@ do_CellularStatesPlot <- function(sample,
                                   axis.ticks = TRUE,
                                   axis.text = TRUE,
                                   verbose = FALSE,
-                                  enforce_simmetry = FALSE,
+                                  enforce_symmetry = FALSE,
                                   plot_marginal_distributions = FALSE,
                                   marginal.type = "density",
                                   marginal.size = 5,
@@ -80,7 +78,7 @@ do_CellularStatesPlot <- function(sample,
     logical_list <- list("axis.ticks" = axis.ticks,
                          "axis.text" = axis.text,
                          "verbose" = verbose,
-                         "enforce_simmetry" = enforce_simmetry,
+                         "enforce_symmetry" = enforce_symmetry,
                          "plot_marginal_distributions" = plot_marginal_distributions,
                          "marginal.group" = marginal.group,
                          "legend.byrow" = legend.byrow)
@@ -202,7 +200,7 @@ do_CellularStatesPlot <- function(sample,
                          subtitle = plot.subtitle,
                          caption = plot.caption)
 
-      if (isTRUE(enforce_simmetry)){
+      if (isTRUE(enforce_symmetry)){
         # Define limits of polots.
         lim1 <- min(min(x), min(y))
         lim2 <- max(max(x), max(y))
@@ -275,7 +273,7 @@ do_CellularStatesPlot <- function(sample,
                            subtitle = plot.subtitle,
                            caption = plot.caption)
 
-        if (isTRUE(enforce_simmetry)){
+        if (isTRUE(enforce_symmetry)){
           # Define limits of polots.
           lim <- max(abs(x))
           lim_x <- c(-lim, lim)
@@ -352,7 +350,7 @@ do_CellularStatesPlot <- function(sample,
                ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
                ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2))
         })
-    if (isTRUE(enforce_simmetry)){
+    if (isTRUE(enforce_symmetry)){
       # Define limits of polots.
       lim_1 <- min(min(d), min(x))
       lim_2 <- max(max(d), max(x))

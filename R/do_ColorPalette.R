@@ -133,7 +133,7 @@ do_ColorPalette <- function(colors.use,
     # Dummy df to plot.
     names(colors) <- colors
     df <- data.frame("values" = rep(1, n), "names" = factor(colors, levels = names(colors)))
-    limits <- c(-5, 1.25)
+    limits <- c(-5, 1.35)
     colors.use <- colors
 
     # Define name for the center of the plot.
