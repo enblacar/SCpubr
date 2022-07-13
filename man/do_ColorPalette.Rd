@@ -50,8 +50,7 @@ A character vector with the desired color scale.
 A ggplot2 object containing a Dot Plot.
 }
 \description{
-This function is an adaptation of \link[colortools]{setColors}, \link[colortools]{complementary}, \link[colortools]{adjacent}, \link[colortools]{triadic}, \link[colortools]{split_complemmentary}, \link[colortools]{tetradic} and \link[colortools]{square}.
-As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,
+This function is an adaptation of colortools package. As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,
 an adaptation of the package into a single function. Original code, developed by Gaston Sanchez, can be found in: \url{https://github.com/gastonstat/colortools}
 }
 \examples{

@@ -2,6 +2,9 @@ testthat::test_that("do_BarPlot: PASS - color vectors", {
   out <- SCpubr::do_ColorPalette(colors.use = "steelblue")
   testthat::expect_length(out, 12)
 
+  out <- SCpubr::do_ColorPalette(colors.use = "#440154FF")
+  testthat::expect_length(out, 12)
+
   out <- SCpubr::do_ColorPalette(colors.use = "steelblue", opposite = TRUE)
   testthat::expect_length(out, 2)
 
@@ -19,6 +22,8 @@ testthat::test_that("do_BarPlot: PASS - color vectors", {
 
   out <- SCpubr::do_ColorPalette(colors.use = "steelblue", square = TRUE)
   testthat::expect_length(out, 4)
+
+
 })
 
 

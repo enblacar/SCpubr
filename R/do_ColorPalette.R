@@ -1,7 +1,6 @@
 #' Generate color scales based on a value.
 #'
-#' This function is an adaptation of \link[colortools]{setColors}, \link[colortools]{complementary}, \link[colortools]{adjacent}, \link[colortools]{triadic}, \link[colortools]{split_complemmentary}, \link[colortools]{tetradic} and \link[colortools]{square}.
-#' As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,
+#' This function is an adaptation of colortools package. As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,
 #' an adaptation of the package into a single function. Original code, developed by Gaston Sanchez, can be found in: <https://github.com/gastonstat/colortools>
 #'
 #' @param colors.use One color upon which generate the color scale. Can be a name or a HEX code.
@@ -77,10 +76,6 @@ do_ColorPalette <- function(colors.use,
   if (sum(options_list) >= 1 & n != 12){
     warning("When an color output option is selected, n parameter becomes by default 12. Please consider not using n for these purposes.", call. = F)
     n <- 12
-  } else {
-    if (!(is.numeric(n))){
-      stop("Please provide a number to `n` to compute the color scale.", call. = FALSE)
-    }
   }
 
   # Convert input to RGB colors: Input can be either color names, hex code.
