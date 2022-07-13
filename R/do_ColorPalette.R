@@ -14,13 +14,13 @@
 #' @param square Logical. Return the square combination of colors to the one provided.
 #' @param complete_output Logical. Runs all the previous options and returns all the outputs as a list that contains all color vectors, all plots and a combined plot with everything.
 #' @param plot Logical. Whether to also return a plot displaying the values instead of a vector with the color.
+#' @param font.size Base font.size of the plot.
+#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @return  A character vector with the desired color scale.
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example man/examples/examples_do_ColorPalette.R
+
 do_ColorPalette <- function(colors.use,
                             n = 12,
                             opposite = FALSE,
@@ -30,7 +30,9 @@ do_ColorPalette <- function(colors.use,
                             tetradic = FALSE,
                             square = FALSE,
                             complete_output = FALSE,
-                            plot = FALSE){
+                            plot = FALSE,
+                            font.size = 14,
+                            font.type = "sans"){
 
   # Check logical parameters.
   logical_list <- list("opposite" = opposite,
@@ -43,11 +45,13 @@ do_ColorPalette <- function(colors.use,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
 
   # Check numeric parameters.
-  numeric_list <- list("n" = n)
+  numeric_list <- list("n" = n,
+                       "font.size", font.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
 
   # Check character parameters.
-  character_list <- list("colors.use" = colors.use)
+  character_list <- list("colors.use" = colors.use,
+                         "font.type" = font.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check that the colors provided are only one.
