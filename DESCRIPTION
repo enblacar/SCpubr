@@ -17,7 +17,6 @@ Suggests:
     rlang,
     Seurat,
     ggplot2,
-    ggpubr,
     tidyr,
     dplyr,
     colorspace,
@@ -46,6 +45,11 @@ Suggests:
     ggtext,
     pheatmap,
     ggExtra,
-    ggplotify
+    ggplotify,
+    monocle3 (>= 1.2.9),
+    liana (>= 0.1.5)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Remotes:  
+    cole-trapnell-lab/monocle3,
+    saezlab/liana

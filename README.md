@@ -5,9 +5,10 @@
 <!-- badges: end -->
   
 # SCpubr
-<img src="man/figures/SCpubr_logo.png" align="right" height="280"/>
+<img src="man/figures/SCpubr_logo.png" align="center" height="100%" width = "100%"/>
 
-Collection of functions aimed to streamline quality figure generation for Single Cell transcriptomics experiments.
+This package aims to provide a streamlined way of generating publication ready plots for known **S**ingle-**C**ell visualizations in a "**pub**lication **r**eady" format (**SCpubr**). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. 
+
 
 For further information read the [publication](https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1).
 
