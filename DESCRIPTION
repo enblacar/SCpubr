@@ -49,11 +49,12 @@ Suggests:
     monocle3 (>= 1.2.9),
     liana (>= 0.1.5),
     scattermore,
-    SeuratWrappers (>= 0.3.0)
+    seurat-wrappers (>= 0.3.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Remotes:  
     cole-trapnell-lab/monocle3,
     saezlab/liana,
+    satijalab/seurat-wrappers,
     satijalab/seurat-wrappers,
     satijalab/seurat-wrappers
