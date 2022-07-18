@@ -90,6 +90,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      plot_cell_borders = TRUE,
                                      plot_features = TRUE,
                                      features = "CD14",
+                                     enforce_symmetry = TRUE)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
                                      plot_enrichment_scores = TRUE)
   testthat::expect_type(p, "list")
 
@@ -101,6 +110,16 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      plot_cell_borders = TRUE,
                                      plot_features = TRUE,
                                      features = "CD14")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
+                                     enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                      gene_list = genes,
@@ -122,6 +141,17 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      plot_cell_borders = TRUE,
                                      plot_features = TRUE,
                                      features = "CD14")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
+                                     enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                      gene_list = genes,
