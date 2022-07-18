@@ -46,9 +46,6 @@ Suggests:
     pheatmap,
     ggExtra,
     ggplotify,
-    liana (>= 0.1.5),
     scattermore
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Remotes:  
-    saezlab/liana
