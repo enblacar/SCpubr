@@ -7,3 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 This is a vignette placeholder to point to the [complete reference book](https://enblacar.github.io/SCpubr-book/).
+
+```{r}
+utils::sessionInfo()
+```
+
