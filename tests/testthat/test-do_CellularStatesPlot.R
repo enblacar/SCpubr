@@ -335,6 +335,14 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables y1 not in the lis
                                                         y1 = "Not in list"))
 })
 
+testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features", {
+  testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
+                                                       gene_list = genes,
+                                                       x1 = "A",
+                                                       y1 = "B",
+                                                       plot_features = TRUE))
+})
+
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       gene_list = genes,
