@@ -48,7 +48,7 @@ Suggests:
     ggplotify,
     monocle3 (>= 1.2.9),
     liana (>= 0.1.5),
-    SeuratWrappers (>= 0.3.0),
+    seurat-wrappers,
     scattermore
 VignetteBuilder: knitr
 Config/testthat/edition: 3
