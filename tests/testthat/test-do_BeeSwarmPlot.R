@@ -7,6 +7,13 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred compone
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, features = "CD14", plot_cell_borders = T)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, pt.size = 1)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "CD14",

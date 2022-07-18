@@ -6,6 +6,21 @@ testthat::test_that("do_FeaturePlot: PASS - single feature", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, pt.size = 1)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, idents.highlight = "1")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_FeaturePlot: PASS - multiple features", {
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = c("nCount_RNA", "nFeature_RNA"))

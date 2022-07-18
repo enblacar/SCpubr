@@ -12,6 +12,128 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
                                      x1 = "A",
                                      y1 = "B")
   testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     raster = TRUE,
+                                     pt.size = 1)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     raster = TRUE,
+                                     pt.size = 1,
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     raster = TRUE,
+                                     pt.size = 1,
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     raster = TRUE,
+                                     pt.size = 1,
+                                     plot_cell_borders = TRUE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
+                                     plot_enrichment_scores = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
+                                     plot_enrichment_scores = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     plot_cell_borders = TRUE,
+                                     plot_features = TRUE,
+                                     features = "CD14",
+                                     plot_enrichment_scores = TRUE)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
@@ -190,6 +312,14 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
                                       y1 = "B",
                                       x2 = "C")
   testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     raster = TRUE,
+                                     pt.size = 1)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
@@ -252,6 +382,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                     gene_list = genes,
+                                     x1 = "A",
+                                     y1 = "B",
+                                     x2 = "C",
+                                     y2 = "D",
+                                     raster = TRUE,
+                                     pt.size = 1)
   testthat::expect_type(p, "list")
 })
 

@@ -4,6 +4,21 @@ testthat::test_that("do_DimPlot: PASS - sample", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DimPlot: PASS - sample cell_borders", {
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, pt.size = 1)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, idents.highlight = "1")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_DimPlot: PASS - sample marginal", {
   p <- SCpubr::do_DimPlot(sample = sample,
                           plot_marginal_distributions = TRUE,
