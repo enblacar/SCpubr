@@ -8,11 +8,7 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature", {
 testthat::test_that("do_NebulosaPlot: PASS - cell_borders", {
   p <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD14", plot_cell_borders = T)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, pt.size = 1)
-  testthat::expect_type(p, "list")
-  p <- SCpubr::do_NebulosaPlot(sample = sample, features = c("CD14", "PC_1"), plot_cell_borders = T, idents.highlight = "1")
-  testthat::expect_type(p, "list")
-  p <- SCpubr::do_NebulosaPlot(sample = sample, features = c("CD14", "PC_1"), plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("CD14", "PC_1"), plot_cell_borders = T)})
   testthat::expect_type(p, "list")
 })
 

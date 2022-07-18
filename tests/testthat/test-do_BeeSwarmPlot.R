@@ -8,9 +8,9 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred compone
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample, features = "CD14", plot_cell_borders = T)
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, pt.size = 1)
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T, raster = T, pt.size = 1)
   testthat::expect_type(p, "list")
 })
 

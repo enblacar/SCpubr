@@ -296,7 +296,7 @@ do_NebulosaPlot <- function(sample,
                                                                           y = .data$y),
                                         colour = border.color,
                                         size = pt.size * border.size,
-                                        show.legend = NA)
+                                        show.legend = FALSE)
       if (num_plots > 1){
         for (plot_num in seq(1, num_plots)){
           # Add cell borders.

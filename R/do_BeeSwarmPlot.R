@@ -293,7 +293,7 @@ do_BeeSwarmPlot <- function(sample,
                                                    raster.dpi = raster.dpi,
                                                    color = border.color,
                                                    size = pt.size * border.size,
-                                                   show.legend = NA)
+                                                   show.legend = FALSE)
     } else if (isFALSE(raster)){
       base_layer <-ggbeeswarm::geom_quasirandom(data = sample@meta.data,
                                                  mapping = ggplot2::aes(x = .data$rank,
@@ -301,7 +301,7 @@ do_BeeSwarmPlot <- function(sample,
                                                  groupOnX = FALSE,
                                                  color = border.color,
                                                  size = pt.size * border.size,
-                                                 show.legend = NA)
+                                                 show.legend = FALSE)
     }
     p$layers <- append(base_layer, p$layers)
 

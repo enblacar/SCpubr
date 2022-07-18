@@ -207,7 +207,7 @@ do_FeaturePlot <- function(sample,
                                                                           y = .data$y),
                                         colour = border.color,
                                         size = pt.size * border.size,
-                                        show.legend = NA)
+                                        show.legend = FALSE)
     } else if (isTRUE(raster)){
       base_layer <- scattermore::geom_scattermore(data = df,
                                                   mapping = ggplot2::aes(x = .data$x,
@@ -217,8 +217,7 @@ do_FeaturePlot <- function(sample,
                                                   stroke = pt.size / 2,
                                                   show.legend = FALSE,
                                                   pointsize = pt.size * border.size,
-                                                  pixels = c(raster.dpi, raster.dpi),
-                                                  show.legend = NA)
+                                                  pixels = c(raster.dpi, raster.dpi))
     }
   }
 

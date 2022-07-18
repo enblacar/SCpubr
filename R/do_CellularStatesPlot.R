@@ -485,7 +485,7 @@ do_CellularStatesPlot <- function(sample,
                                                                   y = .data$set_y),
                                            size = pt.size * border.size,
                                            color = border.color,
-                                           show.legend = NA)
+                                           show.legend = FALSE)
       } else if (isTRUE(raster)){
         base_layer <-  scattermore::geom_scattermore(data = df,
                                                      mapping = ggplot2::aes(x = .data$set_x,
@@ -495,7 +495,7 @@ do_CellularStatesPlot <- function(sample,
                                                      color = border.color,
                                                      pointsize = pt.size * border.size,
                                                      pixels = c(raster.dpi, raster.dpi),
-                                                     show.legend = NA)
+                                                     show.legend = FALSE)
       }
       p$layers <- append(base_layer, p$layers)
     }

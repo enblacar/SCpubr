@@ -41,7 +41,8 @@ do_CellularStatesPlot(
   raster = F,
   raster.dpi = 1024,
   plot_features = FALSE,
-  features = NULL
+  features = NULL,
+  viridis_color_map = "D"
 )
 }
 \arguments{
@@ -112,6 +113,8 @@ do_CellularStatesPlot(
 \item{plot_features}{Logical. Whether to also report any other feature onto the primary plot.}
 
 \item{features}{Character. Additional features to plot.}
+
+\item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

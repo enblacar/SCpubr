@@ -288,7 +288,7 @@ do_DimPlot <- function(sample,
                                                                           y = .data$y),
                                         colour = border.color,
                                         size = pt.size * border.size,
-                                        show.legend = NA)
+                                        show.legend = FALSE)
     } else if (isTRUE(raster)){
       base_layer <- scattermore::geom_scattermore(data = df,
                                                   mapping = ggplot2::aes(x = .data$x,
