@@ -22,6 +22,10 @@
 #' @param remove_y_axis Remove Y axis labels and ticks from the plot.
 #' @param font.size Base font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
+#' @param plot_cell_borders Logical. Whether to plot border around cells.
+#' @param border.size Numeric. Width of the border of the cells.
+#' @param border.color Character. Color to use for the border of the cells.
+#' @param pt.size Numeric. Size of the dots.
 #' @param flip Whether to flip the axis.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param verbose Whether to show warnings.
@@ -60,7 +64,11 @@ do_BeeSwarmPlot <- function(sample,
                             viridis_color_map = "D",
                             verbose = TRUE,
                             raster = FALSE,
-                            raster.dpi = 300){
+                            raster.dpi = 300,
+                            plot_cell_borders = FALSE,
+                            border.size = 1.5,
+                            border.color = "black",
+                            pt.size = 2){
   # Checks for packages.
   check_suggests(function_name = "do_BeeSwarmPlot")
   # Check if the sample provided is a Seurat object.
@@ -77,7 +85,8 @@ do_BeeSwarmPlot <- function(sample,
                        "remove_y_axis" = remove_y_axis,
                        "flip" = flip,
                        "verbose" = verbose,
-                       "raster" = raster)
+                       "raster" = raster,
+                       "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -85,7 +94,9 @@ do_BeeSwarmPlot <- function(sample,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
-                       "legend.width" = legend.width)
+                       "legend.width" = legend.width,
+                       "pt.size" = pt.size,
+                       "border.size" = border.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -101,7 +112,8 @@ do_BeeSwarmPlot <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -109,9 +121,10 @@ do_BeeSwarmPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
-  # Check the colors provided to legend.framecolor and legend.tickcolor.
+  # Check the colors provided to legend.framecolor and legend.tickcolor and border color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(border.color, parameter_name = "border.color")
 
   # Check font.type.
   if (!(font.type %in% c("sans", "serif", "mono"))){
@@ -158,15 +171,21 @@ do_BeeSwarmPlot <- function(sample,
 
   color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
 
-  p <- ggplot2::ggplot(sample@meta.data, mapping = ggplot2::aes(x = rank, y = .data$ranked_groups, color = !!rlang::sym(color_by)))
+  p <- ggplot2::ggplot(sample@meta.data,
+                       mapping = ggplot2::aes(x = .data$rank,
+                                              y = .data$ranked_groups,
+                                              color = !!rlang::sym(color_by)))
 
   # Add raster layer if desired.
   if (isTRUE(raster)){
     p <- p +
-         ggrastr::geom_quasirandom_rast(groupOnX = FALSE, raster.dpi = raster.dpi)
+         ggrastr::geom_quasirandom_rast(groupOnX = FALSE,
+                                        raster.dpi = raster.dpi,
+                                        size = pt.size)
   } else {
     p <- p +
-         ggbeeswarm::geom_quasirandom(groupOnX = FALSE)
+         ggbeeswarm::geom_quasirandom(groupOnX = FALSE,
+                                      size = pt.size)
   }
 
   p <- p +
@@ -261,6 +280,30 @@ do_BeeSwarmPlot <- function(sample,
                         axis.ticks.x = ggplot2::element_blank()) +
          ggplot2::xlab(ifelse(is.null(xlab), ifelse(isTRUE(continuous_feature), "Ranking", paste0("Ranking for ", feature_to_rank)), xlab)) +
          ggplot2::ylab(ylab)
+
+  }
+
+  if (isTRUE(plot_cell_borders)){
+    # Generate base layer.
+    if (isTRUE(raster)){
+      base_layer <- ggrastr::geom_quasirandom_rast(data = sample@meta.data,
+                                                   mapping = ggplot2::aes(x = .data$rank,
+                                                                          y = .data$ranked_groups),
+                                                   groupOnX = FALSE,
+                                                   raster.dpi = raster.dpi,
+                                                   color = border.color,
+                                                   size = pt.size * border.size,
+                                                   show.legend = NA)
+    } else if (isFALSE(raster)){
+      base_layer <-ggbeeswarm::geom_quasirandom(data = sample@meta.data,
+                                                 mapping = ggplot2::aes(x = .data$rank,
+                                                                        y = .data$ranked_groups),
+                                                 groupOnX = FALSE,
+                                                 color = border.color,
+                                                 size = pt.size * border.size,
+                                                 show.legend = NA)
+    }
+    p$layers <- append(base_layer, p$layers)
 
   }
 

@@ -12,21 +12,21 @@ do_DimPlot(
   colors.use = NULL,
   shuffle = TRUE,
   order = NULL,
-  pt.size = 0.5,
+  pt.size = 0.75,
   label = FALSE,
   label.color = "white",
   repel = TRUE,
   cells.highlight = NULL,
   idents.highlight = NULL,
   idents.keep = NULL,
-  sizes.highlight = 0.5,
+  sizes.highlight = 0.75,
   legend = TRUE,
   ncol = NULL,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
   legend.title = FALSE,
-  legend.position = "right",
+  legend.position = "bottom",
   legend.title.position = "top",
   legend.ncol = NULL,
   legend.nrow = NULL,
@@ -38,6 +38,9 @@ do_DimPlot(
   font.size = 14,
   font.type = "sans",
   na.value = "grey75",
+  plot_cell_borders = FALSE,
+  border.size = 1.5,
+  border.color = "black",
   plot_marginal_distributions = FALSE,
   marginal.type = "density",
   marginal.size = 5,
@@ -102,6 +105,12 @@ do_DimPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{na.value}{Color value for NA.}
+
+\item{plot_cell_borders}{Logical. Whether to plot border around cells.}
+
+\item{border.size}{Numeric. Width of the border of the cells.}
+
+\item{border.color}{Character. Color to use for the border of the cells.}
 
 \item{plot_marginal_distributions}{Logical. Whether to plot marginal distributions on the figure or not.}
 

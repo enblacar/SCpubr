@@ -10,10 +10,10 @@
 check_suggests <- function(function_name){
 
   pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel", "ggtext"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext", "ggplotify"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify", "scattermore"),
+                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext", "ggplotify", "scattermore"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggtext"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext", "scattermore"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
@@ -47,10 +47,10 @@ check_suggests <- function(function_name){
 #' }
 state_dependencies <- function(func_name = NULL){
   pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel", "ggtext"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext", "ggplotify"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify", "scattermore"),
+                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggtext", "ggplotify", "scattermore"),
                    "do_DotPlot" = c("Seurat", "ggplot2", "ggtext"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext"),
+                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "ggtext", "scattermore"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork", "ggtext"),
                    "do_PTEA" = c("Seurat", "stringr", "pbapply", "Matrix", "dplyr", "tidyr", "purrr", "rlang"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr", "ggtext"),
@@ -82,6 +82,7 @@ state_dependencies <- function(func_name = NULL){
                      "purrr",
                      "rlang",
                      "scales",
+                     "scattermore",
                      "Seurat",
                      "stringr",
                      "svglite",
@@ -134,7 +135,7 @@ check_Seurat <- function(sample){
 #
 #' @param colors Vector of colors.
 #' @param parameter_name The name of the parameter for which we are testing the colors.
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -156,7 +157,7 @@ check_colors <- function(colors, parameter_name = "") {
 #' @param sample Seurat object.
 #' @param colors Named vector of colors.
 #' @param grouping_variable Metadata variable in sample to obtain its unique values.
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -190,7 +191,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 #' Generate custom color scale.
 #'
 #' @param names_use Vector of the names that will go alongside the color scale.
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -220,7 +221,7 @@ generate_color_scale <- function(names_use){
 #' @param assay Assay used.
 #' @param reduction Reduction used.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -265,7 +266,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' @param value Value to check.
 #' @param value_name Name of the value.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -286,7 +287,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 #' @param dump_reduction_names Whether to return the reduction colnames.
 #' @param permissive Throw a warning or directly stops if the feature is not found.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -384,7 +385,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
 #' @param features Features to check.
 #' @param not_found_features Features to exclude.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -408,7 +409,7 @@ remove_not_found_features <- function(features, not_found_features){
 #'
 #' @param features Features to check.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -450,7 +451,7 @@ remove_duplicated_features <- function(features){
 #' @param sample Seurat object.
 #' @param identities Identities to test.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -469,7 +470,7 @@ check_identity <- function(sample, identities){
 #' @param sample Seurat sample.
 #' @param reduction Reduction.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -501,7 +502,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
 #' @param reduction Provided reduction.
 #' @param dims Provided dimensions.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -548,7 +549,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 #' @param sample Seurat object.
 #' @param assay Provided assay.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -588,7 +589,7 @@ check_and_set_assay <- function(sample, assay = NULL){
 #' @param required_type Name of the required class.
 #' @param test_function Testing function.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -621,7 +622,7 @@ check_type <- function(parameters, required_type, test_function){
 #'
 #' @param slot Slot provided.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -644,7 +645,7 @@ check_and_set_slot <- function(slot){
 #' @param group.by Feature to group the output by.
 #' @param order.by Unique value in group.by to reorder labels in descending order.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -727,7 +728,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' @param viridis_color_map Viridis color map provided.
 #' @param verbose Verbosity choice.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -751,7 +752,7 @@ check_viridis_color_map <- function(viridis_color_map, verbose = F){
 #' @param parameters_name Name of the parameters variable.
 #' @param features_name Name of the features variable.
 
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -769,7 +770,7 @@ check_length <- function(vector_of_parameters,
 
 #' Return a SC count matrix
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -830,7 +831,7 @@ use_dataset <- function(){
 #' @param scale Name of the scale. Either fill or color.
 #' @param limits Whether to put limits.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -868,7 +869,7 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
 #' @param group.by Variable to group by.
 #' @param annotation Annotation variable to use.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -920,7 +921,7 @@ compute_barplot_annotation <- function(sample,
 #' @param column_title_rotation,row_title_rotation Angle of rotation of the titles.
 #' @param row_names_rot,column_names_rot Angle of rotation of the text.
 #' @param na.value Color for NAs
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -1122,7 +1123,7 @@ heatmap_inner <- function(data,
 #'
 #' @param string_to_modify
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -1144,7 +1145,7 @@ modify_string <- function(string_to_modify){
 #' @param list_genes  Named list of genes to compute enrichment for.
 #' @param verbose  Verbose output.
 #'
-#' @return
+#' @return None
 #' @noRd
 #' @examples
 #' \dontrun{

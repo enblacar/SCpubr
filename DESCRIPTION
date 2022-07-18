@@ -9,7 +9,7 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 biocViews:
 URL: https://github.com/enblacar/SCpubr, https://enblacar.github.io/SCpubr-book/
 BugReports: https://github.com/enblacar/SCpubr/issues
@@ -47,9 +47,12 @@ Suggests:
     ggExtra,
     ggplotify,
     monocle3 (>= 1.2.9),
-    liana (>= 0.1.5)
+    liana (>= 0.1.5),
+    SeuratWrappers (>= 0.3.0),
+    scattermore
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Remotes:  
+Remotes: 
     cole-trapnell-lab/monocle3,
-    saezlab/liana
+    saezlab/liana,
+    satijalab/seurat-wrappers

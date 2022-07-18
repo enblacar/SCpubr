@@ -5,7 +5,7 @@
 #' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
 #' @param features Features to plot density for. It can be a single one or a vector of multiple features.
 #' @param slot Slot to retrieve the data from. Defaults to "data".
-#' @param size Size of the dots.
+#' @param pt.size Size of the dots.
 #' @param combine Whether to create a single plot out of multiple features.
 #' @param method Kernel density estimation method. Either "ks" or "wkde" or both. See \link[Nebulosa]{plot_density} for more details.
 #' @param dims Vector of 2 dims to plot the data. By default, first and second from the specified reduction.
@@ -23,6 +23,9 @@
 #' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
 #' @param individual.titles,individual.subtitles,individual.captions Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param plot_cell_borders Logical. Whether to plot border around cells.
+#' @param border.size Numeric. Width of the border of the cells.
+#' @param border.color Character. Color to use for the border of the cells.
 #' @param verbose Whether to show warnings.
 #'
 #' @return  A ggplot2 object containing a Nebulosa plot.
@@ -33,7 +36,7 @@ do_NebulosaPlot <- function(sample,
                              features,
                              slot = NULL,
                              dims = c(1, 2),
-                             size = 1,
+                             pt.size = 1,
                              reduction = NULL,
                              combine = TRUE,
                              method = c("ks", "wkde"),
@@ -57,6 +60,9 @@ do_NebulosaPlot <- function(sample,
                              font.size = 14,
                              font.type = "sans",
                              legend.position = "bottom",
+                             plot_cell_borders = FALSE,
+                             border.size = 1.5,
+                             border.color = "black",
                              viridis_color_map = "D",
                              verbose = TRUE){
   # Check if the sample provided is a Seurat object.
@@ -72,16 +78,18 @@ do_NebulosaPlot <- function(sample,
   logical_list <- list("legend" = legend,
                        "combine" = combine,
                        "joint" = joint,
-                       "return_only_joint" = return_only_joint)
+                       "return_only_joint" = return_only_joint,
+                       "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
-  numeric_list <- list("size" = size,
+  numeric_list <- list("pt.size" = pt.size,
                        "shape" = shape,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
                        "legend.width" = legend.width,
-                       "dims" = dims)
+                       "dims" = dims,
+                       "border.size" = border.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -99,7 +107,8 @@ do_NebulosaPlot <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -128,9 +137,10 @@ do_NebulosaPlot <- function(sample,
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
-  # Check the colors provided to legend.framecolor and legend.tickcolor.
+  # Check the colors provided to legend.framecolor and legend.tickcolor and border.color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(border.color, parameter_name = "border.color")
 
   # Check font.type.
   if (!(font.type %in% c("sans", "serif", "mono"))){
@@ -219,6 +229,11 @@ do_NebulosaPlot <- function(sample,
                    function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
                                                                  option = viridis_color_map))
 
+    for (plot_num in seq(1:num_plots)){
+      # Set size of dots.
+      p[[plot_num]]$layers[[1]]$aes_params$size <- pt.size
+    }
+
     # For embeddings that are umap of tsne, we remove all axes..
     if (reduction %in% c("umap", "tsne")){
       # if dims is first and then second.
@@ -266,6 +281,32 @@ do_NebulosaPlot <- function(sample,
                          axis.line = ggplot2::element_blank(),
                          axis.title = ggplot2::element_text(face = "bold", hjust = 0.5))
       })
+
+    }
+
+    # Add cell borders.
+
+    if (isTRUE(plot_cell_borders)){
+      # Generate base layer.
+      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+      df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
+                       y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
+
+      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
+                                                                          y = .data$y),
+                                        colour = border.color,
+                                        size = pt.size * border.size,
+                                        show.legend = NA)
+      if (num_plots > 1){
+        for (plot_num in seq(1, num_plots)){
+          # Add cell borders.
+          if (isTRUE(plot_cell_borders)){
+            p[[plot_num]]$layers <- append(base_layer, p[[plot_num]]$layers)
+          }
+        }
+      } else {
+        p$layers <- append(base_layer, p$layers)
+      }
 
     }
 
@@ -342,7 +383,6 @@ do_NebulosaPlot <- function(sample,
         }
       }
     }
-
 
     return(p)
 }

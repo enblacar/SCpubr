@@ -15,7 +15,7 @@ do_FeaturePlot(
   cells.highlight = NULL,
   idents.highlight = NULL,
   dims = c(1, 2),
-  pt.size = 0.5,
+  pt.size = 0.75,
   font.size = 14,
   font.type = "sans",
   legend = TRUE,
@@ -37,6 +37,9 @@ do_FeaturePlot(
   viridis_color_map = "D",
   raster = FALSE,
   raster.dpi = 1024,
+  plot_cell_borders = FALSE,
+  border.size = 1.5,
+  border.color = "black",
   verbose = TRUE
 )
 }
@@ -90,6 +93,12 @@ do_FeaturePlot(
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
 \item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::FeaturePlot()} behavior.}
+
+\item{plot_cell_borders}{Logical. Whether to plot border around cells.}
+
+\item{border.size}{Numeric. Width of the border of the cells.}
+
+\item{border.color}{Character. Color to use for the border of the cells.}
 
 \item{verbose}{Whether to show warnings.}
 }

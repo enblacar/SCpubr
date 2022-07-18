@@ -34,7 +34,11 @@ do_BeeSwarmPlot(
   viridis_color_map = "D",
   verbose = TRUE,
   raster = FALSE,
-  raster.dpi = 300
+  raster.dpi = 300,
+  plot_cell_borders = FALSE,
+  border.size = 1.5,
+  border.color = "black",
+  pt.size = 2
 )
 }
 \arguments{
@@ -87,6 +91,14 @@ do_BeeSwarmPlot(
 \item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
 \item{raster.dpi}{Numeric. Resolution in dots per inch. Defaults to 5.}
+
+\item{plot_cell_borders}{Logical. Whether to plot border around cells.}
+
+\item{border.size}{Numeric. Width of the border of the cells.}
+
+\item{border.color}{Character. Color to use for the border of the cells.}
+
+\item{pt.size}{Numeric. Size of the dots.}
 
 \item{legend}{Whether to plot the legend or not.}
 }

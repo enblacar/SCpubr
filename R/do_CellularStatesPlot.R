@@ -36,6 +36,15 @@
 #' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
 #' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
 #' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
+#' @param plot_cell_borders Logical. Whether to plot border around cells.
+#' @param border.size Numeric. Width of the border of the cells.
+#' @param border.color Character. Color to use for the border of the cells.
+#' @param pt.size Numeric. Size of the dots.
+#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
+#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
+#' @param plot_features Logical. Whether to also report any other feature onto the primary plot.
+#' @param features Character. Additional features to plot.
+#' @param plot_enrichment_scores Logical. Whether to report enrichment scores for the input lists as plots.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -49,7 +58,7 @@ do_CellularStatesPlot <- function(sample,
                                   y2 = NULL,
                                   group.by = NULL,
                                   colors.use = NULL,
-                                  legend.position = NULL,
+                                  legend.position = "bottom",
                                   legend.icon.size = 4,
                                   legend.ncol = NULL,
                                   legend.nrow = NULL,
@@ -68,7 +77,16 @@ do_CellularStatesPlot <- function(sample,
                                   plot_marginal_distributions = FALSE,
                                   marginal.type = "density",
                                   marginal.size = 5,
-                                  marginal.group = TRUE){
+                                  marginal.group = TRUE,
+                                  plot_cell_borders = FALSE,
+                                  plot_enrichment_scores = FALSE,
+                                  border.size = 1.5,
+                                  border.color = "black",
+                                  pt.size = 2,
+                                  raster = F,
+                                  raster.dpi = 1024,
+                                  plot_features = FALSE,
+                                  features = NULL){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -81,14 +99,21 @@ do_CellularStatesPlot <- function(sample,
                          "enforce_symmetry" = enforce_symmetry,
                          "plot_marginal_distributions" = plot_marginal_distributions,
                          "marginal.group" = marginal.group,
-                         "legend.byrow" = legend.byrow)
+                         "legend.byrow" = legend.byrow,
+                         "plot_cell_borders" = plot_cell_borders,
+                         "raster" = raster,
+                         "plot_features" = plot_features,
+                         "plot_enrichment_scores" = plot_enrichment_scores)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("font.size" = font.size,
                          "marginal.size" = marginal.size,
                          "legend.icon.size" = legend.icon.size,
                          "legend.ncol" = legend.ncol,
-                         "legend.nrow" = legend.nrow)
+                         "legend.nrow" = legend.nrow,
+                         "pt.size" = pt.size,
+                         "border.size" = border.size,
+                         "raster.dpi" = raster.dpi)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("gene_list" = gene_list,
@@ -104,7 +129,9 @@ do_CellularStatesPlot <- function(sample,
                            "plot.subtitle" = plot.subtitle,
                            "plot.caption" = plot.caption,
                            "font.type" = font.type,
-                           "marginal.type" = marginal.type)
+                           "marginal.type" = marginal.type,
+                           "border.color" = border.color,
+                           "features" = features)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -130,6 +157,8 @@ do_CellularStatesPlot <- function(sample,
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
       }
     }
+    # Check border color.
+    check_colors(border.color, parameter_name = "border.color")
 
     # Fix for group.by.
     if (is.null(group.by)){
@@ -190,8 +219,21 @@ do_CellularStatesPlot <- function(sample,
 
       # Plot
       df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
-      p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-           ggplot2::geom_point() +
+      p <- ggplot2::ggplot(data = df,
+                           mapping = ggplot2::aes(x = .data$set_x,
+                                                  y = .data$set_y,
+                                                  color = .data$group.by))
+
+      if (isFALSE(raster)){
+        p <- p +
+             ggplot2::geom_point(size = pt.size)
+      } else if (isTRUE(raster)){
+        p <- p +
+             scattermore::geom_scattermore(size = pt.size,
+                                           pointsize = pt.size,
+                                           pixels = c(raster.dpi, raster.dpi))
+      }
+      p <- p +
            ggplot2::scale_color_manual(values = colors.use) +
            ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
            ggplot2::xlab(x_lab) +
@@ -210,6 +252,7 @@ do_CellularStatesPlot <- function(sample,
         p <- p  +
              ggplot2::coord_fixed(xlim = lim_x, ylim = lim_y)
       }
+
 
     # 3-variable plot.
     } else if (is.null(y2) & !(is.null(x2))){
@@ -263,8 +306,18 @@ do_CellularStatesPlot <- function(sample,
 
         # Plot.
         df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
-        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-             ggplot2::geom_point() +
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by))
+
+        if (isFALSE(raster)){
+          p <- p +
+               ggplot2::geom_point(size = pt.size)
+        } else if (isTRUE(raster)){
+          p <- p +
+               scattermore::geom_scattermore(size = pt.size,
+                                             pointsize = pt.size,
+                                             pixels = c(raster.dpi, raster.dpi))
+        }
+        p <- p +
              ggplot2::scale_color_manual(values = colors.use) +
              ggplot2::xlab(x_lab) +
              ggplot2::ylab(y_lab) +
@@ -337,8 +390,18 @@ do_CellularStatesPlot <- function(sample,
         df$set_x <- x
         df$set_y <- d
         df$group.by <- sample@meta.data[, group.by]
-        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by)) +
-             ggplot2::geom_point() +
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by))
+
+        if (isFALSE(raster)){
+          p <- p +
+               ggplot2::geom_point(size = pt.size)
+        } else if (isTRUE(raster)){
+          p <- p +
+               scattermore::geom_scattermore(size = pt.size,
+                                             pointsize = pt.size,
+                                             pixels = c(raster.dpi, raster.dpi))
+        }
+        p <- p +
              ggplot2::scale_color_manual(values = colors.use) +
              ggplot2::xlab(x_lab1) +
              ggplot2::ylab(y_lab1) +
@@ -376,6 +439,14 @@ do_CellularStatesPlot <- function(sample,
     p <- p &
          ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
+                        axis.line.y.right = ggplot2::element_line(color = "black"),
+                        axis.ticks.y.right = ggplot2::element_line(color = "black"),
+                        axis.line.x.top = ggplot2::element_line(color = "black"),
+                        axis.ticks.x.top = ggplot2::element_line(color = "black"),
+                        axis.text.x.top = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.text.y.right = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.title.x.top = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.title.y.right = ggplot2::element_text(face = "bold", color = "black"),
                         axis.text = ggplot2::element_text(face = "bold", color = "black"),
                         plot.title = ggtext::element_markdown(face = "bold", hjust = 0, vjust = 0),
                         plot.subtitle = ggtext::element_markdown(hjust = 0),
@@ -388,7 +459,7 @@ do_CellularStatesPlot <- function(sample,
                         legend.position = legend.position,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 30, r = 10, b = 10, l = 10),
+                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -399,6 +470,128 @@ do_CellularStatesPlot <- function(sample,
                                                        nrow = legend.nrow,
                                                        byrow = legend.byrow,
                                                        override.aes = list(size = legend.icon.size)))
+
+    # Add cell borders.
+    if (isTRUE(plot_cell_borders)){
+      if (isFALSE(raster)){
+        base_layer <-  ggplot2::geom_point(data = df,
+                                           mapping = ggplot2::aes(x = .data$set_x,
+                                                                  y = .data$set_y),
+                                           size = pt.size * border.size,
+                                           color = border.color,
+                                           show.legend = NA)
+      } else if (isTRUE(raster)){
+        base_layer <-  scattermore::geom_scattermore(data = df,
+                                                     mapping = ggplot2::aes(x = .data$set_x,
+                                                                            y = .data$set_y),
+                                                     size = pt.size * border.size,
+                                                     stroke = pt.size / 2,
+                                                     color = border.color,
+                                                     pointsize = pt.size * border.size,
+                                                     pixels = c(raster.dpi, raster.dpi),
+                                                     show.legend = NA)
+      }
+      p$layers <- append(base_layer, p$layers)
+    }
+
+    if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
+      if (is.null(features) & isFALSE(plot_enrichment_scores)){
+        stop("Please provide features to plot.", call. = F)
+      }
+      output_list <- list()
+
+      # Generate a mock DimRed object for the plots.
+      df.use <- df[, c("set_x", "set_y")]
+      colnames(df.use) <- c("DIM_1", "DIM_2")
+      sample@reductions[["test"]] <- Seurat::CreateDimReducObject(embeddings = as.matrix(df.use), assay = "SCT")
+
+      if (isTRUE(plot_features) & isTRUE(plot_enrichment_scores)){
+        features <- c(features, names(gene_list))
+      } else if (isFALSE(plot_features) & isTRUE(plot_enrichment_scores)){
+        features <- names(gene_list)
+      }
+
+      for (feature in features){
+        p.feature <- SCpubr::do_FeaturePlot(sample = sample,
+                                            features = feature,
+                                            reduction = "test",
+                                            plot_cell_borders = plot_cell_borders,
+                                            pt.size = pt.size,
+                                            legend.position = legend.position,
+                                            border.size = border.size,
+                                            border.color = border.color,
+                                            raster = raster,
+                                            raster.dpi = raster.dpi,
+                                            font.type = font.type,
+                                            font.size = font.size)
+
+        # Add back the missing aesthetics.
+        if (is.null(y2) & is.null(x2)){
+          # Define titles.
+          p.feature <- p.feature +
+                       ggplot2::xlab(x_lab) +
+                       ggplot2::ylab(y_lab)
+
+          if (isTRUE(enforce_symmetry)){
+            suppressMessages({
+              p.feature <- p.feature  +
+                           ggplot2::coord_fixed(xlim = lim_x, ylim = lim_y)
+            })
+          }
+        } else if (is.null(y2) & !(is.null(x2))){
+          # Define titles.
+          p.feature <- p.feature +
+                       ggplot2::xlab(x_lab) +
+                       ggplot2::ylab(y_lab)
+
+          if (isTRUE(enforce_symmetry)){
+            suppressMessages({
+              p.feature <- p.feature +
+                           ggplot2::xlim(lim_x)
+            })
+
+          }
+        } else if (!is.null(y2) & !(is.null(x2))){
+          p.feature <- p.feature +
+                       ggplot2::xlab(x_lab1) +
+                       ggplot2::ylab(y_lab1)
+
+          if (isTRUE(enforce_symmetry)){
+            suppressMessages({
+              p.feature <- p.feature +
+                           ggplot2::xlim(lim) +
+                           ggplot2::ylim(lim) +
+                           ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
+                           ggplot2::scale_x_continuous(sec.axis = ggplot2::sec_axis(~., name = x_lab2)) +
+                           ggplot2::coord_fixed(xlim = c(-value, value), ylim = c(-value, value))
+            })
+          }
+        }
+        p.feature <- p.feature +
+                     ggplot2::theme_minimal(base_size = font.size) &
+                     ggplot2::theme(axis.title = ggplot2::element_text(face = "bold"),
+                                    axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                                    plot.title = ggtext::element_markdown(face = "bold", hjust = 0, vjust = 0),
+                                    plot.subtitle = ggtext::element_markdown(hjust = 0),
+                                    plot.caption = ggtext::element_markdown(hjust = 1),
+                                    plot.title.position = "plot",
+                                    panel.grid = ggplot2::element_blank(),
+                                    text = ggplot2::element_text(family = font.type),
+                                    plot.caption.position = "plot",
+                                    legend.text = ggplot2::element_text(face = "bold"),
+                                    legend.position = legend.position,
+                                    legend.title = ggplot2::element_text(face = "bold"),
+                                    legend.justification = "center",
+                                    plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                                    axis.ticks = ggplot2::element_line(color = "black"),
+                                    axis.line = ggplot2::element_line(color = "black"),
+                                    plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                                    panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                                    legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+        output_list[[feature]] <- p.feature
+
+      }
+    }
 
     if (isTRUE(plot_marginal_distributions)){
       # Remove annoying warnings when violin is used as marginal distribution.
@@ -436,6 +629,14 @@ do_CellularStatesPlot <- function(sample,
         p <- p +
              ggplot2::theme(axis.text = ggplot2::element_blank())
     }
-    return(p)
+
+    if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
+      output_list[["main"]] <- p
+      return_object <- output_list
+    } else if (isFALSE(plot_features) & isFALSE(plot_enrichment_scores)){
+      return_object <- p
+    }
+
+    return(return_object)
 
 }

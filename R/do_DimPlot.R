@@ -31,6 +31,9 @@
 #' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
 #' @param na.value Color value for NA.
 #' @param plot_marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
+#' @param plot_cell_borders Logical. Whether to plot border around cells.
+#' @param border.size Numeric. Width of the border of the cells.
+#' @param border.color Character. Color to use for the border of the cells.
 #' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
 #' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
 #' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
@@ -46,21 +49,21 @@ do_DimPlot <- function(sample,
                        colors.use = NULL,
                        shuffle = TRUE,
                        order = NULL,
-                       pt.size = 0.5,
+                       pt.size = 0.75,
                        label = FALSE,
                        label.color = "white",
                        repel = TRUE,
                        cells.highlight = NULL,
                        idents.highlight = NULL,
                        idents.keep = NULL,
-                       sizes.highlight = 0.5,
+                       sizes.highlight = 0.75,
                        legend = TRUE,
                        ncol = NULL,
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
                        legend.title = FALSE,
-                       legend.position = "right",
+                       legend.position = "bottom",
                        legend.title.position = "top",
                        legend.ncol = NULL,
                        legend.nrow = NULL,
@@ -72,6 +75,9 @@ do_DimPlot <- function(sample,
                        font.size = 14,
                        font.type = "sans",
                        na.value = "grey75",
+                       plot_cell_borders = FALSE,
+                       border.size = 1.5,
+                       border.color = "black",
                        plot_marginal_distributions = FALSE,
                        marginal.type = "density",
                        marginal.size = 5,
@@ -93,7 +99,8 @@ do_DimPlot <- function(sample,
                        "legend.byrow" = legend.byrow,
                        "raster" = raster,
                        "plot_marginal_distributions" = plot_marginal_distributions,
-                       "marginal.group" = marginal.group)
+                       "marginal.group" = marginal.group,
+                       "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -104,7 +111,8 @@ do_DimPlot <- function(sample,
                        "legend.icon.size" = legend.icon.size,
                        "ncol" = ncol,
                        "raster.dpi" = raster.dpi,
-                       "marginal.size" = marginal.size)
+                       "marginal.size" = marginal.size,
+                       "border.size" = border.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -118,7 +126,8 @@ do_DimPlot <- function(sample,
                          "idents.highlight" = idents.highlight,
                          "legend.title.position" = legend.title.position,
                          "font.type" = font.type,
-                         "marginal.type" = marginal.type)
+                         "marginal.type" = marginal.type,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Checks to ensure proper function.
@@ -136,6 +145,8 @@ do_DimPlot <- function(sample,
   check_colors(label.color, parameter_name = "label.color")
   ## Check the color assigned to NAs.
   check_colors(na.value, parameter_name = "na.value")
+  ## Check the color assigned to border.color.
+  check_colors(border.color, parameter_name = "border.color")
   ## If the user provides more than one color to na.value, stop the function.
   if (length(na.value) != 1){stop("Please provide only one color to na.value.", call. = FALSE)}
 
@@ -240,7 +251,7 @@ do_DimPlot <- function(sample,
       }
       # Set the identities that the user wants to exclude as NA.
       Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
-      # Check the provided color scale based on the selected identitites.
+
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
       # When using group.by, check with the values in group.by.
     } else if (group_by_is_used) {
@@ -250,14 +261,14 @@ do_DimPlot <- function(sample,
       }
       # Convert to NA values in group.by not included in the user's selected values.
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
-      # # Check the provided color scale based on the selected identitites.
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
-      # If split.by is used intead.
+      # If split.by is used instead.
     } else if (split_by_is_used){
       # Check that the values in idents.keep are in the unique values of split.by.
       if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by])))){
         stop("All the values in idents.keep must be in the split.by variable provided.", call. = F)
       }
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
     }
   }
 
@@ -266,7 +277,34 @@ do_DimPlot <- function(sample,
     stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
   }
 
+  # Generate base layer.
+  if (isTRUE(plot_cell_borders)){
+    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+    df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
+                     y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
+
+    if (isFALSE(raster)){
+      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
+                                                                          y = .data$y),
+                                        colour = border.color,
+                                        size = pt.size * border.size,
+                                        show.legend = NA)
+    } else if (isTRUE(raster)){
+      base_layer <- scattermore::geom_scattermore(data = df,
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = border.color,
+                                                  size = pt.size * border.size,
+                                                  stroke = pt.size / 2,
+                                                  show.legend = FALSE,
+                                                  pointsize = pt.size * border.size,
+                                                  pixels = c(raster.dpi, raster.dpi))
+    }
+  }
+
   # PLOTTING
+
+  # If raster = TRUE, add 1 to pt.size to keep consistency between plots.
 
   # If the UMAP does not need to be split in multiple panes (default case).
   # CONDITION: Not highligting cells and not using split.by.
@@ -298,9 +336,19 @@ do_DimPlot <- function(sample,
                                                     byrow = legend.byrow,
                                                     override.aes = list(size = legend.icon.size),
                                                     title.position = legend.title.position))
+    if (isTRUE(label)){
+      p <- add_scale(p = p,
+                     function_use = ggplot2::scale_fill_manual(values = colors.use),
+                     scale = "fill")
+    }
     if (!(is.null(group.by))){
       # Remove automatic title inserted by Seurat.
       p <- p & ggplot2::ggtitle("")
+    }
+
+    # Add cell borders.
+    if (isTRUE(plot_cell_borders)){
+      p$layers <- append(base_layer, p$layers)
     }
   }
   # If split.by is used, the UMAP has to be split in multiple panes.
@@ -337,13 +385,18 @@ do_DimPlot <- function(sample,
         ggplot2::labs(title = iteration)
       p <- add_scale(p = p,
                      function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
-                                                                values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use))),
+                                                                values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use)),
+                                                                na.value = na.value),
                      scale = "color") &
         ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                       nrwo = legend.nrow,
                                                       byrow = legend.byrow,
                                                       override.aes = list(size = legend.icon.size),
                                                       title.position = legend.title.position))
+      # Add cell borders.
+      if (isTRUE(plot_cell_borders)){
+        p$layers <- append(base_layer, p$layers)
+      }
       list.plots[[iteration]] <- p
     }
     # Assemble individual plots as a patch.
@@ -380,14 +433,21 @@ do_DimPlot <- function(sample,
                          raster.dpi = c(raster.dpi, raster.dpi),
                          ncol = ncol)
     p <- add_scale(p = p,
-                   function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected cells"),
-                                                              values = c(na.value, colors.use)),
+                   function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected"),
+                                                              values = c(na.value, colors.use),
+                                                              na.value = na.value),
                    scale = "color") &
       ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                     nrow = legend.nrow,
                                                     byrow = legend.byrow,
                                                     override.aes = list(size = legend.icon.size),
                                                     title.position = legend.title.position))
+
+    # Add cell borders.
+    if (isTRUE(plot_cell_borders)){
+      p$layers <- append(base_layer, p$layers)
+    }
+
   }
   # Titles in split.by are centered by default.
   hjust_use <- if(split_by_used){0.5} else {0}
@@ -500,7 +560,7 @@ do_DimPlot <- function(sample,
   }
 
   # Add marginal plots.
-  if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions)){
+  if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions & isFALSE(plot_cell_borders))){
     # Remove annoying warnings when violin is used as marginal distribution.
     if (marginal.type == "violin"){
       p <- suppressWarnings({ggExtra::ggMarginal(p = p,
@@ -523,8 +583,9 @@ do_DimPlot <- function(sample,
     p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
     p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
   } else if (isTRUE(plot_marginal_distributions)) {
-    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells.", call. = F)
+    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells or plotting cell borders .", call. = F)
   }
+
 
   # Return the final plot.
   return(p)

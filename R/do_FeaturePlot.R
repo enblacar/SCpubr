@@ -26,6 +26,9 @@
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::FeaturePlot()` behavior.
+#' @param plot_cell_borders Logical. Whether to plot border around cells.
+#' @param border.size Numeric. Width of the border of the cells.
+#' @param border.color Character. Color to use for the border of the cells.
 #' @param verbose Whether to show warnings.
 
 #' @return  A ggplot2 object containing a Feature Plot.
@@ -42,7 +45,7 @@ do_FeaturePlot <- function(sample,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2),
-                           pt.size = 0.5,
+                           pt.size = 0.75,
                            font.size = 14,
                            font.type = "sans",
                            legend = TRUE,
@@ -64,6 +67,9 @@ do_FeaturePlot <- function(sample,
                            viridis_color_map = "D",
                            raster = FALSE,
                            raster.dpi = 1024,
+                           plot_cell_borders = FALSE,
+                           border.size = 1.5,
+                           border.color = "black",
                            verbose = TRUE){
 
 
@@ -82,7 +88,8 @@ do_FeaturePlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("legend" = legend,
                        "verbose" = verbose,
-                       "raster" = raster)
+                       "raster" = raster,
+                       "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -92,7 +99,8 @@ do_FeaturePlot <- function(sample,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
-                       "legend.width" = legend.width)
+                       "legend.width" = legend.width,
+                       "border.size" = border.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -117,7 +125,8 @@ do_FeaturePlot <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -146,6 +155,9 @@ do_FeaturePlot <- function(sample,
       stop('Total number of individual captions does not match the number of features provided.', call. = F)
     }
   }
+
+  # Check border color.
+  check_colors(border.color, parameter_name = "border.color")
 
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
@@ -183,6 +195,33 @@ do_FeaturePlot <- function(sample,
     warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
   }
 
+
+  # Generate base layer.
+  if (isTRUE(plot_cell_borders)){
+    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+    df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
+                     y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
+
+    if (isFALSE(raster)){
+      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
+                                                                          y = .data$y),
+                                        colour = border.color,
+                                        size = pt.size * border.size,
+                                        show.legend = NA)
+    } else if (isTRUE(raster)){
+      base_layer <- scattermore::geom_scattermore(data = df,
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = border.color,
+                                                  size = pt.size * border.size,
+                                                  stroke = pt.size / 2,
+                                                  show.legend = FALSE,
+                                                  pointsize = pt.size * border.size,
+                                                  pixels = c(raster.dpi, raster.dpi),
+                                                  show.legend = NA)
+    }
+  }
+
   # CONDITION: Regular FeaturePlot, under default parameters.
   default_parameters <- is.null(split.by) & is.null(cells.highlight) & is.null(idents.highlight)
   # If only default parameters are used.
@@ -215,6 +254,15 @@ do_FeaturePlot <- function(sample,
       p <- p &
         ggplot2::xlab(paste0("DC_", dims[1])) &
         ggplot2::ylab(paste0("DC_", dims[2]))
+    }
+
+    # Add cell borders.
+    if (isTRUE(plot_cell_borders)){
+      counter <- 0
+      for (feature in features){
+        counter <- counter + 1
+        p[[counter]]$layers <- append(base_layer, p[[counter]]$layers)
+      }
     }
 
     # Modified FeaturePlot including only a subset of cells.
@@ -307,6 +355,11 @@ do_FeaturePlot <- function(sample,
         p.loop <- p.loop +
           ggplot2::ggtitle("")
 
+        # Add cell borders.
+        if (isTRUE(plot_cell_borders)){
+          p.loop$layers <- append(base_layer, p.loop$layers)
+        }
+
       } else if (!(is.null(split.by))){
         # Recover all metadata.
         data <- sample[[]]
@@ -382,6 +435,11 @@ do_FeaturePlot <- function(sample,
 
           if (iteration != plot_order[length(plot_order)]){
             p.loop <- p.loop & Seurat::NoLegend()
+          }
+
+          # Add cell borders.
+          if (isTRUE(plot_cell_borders)){
+            p.loop$layers <- append(base_layer, p.loop$layers)
           }
 
           list.plots.split.by[[iteration]] <- p.loop

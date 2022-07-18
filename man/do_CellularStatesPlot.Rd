@@ -13,7 +13,7 @@ do_CellularStatesPlot(
   y2 = NULL,
   group.by = NULL,
   colors.use = NULL,
-  legend.position = NULL,
+  legend.position = "bottom",
   legend.icon.size = 4,
   legend.ncol = NULL,
   legend.nrow = NULL,
@@ -32,7 +32,16 @@ do_CellularStatesPlot(
   plot_marginal_distributions = FALSE,
   marginal.type = "density",
   marginal.size = 5,
-  marginal.group = TRUE
+  marginal.group = TRUE,
+  plot_cell_borders = FALSE,
+  plot_enrichment_scores = FALSE,
+  border.size = 1.5,
+  border.color = "black",
+  pt.size = 2,
+  raster = F,
+  raster.dpi = 1024,
+  plot_features = FALSE,
+  features = NULL
 )
 }
 \arguments{
@@ -85,6 +94,24 @@ do_CellularStatesPlot(
 \item{marginal.size}{Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.}
 
 \item{marginal.group}{Logical. Whether to group the marginal distribution by group.by or current identities.}
+
+\item{plot_cell_borders}{Logical. Whether to plot border around cells.}
+
+\item{plot_enrichment_scores}{Logical. Whether to report enrichment scores for the input lists as plots.}
+
+\item{border.size}{Numeric. Width of the border of the cells.}
+
+\item{border.color}{Character. Color to use for the border of the cells.}
+
+\item{pt.size}{Numeric. Size of the dots.}
+
+\item{raster}{Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
+
+\item{raster.dpi}{Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default \code{Seurat::DimPlot()} behavior.}
+
+\item{plot_features}{Logical. Whether to also report any other feature onto the primary plot.}
+
+\item{features}{Character. Additional features to plot.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

@@ -9,7 +9,7 @@ do_NebulosaPlot(
   features,
   slot = NULL,
   dims = c(1, 2),
-  size = 1,
+  pt.size = 1,
   reduction = NULL,
   combine = TRUE,
   method = c("ks", "wkde"),
@@ -33,6 +33,9 @@ do_NebulosaPlot(
   font.size = 14,
   font.type = "sans",
   legend.position = "bottom",
+  plot_cell_borders = FALSE,
+  border.size = 1.5,
+  border.color = "black",
   viridis_color_map = "D",
   verbose = TRUE
 )
@@ -46,7 +49,7 @@ do_NebulosaPlot(
 
 \item{dims}{Vector of 2 dims to plot the data. By default, first and second from the specified reduction.}
 
-\item{size}{Size of the dots.}
+\item{pt.size}{Size of the dots.}
 
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}.}
 
@@ -79,6 +82,12 @@ do_NebulosaPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{legend.position}{Position of the legend in the plot.}
+
+\item{plot_cell_borders}{Logical. Whether to plot border around cells.}
+
+\item{border.size}{Numeric. Width of the border of the cells.}
+
+\item{border.color}{Character. Color to use for the border of the cells.}
 
 \item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
