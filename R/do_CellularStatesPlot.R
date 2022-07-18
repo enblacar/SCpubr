@@ -45,6 +45,7 @@
 #' @param plot_features Logical. Whether to also report any other feature onto the primary plot.
 #' @param features Character. Additional features to plot.
 #' @param plot_enrichment_scores Logical. Whether to report enrichment scores for the input lists as plots.
+#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
@@ -86,7 +87,8 @@ do_CellularStatesPlot <- function(sample,
                                   raster = F,
                                   raster.dpi = 1024,
                                   plot_features = FALSE,
-                                  features = NULL){
+                                  features = NULL,
+                                  viridis_color_map = "D"){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -131,8 +133,12 @@ do_CellularStatesPlot <- function(sample,
                            "font.type" = font.type,
                            "marginal.type" = marginal.type,
                            "border.color" = border.color,
-                           "features" = features)
+                           "features" = features,
+                           "viridis_color_map" = viridis_color_map)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
+
+    # Check viridis_color_map.
+    check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
 
     # Define pipe operator internally.
@@ -523,7 +529,8 @@ do_CellularStatesPlot <- function(sample,
                                             raster = raster,
                                             raster.dpi = raster.dpi,
                                             font.type = font.type,
-                                            font.size = font.size)
+                                            font.size = font.size,
+                                            viridis_color_map = viridis_color_map)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){
