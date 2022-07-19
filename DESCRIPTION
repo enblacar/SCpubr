@@ -10,7 +10,6 @@ LazyData: false
 Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
-biocViews:
 URL: https://github.com/enblacar/SCpubr, https://enblacar.github.io/SCpubr-book/
 BugReports: https://github.com/enblacar/SCpubr/issues
 Suggests:
