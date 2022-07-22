@@ -22,6 +22,7 @@ check_suggests <- function(function_name){
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
+                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -58,7 +59,8 @@ state_dependencies <- function(func_name = NULL){
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"))
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
+                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -77,6 +79,7 @@ state_dependencies <- function(func_name = NULL){
                      "ggExtra",
                      "ggplotify",
                      "ggrepel",
+                     "ggtext",
                      "Matrix",
                      "patchwork",
                      "purrr",
@@ -86,10 +89,13 @@ state_dependencies <- function(func_name = NULL){
                      "Seurat",
                      "stringr",
                      "svglite",
+                     "tibble",
                      "tidyr",
                      "viridis")
 
   bioconductor_packages <- c("Nebulosa")
+
+  github_packages <- c("liana")
 
   func_list <- sort(names(pkg_list))
   if (!(is.null(func_name))){
