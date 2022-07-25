@@ -1,5 +1,11 @@
 sample <- SCpubr:::use_dataset()
-liana_output <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/liana_cellphoneDB.rds")
+suppressMessages({suppressWarnings({
+  liana_output <- liana::liana_wrap(sce = sample,
+                                    method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
+                                    idents_col = NULL,
+                                    verbose = FALSE,
+                                    assay = "SCT")
+})})
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
   p <- SCpubr::do_LigandReceptorPlot(from_output = TRUE,

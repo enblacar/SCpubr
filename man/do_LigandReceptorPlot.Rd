@@ -13,10 +13,12 @@ do_LigandReceptorPlot(
   keep_source = NULL,
   keep_target = NULL,
   top_interactions = 25,
+  significance_threshold = 0.05,
   assay = "SCT",
   dot_border = TRUE,
   border.color = "black",
   x_labels_angle = 0,
+  rotate_strip_text = FALSE,
   legend.position = "bottom",
   legend.type = "colorbar",
   legend.length = 20,
@@ -30,7 +32,10 @@ do_LigandReceptorPlot(
   font.size = 14,
   dot.size = 1,
   font.type = "sans",
-  flip = FALSE
+  flip = FALSE,
+  plot_grid = FALSE,
+  grid.color = "grey90",
+  grid.type = "dotted"
 )
 }
 \arguments{
@@ -48,6 +53,8 @@ do_LigandReceptorPlot(
 
 \item{top_interactions}{Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
 
+\item{significance_threshold}{Numeric. Value to filter the interactions by significance. Default is 0.05.}
+
 \item{assay}{Character. Only necessary when from_output is FALSE. Assay that contains the normalized data.}
 
 \item{dot_border}{Logical. Whether to draw a black border in the dots.}
@@ -55,6 +62,8 @@ do_LigandReceptorPlot(
 \item{border.color}{Character. Color for the border of the dots.}
 
 \item{x_labels_angle}{Numeric. One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.}
+
+\item{rotate_strip_text}{Logical. Whether the text in the strips should be flipped 90 degrees.}
 
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
@@ -77,6 +86,12 @@ do_LigandReceptorPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{flip}{Logical. Whether to invert the axis.}
+
+\item{plot_grid}{Logical. Whether to plot grid lines.}
+
+\item{grid.color}{Character. Color of the grid in the panels.}
+
+\item{grid.type}{Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

@@ -11,8 +11,10 @@
 #' @param top_interactions Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
 #' @param assay Character. Only necessary when from_output is FALSE. Assay that contains the normalized data.
 #' @param dot_border Logical. Whether to draw a black border in the dots.
+#' @param plot_grid Logical. Whether to plot grid lines.
 #' @param border.color Character. Color for the border of the dots.
 #' @param x_labels_angle Numeric. One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
+#' @param rotate_strip_text Logical. Whether the text in the strips should be flipped 90 degrees.
 #' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
@@ -24,6 +26,9 @@
 #' @param font.size Overall font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param dot.size Numeric. Size aesthetic for the dots.
+#' @param grid.color Character. Color of the grid in the panels.
+#' @param grid.type Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.
+#' @param significance_threshold Numeric. Value to filter the interactions by significance. Default is 0.05.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
@@ -40,10 +45,12 @@ do_LigandReceptorPlot <- function(sample = NULL,
                                   keep_source = NULL,
                                   keep_target = NULL,
                                   top_interactions = 25,
+                                  significance_threshold = 0.05,
                                   assay = "SCT",
                                   dot_border = TRUE,
                                   border.color = "black",
                                   x_labels_angle = 0,
+                                  rotate_strip_text = FALSE,
                                   legend.position = "bottom",
                                   legend.type = "colorbar",
                                   legend.length = 20,
@@ -57,16 +64,22 @@ do_LigandReceptorPlot <- function(sample = NULL,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
-                                  flip = FALSE){
+                                  flip = FALSE,
+                                  plot_grid = FALSE,
+                                  grid.color = "grey90",
+                                  grid.type = "dotted"){
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
+  `%>%` <- purrr::`%>%`
 
   # Check logical parameters.
   logical_list <- list("from_output" = from_output,
                        "dot_border" = dot_border,
                        "verbose" = verbose,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "rotate_strip_text" = rotate_strip_text,
+                       "plot_grid" = plot_grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -76,7 +89,8 @@ do_LigandReceptorPlot <- function(sample = NULL,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
-                       "x_labels_angle" = x_labels_angle)
+                       "x_labels_angle" = x_labels_angle,
+                       "significance_threshold" = significance_threshold)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -91,7 +105,9 @@ do_LigandReceptorPlot <- function(sample = NULL,
                          "legend.framecolor" = legend.framecolor,
                          "viridis_color_map" = viridis_color_map,
                          "legend.tickcolor" = legend.tickcolor,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "grid.color" = grid.color,
+                         "grid.type" = grid.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check border color.
@@ -103,10 +119,16 @@ do_LigandReceptorPlot <- function(sample = NULL,
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(grid.color, parameter_name = "grid.color")
 
   # Check font.type.
   if (!(font.type %in% c("sans", "serif", "mono"))){
     stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
+
+  # Check font.type.
+  if (!(grid.type %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))){
+    stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = F)
   }
 
   # Check the legend.type.
@@ -120,8 +142,8 @@ do_LigandReceptorPlot <- function(sample = NULL,
   }
 
   if (!is.null(split.by)){
-    if (!(split.by %in% c("receptor", "ligand"))){
-      stop("Please select one of the following for split.by: ligand, receptor.", call. = F)
+    if (!(split.by %in% c("receptor.complex", "ligand.complex"))){
+      stop("Please select one of the following for split.by: ligand.complex, receptor.complex.", call. = F)
     }
   }
 
@@ -169,36 +191,56 @@ do_LigandReceptorPlot <- function(sample = NULL,
     }
     group.by <- "dummy"
 
-    # Run liana.
-    liana_output <- liana::liana_wrap(sce = sample,
-                                      method = "cellphonedb",
-                                      idents_col = group.by,
-                                      verbose = verbose,
-                                      assay = assay)
+    if (isFALSE(verbose)){
+      suppressMessages({suppressWarnings({
+        # Run liana.
+        liana_output <- liana::liana_wrap(sce = sample,
+                                          method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
+                                          idents_col = group.by,
+                                          verbose = verbose,
+                                          assay = assay)
 
-    liana_output <- liana_output %>%
-                    dplyr::mutate(magnitude = .data$lr.mean) %>%
-                    dplyr::mutate(specificity = .data$pvalue) %>%
-                    dplyr::arrange(dplyr::desc(.data$magnitude), .data$specificity)
+        liana_output <- liana_output %>%
+                        liana::liana_aggregate() %>%
+                        dplyr::mutate(magnitude = .data$sca.LRscore) %>%
+                        dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
+                        #dplyr::filter(.data$aggregate_rank <= 0.05) %>%
+                        dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+      })})
+    } else if (isTRUE(verbose)){
+      # Run liana.
+      liana_output <- liana::liana_wrap(sce = sample,
+                                        method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
+                                        idents_col = group.by,
+                                        verbose = verbose,
+                                        assay = assay)
+
+      liana_output <- liana_output %>%
+                      liana::liana_aggregate() %>%
+                      dplyr::mutate(magnitude = .data$sca.LRscore) %>%
+                      dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
+                      #dplyr::filter(.data$aggregate_rank <= 0.05) %>%
+                      dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+    }
+
+
 
   # If the user provides the output from liana directly.
   } else if (isTRUE(from_output)){
-    if ((sum(c("lr.mean", "pvalue") %in% colnames(liana_output))) != 2){
-      stop("The column names of the liana object do not match what is expected from an output using cellphonedb as method.", call. = F)
-    }
-    liana_output <- liana_output %>%
-                    dplyr::mutate(magnitude = .data$lr.mean) %>%
-                    dplyr::mutate(specificity = .data$pvalue) %>%
-                    dplyr::arrange(dplyr::desc(.data$magnitude), .data$specificity)
+    suppressMessages({
+      liana_output <- liana_output %>%
+                      liana::liana_aggregate() %>%
+                      dplyr::mutate(magnitude = .data$sca.LRscore) %>%
+                      dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
+                      dplyr::filter(.data$aggregate_rank <= significance_threshold) %>%
+                      dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+    })
   }
 
 
   liana_output <- liana_output %>%
-                  dplyr::filter(.data$specificity <= 0.05) %>%
-                  dplyr::mutate(specificity = -log10(.data$specificity + 0.0000000001)) %>% # Log10 transform and add a small quantity for small values.
-                  dplyr::arrange(dplyr::desc(.data$magnitude), dplyr::desc(.data$specificity)) %>%
                   # Merge ligand.complex and receptor.complex columns into one, that will be used for the Y axis.
-                  tidyr::unite(c("ligand", "receptor"),
+                  tidyr::unite(c("ligand.complex", "receptor.complex"),
                                col = "interaction",
                                sep = "<span style = 'color:grey50;'> | </span>",
                                remove = FALSE) %>%
@@ -206,6 +248,7 @@ do_LigandReceptorPlot <- function(sample = NULL,
                   tidyr::unite(c("source", "target"),
                                col = "interacting_clusters",
                                remove = FALSE)
+
 
   liana_output <- liana_output %>%
                   # Filter based on the top X interactions of ascending sensibilities.
@@ -249,38 +292,54 @@ do_LigandReceptorPlot <- function(sample = NULL,
   }
   # Continue plotting.
   if (isFALSE(flip)){
+    if (isTRUE(rotate_strip_text)){
+      strip_text_angle <- 90
+    } else {
+      strip_text_angle <- 0
+    }
     if (is.null(split.by)){
       p <- p +
         ggplot2::facet_grid(. ~ .data$source,
                             space = "free",
-                            scales = "free")
-    } else if (split.by == "ligand"){
+                            scales = "free",
+                            drop = FALSE)
+    } else if (split.by == "ligand.complex"){
       p <- p +
-        ggplot2::facet_grid(.data$ligand ~ .data$source,
+        ggplot2::facet_grid(.data$ligand.complex ~ .data$source,
                             space = "free",
-                            scales = "free")
-    } else if (split.by == "receptor"){
+                            scales = "free",
+                            drop = FALSE)
+    } else if (split.by == "receptor.complex"){
       p <- p +
-        ggplot2::facet_grid(.data$receptor ~ .data$source,
+        ggplot2::facet_grid(.data$receptor.complex ~ .data$source,
                             space = "free",
-                            scales = "free")
+                            scales = "free",
+                            drop = FALSE)
     }
   } else if (isTRUE(flip)) {
+    if (isTRUE(rotate_strip_text)){
+      strip_text_angle <- 0
+    } else {
+      strip_text_angle <- 270
+    }
     if (is.null(split.by)){
       p <- p +
         ggplot2::facet_grid(.data$source ~ .,
                             space = "free",
-                            scales = "free")
-    } else if (split.by == "ligand"){
+                            scales = "free",
+                            drop = FALSE)
+    } else if (split.by == "ligand.complex"){
       p <- p +
-        ggplot2::facet_grid(.data$source ~ .data$ligand,
+        ggplot2::facet_grid(.data$source ~ .data$ligand.complex,
                             space = "free",
-                            scales = "free")
-    } else if (split.by == "receptor"){
+                            scales = "free",
+                            drop = FALSE)
+    } else if (split.by == "receptor.complex"){
       p <- p +
-        ggplot2::facet_grid(.data$source ~ .data$receptor,
+        ggplot2::facet_grid(.data$source ~ .data$receptor.complex,
                             space = "free",
-                            scales = "free")
+                            scales = "free",
+                            drop = FALSE)
     }
   }
 
@@ -321,12 +380,17 @@ do_LigandReceptorPlot <- function(sample = NULL,
                                                    hjust = hjust,
                                                    vjust = vjust)
                         },
-                      strip.text.x = if (isFALSE(flip)) {ggplot2::element_text(face = "bold")} else {ggplot2::element_blank()},
-                      strip.text.y = if (isFALSE(flip)) {ggplot2::element_blank()} else {ggplot2::element_text(face = "bold")},
-                      panel.grid = ggplot2::element_blank(),
+                      strip.text.x = if (isFALSE(flip)) {ggplot2::element_text(face = "bold",
+                                                                               angle = strip_text_angle)}
+                                     else {ggplot2::element_blank()},
+                      strip.text.y = if (isFALSE(flip)) {ggplot2::element_blank()}
+                                     else {ggplot2::element_text(face = "bold",
+                                                                 angle = strip_text_angle)},
+                      panel.border = ggplot2::element_rect(color = "black", fill = NA),
+                      panel.grid = if (isTRUE(plot_grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                       plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      panel.background = ggplot2::element_rect(fill = "white", color = "black"),
+                      panel.background = ggplot2::element_rect(fill = "white", color = "black", linetype = "solid"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
   # Adjust for the type of legend and whether it is fill or color.
