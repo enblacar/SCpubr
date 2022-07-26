@@ -5,16 +5,12 @@
 \title{Visualize Ligand-Receptor analysis output.}
 \usage{
 do_LigandReceptorPlot(
-  sample = NULL,
-  from_output = FALSE,
   liana_output = NULL,
-  group.by = NULL,
   split.by = NULL,
   keep_source = NULL,
   keep_target = NULL,
   top_interactions = 25,
   significance_threshold = 0.05,
-  assay = "SCT",
   dot_border = TRUE,
   border.color = "black",
   x_labels_angle = 0,
@@ -28,7 +24,6 @@ do_LigandReceptorPlot(
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   viridis_color_map = "G",
-  verbose = FALSE,
   font.size = 14,
   dot.size = 1,
   font.type = "sans",
@@ -39,13 +34,7 @@ do_LigandReceptorPlot(
 )
 }
 \arguments{
-\item{sample}{Seurat object.}
-
-\item{from_output}{Logical. Instead of providing a Seurat object, the user can provide the output of \link[liana]{liana_wrap}, thus reducing heavily computation time to get the plots.}
-
 \item{liana_output}{Object resulting from running \link[liana]{liana_wrap}.}
-
-\item{group.by}{Character. Only necessary when from_output is FALSE. Metadata variable to group the output by. If NULL, falls back to \code{Seurat::Idents(sample)}.}
 
 \item{split.by}{Character. Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.}
 
@@ -54,8 +43,6 @@ do_LigandReceptorPlot(
 \item{top_interactions}{Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
 
 \item{significance_threshold}{Numeric. Value to filter the interactions by significance. Default is 0.05.}
-
-\item{assay}{Character. Only necessary when from_output is FALSE. Assay that contains the normalized data.}
 
 \item{dot_border}{Logical. Whether to draw a black border in the dots.}
 
@@ -76,8 +63,6 @@ do_LigandReceptorPlot(
 \item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
 
 \item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{verbose}{Logical. Displays progress bars when running \link[liana]{liana_wrap}.}
 
 \item{font.size}{Overall font.size of the plot.}
 

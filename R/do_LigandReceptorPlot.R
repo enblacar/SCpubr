@@ -2,14 +2,10 @@
 #'
 #' This function makes use of [liana](https://github.com/saezlab/liana) package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 #'
-#' @param sample Seurat object.
-#' @param from_output Logical. Instead of providing a Seurat object, the user can provide the output of \link[liana]{liana_wrap}, thus reducing heavily computation time to get the plots.
 #' @param liana_output Object resulting from running \link[liana]{liana_wrap}.
-#' @param group.by Character. Only necessary when from_output is FALSE. Metadata variable to group the output by. If NULL, falls back to `Seurat::Idents(sample)`.
 #' @param split.by Character. Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.
 #' @param keep_source,keep_target Character. Identities to keep for the source/target of the interactions. NULL otherwise.
 #' @param top_interactions Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
-#' @param assay Character. Only necessary when from_output is FALSE. Assay that contains the normalized data.
 #' @param dot_border Logical. Whether to draw a black border in the dots.
 #' @param plot_grid Logical. Whether to plot grid lines.
 #' @param border.color Character. Color for the border of the dots.
@@ -21,7 +17,6 @@
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param verbose Logical. Displays progress bars when running \link[liana]{liana_wrap}.
 #' @param flip Logical. Whether to invert the axis.
 #' @param font.size Overall font.size of the plot.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
@@ -37,16 +32,12 @@
 #' \dontrun{
 #' TBD
 #' }
-do_LigandReceptorPlot <- function(sample = NULL,
-                                  from_output = FALSE,
-                                  liana_output = NULL,
-                                  group.by = NULL,
+do_LigandReceptorPlot <- function(liana_output = NULL,
                                   split.by = NULL,
                                   keep_source = NULL,
                                   keep_target = NULL,
                                   top_interactions = 25,
                                   significance_threshold = 0.05,
-                                  assay = "SCT",
                                   dot_border = TRUE,
                                   border.color = "black",
                                   x_labels_angle = 0,
@@ -60,7 +51,6 @@ do_LigandReceptorPlot <- function(sample = NULL,
                                   legend.framewidth = 1.5,
                                   legend.tickwidth = 1.5,
                                   viridis_color_map = "G",
-                                  verbose = FALSE,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
@@ -74,9 +64,7 @@ do_LigandReceptorPlot <- function(sample = NULL,
   `%>%` <- purrr::`%>%`
 
   # Check logical parameters.
-  logical_list <- list("from_output" = from_output,
-                       "dot_border" = dot_border,
-                       "verbose" = verbose,
+  logical_list <- list("dot_border" = dot_border,
                        "flip" = flip,
                        "rotate_strip_text" = rotate_strip_text,
                        "plot_grid" = plot_grid)
@@ -93,11 +81,9 @@ do_LigandReceptorPlot <- function(sample = NULL,
                        "significance_threshold" = significance_threshold)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
-  character_list <- list("group.by" = group.by,
-                         "split.by" = split.by,
+  character_list <- list("split.by" = split.by,
                          "keep_source" = keep_source,
                          "keep_target" = keep_target,
-                         "assay" = assay,
                          "border.color" = border.color,
                          "legend.position" = legend.position,
                          "legend.type" = legend.type,
@@ -114,7 +100,7 @@ do_LigandReceptorPlot <- function(sample = NULL,
   check_colors(border.color, parameter_name = "border.color")
 
   # Check viridis_color_map.
-  check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
+  check_viridis_color_map(viridis_color_map = viridis_color_map)
 
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -175,67 +161,12 @@ do_LigandReceptorPlot <- function(sample = NULL,
     vjust = 0.5
   }
 
-  # If the user wants it to be computed as well.
-  if (isFALSE(from_output)){
-    # Check if the sample provided is a Seurat object.
-    check_Seurat(sample = sample)
-
-    if (is.null(assay)){
-      stop("Please provide an assay.", call. = F)
-    }
-
-    if (is.null(group.by)){
-      sample$dummy <- Seurat::Idents(sample)
-    } else {
-      sample$dummy <- sample@meta.data[, group.by]
-    }
-    group.by <- "dummy"
-
-    if (isFALSE(verbose)){
-      suppressMessages({suppressWarnings({
-        # Run liana.
-        liana_output <- liana::liana_wrap(sce = sample,
-                                          method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
-                                          idents_col = group.by,
-                                          verbose = verbose,
-                                          assay = assay)
-
-        liana_output <- liana_output %>%
-                        liana::liana_aggregate() %>%
-                        dplyr::mutate(magnitude = .data$sca.LRscore) %>%
-                        dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
-                        #dplyr::filter(.data$aggregate_rank <= 0.05) %>%
-                        dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
-      })})
-    } else if (isTRUE(verbose)){
-      # Run liana.
-      liana_output <- liana::liana_wrap(sce = sample,
-                                        method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
-                                        idents_col = group.by,
-                                        verbose = verbose,
-                                        assay = assay)
-
-      liana_output <- liana_output %>%
-                      liana::liana_aggregate() %>%
-                      dplyr::mutate(magnitude = .data$sca.LRscore) %>%
-                      dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
-                      #dplyr::filter(.data$aggregate_rank <= 0.05) %>%
-                      dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
-    }
-
-
-
-  # If the user provides the output from liana directly.
-  } else if (isTRUE(from_output)){
-    suppressMessages({
-      liana_output <- liana_output %>%
-                      liana::liana_aggregate() %>%
-                      dplyr::mutate(magnitude = .data$sca.LRscore) %>%
-                      dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
-                      dplyr::filter(.data$aggregate_rank <= significance_threshold) %>%
-                      dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
-    })
-  }
+  liana_output <- liana_output %>%
+                  liana::liana_aggregate(verbose = FALSE) %>%
+                  dplyr::mutate(magnitude = .data$sca.LRscore) %>%
+                  dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
+                  dplyr::filter(.data$aggregate_rank <= significance_threshold) %>%
+                  dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
 
 
   liana_output <- liana_output %>%
