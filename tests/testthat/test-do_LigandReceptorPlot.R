@@ -20,6 +20,11 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
                                      rotate_strip_text = TRUE,
                                      flip = TRUE)
   testthat::expect_type(p, "list")
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                     rotate_strip_text = TRUE,
+                                     flip = TRUE,
+                                     dot_border = FALSE)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output different n", {
@@ -39,6 +44,11 @@ testthat::test_that("do_LigandReceptorPlot: PASS - legend.type", {
 
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      legend.type = "colorsteps")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                     legend.type = "colorsteps",
+                                     dot_border = FALSE)
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
@@ -142,5 +152,10 @@ testthat::test_that("do_LigandReceptorPlot: FAIL - wrong parameters", {
   testthat::expect_error({SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                                         legend.position = "wrong")})
 
+  testthat::expect_error({SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                                        grid.type = "wrong")})
+
+  testthat::expect_error({SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                                        split.by = "wrong")})
 
 })

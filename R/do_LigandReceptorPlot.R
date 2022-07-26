@@ -199,14 +199,44 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
   }
 
   # Plot.
-  p <-  liana_output %>%
-        ggplot2::ggplot(mapping = ggplot2::aes(x = if (isFALSE(flip)){.data$target} else {.data$interaction},
-                                               y = if (isFALSE(flip)){.data$interaction} else {.data$target},
-                                               fill = if(isTRUE(dot_border)){.data$magnitude} else {NULL},
-                                               size = .data$specificity,
-                                               group = .data$interacting_clusters)) +
-        ggplot2::geom_point(mapping = ggplot2::aes(color = if(isTRUE(dot_border)){NULL} else {.data$magnitude}),
-                            shape = if(isTRUE(dot_border)){21} else {19}) +
+  if (isTRUE(flip)){
+    if (isTRUE(dot_border)){
+      p <-  liana_output %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$interaction,
+                                                   y = .data$target,
+                                                   fill = .data$magnitude,
+                                                   size = .data$specificity,
+                                                   group = .data$interacting_clusters)) +
+            ggplot2::geom_point(shape = 21)
+    } else if (isFALSE(dot_border)) {
+      p <-  liana_output %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$interaction,
+                                                   y = .data$target,
+                                                   size = .data$specificity,
+                                                   group = .data$interacting_clusters)) +
+            ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
+                                shape = 19)
+    }
+  } else if (isFALSE(flip)){
+    if (isTRUE(dot_border)){
+      p <-  liana_output %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
+                                                   y = .data$interaction,
+                                                   fill = .data$magnitude,
+                                                   size = .data$specificity,
+                                                   group = .data$interacting_clusters)) +
+            ggplot2::geom_point(shape = 21)
+    } else if (isFALSE(dot_border)){
+      p <-  liana_output %>%
+            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
+                                                   y = .data$interaction,
+                                                   size = .data$specificity,
+                                                   group = .data$interacting_clusters)) +
+            ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
+                                shape = 19)
+    }
+  }
+  p <-  p +
         ggplot2::scale_size_continuous(name = size_title,
                                        range = c(1 * dot.size, 5 * dot.size))
   # Settings for bordered dots.
