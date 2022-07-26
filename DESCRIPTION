@@ -45,10 +45,11 @@ Suggests:
     pheatmap,
     ggExtra,
     ggplotify,
-    scattermore
+    scattermore,
+    liana (>= 0.1.5)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
-    
-    
+Remotes:  
+    saezlab/liana
