@@ -1,11 +1,6 @@
 sample <- SCpubr:::use_dataset()
-suppressMessages({suppressWarnings({
-  liana_output <- liana::liana_wrap(sce = sample,
-                                    method = c("natmi", "connectome", "logfc", "sca", "cellphonedb"),
-                                    idents_col = NULL,
-                                    verbose = FALSE,
-                                    assay = "SCT")
-})})
+liana_output <- SCpubr:::liana_output
+
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
   p <- SCpubr::do_LigandReceptorPlot(from_output = TRUE,
