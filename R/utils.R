@@ -23,6 +23,7 @@ check_suggests <- function(function_name){
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
+                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -60,7 +61,8 @@ state_dependencies <- function(func_name = NULL){
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats", "ggtext"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"))
+                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
+                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -75,6 +77,7 @@ state_dependencies <- function(func_name = NULL){
                      "enrichR",
                      "forcats",
                      "ggbeeswarm",
+                     "ggdist",
                      "ggplot2",
                      "ggExtra",
                      "ggplotify",
@@ -93,7 +96,8 @@ state_dependencies <- function(func_name = NULL){
                      "tidyr",
                      "viridis")
 
-  bioconductor_packages <- c("Nebulosa")
+  bioconductor_packages <- c("infercnv",
+                             "Nebulosa")
 
   github_packages <- c("liana")
 

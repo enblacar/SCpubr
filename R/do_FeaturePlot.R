@@ -30,6 +30,7 @@
 #' @param border.size Numeric. Width of the border of the cells.
 #' @param border.color Character. Color to use for the border of the cells.
 #' @param verbose Whether to show warnings.
+#' @param order Logical. Whether to order the cells based on expression.
 
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
@@ -40,6 +41,7 @@ do_FeaturePlot <- function(sample,
                            assay = NULL,
                            reduction = NULL,
                            slot = NULL,
+                           order = TRUE,
                            split.by = NULL,
                            split.by.idents = NULL,
                            cells.highlight = NULL,
@@ -89,7 +91,8 @@ do_FeaturePlot <- function(sample,
   logical_list <- list("legend" = legend,
                        "verbose" = verbose,
                        "raster" = raster,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "order" = order)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -234,7 +237,7 @@ do_FeaturePlot <- function(sample,
     p <- Seurat::FeaturePlot(sample,
                              features,
                              reduction = reduction,
-                             order = T,
+                             order = order,
                              dims = dims,
                              pt.size = pt.size,
                              ncol = ncol,
@@ -341,7 +344,7 @@ do_FeaturePlot <- function(sample,
         p.loop <- Seurat::FeaturePlot(sample,
                                       feature.use,
                                       reduction = reduction,
-                                      order = T,
+                                      order = order,
                                       dims = dims,
                                       pt.size = pt.size,
                                       raster = raster,
@@ -389,7 +392,7 @@ do_FeaturePlot <- function(sample,
           p.loop <- Seurat::FeaturePlot(sample,
                                         feature.use,
                                         reduction = reduction,
-                                        order = T,
+                                        order = order,
                                         dims = dims,
                                         pt.size = pt.size,
                                         raster = raster,

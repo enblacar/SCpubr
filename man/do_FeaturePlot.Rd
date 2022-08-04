@@ -10,6 +10,7 @@ do_FeaturePlot(
   assay = NULL,
   reduction = NULL,
   slot = NULL,
+  order = TRUE,
   split.by = NULL,
   split.by.idents = NULL,
   cells.highlight = NULL,
@@ -53,6 +54,8 @@ do_FeaturePlot(
 \item{reduction}{Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
 \item{slot}{Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".}
+
+\item{order}{Logical. Whether to order the cells based on expression.}
 
 \item{split.by}{Split the plot in as many unique values stored in the provided metadata column.}
 
