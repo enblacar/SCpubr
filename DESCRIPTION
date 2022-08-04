@@ -46,7 +46,10 @@ Suggests:
     ggExtra,
     ggplotify,
     scattermore,
-    liana (>= 0.1.5)
+    liana (>= 0.1.5),
+    crayon,
+    ggdist,
+    tibble
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 

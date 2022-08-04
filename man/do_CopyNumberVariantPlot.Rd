@@ -49,6 +49,8 @@ do_CopyNumberVariantPlot(
 
 \item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
 
+\item{font.size}{Overall fontsize for the plots.}
+
 \item{pt.size}{Size of the dots in the dotplot pltos.}
 
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
@@ -65,7 +67,8 @@ Display CNV scores from inferCNV as Feature Plots.
 }
 \examples{
 \dontrun{
-  # This function expects that you have run inferCNV on your own and you have access to the output object.
+  # This function expects that you have run inferCNV on your
+  # own and you have access to the output object.
 
   # Using a normal run - compute for all chromosome arms.
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
@@ -83,7 +86,8 @@ Display CNV scores from inferCNV as Feature Plots.
                                           chromosome_focus = "2")
 
   # Compute for a run using metacells.
-  ## metacell_mapping has to be a vector that, for each cell, tells which is the corresponding metacell.
+  ## metacell_mapping has to be a vector that, for each cell,
+  ## tells which is the corresponding metacell.
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,
                                           using_metacells = TRUE,

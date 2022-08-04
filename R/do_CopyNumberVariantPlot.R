@@ -15,6 +15,7 @@
 #' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param pt.size Size of the dots in the dotplot pltos.
+#' @param font.size Overall fontsize for the plots.
 #' @param border.size Thickness of the border around cells in all plots.
 #' @param rotate_x_axis_labels Logical. Rotate x axis labels 90 degrees in the dotplot plots.
 #'
@@ -92,7 +93,8 @@ do_CopyNumberVariantPlot <- function(sample,
   genes <- infercnv_object@gene_order
 
   # Retrieve chr 1p start and end coordinates.
-  chr_locations <- SCpubr:::human_chr_locations
+  utils::data("human_chr_locations", package = "SCpubr")
+  chr_locations <- human_chr_locations
 
   # This list will contain all the outputs.
   return_list <- list()
@@ -108,7 +110,7 @@ do_CopyNumberVariantPlot <- function(sample,
       end <- locations %>% dplyr::filter(.data$arm == chr_arm) %>% dplyr::pull(end)
 
       # Retrieve the genes present in the chromosome arm.
-      genes_use <- rownames(genes %>% dplyr::filter(chr == paste0("chr", chromosome),  stop <= end))
+      genes_use <- rownames(genes %>% dplyr::filter(.data$chr == paste0("chr", chromosome),  stop <= end))
 
       # Retrieve the CNV scores from the inferCNV object.
       CNV_scores <- infercnv_object@expr.data
@@ -229,12 +231,12 @@ do_CopyNumberVariantPlot <- function(sample,
     p.f <- do_FeaturePlot(sample = sample,
                         features = event,
                         plot_cell_borders = T)
-    p.f <- SCpubr:::add_scale(p = p.f,
-                            scale = "color",
-                            function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
-                                                                          limits = c(0.8, 1.2),
-                                                                          breaks = seq(0.8, 1.2, by = 0.1),
-                                                                          labels = as.character(seq(0.8, 1.2, by = 0.1))))
+    p.f <- add_scale(p = p.f,
+                     scale = "color",
+                     function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                                                   limits = c(0.8, 1.2),
+                                                                   breaks = seq(0.8, 1.2, by = 0.1),
+                                                                   labels = as.character(seq(0.8, 1.2, by = 0.1))))
     return_list[[paste0(event, "_umap")]] <- p.f
     return_list[[paste0(event, "_dotplot")]] <- p
   }
