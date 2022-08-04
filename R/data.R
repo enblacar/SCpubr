@@ -10,5 +10,5 @@
 #'   \item{start}{Start coordinates.}
 #'   \item{end}{End coordinates.}
 #' }
-#'
+#' @usage data(human_chr_locations)
 "human_chr_locations"

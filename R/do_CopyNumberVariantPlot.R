@@ -8,6 +8,7 @@
 #' @param using_metacells Logical. Whether inferCNV was run using metacells or not.
 #' @param metacell_mapping Vector or cell - metacell mapping.
 #' @param chromosome_focus Character. Region stating which chromosome to plot. Eg: 1p, 19q. NULL will plot all regions.
+#' @param chromosome_locations Tibble. Tibble containing the chromosome regions to use. Can be obtained using utils::data("human_chr_locations", package = "SCpubr")
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
@@ -25,6 +26,7 @@
 #' @example man/examples/examples_do_CopyNumberVariantPlot.R
 do_CopyNumberVariantPlot <- function(sample,
                                      infercnv_object,
+                                     chromosome_locations,
                                      group.by = NULL,
                                      using_metacells = FALSE,
                                      metacell_mapping = NULL,
@@ -93,8 +95,7 @@ do_CopyNumberVariantPlot <- function(sample,
   genes <- infercnv_object@gene_order
 
   # Retrieve chr 1p start and end coordinates.
-  utils::data("human_chr_locations", package = "SCpubr")
-  chr_locations <- human_chr_locations
+  chr_locations <- chromosome_locations
 
   # This list will contain all the outputs.
   return_list <- list()

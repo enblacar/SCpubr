@@ -7,6 +7,7 @@
 do_CopyNumberVariantPlot(
   sample,
   infercnv_object,
+  chromosome_locations,
   group.by = NULL,
   using_metacells = FALSE,
   metacell_mapping = NULL,
@@ -30,6 +31,8 @@ do_CopyNumberVariantPlot(
 \item{sample}{Seurat object.}
 
 \item{infercnv_object}{Output inferCNV object run on the same Seurat object.}
+
+\item{chromosome_locations}{Tibble. Tibble containing the chromosome regions to use. Can be obtained using utils::data("human_chr_locations", package = "SCpubr")}
 
 \item{group.by}{Metadata variable to group cells by. If not provided, defaults to active identitites.}
 

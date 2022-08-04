@@ -14,7 +14,7 @@ A tibble with 48 rows and 4 columns:
 }
 }
 \usage{
-human_chr_locations
+data(human_chr_locations)
 }
 \description{
 A tibble containing the chromosome, arm and start and end coordinates.
