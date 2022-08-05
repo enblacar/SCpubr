@@ -1,4 +1,5 @@
 sample <- use_dataset()
+message("Dotplot")
 testthat::test_that("do_DotPlot: PASS - one variable", {
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14")

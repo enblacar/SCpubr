@@ -3,7 +3,8 @@ metacell_mapping <- SCpubr:::metacell_mapping
 infercnv_object <- SCpubr:::infercnv_object
 infercnv_object_metacells <- SCpubr:::infercnv_object_metacells
 human_chr_locations <- SCpubr:::human_chr_locations
-
+library("Seurat")
+message("CNV")
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
