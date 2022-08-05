@@ -41,6 +41,17 @@ testthat::test_that("do_BarPlot: PASS - metacells one chromosome", {
   testthat::expect_type(out, "list")
 })
 
+testthat::test_that("do_BarPlot: PASS - group.by", {
+  out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                          infercnv_object = infercnv_object_metacells,
+                                          using_metacells = TRUE,
+                                          metacell_mapping = metacell_mapping,
+                                          chromosome_focus = "2",
+                                          group.by = "orig.ident",
+                                          chromosome_locations = human_chr_locations)
+  testthat::expect_type(out, "list")
+})
+
 
 testthat::test_that("do_BarPlot: PASS - legend.position", {
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
