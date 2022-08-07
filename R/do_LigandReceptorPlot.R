@@ -355,62 +355,17 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
   # Adjust for the type of legend and whether it is fill or color.
-  if (legend.type == "normal"){
-    if (isTRUE(dot_border)){
-      p <- p +
-           ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                          title.hjust = 0.5))
-    } else {
-      p <- p +
-           ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                           title.hjust = 0.5))
-    }
+  p <- modify_continuous_legend(p = p,
+                                legend.aes = ifelse(isTRUE(dot_border), "fill", "color"),
+                                legend.type = legend.type,
+                                legend.position = legend.position,
+                                legend.length = legend.length,
+                                legend.width = legend.width,
+                                legend.framecolor = legend.framecolor,
+                                legend.tickcolor = legend.tickcolor,
+                                legend.framewidth = legend.framewidth,
+                                legend.tickwidth = legend.tickwidth)
 
-  } else if (legend.type == "colorbar"){
-    if (isTRUE(dot_border)){
-      p <- p +
-           ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                          barwidth = legend.barwidth,
-                                                          barheight = legend.barheight,
-                                                          title.hjust = 0.5,
-                                                          ticks.linewidth = legend.tickwidth,
-                                                          frame.linewidth = legend.framewidth,
-                                                          frame.colour = legend.framecolor,
-                                                          ticks.colour = legend.tickcolor))
-    } else {
-      p <- p +
-           ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                           barwidth = legend.barwidth,
-                                                           barheight = legend.barheight,
-                                                           title.hjust = 0.5,
-                                                           ticks.linewidth = legend.tickwidth,
-                                                           frame.linewidth = legend.framewidth,
-                                                           frame.colour = legend.framecolor,
-                                                           ticks.colour = legend.tickcolor))
-    }
-  } else if (legend.type == "colorsteps"){
-    if (isTRUE(dot_border)){
-      p <- p +
-           ggplot2::guides(fill = ggplot2::guide_colorsteps(title.position = "top",
-                                                            barwidth = legend.barwidth,
-                                                            barheight = legend.barheight,
-                                                            title.hjust = 0.5,
-                                                            ticks.linewidth = legend.tickwidth,
-                                                            frame.linewidth = legend.framewidth,
-                                                            frame.colour = legend.framecolor,
-                                                            ticks.colour = legend.tickcolor))
-    } else {
-      p <- p +
-           ggplot2::guides(color = ggplot2::guide_colorsteps(title.position = "top",
-                                                             barwidth = legend.barwidth,
-                                                             barheight = legend.barheight,
-                                                             title.hjust = 0.5,
-                                                             ticks.linewidth = legend.tickwidth,
-                                                             frame.linewidth = legend.framewidth,
-                                                             frame.colour = legend.framecolor,
-                                                             ticks.colour = legend.tickcolor))
-    }
-  }
   return(p)
 }
 

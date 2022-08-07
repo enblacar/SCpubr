@@ -172,34 +172,17 @@ do_DotPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
     # Add leyend modifiers.
-    if (legend.type == "normal"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorbar(title = "Avg. Expression",
-                                                        title.position = "top",
-                                                        title.hjust = 0.5))
-    } else if (legend.type == "colorbar"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorbar(title = "Avg. Expression",
-                                                        title.position = "top",
-                                                        barwidth = legend.barwidth,
-                                                        barheight = legend.barheight,
-                                                        title.hjust = 0.5,
-                                                        ticks.linewidth = legend.tickwidth,
-                                                        frame.linewidth = legend.framewidth,
-                                                        frame.colour = legend.framecolor,
-                                                        ticks.colour = legend.tickcolor))
-    } else if (legend.type == "colorsteps"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorsteps(title = "Avg. Expression",
-                                                          title.position = "top",
-                                                          barwidth = legend.barwidth,
-                                                          barheight = legend.barheight,
-                                                          title.hjust = 0.5,
-                                                          ticks.linewidth = legend.tickwidth,
-                                                          frame.linewidth = legend.framewidth,
-                                                          frame.colour = legend.framecolor,
-                                                          ticks.colour = legend.tickcolor))
-    }
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = "Avg. Expression",
+                                  legend.aes = "color",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
 
     # Modify size legend.
     p <- p +

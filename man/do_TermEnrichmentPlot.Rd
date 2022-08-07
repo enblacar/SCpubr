@@ -16,7 +16,7 @@ do_TermEnrichmentPlot(
   plot.subtitle = NULL,
   plot.caption = NULL,
   legend.position = "bottom",
-  legend.type = "colorsteps",
+  legend.type = "colorbar",
   colors.use = NULL,
   text_labels_size = 4,
   legend.length = 30,

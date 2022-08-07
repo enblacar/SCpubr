@@ -406,34 +406,17 @@ do_FeaturePlot <- function(sample,
           p.loop <- p.loop +
             ggplot2::ggtitle(iteration)
 
-          if (legend.type == "normal"){
-            p.loop <- p.loop +
-                      ggplot2::guides(color = ggplot2::guide_colorbar(title = feature,
-                                                                      title.position = "top",
-                                                                      title.hjust = 0.5))
-          } else if (legend.type == "colorbar"){
-            p.loop <- p.loop +
-                      ggplot2::guides(color = ggplot2::guide_colorbar(title = feature,
-                                                                      title.position = "top",
-                                                                      barwidth = legend.barwidth,
-                                                                      barheight = legend.barheight,
-                                                                      title.hjust = 0.5,
-                                                                      ticks.linewidth = legend.tickwidth,
-                                                                      frame.linewidth = legend.framewidth,
-                                                                      frame.colour = legend.framecolor,
-                                                                      ticks.colour = legend.tickcolor))
-          } else if (legend.type == "colorsteps"){
-            p.loop <- p.loop +
-              ggplot2::guides(color = ggplot2::guide_colorsteps(title = feature,
-                                                                title.position = "top",
-                                                                barwidth = legend.barwidth,
-                                                                barheight = legend.barheight,
-                                                                title.hjust = 0.5,
-                                                                ticks.linewidth = legend.tickwidth,
-                                                                frame.linewidth = legend.framewidth,
-                                                                frame.colour = legend.framecolor,
-                                                                ticks.colour = legend.tickcolor))
-          }
+          p.loop <- modify_continuous_legend(p = p.loop,
+                                             legend.title = feature,
+                                             legend.aes = "color",
+                                             legend.type = legend.type,
+                                             legend.position = legend.position,
+                                             legend.length = legend.length,
+                                             legend.width = legend.width,
+                                             legend.framecolor = legend.framecolor,
+                                             legend.tickcolor = legend.tickcolor,
+                                             legend.framewidth = legend.framewidth,
+                                             legend.tickwidth = legend.tickwidth)
 
           if (iteration != plot_order[length(plot_order)]){
             p.loop <- p.loop & Seurat::NoLegend()
@@ -499,31 +482,16 @@ do_FeaturePlot <- function(sample,
                    panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                    legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by)){
-    if (legend.type == "normal"){
-      p <- p &
-           ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                           title.hjust = 0.5))
-    } else if (legend.type == "colorbar"){
-      p <- p &
-           ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                           barwidth = legend.barwidth,
-                                                           barheight = legend.barheight,
-                                                           title.hjust = 0.5,
-                                                           ticks.linewidth = legend.tickwidth,
-                                                           frame.linewidth = legend.framewidth,
-                                                           frame.colour = legend.framecolor,
-                                                           ticks.colour = legend.tickcolor))
-    } else if (legend.type == "colorsteps"){
-      p <- p &
-           ggplot2::guides(color = ggplot2::guide_colorsteps(title.position = "top",
-                                                             barwidth = legend.barwidth,
-                                                             barheight = legend.barheight,
-                                                             title.hjust = 0.5,
-                                                             ticks.linewidth = legend.tickwidth,
-                                                             frame.linewidth = legend.framewidth,
-                                                             frame.colour = legend.framecolor,
-                                                             ticks.colour = legend.tickcolor))
-    }
+    p <- modify_continuous_legend(p = p,
+                                  legend.aes = "color",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
   }
 
   # Add custom title.

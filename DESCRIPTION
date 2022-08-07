@@ -49,10 +49,15 @@ Suggests:
     liana (>= 0.1.5),
     crayon,
     ggdist,
-    tibble
+    tibble,
+    SeuratWrappers (>= 0.3.0),
+    monocle3 (>= 1.2.9)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
 Remotes:  
-    saezlab/liana
+    saezlab/liana,
+    satijalab/seurat-wrappers,
+    cole-trapnell-lab/monocle3
+

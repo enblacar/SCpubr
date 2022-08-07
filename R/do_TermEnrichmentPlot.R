@@ -33,7 +33,7 @@ do_TermEnrichmentPlot <- function(genes,
                                   plot.subtitle = NULL,
                                   plot.caption = NULL,
                                   legend.position = "bottom",
-                                  legend.type = "colorsteps",
+                                  legend.type = "colorbar",
                                   colors.use = NULL,
                                   text_labels_size = 4,
                                   legend.length = 30,
@@ -264,46 +264,40 @@ do_TermEnrichmentPlot <- function(genes,
       # Add fill scale.
       if (length(unique(data$Adjusted.P.value)) == 1) {
         if (legend.type == "normal"){
-          p <- p +
-            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                           title.hjust = 0.5))
+          p <- modify_continuous_legend(p = p,
+                                        legend.aes = "color",
+                                        legend.type = legend.type,
+                                        legend.position = legend.position,
+                                        legend.length = legend.length,
+                                        legend.width = legend.width,
+                                        legend.framecolor = legend.framecolor,
+                                        legend.tickcolor = legend.tickcolor,
+                                        legend.framewidth = legend.framewidth,
+                                        legend.tickwidth = legend.tickwidth)
+        # Force to colorbar if only 1 p-value is present.
         } else if (legend.type == "colorbar" | legend.type == "colorsteps"){
-          p <- p +
-            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                           barwidth = legend.barwidth,
-                                                           barheight = legend.barheight,
-                                                           title.hjust = 0.5,
-                                                           ticks.linewidth = legend.tickwidth,
-                                                           frame.linewidth = legend.framewidth,
-                                                           frame.colour = legend.framecolor,
-                                                           ticks.colour = legend.tickcolor))
+          p <- modify_continuous_legend(p = p,
+                                        legend.aes = "color",
+                                        legend.type = "colorbar",
+                                        legend.position = legend.position,
+                                        legend.length = legend.length,
+                                        legend.width = legend.width,
+                                        legend.framecolor = legend.framecolor,
+                                        legend.tickcolor = legend.tickcolor,
+                                        legend.framewidth = legend.framewidth,
+                                        legend.tickwidth = legend.tickwidth)
         }
       } else {
-        if (legend.type == "normal"){
-          p <- p +
-            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                           title.hjust = 0.5))
-        } else if (legend.type == "colorbar"){
-          p <- p +
-            ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "top",
-                                                           barwidth = legend.barwidth,
-                                                           barheight = legend.barheight,
-                                                           title.hjust = 0.5,
-                                                           ticks.linewidth = legend.tickwidth,
-                                                           frame.linewidth = legend.framewidth,
-                                                           frame.colour = legend.framecolor,
-                                                           ticks.colour = legend.tickcolor))
-        } else if (legend.type == "colorsteps"){
-          p <- p +
-            ggplot2::guides(fill = ggplot2::guide_colorsteps(title.position = "top",
-                                                             barwidth = legend.barwidth,
-                                                             barheight = legend.barheight,
-                                                             title.hjust = 0.5,
-                                                             ticks.linewidth = legend.tickwidth,
-                                                             frame.linewidth = legend.framewidth,
-                                                             frame.colour = legend.framecolor,
-                                                             ticks.colour = legend.tickcolor))
-        }
+        p <- modify_continuous_legend(p = p,
+                                      legend.aes = "fill",
+                                      legend.type = legend.type,
+                                      legend.position = legend.position,
+                                      legend.length = legend.length,
+                                      legend.width = legend.width,
+                                      legend.framecolor = legend.framecolor,
+                                      legend.tickcolor = legend.tickcolor,
+                                      legend.framewidth = legend.framewidth,
+                                      legend.tickwidth = legend.tickwidth)
       }
       p <- p +
         ggplot2::theme_minimal(base_size = font.size) +

@@ -24,6 +24,7 @@ check_suggests <- function(function_name){
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
                    "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"),
+                   "do_PseudotimePlot" = c("SeuratWrappers", "monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -62,7 +63,8 @@ state_dependencies <- function(func_name = NULL){
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
-                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"))
+                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"),
+                   "do_PseudotimePlot" = c("SeuratWrappers", "monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -1195,5 +1197,106 @@ compute_enrichment_scores <- function(sample, list_genes, verbose = F){
     sample@meta.data[, col_name] <- NULL
   }
   return(sample)
+}
+
+
+#' Modify the aspect of the legend.
+#'
+#' @param p Plot.
+#' @param legend.aes Character. Either color or fill.
+#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
+#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
+#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
+#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
+#' @param legend.title Character. Title for the legend.
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+modify_continuous_legend <- function(p,
+                                     legend.aes,
+                                     legend.type,
+                                     legend.position,
+                                     legend.length,
+                                     legend.width,
+                                     legend.framecolor,
+                                     legend.tickcolor,
+                                     legend.tickwidth,
+                                     legend.framewidth,
+                                     legend.title = NULL){
+  # Define legend parameters. Width and height values will change depending on the legend orientation.
+  if (legend.position %in% c("top", "bottom")){
+    legend.barwidth <- legend.length
+    legend.barheight <- legend.width
+  } else if (legend.position %in% c("left", "right")){
+    legend.barwidth <- legend.width
+    legend.barheight <- legend.length
+  }
+
+  if (legend.aes == "color" | legend.aes == "colour"){
+    if (legend.type == "normal"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = legend.title,
+                                                        title.position = "top",
+                                                        title.hjust = 0.5))
+    } else if (legend.type == "colorbar"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorbar(title = legend.title,
+                                                        title.position = "top",
+                                                        barwidth = legend.barwidth,
+                                                        barheight = legend.barheight,
+                                                        title.hjust = 0.5,
+                                                        ticks.linewidth = legend.tickwidth,
+                                                        frame.linewidth = legend.framewidth,
+                                                        frame.colour = legend.framecolor,
+                                                        ticks.colour = legend.tickcolor))
+    } else if (legend.type == "colorsteps"){
+      p <- p +
+        ggplot2::guides(color = ggplot2::guide_colorsteps(title = legend.title,
+                                                          title.position = "top",
+                                                          barwidth = legend.barwidth,
+                                                          barheight = legend.barheight,
+                                                          title.hjust = 0.5,
+                                                          ticks.linewidth = legend.tickwidth,
+                                                          frame.linewidth = legend.framewidth,
+                                                          frame.colour = legend.framecolor,
+                                                          ticks.colour = legend.tickcolor))
+    }
+  } else if (legend.aes == "fill"){
+    if (legend.type == "normal"){
+      p <- p +
+        ggplot2::guides(fill = ggplot2::guide_colorbar(title = legend.title,
+                                                       title.position = "top",
+                                                        title.hjust = 0.5))
+    } else if (legend.type == "colorbar"){
+      p <- p +
+        ggplot2::guides(fill = ggplot2::guide_colorbar(title = legend.title,
+                                                       title.position = "top",
+                                                        barwidth = legend.barwidth,
+                                                        barheight = legend.barheight,
+                                                        title.hjust = 0.5,
+                                                        ticks.linewidth = legend.tickwidth,
+                                                        frame.linewidth = legend.framewidth,
+                                                        frame.colour = legend.framecolor,
+                                                        ticks.colour = legend.tickcolor))
+    } else if (legend.type == "colorsteps"){
+      p <- p +
+        ggplot2::guides(fill = ggplot2::guide_colorsteps(title = legend.title,
+                                                         title.position = "top",
+                                                          barwidth = legend.barwidth,
+                                                          barheight = legend.barheight,
+                                                          title.hjust = 0.5,
+                                                          ticks.linewidth = legend.tickwidth,
+                                                          frame.linewidth = legend.framewidth,
+                                                          frame.colour = legend.framecolor,
+                                                          ticks.colour = legend.tickcolor))
+    }
+  }
+
+  return(p)
 }
 

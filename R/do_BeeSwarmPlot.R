@@ -217,34 +217,16 @@ do_BeeSwarmPlot <- function(sample,
     p <- p +
          ggplot2::scale_color_viridis_c(na.value = "grey75",
                                         option = viridis_color_map)
-    if (legend.type == "normal"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
-                                                        title.position = "top",
-                                                        title.hjust = 0.5))
-    } else if (legend.type == "colorbar"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorbar(title = feature_to_rank,
-                                                        title.position = "top",
-                                                        barwidth = legend.barwidth,
-                                                        barheight = legend.barheight,
-                                                        title.hjust = 0.5,
-                                                        ticks.linewidth = legend.tickwidth,
-                                                        frame.linewidth = legend.framewidth,
-                                                        frame.colour = legend.framecolor,
-                                                        ticks.colour = legend.tickcolor))
-    } else if (legend.type == "colorsteps"){
-      p <- p +
-        ggplot2::guides(color = ggplot2::guide_colorsteps(title = feature_to_rank,
-                                                          title.position = "top",
-                                                          barwidth = legend.barwidth,
-                                                          barheight = legend.barheight,
-                                                          title.hjust = 0.5,
-                                                          ticks.linewidth = legend.tickwidth,
-                                                          frame.linewidth = legend.framewidth,
-                                                          frame.colour = legend.framecolor,
-                                                          ticks.colour = legend.tickcolor))
-    }
+    p <- modify_continuous_legend(p = p,
+                                  legend.aes = "color",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
   } else if (continuous_feature == FALSE) {
     if (is.null(colors.use)){
       colors.use <- generate_color_scale(levels(sample))

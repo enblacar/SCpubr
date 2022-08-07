@@ -192,31 +192,16 @@ do_NebulosaPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
-    if (legend.type == "normal"){
-      p <- p &
-        ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                        title.hjust = 0.5))
-    } else if (legend.type == "colorbar"){
-      p <- p &
-        ggplot2::guides(color = ggplot2::guide_colorbar(title.position = "top",
-                                                        barwidth = legend.barwidth,
-                                                        barheight = legend.barheight,
-                                                        title.hjust = 0.5,
-                                                        ticks.linewidth = legend.tickwidth,
-                                                        frame.linewidth = legend.framewidth,
-                                                        frame.colour = legend.framecolor,
-                                                        ticks.colour = legend.tickcolor))
-    } else if (legend.type == "colorsteps"){
-      p <- p &
-        ggplot2::guides(color = ggplot2::guide_colorsteps(title.position = "top",
-                                                          barwidth = legend.barwidth,
-                                                          barheight = legend.barheight,
-                                                          title.hjust = 0.5,
-                                                          ticks.linewidth = legend.tickwidth,
-                                                          frame.linewidth = legend.framewidth,
-                                                          frame.colour = legend.framecolor,
-                                                          ticks.colour = legend.tickcolor))
-    }
+    p <- modify_continuous_legend(p = p,
+                                  legend.aes = "color",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
     # Compute the total number of plots according to whether joint is set to TRUE or not.
     if (isTRUE(joint)){
       num_plots <- length(features) + 1
