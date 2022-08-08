@@ -932,6 +932,8 @@ compute_barplot_annotation <- function(sample,
 #' @param column_title_side,row_title_side Side for the titles.
 #' @param column_title_rotation,row_title_rotation Angle of rotation of the titles.
 #' @param row_names_rot,column_names_rot Angle of rotation of the text.
+#' @param legend.framecolor Color of the lines of the box in the legend.
+#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param na.value Color for NAs
 #' @return None
 #' @noRd
@@ -955,6 +957,10 @@ heatmap_inner <- function(data,
                           cluster_columns = TRUE,
                           cluster_rows = TRUE,
                           border = TRUE,
+                          legend.position = "bottom",
+                          legend.length = 20,
+                          legend.width = 1,
+                          legend.framecolor = "grey50",
                           row_dendogram = FALSE,
                           column_dendogram = FALSE,
                           column_title_side = "top",
@@ -972,6 +978,23 @@ heatmap_inner <- function(data,
   min_value <- min(data)
   max_value <- max(data)
   abs_value <- max(c(abs(min_value), abs(max_value)))
+
+  if (legend.position %in% c("top", "bottom")){
+    legend_width <- grid::unit(legend.length, "mm")
+    legend_height <- NULL
+    grid_height <- grid::unit(legend.width, "mm")
+    grid_width <- grid::unit(4, "mm")
+    direction <- "horizontal"
+    title_position <- "topcenter"
+  } else if (legend.position %in% c("left", "right")){
+    grid_width <- grid::unit(legend.width, "mm")
+    legend_height <- grid::unit(legend.length, "mm")
+    legend_width <- NULL
+    grid_height <- grid::unit(4, "mm")
+    direction <- "vertical"
+    title_position <- "topleft"
+  }
+
   # Checks.
   if (data_range == "only_neg" & min_value >= 0){
     stop("There are no negative values in the matrix.")
@@ -1049,6 +1072,13 @@ heatmap_inner <- function(data,
                                labels = labels,
                                col_fun = col_fun,
                                title = legend_name,
+                               direction = direction,
+                               legend_height = legend_height,
+                               legend_width = legend_width,
+                               grid_width = grid_width,
+                               grid_height = grid_height,
+                               border = legend.framecolor,
+                               title_position = title_position,
                                break_dist = rep(1, length(breaks) - 1),
                                labels_gp = grid::gpar(fontsize = fontsize,
                                                       fontface = "bold"),

@@ -6,6 +6,7 @@
 \usage{
 do_PseudotimePlot(
   sample,
+  cds,
   compute_monocle_partitions = TRUE,
   compute_monocle_clusters = FALSE,
   trajectory_graph_color = "black",
@@ -33,6 +34,8 @@ do_PseudotimePlot(
 }
 \arguments{
 \item{sample}{Seurat object.}
+
+\item{cds}{Cell Data Set of the same seurat object. Can be obtained using \code{SeuratWrappers::as.cell_data_set(sample)}.}
 
 \item{compute_monocle_partitions}{Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.}
 

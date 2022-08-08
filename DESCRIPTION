@@ -50,7 +50,6 @@ Suggests:
     crayon,
     ggdist,
     tibble,
-    SeuratWrappers (>= 0.3.0),
     monocle3 (>= 1.2.9)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
@@ -58,6 +57,5 @@ biocViews:
     Software, SingleCell, Visualization, 
 Remotes:  
     saezlab/liana,
-    satijalab/seurat-wrappers,
     cole-trapnell-lab/monocle3
 

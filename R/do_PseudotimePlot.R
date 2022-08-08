@@ -2,6 +2,7 @@
 #' Compute Pseudotime analysis plots.
 #'
 #' @param sample Seurat object.
+#' @param cds Cell Data Set of the same seurat object. Can be obtained using `SeuratWrappers::as.cell_data_set(sample)`.
 #' @param compute_monocle_partitions Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.
 #' @param compute_monocle_clusters Whether to make monocle3 to re-compute clustering
 #' @param trajectory_graph_color Character. Color of the trajectory graph plotted on top of the UMAP.
@@ -29,6 +30,7 @@
 #' TBD
 #' }
 do_PseudotimePlot <- function(sample,
+                              cds,
                               compute_monocle_partitions = TRUE,
                               compute_monocle_clusters = FALSE,
                               trajectory_graph_color = "black",
@@ -52,7 +54,6 @@ do_PseudotimePlot <- function(sample,
                               legend.framecolor = "grey50",
                               legend.tickcolor = "white",
                               viridis_color_map = "D"){
-  #sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
 
   # Checks for packages.
   check_suggests(function_name = "do_PseudotimePlot")
@@ -93,9 +94,6 @@ do_PseudotimePlot <- function(sample,
   check_colors(trajectory_graph_color, parameter_name = "trajectory_graph_color")
 
 
-  # Transform Seurat object into Cell Data Set.
-  cds <- suppressWarnings(suppressMessages(SeuratWrappers::as.cell_data_set(sample)))
-#
   # Define pipe operator internally.
   `%>%` <- purrr::`%>%`
 
