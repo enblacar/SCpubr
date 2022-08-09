@@ -1329,4 +1329,3 @@ modify_continuous_legend <- function(p,
 
   return(p)
 }
-

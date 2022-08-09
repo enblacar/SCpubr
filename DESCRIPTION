@@ -47,7 +47,6 @@ Suggests:
     ggplotify,
     scattermore,
     liana (>= 0.1.5),
-    crayon,
     ggdist,
     tibble,
     monocle3 (>= 1.2.9)
