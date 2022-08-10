@@ -113,7 +113,7 @@ do_PathwayActivityPlot <- function(sample,
 
 
   #sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
-  #activities <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/dorothea_scores_decoupleR.rds")
+  #activities <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/progeny_scores_decoupleR.rds")
 
   # Retrieve prior knowledge network.
   # network <- decoupleR::get_dorothea(organism = "human",
