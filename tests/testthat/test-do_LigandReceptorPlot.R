@@ -1,5 +1,6 @@
 sample <- SCpubr:::use_dataset()
-liana_output <- SCpubr:::liana_output
+test_list <- SCpubr:::test_list
+liana_output <- test_list$liana_output
 
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {

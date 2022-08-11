@@ -1,5 +1,4 @@
 sample <- use_dataset()
-message("BeeSwarm")
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred component", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",

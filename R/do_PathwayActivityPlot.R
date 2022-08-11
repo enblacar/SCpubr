@@ -126,17 +126,17 @@ do_PathwayActivityPlot <- function(sample,
   #activities <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/progeny_scores_decoupleR.rds")
 
   # Retrieve prior knowledge network.
-  # network <- decoupleR::get_dorothea(organism = "human",
-  #                                    levels = c("A", "B", "C"))
-  #
+   #network <- decoupleR::get_dorothea(organism = "human",
+   #                                   levels = c("A", "B", "C"))
+
   # # Run weighted means algorithm.
-  # activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays$SCT@data),
-  #                                    network = network,
-  #                                    .source = "source",
-  #                                    .targe = "target",
-  #                                    .mor = "mor",
-  #                                    times = 100,
-  #                                    minsize = 5)
+   #activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays$SCT@data),
+   #                                   network = network,
+   #                                   .source = "source",
+   #                                   .targe = "target",
+    #                                  .mor = "mor",
+    #                                  times = 100,
+   #                                   minsize = 5)
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(statistic == "norm_wmean") %>%
                          tidyr::pivot_wider(id_cols = "source",

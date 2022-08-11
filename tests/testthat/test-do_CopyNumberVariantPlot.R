@@ -1,8 +1,9 @@
 sample <- SCpubr:::use_dataset()
-metacell_mapping <- SCpubr:::metacell_mapping
-infercnv_object <- SCpubr:::infercnv_object
-infercnv_object_metacells <- SCpubr:::infercnv_object_metacells
-human_chr_locations <- SCpubr:::human_chr_locations
+test_list <- SCpubr:::test_list
+metacell_mapping <- test_list$metacell_mapping
+infercnv_object <- test_list$infercnv_object
+infercnv_object_metacells <- test_list$infercnv_object_metacells
+human_chr_locations <- test_list$human_chr_locations
 library("Seurat")
 message("CNV")
 

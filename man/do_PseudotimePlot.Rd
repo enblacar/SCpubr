@@ -7,12 +7,12 @@
 do_PseudotimePlot(
   sample,
   cds,
+  pseudotime_genes,
   group.by = NULL,
   compute_monocle_partitions = TRUE,
   compute_monocle_clusters = FALSE,
   trajectory_graph_color = "black",
   trajectory_graph_segment_size = 1,
-  pseudotime_genes = NULL,
   is_max_score_the_start = TRUE,
   label_roots = FALSE,
   label_branches = FALSE,
@@ -38,6 +38,8 @@ do_PseudotimePlot(
 
 \item{cds}{Cell Data Set of the same seurat object. Can be obtained using \code{SeuratWrappers::as.cell_data_set(sample)}.}
 
+\item{pseudotime_genes}{Character. List of genes that will be used to compute enrichment scores, that will be used for pseudotime.}
+
 \item{group.by}{Character. Metadata variable to use as grouping if monocle3 clusters are not computed.}
 
 \item{compute_monocle_partitions}{Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.}
@@ -47,8 +49,6 @@ do_PseudotimePlot(
 \item{trajectory_graph_color}{Character. Color of the trajectory graph plotted on top of the UMAP.}
 
 \item{trajectory_graph_segment_size}{Integer. Size of the trajectory graph.}
-
-\item{pseudotime_genes}{Character. List of genes that will be used to compute enrichment scores, that will be used for pseudotime.}
 
 \item{is_max_score_the_start}{Logical. Do the cells with the highest enrichment scores depict the beginning of the trajectory (TRUE) or the end (FALSE)?}
 
