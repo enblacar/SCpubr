@@ -11,7 +11,7 @@ do_PathwayActivityPlot(
   split.by = NULL,
   plot_FeaturePlots = FALSE,
   plot_Heatmaps = TRUE,
-  plot_DotPlots = FALSE,
+  plot_GeyserPlots = FALSE,
   row_title = NULL,
   column_title = NULL,
   transpose = FALSE,
@@ -19,6 +19,7 @@ do_PathwayActivityPlot(
   cluster_rows = TRUE,
   row_names_rot = 0,
   column_names_rot = 90,
+  geyser_color.by = NULL,
   cell_size = 5,
   pt.size = 1,
   plot_cell_borders = TRUE,
@@ -37,7 +38,9 @@ do_PathwayActivityPlot(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = FALSE
+  rotate_x_axis_labels = FALSE,
+  geyser_symmetrical_scale = TRUE,
+  geyser_order_by_mean = TRUE
 )
 }
 \arguments{
@@ -53,7 +56,7 @@ do_PathwayActivityPlot(
 
 \item{plot_Heatmaps}{Logical. Compute output heatmap showcasing the average TF activity per regulon and group.by variable.}
 
-\item{plot_DotPlots}{Logical. Compute output dotplot for each of the top regulons and group.by variable.}
+\item{plot_GeyserPlots}{Logical. Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
 \item{row_title, column_title}{Character. Title for the rows in the heatmap.}
 
@@ -62,6 +65,8 @@ do_PathwayActivityPlot(
 \item{cluster_cols, cluster_rows}{Logical. Whether to cluster rows and columns in the heatmap.}
 
 \item{row_names_rot, column_names_rot}{Numeric. Angle of rotation of the column and row names. Suggested: either 0 or 90.}
+
+\item{geyser_color.by}{Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 
 \item{cell_size}{Numeric. Size of each cell in the heatmap.}
 
@@ -92,6 +97,10 @@ do_PathwayActivityPlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{rotate_x_axis_labels}{Logical. Whether to rotate the X axis names in the dot plot.}
+
+\item{geyser_symmetrical_scale}{Logical. Whether the geyser plot has a symmetrical color scale.}
+
+\item{geyser_order_by_mean}{Logical. Whether to order the X axis by the mean of the values.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

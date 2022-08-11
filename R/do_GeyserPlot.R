@@ -4,6 +4,8 @@
 #' all the way to the other groups. On top of this, the mean and .66 and .95 of the data is plotted, depicting the overall distribution of the dots. The cells can, then, be colored by
 #' a continuous variable (same as Y axis or different) or a categorical one (same as X axis or different).
 #'
+#' Special thanks to Christina Blume for coming up with the name of the plot.
+#'
 #' @param sample Seurat object.
 #' @param features Character. Features to plot.
 #' @param assay Character. Assay to use. Defaults to active assay if not.
@@ -128,6 +130,7 @@ do_GeyserPlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "na.value" = na.value)
+  # Checks
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(border.color, parameter_name = "border.color")
@@ -142,28 +145,34 @@ do_GeyserPlot <- function(sample,
   assay <- out[["assay"]]
   rm(out)
 
+  # Check if the scale is properly set.
   if (!(scale_type %in% c("categorical", "continuous"))){
     stop("Please provide one of the following to scale_type: continuous, categorical.", call. = FALSE)
   }
 
+  # Check that split.by is in metadata variables.
   if (!(is.null(split.by))){
     if (!(split.by %in% colnames(sample@meta.data))){
       stop("The variable for split.by has to be on the metadata of the object.", call. = FALSE)
     }
   }
 
+  # Check that group.by is in metadata variables.
   if (!(is.null(group.by))){
     if (!(group.by %in% colnames(sample@meta.data))){
       stop("The variable for group.by has to be on the metadata of the object.", call. = FALSE)
     }
   }
 
+  # Check that jitter is in range.
   if (jitter >= 0.5 | jitter < 0){
     stop("Value for jitter has to be betwen 0 and 0.49.", call. = FALSE)
   }
 
+  # Will contain the output.
   list.out <- list()
 
+  # Assign group.by to a metadata variable.
   if (is.null(group.by)){
     sample@meta.data[, "dummy"] <- sample@active.ident
   } else {
@@ -171,33 +180,36 @@ do_GeyserPlot <- function(sample,
   }
   group.by <- "dummy"
 
-
-
-
+  # Iterate for each feature.
   for (feature in features){
+    # Check the feature.
     check_feature(sample = sample,
                   features = feature)
 
-    # Prepare the data.
+    # Get a vector of all dimensional reduction compontents.
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
       col.names <- colnames(sample@reductions[[red]][[]])
       dim_colnames <- c(dim_colnames, col.names)
       if (feature %in% col.names){
+        # Get the reduction in which the feature is, if this is the case.
         reduction <- red
       }
     }
 
-    # If the user wants additional coloring.
+    # If the user wants additional coloring, if not default to feature or group.by.
     if (isTRUE(scale_type == "continuous")){
       if (is.null(color.by)){
         color.by <- feature
       }
     } else if (isTRUE(scale_type == "categorical")){
-      if (!is.null(color.by)){
-        warning("Do not use color.by with a categorical grouping. The colors will follow the unique values in group.by.", call. = FALSE)
+      if (is.null(color.by)){
+        color.by <- group.by
+      } else {
+        if (!(color.by %in% colnames(sample@meta.data))){
+          stop("With a categorical scale, color.by needs to be present in sample@meta.data.", call. = FALSE)
+        }
       }
-      color.by <- group.by
     }
 
     # Generate a column for the color.by parameter that will be added later on to the data dataframe.
@@ -306,7 +318,7 @@ do_GeyserPlot <- function(sample,
 
     if (isTRUE(plot_cell_borders)){
       p <- p +
-           ggplot2::geom_point(position = ggplot2::position_jitter(width = 0.455,
+           ggplot2::geom_point(position = ggplot2::position_jitter(width = jitter,
                                                                    seed = 0),
                                size = pt.size * border.size,
                                color = border.color,
@@ -327,7 +339,7 @@ do_GeyserPlot <- function(sample,
       }
     } else if (isTRUE(scale_type == "categorical")){
       if (is.null(colors.use)){
-        values <- data %>% dplyr::pull(.data$group.by)
+        values <- data %>% dplyr::pull(.data$color.by)
         names.use <- if (is.factor(values)){levels(values)} else {sort(unique(values))}
         colors.use <- generate_color_scale(names = names.use)
       } else {
@@ -354,7 +366,13 @@ do_GeyserPlot <- function(sample,
                                     position = ggplot2::position_dodge(width = 1),
                                     na.rm = TRUE,
                                     show.legend = FALSE) +
-         scale.use +
+         scale.use
+
+    if (!(is.null(split.by))){
+      p <- p +
+           ggplot2::facet_grid(. ~ split.by)
+    }
+    p <- p +
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
@@ -386,7 +404,8 @@ do_GeyserPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        strip.text =ggplot2::element_text(color = "black", face = "bold"))
 
     if (isTRUE(scale_type == "continuous")){
       if (is.null(legend.title)){

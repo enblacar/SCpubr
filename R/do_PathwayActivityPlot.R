@@ -6,7 +6,7 @@
 #' @param split.by Character. Optional variable to split the heatmaps by as well.
 #' @param plot_FeaturePlots Logical. Compute output feature plots for each of the top regulons.
 #' @param plot_Heatmaps Logical. Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
-#' @param plot_DotPlots Logical. Compute output dotplot for each of the top regulons and group.by variable.
+#' @param plot_GeyserPlots Logical. Compute output GeyserPlots for each of the top regulons and group.by variable.
 #' @param row_title,column_title Character. Title for the rows in the heatmap.
 #' @param transpose Logical. Whether to transpose the heatmap matrix.
 #' @param cluster_cols,cluster_rows Logical. Whether to cluster rows and columns in the heatmap.
@@ -26,6 +26,9 @@
 #' @param font.size Numeric. Base font.size of the figure.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param rotate_x_axis_labels Logical. Whether to rotate the X axis names in the dot plot.
+#' @param geyser_color.by Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
+#' @param geyser_symmetrical_scale Logical. Whether the geyser plot has a symmetrical color scale.
+#' @param geyser_order_by_mean Logical. Whether to order the X axis by the mean of the values.
 #'
 #' @return A list containing several output plots according to the user's specifications.
 #' @export
@@ -40,7 +43,7 @@ do_PathwayActivityPlot <- function(sample,
                                    split.by = NULL,
                                    plot_FeaturePlots = FALSE,
                                    plot_Heatmaps = TRUE,
-                                   plot_DotPlots = FALSE,
+                                   plot_GeyserPlots = FALSE,
                                    row_title = NULL,
                                    column_title = NULL,
                                    transpose = FALSE,
@@ -48,6 +51,7 @@ do_PathwayActivityPlot <- function(sample,
                                    cluster_rows = TRUE,
                                    row_names_rot = 0,
                                    column_names_rot = 90,
+                                   geyser_color.by = NULL,
                                    cell_size = 5,
                                    pt.size = 1,
                                    plot_cell_borders = TRUE,
@@ -66,7 +70,9 @@ do_PathwayActivityPlot <- function(sample,
                                    legend.type = "colorbar",
                                    font.size = 14,
                                    font.type = "sans",
-                                   rotate_x_axis_labels = FALSE){
+                                   rotate_x_axis_labels = FALSE,
+                                   geyser_symmetrical_scale = TRUE,
+                                   geyser_order_by_mean = TRUE){
 
   #Checks for packages.
   #check_suggests(function_name = "do_FeaturePlot")
@@ -76,11 +82,14 @@ do_PathwayActivityPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("plot_FeaturePlots" = plot_FeaturePlots,
                        "plot_Heatmaps" = plot_Heatmaps,
+                       "plot_GeyserPlots" = plot_GeyserPlots,
                        "transpose" = transpose,
                        "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "geyser_order_by_mean" = geyser_order_by_mean,
+                       "geyser_symmetrical_scale" = geyser_symmetrical_scale)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -105,7 +114,8 @@ do_PathwayActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "legend.framecolor" = legend.framecolor)
+                         "legend.framecolor" = legend.framecolor,
+                         "geyser_color.by" = geyser_color.by)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%v%` <- ComplexHeatmap::`%v%`
@@ -139,35 +149,11 @@ do_PathwayActivityPlot <- function(sample,
   # Scale data.
   sample <- Seurat::ScaleData(object = sample, verbose = FALSE)
 
-  # Start the process.
-  if (is.null(group.by)){
-    sample@meta.data[, "dummy"] <- sample@active.ident
-  } else {
-    sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
-  }
-  group.by <- "dummy"
-
-  # Extract activities from object as a long dataframe
-  suppressMessages({
-    df <- t(as.matrix(sample@assays$progeny@scale.data)) %>%
-          as.data.frame() %>%
-          tibble::rownames_to_column(var = "cell") %>%
-          dplyr::left_join(y = {sample@meta.data[, group.by, drop = FALSE] %>%
-              tibble::rownames_to_column(var = "cell")},
-              by = "cell") %>%
-          dplyr::select(-"cell") %>%
-          tidyr::pivot_longer(cols = -.data[[group.by]],
-                              names_to = "source",
-                              values_to = "score") %>%
-          dplyr::group_by(.data[[group.by]], .data$source) %>%
-          dplyr::summarise(mean = mean(.data$score))
-  })
-
   list.out <- list()
 
   if (isTRUE(plot_FeaturePlots)){
     list.features <- list()
-    for (pathway in rownames(sample)){
+    for (pathway in sort(rownames(sample))){
       limits <- c(min(sample@assays$progeny@scale.data[pathway, ]),
                   max(sample@assays$progeny@scale.data[pathway, ]))
       end_value <- max(abs(limits))
@@ -200,95 +186,49 @@ do_PathwayActivityPlot <- function(sample,
     list.out[["feature_plots"]] <- list.features
   }
 
-  if (isTRUE(plot_DotPlots)){
-    list.dotplots <- list()
-    for (pathway in rownames(sample)){
-      limits <- c(min(sample@assays$progeny@scale.data[pathway, ]),
-                  max(sample@assays$progeny@scale.data[pathway, ]))
-      end_value <- max(abs(limits))
-      data <- sample@assays$progeny@scale.data[pathway, , drop = F] %>%
-              t() %>%
-              as.data.frame() %>%
-              tibble::rownames_to_column(var = "cell") %>%
-              dplyr::left_join(y = {sample@meta.data[, group.by, drop = F] %>%
-                                    tibble::rownames_to_column(var = "cell")},
-                                    by = "cell") %>%
-              dplyr::select(c(-.data$cell)) %>%
-              tidyr::pivot_longer(cols = -.data[[group.by]],
-                                  names_to = "source",
-                                  values_to = "score")
-      p <- data %>%
-           dplyr::mutate("group.by" = factor(.data[[group.by]], levels = {data %>%
-                                                                          dplyr::group_by(.data[[group.by]]) %>%
-                                                                          dplyr::summarise("mean" = mean(.data$score)) %>%
-                                                                          dplyr::arrange(dplyr::desc(.data$mean)) %>%
-                                                                          dplyr::pull(.data[[group.by]]) %>%
-                                                                          as.character()})) %>%
-           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                  y = .data$score,
-                                                  color = .data$score))
-      if (isTRUE(plot_cell_borders)){
-        p <- p +
-             ggplot2::geom_point(position = ggplot2::position_jitter(width = 0.455,
-                                                                     seed = 0),
-                                 size = pt.size * border.size,
-                                 color = "black",
-                                 na.rm = TRUE)
-      }
-      p <- p +
-           ggplot2::geom_point(position = ggplot2::position_jitter(width = 0.45,
-                                                                   seed = 0),size = pt.size,
-                               na.rm = TRUE) +
-           ggdist::stat_pointinterval(position = ggplot2::position_dodge(width = 1),
-                                      na.rm = TRUE,
-                                      color = "black") +
-           ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
-                                          limits = c(-end_value, end_value)) +
-           ggplot2::theme_minimal(base_size = font.size) +
-           ggplot2::theme(axis.title = ggplot2::element_blank(),
-                          axis.line.x = ggplot2::element_line(color = "black"),
-                          axis.text.x = ggplot2::element_text(color = "black",
-                                                              face = "bold",
-                                                              angle = ifelse(isTRUE(rotate_x_axis_labels), 90, 0),
-                                                              hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                              vjust = ifelse(isTRUE(rotate_x_axis_labels), 0.5, 1)),
-                          axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
-                          axis.ticks = ggplot2::element_line(color = "black"),
-                          panel.grid.major = ggplot2::element_blank(),
-                          plot.title.position = "plot",
-                          plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
-                          plot.subtitle = ggtext::element_markdown(hjust = 0),
-                          plot.caption = ggtext::element_markdown(hjust = 1),
-                          panel.grid = ggplot2::element_blank(),
-                          text = ggplot2::element_text(family = font.type),
-                          plot.caption.position = "plot",
-                          legend.text = ggplot2::element_text(face = "bold"),
-                          legend.position = legend.position,
-                          legend.title = ggplot2::element_text(face = "bold"),
-                          legend.justification = "center",
-                          plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                          plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          legend.background = ggplot2::element_rect(fill = "white", color = "white"))
-
-      p <- modify_continuous_legend(p = p,
-                                    legend.title = paste0(pathway, " activity"),
-                                    legend.aes = "color",
-                                    legend.type = legend.type,
-                                    legend.position = legend.position,
-                                    legend.length = legend.length,
-                                    legend.width = legend.width,
-                                    legend.framecolor = legend.framecolor,
-                                    legend.tickcolor = legend.tickcolor,
-                                    legend.framewidth = legend.framewidth,
-                                    legend.tickwidth = legend.tickwidth)
-      list.dotplots[[pathway]] <- p
+  if (isTRUE(plot_GeyserPlots)){
+    list.geysers <- list()
+    for (pathway in sort(rownames(sample))){
+      p <- do_GeyserPlot(sample = sample,
+                         assay = "progeny",
+                         slot = "scale.data",
+                         features = pathway,
+                         group.by = group.by,
+                         color.by = geyser_color.by,
+                         pt.size = pt.size,
+                         border.size = border.size,
+                         symmetrical_scale = geyser_symmetrical_scale,
+                         order_by_mean = geyser_order_by_mean,
+                         plot_cell_borders = plot_cell_borders,
+                         font.size = font.size,
+                         font.type = font.type,
+                         legend.position = legend.position,
+                         legend.type = legend.type,
+                         legend.framecolor = legend.framecolor,
+                         legend.tickcolor = legend.tickcolor,
+                         legend.framewidth = legend.framewidth,
+                         legend.tickwidth = legend.tickwidth,
+                         legend.length = legend.length,
+                         legend.width = legend.width,
+                         xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
+                         ylab = paste0(pathway, " activity"),
+                         legend.title = if (is.null(geyser_color.by)) {paste0(pathway, " activity")} else {geyser_color.by},
+                         rotate_x_axis_labels = rotate_x_axis_labels)
+      list.geysers[[pathway]] <- p
     }
-    list.out[["dotplots"]] <- list.dotplots
+    list.out[["dotplots"]] <- list.geysers
   }
 
 
   if (isTRUE(plot_Heatmaps)){
+    # Start the process.
+    if (is.null(group.by)){
+      sample@meta.data[, "dummy"] <- sample@active.ident
+    } else {
+      sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
+    }
+
+    group.by <- "dummy"
     if (is.null(split.by)){
       suppressMessages({
         data <- sample@assays$progeny@scale.data %>%

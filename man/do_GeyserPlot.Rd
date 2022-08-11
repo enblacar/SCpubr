@@ -122,6 +122,9 @@ A Geyser plot is a custom plot in which we plot continuous values on the Y axis 
 all the way to the other groups. On top of this, the mean and .66 and .95 of the data is plotted, depicting the overall distribution of the dots. The cells can, then, be colored by
 a continuous variable (same as Y axis or different) or a categorical one (same as X axis or different).
 }
+\details{
+Special thanks to Christina Blume for coming up with the name of the plot.
+}
 \examples{
 \dontrun{
 TBD

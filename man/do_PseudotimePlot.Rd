@@ -7,6 +7,7 @@
 do_PseudotimePlot(
   sample,
   cds,
+  group.by = NULL,
   compute_monocle_partitions = TRUE,
   compute_monocle_clusters = FALSE,
   trajectory_graph_color = "black",
@@ -18,24 +19,26 @@ do_PseudotimePlot(
   label_leaves = FALSE,
   pt.size = 1,
   border.size = 1.5,
-  rotate_x_axis_labels = F,
   legend.position = "bottom",
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  legend.length = 30,
+  legend.length = 20,
   legend.width = 1,
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
-  viridis_color_map = "D"
+  viridis_color_map = "D",
+  plot_cell_borders = TRUE
 )
 }
 \arguments{
 \item{sample}{Seurat object.}
 
 \item{cds}{Cell Data Set of the same seurat object. Can be obtained using \code{SeuratWrappers::as.cell_data_set(sample)}.}
+
+\item{group.by}{Character. Metadata variable to use as grouping if monocle3 clusters are not computed.}
 
 \item{compute_monocle_partitions}{Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.}
 
@@ -55,8 +58,6 @@ do_PseudotimePlot(
 
 \item{border.size}{Numeric. Point size for the border of the cells in the plots.}
 
-\item{rotate_x_axis_labels}{Logical. Whether to rotate X axis labels in the}
-
 \item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
 
 \item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
@@ -72,6 +73,8 @@ do_PseudotimePlot(
 \item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
 
 \item{viridis_color_map}{Character. Viridis color map to use in the FeaturePlot and dotplot for the enrichment scores.}
+
+\item{plot_cell_borders}{Logical. Whether to plot borders around the cells.}
 }
 \value{
 A list containing a collection of ggplot2 objects.
