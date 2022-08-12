@@ -790,15 +790,15 @@ check_length <- function(vector_of_parameters,
 #' \dontrun{
 #' TBD
 #' }
-use_dataset <- function(){
+use_dataset <- function(n_cells = 180){
   # We want this function to be completely silent.
   suppressWarnings({
     test_list <- get0("test_list", envir = asNamespace("SCpubr"))
     genes <- test_list$genes
     values <- seq(0, 15, 0.1)
-    counts <- matrix(ncol = 180, nrow = length(genes))
+    counts <- matrix(ncol = n_cells, nrow = length(genes))
     cols <- c()
-    for (i in seq(1, 180)){
+    for (i in seq(1, n_cells)){
       cts <- sample(values, size = length(genes), replace = T, prob = c(0.66, rep((0.34 / 150), length(values) - 1)))
       counts[, i] <- cts
       cols <- c(cols, paste0("Cell_", i))

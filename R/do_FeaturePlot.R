@@ -467,7 +467,6 @@ do_FeaturePlot <- function(sample,
   # Fix the extra space and add theme parameters.
   p <- p &
        ggplot2::theme_minimal(base_size = font.size) &
-       ggplot2::coord_cartesian(expand = FALSE) &
        ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                       plot.title = ggtext::element_markdown(face = "bold",
                                                             hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
