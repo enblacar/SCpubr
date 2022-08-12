@@ -467,7 +467,7 @@ do_DimPlot <- function(sample,
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
                    panel.grid = ggplot2::element_blank(),
-                   plot.margin = ggplot2::margin(t = 20, r = 10, b = 10, l = 10),
+                   plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                    plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                    panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                    legend.background = ggplot2::element_rect(fill = "white", color = "white"))

@@ -178,6 +178,20 @@ testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
                              show_legend = TRUE,
                              color.by = "seurat_clusters_character")
   testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = TRUE,
+                             scale_type = "categorical",
+                             color.by = "seurat_clusters_character")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = TRUE,
+                             scale_type = "categorical",
+                             color.by = "seurat_clusters_factor")
+  testthat::expect_type(p, "list")
 })
 
 
