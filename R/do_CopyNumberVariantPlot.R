@@ -84,7 +84,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
-
+  `:=` <- rlang::`:=`
   `%>%` <- purrr::`%>%`
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
@@ -149,9 +149,9 @@ do_CopyNumberVariantPlot <- function(sample,
 
         # If metacells were used.
         if (isTRUE(using_metacells)){
+          sample$metacell_mapping <- metacell_mapping
           sample@meta.data <- sample@meta.data %>%
-                              dplyr::mutate("metacell_mapping" = metacell_mapping,
-                                            "cells" = colnames(sample)) %>%
+                              dplyr::mutate("cells" = colnames(sample)) %>%
                               dplyr::left_join(y = {sample@meta.data %>%
                                                     dplyr::select(.data[["metacell_mapping"]]) %>%
                                                     tibble::rownames_to_column(var = "cells") %>%
@@ -162,7 +162,7 @@ do_CopyNumberVariantPlot <- function(sample,
                               tibble::column_to_rownames(var = "cells")
           # If no metacells were used.
         } else if (isFALSE(using_metacells)){
-          sample@meta.data[, scores_name] <- CNV_scores_final$score
+          sample@meta.data[, scores_name] <- CNV_scores_final[, scores_name]
         }
         events_list <- append(events_list, scores_name)
       }

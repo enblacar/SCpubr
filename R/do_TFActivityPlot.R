@@ -140,12 +140,12 @@ do_TFActivityPlot <- function(sample,
   #                                    times = 100,
   #                                    minsize = 5)
   sample[['dorothea']] <- activities %>%
-                          dplyr::filter(statistic == 'norm_wmean') %>%
+                          dplyr::filter(.data$statistic == 'norm_wmean') %>%
                           tidyr::pivot_wider(id_cols = 'source',
                                              names_from = 'condition',
                                              values_from = 'score') %>%
                           tibble::column_to_rownames('source') %>%
-                          Seurat::CreateAssayObject(.)
+                          Seurat::CreateAssayObject()
 
   Seurat::DefaultAssay(sample) <- "dorothea"
   # Scale data.
@@ -156,7 +156,7 @@ do_TFActivityPlot <- function(sample,
     if (is.null(group.by)) {
       sample$group.by <- Seurat::Idents(sample)
     } else {
-      sample$group.by <- sample@meta.dat[, group.by]
+      sample$group.by <- sample@meta.data[, group.by]
     }
     df <- t(as.matrix(sample@assays$dorothea@scale.data)) %>%
           as.data.frame() %>%
@@ -164,7 +164,7 @@ do_TFActivityPlot <- function(sample,
           dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
               tibble::rownames_to_column(var = "cell")},
               by = "cell") %>%
-          dplyr::select(-"cell") %>%
+          dplyr::select(-.data$cell) %>%
           tidyr::pivot_longer(cols = -"group.by",
                               names_to = "source",
                               values_to = "score") %>%
@@ -326,7 +326,7 @@ do_TFActivityPlot <- function(sample,
                                         tibble::rownames_to_column(var = "cell")},
                                         by = "cell") %>%
                   dplyr::filter(.data[[split.by]] == split.value) %>%  # This is key.
-                  dplyr::select(c(-cell, -split.by)) %>%
+                  dplyr::select(c(-.data$cell, -.data[[split.by]])) %>%
                   tidyr::pivot_longer(cols = -"group.by",
                                       names_to = "source",
                                       values_to = "score") %>%
@@ -361,13 +361,6 @@ do_TFActivityPlot <- function(sample,
           data <- data
         }
 
-        if (isTRUE(split.horizontal)){
-          row_title <- ""
-          column_title <- split.value
-        } else {
-          row_title <- split.value
-          column_title <- ""
-        }
         out <- heatmap_inner(data,
                              legend_name = "TF Activity",
                              column_title = column_title,

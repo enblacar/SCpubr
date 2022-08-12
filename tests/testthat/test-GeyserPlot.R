@@ -71,6 +71,13 @@ testthat::test_that("do_GeyserPlot: PASS - categorical colors.use", {
                              group.by = "orig.ident",
                              colors.use = c("Cell" = "green"))
   testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             scale_type = "categorical",
+                             group.by = "orig.ident",
+                             colors.use = NULL)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_GeyserPlot: PASS - order by mean", {
@@ -137,6 +144,43 @@ testthat::test_that("do_BarPlot: FAIL - wrong paramters", {
                                                color.by = "CD14"))
 })
 
+testthat::test_that("do_GeyserPlot: PASS - show legend", {
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = FALSE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_GeyserPlot: PASS - several features", {
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = c("CD14", "PC_1"),
+                             show_legend = TRUE)
+  testthat::expect_type(p, "list")
+  testthat::expect_length(p, 2)
+})
+
+testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
+  sample$seurat_clusters_factor <- as.factor(sample$seurat_clusters)
+  sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = TRUE,
+                             color.by = "seurat_clusters_factor")
+  testthat::expect_type(p, "list")
+
+  testthat::expect_length(p, 2)
+  p <- SCpubr::do_GeyserPlot(sample = sample,
+                             features = "CD14",
+                             show_legend = TRUE,
+                             color.by = "seurat_clusters_character")
+  testthat::expect_type(p, "list")
+  testthat::expect_length(p, 2)
+})
 
 
 

@@ -1270,6 +1270,8 @@ modify_continuous_legend <- function(p,
     legend.barheight <- legend.length
   }
 
+  legend.title <- if (is.null(legend.title)){ggplot2::waiver()} else {legend.title}
+
   if (legend.aes == "color" | legend.aes == "colour"){
     if (legend.type == "normal"){
       p <- p +

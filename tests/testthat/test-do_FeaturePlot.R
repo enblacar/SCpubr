@@ -1,8 +1,26 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 
 testthat::test_that("do_FeaturePlot: PASS - single feature", {
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_FeaturePlot: PASS - legend.title", {
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              legend.title = "pepe")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              legend.title = "pepe",
+                              split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                              features = "nCount_RNA",
+                              split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
 

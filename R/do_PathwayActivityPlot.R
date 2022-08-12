@@ -138,12 +138,12 @@ do_PathwayActivityPlot <- function(sample,
     #                                  times = 100,
    #                                   minsize = 5)
   sample[["progeny"]] <- activities %>%
-                         dplyr::filter(statistic == "norm_wmean") %>%
+                         dplyr::filter(.data$statistic == "norm_wmean") %>%
                          tidyr::pivot_wider(id_cols = "source",
                                             names_from = "condition",
                                             values_from = "score") %>%
                          tibble::column_to_rownames("source") %>%
-                         Seurat::CreateAssayObject(.)
+                         Seurat::CreateAssayObject()
 
   Seurat::DefaultAssay(sample) <- "progeny"
   # Scale data.
@@ -238,7 +238,7 @@ do_PathwayActivityPlot <- function(sample,
                 dplyr::left_join(y = {sample@meta.data[, group.by, drop = FALSE] %>%
                     tibble::rownames_to_column(var = "cell")},
                     by = "cell") %>%
-                dplyr::select(c(-cell)) %>%
+                dplyr::select(c(-.data$cell)) %>%
                 tidyr::pivot_longer(cols = -.data[[group.by]],
                                     names_to = "source",
                                     values_to = "score") %>%
@@ -298,7 +298,7 @@ do_PathwayActivityPlot <- function(sample,
       split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
       list.heatmaps <- list()
       # Get the maximum range.
-      range <- max(abs(top_acts_mat_wide))
+      range <- max(abs(sample@assays$progeny@scale.data))
       for (split.value in split.values){
         suppressMessages({
           data <- sample@assays$progeny@scale.data %>%
@@ -309,7 +309,7 @@ do_PathwayActivityPlot <- function(sample,
                       tibble::rownames_to_column(var = "cell")},
                       by = "cell") %>%
                   dplyr::filter(.data[[split.by]] == split.value) %>%  # This is key.
-                  dplyr::select(c(-cell, -split.by)) %>%
+                  dplyr::select(c(-.data$cell, -.data[[split.by]])) %>%
                   tidyr::pivot_longer(cols = -.data[[group.by]],
                                       names_to = "source",
                                       values_to = "score") %>%
@@ -340,13 +340,7 @@ do_PathwayActivityPlot <- function(sample,
           data <- t(data)
         }
 
-        if (isTRUE(split.horizontal)){
-          row_title <- ""
-          column_title <- split.value
-        } else {
-          row_title <- split.value
-          column_title <- ""
-        }
+
         out <- heatmap_inner(data,
                              legend_name = "Pathway activity",
                              column_title = column_title,

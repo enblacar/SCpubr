@@ -360,7 +360,7 @@ do_FeaturePlot <- function(sample,
                                                                           option = viridis_color_map),
                             scale = "color")
         p.loop <- p.loop +
-          ggplot2::ggtitle("")
+                  ggplot2::ggtitle("")
 
         # Add cell borders.
         if (isTRUE(plot_cell_borders)){
@@ -410,10 +410,10 @@ do_FeaturePlot <- function(sample,
                                                                             limits = limits),
                               scale = "color")
           p.loop <- p.loop +
-            ggplot2::ggtitle(iteration)
+                    ggplot2::ggtitle(iteration)
 
           p.loop <- modify_continuous_legend(p = p.loop,
-                                             legend.title = if (!is.null(legend.title)) {legend.title},
+                                             legend.title = if (is.null(legend.title)){feature} else {legend.title},
                                              legend.aes = "color",
                                              legend.type = legend.type,
                                              legend.position = legend.position,
@@ -466,30 +466,30 @@ do_FeaturePlot <- function(sample,
 
   # Fix the extra space and add theme parameters.
   p <- p &
-    ggplot2::theme_minimal(base_size = font.size) &
-    ggplot2::coord_cartesian(expand = FALSE) &
-    ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                   plot.title = ggtext::element_markdown(face = "bold",
-                                                         hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
-                   plot.subtitle = ggtext::element_markdown(hjust = 0),
-                   plot.caption = ggtext::element_markdown(hjust = 1),
-                   panel.grid = ggplot2::element_blank(),
-                   plot.title.position = "plot",
-                   plot.caption.position = "plot",
-                   text = ggplot2::element_text(family = font.type),
-                   legend.text = ggplot2::element_text(face = "bold"),
-                   legend.position = legend.position,
-                   legend.title = ggplot2::element_text(face = "bold"),
-                   legend.justification = "center",
-                   axis.title.x = ggplot2::element_text(face = "bold"),
-                   axis.title.y = ggplot2::element_text(face = "bold",
-                                                        angle = 90),
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+       ggplot2::theme_minimal(base_size = font.size) &
+       ggplot2::coord_cartesian(expand = FALSE) &
+       ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                      plot.title = ggtext::element_markdown(face = "bold",
+                                                            hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
+                      plot.subtitle = ggtext::element_markdown(hjust = 0),
+                      plot.caption = ggtext::element_markdown(hjust = 1),
+                      panel.grid = ggplot2::element_blank(),
+                      plot.title.position = "plot",
+                      plot.caption.position = "plot",
+                      text = ggplot2::element_text(family = font.type),
+                      legend.text = ggplot2::element_text(face = "bold"),
+                      legend.position = legend.position,
+                      legend.title = ggplot2::element_text(face = "bold"),
+                      legend.justification = "center",
+                      axis.title.x = ggplot2::element_text(face = "bold"),
+                      axis.title.y = ggplot2::element_text(face = "bold",
+                                                           angle = 90),
+                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by)){
     p <- modify_continuous_legend(p = p,
-                                  legend.title = if (!is.null(legend.title)) {legend.title},
+                                  legend.title = legend.title,
                                   legend.aes = "color",
                                   legend.type = legend.type,
                                   legend.position = legend.position,
@@ -623,7 +623,7 @@ do_FeaturePlot <- function(sample,
   }
 
   # Add legend titles.
-  if (is.null(split.by)){
+  if (is.null(split.by) & is.null(legend.title)){
     counter <- 0
     for (feature in features){
       counter <- counter + 1

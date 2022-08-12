@@ -348,7 +348,7 @@ do_GeyserPlot <- function(sample,
       if (is.null(colors.use)){
         values <- data %>% dplyr::pull(.data$color.by)
         names.use <- if (is.factor(values)){levels(values)} else {sort(unique(values))}
-        colors.use <- generate_color_scale(names = names.use)
+        colors.use <- generate_color_scale(names_use = names.use)
       } else {
         check_colors(colors.use)
       }

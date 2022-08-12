@@ -182,7 +182,8 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
                                       gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
-                                      plot_marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -192,6 +193,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.size = 8)
   testthat::expect_type(p, "list")
 })
@@ -202,6 +204,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.group = FALSE)
   testthat::expect_type(p, "list")
 })
@@ -212,6 +215,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.type = "density")
   testthat::expect_type(p, "list")
 
@@ -220,6 +224,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.type = "histogram")
   testthat::expect_type(p, "list")
 
@@ -228,6 +233,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.type = "boxplot")
   testthat::expect_type(p, "list")
 
@@ -236,6 +242,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.type = "violin")
   testthat::expect_type(p, "list")
 
@@ -244,6 +251,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE,
                                       marginal.type = "densigram")
   testthat::expect_type(p, "list")
 })
@@ -377,7 +385,8 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
-                                      plot_marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -450,7 +459,8 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D",
-                                      plot_marginal_distributions = TRUE)
+                                      plot_marginal_distributions = TRUE,
+                                      plot_cell_borders = FALSE)
   testthat::expect_type(p, "list")
 })
 
