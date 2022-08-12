@@ -38,7 +38,7 @@ do_DimPlot(
   font.size = 14,
   font.type = "sans",
   na.value = "grey75",
-  plot_cell_borders = FALSE,
+  plot_cell_borders = TRUE,
   border.size = 1.5,
   border.color = "black",
   plot_marginal_distributions = FALSE,

@@ -33,7 +33,7 @@ do_CellularStatesPlot(
   marginal.type = "density",
   marginal.size = 5,
   marginal.group = TRUE,
-  plot_cell_borders = FALSE,
+  plot_cell_borders = TRUE,
   plot_enrichment_scores = FALSE,
   border.size = 1.5,
   border.color = "black",

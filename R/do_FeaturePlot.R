@@ -15,6 +15,7 @@
 #' @param font.size Base font.size of the figure.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param legend Whether to plot the legend or not.
+#' @param legend.title Character. Title for the legend.
 #' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
 #' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
 #' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
@@ -51,6 +52,7 @@ do_FeaturePlot <- function(sample,
                            font.size = 14,
                            font.type = "sans",
                            legend = TRUE,
+                           legend.title = NULL,
                            legend.type = "colorbar",
                            legend.position = "bottom",
                            legend.framewidth = 1.5,
@@ -69,7 +71,7 @@ do_FeaturePlot <- function(sample,
                            viridis_color_map = "D",
                            raster = FALSE,
                            raster.dpi = 1024,
-                           plot_cell_borders = FALSE,
+                           plot_cell_borders = TRUE,
                            border.size = 1.5,
                            border.color = "black",
                            verbose = TRUE){
@@ -129,7 +131,8 @@ do_FeaturePlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "legend.title" = legend.title)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -410,7 +413,7 @@ do_FeaturePlot <- function(sample,
             ggplot2::ggtitle(iteration)
 
           p.loop <- modify_continuous_legend(p = p.loop,
-                                             legend.title = feature,
+                                             legend.title = if (!is.null(legend.title)) {legend.title},
                                              legend.aes = "color",
                                              legend.type = legend.type,
                                              legend.position = legend.position,
@@ -486,6 +489,7 @@ do_FeaturePlot <- function(sample,
                    legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by)){
     p <- modify_continuous_legend(p = p,
+                                  legend.title = if (!is.null(legend.title)) {legend.title},
                                   legend.aes = "color",
                                   legend.type = legend.type,
                                   legend.position = legend.position,

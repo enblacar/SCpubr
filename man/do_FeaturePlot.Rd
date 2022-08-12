@@ -20,6 +20,7 @@ do_FeaturePlot(
   font.size = 14,
   font.type = "sans",
   legend = TRUE,
+  legend.title = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 1.5,
@@ -38,7 +39,7 @@ do_FeaturePlot(
   viridis_color_map = "D",
   raster = FALSE,
   raster.dpi = 1024,
-  plot_cell_borders = FALSE,
+  plot_cell_borders = TRUE,
   border.size = 1.5,
   border.color = "black",
   verbose = TRUE
@@ -74,6 +75,8 @@ do_FeaturePlot(
 \item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
 
 \item{legend}{Whether to plot the legend or not.}
+
+\item{legend.title}{Character. Title for the legend.}
 
 \item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
 

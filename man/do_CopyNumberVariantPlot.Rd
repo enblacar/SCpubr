@@ -14,7 +14,7 @@ do_CopyNumberVariantPlot(
   chromosome_focus = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
-  legend.length = 30,
+  legend.length = 20,
   legend.width = 1,
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
@@ -24,7 +24,12 @@ do_CopyNumberVariantPlot(
   pt.size = 1,
   font.type = "sans",
   border.size = 1.5,
-  rotate_x_axis_labels = TRUE
+  border.color = "black",
+  rotate_x_axis_labels = TRUE,
+  plot_cell_borders = TRUE,
+  symmetrical_scale = TRUE,
+  legend.title = NULL,
+  na.value = "grey75"
 )
 }
 \arguments{
@@ -60,7 +65,17 @@ do_CopyNumberVariantPlot(
 
 \item{border.size}{Thickness of the border around cells in all plots.}
 
+\item{border.color}{Character. Color for the border of the cells.}
+
 \item{rotate_x_axis_labels}{Logical. Rotate x axis labels 90 degrees in the dotplot plots.}
+
+\item{plot_cell_borders}{Logical. Whether to plot borders around cells.}
+
+\item{symmetrical_scale}{Logical. Whether to make the FeaturePlot and GeyserPlot have a symmetrical scale.}
+
+\item{legend.title}{Character. Title for the legend.}
+
+\item{na.value}{Character. Color for NA values.}
 }
 \value{
 A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..

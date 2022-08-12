@@ -65,7 +65,7 @@ do_BeeSwarmPlot <- function(sample,
                             verbose = TRUE,
                             raster = FALSE,
                             raster.dpi = 300,
-                            plot_cell_borders = FALSE,
+                            plot_cell_borders = TRUE,
                             border.size = 1.5,
                             border.color = "black",
                             pt.size = 2){

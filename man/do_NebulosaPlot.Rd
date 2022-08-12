@@ -33,7 +33,7 @@ do_NebulosaPlot(
   font.size = 14,
   font.type = "sans",
   legend.position = "bottom",
-  plot_cell_borders = FALSE,
+  plot_cell_borders = TRUE,
   border.size = 1.5,
   border.color = "black",
   viridis_color_map = "D",

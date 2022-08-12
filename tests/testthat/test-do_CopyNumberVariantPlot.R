@@ -5,7 +5,6 @@ infercnv_object <- test_list$infercnv_object
 infercnv_object_metacells <- test_list$infercnv_object_metacells
 human_chr_locations <- test_list$human_chr_locations
 library("Seurat")
-message("CNV")
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
