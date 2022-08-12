@@ -4,7 +4,7 @@
 <!-- badges: end -->
   
 # SCpubr
-<img src="man/figures/SCpubr_logo.png" align="center" height="100%" width = "100%"/>
+<span class="border-0"><img src="man/figures/logo.png" class="mx-auto d-block" alt="" style="box-shadow: none; width: 100%"/></span>
 
 This package aims to provide a streamlined way of generating publication ready plots for known **S**ingle-**C**ell visualizations in a "**pub**lication **r**eady" format (**SCpubr**). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. 
 
