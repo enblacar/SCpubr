@@ -21,6 +21,12 @@ testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
                                    activities = activities,
                                    legend.position = "right")
   testthat::expect_type(out, "list")
+
+  out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                   activities = activities,
+                                   legend.position = "right",
+                                   split.by = "orig.ident")
+  testthat::expect_type(out, "list")
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
