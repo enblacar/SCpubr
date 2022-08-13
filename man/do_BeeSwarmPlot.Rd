@@ -44,7 +44,7 @@ do_BeeSwarmPlot(
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{feature_to_rank}{Features for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.}
+\item{feature_to_rank}{Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.}
 
 \item{group.by}{Variable you want the cells to be grouped for.}
 

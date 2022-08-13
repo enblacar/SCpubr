@@ -5,7 +5,7 @@
 #' @param assay Assay to use. Defauls to the current assay.
 #' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
-#' @param feature_to_rank Features for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
+#' @param feature_to_rank Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
 #' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
 #' @param group.by Variable you want the cells to be grouped for.
 #' @param colors.use Named vector with the color assignment.
@@ -129,6 +129,11 @@ do_BeeSwarmPlot <- function(sample,
   # Check font.type.
   if (!(font.type %in% c("sans", "serif", "mono"))){
     stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+  }
+
+  # Check font.type.
+  if (length(feature_to_rank) > 1){
+    stop("Please provide only one feature to feature_to_rank.", call. = F)
   }
 
   # Check the legend.type.

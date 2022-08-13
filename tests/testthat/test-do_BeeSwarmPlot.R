@@ -82,6 +82,13 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend type", {
                                                  legend.type = "wrong"))
 })
 
+testthat::test_that("do_BeeSwarmPlot: FAIL - more than one feature", {
+  testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
+                                                 feature_to_rank = c("PC_1", "PC_2"),
+                                                 group.by = "seurat_clusters",
+                                                 continuous_feature = T))
+})
+
 testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend position", {
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "PC_1",

@@ -192,16 +192,6 @@ do_NebulosaPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
-    p <- modify_continuous_legend(p = p,
-                                  legend.aes = "color",
-                                  legend.type = legend.type,
-                                  legend.position = legend.position,
-                                  legend.length = legend.length,
-                                  legend.width = legend.width,
-                                  legend.framecolor = legend.framecolor,
-                                  legend.tickcolor = legend.tickcolor,
-                                  legend.framewidth = legend.framewidth,
-                                  legend.tickwidth = legend.tickwidth)
     # Compute the total number of plots according to whether joint is set to TRUE or not.
     if (isTRUE(joint)){
       num_plots <- length(features) + 1
@@ -217,6 +207,17 @@ do_NebulosaPlot <- function(sample,
     for (plot_num in seq(1:num_plots)){
       # Set size of dots.
       p[[plot_num]]$layers[[1]]$aes_params$size <- pt.size
+
+      p[[plot_num]] <- modify_continuous_legend(p = p[[plot_num]],
+                                                legend.aes = "color",
+                                                legend.type = legend.type,
+                                                legend.position = legend.position,
+                                                legend.length = legend.length,
+                                                legend.width = legend.width,
+                                                legend.framecolor = legend.framecolor,
+                                                legend.tickcolor = legend.tickcolor,
+                                                legend.framewidth = legend.framewidth,
+                                                legend.tickwidth = legend.tickwidth)
     }
 
     # For embeddings that are umap of tsne, we remove all axes..

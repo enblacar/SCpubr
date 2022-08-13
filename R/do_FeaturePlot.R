@@ -487,17 +487,22 @@ do_FeaturePlot <- function(sample,
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by)){
-    p <- modify_continuous_legend(p = p,
-                                  legend.title = legend.title,
-                                  legend.aes = "color",
-                                  legend.type = legend.type,
-                                  legend.position = legend.position,
-                                  legend.length = legend.length,
-                                  legend.width = legend.width,
-                                  legend.framecolor = legend.framecolor,
-                                  legend.tickcolor = legend.tickcolor,
-                                  legend.framewidth = legend.framewidth,
-                                  legend.tickwidth = legend.tickwidth)
+    counter <- 0
+    for (feature in features){
+      counter <- counter + 1
+      p[[counter]] <- modify_continuous_legend(p = p[[counter]],
+                                               legend.title = legend.title,
+                                               legend.aes = "color",
+                                               legend.type = legend.type,
+                                               legend.position = legend.position,
+                                               legend.length = legend.length,
+                                               legend.width = legend.width,
+                                               legend.framecolor = legend.framecolor,
+                                               legend.tickcolor = legend.tickcolor,
+                                               legend.framewidth = legend.framewidth,
+                                               legend.tickwidth = legend.tickwidth)
+    }
+
   }
 
   # Add custom title.
