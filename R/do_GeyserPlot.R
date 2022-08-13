@@ -42,10 +42,8 @@
 #'
 #' @return Either a plot of a list of plots, depending on the number of features provided.
 #' @export
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_GeyserPlot.R
+
 do_GeyserPlot <- function(sample,
                           features,
                           assay = NULL,
@@ -186,7 +184,7 @@ do_GeyserPlot <- function(sample,
     check_feature(sample = sample,
                   features = feature)
 
-    
+
     # If the user wants additional coloring, if not default to feature or group.by.
     if (isTRUE(scale_type == "continuous")){
       if (is.null(color.by)){
@@ -201,7 +199,7 @@ do_GeyserPlot <- function(sample,
         }
       }
     }
-    
+
     # Get a vector of all dimensional reduction compontents.
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
@@ -211,13 +209,13 @@ do_GeyserPlot <- function(sample,
         # Get the reduction in which the feature is, if this is the case.
         reduction <- red
       }
-      
+
       if (color.by %in% col.names){
         # Get the reduction in which the feature is, if this is the case.
         reduction_color.by <- red
       }
     }
-    
+
 
     # Generate a column for the color.by parameter that will be added later on to the data dataframe.
     if (isTRUE(color.by %in% colnames(sample@meta.data))){
