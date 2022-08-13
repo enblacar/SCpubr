@@ -1,4 +1,3 @@
-library(magrittr)
 small_a549_colData_df <- readRDS(system.file("extdata",
                                              "small_a549_dex_pdata.rda",
                                              package = "monocle3"))
