@@ -77,7 +77,7 @@ do_TFActivityPlot <- function(sample,
                               geyser_order_by_mean = TRUE){
 
   #Checks for packages.
-  #check_suggests(function_name = "do_FeaturePlot")
+  check_suggests(function_name = "do_TFActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
@@ -162,8 +162,8 @@ do_TFActivityPlot <- function(sample,
           as.data.frame() %>%
           tibble::rownames_to_column(var = "cell") %>%
           dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
-              tibble::rownames_to_column(var = "cell")},
-              by = "cell") %>%
+                                tibble::rownames_to_column(var = "cell")},
+                                by = "cell") %>%
           dplyr::select(-.data$cell) %>%
           tidyr::pivot_longer(cols = -"group.by",
                               names_to = "source",

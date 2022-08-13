@@ -24,8 +24,10 @@ check_suggests <- function(function_name){
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
                    "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"),
-                   "do_PseudotimePlot" = c("SeuratWrappers", "monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
+                   "do_PseudotimePlot" = c("monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
                    "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"),
+                   "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -65,8 +67,10 @@ state_dependencies <- function(func_name = NULL){
                    "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
                    "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "ggtext", "purrr"),
                    "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang", "ggtext"),
-                   "do_PseudotimePlot" = c("SeuratWrappers", "monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
-                   "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"))
+                   "do_PseudotimePlot" = c("monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
+                   "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"),
+                   "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
