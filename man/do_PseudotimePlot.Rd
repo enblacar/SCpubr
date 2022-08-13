@@ -30,7 +30,9 @@ do_PseudotimePlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   viridis_color_map = "D",
-  plot_cell_borders = TRUE
+  plot_cell_borders = TRUE,
+  nbin = 24,
+  ctrl = 100
 )
 }
 \arguments{
@@ -42,9 +44,9 @@ do_PseudotimePlot(
 
 \item{group.by}{Character. Metadata variable to use as grouping if monocle3 clusters are not computed.}
 
-\item{compute_monocle_partitions}{Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.}
+\item{compute_monocle_partitions}{Logical. Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.}
 
-\item{compute_monocle_clusters}{Whether to make monocle3 to re-compute clustering}
+\item{compute_monocle_clusters}{Logical. Whether to make monocle3 to re-compute clustering}
 
 \item{trajectory_graph_color}{Character. Color of the trajectory graph plotted on top of the UMAP.}
 
@@ -68,13 +70,17 @@ do_PseudotimePlot(
 
 \item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+\item{legend.framewidth, legend.tickwidth}{Numeric. Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+\item{legend.framecolor, legend.tickcolor}{Numeric. Color of the lines of the box in the legend.}
 
-\item{viridis_color_map}{Character. Viridis color map to use in the FeaturePlot and dotplot for the enrichment scores.}
+\item{viridis_color_map}{Character. Viridis color map to use in the FeaturePlot for the enrichment scores.}
 
 \item{plot_cell_borders}{Logical. Whether to plot borders around the cells.}
+
+\item{nbin}{Numeric. Number of bins to use while computing enrichment scores.}
+
+\item{ctrl}{Numeric. Number of control genes per bin while computing enrichment scores.}
 }
 \value{
 A list containing a collection of ggplot2 objects.

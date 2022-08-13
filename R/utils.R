@@ -1189,6 +1189,8 @@ modify_string <- function(string_to_modify){
 #' @param sample  Seurat object.
 #' @param list_genes  Named list of genes to compute enrichment for.
 #' @param verbose  Verbose output.
+#' @param nbin Number of bins.
+#' @param ctrl Number of control genes.
 #'
 #' @return None
 #' @noRd
@@ -1196,7 +1198,7 @@ modify_string <- function(string_to_modify){
 #' \dontrun{
 #' TBD
 #' }
-compute_enrichment_scores <- function(sample, list_genes, verbose = F){
+compute_enrichment_scores <- function(sample, list_genes, verbose = F, nbin = 24, ctrl = 100){
   if (!is.list(list_genes) & is.character(list_genes)){
     list_genes <- list("Input" = list_genes)
   }
@@ -1209,13 +1211,17 @@ compute_enrichment_scores <- function(sample, list_genes, verbose = F){
                                        list_markers,
                                        name = celltype,
                                        search = TRUE,
-                                       verbose = T)
+                                       verbose = T,
+                                       nbin = nbin,
+                                       ctrl = ctrl)
     } else {
       sample <- suppressMessages(suppressWarnings(Seurat::AddModuleScore(sample,
                                                                          list_markers,
                                                                          name = celltype,
                                                                          search = TRUE,
-                                                                         verbose = F)))
+                                                                         verbose = F,
+                                                                         nbin = nbin,
+                                                                         ctrl = ctrl)))
     }
 
 
