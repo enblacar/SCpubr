@@ -266,8 +266,9 @@ do_FeaturePlot <- function(sample,
                          scale = "color")
         } else if (isTRUE(symmetrical_scale)){
           p.build <- ggplot2::ggplot_build(p)
-          limits <- c(min(p.build$plot$data[, features]),
-                      max(p.build$plot$data[, features]))
+          feature.select <- gsub("-", ".", features)
+          limits <- c(min(p.build$plot$data[, feature.select]),
+                      max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
@@ -283,8 +284,9 @@ do_FeaturePlot <- function(sample,
                                     scale = "color")
         } else if (isTRUE(symmetrical_scale)){
           p.build <- ggplot2::ggplot_build(p[[counter]])
-          limits <- c(min(p.build$plot$data[, features[counter]]),
-                      max(p.build$plot$data[, features[counter]]))
+          feature.select <- gsub("-", ".",  features[counter])
+          limits <- c(min(p.build$plot$data[, feature.select]),
+                      max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p[[counter]] <- add_scale(p = p[[counter]],
                                     function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
@@ -404,8 +406,9 @@ do_FeaturePlot <- function(sample,
                               scale = "color")
         } else if (isTRUE(symmetrical_scale)){
           p.build <- ggplot2::ggplot_build(p.loop)
-          limits <- c(min(p.build$plot$data[, feature.use]),
-                      max(p.build$plot$data[, feature.use]))
+          feature.select <- gsub("-", ".", feature.use)
+          limits <- c(min(p.build$plot$data[, feature.select]),
+                      max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),

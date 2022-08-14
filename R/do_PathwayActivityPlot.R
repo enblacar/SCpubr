@@ -138,13 +138,10 @@ do_PathwayActivityPlot <- function(sample,
   if (isTRUE(plot_FeaturePlots)){
     list.features <- list()
     for (pathway in sort(rownames(sample))){
-      limits <- c(min(sample@assays$progeny@scale.data[pathway, ]),
-                  max(sample@assays$progeny@scale.data[pathway, ]))
-      end_value <- max(abs(limits))
-
       p <- do_FeaturePlot(sample = sample,
                           features = pathway,
                           assay = "progeny",
+                          reduction = "umap",
                           slot = "scale.data",
                           pt.size = pt.size,
                           order = FALSE,
@@ -153,6 +150,7 @@ do_PathwayActivityPlot <- function(sample,
                           plot_cell_borders = plot_cell_borders,
                           font.size = font.size,
                           font.type = font.type,
+                          legend.title = paste0(pathway, " activity"),
                           legend.position = legend.position,
                           legend.type = legend.type,
                           legend.framecolor = legend.framecolor,
@@ -161,11 +159,7 @@ do_PathwayActivityPlot <- function(sample,
                           legend.tickwidth = legend.tickwidth,
                           legend.length = legend.length,
                           legend.width = legend.width)
-      p <- add_scale(p = p,
-                     scale = "color",
-                     function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
-                                                                   limits = c(-end_value, end_value)))
-      p$guides$colour$title <- paste0(pathway, " activity")
+
       list.features[[pathway]] <- p
     }
     list.out[["feature_plots"]] <- list.features
