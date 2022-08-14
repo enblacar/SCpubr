@@ -91,7 +91,7 @@ do_TFActivityPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
-                       "symmetrical_scale" = geyser_symmetrical_scale)
+                       "symmetrical_scale" = symmetrical_scale)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
