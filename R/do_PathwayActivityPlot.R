@@ -7,7 +7,7 @@
 #' @param plot_FeaturePlots Logical. Compute output feature plots for each of the top regulons.
 #' @param plot_Heatmaps Logical. Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
 #' @param plot_GeyserPlots Logical. Compute output GeyserPlots for each of the top regulons and group.by variable.
-#' @param row_title,column_title Character. Title for the rows in the heatmap.
+#' @param row_title,column_title Character. Title for the rows in the heatmap. Not working if split.by is used.
 #' @param transpose Logical. Whether to transpose the heatmap matrix.
 #' @param cluster_cols,cluster_rows Logical. Whether to cluster rows and columns in the heatmap.
 #' @param row_names_rot,column_names_rot Numeric. Angle of rotation of the column and row names. Suggested: either 0 or 90.
@@ -29,14 +29,13 @@
 #' @param geyser_color.by Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
 #' @param symmetrical_scale Logical. Whether the geyser and feature plot have a symmetrical color scale.
 #' @param geyser_order_by_mean Logical. Whether to order the X axis by the mean of the values.
+#' @param geyser_scale_type Character. Type of scale to use. Either "continuous" or "categorical.
 #'
 #' @return A list containing several output plots according to the user's specifications.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_PathwayActivityPlot.R
+
 do_PathwayActivityPlot <- function(sample,
                                    activities,
                                    group.by = NULL,
@@ -72,7 +71,8 @@ do_PathwayActivityPlot <- function(sample,
                                    font.type = "sans",
                                    rotate_x_axis_labels = FALSE,
                                    symmetrical_scale = TRUE,
-                                   geyser_order_by_mean = TRUE){
+                                   geyser_order_by_mean = TRUE,
+                                   geyser_scale_type = "continuous"){
 
   #Checks for packages.
   check_suggests(function_name = "do_PathwayActivityPlot")
@@ -115,7 +115,8 @@ do_PathwayActivityPlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
                          "legend.framecolor" = legend.framecolor,
-                         "geyser_color.by" = geyser_color.by)
+                         "geyser_color.by" = geyser_color.by,
+                         "geyser_scale_type" = geyser_scale_type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%v%` <- ComplexHeatmap::`%v%`
@@ -177,6 +178,7 @@ do_PathwayActivityPlot <- function(sample,
                          pt.size = pt.size,
                          border.size = border.size,
                          symmetrical_scale = symmetrical_scale,
+                         scale_type = geyser_scale_type,
                          order_by_mean = geyser_order_by_mean,
                          plot_cell_borders = plot_cell_borders,
                          font.size = font.size,
@@ -301,19 +303,8 @@ do_PathwayActivityPlot <- function(sample,
                   as.matrix()
         })
 
-        row_title <- {
-          if (!(is.null(row_title))){
-            row_title
-          } else {
-            ""
-          }}
-
-        column_title <- {
-          if (!(is.null(column_title))){
-            column_title
-          } else {
-            ""
-          }}
+        row_title <- split.value
+        column_title <- ""
 
         if (isTRUE(transpose)){
           data <- t(data)
