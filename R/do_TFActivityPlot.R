@@ -28,7 +28,7 @@
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param rotate_x_axis_labels Logical. Whether to rotate the X axis names in the dot plot.
 #' @param geyser_color.by Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
-#' @param geyser_symmetrical_scale Logical. Whether the geyser plot has a symmetrical color scale.
+#' @param symmetrical_scale Logical. Whether the geyser and feature plot has a symmetrical color scale.
 #' @param geyser_order_by_mean Logical. Whether to order the X axis by the mean of the values.
 #'
 #' @return A list containing several output plots according to the user's specifications.
@@ -73,7 +73,7 @@ do_TFActivityPlot <- function(sample,
                               font.size = 14,
                               font.type = "sans",
                               rotate_x_axis_labels = FALSE,
-                              geyser_symmetrical_scale = TRUE,
+                              symmetrical_scale = TRUE,
                               geyser_order_by_mean = TRUE){
 
   #Checks for packages.
@@ -91,7 +91,7 @@ do_TFActivityPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
-                       "geyser_symmetrical_scale" = geyser_symmetrical_scale)
+                       "symmetrical_scale" = geyser_symmetrical_scale)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -209,6 +209,7 @@ do_TFActivityPlot <- function(sample,
                           pt.size = pt.size,
                           order = FALSE,
                           border.size = border.size,
+                          symmetrical_scale = symmetrical_scale,
                           plot_cell_borders = plot_cell_borders,
                           font.size = font.size,
                           font.type = font.type,
@@ -241,7 +242,7 @@ do_TFActivityPlot <- function(sample,
                          color.by = geyser_color.by,
                          pt.size = pt.size,
                          border.size = border.size,
-                         symmetrical_scale = geyser_symmetrical_scale,
+                         symmetrical_scale = symmetrical_scale,
                          order_by_mean = geyser_order_by_mean,
                          plot_cell_borders = plot_cell_borders,
                          font.size = font.size,
@@ -260,7 +261,7 @@ do_TFActivityPlot <- function(sample,
                          rotate_x_axis_labels = rotate_x_axis_labels)
       list.geysers[[regulon]] <- p
     }
-    list.out[["geysers"]] <- list.geysers
+    list.out[["geyser_plots"]] <- list.geysers
   }
 
 

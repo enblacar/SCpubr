@@ -16,6 +16,7 @@ do_FeaturePlot(
   cells.highlight = NULL,
   idents.highlight = NULL,
   dims = c(1, 2),
+  symmetrical_scale = FALSE,
   pt.size = 0.75,
   font.size = 14,
   font.type = "sans",
@@ -42,6 +43,7 @@ do_FeaturePlot(
   plot_cell_borders = TRUE,
   border.size = 1.5,
   border.color = "black",
+  na.value = "grey75",
   verbose = TRUE
 )
 }
@@ -107,6 +109,8 @@ do_FeaturePlot(
 \item{border.color}{Character. Color to use for the border of the cells.}
 
 \item{verbose}{Whether to show warnings.}
+
+\item{symmetrical_scale.}{Logical. Whether to plot the features with a symmetrical scale.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

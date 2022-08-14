@@ -40,7 +40,7 @@ do_TFActivityPlot(
   font.size = 14,
   font.type = "sans",
   rotate_x_axis_labels = FALSE,
-  geyser_symmetrical_scale = TRUE,
+  symmetrical_scale = TRUE,
   geyser_order_by_mean = TRUE
 )
 }
@@ -101,7 +101,7 @@ do_TFActivityPlot(
 
 \item{rotate_x_axis_labels}{Logical. Whether to rotate the X axis names in the dot plot.}
 
-\item{geyser_symmetrical_scale}{Logical. Whether the geyser plot has a symmetrical color scale.}
+\item{symmetrical_scale}{Logical. Whether the geyser and feature plot has a symmetrical color scale.}
 
 \item{geyser_order_by_mean}{Logical. Whether to order the X axis by the mean of the values.}
 }

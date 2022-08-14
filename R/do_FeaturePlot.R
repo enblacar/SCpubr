@@ -11,6 +11,7 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
+#' @param symmetrical_scale. Logical. Whether to plot the features with a symmetrical scale.
 #' @param pt.size Point size.
 #' @param font.size Base font.size of the figure.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
@@ -48,6 +49,7 @@ do_FeaturePlot <- function(sample,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2),
+                           symmetrical_scale = FALSE,
                            pt.size = 0.75,
                            font.size = 14,
                            font.type = "sans",
@@ -74,6 +76,7 @@ do_FeaturePlot <- function(sample,
                            plot_cell_borders = TRUE,
                            border.size = 1.5,
                            border.color = "black",
+                           na.value = "grey75",
                            verbose = TRUE){
 
 
@@ -94,7 +97,8 @@ do_FeaturePlot <- function(sample,
                        "verbose" = verbose,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
-                       "order" = order)
+                       "order" = order,
+                       "symmetrical_scale" = symmetrical_scale)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -132,7 +136,8 @@ do_FeaturePlot <- function(sample,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
                          "border.color" = border.color,
-                         "legend.title" = legend.title)
+                         "legend.title" = legend.title,
+                         "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -164,7 +169,7 @@ do_FeaturePlot <- function(sample,
 
   # Check border color.
   check_colors(border.color, parameter_name = "border.color")
-
+  check_colors(na.value, parameter_name = "na.value")
   # Check viridis_color_map.
   check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
@@ -249,12 +254,47 @@ do_FeaturePlot <- function(sample,
                              raster.dpi = c(raster.dpi, raster.dpi)) &
       # Remove Seurat::FeaturePlot() default plot title.
       ggplot2::ggtitle("")
-    # Add viridis and supress warnings.
-    p <- add_scale(p = p,
-                   num_plots = length(features),
-                   function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                                                 option = viridis_color_map),
-                   scale = "color")
+
+    # Add color scales.
+    num_plots <- length(features)
+    for (counter in seq(1, num_plots)){
+      if (num_plots == 1){
+        if (isFALSE(symmetrical_scale)){
+          p <- add_scale(p = p,
+                         function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                       option = viridis_color_map),
+                         scale = "color")
+        } else if (isTRUE(symmetrical_scale)){
+          p.build <- ggplot2::ggplot_build(p)
+          limits <- c(min(p.build$plot$data[, features]),
+                      max(p.build$plot$data[, features]))
+          end_value <- max(abs(limits))
+          p <- add_scale(p = p,
+                         function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                                                       limits = c(-end_value, end_value),
+                                                                       na.value = na.value),
+                         scale = "color")
+        }
+      } else if (num_plots > 1){
+        if (isFALSE(symmetrical_scale)){
+          p[[counter]] <- add_scale(p = p[[counter]],
+                                    function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                                  option = viridis_color_map),
+                                    scale = "color")
+        } else if (isTRUE(symmetrical_scale)){
+          p.build <- ggplot2::ggplot_build(p[[counter]])
+          limits <- c(min(p.build$plot$data[, features[counter]]),
+                      max(p.build$plot$data[, features[counter]]))
+          end_value <- max(abs(limits))
+          p[[counter]] <- add_scale(p = p[[counter]],
+                                    function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                                                                  limits = c(-end_value, end_value),
+                                                                                  na.value = na.value),
+                                    scale = "color")
+        }
+      }
+    }
+
     # Special patches for diffusion maps: Adding "DC" labels to the axis.
     if (reduction == "diffusion"){
       p <- p &
@@ -354,11 +394,25 @@ do_FeaturePlot <- function(sample,
                                       pt.size = pt.size,
                                       raster = raster,
                                       raster.dpi = c(raster.dpi, raster.dpi))
-        p.loop <- add_scale(p = p.loop,
-                            num_plots = length(feature),
-                            function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                                                          option = viridis_color_map),
-                            scale = "color")
+
+        # Add scale.
+
+        if (isFALSE(symmetrical_scale)){
+          p.loop <- add_scale(p = p.loop,
+                              function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                            option = viridis_color_map),
+                              scale = "color")
+        } else if (isTRUE(symmetrical_scale)){
+          p.build <- ggplot2::ggplot_build(p.loop)
+          limits <- c(min(p.build$plot$data[, feature.use]),
+                      max(p.build$plot$data[, feature.use]))
+          end_value <- max(abs(limits))
+          p.loop <- add_scale(p = p.loop,
+                              function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                                                            limits = c(-end_value, end_value),
+                                                                            na.value = na.value),
+                              scale = "color")
+        }
         p.loop <- p.loop +
                   ggplot2::ggtitle("")
 
@@ -403,12 +457,22 @@ do_FeaturePlot <- function(sample,
                                         pt.size = pt.size,
                                         raster = raster,
                                         raster.dpi = c(raster.dpi, raster.dpi))
-          p.loop <- add_scale(p = p.loop,
-                              num_plots = length(feature),
-                              function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                                                            option = viridis_color_map,
-                                                                            limits = limits),
-                              scale = "color")
+
+          if (isFALSE(symmetrical_scale)){
+            p.loop <- add_scale(p = p.loop,
+                                function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                              option = viridis_color_map,
+                                                                              limits = limits),
+                                scale = "color")
+          } else if (isTRUE(symmetrical_scale)){
+            p.build <- ggplot2::ggplot_build(p.loop)
+            end_value <- max(abs(limits))
+            p.loop <- add_scale(p = p.loop,
+                                function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                                                              limits = c(-end_value, end_value),
+                                                                              na.value = na.value),
+                                scale = "color")
+          }
           p.loop <- p.loop +
                     ggplot2::ggtitle(iteration)
 
