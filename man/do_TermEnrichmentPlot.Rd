@@ -70,7 +70,7 @@ A ggplot2 object with enriched terms.
 Compute the enriched terms for a given list of genes.
 }
 \examples{
-\dontrun{
+\donttest{
   genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
   # General use case.
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,

@@ -60,7 +60,7 @@ A ComplexHeatmap object.
 This function computes the enrichment scores for the cells using \link[Seurat]{AddModuleScore} and then aggregates the scores by the metadata variables provided by the user and displays it as a heatmap, computed by \link[ComplexHeatmap]{Heatmap}.
 }
 \examples{
-\dontrun{
+\donttest{
   # Define list of genes.
   genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
                 "CD14+ Mono" = c("CD14", "LYZ"),

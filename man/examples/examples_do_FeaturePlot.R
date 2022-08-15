@@ -1,4 +1,4 @@
-\dontrun{
+\donttest{
   # Regular FeaturePlot.
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "nCount_RNA")

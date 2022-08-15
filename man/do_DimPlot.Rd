@@ -127,7 +127,7 @@ A ggplot2 object containing a DimPlot.
 Wrapper for \link[Seurat]{DimPlot}.
 }
 \examples{
-\dontrun{
+\donttest{
 # Your Seurat object.
 sample <- my_seurat_object
 

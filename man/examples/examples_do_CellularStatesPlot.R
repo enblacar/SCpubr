@@ -1,4 +1,4 @@
-\dontrun{
+\donttest{
   # Define some gene sets to query. It has to be a named list.
   gene_set <- list("A" = Seurat::VariableFeatures(sample)[1:10],
                    "B" = Seurat::VariableFeatures(sample)[11:20],

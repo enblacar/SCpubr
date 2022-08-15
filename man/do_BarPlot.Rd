@@ -100,7 +100,7 @@ A ggplot2 object containing a Bar plot.
 Wrapper for computing publication ready bar plots.
 }
 \examples{
-\dontrun{
+\donttest{
   # Basic bar plot showing the number of items in a variable and a title.
   # Legend T/F toggles removes or keeps the legend.
   p <- SCpubr::do_BarPlot(sample = sample,

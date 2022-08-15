@@ -86,7 +86,7 @@ A ggplot2 object containing a Dot Plot.
 Wrapper for \link[Seurat]{DotPlot}.
 }
 \examples{
-\dontrun{
+\donttest{
   # Basic Dot plot.
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14")
@@ -147,6 +147,6 @@ Wrapper for \link[Seurat]{DotPlot}.
              "CST3", "PPBP")
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = genes,
-                          colors.use = c("#001219", "#e9d8a6")
+                          colors.use = c("#001219", "#e9d8a6"))
 }
 }

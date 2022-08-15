@@ -109,7 +109,7 @@ A ggplot2 object containing a Bee Swarm plot.
 BeeSwarm plot.
 }
 \examples{
-\dontrun{
+\donttest{
   # Basic Bee Swarm plot - categorical coloring.
   # This will color based on the unique values of seurat_clusters.
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,

@@ -1,4 +1,4 @@
-\dontrun{
+\donttest{
   genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
   # General use case.
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,

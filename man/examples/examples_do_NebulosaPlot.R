@@ -1,4 +1,4 @@
-\dontrun{
+\donttest{
   # Basic Nebulosa plot.
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                               features = "CD14")

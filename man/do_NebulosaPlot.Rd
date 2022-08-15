@@ -100,7 +100,7 @@ A ggplot2 object containing a Nebulosa plot.
 Wrapper for Nebulosa::plot_density in Seurat.
 }
 \examples{
-\dontrun{
+\donttest{
   # Basic Nebulosa plot.
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                               features = "CD14")

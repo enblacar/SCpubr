@@ -1,4 +1,4 @@
-\dontrun{
+\donttest{
   # Generate a plot.
   p <- SCpubr::do_DimPlot(sample = sample)
 
