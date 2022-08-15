@@ -78,7 +78,7 @@ Create correlation matrix heatmaps.
   # Modified color scale.
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   column_names_rot = 0,
-                                  colors.use = colortools::opposite("steelblue", plot = F))
+                                  colors.use = c("red", "blue"))
   p
 }
 }

@@ -117,21 +117,21 @@ Plot TF Activities from DecoupleR using Dorothea prior knowledge.
 \examples{
 \donttest{
   # Define your sample and assay.
-  sample <- your_seurat_object
-  assay <- "your_normalized_data_assay"
+  # sample <- your_seurat_object
+  # assay <- "your_normalized_data_assay"
 
   # Retrieve prior knowledge network.
-  network <- decoupleR::get_dorothea(organism = "human",
-                                     levels = c("A", "B", "C"))
-
-  # Run weighted means algorithm.
-  activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays[[assay]]@data),
-                                     network = network,
-                                     .source = "source",
-                                     .targe = "target",
-                                     .mor = "mor",
-                                     times = 100,
-                                     minsize = 5)
+  # network <- decoupleR::get_dorothea(organism = "human",
+  #                                    levels = c("A", "B", "C"))
+  #
+  # # Run weighted means algorithm.
+  # activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays[[assay]]@data),
+  #                                    network = network,
+  #                                    .source = "source",
+  #                                    .targe = "target",
+  #                                    .mor = "mor",
+  #                                    times = 100,
+  #                                    minsize = 5)
 
   # General heatmap.
   out <- SCpubr::do_TFActivityPlot(sample = sample,

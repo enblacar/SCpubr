@@ -141,7 +141,7 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
                                     cluster_cols = F,
                                     cluster_rows = T,
                                     split.by = "custom_group",
-                                    colors.use = colortools::opposite("steelblue", plot = F))
+                                    colors.use = c("red", "blue"))
   p
 }
 }

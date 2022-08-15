@@ -3,9 +3,9 @@
   pseudotime_genes <- c("CD14", "LYN")
 
   # Define your sample.
-  sample <- your_seurat_object
+  # sample <- your_seurat_object
   # Transform into CDS.
-  cds <- SeuratWrappers::as.cell_data_set(sample)
+  # cds <- SeuratWrappers::as.cell_data_set(sample)
 
   # Compute monocle clusters and partitions.
   out <- SCpubr::do_PseudotimePlot(sample = sample,
