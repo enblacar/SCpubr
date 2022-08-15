@@ -11,7 +11,7 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
-#' @param symmetrical_scale. Logical. Whether to plot the features with a symmetrical scale.
+#' @param symmetrical_scale Logical. Whether to plot the features with a symmetrical scale.
 #' @param pt.size Point size.
 #' @param font.size Base font.size of the figure.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.

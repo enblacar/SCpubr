@@ -191,7 +191,8 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p <- p1 / p2
   p
 
-  # We only have one value in orig.ident. Let's modify it so that it resembles a multi-sample Seurat object.
+  # We only have one value in orig.ident.
+  # Let's modify it so that it resembles a multi-sample Seurat object.
   sample$modified_orig.ident <- sample(x = c("Sample_A", "Sample_B", "Sample_C"),
                                        size = ncol(sample),
                                        replace = T,

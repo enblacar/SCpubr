@@ -70,6 +70,8 @@ do_FeaturePlot(
 
 \item{dims}{Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
+\item{symmetrical_scale}{Logical. Whether to plot the features with a symmetrical scale.}
+
 \item{pt.size}{Point size.}
 
 \item{font.size}{Base font.size of the figure.}
@@ -108,9 +110,9 @@ do_FeaturePlot(
 
 \item{border.color}{Character. Color to use for the border of the cells.}
 
-\item{verbose}{Whether to show warnings.}
+\item{na.value}{Character. Color for NA values.}
 
-\item{symmetrical_scale.}{Logical. Whether to plot the features with a symmetrical scale.}
+\item{verbose}{Whether to show warnings.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.
