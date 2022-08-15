@@ -24,14 +24,12 @@
 #' @param plot_cell_borders Logical. Whether to plot borders around the cells.
 #' @param nbin Numeric. Number of bins to use while computing enrichment scores.
 #' @param ctrl Numeric. Number of control genes per bin while computing enrichment scores.
+#' @param symmetrical_scale Logical. Whethter to plot enrichment as a symmetrical scale.
 #'
 #' @export
 #' @return A list containing a collection of ggplot2 objects.
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_PseudotimePlot.R
 do_PseudotimePlot <- function(sample,
                               cds,
                               pseudotime_genes,
@@ -58,6 +56,7 @@ do_PseudotimePlot <- function(sample,
                               legend.tickcolor = "white",
                               viridis_color_map = "D",
                               plot_cell_borders = TRUE,
+                              symmetrical_scale = FALSE,
                               nbin = 24,
                               ctrl = 100){
   sink(tempfile())
@@ -75,7 +74,8 @@ do_PseudotimePlot <- function(sample,
                          "label_roots" = label_roots,
                          "label_branches" = label_branches,
                          "label_leaves" = label_leaves,
-                         "plot_cell_borders" = plot_cell_borders)
+                         "plot_cell_borders" = plot_cell_borders,
+                         "symmetrical_scale" = symmetrical_scale)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("trajectory_graph_segment_size" = trajectory_graph_segment_size,
@@ -120,16 +120,24 @@ do_PseudotimePlot <- function(sample,
     # Whether to tweak or not the output partitions and clusters.
     if (isFALSE(compute_monocle_clusters) & isFALSE(compute_monocle_partitions)){
       # Tweak to modify the partitions.
-      sample[["monocle3_clusters"]] <- sample$group.by
+      sample[["monocle3_clusters"]] <- as.factor(sample$group.by)
       sample[["monocle3_partitions"]] <- 1
+      cds@clusters[["UMAP"]]$clusters <- sample$monocle3_clusters
+      cds@clusters[["UMAP"]]$partitions <- sample$monocle3_partitions
     } else if (isTRUE(compute_monocle_clusters) & isFALSE(compute_monocle_partitions)){
       cds <- monocle3::cluster_cells(cds)
       sample[["monocle3_partitions"]] <- 1
+      cds@clusters[["UMAP"]]$partitions <- sample$monocle3_partitions
+      sample[["monocle_3_clusters"]] <- cds@clusters[["UMAP"]]$clusters
     } else if (isFALSE(compute_monocle_clusters) & isTRUE(compute_monocle_partitions)){
       cds <- monocle3::cluster_cells(cds)
-      sample[["monocle3_clusters"]] <- sample$group.by
+      sample[["monocle3_clusters"]] <- factor(sample$group.by)
+      cds@clusters[["UMAP"]]$clusters <- sample$monocle3_clusters
+      sample[["monocle3_partitions"]] <- cds@clusters[["UMAP"]]$partitions
     } else if (isTRUE(compute_monocle_clusters) & isTRUE(compute_monocle_partitions)){
       cds <- monocle3::cluster_cells(cds)
+      sample[["monocle_3_clusters"]] <- cds@clusters[["UMAP"]]$clusters
+      sample[["monocle3_partitions"]] <- cds@clusters[["UMAP"]]$partitions
     }
 
     cds <- suppressWarnings(monocle3::learn_graph(cds))
@@ -145,11 +153,9 @@ do_PseudotimePlot <- function(sample,
                               trajectory_graph_color = trajectory_graph_color,
                               trajectory_graph_segment_size = trajectory_graph_segment_size,
                               cell_size = pt.size)
-    build <- ggplot2::ggplot_build(p)
-    sample$partitions <-  build$plot$data$cell_color
 
     p.out <- do_DimPlot(sample,
-                        group.by = "partitions",
+                        group.by = "monocle3_partitions",
                         plot_cell_borders = plot_cell_borders,
                         border.size = border.size,
                         pt.size = pt.size,
@@ -176,11 +182,37 @@ do_PseudotimePlot <- function(sample,
 
     # Order cells based on the cell with the highest value of the enrichment scores.
     if (isTRUE(is_max_score_the_start)){
-      root_cells <- colnames(sample)[which.max(sample$Enrichment)]
+      cell_use <- sample@meta.data %>%
+                  dplyr::select("Enrichment", "group.by") %>%
+                  tibble::rownames_to_column(var = "cells") %>%
+                  dplyr::filter(.data$group.by == {sample@meta.data %>%
+                                                   dplyr::select("monocle3_partitions", "Enrichment", "group.by") %>%
+                                                   dplyr::group_by(.data$group.by) %>%
+                                                   dplyr::summarise(mean = mean(.data$Enrichment)) %>%
+                                                   dplyr::arrange(dplyr::desc(.data$mean)) %>%
+                                                   dplyr::slice_head(n = 1) %>%
+                                                   dplyr::pull("group.by") %>%
+                                                   as.character()}) %>%
+                  dplyr::arrange(dplyr::desc(.data$Enrichment)) %>%
+                  dplyr::slice_head(n = 1) %>%
+                  dplyr::pull(.data$cells)
     } else if (isFALSE(is_max_score_the_start)){
-      root_cells <- colnames(sample)[which.min(sample$Enrichment)]
+      cell_use <- sample@meta.data %>%
+                  dplyr::select("Enrichment", "group.by") %>%
+                  tibble::rownames_to_column(var = "cells") %>%
+                  dplyr::filter(.data$group.by == {sample@meta.data %>%
+                                                   dplyr::select("monocle3_partitions", "Enrichment", "group.by") %>%
+                                                   dplyr::group_by(.data$group.by) %>%
+                                                   dplyr::summarise(mean = mean(.data$Enrichment)) %>%
+                                                   dplyr::arrange(dplyr::desc(.data$mean)) %>%
+                                                   dplyr::slice_tail(n = 1) %>%
+                                                   dplyr::pull("group.by") %>%
+                                                   as.character()}) %>%
+                  dplyr::arrange(dplyr::desc(.data$Enrichment)) %>%
+                  dplyr::slice_tail(n = 1) %>%
+                  dplyr::pull(.data$cells)
     }
-    cds.ordered <- monocle3::order_cells(cds, root_cells = root_cells)
+    cds.ordered <- monocle3::order_cells(cds, root_cells = cell_use)
 
     #Plot Pseudotime.
     p.pseudotime <- monocle3::plot_cells(cds.ordered,
@@ -222,6 +254,7 @@ do_PseudotimePlot <- function(sample,
                                    viridis_color_map = viridis_color_map,
                                    font.size = font.size,
                                    font.type = font.type,
+                                   symmetrical_scale = symmetrical_scale,
                                    legend.length = legend.length,
                                    legend.width = legend.width,
                                    legend.framewidth = legend.framewidth,
