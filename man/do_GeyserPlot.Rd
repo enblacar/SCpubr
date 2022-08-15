@@ -18,7 +18,7 @@ do_GeyserPlot(
   plot_cell_borders = TRUE,
   jitter = 0.45,
   pt.size = 1,
-  border.size = 1.5,
+  border.size = 2,
   border.color = "black",
   legend.position = "bottom",
   legend.width = 1,

@@ -61,7 +61,7 @@ do_NebulosaPlot <- function(sample,
                              font.type = "sans",
                              legend.position = "bottom",
                              plot_cell_borders = TRUE,
-                             border.size = 1.5,
+                             border.size = 2,
                              border.color = "black",
                              viridis_color_map = "D",
                              verbose = TRUE){

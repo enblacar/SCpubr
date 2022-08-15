@@ -23,7 +23,7 @@ do_CopyNumberVariantPlot(
   font.size = 14,
   pt.size = 1,
   font.type = "sans",
-  border.size = 1.5,
+  border.size = 2,
   border.color = "black",
   rotate_x_axis_labels = TRUE,
   plot_cell_borders = TRUE,

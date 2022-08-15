@@ -24,7 +24,7 @@ do_TFActivityPlot(
   cell_size = 5,
   pt.size = 1,
   plot_cell_borders = TRUE,
-  border.size = 1.5,
+  border.size = 2,
   na.value = "grey75",
   legend.position = "bottom",
   heatmap.legend.length = 75,

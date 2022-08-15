@@ -35,7 +35,7 @@ do_CellularStatesPlot(
   marginal.group = TRUE,
   plot_cell_borders = TRUE,
   plot_enrichment_scores = FALSE,
-  border.size = 1.5,
+  border.size = 2,
   border.color = "black",
   pt.size = 2,
   raster = F,

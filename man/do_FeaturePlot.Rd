@@ -17,7 +17,7 @@ do_FeaturePlot(
   idents.highlight = NULL,
   dims = c(1, 2),
   symmetrical_scale = FALSE,
-  pt.size = 0.75,
+  pt.size = 1,
   font.size = 14,
   font.type = "sans",
   legend = TRUE,
@@ -41,7 +41,7 @@ do_FeaturePlot(
   raster = FALSE,
   raster.dpi = 1024,
   plot_cell_borders = TRUE,
-  border.size = 1.5,
+  border.size = 2,
   border.color = "black",
   na.value = "grey75",
   verbose = TRUE

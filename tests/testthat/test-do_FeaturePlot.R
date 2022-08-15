@@ -39,6 +39,17 @@ testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_FeaturePlot: PASS - symmetrical_scale", {
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T, idents.highlight = c("1", "3"))
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T, split.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_FeaturePlot: PASS - multiple features", {
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = c("nCount_RNA", "nFeature_RNA"))
