@@ -33,7 +33,8 @@
 #' @param border.color Character. Color to use for the border of the cells.
 #' @param verbose Whether to show warnings.
 #' @param order Logical. Whether to order the cells based on expression.
-
+#' @param na.value Character. Color for NA values.
+#'
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'

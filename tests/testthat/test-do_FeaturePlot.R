@@ -43,6 +43,9 @@ testthat::test_that("do_FeaturePlot: PASS - symmetrical_scale", {
   p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T)
   testthat::expect_type(p, "list")
 
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("CD14", "nCount_RNA"), symmetrical_scale = T)
+  testthat::expect_type(p, "list")
+
   p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T, idents.highlight = c("1", "3"))
   testthat::expect_type(p, "list")
 
