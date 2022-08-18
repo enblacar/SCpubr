@@ -1,0 +1,60 @@
+\dontrun{
+  # Seurat sample.
+  # sample <- your_seurat_object
+
+  # Set the identities correctly.
+  # Seurat::Idents(sample) <- sample$seurat_clusters
+
+  # Compute DE genes and transform to a tibble.
+  # de_genes <- tibble::tibble(Seurat::FindAllMarkers(object = sample))
+
+  # Default output.
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes)
+
+  p
+
+  # Increase the number of top DE genes by cluster.
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes,
+                                  top_genes = 10)
+
+  p
+
+  # Modify the row and column titles and the rotation.
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes,
+                                  column_title = "Title A",
+                                  row_title_p_values = "Title B",
+                                  row_title_logfc = "Title C",
+                                  row_title_expression = "Title D",
+                                  row_title_rotation = 0)
+
+  p
+
+  sample$modified_orig.ident <- sample(x = c("Sample_A", "Sample_B", "Sample_C"),
+                                       size = ncol(sample),
+                                       replace = T,
+                                       prob = c(0.2, 0.7, 0.1))
+
+  # Add more layers of mean expression with group.by.
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes,
+                                  group.by = c("seurat_clusters",
+                                               "modified_orig.ident",
+                                               "orig.ident"),
+                                  row_title_expression = c("",
+                                                           "Title A",
+                                                           "Title B"))
+
+  p
+
+  # Change the viridis scales.
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes,
+                                  viridis_map_pvalues = "C",
+                                  viridis_map_logfc = "E",
+                                  viridis_map_expression = "D")
+
+  p
+}

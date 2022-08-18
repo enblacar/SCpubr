@@ -54,7 +54,7 @@ This function is an adaptation of colortools package. As the package was removed
 an adaptation of the package into a single function. Original code, developed by Gaston Sanchez, can be found in: \url{https://github.com/gastonstat/colortools}
 }
 \examples{
-\donttest{
+\dontrun{
   # Generate a color wheel based on a single value.
   colors <- SCpubr::do_ColorPalette(colors.use = "steelblue")
   p <- SCpubr::do_ColorPalette(colors.use = "steelblue",

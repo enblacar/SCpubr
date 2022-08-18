@@ -46,7 +46,7 @@ Nothing.
 Save a plot as png, pdf and svg.
 }
 \examples{
-\donttest{
+\dontrun{
   # Generate a plot.
   p <- SCpubr::do_DimPlot(sample = sample)
 

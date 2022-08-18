@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
 # Your Seurat object.
 sample <- my_seurat_object
 

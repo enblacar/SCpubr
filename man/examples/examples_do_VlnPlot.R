@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Basic violin plots.
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = "nCount_RNA")

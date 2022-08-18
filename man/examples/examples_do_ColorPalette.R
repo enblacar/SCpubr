@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Generate a color wheel based on a single value.
   colors <- SCpubr::do_ColorPalette(colors.use = "steelblue")
   p <- SCpubr::do_ColorPalette(colors.use = "steelblue",

@@ -89,7 +89,7 @@ A ggplot2 object containing a Violin Plot.
 Wrapper for \link[Seurat]{VlnPlot}.
 }
 \examples{
-\donttest{
+\dontrun{
   # Basic violin plots.
   p <- SCpubr::do_VlnPlot(sample = sample,
                           features = "nCount_RNA")

@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Genes to use.
   pseudotime_genes <- c("CD14", "LYN")
 

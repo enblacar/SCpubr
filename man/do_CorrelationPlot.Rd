@@ -51,7 +51,7 @@ A ComplexHeatmap object.
 Create correlation matrix heatmaps.
 }
 \examples{
-\donttest{
+\dontrun{
   # Default values.
   p <- SCpubr::do_CorrelationPlot(sample = sample)
   p

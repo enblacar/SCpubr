@@ -84,7 +84,7 @@ A list containing Feature Plots for different chromosome regions and correspondi
 Display CNV scores from inferCNV as Feature Plots.
 }
 \examples{
-\donttest{
+\dontrun{
   # This function expects that you have run inferCNV on your
   # own and you have access to the output object.
 

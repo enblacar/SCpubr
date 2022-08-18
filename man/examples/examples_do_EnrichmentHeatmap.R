@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Define list of genes.
   genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
                 "CD14+ Mono" = c("CD14", "LYZ"),

@@ -115,7 +115,7 @@ A list containing several output plots according to the user's specifications.
 Plot TF Activities from DecoupleR using Dorothea prior knowledge.
 }
 \examples{
-\donttest{
+\dontrun{
   # Define your sample and assay.
   # sample <- your_seurat_object
   # assay <- "your_normalized_data_assay"

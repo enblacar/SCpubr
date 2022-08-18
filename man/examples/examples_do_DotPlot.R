@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Basic Dot plot.
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14")

@@ -121,7 +121,7 @@ A ggplot2 object containing a Feature Plot.
 Wrapper for \link[Seurat]{FeaturePlot}.
 }
 \examples{
-\donttest{
+\dontrun{
   # Regular FeaturePlot.
   p <- SCpubr::do_FeaturePlot(sample = sample,
                               features = "nCount_RNA")

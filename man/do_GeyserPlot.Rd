@@ -126,7 +126,7 @@ a continuous variable (same as Y axis or different) or a categorical one (same a
 Special thanks to Christina Blume for coming up with the name of the plot.
 }
 \examples{
-\donttest{
+\dontrun{
   # Geyser plot with categorical color scale.
   p1 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "nCount_RNA",

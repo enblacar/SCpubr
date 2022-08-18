@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Basic Bee Swarm plot - categorical coloring.
   # This will color based on the unique values of seurat_clusters.
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,

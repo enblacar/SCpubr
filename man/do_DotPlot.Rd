@@ -86,7 +86,7 @@ A ggplot2 object containing a Dot Plot.
 Wrapper for \link[Seurat]{DotPlot}.
 }
 \examples{
-\donttest{
+\dontrun{
   # Basic Dot plot.
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14")

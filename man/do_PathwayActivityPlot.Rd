@@ -112,7 +112,7 @@ A list containing several output plots according to the user's specifications.
 Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
 }
 \examples{
-\donttest{
+\dontrun{
   # Define your sample and assay.
   # sample <- your_seurat_object
   # assay <- "your_normalized_data_assay"

@@ -92,7 +92,7 @@ A list containing a collection of ggplot2 objects.
 Compute Pseudotime analysis plots.
 }
 \examples{
-\donttest{
+\dontrun{
   # Genes to use.
   pseudotime_genes <- c("CD14", "LYN")
 

@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Default values.
   p <- SCpubr::do_CorrelationPlot(sample = sample)
   p

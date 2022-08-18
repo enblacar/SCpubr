@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # Geyser plot with categorical color scale.
   p1 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "nCount_RNA",

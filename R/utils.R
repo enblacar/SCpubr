@@ -28,6 +28,7 @@ check_suggests <- function(function_name){
                    "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"),
                    "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
                    "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -70,7 +71,8 @@ state_dependencies <- function(func_name = NULL){
                    "do_PseudotimePlot" = c("monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "ggtext", "patchwork"),
                    "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"),
                    "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"))
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -942,6 +944,10 @@ compute_barplot_annotation <- function(sample,
 #' @param legend.framecolor Color of the lines of the box in the legend.
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param na.value Color for NAs
+#' @param use_viridis Logical. Whether to use viridis color palettes.
+#' @param viridis_color_map Character. Palette to use.
+#' @param viridis_direction Numeric. Direction of the scale.
+#' @param zeros_are_white Logical.
 #' @return None
 #' @noRd
 #' @examples
@@ -957,6 +963,11 @@ heatmap_inner <- function(data,
                           cell_size = 5,
                           range.data = NULL,
                           outlier.data = FALSE,
+                          outlier.up.color = "#4b010b",
+                          outlier.down.color = "#02294b",
+                          outlier.up.label = NULL,
+                          outlier.down.label = NULL,
+                          round_value_outlier = 2,
                           column_title = NULL,
                           row_title = NULL,
                           row_names_side = "left",
@@ -980,7 +991,11 @@ heatmap_inner <- function(data,
                           row_annotation_side = "right",
                           column_annotation = NULL,
                           column_annotation_side = "top",
-                          na.value = "grey75"){
+                          na.value = "grey75",
+                          use_viridis = FALSE,
+                          viridis_color_map = "D",
+                          viridis_direction = 1,
+                          zeros_are_white = FALSE){
   `%>%`<- purrr::`%>%`
   min_value <- min(data)
   max_value <- max(data)
@@ -1029,48 +1044,78 @@ heatmap_inner <- function(data,
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
-      blue_color <- "#02294b"
-      red_color <- "#4b010b"
       breaks <- c(-abs_value - 0.00001, breaks, abs_value + 0.00001)
-      colors.use <- c(blue_color, colors.use, red_color)
-      labels <- c(paste0("< ", -abs_value), labels, paste0("> ", abs_value))
+      colors.use <- c(outlier.down.color, colors.use, outlier.up.color)
+      labels <- c(if(is.null(outlier.down.label)){paste0("< ", -round(abs_value, round_value_outlier))} else {outlier.down.label},
+                  labels,
+                  if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
     }
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_neg"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1)
-    counter <- 0
-    while (sum(duplicated(breaks)) > 0){
-      counter <- counter + 1
-      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0), 1 + counter)
+    if (isTRUE(zeros_are_white)){
+      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), (-abs_value * 0.01), 0), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), (-abs_value * 0.01), 0), 1 + counter)
+      }
+    } else {
+      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1 + counter)
+      }
     }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(1, 2)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
-      blue_color <- "#02294b"
       breaks <- c(-abs_value - 0.00001, breaks)
-      colors.use <- c(blue_color, colors.use)
-      labels <- c(paste0("< ", -abs_value), labels)
+      colors.use <- c(outlier.down.color, colors.use)
+      labels <- c(if(is.null(outlier.down.label)){paste0("< ", -round(abs_value, round_value_outlier))} else {outlier.down.label},
+                  labels)
     }
     names(colors.use) <- labels
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_pos"){
-    breaks <-  round(c(0, (abs_value / 2), abs_value), 1)
-    counter <- 0
-    while (sum(duplicated(breaks)) > 0){
-      counter <- counter + 1
-      breaks <-  round(c(0, (abs_value / 2), abs_value), 1 + counter)
+    if (isTRUE(zeros_are_white)){
+      breaks <-  round(c(0, (abs_value * 0.01), (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(0, (abs_value * 0.01), (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
+      }
+    } else {
+      breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
+      }
     }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use[c(2, 3)])(length(breaks))
     if (isTRUE(outlier.data) & !is.null(range.data)){
-      red_color <- "#4b010b"
       breaks <- c(breaks, abs_value + 0.00001)
-      colors.use <- c(colors.use, red_color)
-      labels <- c(labels, paste0("> ", abs_value))
+      colors.use <- c(colors.use, outlier.up.color)
+      labels <- c(labels,
+                  if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
     }
     names(colors.use) <- labels
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
+    if (isTRUE(use_viridis)){
+      if (isTRUE(zeros_are_white) & data_range %in% c("only_pos", "only_neg")){
+        col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
+                                                                                              option = viridis_color_map,
+                                                                                              direction = viridis_direction)))
+      } else {
+        col_fun <- circlize::colorRamp2(breaks = breaks, colors = viridis::viridis(n = length(breaks),
+                                                                                   option = viridis_color_map,
+                                                                                   direction = viridis_direction))
+      }
+    } else {
+      col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
+    }
   }
 
 

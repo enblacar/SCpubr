@@ -1,4 +1,4 @@
-\donttest{
+\dontrun{
   # This function expects that you have run inferCNV on your
   # own and you have access to the output object.
 
