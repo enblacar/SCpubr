@@ -927,7 +927,7 @@ compute_barplot_annotation <- function(sample,
 #' - "only_neg": Will compute a color scale based only on the negative values. Will take the negative end of colors.use as well. Use when the values to plot are only negative
 #' @param colors.use Vector of 2 colors defining a gradient. White color will be inserted in the middle.
 #' @param grid_color Color for the grid.
-#' @param range.data Numeric. Max value that will determine the span of the color scale.
+#' @param range.data Numeric. Min or max value (data_range = "only_pos" or "only_neg") or vector of min and max (data_range = "both") that will determine the span of the color scale.
 #' @param outlier.data Logical. Whether there is outlier data to take into account.
 #' @param fontsize General fontsize of the plot.
 #' @param cell_size Size of each of the cells in the heatmap.
@@ -995,11 +995,10 @@ heatmap_inner <- function(data,
                           use_viridis = FALSE,
                           viridis_color_map = "D",
                           viridis_direction = 1,
-                          zeros_are_white = FALSE){
+                          zeros_are_white = FALSE,
+                          symmetrical_scale = FALSE){
   `%>%`<- purrr::`%>%`
-  min_value <- min(data)
-  max_value <- max(data)
-  abs_value <- max(c(abs(min_value), abs(max_value)))
+
 
   if (legend.position %in% c("top", "bottom")){
     legend_width <- grid::unit(legend.length, "mm")
@@ -1017,29 +1016,60 @@ heatmap_inner <- function(data,
     title_position <- "topleft"
   }
 
+  if (!is.null(range.data)){
+
+    if (data_range == "both"){
+      if (isTRUE(symmetrical_scale)){
+        abs_value <- abs(range.data)
+        q100 <- abs(range.data)
+        q0 <- -abs(range.data)
+      } else {
+        q0 <- range.data[1]
+        q100 <- range.data[2]
+      }
+    } else{
+      abs_value <- abs(range.data)
+    }
+  } else {
+    q0 <- min(data)
+    q100 <- max(data)
+    abs_value <- max(c(abs(q0), abs(q100)))
+  }
+
+  q50 <- mean(c(q0, q100))
+  q25 <- mean(c(q0, q50))
+  q75 <- mean(c(q50, q100))
+
   # Checks.
-  if (data_range == "only_neg" & min_value >= 0){
+  if (data_range == "only_neg" & q0 >= 0){
     stop("There are no negative values in the matrix.")
   }
 
-  if (data_range == "only_pos" & max_value < 0){
+  if (data_range == "only_pos" & q100 < 0){
     stop("There are no positive values in the matrix.")
   }
 
-  if (!is.null(range.data)){
-    abs_value <- abs(range.data)
-  }
+
   if (is.null(colors.use)){
     colors.use <- c("#023f73", "white", "#7a0213")
   } else {
     colors.use <- c(colors.use[1], "white", colors.use[2])
   }
   if (data_range == "both"){
-    breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
-    counter <- 0
-    while (sum(duplicated(breaks)) > 0){
-      counter <- counter + 1
-      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1 + counter)
+    if (isTRUE(symmetrical_scale)){
+      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1 + counter)
+      }
+    } else if (isFALSE(symmetrical_scale)){
+      breaks <-  round(c(q0, q25, q50, q75, q100), 1)
+      counter <- 0
+      while (sum(duplicated(breaks)) > 0){
+        counter <- counter + 1
+        breaks <-  round(c(q0, q25, q50, q75, q100), 1 + counter)
+      }
     }
     labels <- as.character(breaks)
     colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
@@ -1050,8 +1080,8 @@ heatmap_inner <- function(data,
                   labels,
                   if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
     }
+
     names(colors.use) <- labels
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_neg"){
     if (isTRUE(zeros_are_white)){
       breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), (-abs_value * 0.01), 0), 1)
@@ -1077,7 +1107,6 @@ heatmap_inner <- function(data,
                   labels)
     }
     names(colors.use) <- labels
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   } else if (data_range == "only_pos"){
     if (isTRUE(zeros_are_white)){
       breaks <-  round(c(0, (abs_value * 0.01), (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
@@ -1103,19 +1132,20 @@ heatmap_inner <- function(data,
                   if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
     }
     names(colors.use) <- labels
-    if (isTRUE(use_viridis)){
-      if (isTRUE(zeros_are_white) & data_range %in% c("only_pos", "only_neg")){
-        col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
-                                                                                              option = viridis_color_map,
-                                                                                              direction = viridis_direction)))
-      } else {
-        col_fun <- circlize::colorRamp2(breaks = breaks, colors = viridis::viridis(n = length(breaks),
-                                                                                   option = viridis_color_map,
-                                                                                   direction = viridis_direction))
-      }
+  }
+
+  if (isTRUE(use_viridis)){
+    if (isTRUE(zeros_are_white) & data_range %in% c("only_pos", "only_neg")){
+      col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
+                                                                                            option = viridis_color_map,
+                                                                                            direction = viridis_direction)))
     } else {
-      col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
+      col_fun <- circlize::colorRamp2(breaks = breaks, colors = viridis::viridis(n = length(breaks),
+                                                                                 option = viridis_color_map,
+                                                                                 direction = viridis_direction))
     }
+  } else {
+    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
   }
 
 
