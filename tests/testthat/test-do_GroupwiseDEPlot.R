@@ -22,6 +22,22 @@ testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
   testthat::expect_type(p, "S4")
 })
 
+testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes,
+                                  assay = "SCT",
+                                  slot = "data",
+                                  legend.position = "right")
+  testthat::expect_type(p, "S4")
+
+  p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                  de_genes = de_genes_scaled,
+                                  assay = "SCT",
+                                  slot = "data",
+                                  legend.position = "right")
+  testthat::expect_type(p, "S4")
+})
+
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - multiple grouping", {
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
