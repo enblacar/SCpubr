@@ -49,12 +49,6 @@ do_GroupwiseDEPlot <- function(sample,
                                row_title_side = "left",
                                row_title_rotation = 90,
                                cell_size = 5){
-  #sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
-  #de_genes <- Seurat::FindAllMarkers(sample)
-  #de_genes <- tibble::tibble(de_genes)
-
-  #de_genes <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/de_genes.rds")
-
   # Checks for packages.
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.

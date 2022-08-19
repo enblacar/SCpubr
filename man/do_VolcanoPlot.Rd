@@ -56,7 +56,7 @@ do_VolcanoPlot(
 
 \item{add_gene_tags}{Logical. Whether to plot the top genes.}
 
-\item{order_tags_by}{Character. Either "both", "pvalue" or "logfc".}
+\item{order_tags_by}{Character. Either "both", "p_value" or "logfc".}
 
 \item{n_genes}{Numeric. Number of top genes in each side to plot.}
 
@@ -72,6 +72,22 @@ Compute a Volcano plot out of DE genes.
 }
 \examples{
 \dontrun{
-TBD
+  # Generate a volcano plot.
+  p <- SCpubr::do_VolcanoPlot(sample = sample,
+                              de_genes = de_genes)
+  p
+
+  # Modify cutoffs.
+  p <- SCpubr::do_VolcanoPlot(sample = sample,
+                              de_genes = de_genes,
+                              pval_cutoff = 1e-15,
+                              FC_cutoff = 0.2)
+  p
+
+  # Modify number of gene tags.
+  p <- SCpubr::do_VolcanoPlot(sample = sample,
+                              de_genes = de_genes,
+                              n_genes = 15)
+  p
 }
 }

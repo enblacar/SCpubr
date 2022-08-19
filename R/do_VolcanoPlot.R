@@ -14,7 +14,7 @@
 #' @param line_color Character. Color for the lines.
 #' @param line_size Numeric. Size of the lines in the plot.
 #' @param add_gene_tags Logical. Whether to plot the top genes.
-#' @param order_tags_by Character. Either "both", "pvalue" or "logfc".
+#' @param order_tags_by Character. Either "both", "p_value" or "logfc".
 #' @param n_genes Numeric. Number of top genes in each side to plot.
 #' @param use_labels Logical. Whether to use labels instead of text for the tags.
 #' @param colors.use Character. Color to generate a tetradic color scale with.
@@ -22,10 +22,7 @@
 #' @return A volcano plot as a ggplot2 object.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_VolcanoPlot.R
 do_VolcanoPlot <- function(sample,
                            de_genes,
                            pval_cutoff = 0.05,
@@ -46,14 +43,6 @@ do_VolcanoPlot <- function(sample,
                            n_genes = 5,
                            use_labels = FALSE,
                            colors.use = "steelblue"){
-  #sample <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/sc_dataset.rds")
-  #de_genes <- readRDS("/b06x-isilon/b06x-g/G703/eblanco/projects/test_SC_datasets/pairwise_de_genes.rds")
-  #de_genes <- Seurat::FindMarkers(object = sample,
-  #                                ident.1 = "0",
-   #                               ident.2 = "1",
-   #                               logfc.threshold = 0)
-
-
   # Checks for packages.
   check_suggests(function_name = "do_VolcanoPlot")
   # Check if the sample provided is a Seurat object.
@@ -88,7 +77,7 @@ do_VolcanoPlot <- function(sample,
   check_colors(line_color, parameter_name = "line_color")
   check_colors(colors.use, parameter_name = "colors.use")
 
-  if (!(order_tags_by %in% c("both", "pvalue", "logfc"))){
+  if (!(order_tags_by %in% c("both", "p_value", "logfc"))){
     stop("Please use either both, pvalue or logfc in order_tags_by.", call. = FALSE)
   }
 
