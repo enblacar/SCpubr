@@ -50,9 +50,9 @@ do_CorrelationPlot(
 
 \item{legend.position}{Character. Location of the legend.}
 
-\item{heatmap.legend.length, heatmap.legend.width}{Numeric. Width and length of the legend in the heatmap.}
+\item{legend.length, legend.width}{Numeric. Width and length of the legend in the heatmap.}
 
-\item{heatmap.legend.framecolor}{Character. Color of the edges and ticks of the legend in the heatmap.}
+\item{legend.framecolor}{Character. Color of the edges and ticks of the legend in the heatmap.}
 }
 \value{
 A ComplexHeatmap object.

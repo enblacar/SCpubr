@@ -29,6 +29,7 @@ check_suggests <- function(function_name){
                    "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
                    "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
+                   "do_VolcanoPlot" = c("plyr", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -72,7 +73,8 @@ state_dependencies <- function(func_name = NULL){
                    "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist", "ggtext"),
                    "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
                    "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang"))
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang"),
+                   "do_VolcanoPlot" = c("plyr", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){

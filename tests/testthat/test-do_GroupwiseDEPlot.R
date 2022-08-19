@@ -1,5 +1,5 @@
 sample <- SCpubr:::use_dataset()
-library(magrittr)
+`%>%` <- purrr::`%>%`
 de_genes <- Seurat::FindAllMarkers(object = sample, assay = "SCT", verbose = F, slot = "data")
 de_genes <- tibble::tibble(de_genes)
 de_genes <- de_genes %>% dplyr::mutate(p_val_adj = stats::runif(n = nrow(de_genes), min = 0, max = 0.05))

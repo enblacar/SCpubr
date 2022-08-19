@@ -49,7 +49,8 @@ Suggests:
     liana (>= 0.1.5),
     ggdist,
     tibble,
-    monocle3 (>= 1.2.9)
+    monocle3 (>= 1.2.9),
+    plyr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 

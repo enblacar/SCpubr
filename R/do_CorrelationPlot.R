@@ -12,8 +12,8 @@
 #' @param colors.use Vector of 2 colors to use to generate the color scale.
 #' @param cell_size Numeric. Size of each cell in the heatmap.
 #' @param na.value Value for NAs.
-#' @param heatmap.legend.length,heatmap.legend.width Numeric. Width and length of the legend in the heatmap.
-#' @param heatmap.legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
+#' @param legend.length,legend.width Numeric. Width and length of the legend in the heatmap.
+#' @param legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
 #' @param legend.position Character. Location of the legend.
 #'
 #' @return A ComplexHeatmap object.
