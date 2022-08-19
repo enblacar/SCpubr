@@ -9,16 +9,20 @@ do_CorrelationPlot(
   mode = "hvg",
   assay = NULL,
   group.by = NULL,
-  column_title = NULL,
-  row_title = NULL,
+  column_title = "",
+  row_title = "",
   cluster_cols = TRUE,
   cluster_rows = TRUE,
   legend_name = "Pearson coef.",
   row_names_rot = 0,
-  column_names_rot = 90,
+  column_names_rot = 0,
   colors.use = NULL,
   cell_size = 5,
-  na.value = "grey75"
+  na.value = "grey75",
+  legend.position = "bottom",
+  legend.length = 75,
+  legend.width = 5,
+  legend.framecolor = "black"
 )
 }
 \arguments{
@@ -43,6 +47,12 @@ do_CorrelationPlot(
 \item{cell_size}{Numeric. Size of each cell in the heatmap.}
 
 \item{na.value}{Value for NAs.}
+
+\item{legend.position}{Character. Location of the legend.}
+
+\item{heatmap.legend.length, heatmap.legend.width}{Numeric. Width and length of the legend in the heatmap.}
+
+\item{heatmap.legend.framecolor}{Character. Color of the edges and ticks of the legend in the heatmap.}
 }
 \value{
 A ComplexHeatmap object.

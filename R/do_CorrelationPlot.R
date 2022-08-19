@@ -12,6 +12,10 @@
 #' @param colors.use Vector of 2 colors to use to generate the color scale.
 #' @param cell_size Numeric. Size of each cell in the heatmap.
 #' @param na.value Value for NAs.
+#' @param heatmap.legend.length,heatmap.legend.width Numeric. Width and length of the legend in the heatmap.
+#' @param heatmap.legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
+#' @param legend.position Character. Location of the legend.
+#'
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -20,16 +24,20 @@ do_CorrelationPlot <- function(sample,
                                mode = "hvg",
                                assay = NULL,
                                group.by = NULL,
-                               column_title = NULL,
-                               row_title = NULL,
+                               column_title = "",
+                               row_title = "",
                                cluster_cols = TRUE,
                                cluster_rows = TRUE,
                                legend_name = "Pearson coef.",
                                row_names_rot = 0,
-                               column_names_rot = 90,
+                               column_names_rot = 0,
                                colors.use = NULL,
                                cell_size = 5,
-                               na.value = "grey75"){
+                               na.value = "grey75",
+                               legend.position = "bottom",
+                               legend.length = 75,
+                               legend.width = 5,
+                               legend.framecolor = "black"){
 
   # Checks for packages.
   check_suggests(function_name = "do_CorrelationPlot")
@@ -65,79 +73,70 @@ do_CorrelationPlot <- function(sample,
 
   if (mode == "hvg"){
     if (is.null(group.by)){
-      aggr_entities <- levels(sample)
       sample@meta.data[, "dummy"] <- sample@active.ident
       group.by <- "dummy"
     } else {
-      if (is.factor(sample@meta.data[, group.by])){
-        aggr_entities <- levels(sample@meta.data[, group.by])
-      } else {
-        aggr_entities <- sort(unique(sample@meta.data[, group.by]))
-      }
+      sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
     }
     # Generate a correlation matrix of the HVG.
     variable_genes <- Seurat::VariableFeatures(sample)
 
     # Subset sample according to the variable genes.
-    sample.variable <- sample[variable_genes, ]
+    sample <- sample[variable_genes, ]
     # Scale the data
-    sample.variable <- Seurat::ScaleData(sample.variable, verbose = F)
+    sample <- Seurat::ScaleData(sample, verbose = F)
 
-    expr_mat <- data.frame("rownames" = rownames(sample.variable))
+    expr_mat <- data.frame("rownames" = rownames(sample))
 
-
-    # Iterate over each marker gene list.
-    for (celltype in aggr_entities){
-
-      # Subset only the cells for the cluster.
-      subset <- subset(sample.variable, !!rlang::sym(group.by) == celltype)
-      # Retrieve which cells are assigned to the cluster.
-      expr_scores <- rowMeans(as.matrix(subset@assays[[assay]]@scale.data))
-
-      # Append the scores.
-      expr_mat[[celltype]] <- expr_scores
-    }
-    subset <- NULL
-    rownames(expr_mat) <- expr_mat$rownames
-    expr_mat$rownames <- NULL
-
-    cor_mat <- round(stats::cor(expr_mat), digits = 2)
-
-    range <- max(abs(cor_mat))
-
-    row_title <- {
-      if (!(is.null(row_title))){
-        row_title
-      } else {
-        ""
-      }}
-    column_title <- {
-      if (!(is.null(column_title))){
-        column_title
-      } else {
-        ""
-      }}
-    out <- heatmap_inner(cor_mat,
-                         legend_name = legend_name,
+    # Retrieve correlation matrix.
+    out <- sample@meta.data %>%
+           dplyr::select(group.by) %>%
+           tibble::rownames_to_column(var = "cell") %>%
+           dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
+                                                      assay = assay,
+                                                      slot = "scale.data") %>%
+                                 as.matrix() %>%
+                                 t() %>%
+                                 as.data.frame() %>%
+                                 tibble::rownames_to_column(var = "cell") %>%
+                                 tidyr::pivot_longer(-.data$cell,
+                                                     names_to = "gene",
+                                                     values_to = "expression")},
+                            by = "cell") %>%
+           dplyr::select(-.data$cell) %>%
+           dplyr::group_by(.data[[group.by]], .data$gene) %>%
+           dplyr::summarise(mean_expression = mean(.data$expression)) %>%
+           tidyr::pivot_wider(names_from = group.by,
+                              values_from = "mean_expression") %>%
+           as.data.frame() %>%
+           tibble::column_to_rownames(var = "gene") %>%
+           as.matrix() %>%
+           stats::cor() %>%
+           round(digits = 2) %>%
+           heatmap_inner(legend_name = legend_name,
                          column_title = column_title,
                          row_title = row_title,
                          row_title_side = "right",
                          row_title_rotation = 0,
                          column_names_rot = column_names_rot,
                          row_names_rot = row_names_rot,
-                         range.data = range,
+                         range.data = c(-1, 1),
                          cluster_columns = cluster_cols,
                          cluster_rows = cluster_rows,
                          colors.use = colors.use,
                          cell_size = cell_size,
-                         na.value = na.value)
-    h <- out[["heatmap"]]
-    h_legend <- out[["legend"]]
+                         na.value = na.value,
+                         legend.position = legend.position,
+                         legend.length = legend.length,
+                         legend.width = legend.width,
+                         legend.framecolor = legend.framecolor)
+
     ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
     suppressWarnings({
       grDevices::pdf(NULL)
-      h <- ComplexHeatmap::draw(h,
-                                heatmap_legend_list = h_legend,
+      h <- ComplexHeatmap::draw(out$heatmap,
+                                heatmap_legend_list = out$legend,
+                                heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
                                 padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
       grDevices::dev.off()
     })
