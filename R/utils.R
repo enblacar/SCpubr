@@ -1020,15 +1020,21 @@ heatmap_inner <- function(data,
 
     if (data_range == "both"){
       if (isTRUE(symmetrical_scale)){
-        abs_value <- abs(range.data)
-        q100 <- abs(range.data)
-        q0 <- -abs(range.data)
+        abs_value <- max(abs(range.data))
+        q100 <- abs(abs_value)
+        q0 <- -abs(abs_value)
       } else {
         q0 <- range.data[1]
         q100 <- range.data[2]
       }
-    } else{
+    } else if (data_range == "only_pos"){
       abs_value <- abs(range.data)
+      q0 <- 0
+      q100 <- abs_value
+    } else if (data_range == "only_neg"){
+      abs_value <- abs(range.data)
+      q100 <- 0
+      q0 <- abs_value
     }
   } else {
     q0 <- min(data)
