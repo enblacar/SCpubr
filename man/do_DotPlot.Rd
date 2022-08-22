@@ -31,7 +31,12 @@ do_DotPlot(
   cluster.idents = FALSE,
   flip = FALSE,
   rotate_x_labels = NULL,
-  scale.by = "size"
+  scale.by = "size",
+  use_viridis = TRUE,
+  viridis_color_map = "G",
+  viridis_scale_direction = -1,
+  na.value = "grey75",
+  dot_border = TRUE
 )
 }
 \arguments{
@@ -78,6 +83,14 @@ do_DotPlot(
 \item{rotate_x_labels}{Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.}
 
 \item{scale.by}{Whether to scale the size of the dots by radius or size aesthetic.}
+
+\item{use_viridis}{Logical. Whether to use viridis color scale.}
+
+\item{na.value}{Character. Color for NAs.}
+
+\item{dot_border}{Logical. Whether to plot a border around dots.}
+
+\item{viridis_color_map.}{Character. Viridis scale to use.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.

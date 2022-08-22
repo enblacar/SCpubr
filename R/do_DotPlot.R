@@ -24,6 +24,10 @@
 #' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
 #' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
 #' @param scale.by Whether to scale the size of the dots by radius or size aesthetic.
+#' @param use_viridis Logical. Whether to use viridis color scale.
+#' @param viridis_color_map. Character. Viridis scale to use.
+#' @param na.value Character. Color for NAs.
+#' @param dot_border Logical. Whether to plot a border around dots.
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -55,7 +59,12 @@ do_DotPlot <- function(sample,
                        cluster.idents = FALSE,
                        flip = FALSE,
                        rotate_x_labels = NULL,
-                       scale.by = "size"){
+                       scale.by = "size",
+                       use_viridis = TRUE,
+                       viridis_color_map = "G",
+                       viridis_scale_direction = -1,
+                       na.value = "grey75",
+                       dot_border = TRUE){
     # Checks for packages.
     check_suggests(function_name = "do_DotPlot")
     # Check the assay.
@@ -67,7 +76,9 @@ do_DotPlot <- function(sample,
     logical_list <- list("legend" = legend,
                          "flip" = flip,
                          "cluster.idents" = cluster.idents,
-                         "rotate_x_labels" = rotate_x_labels)
+                         "rotate_x_labels" = rotate_x_labels,
+                         "use_viridis" = use_viridis,
+                         "dot_border" = dot_border)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -75,7 +86,8 @@ do_DotPlot <- function(sample,
                          "legend.framewidth" = legend.framewidth,
                          "legend.tickwidth" = legend.tickwidth,
                          "legend.length" = legend.length,
-                         "legend.width" = legend.width)
+                         "legend.width" = legend.width,
+                         "viridis_scale_direction" = viridis_scale_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -90,7 +102,8 @@ do_DotPlot <- function(sample,
                            "legend.framecolor" = legend.framecolor,
                            "legend.tickcolor" = legend.tickcolor,
                            "legend.type" = legend.type,
-                           "font.type" = font.type)
+                           "font.type" = font.type,
+                           "viridis_color_map" = viridis_color_map)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -98,7 +111,7 @@ do_DotPlot <- function(sample,
     features <- remove_duplicated_features(features = features)
 
     # Check that flip is not set to TRUE and features is not a named list.
-    if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = F)}
+    if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = FALSE)}
     # Check that split.by is set and the user has not provided a correct vector of colors.
     if (!(is.null(split.by))){
       if (length(colors.use) != length(as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1])))){
@@ -112,7 +125,11 @@ do_DotPlot <- function(sample,
     }
     # Check font.type.
     if (!(font.type %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = FALSE)
+    }
+
+    if (!(viridis_scale_direction %in% c(1, -1))){
+      stop("Please provide a value for viridis_scale_direction of -1 or 1.", call. = FALSE)
     }
 
     # Check colors.
@@ -121,6 +138,7 @@ do_DotPlot <- function(sample,
     # Check the colors provided to legend.framecolor and legend.tickcolor.
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+    check_colors(na.value, parameter_name = "na.value")
 
     # Check the legend.type.
     if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
@@ -149,8 +167,36 @@ do_DotPlot <- function(sample,
                          split.by = split.by,
                          dot.scale = dot.scale,
                          cluster.idents = cluster.idents,
-                         scale.by = scale.by) &
-         ggplot2::theme_minimal(base_size = font.size) &
+                         scale.by = scale.by)
+    if (isTRUE(dot_border)){
+      suppressMessages({
+        p <- p +
+          ggplot2::geom_point(mapping = ggplot2::aes(x = p$data$features.plot,
+                                                     y = p$data$id,
+                                                     fill = p$data$avg.exp.scaled,
+                                                     size = p$data$pct.exp),
+                              shape = 21) +
+          ggplot2::scale_size_continuous(range = c(0, dot.scale))
+      })
+
+      p$layers[[1]] <- NULL
+    }
+    if (isTRUE(use_viridis)){
+      if (isFALSE(dot_border)){
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                     option = viridis_color_map,
+                                                                     direction = -1),
+                       scale = "color")
+      } else if (isTRUE(dot_border)){
+        p <- p +
+             ggplot2::scale_fill_viridis_c(na.value = na.value,
+                                           option = viridis_color_map,
+                                           direction = -1)
+      }
+    }
+    p <- p +
+         ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, face = "bold", color = "black"),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
@@ -174,7 +220,7 @@ do_DotPlot <- function(sample,
     # Add leyend modifiers.
     p <- modify_continuous_legend(p = p,
                                   legend.title = "Avg. Expression",
-                                  legend.aes = "color",
+                                  legend.aes = if (isTRUE(dot_border)) {"fill"} else {"color"},
                                   legend.type = legend.type,
                                   legend.position = legend.position,
                                   legend.length = legend.length,
@@ -189,6 +235,13 @@ do_DotPlot <- function(sample,
          ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
                                                       title.position = "top",
                                                       title.hjust = 0.5))
+    if (isTRUE(dot_border)){
+      p <- p +
+           ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
+                                                        title.position = "top",
+                                                        title.hjust = 0.5,
+                                                        override.aes = ggplot2::aes(fill = "black")))
+    }
 
     if (!is.null(xlab)){
       p <- p & ggplot2::xlab(xlab)
