@@ -454,9 +454,9 @@ do_DimPlot <- function(sample,
   # Add theme settings to all plots.
   p <- p &
     ggplot2::theme_minimal(base_size = font.size) &
-    ggplot2::theme(plot.title = ggtext::element_markdown(face = "bold", hjust = hjust_use),
-                   plot.subtitle = ggtext::element_markdown(hjust = 0),
-                   plot.caption = ggtext::element_markdown(hjust = 1),
+    ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = hjust_use),
+                   plot.subtitle = ggplot2::element_text(hjust = 0),
+                   plot.caption = ggplot2::element_text(hjust = 1),
                    plot.title.position = "plot",
                    plot.caption.position = "plot",
                    text = ggplot2::element_text(family = font.type),

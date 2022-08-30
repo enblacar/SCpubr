@@ -199,9 +199,9 @@ do_BeeSwarmPlot <- function(sample,
                      caption = plot.caption) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                      plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
-                      plot.subtitle = ggtext::element_markdown(hjust = 0),
-                      plot.caption = ggtext::element_markdown(hjust = 1),
+                      plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                      plot.subtitle = ggplot2::element_text(hjust = 0),
+                      plot.caption = ggplot2::element_text(hjust = 1),
                       panel.grid = ggplot2::element_blank(),
                       plot.title.position = "plot",
                       plot.caption.position = "plot",
