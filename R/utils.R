@@ -1424,3 +1424,52 @@ modify_continuous_legend <- function(p,
 
   return(p)
 }
+
+#' Return a column with the desired values of a feature per cell.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to retrieve data.
+#' @param assay Assay to pull data from.
+#' @param slot Slot from the assay to pull data from.
+#'
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+get_data_column <- function(sample,
+                            feature,
+                            assay,
+                            slot){
+  dim_colnames <- c()
+  for(red in Seurat::Reductions(object = sample)){
+    col.names <- colnames(sample@reductions[[red]][[]])
+    dim_colnames <- c(dim_colnames, col.names)
+    if (feature %in% col.names){
+      # Get the reduction in which the feature is, if this is the case.
+      reduction <- red
+    }
+  }
+
+  if (isTRUE(feature %in% colnames(sample@meta.data))){
+    feature_column <- sample@meta.data %>%
+      dplyr::select(.data[[feature]]) %>%
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::rename("feature" = .data[[feature]])
+  } else if (isTRUE(feature %in% rownames(sample))){
+    feature_column <- Seurat::GetAssayData(object = sample,
+                                           assay = assay,
+                                           slot = slot)[feature, , drop = F] %>%
+      as.matrix() %>%
+      t() %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::rename("feature" = .data[[feature]])
+  } else if (isTRUE(feature %in% dim_colnames)){
+    feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::rename("feature" = .data[[feature]])
+  }
+  return(feature_column)
+}
