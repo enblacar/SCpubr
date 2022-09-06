@@ -122,17 +122,17 @@ do_EnrichmentHeatmap <- function(sample,
   # Compute the max values for all heatmaps.
   for (variant in group.by){
     max_value <- sample@meta.data %>%
-                 dplyr::select(dplyr::all_of(c(variant, names(list_genes)))) %>%
+                 dplyr::select(dplyr::all_of(c(variant, names(input_list)))) %>%
                  dplyr::group_by(.data[[variant]]) %>%
-                 dplyr::summarize(dplyr::across(.cols = names(list_genes), mean)) %>%
+                 dplyr::summarize(dplyr::across(.cols = names(input_list), mean)) %>%
                  tibble::column_to_rownames(var = variant) %>%
                  as.matrix() %>%
                  max()
 
     min_value <- sample@meta.data %>%
-                 dplyr::select(dplyr::all_of(c(variant, names(list_genes)))) %>%
+                 dplyr::select(dplyr::all_of(c(variant, names(input_list)))) %>%
                  dplyr::group_by(.data[[variant]]) %>%
-                 dplyr::summarize(dplyr::across(.cols = names(list_genes), mean)) %>%
+                 dplyr::summarize(dplyr::across(.cols = names(input_list), mean)) %>%
                  tibble::column_to_rownames(var = variant) %>%
                  as.matrix() %>%
                  min()
@@ -145,9 +145,9 @@ do_EnrichmentHeatmap <- function(sample,
 
   for (variant in group.by){
     data <- sample@meta.data %>%
-      dplyr::select(dplyr::all_of(c(variant, names(list_genes)))) %>%
+      dplyr::select(dplyr::all_of(c(variant, names(input_list)))) %>%
       dplyr::group_by(.data[[variant]]) %>%
-      dplyr::summarize(dplyr::across(.cols = names(list_genes), mean)) %>%
+      dplyr::summarize(dplyr::across(.cols = names(input_list), mean)) %>%
       tibble::column_to_rownames(var = variant) %>%
       as.matrix()
 
