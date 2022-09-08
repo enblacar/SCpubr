@@ -1019,7 +1019,7 @@ heatmap_inner <- function(data,
 
     if (data_range == "both"){
       if (isTRUE(symmetrical_scale)){
-        abs_value <- max(abs(range.data))
+        abs_value <- max(abs(range.data), na.rm = TRUE)
         q100 <- abs(abs_value)
         q0 <- -abs(abs_value)
       } else {
@@ -1036,9 +1036,9 @@ heatmap_inner <- function(data,
       q0 <- abs_value
     }
   } else {
-    q0 <- min(data)
-    q100 <- max(data)
-    abs_value <- max(c(abs(q0), abs(q100)))
+    q0 <- min(data, na.rm = TRUE)
+    q100 <- max(data, na.rm = TRUE)
+    abs_value <- max(c(abs(q0), abs(q100)), na.rm = TRUE)
   }
 
   q50 <- mean(c(q0, q100))
@@ -1472,4 +1472,48 @@ get_data_column <- function(sample,
       dplyr::rename("feature" = .data[[feature]])
   }
   return(feature_column)
+}
+
+#' Return a column with the desired values of a feature per cell.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to retrieve data.
+#' @param assay Assay to pull data from.
+#' @param group.by Parameter used later on for grouping.
+#' @param split.by Parameter used later on for splitting.
+#' @param slot Slot from the assay to pull data from.
+#'
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+get_data_column_in_context <- function(sample,
+                                       feature,
+                                       group.by = NULL,
+                                       split.by = NULL,
+                                       assay,
+                                       slot){
+  if (is.null(group.by)){
+    sample@meta.data[, "group.by"] <- sample@active.ident
+  } else {
+    sample@meta.data[, "group.by"] <- sample@meta.data[, group.by]
+  }
+  group.by <- "group.by"
+
+  vars <- c("cell", "group.by")
+  if (!is.null(split.by)){
+    sample@meta.data[, "split.by"] <- sample@meta.data[, split.by]
+    vars <- c(vars, "split.by")
+  }
+
+  data <- sample@meta.data %>%
+          tibble::rownames_to_column(var = "cell") %>%
+          dplyr::select(dplyr::all_of(vars)) %>%
+          dplyr::left_join(y = SCpubr:::get_data_column(sample = sample, feature = feature),
+                           by = "cell") %>%
+          dplyr::select(-.data$cell) %>%
+          tibble::as_tibble()
+
+  return(data)
 }

@@ -115,6 +115,10 @@ do_EnrichmentHeatmap <- function(sample,
     group.by <- "dummy"
   }
 
+  if (isFALSE(group.by %in% colnames(sample@meta.data))){
+    stop("Please provide a name to group.by that is a categorical column in sample@meta.data.", call. = FALSE)
+  }
+
 
 
   max_value_list <- c()
@@ -145,11 +149,11 @@ do_EnrichmentHeatmap <- function(sample,
 
   for (variant in group.by){
     data <- sample@meta.data %>%
-      dplyr::select(dplyr::all_of(c(variant, names(input_list)))) %>%
-      dplyr::group_by(.data[[variant]]) %>%
-      dplyr::summarize(dplyr::across(.cols = names(input_list), mean)) %>%
-      tibble::column_to_rownames(var = variant) %>%
-      as.matrix()
+            dplyr::select(dplyr::all_of(c(variant, names(input_list)))) %>%
+            dplyr::group_by(.data[[variant]]) %>%
+            dplyr::summarize(dplyr::across(.cols = names(input_list), mean)) %>%
+            tibble::column_to_rownames(var = variant) %>%
+            as.matrix()
 
     if (isTRUE(transpose)){
       data <- t(data)
@@ -197,7 +201,11 @@ do_EnrichmentHeatmap <- function(sample,
   # Append heatmaps vertically.
   suppressWarnings({
     for (heatmap in list.heatmaps){
-      ht_list = ht_list %v% heatmap
+      if (isTRUE(transpose)){
+        ht_list = ht_list + heatmap
+      } else if (isFALSE(transpose)){
+        ht_list = ht_list %v% heatmap
+      }
     }
   })
 
