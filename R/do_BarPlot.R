@@ -29,7 +29,7 @@
 #' @param return_data_matrix Logical. Whether to also output the data matrix used to generate the bar plot. This is useful to report it for supplementary data.
 #' @param plot_line_guides Logical. Whether to plot line guides for position = "stack".
 #' @return A ggplot2 object containing a Bar plot.
-#' @export
+#' #
 #'
 #' @example /man/examples/examples_do_BarPlot.R
 do_BarPlot <- function(sample,
