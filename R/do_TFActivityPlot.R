@@ -122,7 +122,7 @@ do_TFActivityPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%v%` <- ComplexHeatmap::`%v%`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
 
   sample[['dorothea']] <- activities %>%

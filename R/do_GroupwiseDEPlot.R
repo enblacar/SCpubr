@@ -87,7 +87,7 @@ do_GroupwiseDEPlot <- function(sample,
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
 
   `%v%` <- ComplexHeatmap::`%v%`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   `.` <- plyr::.()
 
    if (length(group.by) != length(row_title_expression)){

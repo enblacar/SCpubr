@@ -142,7 +142,7 @@ do_CellularStatesPlot <- function(sample,
 
 
     # Define pipe operator internally.
-    `%>%` <- purrr::`%>%`
+    `%>%` <- magrittr::`%>%`
 
     # Check the colors provided.
     if (is.null(colors.use)){

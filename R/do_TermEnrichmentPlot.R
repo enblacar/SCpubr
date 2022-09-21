@@ -51,7 +51,7 @@ do_TermEnrichmentPlot <- function(genes,
 
 
     # Define pipe operator internally.
-    `%>%` <- purrr::`%>%`
+    `%>%` <- magrittr::`%>%`
 
 
     # Check numeric parameters.

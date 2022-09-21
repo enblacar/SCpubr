@@ -1,3 +1,22 @@
+# Operators.
+
+#' Not in operator.
+#'
+#' @param x First item of the comparison.
+#' @param y Second item of the comparison.
+#'
+#' @return A logical vector of the items in x that are not in y.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+`%!in%` <- function(x, y) {return(!(x %in% y))}
+
+
+
+
 #' Checks for Suggests.
 #'
 #' @param function_name Function to check.
@@ -9,8 +28,8 @@
 #' }
 check_suggests <- function(function_name){
 
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify", "scattermore"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
                    "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
                    "do_DotPlot" = c("Seurat", "ggplot2"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
@@ -19,17 +38,18 @@ check_suggests <- function(function_name){
                    "do_VlnPlot" = c("Seurat", "ggplot2"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "purrr"),
-                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_VolcanoPlot" = c("plyr", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "do_RidgePlot" = c("purrr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
+                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
+                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
+                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
+                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
+                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
+                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
+                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
+                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
+                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -54,8 +74,8 @@ check_suggests <- function(function_name){
 #' TBD
 #' }
 state_dependencies <- function(func_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "purrr", "rlang", "ggrepel"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "purrr", "rlang", "ggExtra", "ggplotify", "scattermore"),
+  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
+                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
                    "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
                    "do_DotPlot" = c("Seurat", "ggplot2"),
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
@@ -64,17 +84,18 @@ state_dependencies <- function(func_name = NULL){
                    "do_VlnPlot" = c("Seurat", "ggplot2"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "purrr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "purrr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "purrr"),
-                   "do_CopyNumberVariantPlot" = c("purrr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "purrr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_GeyserPlot" = c("purrr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_VolcanoPlot" = c("plyr", "purrr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "do_RidgePlot" = c("purrr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"))
+                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
+                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
+                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
+                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
+                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
+                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
+                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
+                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
+                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -95,8 +116,8 @@ state_dependencies <- function(func_name = NULL){
                      "ggplotify",
                      "ggrepel",
                      "Matrix",
+                     "magrittr",
                      "patchwork",
-                     "purrr",
                      "rlang",
                      "scales",
                      "scattermore",
@@ -110,7 +131,8 @@ state_dependencies <- function(func_name = NULL){
   bioconductor_packages <- c("infercnv",
                              "Nebulosa")
 
-  github_packages <- c("liana")
+  github_packages <- c("liana",
+                       "ggsankey")
 
   func_list <- sort(names(pkg_list))
   if (!(is.null(func_name))){
@@ -674,7 +696,7 @@ check_and_set_slot <- function(slot){
 #' TBD
 #' }
 compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE){
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = F)}
 
@@ -936,7 +958,7 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
 compute_barplot_annotation <- function(sample,
                                        group.by,
                                        annotation){
-  `%>%`<- purrr::`%>%`
+  `%>%`<- magrittr::`%>%`
   # Compute column/row annotation. Obtain the percentage of a group per variable.
   annotation <- sample@meta.data %>%
                 dplyr::select(!!rlang::sym(group.by), !!rlang::sym(annotation)) %>%
@@ -1034,7 +1056,7 @@ heatmap_inner <- function(data,
                           viridis_direction = 1,
                           zeros_are_white = FALSE,
                           symmetrical_scale = FALSE){
-  `%>%`<- purrr::`%>%`
+  `%>%`<- magrittr::`%>%`
 
 
   if (legend.position %in% c("top", "bottom")){
@@ -1479,7 +1501,7 @@ get_data_column <- function(sample,
                             feature,
                             assay,
                             slot){
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   dim_colnames <- c()
   for(red in Seurat::Reductions(object = sample)){
     col.names <- colnames(sample@reductions[[red]][[]])
@@ -1533,7 +1555,7 @@ get_data_column_in_context <- function(sample,
                                        split.by = NULL,
                                        assay,
                                        slot){
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident
   } else {

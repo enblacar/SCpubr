@@ -65,7 +65,7 @@ do_CorrelationPlot <- function(sample,
   check_colors(na.value)
 
   `%v%` <- ComplexHeatmap::`%v%`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]

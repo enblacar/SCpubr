@@ -82,7 +82,7 @@ do_VolcanoPlot <- function(sample,
   }
 
   `.` <- plyr::.()
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   pval_cutoff <- -log10(pval_cutoff)
   colors <- SCpubr::do_ColorPalette(colors.use, tetradic = T)
   names(colors) <- c("A", "C", "B", "D")

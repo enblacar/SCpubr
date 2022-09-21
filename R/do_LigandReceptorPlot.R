@@ -61,7 +61,7 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   # Check logical parameters.
   logical_list <- list("dot_border" = dot_border,

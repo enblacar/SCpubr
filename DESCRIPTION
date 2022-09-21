@@ -50,11 +50,13 @@ Suggests:
     ggdist,
     tibble,
     monocle3 (>= 1.2.9),
-    plyr
+    plyr,
+    ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
-Remotes: 
+Remotes:  
     saezlab/liana,
-    cole-trapnell-lab/monocle3
+    cole-trapnell-lab/monocle3,
+    davidsjoberg/ggsankey

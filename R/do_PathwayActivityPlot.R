@@ -120,7 +120,7 @@ do_PathwayActivityPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%v%` <- ComplexHeatmap::`%v%`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(.data$statistic == "norm_wmean") %>%

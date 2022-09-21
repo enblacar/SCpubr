@@ -72,7 +72,7 @@ do_RidgePlot <- function(sample,
                          color_by_probabilities = TRUE,
                          viridis_direction = -1,
                          alpha = 1){
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   # Checks for packages.
   check_suggests(function_name = "do_RidgePlot")

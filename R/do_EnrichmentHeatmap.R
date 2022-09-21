@@ -92,7 +92,7 @@ do_EnrichmentHeatmap <- function(sample,
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
 
   `%v%` <- ComplexHeatmap::`%v%`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
 
   if (is.character(list_genes)){
     # If list_genes is a character of genes.

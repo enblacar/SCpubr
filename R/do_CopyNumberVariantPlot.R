@@ -85,7 +85,7 @@ do_CopyNumberVariantPlot <- function(sample,
 
 
   `:=` <- rlang::`:=`
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")

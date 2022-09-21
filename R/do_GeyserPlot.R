@@ -136,7 +136,7 @@ do_GeyserPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(na.value, parameter_name = "na.value")
 
-  `%>%` <- purrr::`%>%`
+  `%>%` <- magrittr::`%>%`
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]

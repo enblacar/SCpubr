@@ -107,7 +107,7 @@ do_PseudotimePlot <- function(sample,
 
 
     # Define pipe operator internally.
-    `%>%` <- purrr::`%>%`
+    `%>%` <- magrittr::`%>%`
 
     if (is.null(group.by)){
       sample$group.by <- Seurat::Idents(sample)
