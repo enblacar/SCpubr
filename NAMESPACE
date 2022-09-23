@@ -3,6 +3,7 @@
 export("%!in%")
 export(do_BeeSwarmPlot)
 export(do_CellularStatesPlot)
+export(do_ChordDiagramPlot)
 export(do_ColorPalette)
 export(do_CopyNumberVariantPlot)
 export(do_CorrelationPlot)

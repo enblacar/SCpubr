@@ -50,6 +50,7 @@ check_suggests <- function(function_name){
                    "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
                    "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
                    "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
+                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"),
                    "testing" = c("Does_not_exist"))
   # The function is not in the current list of possibilities.
   if (!(function_name %in% names(pkg_list))){
@@ -95,7 +96,8 @@ state_dependencies <- function(func_name = NULL){
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
                    "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
                    "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"))
+                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
+                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"))
   # The function is not in the current list of possibilities.
   if (!(is.null(func_name))){
     for (func in func_name){
@@ -105,34 +107,43 @@ state_dependencies <- function(func_name = NULL){
     }
   }
 
-  cran_packages <- c("colorspace",
+  cran_packages <- c("circlize",
+                     "colorspace",
                      "dplyr",
                      "enrichR",
                      "forcats",
                      "ggbeeswarm",
                      "ggdist",
-                     "ggplot2",
                      "ggExtra",
+                     "ggplot2",
                      "ggplotify",
+                     "ggrastr",
                      "ggrepel",
-                     "Matrix",
+                     "ggridges",
+                     "grDevices",
+                     "grid",
                      "magrittr",
                      "patchwork",
+                     "pbapply",
+                     "plyr",
                      "rlang",
                      "scales",
                      "scattermore",
                      "Seurat",
+                     "stats",
                      "stringr",
                      "svglite",
                      "tibble",
                      "tidyr",
                      "viridis")
 
-  bioconductor_packages <- c("infercnv",
+  bioconductor_packages <- c("ComplexHeatmap",
+                             "infercnv",
                              "Nebulosa")
 
-  github_packages <- c("liana",
-                       "ggsankey")
+  github_packages <- c("ggsankey",
+                       "liana",
+                       "monocle3")
 
   func_list <- sort(names(pkg_list))
   if (!(is.null(func_name))){
