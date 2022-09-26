@@ -5,9 +5,11 @@
 \title{Generate a Chord diagram.}
 \usage{
 do_ChordDiagramPlot(
-  sample,
-  first_group,
-  last_group,
+  sample = NULL,
+  from = NULL,
+  to = NULL,
+  colors.from = NULL,
+  colors.to = NULL,
   big.gap = 10,
   small.gap = 1,
   link.border.color = NA,
@@ -19,23 +21,26 @@ do_ChordDiagramPlot(
   z_index = FALSE,
   self.link = 1,
   symmetric = FALSE,
-  directional = 0,
-  direction.type = "diffHeight",
+  directional = 1,
+  direction.type = c("diffHeight", "arrows"),
   link.arr.type = "big.arrow",
   scale = FALSE,
   alignment = "default",
-  annotationTrack = c("name", "grid", "axis"),
+  annotationTrack = c("grid", "axis"),
+  padding_labels = 4,
   ...
 )
 }
 \arguments{
 \item{sample}{Seurat object.}
 
-\item{first_group}{Character. Categorical metadata variable. First group to be used as origin of the interaction.}
+\item{from}{Character. Categorical metadata variable. First group to be used as origin of the interaction.}
 
-\item{last_group}{Character. Categorical metadata variable. Last group to be used as the end of the interaction.}
+\item{to}{Character. Categorical metadata variable. Last group to be used as the end of the interaction.}
 
-\item{big.gap}{Numeric. Space between the groups in first_group and last_group.}
+\item{colors.from, colors.to}{Named vector of colors corresponding to the unique values of "from" and "to".}
+
+\item{big.gap}{Numeric. Space between the groups in from and to.}
 
 \item{small.gap}{Numeric. Space within the groups.}
 
@@ -43,7 +48,7 @@ do_ChordDiagramPlot(
 
 \item{link.border.width}{Numeric. Width of the border line of the links.}
 
-\item{highlight_group}{Character. A value from first_group that will be used to highlight only the links coming from it.}
+\item{highlight_group}{Character. A value from from that will be used to highlight only the links coming from it.}
 
 \item{alpha.highlight}{Numeric. A value between 00 (double digits) and 99 to depict the alpha of the highlighted links. No transparency needs "FF"}
 
@@ -60,7 +65,7 @@ do_ChordDiagramPlot(
 \item{symmetric}{pass to \code{\link[circlize]{chordDiagramFromMatrix}}
 }
 
-\item{directional}{Numeric. 0 for non-directional data, 1 for first_group to last_group, -1 for last_group to first_group and 2 for bidirectional.}
+\item{directional}{Numeric. 0 for non-directional data, 1 for from to to, -1 for to to from and 2 for bidirectional.}
 
 \item{direction.type}{Character. One of diffHeight or arrows or both as a character vector.}
 
@@ -73,7 +78,9 @@ do_ChordDiagramPlot(
 \item{annotationTrack}{pass to \code{\link[circlize]{chordDiagramFromMatrix}} or \code{\link[circlize]{chordDiagramFromDataFrame}}
 }
 
-\item{...}{Additional parameters to circlize::chordDiagram.}
+\item{padding_labels}{Numeric. Number of extra padding of the labels so that they do not overlap with the scales.}
+
+\item{...}{For internal use only.}
 }
 \value{
 A circlize plot.

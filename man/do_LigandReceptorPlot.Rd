@@ -5,7 +5,7 @@
 \title{Visualize Ligand-Receptor analysis output.}
 \usage{
 do_LigandReceptorPlot(
-  liana_output = NULL,
+  liana_output,
   split.by = NULL,
   keep_source = NULL,
   keep_target = NULL,
@@ -30,7 +30,8 @@ do_LigandReceptorPlot(
   flip = FALSE,
   plot_grid = FALSE,
   grid.color = "grey90",
-  grid.type = "dotted"
+  grid.type = "dotted",
+  compute_ChordDiagrams = FALSE
 )
 }
 \arguments{
@@ -77,6 +78,8 @@ do_LigandReceptorPlot(
 \item{grid.color}{Character. Color of the grid in the panels.}
 
 \item{grid.type}{Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.}
+
+\item{compute_ChordDiagrams}{Logical. Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

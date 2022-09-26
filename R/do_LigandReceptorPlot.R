@@ -24,6 +24,7 @@
 #' @param grid.color Character. Color of the grid in the panels.
 #' @param grid.type Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.
 #' @param significance_threshold Numeric. Value to filter the interactions by significance. Default is 0.05.
+#' @param compute_ChordDiagrams Logical. Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
@@ -32,7 +33,7 @@
 #' \dontrun{
 #' TBD
 #' }
-do_LigandReceptorPlot <- function(liana_output = NULL,
+do_LigandReceptorPlot <- function(liana_output,
                                   split.by = NULL,
                                   keep_source = NULL,
                                   keep_target = NULL,
@@ -57,7 +58,8 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
                                   flip = FALSE,
                                   plot_grid = FALSE,
                                   grid.color = "grey90",
-                                  grid.type = "dotted"){
+                                  grid.type = "dotted",
+                                  compute_ChordDiagrams = FALSE){
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
@@ -173,13 +175,14 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
                   # Merge ligand.complex and receptor.complex columns into one, that will be used for the Y axis.
                   tidyr::unite(c("ligand.complex", "receptor.complex"),
                                col = "interaction",
-                               sep = "<span style = 'color:grey50;'> | </span>",
+                               sep = " | ",
                                remove = FALSE) %>%
                   # Merge source and target column into one, for future filtering.
                   tidyr::unite(c("source", "target"),
                                col = "interacting_clusters",
                                remove = FALSE)
-
+  # For Chord diagrams.
+  output_copy <- liana_output
 
   liana_output <- liana_output %>%
                   # Filter based on the top X interactions of ascending sensibilities.
@@ -191,11 +194,15 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
   if (!(is.null(keep_source))){
     liana_output <- liana_output %>%
                     dplyr::filter(.data$source %in% keep_source)
+    output_copy <- output_copy %>%
+                   dplyr::filter(.data$source %in% keep_source)
   }
 
   if (!(is.null(keep_target))){
     liana_output <- liana_output %>%
                     dplyr::filter(.data$target %in% keep_target)
+    output_copy <- output_copy %>%
+                   dplyr::filter(.data$target %in% keep_target)
   }
 
   # Plot.
@@ -366,7 +373,31 @@ do_LigandReceptorPlot <- function(liana_output = NULL,
                                 legend.framewidth = legend.framewidth,
                                 legend.tickwidth = legend.tickwidth)
 
-  return(p)
+  if (isTRUE(compute_ChordDiagrams)){
+    data <- output_copy %>%
+            dplyr::select(dplyr::all_of(c("source", "target"))) %>%
+            dplyr::group_by(.data$target, .data$source) %>%
+            dplyr::summarise(value = dplyr::n()) %>%
+            dplyr::rename("from" = .data[["source"]],
+                          "to" = .data[["target"]]) %>%
+            dplyr::select(dplyr::all_of(c("from", "to", "value")))
+    p.source_target <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
+
+    data <- liana_output %>%
+            dplyr::select(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
+            dplyr::group_by(.data$ligand.complex, .data$receptor.complex) %>%
+            dplyr::summarise(value = dplyr::n()) %>%
+            dplyr::rename("from" = .data[["ligand.complex"]],
+                          "to" = .data[["receptor.complex"]]) %>%
+            dplyr::select(dplyr::all_of(c("from", "to", "value")))
+    p.ligand_receptor <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
+    return(list("dotplot" = p,
+                "chord_total_interactions" = p.source_target,
+                "chord_ligand_receptor" = p.ligand_receptor))
+  } else {
+    return(p)
+  }
+
 }
 
 
