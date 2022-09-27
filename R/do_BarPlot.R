@@ -2,13 +2,12 @@
 #' Create Bar Plots.
 #'
 #' @inheritParams doc_function
-#' @param group.by Character. Metadata variable to generate the counts of. Has to be either a character or a factor column.
-#' @param split.by Character. Further metadata variable to group the results by.
-#' @param order Logical. Whether to order the results in descending order of counts.
-#' @param position Character. Either "stack" or "fill".
-#' @param legend.title TBD.
-#' @param colors.use TBD.
-#' @param flip TBD.
+#' @param order \strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.
+#' @param position \strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
+#' \itemize{
+#'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
+#'   \item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
+#' }
 #'
 #' @return A ggplot2 object containing a Bar plot.
 #' @export

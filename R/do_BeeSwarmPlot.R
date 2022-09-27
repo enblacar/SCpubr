@@ -1,36 +1,9 @@
 #' BeeSwarm plot.
 #'
-#'
-#' @param sample Seurat object.
-#' @param assay Assay to use. Defauls to the current assay.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
-#' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
-#' @param feature_to_rank Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
-#' @param continuous_feature Is the feature to rank and color for continuous? I.e: an enrichment score.
-#' @param group.by Variable you want the cells to be grouped for.
-#' @param colors.use Named vector with the color assignment.
-#' @param legend Whether to plot the legend or not.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
-#' @param xlab Title for the X axis.
-#' @param ylab Title for the Y axis.
-#' @param remove_x_axis Remove X axis labels and ticks from the plot.
-#' @param remove_y_axis Remove Y axis labels and ticks from the plot.
-#' @param font.size Base font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param plot_cell_borders Logical. Whether to plot border around cells.
-#' @param border.size Numeric. Width of the border of the cells.
-#' @param border.color Character. Color to use for the border of the cells.
-#' @param pt.size Numeric. Size of the dots.
-#' @param flip Whether to flip the axis.
-#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param verbose Whether to show warnings.
-#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
-#' @param raster.dpi Numeric. Resolution in dots per inch. Defaults to 5.
+#' @inheritParams doc_function
+#' @param feature_to_rank \strong{\code{\link[base]{character}}} | Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
+#' @param continuous_feature \strong{\code{\link[base]{logical}}} | Is the feature to rank and color for continuous? I.e: an enrichment score.
+#' @param remove_x_axis,remove_y_axis \strong{\code{\link[base]{logical}}} | Remove X axis labels and ticks from the plot.
 #' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
 #'
