@@ -1,42 +1,13 @@
 #' Wrapper for \link[Seurat]{DimPlot}.
 #'
-#'
-#' @param sample Seurat object.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
-#' @param group.by Variable you want the cells to be colored for.
-#' @param split.by Split into as many plots as unique values in the variable provided.
-#' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
-#' @param colors.use Vector of named HEX values to color the cells. It has to match the number of unique values in either `Seurat::Idents(sample)` or the group.by or split.by variable. For split.by, a single color can be provided and each panel will be colored by it.
-#' @param label Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
-#' @param cells.highlight,idents.highlight Vector of cells/identities for which the DimPlot should focus into. The rest of the cells will be grayed out. Both parameters can be used at the same time.
-#' @param idents.keep Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
-#' @param shuffle Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
-#' @param order Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
-#' @param pt.size Point size of the cells.
-#' @param font.size Base font.size of the figure.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param sizes.highlight Point size of highlighted cells using cells.highlight parameter.
-#' @param legend Whether to plot the legend or not.
-#' @param legend.title Logical stating whether the legend title is shown or not.
-#' @param legend.title.position Character stating where to place the title of the legend.
-#' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
-#' @param legend.icon.size Numeric. Size of the icons in legend.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.byrow Logical stating whether the legend is filled by row or not.
-#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
-#' @param ncol Number of columns used in the arrangement of the output plot using "split.by" parameter.
-#' @param repel Whether to repel the labels if label is set to TRUE.
-#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
-#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
-#' @param label.color HEX code for the color of the text in the labels if label is set to TRUE.
-#' @param na.value Color value for NA.
-#' @param plot_marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
-#' @param plot_cell_borders Logical. Whether to plot border around cells.
-#' @param border.size Numeric. Width of the border of the cells.
-#' @param border.color Character. Color to use for the border of the cells.
-#' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
-#' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
-#' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
+#' @inheritParams doc_function
+#' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
+#' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
+#' @param shuffle \strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
+#' @param order \strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
+#' @param sizes.highlight \strong{\code{\link[base]{numeric}}} | Point size of highlighted cells using cells.highlight parameter.
+#' @param repel \strong{\code{\link[base]{logical}}} | Whether to repel the labels if label is set to TRUE.
+#' @param label.color \strong{\code{\link[base]{character}}} | HEX code for the color of the text in the labels if label is set to TRUE.
 #' @return  A ggplot2 object containing a DimPlot.
 #'
 #' @export
@@ -57,12 +28,11 @@ do_DimPlot <- function(sample,
                        idents.highlight = NULL,
                        idents.keep = NULL,
                        sizes.highlight = 1,
-                       legend = TRUE,
                        ncol = NULL,
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
-                       legend.title = FALSE,
+                       legend.title = NULL,
                        legend.position = "bottom",
                        legend.title.position = "top",
                        legend.ncol = NULL,
@@ -94,8 +64,6 @@ do_DimPlot <- function(sample,
   logical_list <- list("label" = label,
                        "repel" = repel,
                        "shuffle" = shuffle,
-                       "legend" = legend,
-                       "legend.title" = legend.title,
                        "legend.byrow" = legend.byrow,
                        "raster" = raster,
                        "plot_marginal_distributions" = plot_marginal_distributions,
@@ -119,6 +87,7 @@ do_DimPlot <- function(sample,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
+                         "legend.title" = legend.title,
                          "cells.highlight" = cells.highlight,
                          "idents.keep" = idents.keep,
                          "order" = order,
@@ -388,7 +357,8 @@ do_DimPlot <- function(sample,
                                                                 values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use)),
                                                                 na.value = na.value),
                      scale = "color") &
-        ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+        ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
+                                                      ncol = legend.ncol,
                                                       nrwo = legend.nrow,
                                                       byrow = legend.byrow,
                                                       override.aes = list(size = legend.icon.size),
@@ -437,7 +407,8 @@ do_DimPlot <- function(sample,
                                                               values = c(na.value, colors.use),
                                                               na.value = na.value),
                    scale = "color") &
-      ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+      ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
+                                                    ncol = legend.ncol,
                                                     nrow = legend.nrow,
                                                     byrow = legend.byrow,
                                                     override.aes = list(size = legend.icon.size),
@@ -462,7 +433,7 @@ do_DimPlot <- function(sample,
                    text = ggplot2::element_text(family = font.type),
                    legend.justification = "center",
                    legend.text = ggplot2::element_text(face = "bold"),
-                   legend.title = ggplot2::element_text(face = "bold"),
+                   legend.title = if (legend.position != "none"){ggplot2::element_text(face = "bold")} else {ggplot2::element_blank()},
                    legend.position = legend.position,
                    axis.title.x = ggplot2::element_text(face = "bold"),
                    axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
@@ -503,18 +474,6 @@ do_DimPlot <- function(sample,
     } else {
       p <- p +
         ggplot2::labs(caption = plot.caption)
-    }
-  }
-
-  # Whether to remove the legend or not.
-  if (legend == FALSE){
-    p <- p &
-         ggplot2::theme(legend.position = "none")
-  } else if (legend == TRUE) {
-    # Whether to remove the legend.title or not.
-    if (isFALSE(legend.title)){
-      p <- p &
-           ggplot2::theme(legend.title = ggplot2::element_blank())
     }
   }
 

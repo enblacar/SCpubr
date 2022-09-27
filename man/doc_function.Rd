@@ -125,6 +125,12 @@
 \item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
 
 \item{heatmap_gap, legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.}
+
+\item{cells.highlight, idents.highlight}{\strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.}
+
+\item{ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.}
+
+\item{dims}{\strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 }
 \value{
 Nothing. This is a mock function.

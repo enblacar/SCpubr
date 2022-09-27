@@ -73,9 +73,9 @@
 #' @param transpose \strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.
 #' @param scale_direction \strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.
 #' @param heatmap_gap,legend_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.
-#'
-#'
-#'
+#' @param cells.highlight,idents.highlight \strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.
+#' @param dims \strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
+#' @param ncol \strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.
 #'
 #' @usage NULL
 #' @return Nothing. This is a mock function.
@@ -147,9 +147,11 @@ doc_function <- function(sample,
                          transpose,
                          scale_direction,
                          heatmap_gap,
-                         legend_gap){
-
-}
+                         legend_gap,
+                         cells.highlight,
+                         idents.highlight,
+                         ncol,
+                         dims){}
 
 #' Named vector.
 #'

@@ -1,39 +1,9 @@
 #' Wrapper for \link[Seurat]{FeaturePlot}.
 #'
-#'
-#' @param sample Seurat object.
-#' @param features Features to plot. It can be a single one or a vector of multiple features. Similar behavior as with \link[Seurat]{FeaturePlot}.
-#' @param assay Assay to use. Defaults to the current assay.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
-#' @param slot Data slot to use. Character. Only one of: counts, data, scale.data. Defaults to "data".
-#' @param split.by Split the plot in as many unique values stored in the provided metadata column.
-#' @param split.by.idents Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
-#' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
-#' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
-#' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
-#' @param enforce_symmetry Logical. Whether to plot the features with a symmetrical scale.
-#' @param pt.size Point size.
-#' @param font.size Base font.size of the figure.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param legend Whether to plot the legend or not.
-#' @param legend.title Character. Title for the legend.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param plot.title,plot.subtitle,plot.caption Title for the plot or subtitle or caption.
-#' @param individual.titles,individual.subtitles,individual.captions Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
-#' @param ncol Number of columns to use in the arrangement of the output if more than one feature is queried to the function.
-#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
-#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::FeaturePlot()` behavior.
-#' @param plot_cell_borders Logical. Whether to plot border around cells.
-#' @param border.size Numeric. Width of the border of the cells.
-#' @param border.color Character. Color to use for the border of the cells.
-#' @param verbose Whether to show warnings.
-#' @param order Logical. Whether to order the cells based on expression.
-#' @param na.value Character. Color for NA values.
+#' @inheritParams doc_function
+#' @param split.by.idents \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
+#' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
+#' @param order \strong{\code{\link[base]{logical}}} | Whether to order the cells based on expression.
 #'
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
@@ -54,7 +24,6 @@ do_FeaturePlot <- function(sample,
                            pt.size = 1,
                            font.size = 14,
                            font.type = "sans",
-                           legend = TRUE,
                            legend.title = NULL,
                            legend.type = "colorbar",
                            legend.position = "bottom",
@@ -94,8 +63,7 @@ do_FeaturePlot <- function(sample,
   # Check the dimensions.
   dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
-  logical_list <- list("legend" = legend,
-                       "verbose" = verbose,
+  logical_list <- list("verbose" = verbose,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
                        "order" = order,
@@ -637,14 +605,6 @@ do_FeaturePlot <- function(sample,
         }
       }
     }
-  }
-
-
-
-  # Remove legend.
-  if (legend == FALSE){
-    p <- p &
-         ggplot2::theme(legend.position = "none")
   }
 
   # For embeddings that are umap of tsne, we remove all axes..
