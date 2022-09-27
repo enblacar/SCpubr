@@ -31,7 +31,7 @@ do_PseudotimePlot(
   legend.tickcolor = "white",
   viridis_color_map = "D",
   plot_cell_borders = TRUE,
-  symmetrical_scale = FALSE,
+  enforce_symmetry = FALSE,
   nbin = 24,
   ctrl = 100
 )
@@ -79,7 +79,7 @@ do_PseudotimePlot(
 
 \item{plot_cell_borders}{Logical. Whether to plot borders around the cells.}
 
-\item{symmetrical_scale}{Logical. Whethter to plot enrichment as a symmetrical scale.}
+\item{enforce_symmetry}{Logical. Whethter to plot enrichment as a symmetrical scale.}
 
 \item{nbin}{Numeric. Number of bins to use while computing enrichment scores.}
 

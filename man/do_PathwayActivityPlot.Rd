@@ -39,7 +39,7 @@ do_PathwayActivityPlot(
   font.size = 14,
   font.type = "sans",
   rotate_x_axis_labels = FALSE,
-  symmetrical_scale = TRUE,
+  enforce_symmetry = TRUE,
   geyser_order_by_mean = TRUE,
   geyser_scale_type = "continuous"
 )
@@ -99,7 +99,7 @@ do_PathwayActivityPlot(
 
 \item{rotate_x_axis_labels}{Logical. Whether to rotate the X axis names in the dot plot.}
 
-\item{symmetrical_scale}{Logical. Whether the geyser and feature plot have a symmetrical color scale.}
+\item{enforce_symmetry}{Logical. Whether the geyser and feature plot have a symmetrical color scale.}
 
 \item{geyser_order_by_mean}{Logical. Whether to order the X axis by the mean of the values.}
 

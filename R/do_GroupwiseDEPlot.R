@@ -1,25 +1,12 @@
 #' Compute a heatmap with the results of a group-wise DE analysis.
 #'
-#' @param sample Seurat objects.
-#' @param de_genes DE genes matrix resulting of running `Seurat::FindAllMarkers()`.
-#' @param assay Character. Assay used to compute the DE genes.
-#' @param slot Character. Slot from the assay used to compute the DE genes. Normally, this is "data".
-#' @param group.by Character. Metadata variable (s) that was used with `Seurat::FindAllMarkers()`. Generally, it is "seurat_clusters", but it is normally the one used as current identities of the Seurat object. One can add further variables in a vector, and they will be plotted on top of each other.
-#' @param top_genes Numeric. Top N DE genes by group to retrieve.
-#' @param scale_direction Numeric. Direction of the viridis scales. Either -1 or 1.
-#' @param viridis_map_pvalues,viridis_map_logfc,viridis_map_expression Character. Viridis color map for the heatmap of p-values, logFC or expression. One of A, B, C, D, E, F, G, H.
-#' @param heatmap.legend.length,heatmap.legend.width Numeric. Width and length of the legend in the heatmap.
-#' @param heatmap.legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
-#' @param column_title Character. Title for the column.
-#' @param row_title_p_values Character. Row title for the p-value heatmap. Blank by default.
-#' @param row_title_logfc Character. Row title for the logfc heatmap. Clusters by default.
-#' @param row_title_expression Character. Vector of titles of equal length as group.by.
-#' @param heatmap_gap,legend_gap Numeric. Gap in cm between legends or heatmaps.
-#' @param legend.position Character. Where to place the legends. Either "top", "botom", "right", "left".
-#' @param row_names_side Character. Either left or right.
-#' @param row_title_side Character. Either left or right.
-#' @param row_title_rotation Numeric. Degree of rotation of the row titles.
-#' @param cell_size Numeric. Size of the cells in the heatmap.
+#' @inheritParams doc_function
+#' @param de_genes \strong{\code{\link[tibble]{tibble}}} | DE genes matrix resulting of running `Seurat::FindAllMarkers()`.
+#' @param top_genes \strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.
+#' @param viridis_map_pvalues,viridis_map_logfc,viridis_map_expression \strong{\code{\link[base]{character}}} | Viridis color map for the heatmap of p-values, logFC or expression. One of A, B, C, D, E, F, G, H.
+#' @param row_title_p_values \strong{\code{\link[base]{character}}} | Row title for the p-value heatmap. Blank by default.
+#' @param row_title_logfc \strong{\code{\link[base]{character}}} | Row title for the logfc heatmap. Clusters by default.
+#' @param row_title_expression \strong{\code{\link[base]{character}}} | Vector of titles of equal length as group.by.
 #'
 #' @return A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
 #' @export
@@ -47,7 +34,7 @@ do_GroupwiseDEPlot <- function(sample,
                                legend.position = "bottom",
                                row_names_side = "right",
                                row_title_side = "left",
-                               row_title_rotation = 90,
+                               row_title_row = 90,
                                cell_size = 5){
   # Checks for packages.
   check_suggests(function_name = "do_GroupwiseDEPlot")
@@ -65,7 +52,7 @@ do_GroupwiseDEPlot <- function(sample,
                        "top_genes" = top_genes,
                        "heatmap_gap" = heatmap_gap,
                        "legend_gap" = legend_gap,
-                       "row_title_rotation" = row_title_rotation)
+                       "row_title_rot" = row_title_rot)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -122,7 +109,7 @@ do_GroupwiseDEPlot <- function(sample,
                replace(is.na(.), 0) %>%
                heatmap_inner(cluster_columns = F,
                              cluster_rows = F,
-                             legend_name = ifelse(slot == "data", "Avg. log2(FC)", "Avg. Diff."),
+                             legend.title = ifelse(slot == "data", "Avg. log2(FC)", "Avg. Diff."),
                              data_range = "only_pos",
                              row_title = row_title_logfc,
                              row_names_side = row_names_side,
@@ -134,7 +121,7 @@ do_GroupwiseDEPlot <- function(sample,
                              viridis_color_map = viridis_map_logfc,
                              viridis_direction = scale_direction,
                              zeros_are_white = TRUE,
-                             row_title_rotation = row_title_rotation,
+                             row_title_rotation = row_title_rot,
                              row_title_side = row_title_side,
                              cell_size = cell_size)
 
@@ -159,7 +146,7 @@ do_GroupwiseDEPlot <- function(sample,
                               cluster_rows = F,
                               row_names_side = row_names_side,
                               row_title = row_title_p_values,
-                              legend_name = "-log10(Adjusted P-value)",
+                              legend.title = "-log10(Adjusted P-value)",
                               data_range = "only_pos",
                               legend.position = legend.position,
                               legend.length = heatmap.legend.length,
@@ -174,7 +161,7 @@ do_GroupwiseDEPlot <- function(sample,
                               viridis_color_map = viridis_map_pvalues,
                               viridis_direction = scale_direction,
                               zeros_are_white = TRUE,
-                              row_title_rotation = row_title_rotation,
+                              row_title_rotation = row_title_rot,
                               row_title_side = row_title_side,
                               cell_size = cell_size)
 
@@ -243,7 +230,7 @@ do_GroupwiseDEPlot <- function(sample,
                       heatmap_inner(cluster_columns = F,
                                     cluster_rows = F,
                                     row_names_side = row_names_side,
-                                    legend_name = "Mean expression",
+                                    legend.title = "Mean expression",
                                     data_range = data_range,
                                     row_title = row_title_expression[counter],
                                     legend.position = legend.position,
@@ -255,7 +242,7 @@ do_GroupwiseDEPlot <- function(sample,
                                     viridis_direction = scale_direction,
                                     zeros_are_white = TRUE,
                                     range.data = max(max_value_list),
-                                    row_title_rotation = row_title_rotation,
+                                    row_title_rotation = row_title_rot,
                                     row_title_side = row_title_side,
                                     cell_size = cell_size)
     list.expression.heatmaps[[variable]] <- expression_out$heatmap

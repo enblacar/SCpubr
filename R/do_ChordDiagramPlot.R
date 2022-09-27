@@ -1,23 +1,47 @@
 #' Generate a Chord diagram.
+#'
+#' @inheritParams doc_function
 #' @inheritParams circlize::chordDiagram
-#' @param sample Seurat object.
-#' @param from Character. Categorical metadata variable. First group to be used as origin of the interaction.
-#' @param to Character. Categorical metadata variable. Last group to be used as the end of the interaction.
-#' @param big.gap Numeric. Space between the groups in from and to.
-#' @param small.gap Numeric. Space within the groups.
-#' @param link.border.color Character. Color for the border of the links. NA = no color.
-#' @param link.border.width Numeric. Width of the border line of the links.
-#' @param highlight_group Character. A value from from that will be used to highlight only the links coming from it.
-#' @param alpha.highlight Numeric. A value between 00 (double digits) and 99 to depict the alpha of the highlighted links. No transparency needs "FF"
-#' @param z_index Logical. Whether to bring the bigger links to the top.
-#' @param self.link Numeric. 1 to allow self linking and 2 to prevent them.
-#' @param directional Numeric. 0 for non-directional data, 1 for from to to, -1 for to to from and 2 for bidirectional.
-#' @param direction.type Character. One of diffHeight or arrows or both as a character vector.
-#' @param link.arr.type Character. One of triangle or big.arrow.
-#' @param scale Logical. Whether to put all nodes the same width.
-#' @param alignment Character. One of default, vertical or horizontal. Default will allow circlize to put the angle as it wishes, vertical centers the symmetry on the Y axis and horizontal on the X axis.
-#' @param padding_labels Numeric. Number of extra padding of the labels so that they do not overlap with the scales.
-#' @param colors.from,colors.to Named vector of colors corresponding to the unique values of "from" and "to".
+#' @param from,to \strong{\code{\link[base]{character}}} | Categorical metadata variable to be used as origin and end points of the interactions.
+#' @param big.gap \strong{\code{\link[base]{numeric}}} | Space between the groups in "from" and "to".
+#' @param small.gap \strong{\code{\link[base]{numeric}}} | Space within the groups.
+#' @param link.border.color \strong{\code{\link[base]{character}}} | Color for the border of the links. NA = no color.
+#' @param link.border.width \strong{\code{\link[base]{numeric}}} | Width of the border line of the links.
+#' @param highlight_group \strong{\code{\link[base]{character}}} | A value from from that will be used to highlight only the links coming from it.
+#' @param alpha.highlight \strong{\code{\link[base]{numeric}}} | A value between 00 (double digits) and 99 to depict the alpha of the highlighted links. No transparency needs "FF"
+#' @param z_index \strong{\code{\link[base]{logical}}} | Whether to bring the bigger links to the top.
+#' @param self.link \strong{\code{\link[base]{numeric}}} | Behavior of the links. One of:
+#' \itemize{
+#'   \item \emph{\code{1}}: Allow self linking.
+#'   \item \emph{\code{2}}: Prevent self linking.
+#' }
+#' @param directional \strong{\code{\link[base]{numeric}}} | Set the direction of the links. One of:
+#' \itemize{
+#'   \item \emph{\code{0}}: Non-directional data.
+#'   \item \emph{\code{1}}: Links go from "from" to "to".
+#'   \item \emph{\code{-1}}: Links go from "to" to "from".
+#'   \item \emph{\code{2}}: Links go in both directions.
+#' }
+#' @param direction.type \strong{\code{\link[base]{character}}} | How to display the directions. One of:
+#' \itemize{
+#'   \item \emph{\code{diffHeight}}: Sets a line at the origin of the group showing to how many groups and in which proportion this group is linked to.
+#'   \item \emph{\code{arrows}}: Sets the connection as arrows.
+#'   \item \emph{\code{both}}: Sets up both behaviors. Use as: \code{c("diffHeight", "arrows")}.
+#' }
+#' @param link.arr.type \strong{\code{\link[base]{character}}} | Sets the appearance of the arrows. One of:
+#' \itemize{
+#'   \item \emph{\code{triangle}}: Arrow with a triangle tip at the end displayed on top of the link.
+#'   \item \emph{\code{big.arrow}}: The link itself ends in a triangle shape.
+#' }
+#' @param scale \strong{\code{\link[base]{logical}}} | Whether to put all nodes the same width.
+#' @param alignment \strong{\code{\link[base]{character}}} | How to align the diagram.  One of:
+#' \itemize{
+#'   \item \emph{\code{default}}: Allows \pkg{circlize} to set up the plot as it sees fit.
+#'   \item \emph{\code{horizontal}}: Sets the break between "from" and "to" groups on the horizontal axis.
+#'   \item \emph{\code{vertical}}: Sets the break between "from" and "to" groups on the vertical axis.
+#' }
+#' @param padding_labels \strong{\code{\link[base]{numeric}}} | Number of extra padding (white spaces) of the labels so that they do not overlap with the scales.
+#' @param colors.from,colors.to \strong{\code{\link[SCpubr]{named_vector}}} | Named vector of colors corresponding to the unique values of "from" and "to".
 #' @param ... For internal use only.
 #'
 #' @return A circlize plot.

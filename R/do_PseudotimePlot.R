@@ -24,7 +24,7 @@
 #' @param plot_cell_borders Logical. Whether to plot borders around the cells.
 #' @param nbin Numeric. Number of bins to use while computing enrichment scores.
 #' @param ctrl Numeric. Number of control genes per bin while computing enrichment scores.
-#' @param symmetrical_scale Logical. Whethter to plot enrichment as a symmetrical scale.
+#' @param enforce_symmetry Logical. Whethter to plot enrichment as a symmetrical scale.
 #'
 #' @export
 #' @return A list containing a collection of ggplot2 objects.
@@ -56,7 +56,7 @@ do_PseudotimePlot <- function(sample,
                               legend.tickcolor = "white",
                               viridis_color_map = "D",
                               plot_cell_borders = TRUE,
-                              symmetrical_scale = FALSE,
+                              enforce_symmetry = FALSE,
                               nbin = 24,
                               ctrl = 100){
   sink(tempfile())
@@ -75,7 +75,7 @@ do_PseudotimePlot <- function(sample,
                          "label_branches" = label_branches,
                          "label_leaves" = label_leaves,
                          "plot_cell_borders" = plot_cell_borders,
-                         "symmetrical_scale" = symmetrical_scale)
+                         "enforce_symmetry" = enforce_symmetry)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("trajectory_graph_segment_size" = trajectory_graph_segment_size,
@@ -178,7 +178,7 @@ do_PseudotimePlot <- function(sample,
     list.out[["trajectory_groups"]] <- p.out
 
     # Compute enrichment scores for the desired marker genes.
-    sample <- compute_enrichment_scores(sample = sample, list_genes = list("Enrichment" = pseudotime_genes), verbose = F, nbin = nbin, ctrl = ctrl)
+    sample <- compute_enrichment_scores(sample = sample, input_gene_list = list("Enrichment" = pseudotime_genes), verbose = F, nbin = nbin, ctrl = ctrl)
 
     # Order cells based on the cell with the highest value of the enrichment scores.
     if (isTRUE(is_max_score_the_start)){
@@ -254,7 +254,7 @@ do_PseudotimePlot <- function(sample,
                                    viridis_color_map = viridis_color_map,
                                    font.size = font.size,
                                    font.type = font.type,
-                                   symmetrical_scale = symmetrical_scale,
+                                   enforce_symmetry = enforce_symmetry,
                                    legend.length = legend.length,
                                    legend.width = legend.width,
                                    legend.framewidth = legend.framewidth,

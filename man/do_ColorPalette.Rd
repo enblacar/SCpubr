@@ -20,34 +20,37 @@ do_ColorPalette(
 )
 }
 \arguments{
-\item{colors.use}{One color upon which generate the color scale. Can be a name or a HEX code.}
+\item{colors.use}{\strong{\code{\link[base]{character}}} | One color upon which generate the color scale. Can be a name or a HEX code.}
 
-\item{n}{Numeric. Number of colors to include in the color wheel. Use it when all other options are FALSE, otherwise, it becomes 12.}
+\item{n}{\strong{\code{\link[base]{numeric}}} | Number of colors to include in the color wheel. Use it when all other options are FALSE, otherwise, it becomes 12.}
 
-\item{opposite}{Logical. Return the opposing color to the one provided.}
+\item{opposite}{\strong{\code{\link[base]{logical}}} | Return the opposing color to the one provided.}
 
-\item{adjacent}{Logical. Return the adjacent colors to the one provided.}
+\item{adjacent}{\strong{\code{\link[base]{logical}}} | Return the adjacent colors to the one provided.}
 
-\item{triadic}{Logical. Return the triadic combination of colors to the one provided.}
+\item{triadic}{\strong{\code{\link[base]{logical}}} | Return the triadic combination of colors to the one provided.}
 
-\item{split_complementary}{Logical. Return the split complementary combination of colors to the one provided.}
+\item{split_complementary}{\strong{\code{\link[base]{logical}}} | Return the split complementary combination of colors to the one provided.}
 
-\item{tetradic}{Logical. Return the tetradic combination of colors to the one provided.}
+\item{tetradic}{\strong{\code{\link[base]{logical}}} | Return the tetradic combination of colors to the one provided.}
 
-\item{square}{Logical. Return the square combination of colors to the one provided.}
+\item{square}{\strong{\code{\link[base]{logical}}} | Return the square combination of colors to the one provided.}
 
-\item{complete_output}{Logical. Runs all the previous options and returns all the outputs as a list that contains all color vectors, all plots and a combined plot with everything.}
+\item{complete_output}{\strong{\code{\link[base]{logical}}} | Runs all the previous options and returns all the outputs as a list that contains all color vectors, all plots and a combined plot with everything.}
 
-\item{plot}{Logical. Whether to also return a plot displaying the values instead of a vector with the color.}
+\item{plot}{\strong{\code{\link[base]{logical}}} | Whether to also return a plot displaying the values instead of a vector with the color.}
 
-\item{font.size}{Base font.size of the plot.}
+\item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
-\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
 }
 \value{
 A character vector with the desired color scale.
-
-A ggplot2 object containing a Dot Plot.
 }
 \description{
 This function is an adaptation of colortools package. As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,

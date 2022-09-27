@@ -8,51 +8,26 @@
 #' given corners (enriched in both features) or in the middle of the plot (not enriched for any).
 #'
 #' This plots are based on the following publications:
-#' - Neftel, C. et al. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). https://doi.org/10.1016/j.cell.2019.06.024
-#' - Tirosh, I., Venteicher, A., Hebert, C. et al. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). https://doi.org/10.1038/nature20123
-#'
-#' @param sample  Seurat object.
-#' @param gene_list Named list of lists of marker genes to query for enrichment.
-#' @param x1  A name of a list from gene_list. First feature in the X axis. Will go on the right side of the X axis if y2 is not provided and top-right quadrant if provided.
-#' @param x2  A name of a list from gene_list. Second feature on the X axis. Will go on the left side of the X axis if y2 is not provided and top-left quadrant if provided.
-#' @param y1  A name of a list from gene_list. First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.
-#' @param y2  A name of a list from gene_list. Second feature on the Y axis. Will become the bottom-left quadrant if provided.
-#' @param colors.use Named vector with the names of the unique values in the categorical variable and values the HEX codes for the colors.
-#' @param legend.position  Position of the legend in the plot. One of: top, bottom, left, right.
-#' @param legend.icon.size Numeric. Size of the icons in legend.
-#' @param legend.ncol,legend.nrow Number of columns/rows in the legend.
-#' @param legend.byrow Logical stating whether the legend is filled by row or not.
-#' @param group.by Metadata variable to color the cells by. Defaults to current identities.
-#' @param plot.title,plot.subtitle,plot.caption  Title to use in the plot.
-#' @param xlab  Title for the X axis. Only works if y2 is not set up.
-#' @param ylab  Title for the Y axis. Only works if y2 is not set up.
-#' @param axis.ticks  Whether to show axis ticks.
-#' @param axis.text  Whether to show axis text.
-#' @param enforce_symmetry Logical. Whether to enforce the plot to follow a symmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
-#' @param verbose Verbose function?
-#' @param font.size Overall font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param plot_marginal_distributions Logical. Whether to plot marginal distributions on the figure or not.
-#' @param marginal.type Character. One of density", "histogram", "boxplot", "violin", "densigram". Defaults to density.
-#' @param marginal.size Numeric. Size ratio between the main and marginal plots. 5 means that the main plot is 5 times bigger than the marginal plots.
-#' @param marginal.group Logical. Whether to group the marginal distribution by group.by or current identities.
-#' @param plot_cell_borders Logical. Whether to plot border around cells.
-#' @param border.size Numeric. Width of the border of the cells.
-#' @param border.color Character. Color to use for the border of the cells.
-#' @param pt.size Numeric. Size of the dots.
-#' @param raster Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
-#' @param raster.dpi Numeric. Pixel resolution for rasterized plots. Defaults to 512, as per default `Seurat::DimPlot()` behavior.
-#' @param plot_features Logical. Whether to also report any other feature onto the primary plot.
-#' @param features Character. Additional features to plot.
-#' @param plot_enrichment_scores Logical. Whether to report enrichment scores for the input lists as plots.
-#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' - Neftel, C. \emph{et al}. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). \url{https://doi.org/10.1016/j.cell.2019.06.024}
+#' - Tirosh, I., Venteicher, A., Hebert, C. \emph{et al}. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). \url{https://doi.org/10.1038/nature20123}
+#' @inheritParams doc_function
+#' @param x1  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. First feature in the X axis. Will go on the right side of the X axis if y2 is not provided and top-right quadrant if provided.
+#' @param x2  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the X axis. Will go on the left side of the X axis if y2 is not provided and top-left quadrant if provided.
+#' @param y1  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.
+#' @param y2  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the Y axis. Will become the bottom-left quadrant if provided.
+#' @param axis.ticks  \strong{\code{\link[base]{logical}}} | Whether to show axis ticks.
+#' @param axis.text  \strong{\code{\link[base]{logical}}} | Whether to show axis text.
+#' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether to enforce the plot to follow a symmetry (3 variables, the X axis has 0 as center, 4 variables, all axis have the same range and the plot is squared).
+#' @param plot_features \strong{\code{\link[base]{logical}}} | Whether to also report any other feature onto the primary plot.
+#' @param features \strong{\code{\link[base]{character}}} | Additional features to plot.
+#' @param plot_enrichment_scores \strong{\code{\link[base]{logical}}} | Whether to report enrichment scores for the input lists as plots.
 #'
 #' @return  A ggplot2 object containing a butterfly plot.
 #' @export
 #' @example man/examples/examples_do_CellularStatesPlot.R
 
 do_CellularStatesPlot <- function(sample,
-                                  gene_list,
+                                  input_gene_list,
                                   x1,
                                   x2 = NULL,
                                   y1,
@@ -118,7 +93,7 @@ do_CellularStatesPlot <- function(sample,
                          "raster.dpi" = raster.dpi)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
-    character_list <- list("gene_list" = gene_list,
+    character_list <- list("input_gene_list" = input_gene_list,
                            "x1" = x1,
                            "x2" = x2,
                            "y1" = y1,
@@ -186,7 +161,7 @@ do_CellularStatesPlot <- function(sample,
     }
 
     # Compute the enrichment scores.
-    sample <- compute_enrichment_scores(sample = sample, list_genes = gene_list, verbose = verbose)
+    sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose)
 
     # 2-variable plot.
     if (is.null(y2) & is.null(x2)){
@@ -195,11 +170,11 @@ do_CellularStatesPlot <- function(sample,
         stop("The names of the lists to plot can not be the same.", call. = FALSE)
       }
       # Check that the names provided match the marker genes.
-      if (!(x1 %in% names(gene_list))){
-        stop(paste0(x1, " is not a name of a list of genes provided to gene_list."), call. = F)
+      if (!(x1 %in% names(input_gene_list))){
+        stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list."), call. = F)
       }
-      if (!(y1 %in% names(gene_list))){
-        stop(paste0(y1, " is not a name of a list of genes provided to gene_list."), call. = F)
+      if (!(y1 %in% names(input_gene_list))){
+        stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list."), call. = F)
       }
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
@@ -267,14 +242,14 @@ do_CellularStatesPlot <- function(sample,
           stop("The names of the lists to plot can not be the same.", call. = FALSE)
         }
         # Check that the names provided match the marker genes.
-        if (!(x1 %in% names(gene_list))){
-          stop(paste0(x1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(x1 %in% names(input_gene_list))){
+          stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
-        if (!(x2 %in% names(gene_list))){
-          stop(paste0(x2, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(x2 %in% names(input_gene_list))){
+          stop(paste0(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
-        if (!(y1 %in% names(gene_list))){
-          stop(paste0(y1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(y1 %in% names(input_gene_list))){
+          stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
         # Retrieve metadata variables.
         variables_to_retrieve <- c(x1, x2, y1, group.by)
@@ -350,17 +325,17 @@ do_CellularStatesPlot <- function(sample,
           stop("The names of the lists to plot can not be the same.", call. = FALSE)
         }
         # Check that the names provided match the marker genes.
-        if (!(x1 %in% names(gene_list))){
-          stop(paste0(x1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(x1 %in% names(input_gene_list))){
+          stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
-        if (!(x2 %in% names(gene_list))){
-          stop(paste0(x2, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(x2 %in% names(input_gene_list))){
+          stop(paste0(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
-        if (!(y1 %in% names(gene_list))){
-          stop(paste0(y1, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(y1 %in% names(input_gene_list))){
+          stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
-        if (!(y2 %in% names(gene_list))){
-          stop(paste0(y2, " is not a name of a list of genes provided to gene_list.", call. = FALSE))
+        if (!(y2 %in% names(input_gene_list))){
+          stop(paste0(y2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
         }
         # Retrieve metadata variables to plot.
         variables_to_retrieve <- c(x1, x2, y1, y2)
@@ -512,9 +487,9 @@ do_CellularStatesPlot <- function(sample,
       sample@reductions[["test"]] <- Seurat::CreateDimReducObject(embeddings = as.matrix(df.use), assay = "SCT")
 
       if (isTRUE(plot_features) & isTRUE(plot_enrichment_scores)){
-        features <- c(features, names(gene_list))
+        features <- c(features, names(input_gene_list))
       } else if (isFALSE(plot_features) & isTRUE(plot_enrichment_scores)){
-        features <- names(gene_list)
+        features <- names(input_gene_list)
       }
 
       for (feature in features){

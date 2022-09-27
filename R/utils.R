@@ -26,6 +26,9 @@
 #' @param legend.framewidth,legend.tickwidth \strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.
 #' @param legend.framecolor,legend.tickcolor \strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.
 #' @param legend.length,legend.width \strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.
+#' @param legend.icon.size \strong{\code{\link[base]{numeric}}} | Size of the icons in legend.
+#' @param legend.ncol,legend.nrow \strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.
+#' @param legend.byrow \strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.
 #' @param plot.title,plot.subtitle,plot.caption \strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.
 #' @param reduction \strong{\code{\link[base]{character}}} | Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param assay \strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.
@@ -45,6 +48,33 @@
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.
 #' @param split.by \strong{\code{\link[base]{character}}} | Secondary metadta variable to further group (split) the output by. Has to be a character of factor column.
 #' @param colors.use \strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.
+#' @param plot_marginal_distributions \strong{\code{\link[base]{logical}}} |  Whether to plot marginal distributions on the figure or not.
+#' @param marginal.type \strong{\code{\link[base]{character}}} | One of:
+#' \itemize{
+#'   \item \emph{\code{density}}: Compute density plots on the margins.
+#'   \item \emph{\code{histogram}}: Compute histograms on the margins.
+#'   \item \emph{\code{boxplot}}: Compute boxplot on the margins.
+#'   \item \emph{\code{violin}}: Compute violin plots on the margins.
+#'   \item \emph{\code{densigram}}: Compute densigram plots on the margins.
+#' }
+#' @param marginal.size \strong{\code{\link[base]{numeric}}} | Size ratio between the main and marginal plots. A value of 5 means that the main plot is 5 times bigger than the marginal plots.
+#' @param marginal.group \strong{\code{\link[base]{logical}}} | Whether to group the marginal distribution by group.by or current identities.
+#' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.
+#' @param column_title,row_title \strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.
+#' @param cluster_cols,cluster_rows \strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.
+#' @param column_names_rot,row_names_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.
+#' @param cell_size \strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.
+#' @param input_gene_list \strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.
+#' @param column_title_rot,row_title_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row titles.
+#' @param column_names_side,row_names_side \strong{\code{\link[base]{character}}} | Side to put the column and row names. Either left or right.
+#' @param column_title_side,row_title_side \strong{\code{\link[base]{character}}} | Side to put the column and row titles Either left or right.
+#' @param heatmap.legend.length,heatmap.legend.width \strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.
+#' @param heatmap.legend.framecolor \strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.
+#' @param transpose \strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.
+#' @param scale_direction \strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.
+#' @param heatmap_gap,legend_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.
+#'
+#'
 #'
 #'
 #' @usage NULL
@@ -87,7 +117,37 @@ doc_function <- function(sample,
                          group.by,
                          split.by,
                          colors.use,
-                         legend.title){
+                         legend.title,
+                         legend.icon.size,
+                         legend.byrow,
+                         legend.ncol,
+                         legend.nrow,
+                         plot_marginal_distributions,
+                         marginal.type,
+                         marginal.size,
+                         marginal.group,
+                         enforce_symmetry,
+                         column_title,
+                         row_title,
+                         cluster_cols,
+                         cluster_rows,
+                         column_names_rot,
+                         row_names_rot,
+                         cell_size,
+                         input_gene_list,
+                         column_title_rot,
+                         row_title_rot,
+                         column_names_side,
+                         row_names_side,
+                         column_title_side,
+                         row_title_side,
+                         heatmap.legend.length,
+                         heatmap.legend.width,
+                         heatmap.legend.framecolor,
+                         transpose,
+                         scale_direction,
+                         heatmap_gap,
+                         legend_gap){
 
 }
 
@@ -1108,7 +1168,7 @@ compute_barplot_annotation <- function(sample,
 #' Inner helper for heatmaps
 #'
 #' @param data Matrix ready to be plotted. Use it alongside from_matrix.
-#' @param legend_name Name of the general legend.
+#' @param legend.title Name of the general legend.
 #' @param data_range One of:
 #' - "both": Will compute a color scale equally balanced to both sides. Use when the values to plot are positive and negative.
 #' - "only_pos": Will compute a color scale based only on the positive values. Will take the positive end of colors.use as well. Use when the values to plot are only positive.
@@ -1143,7 +1203,7 @@ compute_barplot_annotation <- function(sample,
 #' TBD
 #' }
 heatmap_inner <- function(data,
-                          legend_name = "Values",
+                          legend.title = "Values",
                           data_range = "both",
                           colors.use = NULL,
                           grid_color = "grey50",
@@ -1347,7 +1407,7 @@ heatmap_inner <- function(data,
   lgd = ComplexHeatmap::Legend(at = breaks,
                                labels = labels,
                                col_fun = col_fun,
-                               title = legend_name,
+                               title = legend.title,
                                direction = direction,
                                legend_height = legend_height,
                                legend_width = legend_width,
@@ -1390,7 +1450,7 @@ heatmap_inner <- function(data,
 
 
   h <- ComplexHeatmap::Heatmap(matrix = data,
-                               name = legend_name,
+                               name = legend.title,
                                col = col_fun,
                                na_col = na.value,
                                show_heatmap_legend = FALSE,
@@ -1460,7 +1520,7 @@ modify_string <- function(string_to_modify){
 #' Compute Enrichment scores using Seurat::AddModuleScore()
 #'
 #' @param sample  Seurat object.
-#' @param list_genes  Named list of genes to compute enrichment for.
+#' @param input_gene_list  Named list of genes to compute enrichment for.
 #' @param verbose  Verbose output.
 #' @param nbin Number of bins.
 #' @param ctrl Number of control genes.
@@ -1471,7 +1531,7 @@ modify_string <- function(string_to_modify){
 #' \dontrun{
 #' TBD
 #' }
-compute_enrichment_scores <- function(sample, list_genes, verbose = F, nbin = 24, ctrl = 100){
+compute_enrichment_scores <- function(sample, input_gene_list, verbose = F, nbin = 24, ctrl = 100){
   if (!is.list(list_genes) & is.character(list_genes)){
     list_genes <- list("Input" = list_genes)
   }

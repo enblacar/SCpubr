@@ -3,20 +3,18 @@
 #' This function is an adaptation of colortools package. As the package was removed from CRAN on 23-06-2022, this utility function came to existence in order to cover the gap. It is, on its basis,
 #' an adaptation of the package into a single function. Original code, developed by Gaston Sanchez, can be found in: <https://github.com/gastonstat/colortools>
 #'
-#' @param colors.use One color upon which generate the color scale. Can be a name or a HEX code.
-#' @param n Numeric. Number of colors to include in the color wheel. Use it when all other options are FALSE, otherwise, it becomes 12.
-#' @param opposite Logical. Return the opposing color to the one provided.
-#' @param adjacent Logical. Return the adjacent colors to the one provided.
-#' @param triadic Logical. Return the triadic combination of colors to the one provided.
-#' @param split_complementary Logical. Return the split complementary combination of colors to the one provided.
-#' @param tetradic Logical. Return the tetradic combination of colors to the one provided.
-#' @param square Logical. Return the square combination of colors to the one provided.
-#' @param complete_output Logical. Runs all the previous options and returns all the outputs as a list that contains all color vectors, all plots and a combined plot with everything.
-#' @param plot Logical. Whether to also return a plot displaying the values instead of a vector with the color.
-#' @param font.size Base font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
+#' @inheritParams doc_function
+#' @param colors.use \strong{\code{\link[base]{character}}} | One color upon which generate the color scale. Can be a name or a HEX code.
+#' @param n \strong{\code{\link[base]{numeric}}} | Number of colors to include in the color wheel. Use it when all other options are FALSE, otherwise, it becomes 12.
+#' @param opposite \strong{\code{\link[base]{logical}}} | Return the opposing color to the one provided.
+#' @param adjacent \strong{\code{\link[base]{logical}}} | Return the adjacent colors to the one provided.
+#' @param triadic \strong{\code{\link[base]{logical}}} | Return the triadic combination of colors to the one provided.
+#' @param split_complementary \strong{\code{\link[base]{logical}}} | Return the split complementary combination of colors to the one provided.
+#' @param tetradic \strong{\code{\link[base]{logical}}} | Return the tetradic combination of colors to the one provided.
+#' @param square \strong{\code{\link[base]{logical}}} | Return the square combination of colors to the one provided.
+#' @param complete_output \strong{\code{\link[base]{logical}}} | Runs all the previous options and returns all the outputs as a list that contains all color vectors, all plots and a combined plot with everything.
+#' @param plot \strong{\code{\link[base]{logical}}} | Whether to also return a plot displaying the values instead of a vector with the color.
 #' @return  A character vector with the desired color scale.
-#' @return A ggplot2 object containing a Dot Plot.
 #' @export
 #' @example man/examples/examples_do_ColorPalette.R
 

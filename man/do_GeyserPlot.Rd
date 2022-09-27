@@ -11,7 +11,7 @@ do_GeyserPlot(
   slot = "data",
   group.by = NULL,
   split.by = NULL,
-  symmetrical_scale = FALSE,
+  enforce_symmetry = FALSE,
   scale_type = "continuous",
   color.by = NULL,
   order_by_mean = TRUE,
@@ -60,7 +60,7 @@ do_GeyserPlot(
 
 \item{split.by}{Character. Metadata variable to further split the plot by.}
 
-\item{symmetrical_scale}{Logical. Whether you want a continuous scale that is symmetrical on both ends and the intensity of the colors in each end matches (blue to red).}
+\item{enforce_symmetry}{Logical. Whether you want a continuous scale that is symmetrical on both ends and the intensity of the colors in each end matches (blue to red).}
 
 \item{scale_type}{Character. Either continuous or categorical.}
 

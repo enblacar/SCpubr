@@ -11,7 +11,7 @@
 #' @param cells.highlight Vector of cells for which the FeaturePlot should focus into. The rest of the cells will be grayed out.
 #' @param idents.highlight Vector of identities that the FeaturePlot should focus into. Has to match the current Seurat identities in `Seurat::Idents(sample)`.
 #' @param dims Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
-#' @param symmetrical_scale Logical. Whether to plot the features with a symmetrical scale.
+#' @param enforce_symmetry Logical. Whether to plot the features with a symmetrical scale.
 #' @param pt.size Point size.
 #' @param font.size Base font.size of the figure.
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
@@ -50,7 +50,7 @@ do_FeaturePlot <- function(sample,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2),
-                           symmetrical_scale = FALSE,
+                           enforce_symmetry = FALSE,
                            pt.size = 1,
                            font.size = 14,
                            font.type = "sans",
@@ -99,7 +99,7 @@ do_FeaturePlot <- function(sample,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
                        "order" = order,
-                       "symmetrical_scale" = symmetrical_scale)
+                       "enforce_symmetry" = enforce_symmetry)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -260,12 +260,12 @@ do_FeaturePlot <- function(sample,
     num_plots <- length(features)
     for (counter in seq(1, num_plots)){
       if (num_plots == 1){
-        if (isFALSE(symmetrical_scale)){
+        if (isFALSE(enforce_symmetry)){
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                        option = viridis_color_map),
                          scale = "color")
-        } else if (isTRUE(symmetrical_scale)){
+        } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p)
           feature.select <- gsub("-", ".", features)
           limits <- c(min(p.build$plot$data[, feature.select]),
@@ -278,12 +278,12 @@ do_FeaturePlot <- function(sample,
                          scale = "color")
         }
       } else if (num_plots > 1){
-        if (isFALSE(symmetrical_scale)){
+        if (isFALSE(enforce_symmetry)){
           p[[counter]] <- add_scale(p = p[[counter]],
                                     function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                                   option = viridis_color_map),
                                     scale = "color")
-        } else if (isTRUE(symmetrical_scale)){
+        } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p[[counter]])
           feature.select <- gsub("-", ".",  features[counter])
           limits <- c(min(p.build$plot$data[, feature.select]),
@@ -400,12 +400,12 @@ do_FeaturePlot <- function(sample,
 
         # Add scale.
 
-        if (isFALSE(symmetrical_scale)){
+        if (isFALSE(enforce_symmetry)){
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                             option = viridis_color_map),
                               scale = "color")
-        } else if (isTRUE(symmetrical_scale)){
+        } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p.loop)
           feature.select <- gsub("-", ".", feature.use)
           limits <- c(min(p.build$plot$data[, feature.select]),
@@ -462,13 +462,13 @@ do_FeaturePlot <- function(sample,
                                         raster = raster,
                                         raster.dpi = c(raster.dpi, raster.dpi))
 
-          if (isFALSE(symmetrical_scale)){
+          if (isFALSE(enforce_symmetry)){
             p.loop <- add_scale(p = p.loop,
                                 function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                               option = viridis_color_map,
                                                                               limits = limits),
                                 scale = "color")
-          } else if (isTRUE(symmetrical_scale)){
+          } else if (isTRUE(enforce_symmetry)){
             p.build <- ggplot2::ggplot_build(p.loop)
             end_value <- max(abs(limits))
             p.loop <- add_scale(p = p.loop,

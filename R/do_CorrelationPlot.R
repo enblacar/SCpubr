@@ -1,20 +1,7 @@
 #' Create correlation matrix heatmaps.
 #'
-#'
-#' @param sample Your Seurat object.
-#' @param assay Assay to retrieve the data from.
-#' @param mode Different types of correlation matrices can be computed. Right now, the only possible value is "hvg", standing for Highly Variable Genes. The sample is subset for the HVG and the data is re-scaled. Scale data is used for the correlation.
-#' @param group.by Metadata variable to group the values by.
-#' @param column_title,row_title Title for the columns and rows. Only works with single heatmaps.
-#' @param cluster_cols,cluster_rows Logical. Cluster the columns or rows.
-#' @param column_names_rot,row_names_rot Numeric. Degree in which to
-#' @param legend_name Text for the legend title.
-#' @param colors.use Vector of 2 colors to use to generate the color scale.
-#' @param cell_size Numeric. Size of each cell in the heatmap.
-#' @param na.value Value for NAs.
-#' @param legend.length,legend.width Numeric. Width and length of the legend in the heatmap.
-#' @param legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
-#' @param legend.position Character. Location of the legend.
+#' @inheritParams doc_function
+#' @param mode \strong{\code{\link[base]{character}}} | Different types of correlation matrices can be computed. Right now, the only possible value is "hvg", standing for Highly Variable Genes. The sample is subset for the HVG and the data is re-scaled. Scale data is used for the correlation.
 #'
 #' @return A ComplexHeatmap object.
 #' @export
@@ -28,10 +15,10 @@ do_CorrelationPlot <- function(sample,
                                row_title = "",
                                cluster_cols = TRUE,
                                cluster_rows = TRUE,
-                               legend_name = "Pearson coef.",
+                               legend.title = "Pearson coef.",
                                row_names_rot = 0,
                                column_names_rot = 0,
-                               colors.use = NULL,
+                               viridis_color_map = "G",
                                cell_size = 5,
                                na.value = "grey75",
                                legend.position = "bottom",
@@ -57,8 +44,8 @@ do_CorrelationPlot <- function(sample,
                          "assay" = assay,
                          "column_title" = column_title,
                          "row_title" = row_title,
-                         "legend_name" = legend_name,
-                         "colors.use" = colors.use,
+                         "legend.title" = legend.title,
+                         "viridis_color_map" = viridis_color_map,
                          "group.by" = group.by,
                          "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -113,7 +100,7 @@ do_CorrelationPlot <- function(sample,
            as.matrix() %>%
            stats::cor() %>%
            round(digits = 2) %>%
-           heatmap_inner(legend_name = legend_name,
+           heatmap_inner(legend.title = legend.title,
                          column_title = column_title,
                          row_title = row_title,
                          row_title_side = "right",
@@ -123,7 +110,7 @@ do_CorrelationPlot <- function(sample,
                          range.data = c(-1, 1),
                          cluster_columns = cluster_cols,
                          cluster_rows = cluster_rows,
-                         colors.use = colors.use,
+                         viridis_color_map = viridis_color_map,
                          cell_size = cell_size,
                          na.value = na.value,
                          legend.position = legend.position,

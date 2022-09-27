@@ -1,29 +1,12 @@
 #' Display CNV scores from inferCNV as Feature Plots.
 #'
 #'
-#'
-#' @param sample Seurat object.
-#' @param infercnv_object Output inferCNV object run on the same Seurat object.
-#' @param group.by Metadata variable to group cells by. If not provided, defaults to active identitites.
-#' @param using_metacells Logical. Whether inferCNV was run using metacells or not.
-#' @param metacell_mapping Vector or cell - metacell mapping.
-#' @param chromosome_focus Character. Region stating which chromosome to plot. Eg: 1p, 19q. NULL will plot all regions.
-#' @param chromosome_locations Tibble. Tibble containing the chromosome regions to use. Can be obtained using utils::data("human_chr_locations", package = "SCpubr")
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param pt.size Size of the dots in the dotplot pltos.
-#' @param font.size Overall fontsize for the plots.
-#' @param border.size Thickness of the border around cells in all plots.
-#' @param rotate_x_axis_labels Logical. Rotate x axis labels 90 degrees in the dotplot plots.
-#' @param plot_cell_borders Logical. Whether to plot borders around cells.
-#' @param border.color Character. Color for the border of the cells.
-#' @param symmetrical_scale Logical. Whether to make the FeaturePlot and GeyserPlot have a symmetrical scale.
-#' @param legend.title Character. Title for the legend.
-#' @param na.value Character. Color for NA values.
+#' @inheritParams doc_function
+#' @param infercnv_object \strong{\code{\link[infercnv]{infercnv}}} | Output inferCNV object run on the same Seurat object.
+#' @param using_metacells \strong{\code{\link[base]{logical}}} | Whether inferCNV was run using metacells or not.
+#' @param metacell_mapping \strong{\code{\link[SCpubr]{named_vector}}} | Vector or cell - metacell mapping.
+#' @param chromosome_focus \strong{\code{\link[base]{character}}} | Region stating which chromosome to plot. Eg: 1p, 19q. NULL will plot all regions.
+#' @param chromosome_locations \strong{\code{\link[tibble]{tibble}}} | Tibble containing the chromosome regions to use. Can be obtained using \code{utils::data("human_chr_locations", package = "SCpubr")}.
 #'
 #' @return A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..
 #' @export
@@ -51,7 +34,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      border.color = "black",
                                      rotate_x_axis_labels = TRUE,
                                      plot_cell_borders = TRUE,
-                                     symmetrical_scale = TRUE,
+                                     enforce_symmetry = TRUE,
                                      legend.title = NULL,
                                      na.value = "grey75"){
 
@@ -60,7 +43,7 @@ do_CopyNumberVariantPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "symmetrical_scale" = symmetrical_scale,
+                       "enforce_symmetry" = enforce_symmetry,
                        "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
@@ -182,7 +165,7 @@ do_CopyNumberVariantPlot <- function(sample,
                        color.by = event,
                        pt.size = pt.size,
                        border.size = border.size,
-                       symmetrical_scale = symmetrical_scale,
+                       enforce_symmetry = enforce_symmetry,
                        order_by_mean = FALSE,
                        plot_cell_borders = plot_cell_borders,
                        font.size = font.size,
@@ -217,7 +200,7 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.length = legend.length,
                           legend.width = legend.width)
 
-    if (isTRUE(symmetrical_scale)){
+    if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),
                         max(sample@meta.data[, event]))))
 

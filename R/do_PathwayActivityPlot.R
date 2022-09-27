@@ -27,7 +27,7 @@
 #' @param font.type Character. Base font for the plot. One of mono, serif or sans.
 #' @param rotate_x_axis_labels Logical. Whether to rotate the X axis names in the dot plot.
 #' @param geyser_color.by Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
-#' @param symmetrical_scale Logical. Whether the geyser and feature plot have a symmetrical color scale.
+#' @param enforce_symmetry Logical. Whether the geyser and feature plot have a symmetrical color scale.
 #' @param geyser_order_by_mean Logical. Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type Character. Type of scale to use. Either "continuous" or "categorical.
 #'
@@ -70,7 +70,7 @@ do_PathwayActivityPlot <- function(sample,
                                    font.size = 14,
                                    font.type = "sans",
                                    rotate_x_axis_labels = FALSE,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE,
                                    geyser_scale_type = "continuous"){
 
@@ -89,7 +89,7 @@ do_PathwayActivityPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
-                       "symmetrical_scale" = symmetrical_scale)
+                       "enforce_symmetry" = enforce_symmetry)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -147,7 +147,7 @@ do_PathwayActivityPlot <- function(sample,
                           pt.size = pt.size,
                           order = FALSE,
                           border.size = border.size,
-                          symmetrical_scale = symmetrical_scale,
+                          enforce_symmetry = enforce_symmetry,
                           plot_cell_borders = plot_cell_borders,
                           font.size = font.size,
                           font.type = font.type,
@@ -177,7 +177,7 @@ do_PathwayActivityPlot <- function(sample,
                          color.by = geyser_color.by,
                          pt.size = pt.size,
                          border.size = border.size,
-                         symmetrical_scale = symmetrical_scale,
+                         enforce_symmetry = enforce_symmetry,
                          scale_type = geyser_scale_type,
                          order_by_mean = geyser_order_by_mean,
                          plot_cell_borders = plot_cell_borders,
@@ -251,7 +251,7 @@ do_PathwayActivityPlot <- function(sample,
       }
 
       out <- heatmap_inner(data,
-                           legend_name = "Pathway activity",
+                           legend.title = "Pathway activity",
                            column_title = column_title,
                            row_title = row_title,
                            cluster_columns = cluster_cols,
@@ -312,7 +312,7 @@ do_PathwayActivityPlot <- function(sample,
 
 
         out <- heatmap_inner(data,
-                             legend_name = "Pathway activity",
+                             legend.title = "Pathway activity",
                              column_title = column_title,
                              row_title = row_title,
                              cluster_columns = cluster_cols,

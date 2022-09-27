@@ -12,7 +12,7 @@
 #' @param slot Character. Slot to use. Defaults to data slot if not.
 #' @param group.by Character. Metadata variable to group the data by.
 #' @param split.by Character. Metadata variable to further split the plot by.
-#' @param symmetrical_scale Logical. Whether you want a continuous scale that is symmetrical on both ends and the intensity of the colors in each end matches (blue to red).
+#' @param enforce_symmetry Logical. Whether you want a continuous scale that is symmetrical on both ends and the intensity of the colors in each end matches (blue to red).
 #' @param scale_type Character. Either continuous or categorical.
 #' @param color.by Character. Vector of colors to color the groups by if scale_type is categorical.
 #' @param order_by_mean Logical. Whether to order the groups by the mean of the data (highest to lowest).
@@ -50,7 +50,7 @@ do_GeyserPlot <- function(sample,
                           slot = "data",
                           group.by = NULL,
                           split.by = NULL,
-                          symmetrical_scale = FALSE,
+                          enforce_symmetry = FALSE,
                           scale_type = "continuous",
                           color.by = NULL,
                           order_by_mean = TRUE,
@@ -91,7 +91,7 @@ do_GeyserPlot <- function(sample,
   check_Seurat(sample = sample)
 
   # Check logical parameters.
-  logical_list <- list("symmetrical_scale" = symmetrical_scale,
+  logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "order_by_mean" = order_by_mean,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "plot_cell_borders" = plot_cell_borders)
@@ -331,14 +331,14 @@ do_GeyserPlot <- function(sample,
     }
 
     if (isTRUE(scale_type == "continuous")){
-      if (isTRUE(symmetrical_scale)){
+      if (isTRUE(enforce_symmetry)){
         limits <- c(min(data[, "color.by"]),
                     max(data[, "color.by"]))
         end_value <- max(abs(limits))
         scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
                                                     limits = c(-end_value, end_value),
                                                     na.value = na.value)
-      } else if (isFALSE(symmetrical_scale)){
+      } else if (isFALSE(enforce_symmetry)){
         scale.use <- ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                                     na.value = na.value)
       }

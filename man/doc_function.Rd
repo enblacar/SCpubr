@@ -76,6 +76,55 @@
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
+\item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
+
+\item{legend.ncol, legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.}
+
+\item{plot_marginal_distributions}{\strong{\code{\link[base]{logical}}} |  Whether to plot marginal distributions on the figure or not.}
+
+\item{marginal.type}{\strong{\code{\link[base]{character}}} | One of:
+\itemize{
+\item \emph{\code{density}}: Compute density plots on the margins.
+\item \emph{\code{histogram}}: Compute histograms on the margins.
+\item \emph{\code{boxplot}}: Compute boxplot on the margins.
+\item \emph{\code{violin}}: Compute violin plots on the margins.
+\item \emph{\code{densigram}}: Compute densigram plots on the margins.
+}}
+
+\item{marginal.size}{\strong{\code{\link[base]{numeric}}} | Size ratio between the main and marginal plots. A value of 5 means that the main plot is 5 times bigger than the marginal plots.}
+
+\item{marginal.group}{\strong{\code{\link[base]{logical}}} | Whether to group the marginal distribution by group.by or current identities.}
+
+\item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
+
+\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
+
+\item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
+
+\item{column_names_rot, row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.}
+
+\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
+
+\item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
+
+\item{column_title_rot, row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row titles.}
+
+\item{column_names_side, row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the column and row names. Either left or right.}
+
+\item{column_title_side, row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the column and row titles Either left or right.}
+
+\item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
+
+\item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
+
+\item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
+
+\item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
+
+\item{heatmap_gap, legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.}
 }
 \value{
 Nothing. This is a mock function.
