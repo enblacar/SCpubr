@@ -1,23 +1,17 @@
 #' Compute a Volcano plot out of DE genes.
 #'
-#' @param sample Seurat object.
-#' @param de_genes Output of `Seurat::FindMarkers()`.
-#' @param pval_cutoff Numeric. Cutoff for the p-value.
-#' @param FC_cutoff Numeric. Cutoff for the avg_log2FC.
-#' @param pt.size Numeric. Size for the dots.
-#' @param border.size Numeric. Size for the border of the dots.
-#' @param border.color Character. Color for the border of the dots.
-#' @param font.size Numeric. Overall size of the font in the plot.
-#' @param font.type Character. Type of font.
-#' @param plot.title,plot.subtitle,plot.caption Character. Title, subtitle and caption for the plot.
-#' @param plot_lines Logical. Whether to plot the division lines.
-#' @param line_color Character. Color for the lines.
-#' @param line_size Numeric. Size of the lines in the plot.
-#' @param add_gene_tags Logical. Whether to plot the top genes.
-#' @param order_tags_by Character. Either "both", "p_value" or "logfc".
-#' @param n_genes Numeric. Number of top genes in each side to plot.
-#' @param use_labels Logical. Whether to use labels instead of text for the tags.
-#' @param colors.use Character. Color to generate a tetradic color scale with.
+#' @inheritParams doc_function
+#' @param de_genes \strong{\code{\link[tibble]{tibble}}} | Output of `Seurat::FindMarkers()`.
+#' @param pval_cutoff \strong{\code{\link[base]{numeric}}} | Cutoff for the p-value.
+#' @param FC_cutoff \strong{\code{\link[base]{numeric}}} | Cutoff for the avg_log2FC.
+#' @param plot_lines \strong{\code{\link[base]{logical}}} | Whether to plot the division lines.
+#' @param line_color \strong{\code{\link[base]{character}}} | Color for the lines.
+#' @param line_size \strong{\code{\link[base]{numeric}}} | Size of the lines in the plot.
+#' @param add_gene_tags \strong{\code{\link[base]{logical}}} | Whether to plot the top genes.
+#' @param order_tags_by \strong{\code{\link[base]{character}}} | Either "both", "p_value" or "logfc".
+#' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes in each side to plot.
+#' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.
+#' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.
 #'
 #' @return A volcano plot as a ggplot2 object.
 #' @export

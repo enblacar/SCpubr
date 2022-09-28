@@ -2,29 +2,29 @@
 #'
 #' This function makes use of [liana](https://github.com/saezlab/liana) package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 #'
-#' @param liana_output Object resulting from running \link[liana]{liana_wrap}.
-#' @param split.by Character. Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.
-#' @param keep_source,keep_target Character. Identities to keep for the source/target of the interactions. NULL otherwise.
-#' @param top_interactions Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
-#' @param dot_border Logical. Whether to draw a black border in the dots.
-#' @param plot_grid Logical. Whether to plot grid lines.
-#' @param border.color Character. Color for the border of the dots.
-#' @param x_labels_angle Numeric. One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
-#' @param rotate_strip_text Logical. Whether the text in the strips should be flipped 90 degrees.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param flip Logical. Whether to invert the axis.
-#' @param font.size Overall font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param dot.size Numeric. Size aesthetic for the dots.
-#' @param grid.color Character. Color of the grid in the panels.
-#' @param grid.type Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.
-#' @param significance_threshold Numeric. Value to filter the interactions by significance. Default is 0.05.
-#' @param compute_ChordDiagrams Logical. Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
+#' @inheritParams doc_function
+#' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap}.
+#' @param split.by \strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.
+#' @param keep_source,keep_target \strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.
+#' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
+#' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.
+#' @param plot_grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
+#' @param x_labels_angle \strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
+#' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
+#' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
+#' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the panels.
+#' @param grid.type \strong{\code{\link[base]{character}}} | One of the possible linetype options:
+#' \itemize{
+#'   \item \emph{\code{blank}}.
+#'   \item \emph{\code{solid}}.
+#'   \item \emph{\code{dashed}}.
+#'   \item \emph{\code{dotted}}.
+#'   \item \emph{\code{dotdash}}.
+#'   \item \emph{\code{longdash}}.
+#'   \item \emph{\code{twodash}}.
+#' }
+#' @param significance_threshold \strong{\code{\link[base]{numeric}}} | Value to filter the interactions by significance. Default is 0.05.
+#' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
@@ -41,7 +41,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                   significance_threshold = 0.05,
                                   dot_border = TRUE,
                                   border.color = "black",
-                                  x_labels_angle = 0,
+                                  x_labels_angle = 45,
                                   rotate_strip_text = FALSE,
                                   legend.position = "bottom",
                                   legend.type = "colorbar",

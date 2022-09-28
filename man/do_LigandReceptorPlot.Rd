@@ -13,7 +13,7 @@ do_LigandReceptorPlot(
   significance_threshold = 0.05,
   dot_border = TRUE,
   border.color = "black",
-  x_labels_angle = 0,
+  x_labels_angle = 45,
   rotate_strip_text = FALSE,
   legend.position = "bottom",
   legend.type = "colorbar",
@@ -35,51 +35,77 @@ do_LigandReceptorPlot(
 )
 }
 \arguments{
-\item{liana_output}{Object resulting from running \link[liana]{liana_wrap}.}
+\item{liana_output}{\strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap}.}
 
-\item{split.by}{Character. Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.}
+\item{split.by}{\strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.}
 
-\item{keep_source, keep_target}{Character. Identities to keep for the source/target of the interactions. NULL otherwise.}
+\item{keep_source, keep_target}{\strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.}
 
-\item{top_interactions}{Numeric. Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
+\item{top_interactions}{\strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
 
-\item{significance_threshold}{Numeric. Value to filter the interactions by significance. Default is 0.05.}
+\item{significance_threshold}{\strong{\code{\link[base]{numeric}}} | Value to filter the interactions by significance. Default is 0.05.}
 
-\item{dot_border}{Logical. Whether to draw a black border in the dots.}
+\item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.}
 
-\item{border.color}{Character. Color for the border of the dots.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
 
-\item{x_labels_angle}{Numeric. One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.}
+\item{x_labels_angle}{\strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.}
 
-\item{rotate_strip_text}{Logical. Whether the text in the strips should be flipped 90 degrees.}
+\item{rotate_strip_text}{\strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.}
 
-\item{legend.position}{Position of the legend in the plot. Will only work if legend is set to TRUE.}
+\item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
+\itemize{
+\item \emph{\code{top}}: Top of the figure.
+\item \emph{\code{bottom}}: Bottom of the figure.
+\item \emph{\code{left}}: Left of the figure.
+\item \emph{\code{right}}: Right of the figure.
+\item \emph{\code{none}}: No legend is displayed.
+}}
 
-\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps.}
+\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
+\itemize{
+\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
+\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
+\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
+}}
 
-\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+\item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
-\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{viridis_color_map}{Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{font.size}{Overall font.size of the plot.}
+\item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
-\item{dot.size}{Numeric. Size aesthetic for the dots.}
+\item{dot.size}{\strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.}
 
-\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
 
-\item{flip}{Logical. Whether to invert the axis.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
 
-\item{plot_grid}{Logical. Whether to plot grid lines.}
+\item{plot_grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
-\item{grid.color}{Character. Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 
-\item{grid.type}{Character. One of the possible linetype options: blank, solid, dashed, dotted, dotdash, longdash, twodash.}
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
 
-\item{compute_ChordDiagrams}{Logical. Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
+\item{compute_ChordDiagrams}{\strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

@@ -28,40 +28,64 @@ do_TermEnrichmentPlot(
 )
 }
 \arguments{
-\item{genes}{Character vector with the genes to query.}
+\item{genes}{\strong{\code{\link[base]{character}}} | Character vector with the genes to query.}
 
-\item{dbs_use}{Character vector with the desired EnrichR databases to query. This can be consulted with \code{enrichR::listEnrichrDbs()}. Alternatively, one of the following values:
+\item{dbs_use}{\strong{\code{\link[base]{character}}} | Character vector with the desired EnrichR databases to query. This can be consulted with \code{enrichR::listEnrichrDbs()}. Alternatively, one of:
 \itemize{
-\item "A": Will perform a query to 4 databases for cell types (Azimuth, Descartes, PanglaoDB and Descartes) and 4 databases for functional terms (MsigDB, GO-BP, GO-MF and KEGG). This is the default option if this parameter is not provided.
-\item "B": Performs a query for the cell type databases (Azimuth, Descartes, PanglaoDB and Descartes).
-\item "C": Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
+\item \emph{\code{A}}: Will perform a query to 4 databases for cell types (Azimuth, Descartes, PanglaoDB and Descartes) and 4 databases for functional terms (MsigDB, GO-BP, GO-MF and KEGG). This is the default option if this parameter is not provided.
+\item \emph{\code{B}}: Performs a query for the cell type databases (Azimuth, Descartes, PanglaoDB and Descartes).
+\item \emph{\code{C}}: Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
 }}
 
-\item{nchar_wrap}{Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.}
+\item{nchar_wrap}{\strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.}
 
-\item{nterms}{Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.}
+\item{nterms}{\strong{\code{\link[base]{numeric}}} | Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.}
 
-\item{font.size}{Base font size for the plot. Defaults to 14.}
+\item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
-\item{font.type}{Character. Base font for the plot. One of mono, serif or sans.}
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
 
-\item{site}{Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".}
+\item{site}{\strong{\code{\link[base]{character}}} | Site to query the genes against. Can be one of:
+\itemize{
+\item \emph{\code{Enrichr}}.
+\item \emph{\code{FlyEnrichr}}.
+\item \emph{\code{WormEnrichr}}.
+\item \emph{\code{YeastEnrichr}}.
+\item \emph{\code{FishEnrichr}}.
+}}
 
-\item{plot.title, plot.subtitle, plot.caption}{Title,subtitle or caption to use in the plot.}
+\item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
-\item{legend.position}{Position of the legend in the plot.}
+\item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
+\itemize{
+\item \emph{\code{top}}: Top of the figure.
+\item \emph{\code{bottom}}: Bottom of the figure.
+\item \emph{\code{left}}: Left of the figure.
+\item \emph{\code{right}}: Right of the figure.
+\item \emph{\code{none}}: No legend is displayed.
+}}
 
-\item{legend.type}{Character. Type of legend to display. One of: normal, colorbar, colorsteps. Colorsteps will default to colorbar if only one value is present for the scale.}
+\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
+\itemize{
+\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
+\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
+\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
+}}
 
-\item{colors.use}{Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
+\item{colors.use}{\strong{\code{\link[base]{character}}} | Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
 
-\item{text_labels_size}{Numeric. Controls how big or small labels are in the plot.}
+\item{text_labels_size}{\strong{\code{\link[base]{numeric}}} | Controls how big or small labels are in the plot.}
 
-\item{legend.length, legend.width}{Length and width of the legend. Will adjust automatically depending on legend side.}
+\item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{legend.framewidth, legend.tickwidth}{Width of the lines of the box in the legend.}
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{Color of the lines of the box in the legend.}
+\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 }
 \value{
 A ggplot2 object with enriched terms.

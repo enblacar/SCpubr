@@ -1,23 +1,25 @@
 #' Compute the enriched terms for a given list of genes.
 #'
-#' @param genes Character vector with the genes to query.
-#' @param dbs_use Character vector with the desired EnrichR databases to query. This can be consulted with `enrichR::listEnrichrDbs()`. Alternatively, one of the following values:
-#' - "A": Will perform a query to 4 databases for cell types (Azimuth, Descartes, PanglaoDB and Descartes) and 4 databases for functional terms (MsigDB, GO-BP, GO-MF and KEGG). This is the default option if this parameter is not provided.
-#' - "B": Performs a query for the cell type databases (Azimuth, Descartes, PanglaoDB and Descartes).
-#' - "C": Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
-#' @param nchar_wrap Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.
-#' @param nterms Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.
-#' @param font.size Base font size for the plot. Defaults to 14.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param plot.title,plot.subtitle,plot.caption  Title,subtitle or caption to use in the plot.
-#' @param site Site to query the genes against. Can be one of: "Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr".
-#' @param colors.use Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps. Colorsteps will default to colorbar if only one value is present for the scale.
-#' @param legend.position Position of the legend in the plot.
-#' @param text_labels_size Numeric. Controls how big or small labels are in the plot.
+#' @inheritParams doc_function
+#' @param genes \strong{\code{\link[base]{character}}} | Character vector with the genes to query.
+#' @param dbs_use \strong{\code{\link[base]{character}}} | Character vector with the desired EnrichR databases to query. This can be consulted with `enrichR::listEnrichrDbs()`. Alternatively, one of:
+#' \itemize{
+#'   \item \emph{\code{A}}: Will perform a query to 4 databases for cell types (Azimuth, Descartes, PanglaoDB and Descartes) and 4 databases for functional terms (MsigDB, GO-BP, GO-MF and KEGG). This is the default option if this parameter is not provided.
+#'   \item \emph{\code{B}}: Performs a query for the cell type databases (Azimuth, Descartes, PanglaoDB and Descartes).
+#'   \item \emph{\code{C}}: Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
+#' }
+#' @param nchar_wrap \strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.
+#' @param nterms \strong{\code{\link[base]{numeric}}} | Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.
+#' @param site \strong{\code{\link[base]{character}}} | Site to query the genes against. Can be one of:
+#' \itemize{
+#'   \item \emph{\code{Enrichr}}.
+#'   \item \emph{\code{FlyEnrichr}}.
+#'   \item \emph{\code{WormEnrichr}}.
+#'   \item \emph{\code{YeastEnrichr}}.
+#'   \item \emph{\code{FishEnrichr}}.
+#' }
+#' @param colors.use \strong{\code{\link[base]{character}}} | Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.
+#' @param text_labels_size \strong{\code{\link[base]{numeric}}} | Controls how big or small labels are in the plot.
 #' @return A ggplot2 object with enriched terms.
 #' @export
 #'

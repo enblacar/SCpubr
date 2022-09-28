@@ -131,6 +131,12 @@
 \item{ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.}
 
 \item{dims}{\strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
+
+\item{feature}{\strong{\code{\link[base]{character}}} | Feature to represent.}
+
+\item{features}{\strong{\code{\link[base]{character}}} | Features to represent.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 }
 \value{
 Nothing. This is a mock function.

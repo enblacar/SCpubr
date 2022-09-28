@@ -3,7 +3,6 @@
 #' This function computes the enrichment scores for the cells using \link[Seurat]{AddModuleScore} and then aggregates the scores by the metadata variables provided by the user and displays it as a heatmap, computed by \link[ComplexHeatmap]{Heatmap}.
 #'
 #' @inheritParams doc_function
-#' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales or a bicolor (blue-white-red) color scale.
 #' @param symmetrical_scale \strong{\code{\link[base]{logical}}} | Whether to make the color scale symmetrical. Works best when use_viridis = FALSE.
 #'
 #' @return A ComplexHeatmap object.

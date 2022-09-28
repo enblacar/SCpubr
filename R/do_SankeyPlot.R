@@ -1,25 +1,26 @@
 
 #' Do Sankey or Alluvial plots.
 #'
-#' @param sample Seurat object.
-#' @param first_group Character. Categorical metadata variable. First group of nodes of the sankey plot.
-#' @param last_group Character. Categorical metadata variable. Last group of nodes of the sankey plot.
-#' @param middle_groups Character. Categorical metadata variable. Vector of groups of nodes of the sankey plot.
-#' @param type Character. Type of plot. Either sankey or alluvial.
-#' @param width Numeric. Width of the nodes.
-#' @param space Numeric. Vertical space between the nodes. It appears to be equal to a single cell. Use big numbers to see a difference (like, 1000 or 10000).
-#' @param position Character. GGplot2 position.
-#' @param node.fill Character. Color to fill the nodes.
-#' @param node.color Character. Color for the contour of the nodes.
-#' @param flow.alpha Character. Alpha of the connections.
-#' @param flow.color Character. Color for the contour of the connections.
-#' @param text_size Numeric. Size of the labels.
-#' @param text_color Character. Color of the labels.
-#' @param font.size Numeric. Overall font size of the plot.
-#' @param font.type Character. Font family: either sans, mono or serif.
-#' @param smooth Numeric. How smooth the connections are.
-#' @param colors.first,colors.middle,colors.last Character. Named vector of colors equal to ALL unique values in first_group, middle_groups, or last_group.
-#' @param plot.title,plot.subtitle,plot.caption Character. Title, Subtitle and caption to use in the plot.
+#' @inheritParams doc_function
+#' @param first_group \strong{\code{\link[base]{character}}} | Categorical metadata variable. First group of nodes of the sankey plot.
+#' @param last_group \strong{\code{\link[base]{character}}} | Categorical metadata variable. Last group of nodes of the sankey plot.
+#' @param middle_groups \strong{\code{\link[base]{character}}} | Categorical metadata variable. Vector of groups of nodes of the sankey plot.
+#' @param type \strong{\code{\link[base]{character}}} | Type of plot to make. One of:
+#' \itemize{
+#'   \item \emph{\code{sankey}}: Generates a sankey plot.
+#'   \item \emph{\code{alluvial}}: Generated an Alluvial plot, a kind of sankey plot where all groups have the same height.
+#' }
+#' @param width \strong{\code{\link[base]{numeric}}} | Width of the nodes.
+#' @param space \strong{\code{\link[base]{numeric}}} | Vertical space between the nodes. It appears to be equal to a single cell. Use big numbers to see a difference (like, 1000 or 10000).
+#' @param position \strong{\code{\link[base]{character}}} | GGplot2 position.
+#' @param node.fill \strong{\code{\link[base]{character}}} | Color to fill the nodes.
+#' @param node.color \strong{\code{\link[base]{character}}} | Color for the contour of the nodes.
+#' @param flow.alpha \strong{\code{\link[base]{character}}} | Alpha of the connections.
+#' @param flow.color \strong{\code{\link[base]{character}}} | Color for the contour of the connections.
+#' @param text_size \strong{\code{\link[base]{numeric}}} | Size of the labels.
+#' @param text_color \strong{\code{\link[base]{character}}} | Color of the labels.
+#' @param smooth \strong{\code{\link[base]{numeric}}} | How smooth the connections are.
+#' @param colors.first,colors.middle,colors.last \strong{\code{\link[base]{character}}} | Named vector of colors equal to ALL unique values in first_group, middle_groups, or last_group.
 #'
 #' @return A ggplot2 object.
 #' @export

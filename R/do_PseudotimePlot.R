@@ -1,30 +1,17 @@
-
 #' Compute Pseudotime analysis plots.
 #'
-#' @param sample Seurat object.
-#' @param cds Cell Data Set of the same seurat object. Can be obtained using `SeuratWrappers::as.cell_data_set(sample)`.
-#' @param group.by Character. Metadata variable to use as grouping if monocle3 clusters are not computed.
-#' @param compute_monocle_partitions Logical. Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.
-#' @param compute_monocle_clusters Logical. Whether to make monocle3 to re-compute clustering
-#' @param trajectory_graph_color Character. Color of the trajectory graph plotted on top of the UMAP.
-#' @param trajectory_graph_segment_size Integer. Size of the trajectory graph.
-#' @param pseudotime_genes Character. List of genes that will be used to compute enrichment scores, that will be used for pseudotime.
-#' @param is_max_score_the_start Logical. Do the cells with the highest enrichment scores depict the beginning of the trajectory (TRUE) or the end (FALSE)?
-#' @param label_roots,label_branches,label_leaves Logical. Label roots, branches or leaves in the trajectory graph.
-#' @param pt.size Numeric. Point size for the plots.
-#' @param border.size Numeric. Point size for the border of the cells in the plots.
-#' @param font.size Numeric. Overall fontsize for the plots.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Numeric. Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Numeric. Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param viridis_color_map Character. Viridis color map to use in the FeaturePlot for the enrichment scores.
-#' @param plot_cell_borders Logical. Whether to plot borders around the cells.
-#' @param nbin Numeric. Number of bins to use while computing enrichment scores.
-#' @param ctrl Numeric. Number of control genes per bin while computing enrichment scores.
-#' @param enforce_symmetry Logical. Whethter to plot enrichment as a symmetrical scale.
+#' @inheritParams doc_function
+#' @param cds \strong{\code{\link[monocle3]{cell_data_set}}} | Cell Data Set of the same seurat object. Can be obtained using `SeuratWrappers::as.cell_data_set(sample)`.
+#' @param group.by \strong{\code{\link[base]{character}}} | Metadata variable to use as grouping if monocle3 clusters are not computed.
+#' @param compute_monocle_partitions \strong{\code{\link[base]{logical}}} | Whether to tell monocle3 to compute different partitions. FALSE will treat all the UMAP as a single partition.
+#' @param compute_monocle_clusters \strong{\code{\link[base]{logical}}} | Whether to make monocle3 to re-compute clustering
+#' @param trajectory_graph_color \strong{\code{\link[base]{character}}} | Color of the trajectory graph plotted on top of the UMAP.
+#' @param trajectory_graph_segment_size \strong{\code{\link[base]{numeric}}} | Size of the trajectory graph.
+#' @param pseudotime_genes \strong{\code{\link[base]{character}}} | List of genes that will be used to compute enrichment scores, that will be used for pseudotime.
+#' @param is_max_score_the_start \strong{\code{\link[base]{logical}}} | Do the cells with the highest enrichment scores depict the beginning of the trajectory (TRUE) or the end (FALSE)?
+#' @param label_roots,label_branches,label_leaves \strong{\code{\link[base]{logical}}} | Label roots, branches or leaves in the trajectory graph.
+#' @param nbin \strong{\code{\link[base]{numeric}}} | Number of bins to use while computing enrichment scores.
+#' @param ctrl \strong{\code{\link[base]{numeric}}} | Number of control genes per bin while computing enrichment scores.
 #'
 #' @export
 #' @return A list containing a collection of ggplot2 objects.

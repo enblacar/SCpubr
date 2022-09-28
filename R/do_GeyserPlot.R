@@ -6,39 +6,16 @@
 #'
 #' Special thanks to Christina Blume for coming up with the name of the plot.
 #'
-#' @param sample Seurat object.
-#' @param features Character. Features to plot.
-#' @param assay Character. Assay to use. Defaults to active assay if not.
-#' @param slot Character. Slot to use. Defaults to data slot if not.
-#' @param group.by Character. Metadata variable to group the data by.
-#' @param split.by Character. Metadata variable to further split the plot by.
-#' @param enforce_symmetry Logical. Whether you want a continuous scale that is symmetrical on both ends and the intensity of the colors in each end matches (blue to red).
-#' @param scale_type Character. Either continuous or categorical.
-#' @param color.by Character. Vector of colors to color the groups by if scale_type is categorical.
-#' @param order_by_mean Logical. Whether to order the groups by the mean of the data (highest to lowest).
-#' @param plot_cell_borders Logical. Whether to plot border around the cells.
-#' @param jitter Numeric. Amount of jitter in the plot along the X axis. The lower the value, the more compacted the dots are.
-#' @param pt.size Numeric. Size of the cells.
-#' @param border.size Numeric. Thickness of the border around the cells.
-#' @param border.color Character. Color for the border of the cells.
-#' @param show_legend Logical. Whether to display the legend. Might be redundant depending on the setups.
-#' @param legend.title Character. Title for the legend.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Character. Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Numeric. Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Character. Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Numeric. Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param legend.ncol,legend.nrow Numeric. Number of rows/columns of a categorical legend.
-#' @param legend.icon.size Numeric. Size of the dots in a categorical legend.
-#' @param legend.byrow Logical. Whether to fill the legend by rows instead of columns in a categorical legend.
-#' @param font.size Numeric. Overall font size of the plot.
-#' @param font.type Character. Font family for the plot: sans, mono, serif.
-#' @param rotate_x_axis_labels Logical. Whether to rotate X axis labels.
-#' @param viridis_color_map Character. Viridis color map to use. One of: A, B, C, D, E, F, G, H.
-#' @param colors.use Character. Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.
-#' @param na.value Character. Color for NAs.
-#' @param plot.title,plot.subtitle,plot.caption Character. Title, Subtitle and caption to use in the plot.
-#' @param xlab,ylab Character. Titles for the X and Y axis.
+#' @inheritParams doc_function
+#' @param scale_type \strong{\code{\link[base]{character}}} | Type of color scale to use.  One of:
+#' \itemize{
+#'   \item \emph{\code{categorical}}: Use a categorical color scale based on the values of "color.by" or "group.by".
+#'   \item \emph{\code{continuous}}: Use a continuous color scale based on the values of "color.by" or "feature".
+#' }
+#' @param color.by \strong{\code{\link[base]{character}}} | Metadata variable to color the cells by if scale is categorical or continuous variable if the scale is continuous.
+#' @param order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the groups by the mean of the data (highest to lowest).
+#' @param jitter \strong{\code{\link[base]{numeric}}} | Amount of jitter in the plot along the X axis. The lower the value, the more compacted the dots are.
+#' @param colors.use \strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.
 #'
 #' @return Either a plot of a list of plots, depending on the number of features provided.
 #' @export
@@ -69,7 +46,7 @@ do_GeyserPlot <- function(sample,
                           legend.type = "colorbar",
                           font.size = 14,
                           font.type = "sans",
-                          rotate_x_axis_labels = FALSE,
+                          rotate_x_axis_labels = TRUE,
                           viridis_color_map = "D",
                           colors.use = NULL,
                           na.value = "grey75",
@@ -78,7 +55,6 @@ do_GeyserPlot <- function(sample,
                           legend.icon.size = 4,
                           legend.byrow = FALSE,
                           legend.title = NULL,
-                          show_legend = TRUE,
                           plot.title = NULL,
                           plot.subtitle = NULL,
                           plot.caption = NULL,
@@ -378,6 +354,7 @@ do_GeyserPlot <- function(sample,
            ggplot2::facet_grid(. ~ split.by)
     }
     p <- p +
+         ggplot2::scale_y_continuous(labels = scales::label_number()) +
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
@@ -389,9 +366,9 @@ do_GeyserPlot <- function(sample,
                         axis.line.x = ggplot2::element_line(color = "black"),
                         axis.text.x = ggplot2::element_text(color = "black",
                                                             face = "bold",
-                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 90, 0),
+                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
                                                             hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 0.5, 1)),
+                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
                         axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         panel.grid.major = ggplot2::element_blank(),
@@ -439,12 +416,6 @@ do_GeyserPlot <- function(sample,
                                                          override.aes = list(size = legend.icon.size),
                                                          title.position = "top",
                                                          title.hjust = 0.5))
-    }
-
-    # Remove legend if necessary.
-    if (isFALSE(show_legend)){
-      p <- p +
-           ggplot2::theme(legend.position = "none")
     }
     list.out[[feature]] <- p
   }

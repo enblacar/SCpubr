@@ -1,33 +1,15 @@
 #' Wrapper for \link[Seurat]{DotPlot}.
 #'
-#'
-#' @param sample Seurat object.
-#' @param features Features to represent.
-#' @param assay Assay to use. Defaults to the current assay.
-#' @param group.by Variable you want the cells to be colored for.
-#' @param split.by Split into as many plots as unique values in the variable provided.
-#' @param colors.use Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
-#' @param legend Whether to plot the legend or not.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot. Will only work if legend is set to TRUE.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param plot.title,plot.subtitle,plot.caption Title, subtitle or caption to use in the plot.
-#' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
-#' @param xlab Title for the X axis.
-#' @param ylab Title for the Y axis.
-#' @param font.size Base font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param flip Whether to flip the axis.
-#' @param dot.scale Scale the size of the dots.
-#' @param cluster.idents Logical. Whether to cluster the identities based on the expression of the features.
-#' @param rotate_x_labels Logical. Whether to rotate X axis labels to horizontal or not. If multiple features, a vector of logical values of the same length.
-#' @param scale.by Whether to scale the size of the dots by radius or size aesthetic.
-#' @param use_viridis Logical. Whether to use viridis color scale.
-#' @param viridis_color_map. Character. Viridis scale to use.
-#' @param na.value Character. Color for NAs.
-#' @param dot_border Logical. Whether to plot a border around dots.
+#' @inheritParams doc_function
+#' @param colors.use \strong{\code{\link[base]{character}}} | Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
+#' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
+#' @param cluster.idents \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
+#' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
+#' \itemize{
+#'   \item \emph{\code{radius}}: use radius aesthetic.
+#'   \item \emph{\code{size}}: use size aesthetic.
+#' }
+#' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to plot a border around dots.
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -38,7 +20,6 @@ do_DotPlot <- function(sample,
                        assay = NULL,
                        group.by = NULL,
                        split.by = NULL,
-                       legend = TRUE,
                        legend.type = "colorbar",
                        legend.position = "bottom",
                        legend.framewidth = 1.5,
@@ -58,7 +39,7 @@ do_DotPlot <- function(sample,
                        font.type = "sans",
                        cluster.idents = FALSE,
                        flip = FALSE,
-                       rotate_x_labels = NULL,
+                       rotate_x_axis_labels = TRUE,
                        scale.by = "size",
                        use_viridis = TRUE,
                        viridis_color_map = "G",
@@ -73,10 +54,9 @@ do_DotPlot <- function(sample,
     assay <- out[["assay"]]
 
     # Check logical parameters.
-    logical_list <- list("legend" = legend,
-                         "flip" = flip,
+    logical_list <- list("flip" = flip,
                          "cluster.idents" = cluster.idents,
-                         "rotate_x_labels" = rotate_x_labels,
+                         "rotate_x_axis_labels" = rotate_x_axis_labels,
                          "use_viridis" = use_viridis,
                          "dot_border" = dot_border)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
@@ -196,8 +176,17 @@ do_DotPlot <- function(sample,
       }
     }
     p <- p +
+         ggplot2::xlab(xlab) +
+         ggplot2::ylab(ylab) +
+         ggplot2::labs(title = plot.title,
+                       subtitle = plot.subtitle,
+                       caption = plot.caption) +
          ggplot2::theme_minimal(base_size = font.size) +
-         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, face = "bold", color = "black"),
+         ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
+                                                            face = "bold",
+                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
+                                                            hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
+                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
                         axis.title = ggplot2::element_text(face = "bold"),
@@ -231,50 +220,17 @@ do_DotPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
 
     # Modify size legend.
-    p <- p +
-         ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
-                                                      title.position = "top",
-                                                      title.hjust = 0.5))
     if (isTRUE(dot_border)){
       p <- p +
            ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
                                                         title.position = "top",
                                                         title.hjust = 0.5,
                                                         override.aes = ggplot2::aes(fill = "black")))
-    }
-
-    if (!is.null(xlab)){
-      p <- p & ggplot2::xlab(xlab)
     } else {
-      p <- p & ggplot2::xlab("")
-    }
-    if (!is.null(ylab)){
-      p <- p & ggplot2::ylab(ylab)
-    } else {
-      p <- p & ggplot2::ylab("")
-    }
-    if (!is.null(plot.title)){
-      p <- p &
-          ggplot2::labs(title = plot.title)
-    }
-
-
-    # Add custom subtitle.
-    if (!is.null(plot.subtitle)){
       p <- p +
-          ggplot2::labs(subtitle = plot.subtitle)
-    }
-
-    # Add custom caption
-    if (!is.null(plot.caption)){
-      p <- p +
-          ggplot2::labs(caption = plot.caption)
-      }
-
-    if (!(is.null(rotate_x_labels))){
-      if (isTRUE(rotate_x_labels)){
-        p <- p & ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5))
-      }
+           ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
+                                                        title.position = "top",
+                                                        title.hjust = 0.5))
     }
 
     if (is.list(features)){

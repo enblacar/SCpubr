@@ -65,7 +65,7 @@ do_EnrichmentHeatmap(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales or a bicolor (blue-white-red) color scale.}
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 

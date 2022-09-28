@@ -76,6 +76,11 @@
 #' @param cells.highlight,idents.highlight \strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.
 #' @param dims \strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param ncol \strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.
+#' @param features \strong{\code{\link[base]{character}}} | Features to represent.
+#' @param feature \strong{\code{\link[base]{character}}} | Feature to represent.
+#' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.
+#'
+#'
 #'
 #' @usage NULL
 #' @return Nothing. This is a mock function.
@@ -151,7 +156,10 @@ doc_function <- function(sample,
                          cells.highlight,
                          idents.highlight,
                          ncol,
-                         dims){}
+                         dims,
+                         feature,
+                         features,
+                         use_viridis){}
 
 #' Named vector.
 #'
@@ -215,7 +223,7 @@ check_suggests <- function(function_name){
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2"),
+                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
@@ -262,7 +270,7 @@ state_dependencies <- function(func_name = NULL){
                    "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
                    "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
                    "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_VlnPlot" = c("Seurat", "ggplot2"),
+                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
                    "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
                    "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
                    "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),

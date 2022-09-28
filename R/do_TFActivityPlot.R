@@ -1,36 +1,16 @@
 #' Plot TF Activities from DecoupleR using Dorothea prior knowledge.
 #'
-#' @param sample Seurat object.
-#' @param activities Result of running decoupleR method with dorothea regulon prior knowledge.
-#' @param n_tfs Numeric. Number of top regulons to consider for downstream analysis.
-#' @param group.by Character. Variable to group the output by. Defaults to current identities.
-#' @param split.by Character. Optional variable to split the heatmaps by as well.
-#' @param plot_FeaturePlots Logical. Compute output feature plots for each of the top regulons.
-#' @param plot_Heatmaps Logical. Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
-#' @param plot_GeyserPlots Logical. Compute output dotplot for each of the top regulons and group.by variable.
-#' @param row_title,column_title Character. Title for the rows in the heatmap. Not working if split.by is used.
-#' @param transpose Logical. Whether to transpose the heatmap matrix.
-#' @param cluster_cols,cluster_rows Logical. Whether to cluster rows and columns in the heatmap.
-#' @param row_names_rot,column_names_rot Numeric. Angle of rotation of the column and row names. Suggested: either 0 or 90.
-#' @param cell_size Numeric. Size of each cell in the heatmap.
-#' @param pt.size Numeric. Size of the dots in the non-heatmap plots.
-#' @param plot_cell_borders Logical. Whether to plot borders around cells in non-heatmap plots.
-#' @param border.size Numeric. Size of the border.
-#' @param na.value Character. Color for NA values.
-#' @param legend.position Character. Position of the legend in the plots. One of: top, bottom, left, right.
-#' @param heatmap.legend.length,heatmap.legend.width Numeric. Width and length of the legend in the heatmap.
-#' @param heatmap.legend.framecolor Character. Color of the edges and ticks of the legend in the heatmap.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend for both feature plots and dot plots.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend for both feature plots and dot plots.
-#' @param legend.length,legend.width Length and width of the legend for both feature plots and dot plots. Will adjust automatically depending on legend side.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param font.size Numeric. Base font.size of the figure.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param rotate_x_axis_labels Logical. Whether to rotate the X axis names in the dot plot.
-#' @param geyser_color.by Character. Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
-#' @param enforce_symmetry Logical. Whether the geyser and feature plot has a symmetrical color scale.
-#' @param geyser_order_by_mean Logical. Whether to order the X axis by the mean of the values.
-#' @param geyser_scale_type Character. Type of scale to use. Either "continuous" or "categorical.
+#'
+#' @inheritParams doc_function
+#' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with dorothea regulon prior knowledge.
+#' @param n_tfs \strong{\code{\link[base]{numeric}}} | Number of top regulons to consider for downstream analysis.
+#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.
+#' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
+#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output dotplot for each of the top regulons and group.by variable.
+#' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
+#' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
+#' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
+#' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
 #'
 #' @return A list containing several output plots according to the user's specifications.
 #' @export

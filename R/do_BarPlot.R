@@ -2,6 +2,8 @@
 #' Create Bar Plots.
 #'
 #' @inheritParams doc_function
+#' @param group.by \strong{\code{\link[base]{character}}} | Metadata column to compute the counts of. Has to be either a character or factor column.
+#' @param split.by \strong{\code{\link[base]{character}}} | Metadata column to split the values of group.by by. If not used, defaults to the active idents.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.
 #' @param position \strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
 #' \itemize{
@@ -21,7 +23,7 @@ do_BarPlot <- function(sample,
                        font.size = 14,
                        font.type = "sans",
                        legend.position = "bottom",
-                       rotate_x_axis_labels = FALSE,
+                       rotate_x_axis_labels = TRUE,
                        legend.title = NULL,
                        xlab = NULL,
                        ylab = NULL,
@@ -80,7 +82,7 @@ do_BarPlot <- function(sample,
                                                                                                                                     dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
                                                                                                                                     dplyr::group_by(.data[[group.by]]) %>%
                                                                                                                                     dplyr::summarise("n" = dplyr::n()) %>%
-                                                                                                                                    dplyr::arrange(dplyr::desc(.data$n)) %>%
+                                                                                                                                    dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data$n)} else {.data$n}) %>%
                                                                                                                                     dplyr::pull(.data[[group.by]]) %>%
                                                                                                                                     as.character()})}) %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = if(is.null(split.by)) {.data[[group.by]]} else {.data[[split.by]]},
@@ -108,9 +110,9 @@ do_BarPlot <- function(sample,
                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = "bold",
-                                                          angle = ifelse(isTRUE(rotate_x_axis_labels), 90, 0),
+                                                          angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
                                                           hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                          vjust = ifelse(isTRUE(rotate_x_axis_labels), 0.5, 1)),
+                                                          vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
                       axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       plot.title.position = "plot",

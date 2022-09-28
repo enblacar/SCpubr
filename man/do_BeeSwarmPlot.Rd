@@ -13,6 +13,7 @@ do_BeeSwarmPlot(
   slot = NULL,
   continuous_feature = FALSE,
   colors.use = NULL,
+  legend.title = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 1.5,
@@ -57,6 +58,8 @@ do_BeeSwarmPlot(
 \item{continuous_feature}{\strong{\code{\link[base]{logical}}} | Is the feature to rank and color for continuous? I.e: an enrichment score.}
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
+
+\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{

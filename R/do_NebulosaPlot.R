@@ -1,32 +1,10 @@
 #' Wrapper for Nebulosa::plot_density in Seurat.
 #'
-#'
-#' @param sample Seurat object.
-#' @param reduction Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`.
-#' @param features Features to plot density for. It can be a single one or a vector of multiple features.
-#' @param slot Slot to retrieve the data from. Defaults to "data".
-#' @param pt.size Size of the dots.
-#' @param combine Whether to create a single plot out of multiple features.
-#' @param method Kernel density estimation method. Either "ks" or "wkde" or both. See \link[Nebulosa]{plot_density} for more details.
-#' @param dims Vector of 2 dims to plot the data. By default, first and second from the specified reduction.
-#' @param joint Whether to plot different features as joint density.
-#' @param return_only_joint Whether to only return the joint density panel. Logical.
-#' @param shape Shape of the geometry (ggplot number).
-#' @param legend Whether to plot the legend or not. Logical.
-#' @param legend.type Character. Type of legend to display. One of: normal, colorbar, colorsteps.
-#' @param legend.position Position of the legend in the plot.
-#' @param legend.framewidth,legend.tickwidth Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param font.size Base font.size of the plot.
-#' @param font.type Character. Base font for the plot. One of mono, serif or sans.
-#' @param plot.title,plot.subtitle,plot.caption Title to use in the plot.
-#' @param individual.titles,individual.subtitles,individual.captions Titles, subtitles and captions for each feature if needed. Either NULL or a vector of equal length of features.
-#' @param viridis_color_map Character. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param plot_cell_borders Logical. Whether to plot border around cells.
-#' @param border.size Numeric. Width of the border of the cells.
-#' @param border.color Character. Color to use for the border of the cells.
-#' @param verbose Whether to show warnings.
+#' @inheritParams doc_function
+#' @inheritParams Nebulosa::plot_density
+#' @param combine \strong{\code{\link[base]{logical}}} | Whether to create a single plot out of multiple features.
+#' @param joint \strong{\code{\link[base]{logical}}} | Whether to plot different features as joint density.
+#' @param return_only_joint \strong{\code{\link[base]{logical}}} | Whether to only return the joint density panel.
 #'
 #' @return  A ggplot2 object containing a Nebulosa plot.
 #' @export
@@ -48,8 +26,6 @@ do_NebulosaPlot <- function(sample,
                              individual.titles = NULL,
                              individual.subtitles = NULL,
                              individual.captions = NULL,
-                             shape = 16,
-                             legend = TRUE,
                              legend.type = "colorbar",
                              legend.framewidth = 1.5,
                              legend.tickwidth = 1.5,
@@ -75,15 +51,13 @@ do_NebulosaPlot <- function(sample,
   # Check the dimensions.
   dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
-  logical_list <- list("legend" = legend,
-                       "combine" = combine,
+  logical_list <- list("combine" = combine,
                        "joint" = joint,
                        "return_only_joint" = return_only_joint,
                        "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
-                       "shape" = shape,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
@@ -175,9 +149,9 @@ do_NebulosaPlot <- function(sample,
          ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(axis.title = ggplot2::element_blank(),
                         axis.text = ggplot2::element_blank(),
-                        plot.title = ggtext::element_markdown(face = "bold", hjust = 0),
-                        plot.subtitle = ggtext::element_markdown(hjust = 0),
-                        plot.caption = ggtext::element_markdown(hjust = 1),
+                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                        plot.subtitle = ggplot2::element_text(hjust = 0),
+                        plot.caption = ggplot2::element_text(hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
                         text = ggplot2::element_text(family = font.type),
@@ -308,12 +282,6 @@ do_NebulosaPlot <- function(sample,
         p$layers <- append(base_layer, p$layers)
       }
 
-    }
-
-    # Remove legend.
-    if (legend == FALSE){
-      p <- p +
-           ggplot2::theme(legend.position = "none")
     }
 
     if (isTRUE(return_only_joint)){
