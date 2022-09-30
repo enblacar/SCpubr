@@ -60,8 +60,8 @@ do_ChordDiagramPlot(
 
 \item{self.link}{\strong{\code{\link[base]{numeric}}} | Behavior of the links. One of:
 \itemize{
-\item \emph{\code{1}}: Allow self linking.
-\item \emph{\code{2}}: Prevent self linking.
+\item \emph{\code{1}}: Prevents self linking.
+\item \emph{\code{2}}: Allows self linking.
 }}
 
 \item{symmetric}{pass to \code{\link[circlize]{chordDiagramFromMatrix}}

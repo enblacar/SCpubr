@@ -12,8 +12,8 @@
 #' @param z_index \strong{\code{\link[base]{logical}}} | Whether to bring the bigger links to the top.
 #' @param self.link \strong{\code{\link[base]{numeric}}} | Behavior of the links. One of:
 #' \itemize{
-#'   \item \emph{\code{1}}: Allow self linking.
-#'   \item \emph{\code{2}}: Prevent self linking.
+#'   \item \emph{\code{1}}: Prevents self linking.
+#'   \item \emph{\code{2}}: Allows self linking.
 #' }
 #' @param directional \strong{\code{\link[base]{numeric}}} | Set the direction of the links. One of:
 #' \itemize{
@@ -217,7 +217,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
     stop("Please set alignment as either default or vertical or horizontal.", call. = FALSE)
   } else {
     if (alignment == "vertical"){
-      circlize::circos.par(start.degree = 90)
+      circlize::circos.par(start.degree = 0)
     } else if (alignment == "horizontal"){
       circlize::circos.par(start.degree = 90)
     }
