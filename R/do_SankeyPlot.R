@@ -35,7 +35,7 @@ do_SankeyPlot <- function(sample,
                           type = "sankey",
                           middle_groups = NULL,
                           width = 0.1,
-                          space = 0.05 * ncol(sample),
+                          space = ifelse(type == "sankey", 0.05 * ncol(sample), 0),
                           position = "identity",
                           node.fill = "white",
                           node.color = "white",
@@ -46,6 +46,8 @@ do_SankeyPlot <- function(sample,
                           font.size = 14,
                           font.type = "sans",
                           smooth = 8,
+                          use_labels = FALSE,
+                          hjust = NULL,
                           colors.first = NULL,
                           colors.middle = NULL,
                           colors.last = NULL,
@@ -59,15 +61,16 @@ do_SankeyPlot <- function(sample,
   check_Seurat(sample = sample)
 
   # Check logical parameters.
-  #logical_list <- list("load_dplyr" = load_dplyr)
-  #check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  logical_list <- list("use_labels" = use_labels)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("width" = width,
                        "space" = space,
                        "flow.alpha" = flow.alpha,
                        "text_size" = text_size,
                        "font.size" = font.size,
-                       "smooth" = smooth)
+                       "smooth" = smooth,
+                       "hjust" = hjust)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -154,6 +157,7 @@ do_SankeyPlot <- function(sample,
                             dplyr::mutate(hjust = if(.data$x %in% middle_groups){0.5}
                                           else if (.data$x == last_group){0}
                                           else if (.data$x == first_group){1})})
+  if (!is.null(hjust)){data$hjust <- hjust}
 
   if (!(is.null(colors.first))){
     check_colors(colors.first, parameter_name = "colors.first")
@@ -179,7 +183,7 @@ do_SankeyPlot <- function(sample,
       stop("The colors provided for the last group do not match the number of unique nodes.", call. = FALSE)
     }
   } else{
-    colors.last <- viridis::viridis(n = length(unique(sample@meta.data[, last_group])), option = "C")
+    colors.last <- viridis::viridis(n = length(unique(sample@meta.data[, last_group])), option = "D")
     names(colors.last) <- if(is.factor(sample@meta.data[, last_group])) {levels(sample@meta.data[, last_group])} else {sort(unique(sample@meta.data[, last_group]))}
   }
 
@@ -204,11 +208,12 @@ do_SankeyPlot <- function(sample,
       unique_middle_values <- c(unique_middle_values, if(is.factor(sample@meta.data[, var])) {levels(sample@meta.data[, var])} else {sort(unique(sample@meta.data[, var]))})
     }
 
-    colors.middle <- viridis::viridis(n = length(unique_middle_values))
+    colors.middle <- viridis::viridis(n = length(unique_middle_values), option = "C")
     names(colors.middle) <- unique_middle_values
   }
 
   colors.use <- c(colors.first, colors.middle, colors.last)
+  func_use <- ifelse(isTRUE(use_labels), ggsankey::geom_sankey_label, ggsankey::geom_sankey_text)
 
   p <- data %>%
 
@@ -227,12 +232,12 @@ do_SankeyPlot <- function(sample,
                              position = position,
                              type = type,
                              space = space) +
-       ggsankey::geom_sankey_text(size = text_size,
-                                  color = text_color,
-                                  fontface = "bold",
-                                  position = position,
-                                  type = type,
-                                  space = space) +
+       func_use(size = text_size,
+                color = text_color,
+                fontface = "bold",
+                position = position,
+                type = type,
+                space = space) +
        ggplot2::scale_fill_manual(values = colors.use) +
        ggplot2::xlab("") +
        ggplot2::ylab("") +

@@ -12,7 +12,6 @@
 #' @param prob_tails \strong{\code{\link[base]{numeric}}} | The accumulated probability that the tails should contain.
 #' @param color_by_probabilities \strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.
 #' @param viridis_direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
-#' @param alpha \strong{\code{\link[base]{numeric}}} | How transparent ridges are.
 #' @return A ggplot2 object.
 #' @export
 #'
@@ -47,9 +46,8 @@ do_RidgePlot <- function(sample,
                          quantiles = c(0.25, 0.50, 0.75),
                          compute_distribution_tails = FALSE,
                          prob_tails = 0.025,
-                         color_by_probabilities = TRUE,
-                         viridis_direction = -1,
-                         alpha = 1){
+                         color_by_probabilities = FALSE,
+                         viridis_direction = 1){
   `%>%` <- magrittr::`%>%`
 
   # Checks for packages.
@@ -73,8 +71,7 @@ do_RidgePlot <- function(sample,
                        "font.size" = font.size,
                        "quantiles" = quantiles,
                        "prob_tails" = prob_tails,
-                       "viridis_direction" = viridis_direction,
-                       "alpha" = alpha)
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -116,8 +113,7 @@ do_RidgePlot <- function(sample,
                                                   y = .data$group.by,
                                                   fill = ..x..)) +
            ggridges::geom_density_ridges_gradient(color = "black",
-                                                  size = 1.25,
-                                                  alpha = alpha) +
+                                                  size = 1.25) +
            ggplot2::scale_fill_viridis_c(option = "G",
                                          direction = viridis_direction,
                                          name = feature)
@@ -154,8 +150,7 @@ do_RidgePlot <- function(sample,
                                            quantile_lines = TRUE,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
-                                           quantiles = quantiles,
-                                           alpha = alpha) +
+                                           quantiles = quantiles) +
              ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = "G", direction = viridis_direction),
                                         name = ifelse(is.null(legend.title), "Probability", legend.title),
                                         labels = unique(labels))
@@ -169,8 +164,7 @@ do_RidgePlot <- function(sample,
                                            quantile_lines = TRUE,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
-                                           quantiles = c(0 + prob_tails, 1 - prob_tails),
-                                           alpha = alpha) +
+                                           quantiles = c(0 + prob_tails, 1 - prob_tails)) +
              ggplot2::scale_fill_manual(values = c("#134074", "grey75", "#721313"),
                                         labels = c(paste0("]0 , ", 0 + prob_tails, "]"),
                                                    paste0("]", 0 + prob_tails , ", ",  1 - prob_tails, "]"),
@@ -184,8 +178,7 @@ do_RidgePlot <- function(sample,
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            calc_ecdf = TRUE,
-                                           geom = "density_ridges_gradient",
-                                           alpha = alpha) +
+                                           geom = "density_ridges_gradient") +
              ggplot2::scale_fill_viridis_c(option = "G",
                                            name = "Tail probability",
                                            direction = viridis_direction)
@@ -209,8 +202,7 @@ do_RidgePlot <- function(sample,
                                                 y = .data$group.by,
                                                 fill = .data$group.by)) +
          ggridges::geom_density_ridges(color = "black",
-                                       size = 1.25,
-                                       alpha = alpha) +
+                                       size = 1.25) +
          ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}})} else {colors.use},
                                     name = legend.title)
   }
@@ -231,7 +223,7 @@ do_RidgePlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = "bold"),
-                      axis.line.x = ggplot2::element_line(color = "black"),
+                      axis.line.y = ggplot2::element_line(color = "black"),
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = "bold",
                                                           angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
@@ -240,6 +232,9 @@ do_RidgePlot <- function(sample,
                       axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       panel.grid.major = ggplot2::element_blank(),
+                      panel.grid.major.x = ggplot2::element_line(color = "grey75",
+                                                                 linetype = "dashed",
+                                                                 size = 0.5),
                       plot.title.position = "plot",
                       plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                       plot.subtitle = ggplot2::element_text(hjust = 0),

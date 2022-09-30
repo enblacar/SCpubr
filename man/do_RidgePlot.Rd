@@ -35,9 +35,8 @@ do_RidgePlot(
   quantiles = c(0.25, 0.5, 0.75),
   compute_distribution_tails = FALSE,
   prob_tails = 0.025,
-  color_by_probabilities = TRUE,
-  viridis_direction = -1,
-  alpha = 1
+  color_by_probabilities = FALSE,
+  viridis_direction = 1
 )
 }
 \arguments{
@@ -107,8 +106,6 @@ do_RidgePlot(
 \item{color_by_probabilities}{\strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
-
-\item{alpha}{\strong{\code{\link[base]{numeric}}} | How transparent ridges are.}
 
 \item{continuous}{\strong{\code{\link[base]{logical}}} | Whether we want coloring based on the continuous scale (feature) or categorical scale (groups).}
 }
