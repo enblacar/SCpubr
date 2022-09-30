@@ -38,7 +38,7 @@ do_PathwayActivityPlot(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = FALSE,
+  rotate_x_axis_labels = TRUE,
   enforce_symmetry = TRUE,
   geyser_order_by_mean = TRUE,
   geyser_scale_type = "continuous"

@@ -1542,11 +1542,11 @@ modify_string <- function(string_to_modify){
 #' TBD
 #' }
 compute_enrichment_scores <- function(sample, input_gene_list, verbose = F, nbin = 24, ctrl = 100){
-  if (!is.list(list_genes) & is.character(list_genes)){
-    list_genes <- list("Input" = list_genes)
+  if (!is.list(input_gene_list) & is.character(input_gene_list)){
+    input_gene_list <- list("Input" = input_gene_list)
   }
-  for (celltype in names(list_genes)){
-    list_markers <- list(list_genes[[celltype]])
+  for (celltype in names(input_gene_list)){
+    list_markers <- list(input_gene_list[[celltype]])
 
     # Compute Seurat AddModuleScore as well.
     if (verbose){
@@ -1778,3 +1778,11 @@ get_data_column_in_context <- function(sample,
 
   return(data)
 }
+
+
+
+
+
+
+
+

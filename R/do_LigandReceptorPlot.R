@@ -56,7 +56,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                   dot.size = 1,
                                   font.type = "sans",
                                   flip = FALSE,
-                                  plot_grid = FALSE,
+                                  plot_grid = TRUE,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
                                   compute_ChordDiagrams = FALSE){

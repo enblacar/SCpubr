@@ -18,26 +18,26 @@ save_Plot(
 \arguments{
 \item{plot}{Plot to save.}
 
-\item{figure_path}{Path where the figure will be stored.}
+\item{figure_path}{\strong{\code{\link[base]{character}}} | Path where the figure will be stored.}
 
-\item{create_path}{Logical. Whether to create the path.}
+\item{create_path}{\strong{\code{\link[base]{logical}}} | Whether to create the path.}
 
-\item{file_name}{Name of the file (without extension, it will be added automatically).}
+\item{file_name}{\strong{\code{\link[base]{character}}} | Name of the file (without extension, it will be added automatically).}
 
-\item{dpi}{Dpi to use.}
+\item{dpi}{\strong{\code{\link[base]{numeric}}} | Dpi to use.}
 
-\item{output_format}{Character. One of the following:
+\item{output_format}{\strong{\code{\link[base]{character}}} | Output format of the saved figure.  One of:
 \itemize{
-\item pdf.
-\item png.
-\item jpeg.
-\item tiff.
-\item svg
-\item publication: Includes pdf, png and svg formats.
-\item all: Includes all formats.
+\item \emph{\code{pdf}}: Saves the figure as a PDF file.
+\item \emph{\code{png}}: Saves the figure as a PNG file.
+\item \emph{\code{jpeg}}: Saves the figure as a JPEG file.
+\item \emph{\code{tiff}}: Saves the figure as a TIFF file.
+\item \emph{\code{svg}}: Saves the figure as a SVG file.
+\item \emph{\code{publication}}: Saves the figure as PDF, PNG and SVG files.
+\item \emph{\code{all}}: Saves the figure in all possible formats.
 }}
 
-\item{width, height}{Width and height of the figure (inches).}
+\item{width, height}{\strong{\code{\link[base]{numeric}}} | Width and height of the figure (inches).}
 }
 \value{
 Nothing.

@@ -47,7 +47,7 @@ do_PathwayActivityPlot <- function(sample,
                                    legend.type = "colorbar",
                                    font.size = 14,
                                    font.type = "sans",
-                                   rotate_x_axis_labels = FALSE,
+                                   rotate_x_axis_labels = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE,
                                    geyser_scale_type = "continuous"){
@@ -241,7 +241,8 @@ do_PathwayActivityPlot <- function(sample,
                            legend.position = legend.position,
                            legend.length = heatmap.legend.length,
                            legend.width = heatmap.legend.width,
-                           legend.framecolor = heatmap.legend.framecolor)
+                           legend.framecolor = heatmap.legend.framecolor,
+                           symmetrical_scale = enforce_symmetry)
       h <- out[["heatmap"]]
       h_legend <- out[["legend"]]
       ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
@@ -302,7 +303,8 @@ do_PathwayActivityPlot <- function(sample,
                              legend.position = legend.position,
                              legend.length = heatmap.legend.length,
                              legend.width = heatmap.legend.width,
-                             legend.framecolor = heatmap.legend.framecolor)
+                             legend.framecolor = heatmap.legend.framecolor,
+                             symmetrical_scale = enforce_symmetry)
         h <- out[["heatmap"]]
         h_legend <- out[["legend"]]
         list.heatmaps[[split.value]] <- h

@@ -75,7 +75,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 annotationTrack = c("grid", "axis"),
                                 padding_labels = 4,
                                 ...){
-
+  `%>%` <- magrittr::`%>%`
   # Checks for packages.
   check_suggests(function_name = "do_ChordDiagramPlot")
 

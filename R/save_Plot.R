@@ -2,19 +2,21 @@
 #'
 #'
 #' @param plot Plot to save.
-#' @param figure_path Path where the figure will be stored.
-#' @param create_path Logical. Whether to create the path.
-#' @param file_name Name of the file (without extension, it will be added automatically).
-#' @param output_format Character. One of the following:
-#' - pdf.
-#' - png.
-#' - jpeg.
-#' - tiff.
-#' - svg
-#' - publication: Includes pdf, png and svg formats.
-#' - all: Includes all formats.
-#' @param dpi Dpi to use.
-#' @param width,height Width and height of the figure (inches).
+#' @param figure_path \strong{\code{\link[base]{character}}} | Path where the figure will be stored.
+#' @param create_path \strong{\code{\link[base]{logical}}} | Whether to create the path.
+#' @param file_name \strong{\code{\link[base]{character}}} | Name of the file (without extension, it will be added automatically).
+#' @param output_format \strong{\code{\link[base]{character}}} | Output format of the saved figure.  One of:
+#' \itemize{
+#'   \item \emph{\code{pdf}}: Saves the figure as a PDF file.
+#'   \item \emph{\code{png}}: Saves the figure as a PNG file.
+#'   \item \emph{\code{jpeg}}: Saves the figure as a JPEG file.
+#'   \item \emph{\code{tiff}}: Saves the figure as a TIFF file.
+#'   \item \emph{\code{svg}}: Saves the figure as a SVG file.
+#'   \item \emph{\code{publication}}: Saves the figure as PDF, PNG and SVG files.
+#'   \item \emph{\code{all}}: Saves the figure in all possible formats.
+#' }
+#' @param dpi \strong{\code{\link[base]{numeric}}} | Dpi to use.
+#' @param width,height \strong{\code{\link[base]{numeric}}} | Width and height of the figure (inches).
 #'
 #' @return Nothing.
 #' @export
@@ -90,7 +92,7 @@ save_Plot <- function(plot,
   # Is it a heatmap?
   } else if (sum(class(plot) %in% c("HeatmapList", "ComplexHeatmap")) >= 1) {
     suppressMessages({
-      filename <- paste0(figure_path, file_name)
+      filename <- paste0(figure_path, "/", file_name)
       if ("png" %in% devices_use){
         grDevices::png(filename = paste0(filename, ".png"), units = "in", height = height, width = width, res = dpi)
         ComplexHeatmap::draw(plot, show_heatmap_legend = TRUE, padding = ggplot2::unit(c(20, 20, 2, 20), "mm"))
@@ -125,7 +127,7 @@ save_Plot <- function(plot,
 
   } else if (sum(class(plot) %in% c("pheatmap")) >= 1){
     suppressMessages({
-      filename <- paste0(figure_path, file_name)
+      filename <- paste0(figure_path, "/", file_name)
       if ("png" %in% devices_use){
         grDevices::png(filename = paste0(filename, ".png"), units = "in", height = height, width = width, res = dpi)
         print(plot)
@@ -154,6 +156,40 @@ save_Plot <- function(plot,
       if ("svg" %in% devices_use){
         svglite::svglite(filename = paste0(filename, ".svg"), height = height, width = width)
         print(plot)
+        grDevices::dev.off()
+      }
+    })
+  } else if (sum(class(plot) %in% c("recordedplot")) >= 1){
+    suppressMessages({
+      filename <- paste0(figure_path, "/", file_name)
+      if ("png" %in% devices_use){
+        grDevices::png(filename = paste0(filename, ".png"), units = "in", height = height, width = width, res = dpi)
+        grDevices::replayPlot(plot)
+        grDevices::dev.off()
+
+      }
+
+      if ("pdf" %in% devices_use){
+        grDevices::pdf(file = paste0(filename, ".pdf"), height = height, width = width)
+        grDevices::replayPlot(plot)
+        grDevices::dev.off()
+      }
+
+      if ("jpeg" %in% devices_use){
+        grDevices::jpeg(file = paste0(filename, ".jpeg"), units = "in", height = height, width = width, res = dpi)
+        grDevices::replayPlot(plot)
+        grDevices::dev.off()
+      }
+
+      if ("tiff" %in% devices_use){
+        grDevices::jpeg(file = paste0(filename, ".tiff"), units = "in", height = height, width = width, res = dpi)
+        grDevices::replayPlot(plot)
+        grDevices::dev.off()
+      }
+
+      if ("svg" %in% devices_use){
+        svglite::svglite(filename = paste0(filename, ".svg"), height = height, width = width)
+        grDevices::replayPlot(plot)
         grDevices::dev.off()
       }
     })
