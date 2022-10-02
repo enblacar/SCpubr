@@ -93,33 +93,21 @@ do_BeeSwarmPlot <- function(sample,
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
 
-  # Check viridis_color_map.
-  check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
-
   # Check the colors provided to legend.framecolor and legend.tickcolor and border color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(border.color, parameter_name = "border.color")
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
   # Check font.type.
   if (length(feature_to_rank) > 1){
     stop("Please provide only one feature to feature_to_rank.", call. = F)
   }
 
-  # Check the legend.type.
-  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-  }
-
-  # Check the legend.position.
-  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-  }
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){

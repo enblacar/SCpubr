@@ -31,7 +31,10 @@ do_BarPlot <- function(sample,
                        flip = FALSE,
                        plot.title = NULL,
                        plot.subtitle = NULL,
-                       plot.caption = NULL){
+                       plot.caption = NULL,
+                       plot.grid = TRUE,
+                       grid.color = "grey75",
+                       grid.type = "dashed"){
 
   check_suggests(function_name = "do_BarPlot")
   check_Seurat(sample)
@@ -42,7 +45,8 @@ do_BarPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("order" = order,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "plot.grid" = plot.grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size)
@@ -59,9 +63,17 @@ do_BarPlot <- function(sample,
                          "ylab" = ylab,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
-                         "plot.caption" = plot.caption)
+                         "plot.caption" = plot.caption,
+                         "grid.color" = grid.color,
+                         "grid.type" = grid.type)
   # Checks
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
+
+  check_colors(grid.color, parameter_name = "grid.color")
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
   # Get the general table.
   if (class(sample@meta.data[, group.by]) %!in% c("character", "factor")){
@@ -100,12 +112,8 @@ do_BarPlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = "bold"),
-                      panel.grid.major.y = if (isFALSE(flip)) {ggplot2::element_line(color = "grey75",
-                                                                                     linetype = "dashed",
-                                                                                     size = 0.5)} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      panel.grid.major.x = if (isTRUE(flip)) {ggplot2::element_line(color = "grey75",
-                                                                                     linetype = "dashed",
-                                                                                     size = 0.5)} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
                       axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",

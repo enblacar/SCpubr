@@ -36,7 +36,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                      plot_cell_borders = TRUE,
                                      enforce_symmetry = TRUE,
                                      legend.title = NULL,
-                                     na.value = "grey75"){
+                                     na.value = "grey75",
+                                     viridis_color_map = "D",
+                                     viridis_direction = 1){
 
   check_suggests(function_name = "do_CopyNumberVariantPlot")
 
@@ -53,7 +55,8 @@ do_CopyNumberVariantPlot <- function(sample,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "pt.size" = pt.size,
-                       "border.size" = border.size)
+                       "border.size" = border.size,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -63,7 +66,8 @@ do_CopyNumberVariantPlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "font.type" = font.type,
                          "border.color" = border.color,
-                         "legend.title" = legend.title)
+                         "legend.title" = legend.title,
+                         "viridis_color_map" = viridis_color_map)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -72,6 +76,12 @@ do_CopyNumberVariantPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
 
   if (is.null(chromosome_focus)){
     chromosome_list <- c(as.character(seq(1, 22)))
@@ -181,7 +191,9 @@ do_CopyNumberVariantPlot <- function(sample,
                        xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
                        ylab = paste0(event, " score"),
                        legend.title = paste0(event, " score"),
-                       rotate_x_axis_labels = rotate_x_axis_labels)
+                       rotate_x_axis_labels = rotate_x_axis_labels,
+                       viridis_color_map = viridis_color_map,
+                       viridis_direction = viridis_direction)
 
     # Plot the scores!
     p.f <- do_FeaturePlot(sample = sample,
@@ -198,7 +210,9 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.framewidth = legend.framewidth,
                           legend.tickwidth = legend.tickwidth,
                           legend.length = legend.length,
-                          legend.width = legend.width)
+                          legend.width = legend.width,
+                          viridis_color_map = viridis_color_map,
+                          viridis_direction = viridis_direction)
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),

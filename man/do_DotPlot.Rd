@@ -33,9 +33,12 @@ do_DotPlot(
   scale.by = "size",
   use_viridis = TRUE,
   viridis_color_map = "G",
-  viridis_scale_direction = -1,
+  viridis_direction = -1,
   na.value = "grey75",
-  dot_border = TRUE
+  dot_border = TRUE,
+  plot.grid = TRUE,
+  grid.color = "grey75",
+  grid.type = "dashed"
 )
 }
 \arguments{
@@ -104,9 +107,13 @@ do_DotPlot(
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to plot a border around dots.}
+
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 }
 \value{
 A ggplot2 object containing a Dot Plot.

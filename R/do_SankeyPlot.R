@@ -97,6 +97,8 @@ do_SankeyPlot <- function(sample,
   check_colors(flow.color, parameter_name = "flow.color")
   check_colors(text_color, parameter_name = "text_color")
 
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+
 
   # Workaround for ggsankey bug.
   if("dplyr" %!in% (.packages())){
@@ -111,11 +113,6 @@ do_SankeyPlot <- function(sample,
   # Wrong position.
   if (position %!in% c("identity", "nudge")){
     stop("This position type has not been tested.", call. = FALSE)
-  }
-
-  # Wrong font.type.
-  if (font.type %!in% c("sans", "mono", "serif")){
-    stop("Please provide either sans, mono or serif to font.type.", call. = FALSE)
   }
 
   # Not a metadata column.

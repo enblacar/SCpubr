@@ -137,6 +137,12 @@
 \item{features}{\strong{\code{\link[base]{character}}} | Features to represent.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
+
+\item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 }
 \value{
 Nothing. This is a mock function.

@@ -11,36 +11,39 @@
 #'
 #' @example /man/examples/examples_do_NebulosaPlot.R
 do_NebulosaPlot <- function(sample,
-                             features,
-                             slot = NULL,
-                             dims = c(1, 2),
-                             pt.size = 1,
-                             reduction = NULL,
-                             combine = TRUE,
-                             method = c("ks", "wkde"),
-                             joint = FALSE,
-                             return_only_joint = NULL,
-                             plot.title = NULL,
-                             plot.subtitle = NULL,
-                             plot.caption = NULL,
-                             individual.titles = NULL,
-                             individual.subtitles = NULL,
-                             individual.captions = NULL,
-                             legend.type = "colorbar",
-                             legend.framewidth = 1.5,
-                             legend.tickwidth = 1.5,
-                             legend.length = 20,
-                             legend.width = 1,
-                             legend.framecolor = "grey50",
-                             legend.tickcolor = "white",
-                             font.size = 14,
-                             font.type = "sans",
-                             legend.position = "bottom",
-                             plot_cell_borders = TRUE,
-                             border.size = 2,
-                             border.color = "black",
-                             viridis_color_map = "D",
-                             verbose = TRUE){
+                            features,
+                            slot = NULL,
+                            dims = c(1, 2),
+                            pt.size = 1,
+                            reduction = NULL,
+                            combine = TRUE,
+                            method = c("ks", "wkde"),
+                            joint = FALSE,
+                            return_only_joint = NULL,
+                            plot.title = NULL,
+                            plot.subtitle = NULL,
+                            plot.caption = NULL,
+                            individual.titles = NULL,
+                            individual.subtitles = NULL,
+                            individual.captions = NULL,
+                            legend.type = "colorbar",
+                            legend.framewidth = 1.5,
+                            legend.tickwidth = 1.5,
+                            legend.length = 20,
+                            legend.width = 1,
+                            legend.framecolor = "grey50",
+                            legend.tickcolor = "white",
+                            font.size = 14,
+                            font.type = "sans",
+                            legend.position = "bottom",
+                            plot_cell_borders = TRUE,
+                            border.size = 2,
+                            border.color = "black",
+                            viridis_color_map = "G",
+                            viridis_direction = 1,
+                            verbose = TRUE,
+                            na.value = "grey75",
+                            plot.axes = FALSE){
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
@@ -54,7 +57,8 @@ do_NebulosaPlot <- function(sample,
   logical_list <- list("combine" = combine,
                        "joint" = joint,
                        "return_only_joint" = return_only_joint,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "plot.axes" = plot.axes)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -63,7 +67,8 @@ do_NebulosaPlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.width" = legend.width,
                        "dims" = dims,
-                       "border.size" = border.size)
+                       "border.size" = border.size,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -82,7 +87,8 @@ do_NebulosaPlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -108,28 +114,18 @@ do_NebulosaPlot <- function(sample,
       }
     }
   }
-  # Check viridis_color_map.
-  check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
 
   # Check the colors provided to legend.framecolor and legend.tickcolor and border.color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(border.color, parameter_name = "border.color")
+  check_colors(na.value, parameter_name = "na.value")
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
-
-  # Check the legend.type.
-  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-  }
-
-  # Check the legend.position.
-  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-  }
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -147,9 +143,7 @@ do_NebulosaPlot <- function(sample,
                                 reduction = reduction,
                                 dims = dims) &
          ggplot2::theme_minimal(base_size = font.size) &
-         ggplot2::theme(axis.title = ggplot2::element_blank(),
-                        axis.text = ggplot2::element_blank(),
-                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+         ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                         plot.subtitle = ggplot2::element_text(hjust = 0),
                         plot.caption = ggplot2::element_text(hjust = 1),
                         plot.title.position = "plot",
@@ -175,8 +169,9 @@ do_NebulosaPlot <- function(sample,
     p <- add_scale(p = p,
                    num_plots = num_plots,
                    scale = "color",
-                   function_use = ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                                                 option = viridis_color_map))
+                   function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                 option = viridis_color_map,
+                                                                 direction = viridis_direction))
 
     for (plot_num in seq(1:num_plots)){
       # Set size of dots.
@@ -213,18 +208,17 @@ do_NebulosaPlot <- function(sample,
       # if dims is first and then second.
       if (sum(dims == c(1, 2)) == 2){
         p <- p &
-          ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                         axis.title.y = ggplot2::element_blank(),
-                         axis.text = ggplot2::element_blank(),
-                         axis.ticks = ggplot2::element_blank(),
-                         axis.line = ggplot2::element_blank())
+          ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
+                         axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       } else {
         labels <- colnames(sample@reductions[[reduction]][[]])[dims]
         p <- p &
-          ggplot2::theme(axis.text = ggplot2::element_blank(),
-                         axis.ticks = ggplot2::element_blank(),
-                         axis.line = ggplot2::element_blank(),
-                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5)) &
+          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
           ggplot2::xlab(labels[1]) &
           ggplot2::ylab(labels[2])
       }
@@ -232,10 +226,10 @@ do_NebulosaPlot <- function(sample,
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggplot2::theme(axis.text = ggplot2::element_blank(),
-                       axis.ticks = ggplot2::element_blank(),
-                       axis.line = ggplot2::element_blank(),
-                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5)) &
+        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -250,10 +244,10 @@ do_NebulosaPlot <- function(sample,
           ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
                           max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
           # Remove axis elements so that the axis title is the only thing left.
-          ggplot2::theme(axis.text = ggplot2::element_blank(),
-                         axis.ticks = ggplot2::element_blank(),
-                         axis.line = ggplot2::element_blank(),
-                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5))
+          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black"))
       })
 
     }

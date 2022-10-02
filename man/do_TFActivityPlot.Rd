@@ -42,7 +42,9 @@ do_TFActivityPlot(
   rotate_x_axis_labels = TRUE,
   enforce_symmetry = TRUE,
   geyser_order_by_mean = TRUE,
-  geyser_scale_type = "continuous"
+  geyser_scale_type = "continuous",
+  viridis_color_map = "D",
+  viridis_scale = 1
 )
 }
 \arguments{
@@ -124,6 +126,8 @@ do_TFActivityPlot(
 \item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
 
 \item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
+
+\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

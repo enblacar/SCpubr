@@ -43,7 +43,8 @@ do_DimPlot(
   plot_marginal_distributions = FALSE,
   marginal.type = "density",
   marginal.size = 5,
-  marginal.group = TRUE
+  marginal.group = TRUE,
+  plot.axes = FALSE
 )
 }
 \arguments{
@@ -133,6 +134,8 @@ do_DimPlot(
 \item{marginal.size}{\strong{\code{\link[base]{numeric}}} | Size ratio between the main and marginal plots. A value of 5 means that the main plot is 5 times bigger than the marginal plots.}
 
 \item{marginal.group}{\strong{\code{\link[base]{logical}}} | Whether to group the marginal distribution by group.by or current identities.}
+
+\item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 }
 \value{
 A ggplot2 object containing a DimPlot.

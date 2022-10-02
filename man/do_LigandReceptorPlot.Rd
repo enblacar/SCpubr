@@ -24,11 +24,12 @@ do_LigandReceptorPlot(
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   viridis_color_map = "G",
+  viridis_direction = 1,
   font.size = 14,
   dot.size = 1,
   font.type = "sans",
   flip = FALSE,
-  plot_grid = TRUE,
+  plot.grid = TRUE,
   grid.color = "grey90",
   grid.type = "dotted",
   compute_ChordDiagrams = FALSE
@@ -77,6 +78,8 @@ do_LigandReceptorPlot(
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
 \item{dot.size}{\strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.}
@@ -90,7 +93,7 @@ do_LigandReceptorPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
 
-\item{plot_grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 

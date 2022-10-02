@@ -30,6 +30,7 @@ do_PseudotimePlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   viridis_color_map = "D",
+  viridis_direction = 1,
   plot_cell_borders = TRUE,
   enforce_symmetry = FALSE,
   nbin = 24,
@@ -93,6 +94,8 @@ do_PseudotimePlot(
 \item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 

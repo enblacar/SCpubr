@@ -50,7 +50,9 @@ do_PathwayActivityPlot <- function(sample,
                                    rotate_x_axis_labels = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE,
-                                   geyser_scale_type = "continuous"){
+                                   geyser_scale_type = "continuous",
+                                   viridis_color_map = "D",
+                                   viridis_direction = 1){
 
   #Checks for packages.
   check_suggests(function_name = "do_PathwayActivityPlot")
@@ -81,7 +83,8 @@ do_PathwayActivityPlot <- function(sample,
                        "legend.width" = legend.width,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
-                       "legend.tickwidth" = legend.tickwidth)
+                       "legend.tickwidth" = legend.tickwidth,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -94,8 +97,21 @@ do_PathwayActivityPlot <- function(sample,
                          "legend.type" = legend.type,
                          "legend.framecolor" = legend.framecolor,
                          "geyser_color.by" = geyser_color.by,
-                         "geyser_scale_type" = geyser_scale_type)
+                         "geyser_scale_type" = geyser_scale_type,
+                         "viridis_color_map" = viridis_color_map)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
+
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
+  check_colors(na.value, parameter_name = "na.value")
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
@@ -137,7 +153,9 @@ do_PathwayActivityPlot <- function(sample,
                           legend.framewidth = legend.framewidth,
                           legend.tickwidth = legend.tickwidth,
                           legend.length = legend.length,
-                          legend.width = legend.width)
+                          legend.width = legend.width,
+                          viridis_color_map = viridis_color_map,
+                          viridis_direction = viridis_direction)
 
       list.features[[pathway]] <- p
     }
@@ -172,7 +190,9 @@ do_PathwayActivityPlot <- function(sample,
                          xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
                          ylab = paste0(pathway, " activity"),
                          legend.title = if (is.null(geyser_color.by)) {paste0(pathway, " activity")} else {geyser_color.by},
-                         rotate_x_axis_labels = rotate_x_axis_labels)
+                         rotate_x_axis_labels = rotate_x_axis_labels,
+                         viridis_color_map = viridis_color_map,
+                         viridis_direction = viridis_direction)
       list.geysers[[pathway]] <- p
     }
     list.out[["geyser_plots"]] <- list.geysers

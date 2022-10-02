@@ -8,7 +8,6 @@
 #' @param keep_source,keep_target \strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.
 #' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
 #' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.
-#' @param plot_grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
 #' @param x_labels_angle \strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
 #' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
@@ -52,11 +51,12 @@ do_LigandReceptorPlot <- function(liana_output,
                                   legend.framewidth = 1.5,
                                   legend.tickwidth = 1.5,
                                   viridis_color_map = "G",
+                                  viridis_direction = 1,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
                                   flip = FALSE,
-                                  plot_grid = TRUE,
+                                  plot.grid = TRUE,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
                                   compute_ChordDiagrams = FALSE){
@@ -69,7 +69,7 @@ do_LigandReceptorPlot <- function(liana_output,
   logical_list <- list("dot_border" = dot_border,
                        "flip" = flip,
                        "rotate_strip_text" = rotate_strip_text,
-                       "plot_grid" = plot_grid)
+                       "plot.grid" = plot.grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -80,7 +80,8 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
                        "x_labels_angle" = x_labels_angle,
-                       "significance_threshold" = significance_threshold)
+                       "significance_threshold" = significance_threshold,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("split.by" = split.by,
@@ -109,25 +110,12 @@ do_LigandReceptorPlot <- function(liana_output,
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(grid.color, parameter_name = "grid.color")
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
-
-  # Check font.type.
-  if (!(grid.type %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))){
-    stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = F)
-  }
-
-  # Check the legend.type.
-  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-  }
-
-  # Check the legend.position.
-  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-  }
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
   if (!is.null(split.by)){
     if (!(split.by %in% c("receptor.complex", "ligand.complex"))){
@@ -252,11 +240,13 @@ do_LigandReceptorPlot <- function(liana_output,
     p$layers[[1]]$aes_params$color <- border.color
     p <- p +
          ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                       name = fill.title)
+                                       name = fill.title,
+                                       direction = viridis_direction)
   } else {
     p <- p +
          ggplot2::scale_color_viridis_c(option = viridis_color_map,
-                                        name = fill.title)
+                                        name = fill.title,
+                                        direction = viridis_direction)
   }
   # Continue plotting.
   if (isFALSE(flip)){
@@ -355,7 +345,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                      else {ggplot2::element_text(face = "bold",
                                                                  angle = strip_text_angle)},
                       panel.border = ggplot2::element_rect(color = "black", fill = NA),
-                      panel.grid = if (isTRUE(plot_grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
+                      panel.grid = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                       plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "black", linetype = "solid"),

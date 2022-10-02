@@ -32,6 +32,7 @@ do_GeyserPlot(
   font.type = "sans",
   rotate_x_axis_labels = TRUE,
   viridis_color_map = "D",
+  viridis_direction = 1,
   colors.use = NULL,
   na.value = "grey75",
   legend.ncol = NULL,
@@ -115,6 +116,8 @@ do_GeyserPlot(
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.}
 

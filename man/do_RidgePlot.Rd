@@ -36,7 +36,11 @@ do_RidgePlot(
   compute_distribution_tails = FALSE,
   prob_tails = 0.025,
   color_by_probabilities = FALSE,
-  viridis_direction = 1
+  viridis_color_map = "G",
+  viridis_direction = 1,
+  plot.grid = TRUE,
+  grid.color = "grey75",
+  grid.type = "dashed"
 )
 }
 \arguments{
@@ -105,7 +109,11 @@ do_RidgePlot(
 
 \item{color_by_probabilities}{\strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.}
 
+\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
 \item{continuous}{\strong{\code{\link[base]{logical}}} | Whether we want coloring based on the continuous scale (feature) or categorical scale (groups).}
 }

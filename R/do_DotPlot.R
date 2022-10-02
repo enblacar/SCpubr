@@ -43,9 +43,12 @@ do_DotPlot <- function(sample,
                        scale.by = "size",
                        use_viridis = TRUE,
                        viridis_color_map = "G",
-                       viridis_scale_direction = -1,
+                       viridis_direction = -1,
                        na.value = "grey75",
-                       dot_border = TRUE){
+                       dot_border = TRUE,
+                       plot.grid = TRUE,
+                       grid.color = "grey75",
+                       grid.type = "dashed"){
     # Checks for packages.
     check_suggests(function_name = "do_DotPlot")
     # Check the assay.
@@ -58,7 +61,8 @@ do_DotPlot <- function(sample,
                          "cluster.idents" = cluster.idents,
                          "rotate_x_axis_labels" = rotate_x_axis_labels,
                          "use_viridis" = use_viridis,
-                         "dot_border" = dot_border)
+                         "dot_border" = dot_border,
+                         "plot.grid" = plot.grid)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -67,7 +71,7 @@ do_DotPlot <- function(sample,
                          "legend.tickwidth" = legend.tickwidth,
                          "legend.length" = legend.length,
                          "legend.width" = legend.width,
-                         "viridis_scale_direction" = viridis_scale_direction)
+                         "viridis_direction" = viridis_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -83,7 +87,9 @@ do_DotPlot <- function(sample,
                            "legend.tickcolor" = legend.tickcolor,
                            "legend.type" = legend.type,
                            "font.type" = font.type,
-                           "viridis_color_map" = viridis_color_map)
+                           "viridis_color_map" = viridis_color_map,
+                           "grid.color" = grid.color,
+                           "grid.type" = grid.type)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -103,14 +109,12 @@ do_DotPlot <- function(sample,
         colors.use <- generate_color_scale(names.use)
       }
     }
-    # Check font.type.
-    if (!(font.type %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = FALSE)
-    }
-
-    if (!(viridis_scale_direction %in% c(1, -1))){
-      stop("Please provide a value for viridis_scale_direction of -1 or 1.", call. = FALSE)
-    }
+    check_parameters(parameter = font.type, parameter_name = "font.type")
+    check_parameters(parameter = legend.type, parameter_name = "legend.type")
+    check_parameters(parameter = legend.position, parameter_name = "legend.position")
+    check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+    check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+    check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
     # Check colors.
     check_colors(colors.use)
@@ -119,16 +123,7 @@ do_DotPlot <- function(sample,
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
     check_colors(na.value, parameter_name = "na.value")
-
-    # Check the legend.type.
-    if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-    }
-
-    # Check the legend.position.
-    if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-      stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-    }
+    check_colors(grid.color, parameter_name = "grid.color")
 
     # Define legend parameters.
     if (legend.position %in% c("top", "bottom")){
@@ -166,13 +161,13 @@ do_DotPlot <- function(sample,
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                      option = viridis_color_map,
-                                                                     direction = -1),
+                                                                     direction = viridis_direction),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
              ggplot2::scale_fill_viridis_c(na.value = na.value,
                                            option = viridis_color_map,
-                                           direction = -1)
+                                           direction = viridis_direction)
       }
     }
     p <- p +
@@ -194,7 +189,7 @@ do_DotPlot <- function(sample,
                         plot.subtitle = ggplot2::element_text(hjust = 0),
                         plot.caption = ggplot2::element_text(hjust = 1),
                         plot.title.position = "plot",
-                        panel.grid = ggplot2::element_blank(),
+                        panel.grid = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),

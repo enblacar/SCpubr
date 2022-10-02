@@ -34,8 +34,11 @@ do_NebulosaPlot(
   plot_cell_borders = TRUE,
   border.size = 2,
   border.color = "black",
-  viridis_color_map = "D",
-  verbose = TRUE
+  viridis_color_map = "G",
+  viridis_direction = 1,
+  verbose = TRUE,
+  na.value = "grey75",
+  plot.axes = FALSE
 )
 }
 \arguments{
@@ -108,7 +111,13 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+
+\item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.

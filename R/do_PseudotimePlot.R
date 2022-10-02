@@ -42,6 +42,7 @@ do_PseudotimePlot <- function(sample,
                               legend.framecolor = "grey50",
                               legend.tickcolor = "white",
                               viridis_color_map = "D",
+                              viridis_direction = 1,
                               plot_cell_borders = TRUE,
                               enforce_symmetry = FALSE,
                               nbin = 24,
@@ -74,7 +75,8 @@ do_PseudotimePlot <- function(sample,
                          "legend.framewidth" = legend.framewidth,
                          "legend.tickwidth" = legend.tickwidth,
                          "nbin" = nbin,
-                         "ctrl" = ctrl)
+                         "ctrl" = ctrl,
+                         "viridis_direction" = viridis_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("trajectory_graph_color" = trajectory_graph_color,
@@ -92,6 +94,11 @@ do_PseudotimePlot <- function(sample,
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
     check_colors(trajectory_graph_color, parameter_name = "trajectory_graph_color")
 
+    check_parameters(parameter = font.type, parameter_name = "font.type")
+    check_parameters(parameter = legend.type, parameter_name = "legend.type")
+    check_parameters(parameter = legend.position, parameter_name = "legend.position")
+    check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+    check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
     # Define pipe operator internally.
     `%>%` <- magrittr::`%>%`
@@ -228,7 +235,8 @@ do_PseudotimePlot <- function(sample,
                                        legend.framewidth = legend.framewidth,
                                        legend.tickwidth = legend.tickwidth,
                                        legend.framecolor = legend.framecolor,
-                                       legend.tickcolor = legend.tickcolor)
+                                       legend.tickcolor = legend.tickcolor,
+                                       viridis_direction = viridis_direction)
     p.pseudotime.out$layers <- append(p.pseudotime.out$layers, p.pseudotime$layers[seq(3, length(p.pseudotime$layers))])
 
     list.out[["pseudotime"]] <- p.pseudotime.out
@@ -247,7 +255,8 @@ do_PseudotimePlot <- function(sample,
                                    legend.framewidth = legend.framewidth,
                                    legend.tickwidth = legend.tickwidth,
                                    legend.framecolor = legend.framecolor,
-                                   legend.tickcolor = legend.tickcolor)
+                                   legend.tickcolor = legend.tickcolor,
+                                   viridis_direction = viridis_direction)
     list.out[["enrichment"]] <- p.enrichment
   }))
   return(list.out)

@@ -26,7 +26,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  legend.position = "bottom",
                                  use_viridis = TRUE,
                                  viridis_color_map = "G",
-                                 scale_direction = -1,
+                                 viridis_direction = -1,
                                  heatmap.legend.length = 75,
                                  heatmap.legend.width = 5,
                                  heatmap.legend.framecolor = "black",
@@ -50,7 +50,7 @@ do_EnrichmentHeatmap <- function(sample,
   numeric_list <- list("row_names_rot" = row_names_rot,
                        "column_names_rot" = column_names_rot,
                        "cell_size" = cell_size,
-                       "scale_direction" = scale_direction,
+                       "viridis_direction" = viridis_direction,
                        "row_title_rot" = row_title_rot)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
@@ -67,6 +67,9 @@ do_EnrichmentHeatmap <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   check_colors(na.value)
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
+
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
@@ -158,7 +161,7 @@ do_EnrichmentHeatmap <- function(sample,
                          na.value = na.value,
                          use_viridis = use_viridis,
                          viridis_color_map = viridis_color_map,
-                         viridis_direction = scale_direction,
+                         viridis_direction = viridis_direction,
                          legend.position = legend.position,
                          legend.length = heatmap.legend.length,
                          range.data = range.data,

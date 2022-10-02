@@ -24,7 +24,10 @@ do_ViolinPlot(
   ylab = feature,
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = TRUE
+  rotate_x_axis_labels = TRUE,
+  plot.grid = TRUE,
+  grid.color = "grey75",
+  grid.type = "dashed"
 )
 }
 \arguments{
@@ -73,6 +76,8 @@ do_ViolinPlot(
 }}
 
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
+
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 }
 \value{
 A ggplot2 object containing a Violin Plot.

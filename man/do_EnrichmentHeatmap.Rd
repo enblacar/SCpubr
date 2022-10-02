@@ -22,7 +22,7 @@ do_EnrichmentHeatmap(
   legend.position = "bottom",
   use_viridis = TRUE,
   viridis_color_map = "G",
-  scale_direction = -1,
+  viridis_direction = -1,
   heatmap.legend.length = 75,
   heatmap.legend.width = 5,
   heatmap.legend.framecolor = "black",
@@ -69,7 +69,7 @@ do_EnrichmentHeatmap(
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
 

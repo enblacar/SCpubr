@@ -40,14 +40,16 @@ do_FeaturePlot <- function(sample,
                            individual.subtitles = NULL,
                            individual.captions = NULL,
                            ncol = NULL,
-                           viridis_color_map = "D",
+                           viridis_color_map = "G",
+                           viridis_direction = 1,
                            raster = FALSE,
                            raster.dpi = 1024,
                            plot_cell_borders = TRUE,
                            border.size = 2,
                            border.color = "black",
                            na.value = "grey75",
-                           verbose = TRUE){
+                           verbose = TRUE,
+                           plot.axes = FALSE){
 
 
   # Checks for packages.
@@ -67,7 +69,8 @@ do_FeaturePlot <- function(sample,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
                        "order" = order,
-                       "enforce_symmetry" = enforce_symmetry)
+                       "enforce_symmetry" = enforce_symmetry,
+                       "plot.axes" = plot.axes)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -78,7 +81,8 @@ do_FeaturePlot <- function(sample,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
                        "legend.width" = legend.width,
-                       "border.size" = border.size)
+                       "border.size" = border.size,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -136,30 +140,17 @@ do_FeaturePlot <- function(sample,
     }
   }
 
-  # Check border color.
   check_colors(border.color, parameter_name = "border.color")
   check_colors(na.value, parameter_name = "na.value")
-  # Check viridis_color_map.
-  check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
-
-  # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
-  # Check the legend.type.
-  if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-    stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-  }
-
-  # Check the legend.position.
-  if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-    stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-  }
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
@@ -231,7 +222,8 @@ do_FeaturePlot <- function(sample,
         if (isFALSE(enforce_symmetry)){
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                       option = viridis_color_map),
+                                                                       option = viridis_color_map,
+                                                                       direction = viridis_direction),
                          scale = "color")
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p)
@@ -249,7 +241,8 @@ do_FeaturePlot <- function(sample,
         if (isFALSE(enforce_symmetry)){
           p[[counter]] <- add_scale(p = p[[counter]],
                                     function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                                  option = viridis_color_map),
+                                                                                  option = viridis_color_map,
+                                                                                  direction = viridis_direction),
                                     scale = "color")
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p[[counter]])
@@ -371,7 +364,8 @@ do_FeaturePlot <- function(sample,
         if (isFALSE(enforce_symmetry)){
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                            option = viridis_color_map),
+                                                                            option = viridis_color_map,
+                                                                            direction = viridis_direction),
                               scale = "color")
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p.loop)
@@ -434,7 +428,8 @@ do_FeaturePlot <- function(sample,
             p.loop <- add_scale(p = p.loop,
                                 function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                               option = viridis_color_map,
-                                                                              limits = limits),
+                                                                              limits = limits,
+                                                                              direction = viridis_direction),
                                 scale = "color")
           } else if (isTRUE(enforce_symmetry)){
             p.build <- ggplot2::ggplot_build(p.loop)
@@ -448,17 +443,19 @@ do_FeaturePlot <- function(sample,
           p.loop <- p.loop +
                     ggplot2::ggtitle(iteration)
 
-          p.loop <- modify_continuous_legend(p = p.loop,
-                                             legend.title = if (is.null(legend.title)){feature} else {legend.title},
-                                             legend.aes = "color",
-                                             legend.type = legend.type,
-                                             legend.position = legend.position,
-                                             legend.length = legend.length,
-                                             legend.width = legend.width,
-                                             legend.framecolor = legend.framecolor,
-                                             legend.tickcolor = legend.tickcolor,
-                                             legend.framewidth = legend.framewidth,
-                                             legend.tickwidth = legend.tickwidth)
+          if (legend.position != "none"){
+            p.loop <- modify_continuous_legend(p = p.loop,
+                                               legend.title = if (is.null(legend.title)){feature} else {legend.title},
+                                               legend.aes = "color",
+                                               legend.type = legend.type,
+                                               legend.position = legend.position,
+                                               legend.length = legend.length,
+                                               legend.width = legend.width,
+                                               legend.framecolor = legend.framecolor,
+                                               legend.tickcolor = legend.tickcolor,
+                                               legend.framewidth = legend.framewidth,
+                                               legend.tickwidth = legend.tickwidth)
+          }
 
           if (iteration != plot_order[length(plot_order)]){
             p.loop <- p.loop & Seurat::NoLegend()
@@ -516,13 +513,10 @@ do_FeaturePlot <- function(sample,
                       legend.position = legend.position,
                       legend.title = ggplot2::element_text(face = "bold"),
                       legend.justification = "center",
-                      axis.title.x = ggplot2::element_text(face = "bold"),
-                      axis.title.y = ggplot2::element_text(face = "bold",
-                                                           angle = 90),
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
-  if (is.null(split.by)){
+  if (is.null(split.by) & legend.position != "none"){
     counter <- 0
     for (feature in features){
       counter <- counter + 1
@@ -612,17 +606,17 @@ do_FeaturePlot <- function(sample,
     # if dims is first and then second.
     if (sum(dims == c(1, 2)) == 2){
       p <- p &
-           ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                          axis.title.y = ggplot2::element_blank(),
-                          axis.text = ggplot2::element_blank(),
-                          axis.ticks = ggplot2::element_blank(),
-                          axis.line = ggplot2::element_blank())
+           ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
+                          axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                          axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggplot2::theme(axis.text = ggplot2::element_blank(),
-                       axis.ticks = ggplot2::element_blank(),
-                       axis.line = ggplot2::element_blank()) &
+        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -630,9 +624,10 @@ do_FeaturePlot <- function(sample,
   } else {
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     p <- p &
-      ggplot2::theme(axis.text = ggplot2::element_blank(),
-                     axis.ticks = ggplot2::element_blank(),
-                     axis.line = ggplot2::element_blank()) &
+      ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                     axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                     axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                     axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }
@@ -647,9 +642,10 @@ do_FeaturePlot <- function(sample,
         ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
                         max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
         # Remove axis elements so that the axis title is the only thing left.
-        ggplot2::theme(axis.text = ggplot2::element_blank(),
-                       axis.ticks = ggplot2::element_blank(),
-                       axis.line = ggplot2::element_blank())
+        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black"))
     })
 
   }

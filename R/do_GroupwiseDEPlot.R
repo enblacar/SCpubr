@@ -22,7 +22,7 @@ do_GroupwiseDEPlot <- function(sample,
                                heatmap.legend.width = 5,
                                heatmap.legend.framecolor = "black",
                                top_genes = 5,
-                               scale_direction = -1,
+                               viridis_direction = -1,
                                row_title_p_values = "",
                                row_title_logfc = "Clusters",
                                row_title_expression = c(""),
@@ -48,7 +48,7 @@ do_GroupwiseDEPlot <- function(sample,
   numeric_list <- list("heatmap.legend.length" = heatmap.legend.length,
                        "heatmap.legend.width" = heatmap.legend.width,
                        "cell_size" = cell_size,
-                       "scale_direction" = scale_direction,
+                       "viridis_direction" = viridis_direction,
                        "top_genes" = top_genes,
                        "heatmap_gap" = heatmap_gap,
                        "legend_gap" = legend_gap,
@@ -77,13 +77,15 @@ do_GroupwiseDEPlot <- function(sample,
   `%>%` <- magrittr::`%>%`
   `.` <- plyr::.()
 
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_map_pvalues, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis_map_expression, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis_map_logfc, parameter_name = "viridis_color_map")
+
    if (length(group.by) != length(row_title_expression)){
      stop("Please provide the same number of row titles as the number of items in group.by.", call. = FALSE)
    }
-
-  if (!(scale_direction %in% c(1, -1))){
-    stop("Please provide either -1 or 1 to scale_direction.", call. = FALSE)
-  }
 
 
   magnitude <- ifelse(slot == "data", "avg_log2FC", "avg_diff")
@@ -119,7 +121,7 @@ do_GroupwiseDEPlot <- function(sample,
                              legend.framecolor = heatmap.legend.framecolor,
                              use_viridis = TRUE,
                              viridis_color_map = viridis_map_logfc,
-                             viridis_direction = scale_direction,
+                             viridis_direction = viridis_direction,
                              zeros_are_white = TRUE,
                              row_title_rotation = row_title_rot,
                              row_title_side = row_title_side,
@@ -159,7 +161,7 @@ do_GroupwiseDEPlot <- function(sample,
                               outlier.up.label = "Inf",
                               use_viridis = TRUE,
                               viridis_color_map = viridis_map_pvalues,
-                              viridis_direction = scale_direction,
+                              viridis_direction = viridis_direction,
                               zeros_are_white = TRUE,
                               row_title_rotation = row_title_rot,
                               row_title_side = row_title_side,
@@ -239,7 +241,7 @@ do_GroupwiseDEPlot <- function(sample,
                                     legend.framecolor = heatmap.legend.framecolor,
                                     use_viridis = TRUE,
                                     viridis_color_map = viridis_map_expression,
-                                    viridis_direction = scale_direction,
+                                    viridis_direction = viridis_direction,
                                     zeros_are_white = TRUE,
                                     range.data = max(max_value_list),
                                     row_title_rotation = row_title_rot,

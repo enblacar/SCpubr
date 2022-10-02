@@ -42,7 +42,8 @@ do_CellularStatesPlot(
   raster.dpi = 1024,
   plot_features = FALSE,
   features = NULL,
-  viridis_color_map = "D"
+  viridis_color_map = "D",
+  viridis_direction = 1
 )
 }
 \arguments{
@@ -132,6 +133,8 @@ do_CellularStatesPlot(
 \item{features}{\strong{\code{\link[base]{character}}} | Additional features to plot.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

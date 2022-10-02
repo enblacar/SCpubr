@@ -29,7 +29,9 @@ do_CopyNumberVariantPlot(
   plot_cell_borders = TRUE,
   enforce_symmetry = TRUE,
   legend.title = NULL,
-  na.value = "grey75"
+  na.value = "grey75",
+  viridis_color_map = "D",
+  viridis_direction = 1
 )
 }
 \arguments{
@@ -93,6 +95,10 @@ do_CopyNumberVariantPlot(
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+
+\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 }
 \value{
 A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..

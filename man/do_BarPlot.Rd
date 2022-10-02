@@ -21,7 +21,10 @@ do_BarPlot(
   flip = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,
-  plot.caption = NULL
+  plot.caption = NULL,
+  plot.grid = TRUE,
+  grid.color = "grey75",
+  grid.type = "dashed"
 )
 }
 \arguments{
@@ -68,6 +71,8 @@ do_BarPlot(
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
+
+\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 }
 \value{
 A ggplot2 object containing a Bar plot.

@@ -15,7 +15,7 @@ do_GroupwiseDEPlot(
   heatmap.legend.width = 5,
   heatmap.legend.framecolor = "black",
   top_genes = 5,
-  scale_direction = -1,
+  viridis_direction = -1,
   row_title_p_values = "",
   row_title_logfc = "Clusters",
   row_title_expression = c(""),
@@ -46,7 +46,7 @@ do_GroupwiseDEPlot(
 
 \item{top_genes}{\strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.}
 
-\item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{row_title_p_values}{\strong{\code{\link[base]{character}}} | Row title for the p-value heatmap. Blank by default.}
 

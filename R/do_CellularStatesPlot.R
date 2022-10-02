@@ -63,7 +63,8 @@ do_CellularStatesPlot <- function(sample,
                                   raster.dpi = 1024,
                                   plot_features = FALSE,
                                   features = NULL,
-                                  viridis_color_map = "D"){
+                                  viridis_color_map = "D",
+                                  viridis_direction = 1){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -90,7 +91,8 @@ do_CellularStatesPlot <- function(sample,
                          "legend.nrow" = legend.nrow,
                          "pt.size" = pt.size,
                          "border.size" = border.size,
-                         "raster.dpi" = raster.dpi)
+                         "raster.dpi" = raster.dpi,
+                         "viridis_direction" = viridis_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("input_gene_list" = input_gene_list,
@@ -111,10 +113,6 @@ do_CellularStatesPlot <- function(sample,
                            "features" = features,
                            "viridis_color_map" = viridis_color_map)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-
-    # Check viridis_color_map.
-    check_viridis_color_map(viridis_color_map = viridis_color_map, verbose = verbose)
-
 
     # Define pipe operator internally.
     `%>%` <- magrittr::`%>%`
@@ -150,15 +148,12 @@ do_CellularStatesPlot <- function(sample,
       group.by <- "dummy"
     }
 
-    # Check font.type.
-    if (!(font.type %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-    }
+    check_parameters(parameter = font.type, parameter_name = "font.type")
+    check_parameters(parameter = legend.position, parameter_name = "legend.position")
+    check_parameters(parameter = marginal.type, parameter_name = "marginal.type")
+    check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+    check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
 
-    # Check marginal.type.
-    if (!(marginal.type %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
-      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
-    }
 
     # Compute the enrichment scores.
     sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose)
@@ -505,7 +500,8 @@ do_CellularStatesPlot <- function(sample,
                                             raster.dpi = raster.dpi,
                                             font.type = font.type,
                                             font.size = font.size,
-                                            viridis_color_map = viridis_color_map)
+                                            viridis_color_map = viridis_color_map,
+                                            viridis_direction = viridis_direction)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){

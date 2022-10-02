@@ -31,7 +31,10 @@ do_ViolinPlot <- function(sample,
                           ylab = feature,
                           font.size = 14,
                           font.type = "sans",
-                          rotate_x_axis_labels = TRUE){
+                          rotate_x_axis_labels = TRUE,
+                          plot.grid = TRUE,
+                          grid.color = "grey75",
+                          grid.type = "dashed"){
   # Checks for packages.
   check_suggests(function_name = "do_ViolinPlot")
   # Check if the sample provided is a Seurat object.
@@ -45,7 +48,8 @@ do_ViolinPlot <- function(sample,
   slot <- check_and_set_slot(slot = slot)
   # Check logical parameters.
   logical_list <- list("plot_boxplot" = plot_boxplot,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "plot.grid" = plot.grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -64,7 +68,9 @@ do_ViolinPlot <- function(sample,
                          "plot.caption" = plot.caption,
                          "xlab" = xlab,
                          "ylab" = ylab,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "grid.color" = grid.color,
+                         "grid.type" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check the feature.
@@ -84,11 +90,12 @@ do_ViolinPlot <- function(sample,
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }
   }
+  check_colors(grid.color, parameter_name = "grid.color")
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
     p <- Seurat::VlnPlot(sample,
                          features = feature,
@@ -116,7 +123,7 @@ do_ViolinPlot <- function(sample,
                         plot.title.position = "plot",
                         panel.grid.major.x = ggplot2::element_blank(),
                         panel.grid.minor = ggplot2::element_blank(),
-                        panel.grid.major.y = ggplot2::element_line(color = "grey75", linetype = "dashed"),
+                        panel.grid.major.y = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
                         legend.text = ggplot2::element_text(face = "bold"),

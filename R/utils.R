@@ -79,7 +79,9 @@
 #' @param features \strong{\code{\link[base]{character}}} | Features to represent.
 #' @param feature \strong{\code{\link[base]{character}}} | Feature to represent.
 #' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.
-#'
+#' @param viridis_direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
+#' @param plot.grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
+#' @param plot.axes \strong{\code{\link[base]{logical}}} | Whether to plot axes or not.
 #'
 #'
 #' @usage NULL
@@ -159,7 +161,10 @@ doc_function <- function(sample,
                          dims,
                          feature,
                          features,
-                         use_viridis){}
+                         use_viridis,
+                         viridis_direction,
+                         plot.grid,
+                         plot.axes){}
 
 #' Named vector.
 #'
@@ -1779,7 +1784,53 @@ get_data_column_in_context <- function(sample,
   return(data)
 }
 
-
+#' Check parameters.
+#'
+#' @param parameter Parameter to check
+#' @param parameter_name Name of the parameter.
+#'
+#' @noRd
+#' @examples
+#' \dontrun{
+#' TBD
+#' }
+check_parameters <- function(parameter,
+                             parameter_name){
+  if (parameter_name == "font.type"){
+    # Check font.type.
+    if (!(parameter %in% c("sans", "serif", "mono"))){
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+    }
+  } else if (parameter_name == "legend.type"){
+    # Check the legend.type.
+    if (!(parameter %in% c("normal", "colorbar", "colorsteps"))){
+      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
+    }
+  } else if (parameter_name == "legend.position"){
+    # Check the legend.position.
+    if (!(parameter %in% c("top", "bottom", "left", "right", "none"))){
+      stop("Please select one of the following for legend.position: top, bottom, left, right, none.", call. = FALSE)
+    }
+  } else if (parameter_name == "marginal.type"){
+    # Check marginal.type.
+    if (!(parameter %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
+      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
+    }
+  } else if (parameter_name == "viridis_direction"){
+    if (!(parameter %in% c(1, -1))){
+      stop("Please provide a value for viridis_direction of -1 or 1.", call. = FALSE)
+    }
+  } else if (parameter_name == "viridis_color_map"){
+    viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
+    if (!(parameter %in% viridis_options)){
+      stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)
+    }
+  } else if (parameter_name == "grid.type"){
+    if (!(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))){
+      stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = F)
+    }
+  }
+}
 
 
 

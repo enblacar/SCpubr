@@ -36,14 +36,16 @@ do_FeaturePlot(
   individual.subtitles = NULL,
   individual.captions = NULL,
   ncol = NULL,
-  viridis_color_map = "D",
+  viridis_color_map = "G",
+  viridis_direction = 1,
   raster = FALSE,
   raster.dpi = 1024,
   plot_cell_borders = TRUE,
   border.size = 2,
   border.color = "black",
   na.value = "grey75",
-  verbose = TRUE
+  verbose = TRUE,
+  plot.axes = FALSE
 )
 }
 \arguments{
@@ -112,6 +114,8 @@ do_FeaturePlot(
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
 \item{raster}{\strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
 \item{raster.dpi}{\strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024.}
@@ -125,6 +129,8 @@ do_FeaturePlot(
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

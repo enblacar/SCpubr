@@ -94,20 +94,9 @@ do_TermEnrichmentPlot <- function(genes,
       colors.use <- c("#bdc3c7", "#2c3e50")
     }
 
-    # Check font.type.
-    if (!(font.type %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-    }
-
-    # Check the legend.type.
-    if (!(legend.type %in% c("normal", "colorbar", "colorsteps"))){
-      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-    }
-
-    # Check the legend.position.
-    if (!(legend.position %in% c("top", "bottom", "left", "right"))){
-      stop("Please select one of the following for legend.position: top, bottom, left, right.", call. = FALSE)
-    }
+    check_parameters(parameter = font.type, parameter_name = "font.type")
+    check_parameters(parameter = legend.type, parameter_name = "legend.type")
+    check_parameters(parameter = legend.position, parameter_name = "legend.position")
 
     # Define legend parameters. Width and height values will change depending on the legend orientation.
     if (legend.position %in% c("top", "bottom")){

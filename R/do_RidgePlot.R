@@ -11,7 +11,6 @@
 #' @param compute_distribution_tails \strong{\code{\link[base]{logical}}} | Whether to compute distribution tails and color them.
 #' @param prob_tails \strong{\code{\link[base]{numeric}}} | The accumulated probability that the tails should contain.
 #' @param color_by_probabilities \strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.
-#' @param viridis_direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
 #' @return A ggplot2 object.
 #' @export
 #'
@@ -47,7 +46,11 @@ do_RidgePlot <- function(sample,
                          compute_distribution_tails = FALSE,
                          prob_tails = 0.025,
                          color_by_probabilities = FALSE,
-                         viridis_direction = 1){
+                         viridis_color_map = "G",
+                         viridis_direction = 1,
+                         plot.grid = TRUE,
+                         grid.color = "grey75",
+                         grid.type = "dashed"){
   `%>%` <- magrittr::`%>%`
 
   # Checks for packages.
@@ -61,7 +64,8 @@ do_RidgePlot <- function(sample,
                        "compute_quantiles" = compute_quantiles,
                        "compute_custom_quantiles" = compute_custom_quantiles,
                        "compute_distribution_tails" = compute_distribution_tails,
-                       "color_by_probabilities" = color_by_probabilities)
+                       "color_by_probabilities" = color_by_probabilities,
+                       "plot.grid" = plot.grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("legend.width" = legend.width,
@@ -90,10 +94,21 @@ do_RidgePlot <- function(sample,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
                          "xlab" = xlab,
-                         "ylab" = ylab)
+                         "ylab" = ylab,
+                         "viridis_color_map" = viridis_color_map,
+                         "grid.color" = grid.color,
+                         "grid.type" = grid.type)
 
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = grid.type, parameter_name = "grid.type")
+
   if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
 
   if (is.null(legend.position)){
@@ -114,7 +129,7 @@ do_RidgePlot <- function(sample,
                                                   fill = ..x..)) +
            ggridges::geom_density_ridges_gradient(color = "black",
                                                   size = 1.25) +
-           ggplot2::scale_fill_viridis_c(option = "G",
+           ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                          direction = viridis_direction,
                                          name = feature)
 
@@ -151,7 +166,7 @@ do_RidgePlot <- function(sample,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
                                            quantiles = quantiles) +
-             ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = "G", direction = viridis_direction),
+             ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis_color_map, direction = viridis_direction),
                                         name = ifelse(is.null(legend.title), "Probability", legend.title),
                                         labels = unique(labels))
       } else if (isTRUE(compute_distribution_tails)){
@@ -179,7 +194,7 @@ do_RidgePlot <- function(sample,
                                            size = 1.25,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient") +
-             ggplot2::scale_fill_viridis_c(option = "G",
+             ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                            name = "Tail probability",
                                            direction = viridis_direction)
         p <- modify_continuous_legend(p = p,
@@ -239,7 +254,8 @@ do_RidgePlot <- function(sample,
                       plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                       plot.subtitle = ggplot2::element_text(hjust = 0),
                       plot.caption = ggplot2::element_text(hjust = 1),
-                      panel.grid = ggplot2::element_blank(),
+                      panel.grid.major.y = ggplot2::element_blank(),
+                      panel.grid.major.x = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                       text = ggplot2::element_text(family = font.type),
                       plot.caption.position = "plot",
                       legend.text = ggplot2::element_text(face = "bold"),

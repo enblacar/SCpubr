@@ -51,6 +51,8 @@ do_CorrelationPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   check_colors(na.value)
 
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
 

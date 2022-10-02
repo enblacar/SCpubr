@@ -48,6 +48,7 @@ do_GeyserPlot <- function(sample,
                           font.type = "sans",
                           rotate_x_axis_labels = TRUE,
                           viridis_color_map = "D",
+                          viridis_direction = 1,
                           colors.use = NULL,
                           na.value = "grey75",
                           legend.ncol = NULL,
@@ -83,7 +84,8 @@ do_GeyserPlot <- function(sample,
                        "border.size" = border.size,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
-                       "legend.icon.size" = legend.icon.size)
+                       "legend.icon.size" = legend.icon.size,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -111,6 +113,12 @@ do_GeyserPlot <- function(sample,
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(na.value, parameter_name = "na.value")
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
   `%>%` <- magrittr::`%>%`
   # Check the assay.
@@ -316,7 +324,8 @@ do_GeyserPlot <- function(sample,
                                                     na.value = na.value)
       } else if (isFALSE(enforce_symmetry)){
         scale.use <- ggplot2::scale_color_viridis_c(option = viridis_color_map,
-                                                    na.value = na.value)
+                                                    na.value = na.value,
+                                                    direction = viridis_direction)
       }
     } else if (isTRUE(scale_type == "categorical")){
       if (is.null(colors.use)){

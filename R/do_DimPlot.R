@@ -51,7 +51,8 @@ do_DimPlot <- function(sample,
                        plot_marginal_distributions = FALSE,
                        marginal.type = "density",
                        marginal.size = 5,
-                       marginal.group = TRUE){
+                       marginal.group = TRUE,
+                       plot.axes = FALSE){
   # Checks for packages.
   check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
@@ -68,7 +69,8 @@ do_DimPlot <- function(sample,
                        "raster" = raster,
                        "plot_marginal_distributions" = plot_marginal_distributions,
                        "marginal.group" = marginal.group,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "plot.axes" = plot.axes)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -123,6 +125,10 @@ do_DimPlot <- function(sample,
   if (isTRUE(raster) & pt.size < 1){
     warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
   }
+
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = marginal.type, parameter_name = "marginal.type")
 
   # If the user has not provided colors.
   if (is.null(colors.use)){
@@ -197,11 +203,6 @@ do_DimPlot <- function(sample,
     }
   }
 
-  # Check marginal.type.
-  if (!(marginal.type %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
-    stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
-  }
-
   # Set cells to NA according to idents.keep.
   # If the user does not want to highlight cells or split by identities but wants to remove some identities.
   idents_keep_used <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(idents.keep))
@@ -241,10 +242,6 @@ do_DimPlot <- function(sample,
     }
   }
 
-  # Check font.type.
-  if (!(font.type %in% c("sans", "serif", "mono"))){
-    stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
-  }
 
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
@@ -435,8 +432,6 @@ do_DimPlot <- function(sample,
                    legend.text = ggplot2::element_text(face = "bold"),
                    legend.title = if (legend.position != "none"){ggplot2::element_text(face = "bold")} else {ggplot2::element_blank()},
                    legend.position = legend.position,
-                   axis.title.x = ggplot2::element_text(face = "bold"),
-                   axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
                    panel.grid = ggplot2::element_blank(),
                    plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                    plot.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -483,20 +478,20 @@ do_DimPlot <- function(sample,
     if (sum(dims == c(1, 2)) == 2){
       # Remove axes completely.
       p <- p &
-        ggplot2::theme(axis.line = ggplot2::element_blank(),
-                       axis.text = ggplot2::element_blank(),
-                       axis.ticks = ggplot2::element_blank(),
-                       axis.title.x = ggplot2::element_blank(),
-                       axis.title.y = ggplot2::element_blank())
+        ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
+                       axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       # If dims do not follow the usual order.
     } else {
       # Get the name of the selected dims.
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       # Remove everything in the axes but the axis titles.
       p <- p &
-           ggplot2::theme(axis.line = ggplot2::element_blank(),
-                          axis.text = ggplot2::element_blank(),
-                          axis.ticks = ggplot2::element_blank()) &
+           ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                          axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                          axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -506,9 +501,10 @@ do_DimPlot <- function(sample,
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     # Remove everything in the axes but not the axis titles.
     p <- p &
-      ggplot2::theme(axis.line = ggplot2::element_blank(),
-                     axis.text = ggplot2::element_blank(),
-                     axis.ticks = ggplot2::element_blank()) &
+      ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                     axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                     axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                     axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }
