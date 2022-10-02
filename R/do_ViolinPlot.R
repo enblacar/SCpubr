@@ -93,7 +93,6 @@ do_ViolinPlot <- function(sample,
   check_colors(grid.color, parameter_name = "grid.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
-  check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
 

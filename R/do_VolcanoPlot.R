@@ -72,7 +72,6 @@ do_VolcanoPlot <- function(sample,
   check_colors(colors.use, parameter_name = "colors.use")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
-  check_parameters(parameter = legend.position, parameter_name = "legend.position")
 
 
   if (!(order_tags_by %in% c("both", "p_value", "logfc"))){

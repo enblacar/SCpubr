@@ -104,7 +104,7 @@ do_RidgePlot <- function(sample,
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
-  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  if (!is.null(legend.position)){check_parameters(parameter = legend.position, parameter_name = "legend.position")}
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
@@ -247,9 +247,6 @@ do_RidgePlot <- function(sample,
                       axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       panel.grid.major = ggplot2::element_blank(),
-                      panel.grid.major.x = ggplot2::element_line(color = "grey75",
-                                                                 linetype = "dashed",
-                                                                 size = 0.5),
                       plot.title.position = "plot",
                       plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                       plot.subtitle = ggplot2::element_text(hjust = 0),

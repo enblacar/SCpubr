@@ -10,7 +10,6 @@ do_LigandReceptorPlot(
   keep_source = NULL,
   keep_target = NULL,
   top_interactions = 25,
-  significance_threshold = 0.05,
   dot_border = TRUE,
   border.color = "black",
   x_labels_angle = 45,
@@ -43,8 +42,6 @@ do_LigandReceptorPlot(
 \item{keep_source, keep_target}{\strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.}
 
 \item{top_interactions}{\strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
-
-\item{significance_threshold}{\strong{\code{\link[base]{numeric}}} | Value to filter the interactions by significance. Default is 0.05.}
 
 \item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.}
 

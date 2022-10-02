@@ -22,7 +22,6 @@
 #'   \item \emph{\code{longdash}}.
 #'   \item \emph{\code{twodash}}.
 #' }
-#' @param significance_threshold \strong{\code{\link[base]{numeric}}} | Value to filter the interactions by significance. Default is 0.05.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
@@ -37,7 +36,6 @@ do_LigandReceptorPlot <- function(liana_output,
                                   keep_source = NULL,
                                   keep_target = NULL,
                                   top_interactions = 25,
-                                  significance_threshold = 0.05,
                                   dot_border = TRUE,
                                   border.color = "black",
                                   x_labels_angle = 45,
@@ -80,7 +78,6 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
                        "x_labels_angle" = x_labels_angle,
-                       "significance_threshold" = significance_threshold,
                        "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
@@ -151,11 +148,27 @@ do_LigandReceptorPlot <- function(liana_output,
     vjust = 0.5
   }
 
+
+
   liana_output <- liana_output %>%
-                  liana::liana_aggregate(verbose = FALSE) %>%
+                  liana::liana_aggregate(verbose = FALSE)
+
+  # This is to later on add missing interacting pairs.
+  possible_interacting_clusters <- c()
+
+  # If we are subsetting the final plot.
+  possible_sources <- if(is.null(keep_source)){sort(unique(liana_output$source))} else {sort(unique(liana_output$source))[sort(unique(liana_output$source)) %in% keep_source]}
+  possible_targets <- if(is.null(keep_target)){sort(unique(liana_output$target))} else {sort(unique(liana_output$target))[sort(unique(liana_output$target)) %in% keep_target]}
+
+  for (source in possible_sources){
+    for (target in possible_targets){
+      name <- paste0(source, "_", target)
+      possible_interacting_clusters <- c(possible_interacting_clusters, name)
+    }
+  }
+  liana_output <- liana_output %>%
                   dplyr::mutate(magnitude = .data$sca.LRscore) %>%
                   dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
-                  dplyr::filter(.data$aggregate_rank <= significance_threshold) %>%
                   dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
 
 
@@ -170,14 +183,47 @@ do_LigandReceptorPlot <- function(liana_output,
                                col = "interacting_clusters",
                                remove = FALSE)
   # For Chord diagrams.
-  output_copy <- liana_output
+  output_copy <- liana_output %>% dplyr::filter(.data$aggregate_rank <= 0.05)
+
 
   liana_output <- liana_output %>%
                   # Filter based on the top X interactions of ascending sensibilities.
-                  # Retrieve the interaction column and return the unique values.
-                  dplyr::filter(.data$interaction %in% {liana_output %>%
-                                                        dplyr::pull(.data$interaction) %>%
-                                                        unique()}[1:top_interactions])
+                  dplyr::inner_join(y = {liana_output %>%
+                                         dplyr::distinct_at(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
+                                         dplyr::slice_head(n = top_interactions)},
+                                    by = c("ligand.complex", "receptor.complex"))
+
+  # Fix to add missing "NA" interactions.
+  liana_output <- liana_output %>%
+                  dplyr::select(dplyr::all_of(c("interacting_clusters", "source", "target", "interaction", "ligand.complex", "receptor.complex", "magnitude", "specificity")))
+
+  # Iterate over each possible interaction and each interacting pair.
+  not_found_interaction_pairs <- possible_interacting_clusters[possible_interacting_clusters %!in% unique(liana_output$interacting_clusters)]
+  interactions <- unique(liana_output$interaction)
+
+  # Iterate over each interaction.
+  for(interaction in interactions){
+    ligand.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][1]
+    receptor.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][2]
+    # For each missing interaction pair.
+    for (interacting_cluster in not_found_interaction_pairs){
+      source <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][1]
+      target <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][2]
+
+      # If the interacting pair - interaction is missing, add a mock row with it.
+      column <- tibble::tibble("interacting_clusters" = interacting_cluster,
+                               "source" = source,
+                               "target" = target,
+                               "interaction" = interaction,
+                               "ligand.complex" = ligand.complex,
+                               "receptor.complex" = receptor.complex,
+                               "magnitude" = NA,
+                               "specificity" = NA)
+      liana_output <- liana_output %>% dplyr::bind_rows(column)
+    }
+  }
+
+
   # If the user wants to trim the matrix and subset interacting entities.
   if (!(is.null(keep_source))){
     liana_output <- liana_output %>%
@@ -193,6 +239,11 @@ do_LigandReceptorPlot <- function(liana_output,
                    dplyr::filter(.data$target %in% keep_target)
   }
 
+  # Make source and target factors, so that they do not get dropped by the plot.
+  liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
+  liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
+  liana_output$interaction <- factor(liana_output$interaction, levels = rev(sort(unique(liana_output$interaction))))
+
   # Plot.
   if (isTRUE(flip)){
     if (isTRUE(dot_border)){
@@ -202,7 +253,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                                    fill = .data$magnitude,
                                                    size = .data$specificity,
                                                    group = .data$interacting_clusters)) +
-            ggplot2::geom_point(shape = 21)
+            ggplot2::geom_point(shape = 21,
+                                na.rm = TRUE)
     } else if (isFALSE(dot_border)) {
       p <-  liana_output %>%
             ggplot2::ggplot(mapping = ggplot2::aes(x = .data$interaction,
@@ -210,7 +262,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                                    size = .data$specificity,
                                                    group = .data$interacting_clusters)) +
             ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
-                                shape = 19)
+                                shape = 19,
+                                na.rm = TRUE)
     }
   } else if (isFALSE(flip)){
     if (isTRUE(dot_border)){
@@ -220,7 +273,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                                    fill = .data$magnitude,
                                                    size = .data$specificity,
                                                    group = .data$interacting_clusters)) +
-            ggplot2::geom_point(shape = 21)
+            ggplot2::geom_point(shape = 21,
+                                na.rm = TRUE)
     } else if (isFALSE(dot_border)){
       p <-  liana_output %>%
             ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
@@ -228,7 +282,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                                    size = .data$specificity,
                                                    group = .data$interacting_clusters)) +
             ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
-                                shape = 19)
+                                shape = 19,
+                                na.rm = TRUE)
     }
   }
   p <-  p +
@@ -241,12 +296,14 @@ do_LigandReceptorPlot <- function(liana_output,
     p <- p +
          ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                        name = fill.title,
-                                       direction = viridis_direction)
+                                       direction = viridis_direction,
+                                       na.value = NA)
   } else {
     p <- p +
          ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                         name = fill.title,
-                                        direction = viridis_direction)
+                                        direction = viridis_direction,
+                                        na.value = NA)
   }
   # Continue plotting.
   if (isFALSE(flip)){
@@ -374,6 +431,7 @@ do_LigandReceptorPlot <- function(liana_output,
     p.source_target <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
 
     data <- liana_output %>%
+            dplyr::filter(!(is.na(.data$magnitude))) %>%
             dplyr::select(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
             dplyr::group_by(.data$ligand.complex, .data$receptor.complex) %>%
             dplyr::summarise(value = dplyr::n()) %>%

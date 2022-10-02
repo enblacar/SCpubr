@@ -56,7 +56,7 @@ do_TFActivityPlot <- function(sample,
                               geyser_order_by_mean = TRUE,
                               geyser_scale_type = "continuous",
                               viridis_color_map = "D",
-                              viridis_scale = 1){
+                              viridis_direction = 1){
 
   #Checks for packages.
   check_suggests(function_name = "do_TFActivityPlot")
