@@ -21,10 +21,4 @@
                                   column_names_rot = 0,
                                   cell_size = 7)
   p
-
-  # Modified color scale.
-  p <- SCpubr::do_CorrelationPlot(sample = sample,
-                                  column_names_rot = 0,
-                                  colors.use = c("red", "blue"))
-  p
 }

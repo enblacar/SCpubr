@@ -95,7 +95,9 @@ do_GeyserPlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -182,13 +184,13 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p1 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = FALSE)
+                              enforce_symmetry = FALSE)
 
   # Geyser plot with continuous and symmetrical color scale.
   p2 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE)
+                              enforce_symmetry = TRUE)
 
 
   p <- p1 / p2
@@ -249,7 +251,7 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p2 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               group.by = "modified_orig.ident",
                               split.by = "seurat_clusters",
                               rotate_x_axis_labels = TRUE)
@@ -268,7 +270,7 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p2 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               color.by = "nCount_RNA")
 
 
@@ -287,7 +289,7 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p2 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               color.by = "nCount_RNA",
                               group.by = "orig.ident",
                               split.by = "seurat_clusters")
@@ -300,37 +302,37 @@ Special thanks to Christina Blume for coming up with the name of the plot.
   p0 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.01)
 
   p1 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.1)
 
   p2 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.2)
 
   p3 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.3)
 
   p4 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.4)
 
   p5 <- SCpubr::do_GeyserPlot(sample = sample,
                               features = "UMAP_2",
                               scale_type = "continuous",
-                              symmetrical_scale = TRUE,
+                              enforce_symmetry = TRUE,
                               jitter = 0.49)
 
 

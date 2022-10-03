@@ -52,7 +52,7 @@
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
-                                   symmetrical_scale = FALSE)
+                                   enforce_symmetry = FALSE)
   p1 <- out$feature_plots$GLI2
   p2 <- out$geyser_plots$GLI2
 
@@ -60,7 +60,7 @@
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
-                                   symmetrical_scale = TRUE)
+                                   enforce_symmetry = TRUE)
   p3 <- out$feature_plots$GLI2
   p4 <- out$geyser_plots$GLI2
 
@@ -71,14 +71,14 @@
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$GLI2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE)
   p2 <- out$geyser_plots$GLI2
 

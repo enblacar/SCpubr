@@ -8,15 +8,13 @@ do_EnrichmentHeatmap(
   sample,
   input_gene_list,
   group.by = NULL,
-  column_title = "List of Genes",
-  row_title = "Groups",
   verbose = FALSE,
   transpose = FALSE,
   cluster_cols = FALSE,
   cluster_rows = FALSE,
   legend.title = "Enrichment",
   row_names_rot = 0,
-  column_names_rot = 90,
+  column_names_rot = 45,
   cell_size = 5,
   na.value = "grey75",
   legend.position = "bottom",
@@ -30,7 +28,18 @@ do_EnrichmentHeatmap(
   heatmap_gap = 0.5,
   row_names_side = "right",
   row_title_side = "left",
-  row_title_rot = 90
+  row_title_rot = 90,
+  column_title = if (isFALSE(transpose)) {
+     "List of Genes"
+ } else {
+     "Groups"
+
+    },
+  row_title = if (isFALSE(transpose)) {
+     "Groups"
+ } else {
+     "List of Genes"
+ }
 )
 }
 \arguments{
@@ -39,8 +48,6 @@ do_EnrichmentHeatmap(
 \item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
-
-\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
@@ -76,6 +83,18 @@ do_EnrichmentHeatmap(
 \item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
 
 \item{symmetrical_scale}{\strong{\code{\link[base]{logical}}} | Whether to make the color scale symmetrical. Works best when use_viridis = FALSE.}
+
+\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
+
+\item{row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.}
+
+\item{row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.}
+
+\item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
+
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
+
+\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
 }
 \value{
 A ComplexHeatmap object.
@@ -98,31 +117,31 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
 
   # Default parameters.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes)
+                                    input_gene_list = genes)
   p
 
   # Custom aggregated values.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     group.by = "orig.ident")
   p
 
   # Transposing the matrix.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE)
   p
 
   # Rotating the labels.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0)
   p
 
   # Modifying the tile size.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,
@@ -134,7 +153,7 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
 
   # Symmetrical scale viriis.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,
@@ -146,7 +165,7 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
 
   # Modifying the symmetrical scale non viridis.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,

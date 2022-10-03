@@ -37,13 +37,14 @@ p <- SCpubr::do_DimPlot(sample = sample,
 # Use labels instead of legend.
 p <- SCpubr::do_DimPlot(sample = sample,
                         label = TRUE,
-                        legend = FALSE)
+                        legend.position = "none")
 
 # Changing the order of plotting.
 # Using order with one identity value.
 p <- SCpubr::do_DimPlot(sample = sample,
                         shuffle = TRUE,
                         order = "5")
+
 # Using order with all identity values.
 p <- SCpubr::do_DimPlot(sample = sample,
                         shuffle = FALSE,

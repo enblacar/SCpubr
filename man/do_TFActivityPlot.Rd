@@ -44,7 +44,7 @@ do_TFActivityPlot(
   geyser_order_by_mean = TRUE,
   geyser_scale_type = "continuous",
   viridis_color_map = "D",
-  viridis_scale = 1
+  viridis_direction = 1
 )
 }
 \arguments{
@@ -66,7 +66,9 @@ do_TFActivityPlot(
 
 \item{geyser_color.by}{\strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 
-\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
+\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
+
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
 
 \item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
 
@@ -101,7 +103,9 @@ do_TFActivityPlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -128,6 +132,8 @@ do_TFActivityPlot(
 \item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 }
 \value{
 A list containing several output plots according to the user's specifications.
@@ -190,7 +196,7 @@ Plot TF Activities from DecoupleR using Dorothea prior knowledge.
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
-                                   symmetrical_scale = FALSE)
+                                   enforce_symmetry = FALSE)
   p1 <- out$feature_plots$GLI2
   p2 <- out$geyser_plots$GLI2
 
@@ -198,7 +204,7 @@ Plot TF Activities from DecoupleR using Dorothea prior knowledge.
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
-                                   symmetrical_scale = TRUE)
+                                   enforce_symmetry = TRUE)
   p3 <- out$feature_plots$GLI2
   p4 <- out$geyser_plots$GLI2
 
@@ -209,14 +215,14 @@ Plot TF Activities from DecoupleR using Dorothea prior knowledge.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$GLI2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
                                    plot_GeyserPlots = TRUE,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE)
   p2 <- out$geyser_plots$GLI2
 

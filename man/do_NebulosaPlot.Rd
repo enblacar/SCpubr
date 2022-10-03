@@ -72,6 +72,8 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
+\item{individual.titles, individual.subtitles, individual.captions}{\strong{\code{\link[base]{character}}} | Vector. Title, subtitle or caption to use in the plot when multiple features are passed on. Use NA to keep the original title.}
+
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
@@ -83,7 +85,9 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

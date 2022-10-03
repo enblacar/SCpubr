@@ -56,6 +56,8 @@ do_RidgePlot(
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
+\item{continuous_scale}{\strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on a categorical or continuous scale.}
+
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
@@ -71,7 +73,9 @@ do_RidgePlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -115,7 +119,18 @@ do_RidgePlot(
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
-\item{continuous}{\strong{\code{\link[base]{logical}}} | Whether we want coloring based on the continuous scale (feature) or categorical scale (groups).}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
 }
 \value{
 A ggplot2 object.
@@ -125,75 +140,65 @@ This function computes ridge plots based on the \pkg{ggridges} package.
 }
 \examples{
 \dontrun{
-  # Define list of genes.
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
-
-  # Default parameters.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes)
+  # Compute the most basic ridge plot.
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nFeature_RNA")
   p
 
-  # Custom aggregated values.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    group.by = "orig.ident")
+  # Use continuous color scale.
+  p1 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             viridis_direction = 1)
+
+  p2 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             viridis_direction = -1)
+
+  p <- p1 / p2
   p
 
-  # Transposing the matrix.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    transpose = TRUE)
+  # Draw quantiles of the distribution.
+  p1 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             compute_quantiles = TRUE,
+                             compute_custom_quantiles = TRUE)
+
+  p2 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             compute_quantiles = TRUE,
+                             compute_custom_quantiles = TRUE,
+                             quantiles = c(0.1, 0.5, 0.75))
+
+  p <- p1 / p2
   p
 
-  # Rotating the labels.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0)
+  # Draw probability tails.
+  p1 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             compute_quantiles = TRUE,
+                             compute_distribution_tails = TRUE)
+
+  p2 <- SCpubr::do_RidgePlot(sample = sample,
+                             feature = "nFeature_RNA",
+                             continuous_scale = TRUE,
+                             compute_quantiles = TRUE,
+                             compute_distribution_tails = TRUE,
+                             prob_tails = 0.3)
+
+  p <- p1 / p2
   p
 
-  # Modifying the tile size.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    split.by = "custom_group",
-                                    cell_size = 7)
-  p
-
-
-  # Symmetrical scale viriis.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    cell_size = 7,
-                                    symmetrical_scale = TRUE)
-  p
-
-
-  # Modifying the symmetrical scale non viridis.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    cell_size = 7,
-                                    symmetrical_scale = TRUE,
-                                    use_viridis = FALSE)
+  # Draw probability tails.
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nFeature_RNA",
+                            continuous_scale = TRUE,
+                            compute_quantiles = TRUE,
+                            color_by_probabilities = TRUE)
   p
 }
 }

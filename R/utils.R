@@ -23,13 +23,22 @@
 #'   \item \emph{\code{none}}: No legend is displayed.
 #' }
 #' @param legend.title \strong{\code{\link[base]{character}}} | Title for the legend.
+#' @param legend.title.position \strong{\code{\link[base]{character}}} | Position for the title of the legend. One of:
+#' \itemize{
+#'   \item \emph{\code{top}}: Top of the legend.
+#'   \item \emph{\code{bottom}}: Bottom of the legend.
+#'   \item \emph{\code{left}}: Left of the legend.
+#'   \item \emph{\code{right}}: Right of the legend.
+#' }
 #' @param legend.framewidth,legend.tickwidth \strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.
-#' @param legend.framecolor,legend.tickcolor \strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.
+#' @param legend.framecolor \strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.
+#' @param legend.tickcolor \strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.
 #' @param legend.length,legend.width \strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param legend.icon.size \strong{\code{\link[base]{numeric}}} | Size of the icons in legend.
 #' @param legend.ncol,legend.nrow \strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.
 #' @param legend.byrow \strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.
 #' @param plot.title,plot.subtitle,plot.caption \strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.
+#' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Vector. Title, subtitle or caption to use in the plot when multiple features are passed on. Use NA to keep the original title.
 #' @param reduction \strong{\code{\link[base]{character}}} | Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param assay \strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.
 #' @param slot \strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".
@@ -60,19 +69,24 @@
 #' @param marginal.size \strong{\code{\link[base]{numeric}}} | Size ratio between the main and marginal plots. A value of 5 means that the main plot is 5 times bigger than the marginal plots.
 #' @param marginal.group \strong{\code{\link[base]{logical}}} | Whether to group the marginal distribution by group.by or current identities.
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.
-#' @param column_title,row_title \strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.
+#' @param column_title \strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.
+#' @param row_title \strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.
 #' @param cluster_cols,cluster_rows \strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.
 #' @param column_names_rot,row_names_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.
 #' @param cell_size \strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.
 #' @param input_gene_list \strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.
-#' @param column_title_rot,row_title_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row titles.
-#' @param column_names_side,row_names_side \strong{\code{\link[base]{character}}} | Side to put the column and row names. Either left or right.
-#' @param column_title_side,row_title_side \strong{\code{\link[base]{character}}} | Side to put the column and row titles Either left or right.
+#' @param column_title_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column titles.
+#' @param row_title_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.
+#' @param column_names_side \strong{\code{\link[base]{character}}} | Side to put the column names. Either left or right.
+#' @param row_names_side \strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.
+#' @param column_title_side \strong{\code{\link[base]{character}}} | Side to put the column titles Either left or right.
+#' @param row_title_side \strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.
 #' @param heatmap.legend.length,heatmap.legend.width \strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.
 #' @param heatmap.legend.framecolor \strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.
 #' @param transpose \strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.
 #' @param scale_direction \strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.
-#' @param heatmap_gap,legend_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.
+#' @param heatmap_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.
+#' @param legend_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between legends.
 #' @param cells.highlight,idents.highlight \strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.
 #' @param dims \strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.
 #' @param ncol \strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.
@@ -81,6 +95,17 @@
 #' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.
 #' @param viridis_direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
 #' @param plot.grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
+#' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the panels.
+#' @param grid.type \strong{\code{\link[base]{character}}} | One of the possible linetype options:
+#' \itemize{
+#'   \item \emph{\code{blank}}.
+#'   \item \emph{\code{solid}}.
+#'   \item \emph{\code{dashed}}.
+#'   \item \emph{\code{dotted}}.
+#'   \item \emph{\code{dotdash}}.
+#'   \item \emph{\code{longdash}}.
+#'   \item \emph{\code{twodash}}.
+#' }
 #' @param plot.axes \strong{\code{\link[base]{logical}}} | Whether to plot axes or not.
 #'
 #'
@@ -88,7 +113,7 @@
 #' @return Nothing. This is a mock function.
 #' @keywords internal
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' TBD
 #' }
 doc_function <- function(sample,
@@ -164,7 +189,13 @@ doc_function <- function(sample,
                          use_viridis,
                          viridis_direction,
                          plot.grid,
-                         plot.axes){}
+                         grid.color,
+                         grid.type,
+                         plot.axes,
+                         individual.titles,
+                         individual.subtitles,
+                         individual.captions,
+                         legend.title.position){}
 
 #' Named vector.
 #'
@@ -194,18 +225,7 @@ named_list <- function(){}
 
 # Operators.
 
-#' Not in operator.
-#'
-#' @param x First item of the comparison.
-#' @param y Second item of the comparison.
-#'
-#' @return A logical vector of the items in x that are not in y.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+# Not in operator.
 `%!in%` <- function(x, y) {return(!(x %in% y))}
 
 
@@ -914,9 +934,9 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   if (isFALSE(order)){
     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
   } else if (isTRUE(order)){
-    factor_levels <- SCpubr:::get_data_column_in_context(sample = sample,
-                                                         feature = feature,
-                                                         group.by = group.by) %>%
+    factor_levels <- get_data_column_in_context(sample = sample,
+                                                feature = feature,
+                                                group.by = group.by) %>%
                      dplyr::group_by(.data$group.by) %>%
                      dplyr::summarise(if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
                      dplyr::mutate("feature" = if (position == "fill") {.data$feature / sum(.data$feature)} else {.data$feature}) %>%
@@ -1776,7 +1796,7 @@ get_data_column_in_context <- function(sample,
   data <- sample@meta.data %>%
           tibble::rownames_to_column(var = "cell") %>%
           dplyr::select(dplyr::all_of(vars)) %>%
-          dplyr::left_join(y = SCpubr:::get_data_column(sample = sample, feature = feature),
+          dplyr::left_join(y = get_data_column(sample = sample, feature = feature),
                            by = "cell") %>%
           dplyr::select(-.data$cell) %>%
           tibble::as_tibble()

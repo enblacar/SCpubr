@@ -78,6 +78,19 @@ do_ViolinPlot(
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
 }
 \value{
 A ggplot2 object containing a Violin Plot.
@@ -87,51 +100,49 @@ Wrapper for \link[Seurat]{VlnPlot}.
 }
 \examples{
 \dontrun{
-  # Basic violin plots.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = "nCount_RNA")
+  # Basic violin plot.
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "nCount_RNA")
+  p
 
-  # Remove the inner boxplot.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = "nCount_RNA",
-                          plot_boxplot = FALSE)
+  # Remove the box plots.
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "nCount_RNA",
+                             plot_boxplot = FALSE)
+  p
+
   # Rotate x axis labels.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = c("nCount_RNA"),
-                          rotate_x_labels = TRUE)
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = c("nCount_RNA"),
+                             rotate_x_axis_labels = FALSE)
+  p
 
-  # Rotate x axis labels of only one panel.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = c("nCount_RNA", "nFeature_RNA"),
-                          rotate_x_labels = c(FALSE, TRUE),
-                          ncol = 1)
+  # Add horizontal lines.
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "nCount_RNA",
+                             y_cut = 25000)
+  p
 
-  # Add a horizontal line if we want to show a given cutoff.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = "nCount_RNA",
-                          y_cut = 30000)
+  # Increase line width.
+  p1 <- SCpubr::do_ViolinPlot(sample = sample,
+                              feature = "nCount_RNA")
 
-  # Add a horizontal line to one of the panels.
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = c("nCount_RNA", "nFeature_RNA"),
-                          y_cut = c(NA, 5000),
-                          individual.titles = c("UMIs", NA),
-                          ncol = 1)
+  p2 <- SCpubr::do_ViolinPlot(sample = sample,
+                              feature = "nCount_RNA",
+                              line_width = 2)
 
-  # Modifying default colors.
-  colors <- c("0" = "#001219",
-              "1" = "#005f73",
-              "2" = "#0a9396",
-              "3" = "#94d2bd",
-              "4" = "#e9d8a6",
-              "5" = "#ee9b00",
-              "6" = "#ca6702",
-              "7" = "#bb3e03",
-              "8" = "#ae2012",
-              "9" = "#9b2226")
+  p <- p1 / p2
+  p
 
-  p <- SCpubr::do_VlnPlot(sample = sample,
-                          features = "nCount_RNA",
-                          colors.use = colors)
+  # Decrease boxplot width.
+  p1 <- SCpubr::do_ViolinPlot(sample = sample,
+                              feature = "nCount_RNA")
+
+  p2 <- SCpubr::do_ViolinPlot(sample = sample,
+                              feature = "nCount_RNA",
+                              boxplot_width = 0.1)
+
+  p <- p1 / p2
+  p
 }
 }

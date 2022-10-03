@@ -3,7 +3,6 @@
 #' This function computes ridge plots based on the \pkg{ggridges} package.
 #'
 #' @inheritParams doc_function
-#' @param continuous \strong{\code{\link[base]{logical}}} | Whether we want coloring based on the continuous scale (feature) or categorical scale (groups).
 #' @param colors.use \strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.
 #' @param compute_quantiles \strong{\code{\link[base]{logical}}} | Whether to compute quantiles of the distribution and color the ridge plots by them.
 #' @param compute_custom_quantiles \strong{\code{\link[base]{logical}}} | Whether to compute custom quantiles.
@@ -11,10 +10,11 @@
 #' @param compute_distribution_tails \strong{\code{\link[base]{logical}}} | Whether to compute distribution tails and color them.
 #' @param prob_tails \strong{\code{\link[base]{numeric}}} | The accumulated probability that the tails should contain.
 #' @param color_by_probabilities \strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.
+#' @param continuous_scale \strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on a categorical or continuous scale.
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_EnrichmentHeatmap.R
+#' @example /man/examples/examples_do_RidgePlot.R
 do_RidgePlot <- function(sample,
                          feature,
                          group.by = NULL,

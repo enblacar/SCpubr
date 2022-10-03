@@ -61,7 +61,9 @@ do_PathwayActivityPlot(
 
 \item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
-\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
+\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
+
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
 
 \item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
 
@@ -98,7 +100,9 @@ do_PathwayActivityPlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -181,7 +185,7 @@ Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
-                                        symmetrical_scale = FALSE)
+                                        enforce_symmetry = FALSE)
   p1 <- out$feature_plots$EGFR
   p2 <- out$geyser_plots$EGFR
 
@@ -189,7 +193,7 @@ Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
-                                        symmetrical_scale = TRUE)
+                                        enforce_symmetry = TRUE)
   p3 <- out$feature_plots$EGFR
   p4 <- out$geyser_plots$EGFR
 
@@ -200,14 +204,14 @@ Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
-                                        symmetrical_scale = TRUE,
+                                        enforce_symmetry = TRUE,
                                         geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$EGFR
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
-                                        symmetrical_scale = TRUE,
+                                        enforce_symmetry = TRUE,
                                         geyser_order_by_mean = TRUE)
   p2 <- out$geyser_plots$EGFR
 

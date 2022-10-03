@@ -11,7 +11,7 @@
 #' @return A ggplot2 object containing a Violin Plot.
 #' @export
 #'
-#' @example man/examples/examples_do_VlnPlot.R
+#' @example man/examples/examples_do_ViolinPlot.R
 do_ViolinPlot <- function(sample,
                           feature,
                           assay = NULL,
@@ -114,7 +114,7 @@ do_ViolinPlot <- function(sample,
                                                             vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
                         axis.title.y = ggplot2::element_text(face = "bold"),
-                        axis.title.x = ggplot2:::element_text(face = "bold"),
+                        axis.title.x = ggplot2::element_text(face = "bold"),
                         axis.line.y = ggplot2::element_blank(),
                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                         plot.subtitle = ggplot2::element_text(hjust = 0),

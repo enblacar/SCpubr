@@ -44,7 +44,7 @@
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
-                                        symmetrical_scale = FALSE)
+                                        enforce_symmetry = FALSE)
   p1 <- out$feature_plots$EGFR
   p2 <- out$geyser_plots$EGFR
 
@@ -52,7 +52,7 @@
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
-                                        symmetrical_scale = TRUE)
+                                        enforce_symmetry = TRUE)
   p3 <- out$feature_plots$EGFR
   p4 <- out$geyser_plots$EGFR
 
@@ -63,14 +63,14 @@
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
-                                        symmetrical_scale = TRUE,
+                                        enforce_symmetry = TRUE,
                                         geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$EGFR
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
-                                        symmetrical_scale = TRUE,
+                                        enforce_symmetry = TRUE,
                                         geyser_order_by_mean = TRUE)
   p2 <- out$geyser_plots$EGFR
 

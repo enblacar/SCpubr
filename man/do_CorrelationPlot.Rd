@@ -34,7 +34,9 @@ do_CorrelationPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
+
+\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
 
 \item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
 
@@ -58,6 +60,8 @@ do_CorrelationPlot(
 }}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 }
 \value{
 A ComplexHeatmap object.
@@ -88,12 +92,6 @@ Create correlation matrix heatmaps.
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   column_names_rot = 0,
                                   cell_size = 7)
-  p
-
-  # Modified color scale.
-  p <- SCpubr::do_CorrelationPlot(sample = sample,
-                                  column_names_rot = 0,
-                                  colors.use = c("red", "blue"))
   p
 }
 }

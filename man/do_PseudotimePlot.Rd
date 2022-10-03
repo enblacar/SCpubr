@@ -91,7 +91,9 @@ do_PseudotimePlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
@@ -290,7 +292,7 @@ Compute Pseudotime analysis plots.
                                    compute_monocle_partitions = TRUE,
                                    compute_monocle_clusters = FALSE,
                                    pseudotime_genes = pseudotime_genes,
-                                   symmetrical_scale = FALSE,
+                                   enforce_symmetry = FALSE,
                                    is_max_score_the_start = TRUE)
   p1 <- out$pseudotime
   p3 <- out$enrichment
@@ -300,7 +302,7 @@ Compute Pseudotime analysis plots.
                                    compute_monocle_partitions = TRUE,
                                    compute_monocle_clusters = FALSE,
                                    pseudotime_genes = pseudotime_genes,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    is_max_score_the_start = FALSE)
   p2 <- out$pseudotime
   p4 <- out$enrichment

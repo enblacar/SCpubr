@@ -21,14 +21,13 @@
 #' @param text_color \strong{\code{\link[base]{character}}} | Color of the labels.
 #' @param smooth \strong{\code{\link[base]{numeric}}} | How smooth the connections are.
 #' @param colors.first,colors.middle,colors.last \strong{\code{\link[base]{character}}} | Named vector of colors equal to ALL unique values in first_group, middle_groups, or last_group.
+#' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels or text for the node names.
+#' @param hjust \strong{\code{\link[base]{numeric}}} | General hjust for the labels.
 #'
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_SankeyPlot.R
 do_SankeyPlot <- function(sample,
                           first_group,
                           last_group,
@@ -102,7 +101,7 @@ do_SankeyPlot <- function(sample,
 
   # Workaround for ggsankey bug.
   if("dplyr" %!in% (.packages())){
-    summarise <<- dplyr::summarise
+    stop("Due to an internal bug in ggsankey, package dplyr must be loaded using `library(dplyr)`. This behaviour will be corrected if this bug disappears. Thanks for your understanding.", call. = FALSE)
   }
 
   # Wrong type.

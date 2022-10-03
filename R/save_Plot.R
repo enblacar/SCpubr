@@ -21,7 +21,7 @@
 #' @return Nothing.
 #' @export
 #'
-#' @example /man/examples/examples_savePlot.R
+#' @example /man/examples/examples_save_Plot.R
 save_Plot <- function(plot,
                       figure_path = NULL,
                       create_path = TRUE,

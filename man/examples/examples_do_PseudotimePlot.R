@@ -176,7 +176,7 @@
                                    compute_monocle_partitions = TRUE,
                                    compute_monocle_clusters = FALSE,
                                    pseudotime_genes = pseudotime_genes,
-                                   symmetrical_scale = FALSE,
+                                   enforce_symmetry = FALSE,
                                    is_max_score_the_start = TRUE)
   p1 <- out$pseudotime
   p3 <- out$enrichment
@@ -186,7 +186,7 @@
                                    compute_monocle_partitions = TRUE,
                                    compute_monocle_clusters = FALSE,
                                    pseudotime_genes = pseudotime_genes,
-                                   symmetrical_scale = TRUE,
+                                   enforce_symmetry = TRUE,
                                    is_max_score_the_start = FALSE)
   p2 <- out$pseudotime
   p4 <- out$enrichment

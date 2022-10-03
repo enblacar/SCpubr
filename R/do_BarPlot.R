@@ -81,10 +81,10 @@ do_BarPlot <- function(sample,
   }
 
   if (is.null(colors.use)){
-    colors.use <- SCpubr:::generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
+    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
   } else {
-    SCpubr:::check_colors(colors.use, parameter_name = "colors.use")
-    SCpubr:::check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    check_colors(colors.use, parameter_name = "colors.use")
+    check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
   }
   p <- sample@meta.data %>%
        tibble::as_tibble() %>%

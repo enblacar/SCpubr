@@ -11,26 +11,13 @@
 #' @param x_labels_angle \strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
 #' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
-#' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the panels.
-#' @param grid.type \strong{\code{\link[base]{character}}} | One of the possible linetype options:
-#' \itemize{
-#'   \item \emph{\code{blank}}.
-#'   \item \emph{\code{solid}}.
-#'   \item \emph{\code{dashed}}.
-#'   \item \emph{\code{dotted}}.
-#'   \item \emph{\code{dotdash}}.
-#'   \item \emph{\code{longdash}}.
-#'   \item \emph{\code{twodash}}.
-#' }
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_LigandReceptorPlot.R
+
 do_LigandReceptorPlot <- function(liana_output,
                                   split.by = NULL,
                                   keep_source = NULL,

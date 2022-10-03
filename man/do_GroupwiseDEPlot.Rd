@@ -54,7 +54,11 @@ do_GroupwiseDEPlot(
 
 \item{row_title_expression}{\strong{\code{\link[base]{character}}} | Vector of titles of equal length as group.by.}
 
-\item{heatmap_gap, legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.}
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
+
+\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
+
+\item{legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
@@ -68,6 +72,12 @@ do_GroupwiseDEPlot(
 \item \emph{\code{right}}: Right of the figure.
 \item \emph{\code{none}}: No legend is displayed.
 }}
+
+\item{row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.}
+
+\item{row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.}
+
+\item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
 
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 }

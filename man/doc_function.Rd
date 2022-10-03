@@ -33,7 +33,9 @@
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
@@ -100,7 +102,9 @@
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
-\item{column_title, row_title}{\strong{\code{\link[base]{character}}} | Title for the columns and rows of the heatmaps. Only works with single heatmaps.}
+\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
+
+\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
 
 \item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
 
@@ -110,11 +114,17 @@
 
 \item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
 
-\item{column_title_rot, row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row titles.}
+\item{column_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column titles.}
 
-\item{column_names_side, row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the column and row names. Either left or right.}
+\item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
 
-\item{column_title_side, row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the column and row titles Either left or right.}
+\item{column_names_side}{\strong{\code{\link[base]{character}}} | Side to put the column names. Either left or right.}
+
+\item{row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.}
+
+\item{column_title_side}{\strong{\code{\link[base]{character}}} | Side to put the column titles Either left or right.}
+
+\item{row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.}
 
 \item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
 
@@ -124,7 +134,9 @@
 
 \item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
 
-\item{heatmap_gap, legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends or heatmaps.}
+\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
+
+\item{legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends.}
 
 \item{cells.highlight, idents.highlight}{\strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.}
 
@@ -142,7 +154,30 @@
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
+
 \item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
+
+\item{individual.titles, individual.subtitles, individual.captions}{\strong{\code{\link[base]{character}}} | Vector. Title, subtitle or caption to use in the plot when multiple features are passed on. Use NA to keep the original title.}
+
+\item{legend.title.position}{\strong{\code{\link[base]{character}}} | Position for the title of the legend. One of:
+\itemize{
+\item \emph{\code{top}}: Top of the legend.
+\item \emph{\code{bottom}}: Bottom of the legend.
+\item \emph{\code{left}}: Left of the legend.
+\item \emph{\code{right}}: Right of the legend.
+}}
 }
 \value{
 Nothing. This is a mock function.
@@ -151,7 +186,7 @@ Nothing. This is a mock function.
 Mock function used to document all main function.
 }
 \examples{
-#' \dontrun{
+\dontrun{
 TBD
 }
 }

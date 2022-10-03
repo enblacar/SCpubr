@@ -47,10 +47,7 @@
 #' @return A circlize plot.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @example /man/examples/examples_do_ChordDiagramPlot.R
 do_ChordDiagramPlot <- function(sample = NULL,
                                 from = NULL,
                                 to = NULL,
@@ -173,20 +170,20 @@ do_ChordDiagramPlot <- function(sample = NULL,
                         "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
 
   if (!(is.null(colors.from))){
-    SCpubr:::check_colors(colors.from, parameter_name = "colors.from")
-    SCpubr:::check_consistency_colors_and_names(sample = sample,
-                                                colors = colors.from,
-                                                grouping_variable = from)
+    check_colors(colors.from, parameter_name = "colors.from")
+    check_consistency_colors_and_names(sample = sample,
+                                       colors = colors.from,
+                                       grouping_variable = from)
   } else {
-    colors.from <- SCpubr:::generate_color_scale(names_use = if(is.factor(data$from)){levels(data$from)} else {sort(unique(data$from))})
+    colors.from <- generate_color_scale(names_use = if(is.factor(data$from)){levels(data$from)} else {sort(unique(data$from))})
   }
   names(colors.from) <- stringr::str_pad(names(colors.from), width = max_char, side = "both")
 
   if (!(is.null(colors.to))){
-    SCpubr:::check_colors(colors.to, parameter_name = "colors.to")
-    SCpubr:::check_consistency_colors_and_names(sample = sample,
-                                                colors = colors.to,
-                                                grouping_variable = to)
+    check_colors(colors.to, parameter_name = "colors.to")
+    check_consistency_colors_and_names(sample = sample,
+                                       colors = colors.to,
+                                       grouping_variable = to)
   } else {
     colors.to <- viridis::viridis(n = length(unique(data$to)), option = "G")
     colors.to <- stats::setNames(colors.to, if(is.factor(data$to)){levels(data$to)} else {sort(unique(data$to))})
@@ -228,7 +225,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
   }
 
   if (!is.na(link.border.color)){
-    SCpubr:::check_colors(link.border.color)
+    check_colors(link.border.color)
   }
 
   if (!(is.null(highlight_group))){
@@ -273,7 +270,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                          link.arr.type = link.arr.type,
                          scale = scale,
                          annotationTrack = annotationTrack,
-                         preAllocateTracks = list(track.height = max(strwidth(unlist(dimnames(data))))))
+                         preAllocateTracks = list(track.height = max(graphics::strwidth(unlist(dimnames(data))))))
   circlize::circos.track(track.index = 1,
                          panel.fun = function(x, y){circlize::circos.text(circlize::CELL_META$xcenter,
                                                                           circlize::CELL_META$ylim[1],

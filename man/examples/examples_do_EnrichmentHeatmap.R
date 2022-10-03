@@ -12,31 +12,31 @@
 
   # Default parameters.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes)
+                                    input_gene_list = genes)
   p
 
   # Custom aggregated values.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     group.by = "orig.ident")
   p
 
   # Transposing the matrix.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE)
   p
 
   # Rotating the labels.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0)
   p
 
   # Modifying the tile size.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,
@@ -48,7 +48,7 @@
 
   # Symmetrical scale viriis.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,
@@ -60,7 +60,7 @@
 
   # Modifying the symmetrical scale non viridis.
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    list_genes = genes,
+                                    input_gene_list = genes,
                                     transpose = TRUE,
                                     column_names_rot = 0,
                                     cluster_cols = F,

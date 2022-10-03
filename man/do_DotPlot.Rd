@@ -72,7 +72,9 @@ do_DotPlot(
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{legend.framecolor, legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
 
@@ -114,6 +116,19 @@ do_DotPlot(
 \item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to plot a border around dots.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
 }
 \value{
 A ggplot2 object containing a Dot Plot.
