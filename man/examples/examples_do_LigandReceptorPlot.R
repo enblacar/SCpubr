@@ -8,6 +8,16 @@
                                      top_interactions = 50)
   p
 
+  # Add missing LR combinations.
+  p1 <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                      add_missing_LR_combinations = TRUE)
+
+  # Restrict the results to only the LR combinations that have a value.
+  p2 <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                      add_missing_LR_combinations = FALSE)
+  p <- p1 /p2
+  p
+
   # Ligand Receptor analysis plot with increased dot size.
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      dot.size = 2)
