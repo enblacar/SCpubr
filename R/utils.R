@@ -1757,9 +1757,8 @@ get_data_column_in_context <- function(sample,
   data <- sample@meta.data %>%
           tibble::rownames_to_column(var = "cell") %>%
           dplyr::select(dplyr::all_of(vars)) %>%
-          dplyr::left_join(y = get_data_column(sample = sample, feature = feature),
+          dplyr::left_join(y = get_data_column(sample = sample, feature = feature, assay = assay, slot = slot),
                            by = "cell") %>%
-          dplyr::select(-.data$cell) %>%
           tibble::as_tibble()
 
   return(data)
