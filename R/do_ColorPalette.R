@@ -30,7 +30,7 @@ do_ColorPalette <- function(colors.use,
                             plot = FALSE,
                             font.size = 14,
                             font.type = "sans"){
-
+  check_suggests()
   # Check logical parameters.
   logical_list <- list("opposite" = opposite,
                        "adjacent" = adjacent,

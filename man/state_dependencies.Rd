@@ -4,10 +4,7 @@
 \alias{state_dependencies}
 \title{State SCpubr current function dependencies.}
 \usage{
-state_dependencies(func_name = NULL)
-}
-\arguments{
-\item{func_name}{Name of an exported function from SCpubr. If NULL, return all functions.}
+state_dependencies()
 }
 \value{
 None

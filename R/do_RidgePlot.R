@@ -54,7 +54,7 @@ do_RidgePlot <- function(sample,
   `%>%` <- magrittr::`%>%`
 
   # Checks for packages.
-  check_suggests(function_name = "do_RidgePlot")
+  check_suggests()
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

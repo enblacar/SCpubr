@@ -40,7 +40,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      viridis_color_map = "D",
                                      viridis_direction = 1){
 
-  check_suggests(function_name = "do_CopyNumberVariantPlot")
+  check_suggests()
 
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,

@@ -55,7 +55,7 @@ do_PathwayActivityPlot <- function(sample,
                                    viridis_direction = 1){
 
   #Checks for packages.
-  check_suggests(function_name = "do_PathwayActivityPlot")
+  check_suggests()
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

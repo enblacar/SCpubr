@@ -45,7 +45,7 @@ do_NebulosaPlot <- function(sample,
                             na.value = "grey75",
                             plot.axes = FALSE){
   # Check if the sample provided is a Seurat object.
-  check_Seurat(sample = sample)
+  check_Seurat()
 
   # Checks for packages.
   check_suggests(function_name = "do_NebulosaPlot")

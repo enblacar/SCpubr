@@ -55,7 +55,7 @@ do_SankeyPlot <- function(sample,
                           plot.caption = NULL){
 
   # Checks for packages.
-  check_suggests(function_name = "do_SankeyPlot")
+  check_suggests()
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

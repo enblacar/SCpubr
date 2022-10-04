@@ -66,7 +66,7 @@ do_CellularStatesPlot <- function(sample,
                                   viridis_color_map = "D",
                                   viridis_direction = 1){
     # Checks for packages.
-    check_suggests(function_name = "do_CellularStatesPlot")
+    check_suggests()
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
 

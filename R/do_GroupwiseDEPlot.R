@@ -37,7 +37,7 @@ do_GroupwiseDEPlot <- function(sample,
                                row_title_rot = 90,
                                cell_size = 5){
   # Checks for packages.
-  check_suggests(function_name = "do_GroupwiseDEPlot")
+  check_suggests()
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

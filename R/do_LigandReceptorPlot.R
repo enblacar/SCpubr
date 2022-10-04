@@ -49,7 +49,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                   add_missing_LR_combinations = TRUE){
 
   # Checks for packages.
-  check_suggests(function_name = "do_LigandReceptorPlot")
+  check_suggests()
   `%>%` <- magrittr::`%>%`
 
   # Check logical parameters.

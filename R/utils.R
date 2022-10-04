@@ -232,54 +232,57 @@ named_list <- function(){}
 
 #' Checks for Suggests.
 #'
-#' @param function_name Function to check.
 #' @noRd
 #' @return None
 #' @examples
 #' \dontrun{
 #' TBD
 #' }
-check_suggests <- function(function_name){
-
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c("Seurat", "ggplot2"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
-                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
-                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"),
-                   "testing" = c("Does_not_exist"))
-  # The function is not in the current list of possibilities.
-  if (!(function_name %in% names(pkg_list))){
-    stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
-  }
-  pkgs <- pkg_list[[function_name]]
-  for (pkg in pkgs){
+check_suggests <- function(){
+  pkg_list <- list("circlize",
+                   "colorspace",
+                   "ComplexHeatmap",
+                   "dplyr",
+                   "enrichR",
+                   "forcats",
+                   "ggbeeswarm",
+                   "ggdist",
+                   "ggExtra",
+                   "ggplot2",
+                   "ggplotify",
+                   "ggrastr",
+                   "ggrepel",
+                   "ggridges",
+                   "ggsankey",
+                   "grDevices",
+                   "grid",
+                   "infercnv",
+                   "liana",
+                   "magrittr",
+                   "monocle3",
+                   "Nebulosa",
+                   "patchwork",
+                   "pbapply",
+                   "plyr",
+                   "rlang",
+                   "scales",
+                   "scattermore",
+                   "Seurat",
+                   "stats",
+                   "stringr",
+                   "svglite",
+                   "tibble",
+                   "tidyr",
+                   "viridis")
+  for (pkg in pkg_list){
     if(!requireNamespace(pkg, quietly = T)){
-      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = F)
+      stop(paste0("Package ", pkg, " must be installed to run SCpubr."), call. = F)
     }
   }
 }
 
 #' State SCpubr current function dependencies.
 #'
-#' @param func_name Name of an exported function from SCpubr. If NULL, return all functions.
 #' @return None
 #' @export
 #'
@@ -287,39 +290,7 @@ check_suggests <- function(function_name){
 #' \dontrun{
 #' TBD
 #' }
-state_dependencies <- function(func_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c("Seurat", "ggplot2"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
-                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "enrichR", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
-                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"))
-  # The function is not in the current list of possibilities.
-  if (!(is.null(func_name))){
-    for (func in func_name){
-      if (!(func %in% names(pkg_list))){
-        stop(paste0(func_name, " is not an accepted function name."), call. = FALSE)
-      }
-    }
-  }
-
+state_dependencies <- function(){
   cran_packages <- c("circlize",
                      "colorspace",
                      "dplyr",
@@ -358,23 +329,13 @@ state_dependencies <- function(func_name = NULL){
                        "liana",
                        "monocle3")
 
-  func_list <- sort(names(pkg_list))
-  if (!(is.null(func_name))){
-    func_list <- func_name
-  } else {
-    func_list <- names(pkg_list)
-  }
-
   message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
-  for (func in func_list){
-    packages <- pkg_list[[func]]
-    cran_packages_individual <- sort(packages[packages %in% cran_packages])
-    bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
-    message("Dependencies for ", func, ":")
-    if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
-    if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
-    message("")
-  }
+  message("CRAN packages:\n  - ", paste(cran_packages, collapse = "\n  - "))
+  message("\n")
+  message("Bioconductor packages:\n  - ", paste(bioconductor_packages, collapse = "\n  - "))
+  message("\n")
+  message("GitHub packages:\n  - ", paste(github_packages, collapse = "\n  - "))
+  message("\n")
 }
 
 

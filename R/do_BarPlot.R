@@ -36,7 +36,7 @@ do_BarPlot <- function(sample,
                        grid.color = "grey75",
                        grid.type = "dashed"){
 
-  check_suggests(function_name = "do_BarPlot")
+  check_suggests()
   check_Seurat(sample)
 
   `%>%` <- magrittr::`%>%`

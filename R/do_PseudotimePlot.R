@@ -51,7 +51,7 @@ do_PseudotimePlot <- function(sample,
   on.exit(sink())
   invisible(force({
     # Checks for packages.
-    check_suggests(function_name = "do_PseudotimePlot")
+    check_suggests()
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
 
