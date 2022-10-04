@@ -12,6 +12,7 @@
 #' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
+#' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combiantions will be brought back to the plot as NA values.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
@@ -44,7 +45,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                   plot.grid = TRUE,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
-                                  compute_ChordDiagrams = FALSE){
+                                  compute_ChordDiagrams = FALSE,
+                                  add_missing_LR_combinations = TRUE){
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
@@ -54,7 +56,8 @@ do_LigandReceptorPlot <- function(liana_output,
   logical_list <- list("dot_border" = dot_border,
                        "flip" = flip,
                        "rotate_strip_text" = rotate_strip_text,
-                       "plot.grid" = plot.grid)
+                       "plot.grid" = plot.grid,
+                       "add_missing_LR_combinations" = add_missing_LR_combinations)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -144,15 +147,18 @@ do_LigandReceptorPlot <- function(liana_output,
   possible_interacting_clusters <- c()
 
   # If we are subsetting the final plot.
-  possible_sources <- if(is.null(keep_source)){sort(unique(liana_output$source))} else {sort(unique(liana_output$source))[sort(unique(liana_output$source)) %in% keep_source]}
-  possible_targets <- if(is.null(keep_target)){sort(unique(liana_output$target))} else {sort(unique(liana_output$target))[sort(unique(liana_output$target)) %in% keep_target]}
+  if (isTRUE(add_missing_LR_combinations)){
+    possible_sources <- if(is.null(keep_source)){sort(unique(liana_output$source))} else {sort(unique(liana_output$source))[sort(unique(liana_output$source)) %in% keep_source]}
+    possible_targets <- if(is.null(keep_target)){sort(unique(liana_output$target))} else {sort(unique(liana_output$target))[sort(unique(liana_output$target)) %in% keep_target]}
 
-  for (source in possible_sources){
-    for (target in possible_targets){
-      name <- paste0(source, "_", target)
-      possible_interacting_clusters <- c(possible_interacting_clusters, name)
+    for (source in possible_sources){
+      for (target in possible_targets){
+        name <- paste0(source, "_", target)
+        possible_interacting_clusters <- c(possible_interacting_clusters, name)
+      }
     }
   }
+
   liana_output <- liana_output %>%
                   dplyr::mutate(magnitude = .data$sca.LRscore) %>%
                   dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
@@ -179,37 +185,37 @@ do_LigandReceptorPlot <- function(liana_output,
                                          dplyr::distinct_at(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
                                          dplyr::slice_head(n = top_interactions)},
                                     by = c("ligand.complex", "receptor.complex"))
+  if (isTRUE(add_missing_LR_combinations)){
+    # Fix to add missing "NA" interactions.
+    liana_output <- liana_output %>%
+      dplyr::select(dplyr::all_of(c("interacting_clusters", "source", "target", "interaction", "ligand.complex", "receptor.complex", "magnitude", "specificity")))
 
-  # Fix to add missing "NA" interactions.
-  liana_output <- liana_output %>%
-                  dplyr::select(dplyr::all_of(c("interacting_clusters", "source", "target", "interaction", "ligand.complex", "receptor.complex", "magnitude", "specificity")))
+    # Iterate over each possible interaction and each interacting pair.
+    not_found_interaction_pairs <- possible_interacting_clusters[possible_interacting_clusters %!in% unique(liana_output$interacting_clusters)]
+    interactions <- unique(liana_output$interaction)
 
-  # Iterate over each possible interaction and each interacting pair.
-  not_found_interaction_pairs <- possible_interacting_clusters[possible_interacting_clusters %!in% unique(liana_output$interacting_clusters)]
-  interactions <- unique(liana_output$interaction)
+    # Iterate over each interaction.
+    for(interaction in interactions){
+      ligand.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][1]
+      receptor.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][2]
+      # For each missing interaction pair.
+      for (interacting_cluster in not_found_interaction_pairs){
+        source <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][1]
+        target <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][2]
 
-  # Iterate over each interaction.
-  for(interaction in interactions){
-    ligand.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][1]
-    receptor.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][2]
-    # For each missing interaction pair.
-    for (interacting_cluster in not_found_interaction_pairs){
-      source <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][1]
-      target <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][2]
-
-      # If the interacting pair - interaction is missing, add a mock row with it.
-      column <- tibble::tibble("interacting_clusters" = interacting_cluster,
-                               "source" = source,
-                               "target" = target,
-                               "interaction" = interaction,
-                               "ligand.complex" = ligand.complex,
-                               "receptor.complex" = receptor.complex,
-                               "magnitude" = NA,
-                               "specificity" = NA)
-      liana_output <- liana_output %>% dplyr::bind_rows(column)
+        # If the interacting pair - interaction is missing, add a mock row with it.
+        column <- tibble::tibble("interacting_clusters" = interacting_cluster,
+                                 "source" = source,
+                                 "target" = target,
+                                 "interaction" = interaction,
+                                 "ligand.complex" = ligand.complex,
+                                 "receptor.complex" = receptor.complex,
+                                 "magnitude" = NA,
+                                 "specificity" = NA)
+        liana_output <- liana_output %>% dplyr::bind_rows(column)
+      }
     }
   }
-
 
   # If the user wants to trim the matrix and subset interacting entities.
   if (!(is.null(keep_source))){
