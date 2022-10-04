@@ -29,7 +29,7 @@ do_PseudotimePlot(
   legend.tickwidth = 1.5,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
-  viridis_color_map = "D",
+  viridis_color_map = "G",
   viridis_direction = 1,
   plot_cell_borders = TRUE,
   enforce_symmetry = FALSE,

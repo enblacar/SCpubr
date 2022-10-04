@@ -37,7 +37,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      enforce_symmetry = TRUE,
                                      legend.title = NULL,
                                      na.value = "grey75",
-                                     viridis_color_map = "D",
+                                     viridis_color_map = "G",
                                      viridis_direction = 1){
 
   check_suggests()

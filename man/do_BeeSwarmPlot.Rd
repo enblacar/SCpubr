@@ -32,7 +32,7 @@ do_BeeSwarmPlot(
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
   flip = FALSE,
-  viridis_color_map = "D",
+  viridis_color_map = "G",
   verbose = TRUE,
   raster = FALSE,
   raster.dpi = 300,

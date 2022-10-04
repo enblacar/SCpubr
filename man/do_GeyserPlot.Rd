@@ -31,7 +31,7 @@ do_GeyserPlot(
   font.size = 14,
   font.type = "sans",
   rotate_x_axis_labels = TRUE,
-  viridis_color_map = "D",
+  viridis_color_map = "G",
   viridis_direction = 1,
   colors.use = NULL,
   na.value = "grey75",

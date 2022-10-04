@@ -42,7 +42,7 @@ do_PathwayActivityPlot(
   enforce_symmetry = TRUE,
   geyser_order_by_mean = TRUE,
   geyser_scale_type = "continuous",
-  viridis_color_map = "D",
+  viridis_color_map = "G",
   viridis_direction = 1
 )
 }

@@ -45,10 +45,10 @@ do_NebulosaPlot <- function(sample,
                             na.value = "grey75",
                             plot.axes = FALSE){
   # Check if the sample provided is a Seurat object.
-  check_Seurat()
+  check_Seurat(sample = sample)
 
   # Checks for packages.
-  check_suggests(function_name = "do_NebulosaPlot")
+  check_suggests()
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.

@@ -63,7 +63,7 @@ do_CellularStatesPlot <- function(sample,
                                   raster.dpi = 1024,
                                   plot_features = FALSE,
                                   features = NULL,
-                                  viridis_color_map = "D",
+                                  viridis_color_map = "G",
                                   viridis_direction = 1){
     # Checks for packages.
     check_suggests()
