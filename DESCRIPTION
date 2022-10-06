@@ -54,7 +54,8 @@ Suggests:
     ggsankey (>= 0.0.99999),
     graphics,
     magrittr,
-    ggridges
+    ggridges,
+    ggsignif
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 

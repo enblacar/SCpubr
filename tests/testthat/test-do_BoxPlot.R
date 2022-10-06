@@ -1,0 +1,76 @@
+sample <- SCpubr:::use_dataset()
+
+testthat::test_that("do_BoxPlot: PASS - default", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA")
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BoxPlot: PASS - custom_grouping", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          group.by = "orig.ident")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_BoxPlot: PASS - split.by", {
+  sample$orig.ident <- ifelse(sample$seurat_clusters == "0", "C", "B")
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          split.by = "orig.ident")
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_BoxPlot: PASS - silhouette", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          use_silhouette = TRUE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BoxPlot: PASS - silhouette", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          use_test = TRUE,
+                          comparisons = list(c("0", "1")))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BoxPlot: PASS - order", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          order = TRUE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_BoxPlot: PASS - flip", {
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          flip = TRUE)
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_BoxPlot: FAILS ", {
+  testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
+                                             feature = "nCount_RNA",
+                                             use_test = TRUE,
+                                             split.by = "orig.ident")})
+
+  testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
+                                             feature = "nCount_RNA",
+                                             use_silhouette = TRUE,
+                                             split.by = "orig.ident")})
+
+  testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
+                                             feature = "nCount_RNA",
+                                             use_test = TRUE)})
+
+  testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
+                                             feature = "nCount_RNA",
+                                             order = TRUE,
+                                             split.by = "orig.ident")})
+})
+

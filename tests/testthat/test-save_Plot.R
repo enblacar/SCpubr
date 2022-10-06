@@ -25,7 +25,7 @@ testthat::test_that("save_Plot: PASS - null file path", {
 
 testthat::test_that("save_Plot: PASS - no file path", {
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
-                                            figure_path = paste0(figure_path, "deleteme"),
+                                            figure_path = paste0(figure_path, "/deleteme"),
                                             file_name = "test",
                                             output_format = "svg"))
 })
