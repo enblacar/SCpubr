@@ -53,7 +53,7 @@ do_FeaturePlot <- function(sample,
 
 
   # Checks for packages.
-  check_suggests(function_name = do_FeaturePlot)
+  check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
   # Check the assay.

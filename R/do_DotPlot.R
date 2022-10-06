@@ -51,7 +51,7 @@ do_DotPlot <- function(sample,
                        grid.type = "dashed"){
     # Checks for packages.
     check_Seurat(sample = sample)
-    check_suggests()
+    check_suggests(function_name = "do_DotPlot")
     # Check the assay.
     out <- check_and_set_assay(sample, assay = assay)
     sample <- out[["sample"]]
