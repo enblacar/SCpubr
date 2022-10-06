@@ -38,4 +38,8 @@ unsrturl.bst
 .tm_properties
 omnipathr-log/*
 R/sysdata.rda
-
+tests/testthat/omnipathr-log
+tests/testthat/omnipathr-log/*
+tests/testthat/_snaps/
+tests/testthat/output_figure*
+tests/testthat/test.*
