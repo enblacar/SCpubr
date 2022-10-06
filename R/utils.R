@@ -1284,6 +1284,19 @@ heatmap_inner <- function(data,
                           symmetrical_scale = FALSE){
   `%>%`<- magrittr::`%>%`
 
+  if (nrow(data) == 1 & ncol(data) == 1){
+    stop("Please provide a matrix that is not 1x1.", call. = FALSE)
+  }
+
+  if (!(is.null(range.data))){
+    if (data_range == "both" & length(range.data) != 2){
+      stop("When providing data_range = both and range data, you need to specify the two ends of the scale in range.data. Please provide two numbers to range.data.", call. = FALSE)
+    }
+  }
+
+  if (sum(dim(unique(data))) == 2){
+    stop("Please provide a matrix with at least 2 different values.", call. = FALSE)
+  }
 
   if (legend.position %in% c("top", "bottom")){
     legend_width <- grid::unit(legend.length, "mm")
@@ -1311,6 +1324,7 @@ heatmap_inner <- function(data,
       } else {
         q0 <- range.data[1]
         q100 <- range.data[2]
+        abs_value <- q100
       }
     } else if (data_range == "only_pos"){
       abs_value <- abs(range.data)
@@ -1319,7 +1333,7 @@ heatmap_inner <- function(data,
     } else if (data_range == "only_neg"){
       abs_value <- abs(range.data)
       q100 <- 0
-      q0 <- abs_value
+      q0 <- range.data
     }
   } else {
     q0 <- min(data, na.rm = TRUE)
@@ -1336,7 +1350,7 @@ heatmap_inner <- function(data,
     stop("There are no negative values in the matrix.")
   }
 
-  if (data_range == "only_pos" & q100 < 0){
+  if (data_range == "only_pos" & q100 <= 0){
     stop("There are no positive values in the matrix.")
   }
 

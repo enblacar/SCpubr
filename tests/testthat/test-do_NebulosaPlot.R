@@ -1,4 +1,4 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 testthat::test_that("do_NebulosaPlot: PASS - single feature", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14"))
@@ -196,7 +196,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles for jo
 testthat::test_that("do_NebulosaPlot: PASS - no legend", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14"),
-                               legend = F)
+                               legend.position = "none")
   testthat::expect_type(p, "list")
 })
 

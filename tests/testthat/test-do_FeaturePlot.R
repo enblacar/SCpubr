@@ -39,17 +39,17 @@ testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_FeaturePlot: PASS - symmetrical_scale", {
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T)
+testthat::test_that("do_FeaturePlot: PASS - enforce_symmetry", {
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("CD14", "nCount_RNA"), symmetrical_scale = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("CD14", "nCount_RNA"), enforce_symmetry = T)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T, idents.highlight = c("1", "3"))
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T, idents.highlight = c("1", "3"))
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", symmetrical_scale = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
 
@@ -259,7 +259,7 @@ testthat::test_that("do_FeaturePlot: PASS - split.by and diffusion", {
 testthat::test_that("do_FeaturePlot: PASS - remove legend", {
   p <- SCpubr::do_FeaturePlot(sample,
                               features = c("PC_1"),
-                              legend = F)
+                              legend.position = "none")
   testthat::expect_type(p, "list")
 })
 

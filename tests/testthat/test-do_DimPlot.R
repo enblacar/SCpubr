@@ -1,4 +1,4 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 testthat::test_that("do_DimPlot: PASS - sample", {
   p <- SCpubr::do_DimPlot(sample = sample)
   testthat::expect_type(p, "list")
@@ -257,9 +257,9 @@ testthat::test_that("do_DimPlot: PASS - split.by + plot.title, subtitle and capt
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_DimPlot: PASS - legend = F", {
+testthat::test_that("do_DimPlot: PASS - legend.position none", {
   p <- SCpubr::do_DimPlot(sample = sample,
-                          legend = F)
+                          legend.position = "none")
   testthat::expect_type(p, "list")
 })
 

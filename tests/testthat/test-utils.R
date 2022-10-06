@@ -461,7 +461,7 @@ testthat::test_that("utils: check_type - PASS - character with NULL", {
 testthat::test_that("utils: check_type - PASS - logical", {
   parameters <- c("first" = TRUE,
                   "second" = FALSE)
-  testthat::expect_silent(check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
+  testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
 })
 
 testthat::test_that("utils: check_type - PASS - logical with NULL", {
@@ -616,14 +616,14 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
                                 outlier.data = TRUE,
                                 outlier.down.label = "A",
                                 outlier.up.label = "B",
-                                range.data = 50,
+                                range.data = c(0, 50),
                                 data_range = "both")
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
   out <- SCpubr:::heatmap_inner(data,
                                 outlier.data = TRUE,
-                                range.data = 50,
+                                range.data = c(0, 50),
                                 data_range = "both")
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
@@ -707,7 +707,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, outlier.data = TRUE, range.data = 15)
+  out <- SCpubr:::heatmap_inner(data, outlier.data = TRUE, range.data = c(0, 15))
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -791,30 +791,22 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, outlier.data = T, range.data = 15)
+  out <- SCpubr:::heatmap_inner(data, outlier.data = T, range.data = c(0, 15))
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  sample <- SCpubr:::compute_enrichment_scores(sample, list_genes = "CD14")
+  sample <- SCpubr:::compute_enrichment_scores(sample, input_gene_list = "CD14")
   data <- as.matrix({
     sample@meta.data %>% dplyr::select(c(orig.ident, Input)) %>% dplyr::group_by(orig.ident) %>% dplyr::summarise(n = mean(Input)) %>% dplyr::pull(n)
   })
-  out <- SCpubr:::heatmap_inner(data)
-  testthat::expect_true("Legends" %in% class(out$legend))
-  testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-  out <- SCpubr:::heatmap_inner(data, data_range = "only_neg")
-  testthat::expect_true("Legends" %in% class(out$legend))
-  testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-  out <- SCpubr:::heatmap_inner(data * -1, data_range = "only_pos")
-  testthat::expect_true("Legends" %in% class(out$legend))
-  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+  testthat::expect_error({SCpubr:::heatmap_inner(data)})
 
   data <- as.matrix({
     sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::pull(n)
   })
-  obj <- ComplexHeatmap::HeatmapAnnotation(orig.ident = data, col = list(orig.ident = c("20" = "red")), which = "row")
+
+  data[2,] <- 22
+  obj <- ComplexHeatmap::HeatmapAnnotation(orig.ident = data, col = list(orig.ident = c("20" = "red", "22" = "green")), which = "row")
   out <- SCpubr:::heatmap_inner(data, row_annotation = obj, row_annotation_side = "right")
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
@@ -846,15 +838,15 @@ testthat::test_that("utils: modify_string - PASS - checks", {
 # COMPUTE ENRICHMENT SCORES
 
 testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, list_genes = list("test" = c("CD14")))
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("CD14")))
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, list_genes = list("test" = c("CD14")), verbose = T)
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("CD14")), verbose = T)
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, list_genes = c("CD14"))
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = c("CD14"))
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("Input" %in% colnames(output@meta.data))
 })

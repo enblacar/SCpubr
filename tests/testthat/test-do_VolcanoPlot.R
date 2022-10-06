@@ -1,8 +1,6 @@
 sample <- SCpubr:::use_dataset()
-`%>%` <- purrr::`%>%`
-de_genes <- Seurat::FindMarkers(object = sample, assay = "SCT", ident.1 = "0", ident.2 = "1", slot = "data", verbose = F)
-de_genes <- tibble::tibble(de_genes)
-de_genes <- de_genes %>% dplyr::mutate(p_val_adj = stats::runif(n = nrow(de_genes), min = 0, max = 0.05))
+
+de_genes <- SCpubr:::test_list$de_genes
 
 testthat::test_that("do_VolcanoPlot: PASS - default", {
   p <- SCpubr::do_VolcanoPlot(sample = sample,

@@ -172,6 +172,7 @@ do_GroupwiseDEPlot <- function(sample,
   list.expression.legends <- list()
 
   max_value_list <- c()
+  min_value_list <- c()
   # Compute the max values for all heatmaps.
   for (variable in group.by){
     max_value <- sample@meta.data %>%
@@ -198,14 +199,40 @@ do_GroupwiseDEPlot <- function(sample,
                  dplyr::select(dplyr::all_of(genes.use)) %>%
                  as.matrix() %>%
                  max()
+    min_value <- sample@meta.data %>%
+                 dplyr::select(.data[[variable]]) %>%
+                 tibble::rownames_to_column(var = "cell") %>%
+                 dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
+                                                            slot = slot,
+                                                            assay = assay)[genes.use, ] %>%
+                                       as.matrix() %>%
+                                       t() %>%
+                                       as.data.frame() %>%
+                                       tibble::rownames_to_column(var = "cell")},
+                                       by = "cell") %>%
+                 dplyr::select(-.data$cell) %>%
+                 tidyr::pivot_longer(cols = -.data[[variable]],
+                                     names_to = "gene",
+                                     values_to = "expression") %>%
+                 dplyr::group_by(.data[[variable]], .data$gene) %>%
+                 dplyr::summarise(mean_expression = mean(.data$expression)) %>%
+                 tidyr::pivot_wider(names_from = .data$gene,
+                                    values_from = .data$mean_expression) %>%
+                 as.data.frame() %>%
+                 tibble::column_to_rownames(var = variable) %>%
+                 dplyr::select(dplyr::all_of(genes.use)) %>%
+                 as.matrix() %>%
+                 min()
 
     max_value_list <- c(max_value_list, max_value)
+    min_value_list <- c(min_value_list, min_value)
   }
 
   counter <- 0
   for (variable in group.by){
     counter <- counter + 1
     data_range <- if(slot == "data") {"only_pos"} else if (slot == "scale.data"){"both"}
+    range.data <- if(slot == "data") {max(max_value_list)} else if (slot == "scale.data") {c(min(min_value_list), max(max_value_list))}
     expression_out <- sample@meta.data %>%
                       dplyr::select(.data[[variable]]) %>%
                       tibble::rownames_to_column(var = "cell") %>%
@@ -243,7 +270,7 @@ do_GroupwiseDEPlot <- function(sample,
                                     viridis_color_map = viridis_map_expression,
                                     viridis_direction = viridis_direction,
                                     zeros_are_white = TRUE,
-                                    range.data = max(max_value_list),
+                                    range.data = range.data,
                                     row_title_rotation = row_title_rot,
                                     row_title_side = row_title_side,
                                     cell_size = cell_size)

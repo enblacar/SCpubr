@@ -177,30 +177,31 @@ do_NebulosaPlot <- function(sample,
       # Set size of dots.
       p[[plot_num]]$layers[[1]]$aes_params$size <- pt.size
 
-      if (num_plots == 1){
-        p <- modify_continuous_legend(p = p,
-                                      legend.aes = "color",
-                                      legend.type = legend.type,
-                                      legend.position = legend.position,
-                                      legend.length = legend.length,
-                                      legend.width = legend.width,
-                                      legend.framecolor = legend.framecolor,
-                                      legend.tickcolor = legend.tickcolor,
-                                      legend.framewidth = legend.framewidth,
-                                      legend.tickwidth = legend.tickwidth)
-      } else {
-        p[[plot_num]] <- modify_continuous_legend(p = p[[plot_num]],
-                                                  legend.aes = "color",
-                                                  legend.type = legend.type,
-                                                  legend.position = legend.position,
-                                                  legend.length = legend.length,
-                                                  legend.width = legend.width,
-                                                  legend.framecolor = legend.framecolor,
-                                                  legend.tickcolor = legend.tickcolor,
-                                                  legend.framewidth = legend.framewidth,
-                                                  legend.tickwidth = legend.tickwidth)
+      if (legend.position != "none"){
+        if (num_plots == 1){
+          p <- modify_continuous_legend(p = p,
+                                        legend.aes = "color",
+                                        legend.type = legend.type,
+                                        legend.position = legend.position,
+                                        legend.length = legend.length,
+                                        legend.width = legend.width,
+                                        legend.framecolor = legend.framecolor,
+                                        legend.tickcolor = legend.tickcolor,
+                                        legend.framewidth = legend.framewidth,
+                                        legend.tickwidth = legend.tickwidth)
+        } else {
+          p[[plot_num]] <- modify_continuous_legend(p = p[[plot_num]],
+                                                    legend.aes = "color",
+                                                    legend.type = legend.type,
+                                                    legend.position = legend.position,
+                                                    legend.length = legend.length,
+                                                    legend.width = legend.width,
+                                                    legend.framecolor = legend.framecolor,
+                                                    legend.tickcolor = legend.tickcolor,
+                                                    legend.framewidth = legend.framewidth,
+                                                    legend.tickwidth = legend.tickwidth)
+        }
       }
-
     }
 
     # For embeddings that are umap of tsne, we remove all axes..

@@ -8,12 +8,12 @@ testthat::test_that("do_GeyserPlot: PASS - default parameters", {
 testthat::test_that("do_GeyserPlot: PASS - default parameters = symmetrical scale", {
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             symmetrical_scale = TRUE)
+                             enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             symmetrical_scale = FALSE)
+                             enforce_symmetry = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -146,20 +146,17 @@ testthat::test_that("do_BarPlot: FAIL - wrong paramters", {
 
 testthat::test_that("do_GeyserPlot: PASS - show legend", {
   p <- SCpubr::do_GeyserPlot(sample = sample,
-                             features = "CD14",
-                             show_legend = TRUE)
+                             features = "CD14")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_GeyserPlot(sample = sample,
-                             features = "CD14",
-                             show_legend = FALSE)
+                             features = "CD14")
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_GeyserPlot: PASS - several features", {
   p <- SCpubr::do_GeyserPlot(sample = sample,
-                             features = c("CD14", "PC_1"),
-                             show_legend = TRUE)
+                             features = c("CD14", "PC_1"))
   testthat::expect_type(p, "list")
   testthat::expect_length(p, 2)
 })
@@ -169,26 +166,22 @@ testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
   sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             show_legend = TRUE,
                              color.by = "seurat_clusters_factor")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             show_legend = TRUE,
                              color.by = "seurat_clusters_character")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             show_legend = TRUE,
                              scale_type = "categorical",
                              color.by = "seurat_clusters_character")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
-                             show_legend = TRUE,
                              scale_type = "categorical",
                              color.by = "seurat_clusters_factor")
   testthat::expect_type(p, "list")

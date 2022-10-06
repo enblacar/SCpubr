@@ -1,4 +1,4 @@
-sample <- use_dataset()
+sample <- SCpubr:::use_dataset()
 sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
 genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -31,14 +31,7 @@ testthat::test_that("do_CorrelationPlot: PASS - group.by - cell size", {
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
-testthat::test_that("do_CorrelationPlot: PASS - group.by - colors", {
-  p <- SCpubr::do_CorrelationPlot(sample = sample,
-                                  group.by = "orig.ident",
-                                  column_names_rot = 0,
-                                  cell_size = 7,
-                                  colors.use = c("#e9d8a6", "#9b2226"))
-  testthat::expect_true("HeatmapList" %in% class(p))
-})
+
 
 
 testthat::test_that("do_CorrelationPlot: PASS - row title and column title", {

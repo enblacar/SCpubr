@@ -8,12 +8,12 @@ genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      raster = TRUE,
@@ -23,13 +23,13 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      raster = TRUE,
@@ -38,14 +38,14 @@ testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
                                      plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -55,7 +55,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -63,7 +63,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
                                      plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -76,7 +76,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      plot_cell_borders = TRUE,
@@ -84,7 +84,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      features = "CD14")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      plot_cell_borders = TRUE,
@@ -93,7 +93,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      plot_cell_borders = TRUE,
@@ -103,7 +103,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -112,7 +112,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      features = "CD14")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -122,7 +122,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -133,7 +133,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -143,7 +143,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      features = "CD14")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -154,7 +154,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
                                      enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -166,7 +166,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -179,7 +179,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -189,7 +189,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.size", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -200,7 +200,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.group FALSE", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -211,7 +211,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribution types", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -220,7 +220,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -229,7 +229,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -238,7 +238,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -247,7 +247,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot_marginal_distributions = TRUE,
@@ -258,7 +258,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {
   testthat::expect_error({SCpubr::do_CellularStatesPlot(sample = sample,
-                                                         gene_list = genes,
+                                                         input_gene_list = genes,
                                                          x1 = "A",
                                                          y1 = "B",
                                                          plot_marginal_distributions = TRUE,
@@ -268,7 +268,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong ma
 
 testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       plot.title = "A",
@@ -279,7 +279,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption",
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       enforce_symmetry = T)
@@ -289,7 +289,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry"
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
   Seurat::Idents(sample) <- sample$orig.ident
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       colors.use = c("A" = "black", "B" = "red"),
                                       x1 = "A",
                                       y1 = "B")
@@ -298,7 +298,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       group.by = "orig.ident",
                                       x1 = "A",
                                       y1 = "B")
@@ -307,7 +307,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       axis.ticks = F)
@@ -316,7 +316,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       axis.text = F)
@@ -325,7 +325,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text"
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and colors.use", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       group.by = "orig.ident",
                                       colors.use = c("A" = "black", "B" = "red"),
                                       x1 = "A",
@@ -335,28 +335,28 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and col
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables same parameters", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "A"))
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables x1 not in the list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "Not in list",
                                                         y1 = "A"))
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables y1 not in the list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "Not in list"))
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                       gene_list = genes,
+                                                       input_gene_list = genes,
                                                        x1 = "A",
                                                        y1 = "B",
                                                        plot_features = TRUE))
@@ -364,13 +364,13 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features"
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -381,7 +381,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
@@ -392,7 +392,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
@@ -403,7 +403,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry"
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parameters", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "A",
                                                         x2 = "B"))
@@ -411,7 +411,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parame
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x1 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "Not in list",
                                                         y1 = "A",
                                                         x2 = "B"))
@@ -419,7 +419,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x1 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x2 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "B",
                                                         y1 = "A",
                                                         x2 = "Not in list"))
@@ -427,7 +427,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x2 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables y1 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "Not in list",
                                                         x2 = "B"))
@@ -435,14 +435,14 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables y1 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D")
   testthat::expect_type(p, "list")
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                     gene_list = genes,
+                                     input_gene_list = genes,
                                      x1 = "A",
                                      y1 = "B",
                                      x2 = "C",
@@ -454,7 +454,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
@@ -466,7 +466,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry", {
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                      gene_list = genes,
+                                      input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
@@ -479,7 +479,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry"
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated parameters", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "A",
                                                         x2 = "A",
@@ -488,7 +488,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated paramete
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "Not in list",
                                                         y1 = "B",
                                                         x2 = "C",
@@ -497,7 +497,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y1 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "Not in list",
                                                         x2 = "C",
@@ -506,7 +506,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y1 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x2 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "B",
                                                         x2 = "Not in list",
@@ -515,7 +515,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x2 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "B",
                                                         x2 = "C",
@@ -524,7 +524,7 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - wrong font.type", {
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
-                                                        gene_list = genes,
+                                                        input_gene_list = genes,
                                                         x1 = "A",
                                                         y1 = "Not in list",
                                                         x2 = "B",

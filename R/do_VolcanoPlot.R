@@ -84,8 +84,13 @@ do_VolcanoPlot <- function(sample,
   colors <- SCpubr::do_ColorPalette(colors.use, tetradic = T)
   names(colors) <- c("A", "C", "B", "D")
 
-  data <- de_genes %>%
-          tibble::rownames_to_column(var = "gene") %>%
+  if (!("gene" %in% colnames(de_genes))){
+    data <- de_genes %>%
+            tibble::rownames_to_column(var = "gene")
+  } else {
+    data <- de_genes
+  }
+  data <- data %>%
           tibble::as_tibble() %>%
           dplyr::select(.data$p_val_adj, .data$avg_log2FC, .data$gene) %>%
           dplyr::mutate("p_val_adj" = replace(.data$p_val_adj, .data$p_val_adj == 0, .Machine$double.xmin)) %>%

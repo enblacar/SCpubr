@@ -1,12 +1,9 @@
 sample <- SCpubr:::use_dataset()
-`%>%` <- purrr::`%>%`
-de_genes <- Seurat::FindAllMarkers(object = sample, assay = "SCT", verbose = F, slot = "data")
-de_genes <- tibble::tibble(de_genes)
-de_genes <- de_genes %>% dplyr::mutate(p_val_adj = stats::runif(n = nrow(de_genes), min = 0, max = 0.05))
 
-de_genes_scaled <- Seurat::FindAllMarkers(object = sample, assay = "SCT", verbose = F, slot = "scale.data")
-de_genes_scaled <- tibble::tibble(de_genes_scaled)
-de_genes_scaled <- de_genes_scaled %>% dplyr::mutate(p_val_adj = stats::runif(n = nrow(de_genes_scaled), min = 0, max = 0.05))
+de_genes <- SCpubr:::test_list$de_genes
+de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
@@ -33,7 +30,7 @@ testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                   de_genes = de_genes_scaled,
                                   assay = "SCT",
-                                  slot = "data",
+                                  slot = "scale.data",
                                   legend.position = "right")
   testthat::expect_type(p, "S4")
 })

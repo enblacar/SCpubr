@@ -94,7 +94,7 @@ testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels",
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             flip = T,
-                                            rotate_x_labels = T)})
+                                            rotate_x_axis_labels = T)})
   testthat::expect_type(p, "list")
 })
 
