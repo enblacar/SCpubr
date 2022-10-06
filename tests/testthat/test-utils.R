@@ -608,7 +608,13 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
     sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from=1,to=90,by=10),
                                                                                                                                                        zeros = 0) %>% dplyr::select(-seurat_clusters)
   })
+  testthat::expect_error(heatmap_inner(data, data_range = "both", range.data = 10))
+  testthat::expect_error(heatmap_inner(matrix(c(1, 1))))
   out <- SCpubr:::heatmap_inner(data)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(data, symmetrical_scale = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -851,9 +857,27 @@ testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
   testthat::expect_true("Input" %in% colnames(output@meta.data))
 })
 
+# GET DATA COLUMN
 
+testthat::test_that("utils: get data column - PASS ", {
+  data <- SCpubr:::get_data_column(sample = sample, feature = "CD14", assay = "SCT", slot = "data")
+  testthat::expect_true("data.frame" %in% class(data))
+  testthat::expect_true("feature" %in% colnames(data))
 
+  data <- SCpubr:::get_data_column(sample = sample, feature = "nCount_RNA", assay = "SCT", slot = "data")
+  testthat::expect_true("data.frame" %in% class(data))
+  testthat::expect_true("feature" %in% colnames(data))
 
+  data <- SCpubr:::get_data_column(sample = sample, feature = "PC_1", assay = "SCT", slot = "data")
+  testthat::expect_true("data.frame" %in% class(data))
+  testthat::expect_true("feature" %in% colnames(data))
+})
+
+# CHECK PARAMETERS
+testthat::test_that("utils: check parameters - FAIL ", {
+  testthat::expect_error({SCpubr:::check_parameters(parameter = -2, parameter_name = "viridis_direction")})
+  testthat::expect_error({SCpubr:::check_parameters(parameter = "ERROR", parameter_name = "viridis_color_map")})
+})
 
 
 

@@ -43,8 +43,8 @@ do_GeyserPlot(
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  xlab = NULL,
-  ylab = NULL
+  xlab = "Groups",
+  ylab = feature
 )
 }
 \arguments{

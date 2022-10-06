@@ -324,3 +324,21 @@ testthat::test_that("do_FeaturePlot: FAIL - wrong font.type", {
                                                 features = c("PC_1"),
                                                 font.type = "wrong"))
 })
+
+testthat::test_that("do_FeaturePlot: PASS - plot axis", {
+  p <- SCpubr::do_FeaturePlot(sample = sample, plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample, reduction = "pca", plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_FeaturePlot(sample = sample, dims = c(2, 1), plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  sample@reductions$diffusion <- sample@reductions$umap
+  p <- SCpubr::do_FeaturePlot(sample = sample,
+                          reduction = "diffusion",
+                          plot.axes = TRUE,
+                          features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+})

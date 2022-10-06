@@ -63,15 +63,18 @@ testthat::test_that("do_BarPlot: PASS - two variables - stack - flip - ordered",
 testthat::test_that("do_BarPlot: FAIL - wrong position", {
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = "orig.ident",
-                                            group.by = "seurat_clusters",
                                             position = "wrong"))
 })
 
 testthat::test_that("do_BarPlot: FAIL - wrong font.type", {
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = "orig.ident",
-                                            group.by = "seurat_clusters",
                                             font.type = "wrong"))
+})
+
+testthat::test_that("do_BarPlot: FAIL - column not a factor or character", {
+  testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
+                                            group.by = "nCount_RNA"))
 })
 
 testthat::test_that("do_BarPlot: PASS - rotate x labels", {

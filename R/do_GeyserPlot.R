@@ -59,8 +59,8 @@ do_GeyserPlot <- function(sample,
                           plot.title = NULL,
                           plot.subtitle = NULL,
                           plot.caption = NULL,
-                          xlab = NULL,
-                          ylab = NULL){
+                          xlab = "Groups",
+                          ylab = feature){
 
   # Checks for packages.
   check_suggests(function_name = "do_GeyserPlot")
@@ -367,8 +367,8 @@ do_GeyserPlot <- function(sample,
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
-         ggplot2::xlab(if (is.null(xlab)) {"Groups"} else (xlab)) +
-         ggplot2::ylab(if (is.null(ylab)) {feature} else (ylab)) +
+         ggplot2::xlab(xlab) +
+         ggplot2::ylab(ylab) +
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                            face = "bold"),

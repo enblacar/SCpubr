@@ -4,6 +4,23 @@ testthat::test_that("do_DimPlot: PASS - sample", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_DimPlot: PASS - plot axis", {
+  p <- SCpubr::do_DimPlot(sample = sample, plot.axes = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DimPlot(sample = sample, reduction = "pca", plot.axes = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DimPlot(sample = sample, dims = c(2, 1), plot.axes = TRUE)
+  testthat::expect_type(p, "list")
+
+  sample@reductions$diffusion <- sample@reductions$umap
+  p <- SCpubr::do_DimPlot(sample = sample,
+                          reduction = "diffusion",
+                          plot.axes = TRUE)
+  testthat::expect_type(p, "list")
+})
+
 testthat::test_that("do_DimPlot: PASS - sample cell_borders", {
   p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T)
   testthat::expect_type(p, "list")

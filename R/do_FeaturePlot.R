@@ -634,13 +634,14 @@ do_FeaturePlot <- function(sample,
 
   # Further patch for diffusion maps.
   if (reduction == "diffusion"){
+    labels <- colnames(sample@reductions[["diffusion"]][[]])[dims]
     # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
     p <-  suppressMessages({
       p &
-        ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]),
-                        max(sample@reductions$diffusion[[]][, paste0("DC_", dims[1])]))) &
-        ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]),
-                        max(sample@reductions$diffusion[[]][, paste0("DC_", dims[2])]))) &
+        ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, labels[1]]),
+                        max(sample@reductions$diffusion[[]][, labels[1]]))) &
+        ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, labels[2]]),
+                        max(sample@reductions$diffusion[[]][, labels[2]]))) &
         # Remove axis elements so that the axis title is the only thing left.
         ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
                        axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},

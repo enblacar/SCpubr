@@ -3,6 +3,7 @@ p <- SCpubr::do_DimPlot(sample)
 p.heatmap <- SCpubr::do_CorrelationPlot(sample)
 data <- p.heatmap@ht_list$`Pearson coef.`@matrix
 p.pheatmap <- pheatmap::pheatmap(data)
+p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
 figure_path <- getwd()
 
 testthat::test_that("save_Plot: PASS - no file", {
@@ -59,6 +60,11 @@ testthat::test_that("save_Plot: PASS - all", {
                                             figure_path = figure_path,
                                             file_name = "test",
                                             output_format = "all"))
+
+  testthat::expect_silent(SCpubr::save_Plot(plot = p.chord,
+                                            figure_path = figure_path,
+                                            file_name = "test",
+                                            output_format = "all"))
 })
 
 testthat::test_that("save_Plot: PASS - publication", {
@@ -77,6 +83,11 @@ testthat::test_that("save_Plot: PASS - publication", {
                                             file_name = "test",
                                             output_format = "publication"))
 
+  testthat::expect_silent(SCpubr::save_Plot(plot = p.chord,
+                                            figure_path = figure_path,
+                                            file_name = "test",
+                                            output_format = "publication"))
+
 })
 
 testthat::test_that("save_Plot: PASS - jpeg", {
@@ -91,6 +102,11 @@ testthat::test_that("save_Plot: PASS - jpeg", {
                                             output_format = "jpeg"))
 
   testthat::expect_silent(SCpubr::save_Plot(plot = p.pheatmap,
+                                            figure_path = figure_path,
+                                            file_name = "test",
+                                            output_format = "jpeg"))
+
+  testthat::expect_silent(SCpubr::save_Plot(plot = p.chord,
                                             figure_path = figure_path,
                                             file_name = "test",
                                             output_format = "jpeg"))
@@ -145,6 +161,11 @@ testthat::test_that("save_Plot: PASS - tiff", {
                                             figure_path = figure_path,
                                             file_name = "test",
                                             output_format = "tiff"))
+
+  testthat::expect_silent(SCpubr::save_Plot(plot = p.chord,
+                                            figure_path = figure_path,
+                                            file_name = "test",
+                                            output_format = "tiff"))
 })
 
 testthat::test_that("save_Plot: PASS - svg", {
@@ -159,6 +180,11 @@ testthat::test_that("save_Plot: PASS - svg", {
                                             output_format = "svg"))
 
   testthat::expect_silent(SCpubr::save_Plot(plot = p.pheatmap,
+                                            figure_path = figure_path,
+                                            file_name = "test",
+                                            output_format = "svg"))
+
+  testthat::expect_silent(SCpubr::save_Plot(plot = p.chord,
                                             figure_path = figure_path,
                                             file_name = "test",
                                             output_format = "svg"))

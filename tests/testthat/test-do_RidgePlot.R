@@ -3,6 +3,50 @@ testthat::test_that("do_RidgePlot: PASS - default", {
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA")
   testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            group.by = "orig.ident")
+  testthat::expect_type(p, "list")
+
+  sample$orig.ident <- factor(sample$orig.ident)
+
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            group.by = "orig.ident")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            legend.position = "bottom")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            group.by = "orig.ident",
+                            legend.position = "bottom",
+                            colors.use = c("Cell" = "red"))
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_RidgePlot: PASS - plot.grid", {
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            plot.grid = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            plot.grid = FALSE)
+  testthat::expect_type(p, "list")
+})
+
+
+testthat::test_that("do_RidgePlot: PASS - split.by", {
+  p <- SCpubr::do_RidgePlot(sample = sample,
+                            feature = "nCount_RNA",
+                            split.by = "orig.ident")
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_RidgePlot: PASS - continuous scale", {

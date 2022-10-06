@@ -29,7 +29,7 @@ do_DotPlot <- function(sample,
                        legend.framecolor = "grey50",
                        legend.tickcolor = "white",
                        dot.scale = 6,
-                       colors.use = c("#bdc3c7", "#2c3e50"),
+                       colors.use = c("#1BFFFF", "#2E3192"),
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
@@ -41,7 +41,7 @@ do_DotPlot <- function(sample,
                        flip = FALSE,
                        rotate_x_axis_labels = TRUE,
                        scale.by = "size",
-                       use_viridis = TRUE,
+                       use_viridis = FALSE,
                        viridis_color_map = "G",
                        viridis_direction = -1,
                        na.value = "grey75",
@@ -169,6 +169,17 @@ do_DotPlot <- function(sample,
              ggplot2::scale_fill_viridis_c(na.value = na.value,
                                            option = viridis_color_map,
                                            direction = viridis_direction)
+      }
+    } else if (isFALSE(use_viridis)){
+      if (isFALSE(dot_border)){
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_color_gradientn(na.value = na.value,
+                                                                     colors = colors.use),
+                       scale = "color")
+      } else if (isTRUE(dot_border)){
+        p <- p +
+             ggplot2::scale_fill_gradientn(na.value = na.value,
+                                           colors = colors.use)
       }
     }
     p <- p +

@@ -208,3 +208,21 @@ testthat::test_that("do_NebulosaPlot: PASS - patchwork title, subtitle and capti
                                plot.caption = "C")
   testthat::expect_type(p, "list")
 })
+
+testthat::test_that("do_NebulosaPlot: PASS - plot axis", {
+  p <- SCpubr::do_NebulosaPlot(sample = sample, plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_NebulosaPlot(sample = sample, reduction = "pca", plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_NebulosaPlot(sample = sample, dims = c(2, 1), plot.axes = TRUE, features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+
+  sample@reductions$diffusion <- sample@reductions$umap
+  p <- SCpubr::do_NebulosaPlot(sample = sample,
+                              reduction = "diffusion",
+                              plot.axes = TRUE,
+                              features = "nCount_RNA")
+  testthat::expect_type(p, "list")
+})

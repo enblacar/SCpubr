@@ -79,7 +79,7 @@ do_CorrelationPlot <- function(sample,
 
     # Retrieve correlation matrix.
     out <- sample@meta.data %>%
-           dplyr::select(dplyr::all_of(group.by)) %>%
+           dplyr::select(dplyr::all_of(c(group.by))) %>%
            tibble::rownames_to_column(var = "cell") %>%
            dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
                                                       assay = assay,

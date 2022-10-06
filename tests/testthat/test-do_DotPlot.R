@@ -3,6 +3,37 @@ testthat::test_that("do_DotPlot: PASS - one variable", {
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "CD14")
   testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          dot_border = FALSE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: PASS - plot grid", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          plot.grid = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          plot.grid = FALSE)
+  testthat::expect_type(p, "list")
+})
+
+testthat::test_that("do_DotPlot: PASS - use_viridis", {
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          use_viridis = TRUE,
+                          dot_border = FALSE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_DotPlot(sample = sample,
+                          features = "CD14",
+                          use_viridis = TRUE,
+                          dot_border = TRUE)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_DotPlot: PASS - one variable legend normal", {

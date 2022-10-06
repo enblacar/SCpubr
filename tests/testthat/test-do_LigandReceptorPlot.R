@@ -6,6 +6,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE)
   testthat::expect_type(p, "list")
 
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = TRUE)
+  testthat::expect_type(p, "list")
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      dot_border = FALSE,
                                      add_missing_LR_combinations = FALSE)
@@ -189,4 +192,13 @@ testthat::test_that("do_LigandReceptorPlot: FAIL - wrong parameters", {
                                                         split.by = "wrong",
                                                         add_missing_LR_combinations = FALSE)})
 
+})
+
+testthat::test_that("do_LigandReceptorPlot: PASS - chord diagrams", {
+  out <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE, compute_ChordDiagrams = TRUE)
+  testthat::expect_type(out, "list")
+  testthat::expect_length(out, 3)
+  testthat::expect_equal(class(out$dotplot), c("gg", "ggplot"))
+  testthat::expect_equal(class(out$chord_total_interactions), c("recordedplot"))
+  testthat::expect_equal(class(out$chord_ligand_receptor), c("recordedplot"))
 })
