@@ -43,3 +43,5 @@ tests/testthat/omnipathr-log/*
 tests/testthat/_snaps/
 tests/testthat/output_figure*
 tests/testthat/test.*
+output_figure*
+test.*
