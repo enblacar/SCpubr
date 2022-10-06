@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 liana_output <- SCpubr:::test_list$liana_output
 
 

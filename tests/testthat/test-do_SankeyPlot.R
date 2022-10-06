@@ -1,11 +1,11 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 
 testthat::test_that("do_SankeyPlot: FAIL - no dplyr", {
   testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
                                                 first_group = "seurat_cluters",
                                                 last_group = "orig.ident")})
 })
-library(dplyr)
+suppressMessages(library(dplyr))
 testthat::test_that("do_SankeyPlot: PASS - default", {
   p <- SCpubr::do_SankeyPlot(sample = sample,
                              first_group = "seurat_clusters",

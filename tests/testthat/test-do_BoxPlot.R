@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 
 testthat::test_that("do_BoxPlot: PASS - default", {
   p <- SCpubr::do_BoxPlot(sample = sample,

@@ -1,9 +1,9 @@
-sample <- SCpubr:::use_dataset()
-test_list <- SCpubr:::test_list
-metacell_mapping <- test_list$metacell_mapping
-infercnv_object <- test_list$infercnv_object
-infercnv_object_metacells <- test_list$infercnv_object_metacells
-human_chr_locations <- test_list$human_chr_locations
+sample <- SCpubr:::test_list$sample
+
+metacell_mapping <- SCpubr:::test_list$metacell_mapping
+infercnv_object <- SCpubr:::test_list$infercnv_object
+infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
+human_chr_locations <- SCpubr:::test_list$human_chr_locations
 library("Seurat")
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {

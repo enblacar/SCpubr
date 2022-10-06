@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
 genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],

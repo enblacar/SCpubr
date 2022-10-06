@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 p <- SCpubr::do_DimPlot(sample)
 p.heatmap <- SCpubr::do_CorrelationPlot(sample)
 data <- p.heatmap@ht_list$`Pearson coef.`@matrix

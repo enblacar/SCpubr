@@ -1,4 +1,5 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
+
 testthat::test_that("do_ViolinPlot: PASS - one variable", {
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14")

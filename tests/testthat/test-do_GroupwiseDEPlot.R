@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 
 de_genes <- SCpubr:::test_list$de_genes
 de_genes_scaled <- SCpubr:::test_list$de_genes_scaled

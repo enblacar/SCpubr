@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 
 # CHECK SUGGESTS
 testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
@@ -417,6 +417,7 @@ testthat::test_that("utils: check_and_set_assay - PASS - providing assay", {
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - providing non defaultassay", {
+  sample@assays$RNA <- sample@assays$SCT
   output <- SCpubr:::check_and_set_assay(sample = sample, assay = "RNA")
   testthat::expect_true(class(output$sample) == "Seurat")
   testthat::expect_equal(output$assay, "RNA")

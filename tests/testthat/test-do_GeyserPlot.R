@@ -1,4 +1,5 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
+
 testthat::test_that("do_GeyserPlot: PASS - default parameters", {
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14")

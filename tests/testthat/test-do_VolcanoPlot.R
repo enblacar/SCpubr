@@ -1,5 +1,4 @@
-sample <- SCpubr:::use_dataset()
-
+sample <- SCpubr:::test_list$sample
 de_genes <- SCpubr:::test_list$de_genes
 
 testthat::test_that("do_VolcanoPlot: PASS - default", {

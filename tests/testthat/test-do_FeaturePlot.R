@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 
 testthat::test_that("do_FeaturePlot: PASS - single feature", {
   p <- SCpubr::do_FeaturePlot(sample = sample,

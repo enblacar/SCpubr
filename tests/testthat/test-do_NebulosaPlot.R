@@ -1,4 +1,5 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
+
 testthat::test_that("do_NebulosaPlot: PASS - single feature", {
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("CD14"))

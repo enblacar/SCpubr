@@ -1,4 +1,4 @@
-sample <- SCpubr:::use_dataset()
+sample <- SCpubr:::test_list$sample
 activities <- SCpubr:::test_list$dorothea_activities
 
 testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
