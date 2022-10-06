@@ -49,7 +49,7 @@ do_TermEnrichmentPlot <- function(genes,
   on.exit(sink())
   invisible(force({
     # Checks for packages.
-    check_suggests()
+    check_suggests(function_name = "do_TermEnrichmentPlot")
 
 
     # Define pipe operator internally.

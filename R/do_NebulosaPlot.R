@@ -48,7 +48,7 @@ do_NebulosaPlot <- function(sample,
   check_Seurat(sample = sample)
 
   # Checks for packages.
-  check_suggests()
+  check_suggests(function_name = "do_NebulosaPlot")
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.

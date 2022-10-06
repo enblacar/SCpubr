@@ -54,7 +54,7 @@ do_DimPlot <- function(sample,
                        marginal.group = TRUE,
                        plot.axes = FALSE){
   # Checks for packages.
-  check_suggests()
+  check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
   # Check the reduction.
