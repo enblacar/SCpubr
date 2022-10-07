@@ -1,8 +1,8 @@
-sample <- SCpubr:::test_list$sample
-liana_output <- SCpubr:::test_list$liana_output
-
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE)
   testthat::expect_type(p, "list")
 
@@ -36,6 +36,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output different n", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,
                                      add_missing_LR_combinations = FALSE)
@@ -43,6 +46,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output different n", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - legend.type", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      legend.type = "normal",
                                      add_missing_LR_combinations = FALSE)
@@ -83,6 +89,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - legend.type", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - split.by", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      split.by = "ligand.complex",
                                      dot_border = FALSE,
@@ -107,6 +116,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - split.by", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output, angle ", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      x_labels_angle = 0,
                                      add_missing_LR_combinations = FALSE)
@@ -124,6 +136,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output, angle ", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output flip", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,
                                      flip = TRUE,
@@ -132,6 +147,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output flip", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output different keep", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,
                                      keep_source = "0",
@@ -149,6 +167,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output different keep", 
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output legend.position", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,
                                      flip = TRUE,
@@ -164,6 +185,9 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output legend.position",
 })
 
 testthat::test_that("do_LigandReceptorPlot: FAIL - wrong parameters", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   testthat::expect_error({SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                                         font.type = "wrong",
                                                         add_missing_LR_combinations = FALSE)})
@@ -195,6 +219,9 @@ testthat::test_that("do_LigandReceptorPlot: FAIL - wrong parameters", {
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - chord diagrams", {
+  sample <- SCpubr:::test_list$sample
+  liana_output <- SCpubr:::test_list$liana_output
+
   out <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE, compute_ChordDiagrams = TRUE)
   testthat::expect_type(out, "list")
   testthat::expect_length(out, 3)

@@ -1,12 +1,14 @@
-sample <- SCpubr:::test_list$sample
-sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
-
-genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-              "B" = Seurat::VariableFeatures(sample)[6:10],
-              "C" = Seurat::VariableFeatures(sample)[11:15],
-              "D" = Seurat::VariableFeatures(sample)[16:20])
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                      input_gene_list = genes,
                                      x1 = "A",
@@ -22,6 +24,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                      input_gene_list = genes,
                                      x1 = "A",
@@ -75,6 +86,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                      input_gene_list = genes,
                                      x1 = "A",
@@ -178,6 +198,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -188,6 +217,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.size", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -199,6 +237,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.group FALSE", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -210,6 +257,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribution types", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -257,6 +313,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribu
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error({SCpubr::do_CellularStatesPlot(sample = sample,
                                                          input_gene_list = genes,
                                                          x1 = "A",
@@ -267,6 +332,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong ma
 
 
 testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -278,6 +352,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption",
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -287,6 +370,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry"
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   Seurat::Idents(sample) <- sample$orig.ident
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
@@ -297,6 +389,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       group.by = "orig.ident",
@@ -306,6 +407,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -315,6 +425,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -324,6 +443,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text"
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and colors.use", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       group.by = "orig.ident",
@@ -334,6 +462,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and col
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables same parameters", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -341,6 +478,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables same parameters",
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables x1 not in the list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "Not in list",
@@ -348,6 +494,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables x1 not in the lis
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables y1 not in the list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -355,6 +510,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables y1 not in the lis
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                        input_gene_list = genes,
                                                        x1 = "A",
@@ -363,6 +527,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features"
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -380,6 +553,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -391,6 +573,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -402,6 +593,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry"
 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parameters", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -410,6 +610,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parame
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x1 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "Not in list",
@@ -418,6 +627,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x1 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x2 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "B",
@@ -426,6 +644,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x2 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables y1 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -434,6 +661,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables y1 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -453,6 +689,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -465,6 +710,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
 })
 
 testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                       input_gene_list = genes,
                                       x1 = "A",
@@ -478,6 +732,15 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry"
 
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated parameters", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -487,6 +750,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated paramete
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "Not in list",
@@ -496,6 +768,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y1 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -505,6 +786,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y1 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x2 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -514,6 +804,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x2 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",
@@ -523,6 +822,15 @@ testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", 
 })
 
 testthat::test_that("do_CellularStatesPlot: FAIL - wrong font.type", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15],
+                "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
   testthat::expect_error(SCpubr::do_CellularStatesPlot(sample = sample,
                                                         input_gene_list = genes,
                                                         x1 = "A",

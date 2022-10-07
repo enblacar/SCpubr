@@ -1,12 +1,15 @@
-sample <- SCpubr:::test_list$sample
 
 testthat::test_that("do_GeyserPlot: PASS - default parameters", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14")
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_GeyserPlot: PASS - default parameters = symmetrical scale", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              enforce_symmetry = TRUE)
@@ -20,6 +23,8 @@ testthat::test_that("do_GeyserPlot: PASS - default parameters = symmetrical scal
 
 
 testthat::test_that("do_GeyserPlot: PASS - default parameters = categorical scale", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "categorical")
@@ -27,6 +32,8 @@ testthat::test_that("do_GeyserPlot: PASS - default parameters = categorical scal
 })
 
 testthat::test_that("do_GeyserPlot: PASS - default parameters = color.by", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "categorical",
@@ -66,6 +73,8 @@ testthat::test_that("do_GeyserPlot: PASS - default parameters = color.by", {
 
 
 testthat::test_that("do_GeyserPlot: PASS - categorical colors.use", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "categorical",
@@ -82,6 +91,8 @@ testthat::test_that("do_GeyserPlot: PASS - categorical colors.use", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - order by mean", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "continuous",
@@ -96,6 +107,8 @@ testthat::test_that("do_GeyserPlot: PASS - order by mean", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - plot cell borders", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "continuous",
@@ -110,6 +123,8 @@ testthat::test_that("do_GeyserPlot: PASS - plot cell borders", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - split.by", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14",
                              scale_type = "continuous",
@@ -127,6 +142,8 @@ testthat::test_that("do_GeyserPlot: PASS - split.by", {
 
 
 testthat::test_that("do_BarPlot: FAIL - wrong paramters", {
+  sample <- SCpubr:::test_list$sample
+
   testthat::expect_error(SCpubr::do_GeyserPlot(sample = sample,
                                                features = "CD14",
                                                scale_type = "wrong"))
@@ -146,6 +163,8 @@ testthat::test_that("do_BarPlot: FAIL - wrong paramters", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - show legend", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = "CD14")
   testthat::expect_type(p, "list")
@@ -156,6 +175,8 @@ testthat::test_that("do_GeyserPlot: PASS - show legend", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - several features", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_GeyserPlot(sample = sample,
                              features = c("CD14", "PC_1"))
   testthat::expect_type(p, "list")
@@ -163,6 +184,8 @@ testthat::test_that("do_GeyserPlot: PASS - several features", {
 })
 
 testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
+  sample <- SCpubr:::test_list$sample
+
   sample$seurat_clusters_factor <- as.factor(sample$seurat_clusters)
   sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
   p <- SCpubr::do_GeyserPlot(sample = sample,

@@ -1,8 +1,7 @@
 
-genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
-
-
 testthat::test_that("do_TermEnrichmentPlot: PASS - A", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "A",
                                      nterms = 2)
@@ -11,6 +10,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - A", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - B", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "B",
                                      nterms = 2)
@@ -20,6 +21,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - B", {
 
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - C", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "C",
                                      nterms = 2)
@@ -28,6 +31,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - C", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      nterms = 2,
                                      dbs_use = "GO_Biological_Process_2021",
@@ -36,6 +41,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - number of terms", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "C",
                                      nterms = 2)
@@ -44,6 +51,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - number of terms", {
 
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - length of terms", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "C",
                                      nterms = 2,
@@ -52,6 +61,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - length of terms", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - modify colors", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "C",
                                      nterms = 2,
@@ -60,6 +71,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - modify colors", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "GO_Biological_Process_2021",
                                      nterms = 2,
@@ -68,6 +81,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "GO_Biological_Process_2021",
                                      nterms = 2,
@@ -77,6 +92,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorbar", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "GO_Biological_Process_2021",
                                      nterms = 2,
@@ -87,6 +104,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorb
 
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorsteps", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "GO_Biological_Process_2021",
                                      nterms = 2,
@@ -96,6 +115,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colors
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.type", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "GO_Biological_Process_2021",
                                                        nterms = 2,
@@ -103,6 +124,8 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.type", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.position", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "GO_Biological_Process_2021",
                                                        nterms = 2,
@@ -110,6 +133,8 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.position", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong font.type", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "GO_Biological_Process_2021",
                                                        nterms = 2,
@@ -117,6 +142,8 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong font.type", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal - one pvalue", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "Azimuth_Cell_Types_2021",
                                      nterms = 2,
@@ -126,6 +153,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend normal
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorbar - one pvalue", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "Azimuth_Cell_Types_2021",
                                      nterms = 2,
@@ -136,6 +165,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorb
 
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorsteps - one pvalue", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   p <- SCpubr::do_TermEnrichmentPlot(genes = genes,
                                      dbs_use = "Azimuth_Cell_Types_2021",
                                      nterms = 2,
@@ -145,6 +176,8 @@ testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colors
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - provide more colors than needed", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "C",
                                                        nterms = 2,
@@ -152,12 +185,16 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - provide more colors than need
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - database = NULL", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        nterms = 2,
                                                        colors.use = c("#e9d8a6", "#9b2226")))
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong database", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = "wrong_database",
                                                        nterms = 2,
@@ -165,6 +202,8 @@ testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong database", {
 })
 
 testthat::test_that("do_TermEnrichmentPlot: FAIL - more than one database", {
+  genes <- c("ABCB1", "ABCG2", "AHR", "AKT1", "AR")
+
   testthat::expect_error(SCpubr::do_TermEnrichmentPlot(genes = genes,
                                                        dbs_use = c("A", "B"),
                                                        nterms = 2,

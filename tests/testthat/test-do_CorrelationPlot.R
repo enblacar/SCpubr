@@ -1,22 +1,38 @@
-sample <- SCpubr:::test_list$sample
-sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-              "B" = Seurat::VariableFeatures(sample)[6:10],
-              "C" = Seurat::VariableFeatures(sample)[11:15])
 
 testthat::test_that("do_CorrelationPlot: PASS - normal", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   p <- SCpubr::do_CorrelationPlot(sample = sample)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
 testthat::test_that("do_CorrelationPlot: PASS - group.by", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   group.by = "orig.ident")
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
 testthat::test_that("do_CorrelationPlot: PASS - group.by - rotate axis labels", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   group.by = "orig.ident",
                                   column_names_rot = 0)
@@ -24,6 +40,13 @@ testthat::test_that("do_CorrelationPlot: PASS - group.by - rotate axis labels", 
 })
 
 testthat::test_that("do_CorrelationPlot: PASS - group.by - cell size", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   group.by = "orig.ident",
                                   column_names_rot = 0,
@@ -35,6 +58,13 @@ testthat::test_that("do_CorrelationPlot: PASS - group.by - cell size", {
 
 
 testthat::test_that("do_CorrelationPlot: PASS - row title and column title", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   group.by = "orig.ident",
                                   column_names_rot = 0,
@@ -45,6 +75,13 @@ testthat::test_that("do_CorrelationPlot: PASS - row title and column title", {
 })
 
 testthat::test_that("do_CorrelationPlot: PASS - group.by factor", {
+  sample <- SCpubr:::test_list$sample
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+  genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                "B" = Seurat::VariableFeatures(sample)[6:10],
+                "C" = Seurat::VariableFeatures(sample)[11:15])
+
   sample$orig.ident <- factor(sample$orig.ident)
   p <- SCpubr::do_CorrelationPlot(sample = sample,
                                   group.by = "orig.ident",

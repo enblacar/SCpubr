@@ -1,7 +1,8 @@
-sample <- SCpubr:::test_list$sample
-activities <- SCpubr:::test_list$progeny_activities
 
 testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities)
   testthat::expect_type(out, "list")
@@ -30,6 +31,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - plot featureplots", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_FeaturePlots = TRUE)
@@ -38,6 +42,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - plot featureplots", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - plot geysers", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE)
@@ -53,6 +60,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - plot geysers", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - all", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
@@ -62,6 +72,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - all", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - all group.by", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
@@ -72,6 +85,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - all group.by", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - all split.by", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = TRUE,
@@ -82,6 +98,9 @@ testthat::test_that("do_PathwayActivityPlot: PASS - all split.by", {
 })
 
 testthat::test_that("do_PathwayActivityPlot: PASS - column.title and row.title", {
+  sample <- SCpubr:::test_list$sample
+  activities <- SCpubr:::test_list$progeny_activities
+
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = activities,
                                         plot_GeyserPlots = FALSE,

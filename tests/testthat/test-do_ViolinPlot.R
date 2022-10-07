@@ -1,12 +1,15 @@
-sample <- SCpubr:::test_list$sample
 
 testthat::test_that("do_ViolinPlot: PASS - one variable", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14")
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_ViolinPlot: PASS - without boxplot", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14",
                           plot_boxplot = F)
@@ -14,6 +17,8 @@ testthat::test_that("do_ViolinPlot: PASS - without boxplot", {
 })
 
 testthat::test_that("do_ViolinPlot: PASS - rotate axis", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14",
                           rotate_x_axis_labels = T)
@@ -21,6 +26,8 @@ testthat::test_that("do_ViolinPlot: PASS - rotate axis", {
 })
 
 testthat::test_that("do_ViolinPlot: PASS - plot.grid", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("CD14"),
                           plot.grid = TRUE)
@@ -31,6 +38,8 @@ testthat::test_that("do_ViolinPlot: PASS - plot.grid", {
 
 
 testthat::test_that("do_ViolinPlot: PASS - one feature ycut", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("CD14"),
                           rotate_x_axis_labels = T,
@@ -40,6 +49,8 @@ testthat::test_that("do_ViolinPlot: PASS - one feature ycut", {
 
 
 testthat::test_that("do_ViolinPlot: PASS - one feature line width", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("CD14"),
                           rotate_x_axis_labels = T,
@@ -49,6 +60,8 @@ testthat::test_that("do_ViolinPlot: PASS - one feature line width", {
 })
 
 testthat::test_that("do_ViolinPlot: PASS - one feature boxplot width", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("CD14"),
                           rotate_x_axis_labels = T,
@@ -58,6 +71,8 @@ testthat::test_that("do_ViolinPlot: PASS - one feature boxplot width", {
 })
 
 testthat::test_that("do_ViolinPlot: PASS - change colors", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("CD14"),
                           rotate_x_axis_labels = T,
@@ -78,6 +93,8 @@ testthat::test_that("do_ViolinPlot: PASS - change colors", {
 
 
 testthat::test_that("do_ViolinPlot: FAIL - split.by", {
+  sample <- SCpubr:::test_list$sample
+
   testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,
                                             feature = c("CD14"),
                                             split.by = "orig.ident"))
@@ -87,6 +104,8 @@ testthat::test_that("do_ViolinPlot: FAIL - split.by", {
 
 
 testthat::test_that("do_ViolinPlot: PASS - one variable, group by", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14",
                           group.by = "orig.ident")
@@ -94,6 +113,8 @@ testthat::test_that("do_ViolinPlot: PASS - one variable, group by", {
 })
 
 testthat::test_that("do_ViolinPlot: PASS - one variable, xlab y lab", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14",
                           xlab = "y",
@@ -103,6 +124,8 @@ testthat::test_that("do_ViolinPlot: PASS - one variable, xlab y lab", {
 
 
 testthat::test_that("do_ViolinPlot: PASS - one variable, plot.title, subtitle and caption", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "CD14",
                           plot.title = "A",
@@ -113,6 +136,8 @@ testthat::test_that("do_ViolinPlot: PASS - one variable, plot.title, subtitle an
 
 
 testthat::test_that("do_ViolinPlot: PASS - multiple variables plot.title, subtitle and caption", {
+  sample <- SCpubr:::test_list$sample
+
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           c("CD14"),
                           group.by = "orig.ident",
@@ -121,6 +146,8 @@ testthat::test_that("do_ViolinPlot: PASS - multiple variables plot.title, subtit
 })
 
 testthat::test_that("do_ViolinPlot: FAIL - wrong font.type", {
+  sample <- SCpubr:::test_list$sample
+
   testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,
                                             feature = c("CD14"),
                                             font.type = "wrong"))

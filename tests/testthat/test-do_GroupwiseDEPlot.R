@@ -1,11 +1,11 @@
-sample <- SCpubr:::test_list$sample
-
-de_genes <- SCpubr:::test_list$de_genes
-de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
-
-sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
-
 testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
+  sample <- SCpubr:::test_list$sample
+
+  de_genes <- SCpubr:::test_list$de_genes
+  de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+  sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                   de_genes = de_genes,
                                   assay = "SCT",
@@ -20,6 +20,13 @@ testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
 })
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
+  sample <- SCpubr:::test_list$sample
+
+  de_genes <- SCpubr:::test_list$de_genes
+  de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+  sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                   de_genes = de_genes,
                                   assay = "SCT",
@@ -37,6 +44,13 @@ testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
 
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - multiple grouping", {
+  sample <- SCpubr:::test_list$sample
+
+  de_genes <- SCpubr:::test_list$de_genes
+  de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+  sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
   p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                   de_genes = de_genes,
                                   assay = "SCT",
@@ -55,6 +69,13 @@ testthat::test_that("do_GroupwiseDEPlot: PASS - multiple grouping", {
 })
 
 testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong number of titles", {
+  sample <- SCpubr:::test_list$sample
+
+  de_genes <- SCpubr:::test_list$de_genes
+  de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+  sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
   testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                      de_genes = de_genes,
                                                      assay = "SCT",
@@ -68,6 +89,13 @@ testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong number of titles", {
 })
 
 testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong direction", {
+  sample <- SCpubr:::test_list$sample
+
+  de_genes <- SCpubr:::test_list$de_genes
+  de_genes_scaled <- SCpubr:::test_list$de_genes_scaled
+
+  sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
   testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                      de_genes = de_genes,
                                                      assay = "SCT",
