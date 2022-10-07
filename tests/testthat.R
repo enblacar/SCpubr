@@ -1,3 +1,5 @@
 library(testthat)
 library(SCpubr)
+library(infercnv)
+library(Seurat)
 test_check("SCpubr")
