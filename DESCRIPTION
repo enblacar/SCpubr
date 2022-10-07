@@ -55,7 +55,8 @@ Suggests:
     graphics,
     magrittr,
     ggridges,
-    ggsignif
+    ggsignif,
+    infercnv
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
