@@ -1,5 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-sample <- test.data$sample
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",

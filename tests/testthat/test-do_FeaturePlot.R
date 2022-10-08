@@ -1,6 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
 
 testthat::test_that("do_FeaturePlot: PASS - single feature", {
 

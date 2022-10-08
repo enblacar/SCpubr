@@ -1,6 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-sample <- test.data$sample
-
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred component", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",

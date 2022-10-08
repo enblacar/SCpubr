@@ -1,10 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
-metacell_mapping <- test.data$metacell_mapping
-infercnv_object <- test.data$infercnv_object
-infercnv_object_metacells <- test.data$infercnv_object_metacells
-human_chr_locations <- test.data$human_chr_locations
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
 

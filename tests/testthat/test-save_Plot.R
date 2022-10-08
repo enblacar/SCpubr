@@ -1,14 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test_list$sample
-
-p <- SCpubr::do_DimPlot(sample)
-p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-p.pheatmap <- pheatmap::pheatmap(data)
-p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
-figure_path <- getwd()
-
 
 testthat::test_that("save_Plot: PASS - no file", {
   testthat::expect_silent(SCpubr::save_Plot(plot = p,

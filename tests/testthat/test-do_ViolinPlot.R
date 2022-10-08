@@ -1,6 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.dat$sample
 
 testthat::test_that("do_ViolinPlot: PASS - one variable", {
 

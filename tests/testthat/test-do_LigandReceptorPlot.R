@@ -1,7 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
-liana_output <- SCpubr:::test.data$liana_output
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
 

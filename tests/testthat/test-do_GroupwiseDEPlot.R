@@ -1,8 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
-de_genes <- test.data$de_genes
-de_genes_scaled <- test.data$de_genes_scaled
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
 

@@ -1,6 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
 
 testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")

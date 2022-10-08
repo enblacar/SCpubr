@@ -1,6 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
 
 # CHECK SUGGESTS
 testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
