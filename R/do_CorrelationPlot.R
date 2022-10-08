@@ -95,7 +95,7 @@ do_CorrelationPlot <- function(sample,
            dplyr::select(-.data$cell) %>%
            dplyr::group_by(.data[[group.by]], .data$gene) %>%
            dplyr::summarise(mean_expression = mean(.data$expression)) %>%
-           tidyr::pivot_wider(names_from = group.by,
+           tidyr::pivot_wider(names_from = dplyr::all_of(c(group.by)),
                               values_from = "mean_expression") %>%
            as.data.frame() %>%
            tibble::column_to_rownames(var = "gene") %>%

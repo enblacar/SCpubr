@@ -2,7 +2,7 @@ suppressMessages(library(Seurat))
 suppressMessages(library(monocle3))
 suppressMessages(library(magrittr))
 suppressMessages(library(dplyr))
-test.data <- readRDS(file= system.file("test_data/test.data.rds", package= "SCpubr"))
+test.data <- SCpubr:::test.data
 sample <- test.data$sample
 metacell_mapping <- test.data$metacell_mapping
 infercnv_object <- test.data$infercnv_object
