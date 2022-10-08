@@ -42,4 +42,5 @@ You can also use the following BibLaTeX entry:
 
 
 ## Contact
-e.blancocarmona@kitz-heidelberg.de
+scpubr@gmail.com
+

@@ -7,7 +7,7 @@ Description: This package aims to provide a streamlined way of generating public
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-LazyDataCompression: bzip2
+LazyDataCompression: xz
 Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

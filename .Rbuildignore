@@ -11,3 +11,9 @@
 ^NEWS$
 ^cran-comments\.md$
 ^revdep$
+^README\.Rmd$
+^data-raw$
+^pkgdown$
+^_pkgdown\.yml$
+^man/figures$
+^man/figures/*
