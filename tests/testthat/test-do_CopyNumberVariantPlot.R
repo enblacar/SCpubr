@@ -1,12 +1,10 @@
-library(SCpubr)
-suppressMessages(library("Seurat"))
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-metacell_mapping <- test_list$metacell_mapping
-infercnv_object <- test_list$infercnv_object
-infercnv_object_metacells <- test_list$infercnv_object_metacells
-human_chr_locations <- test_list$human_chr_locations
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+metacell_mapping <- test.data$metacell_mapping
+infercnv_object <- test.data$infercnv_object
+infercnv_object_metacells <- test.data$infercnv_object_metacells
+human_chr_locations <- test.data$human_chr_locations
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
 

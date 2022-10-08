@@ -1,8 +1,7 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-activities <- test_list$dorothea_activities
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+activities <- test.data$dorothea_activities
 
 testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
 

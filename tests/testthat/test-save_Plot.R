@@ -1,6 +1,5 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
+utils::data("test.data", package = "SCpubr")
+
 sample <- test_list$sample
 
 p <- SCpubr::do_DimPlot(sample)

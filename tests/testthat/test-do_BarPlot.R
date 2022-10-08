@@ -1,7 +1,5 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
+utils::data("test.data", package = "SCpubr")
+sample <- test.data$sample
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",

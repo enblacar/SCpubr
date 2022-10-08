@@ -1,8 +1,7 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-activities <- test_list$progeny_activities
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+activities <- test.data$progeny_activities
 
 testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
 

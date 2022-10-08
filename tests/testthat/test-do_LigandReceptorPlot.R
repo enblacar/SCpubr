@@ -1,8 +1,7 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-liana_output <- SCpubr:::test_list$liana_output
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+liana_output <- SCpubr:::test.data$liana_output
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
 
@@ -158,8 +157,8 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output different keep", 
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output legend.position", {
-  sample <- SCpubr:::test_list$sample
-  liana_output <- SCpubr:::test_list$liana_output
+  sample <- SCpubr:::test.data$sample
+  liana_output <- SCpubr:::test.data$liana_output
 
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,

@@ -1,7 +1,6 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
 
 
 testthat::test_that("do_ChordDiagramPlot: PASS - default", {
@@ -147,7 +146,7 @@ testthat::test_that("do_ChordDiagramPlot: FAILS", {
 testthat::test_that("do_ChordDiagramPlot: internal_use", {
 
 
-  liana_output <- SCpubr:::test_list$liana_output
+  liana_output <- SCpubr:::test.data$liana_output
 
   liana_output <- liana_output %>%
                   liana::liana_aggregate(verbose = FALSE) %>%

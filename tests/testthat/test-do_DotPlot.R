@@ -1,7 +1,6 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
 
 testthat::test_that("do_DotPlot: PASS - one variable", {
 

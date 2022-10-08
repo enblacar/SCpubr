@@ -1,8 +1,7 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-de_genes <- test_list$de_genes
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+de_genes <- test.data$de_genes
 
 testthat::test_that("do_VolcanoPlot: PASS - default", {
   `%>%` <- magrittr::`%>%`

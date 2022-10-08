@@ -1,9 +1,8 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
-de_genes <- test_list$de_genes
-de_genes_scaled <- test_list$de_genes_scaled
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$sample
+de_genes <- test.data$de_genes
+de_genes_scaled <- test.data$de_genes_scaled
 
 testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
 

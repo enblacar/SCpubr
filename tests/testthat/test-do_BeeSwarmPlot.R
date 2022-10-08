@@ -1,7 +1,5 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-sample <- test_list$sample
+utils::data("test.data", package = "SCpubr")
+sample <- test.data$sample
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred component", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
@@ -36,7 +34,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable metadata", {
-  sample <- SCpubr:::test_list$sample
+  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "nCount_RNA",
                                group.by = "seurat_clusters",
@@ -45,7 +43,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable metadata", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable", {
-  sample <- SCpubr:::test_list$sample
+  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -54,7 +52,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend normal", {
-  sample <- SCpubr:::test_list$sample
+  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -122,7 +120,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale",
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend position = top", {
-  sample <- SCpubr:::test_list$sample
+  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",

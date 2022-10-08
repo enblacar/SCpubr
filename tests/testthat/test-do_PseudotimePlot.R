@@ -1,9 +1,7 @@
-library(SCpubr)
-suppressWarnings(rm(test_list))
-test_list <- SCpubr::test.data
-suppressMessages(library(monocle3))
-sample <- test_list$monocle_sample
-cds <- test_list$monocle_cds
+utils::data("test.data", package = "SCpubr")
+
+sample <- test.data$monocle_sample
+cds <- test.data$monocle_cds
 
 testthat::test_that("do_PseudotimePlot: PASS - default", {
 
