@@ -58,7 +58,8 @@ Suggests:
     ggridges,
     ggsignif,
     infercnv,
-    rjags
+    rjags,
+    rgdal
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
