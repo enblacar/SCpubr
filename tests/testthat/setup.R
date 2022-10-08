@@ -1,5 +1,4 @@
 suppressMessages(library(Seurat))
-suppressMessages(library(infercnv))
 suppressMessages(library(monocle3))
 suppressMessages(library(magrittr))
 suppressMessages(library(dplyr))
