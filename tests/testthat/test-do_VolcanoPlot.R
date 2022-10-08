@@ -1,8 +1,3 @@
-utils::data("test.data", package = "SCpubr")
-
-sample <- test.data$sample
-de_genes <- test.data$de_genes
-
 testthat::test_that("do_VolcanoPlot: PASS - default", {
   `%>%` <- magrittr::`%>%`
 

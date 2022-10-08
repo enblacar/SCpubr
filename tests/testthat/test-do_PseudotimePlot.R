@@ -2,7 +2,7 @@
 
 testthat::test_that("do_PseudotimePlot: PASS - default", {
 
-  pseudotime_genes <- Seurat::VariableFeatures(sample)[1:5]
+  pseudotime_genes <- Seurat::VariableFeatures(monocle_sample)[1:25]
 
  out <- SCpubr::do_PseudotimePlot(sample = monocle_sample,
                                   cds = monocle_cds,

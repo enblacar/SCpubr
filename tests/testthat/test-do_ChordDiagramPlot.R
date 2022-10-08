@@ -140,10 +140,6 @@ testthat::test_that("do_ChordDiagramPlot: FAILS", {
 
 
 testthat::test_that("do_ChordDiagramPlot: internal_use", {
-
-
-  liana_output <- SCpubr:::test.data$liana_output
-
   liana_output <- liana_output %>%
                   liana::liana_aggregate(verbose = FALSE) %>%
                   dplyr::mutate(magnitude = .data$sca.LRscore) %>%

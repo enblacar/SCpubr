@@ -31,7 +31,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable metadata", {
-  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "nCount_RNA",
                                group.by = "seurat_clusters",
@@ -40,7 +39,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable metadata", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable", {
-  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -49,7 +47,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend normal", {
-  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -117,7 +114,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale",
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend position = top", {
-  sample <- SCpubr:::test.data$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",

@@ -153,9 +153,6 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output different keep", 
 })
 
 testthat::test_that("do_LigandReceptorPlot: PASS - from output legend.position", {
-  sample <- SCpubr:::test.data$sample
-  liana_output <- SCpubr:::test.data$liana_output
-
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                      top_interactions = 50,
                                      flip = TRUE,

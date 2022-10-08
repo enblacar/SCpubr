@@ -1,6 +1,8 @@
-library(Seurat)
-library(infercnv)
-library(monocle3)
+suppressMessages(library(Seurat))
+suppressMessages(library(infercnv))
+suppressMessages(library(monocle3))
+suppressMessages(library(magrittr))
+suppressMessages(library(dplyr))
 test.data <- readRDS(file= system.file("test_data/test.data.rds", package= "SCpubr"))
 sample <- test.data$sample
 metacell_mapping <- test.data$metacell_mapping
@@ -11,6 +13,7 @@ de_genes <- test.data$de_genes
 de_genes_scaled <- test.data$de_genes_scaled
 liana_output <- test.data$liana_output
 progeny_activities <- test.data$progeny_activities
+dorothea_activities <- test.data$dorothea_activities
 monocle_sample <- test.data$monocle_sample
 monocle_cds <- test.data$monocle_cds
 p <- SCpubr::do_DimPlot(sample)
