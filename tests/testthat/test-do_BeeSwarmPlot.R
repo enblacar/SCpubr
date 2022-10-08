@@ -1,7 +1,8 @@
-
+library(SCpubr)
+test_list <- get("test_list")
+sample <- test_list$sample
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred component", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -10,7 +11,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred compone
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T)
   testthat::expect_type(p, "list")
   p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T, raster = T, pt.size = 1)
@@ -18,7 +18,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "CD14",
                                group.by = "seurat_clusters",
@@ -27,7 +26,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "CD14",
                                group.by = "seurat_clusters",
@@ -65,7 +63,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend normal",
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorbar", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -75,7 +72,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorbar
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorsteps", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -85,7 +81,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend colorste
 })
 
 testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend type", {
-  sample <- SCpubr:::test_list$sample
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "PC_1",
                                                  group.by = "seurat_clusters",
@@ -94,7 +89,6 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend type", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: FAIL - more than one feature", {
-  sample <- SCpubr:::test_list$sample
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = c("PC_1", "PC_2"),
                                                  group.by = "seurat_clusters",
@@ -102,7 +96,6 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - more than one feature", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend position", {
-  sample <- SCpubr:::test_list$sample
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "PC_1",
                                                  group.by = "seurat_clusters",
@@ -111,7 +104,6 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - wrong legend position", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: FAIL - wrong font.type", {
-  sample <- SCpubr:::test_list$sample
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "PC_1",
                                                  group.by = "seurat_clusters",
@@ -120,7 +112,6 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - wrong font.type", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable viridis scale", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -140,7 +131,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - continuous variable legend position
 })
 
 testthat::test_that("do_BeeSwarmPlot: FAIL - feature not found", {
-  sample <- SCpubr:::test_list$sample
   testthat::expect_error(SCpubr::do_BeeSwarmPlot(sample = sample,
                                                  feature_to_rank = "not_found",
                                                  group.by = "seurat_clusters",
@@ -149,7 +139,6 @@ testthat::test_that("do_BeeSwarmPlot: FAIL - feature not found", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - raster", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -158,7 +147,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - raster", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - colors.use", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -175,7 +163,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - colors.use", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - remove x axis", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -184,7 +171,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - remove x axis", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - remove y axis", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
@@ -193,7 +179,6 @@ testthat::test_that("do_BeeSwarmPlot: PASS - remove y axis", {
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - flip", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
                                feature_to_rank = "PC_1",
                                group.by = "seurat_clusters",
