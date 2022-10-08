@@ -1,3 +1,7 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
 
 # CHECK SUGGESTS
 testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
@@ -39,7 +43,7 @@ testthat::test_that("utils: check_Seurat - FAIL - Not Seurat object", {
 })
 
 testthat::test_that("utils: check_suggests - PASS - Seurat object", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_silent(SCpubr:::check_Seurat(sample))
 })
@@ -69,7 +73,7 @@ testthat::test_that("utils: check_colors - PASS - Several colors", {
 # CHECK CONSISTENCY COLORS AND NAMES
 
 testthat::test_that("utils: check_consistency_colors_and_names - FAIL - more colors provided", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
                                                                      colors = c("a" = "red", "b" = "blue"),
@@ -77,7 +81,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - FAIL - more col
 })
 
 testthat::test_that("utils: check_consistency_colors_and_names - FAIL - names of colors not matching", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
                                                                      colors = c("a" = "red"),
@@ -85,7 +89,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - FAIL - names of
 })
 
 testthat::test_that("utils: check_consistency_colors_and_names - FAIL - less colors provided", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
                                                                      colors = c("1" = "red"),
@@ -93,7 +97,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - FAIL - less col
 })
 
 testthat::test_that("utils: check_consistency_colors_and_names - PASS - Colors matching", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_silent(SCpubr:::check_consistency_colors_and_names(sample = sample,
                                                                       colors = c("0" = "red",
@@ -108,7 +112,7 @@ testthat::test_that("utils: check_consistency_colors_and_names - PASS - Colors m
 })
 
 testthat::test_that("utils: check_consistency_colors_and_names - PASS - Colors matching, grouping variable", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_silent(SCpubr:::check_consistency_colors_and_names(sample = sample,
                                                                       colors = c("Cell" = "red"),
@@ -126,7 +130,7 @@ testthat::test_that("utils: generate_color_scale - PASS - equal length of output
 # COMPUTE SCALES LIMITS
 
 testthat::test_that("utils: compute_scale_limits - PASS - using a gene", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::compute_scale_limits(sample = sample,
                                           feature = "CD14")
@@ -134,7 +138,7 @@ testthat::test_that("utils: compute_scale_limits - PASS - using a gene", {
 })
 
 testthat::test_that("utils: compute_scale_limits - PASS - using a metadata variable", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::compute_scale_limits(sample = sample,
                                           feature = "orig.ident")
@@ -142,7 +146,7 @@ testthat::test_that("utils: compute_scale_limits - PASS - using a metadata varia
 })
 
 testthat::test_that("utils: compute_scale_limits - PASS - using dimensional reduction variable", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::compute_scale_limits(sample = sample,
                                           feature = "PC_1")
@@ -152,28 +156,28 @@ testthat::test_that("utils: compute_scale_limits - PASS - using dimensional redu
 # CHECK FEATURE
 
 testthat::test_that("utils: check_feature - FAIL - using the wrong gene", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(check_feature(sample = sample,
                                        features = "NOTCD14"))
 })
 
 testthat::test_that("utils: check_feature - FAIL - using the wrong metadata", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
                                                 features = "oris.ident"))
 })
 
 testthat::test_that("utils: check_feature - FAIL - using the wrong dimensional reduction variable", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
                                                 features = "UMAP_38"))
 })
 
 testthat::test_that("utils: check_feature - FAIL - all features failing while in permissive mode", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
                                                 features = c("NOTCD14", "UMAP_38"),
@@ -181,7 +185,7 @@ testthat::test_that("utils: check_feature - FAIL - all features failing while in
 })
 
 testthat::test_that("utils: check_feature - WARNING - using one wrong gene and one good", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_warning(SCpubr:::check_feature(sample = sample,
                                                   features = c("NOTCD14", "CD14"),
@@ -189,7 +193,7 @@ testthat::test_that("utils: check_feature - WARNING - using one wrong gene and o
 })
 
 testthat::test_that("utils: check_feature - WARNING - using one wrong metadata variable and one good", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_warning(SCpubr:::check_feature(sample = sample,
                                                   features = c("oris.ident", "orig.ident"),
@@ -197,7 +201,7 @@ testthat::test_that("utils: check_feature - WARNING - using one wrong metadata v
 })
 
 testthat::test_that("utils: check_feature - WARNING - using one wrong dimensional reduction variable and one good", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_warning(SCpubr:::check_feature(sample = sample,
                                                   features = c("UMAP_38", "PC_1"),
@@ -205,7 +209,7 @@ testthat::test_that("utils: check_feature - WARNING - using one wrong dimensiona
 })
 
 testthat::test_that("utils: check_feature - PASS - dump reduction names", {
-  sample <- SCpubr:::test_list$sample
+
 
   dim_names <- SCpubr:::check_feature(sample = sample,
                                       features = c("PC_1"),
@@ -218,7 +222,7 @@ testthat::test_that("utils: check_feature - PASS - dump reduction names", {
 })
 
 testthat::test_that("utils: check_feature - PASS - permissive check length of output", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_warning({
     features <- SCpubr:::check_feature(sample = sample,
@@ -229,7 +233,7 @@ testthat::test_that("utils: check_feature - PASS - permissive check length of ou
 })
 
 testthat::test_that("utils: check_feature - PASS - permissive check length of output when both permissive and dump_reduction_names are present.", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_feature(sample = sample,
                                    features = c("PC_1"),
@@ -239,7 +243,7 @@ testthat::test_that("utils: check_feature - PASS - permissive check length of ou
 })
 
 testthat::test_that("utils: check_feature - ERROR - using the wrong enforcer", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
                                                 features = c("CD14"),
@@ -248,7 +252,7 @@ testthat::test_that("utils: check_feature - ERROR - using the wrong enforcer", {
 })
 
 testthat::test_that("utils: check_feature - ERROR - using the wrong feature for the selected enforcer", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
                                                 features = c("CD14"),
@@ -351,13 +355,13 @@ testthat::test_that("utils: remove_duplicated_features - WARNING - having duplic
 # CHECK IDENTITY
 
 testthat::test_that("utils: check_identity - FAIL - wrong identity", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_identity(sample, "wrong_identity"))
 })
 
 testthat::test_that("utils: check_identity - PASS - right identity", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_silent(SCpubr:::check_identity(sample, "0"))
 })
@@ -366,7 +370,7 @@ testthat::test_that("utils: check_identity - PASS - right identity", {
 # CHECK AND SET REDUCTION
 
 testthat::test_that("utils: check_and_set_reduction - FAIL - no reductions", {
-  sample <- SCpubr:::test_list$sample
+
 
   test <- sample
   test@reductions[["pca"]] <- NULL
@@ -375,13 +379,13 @@ testthat::test_that("utils: check_and_set_reduction - FAIL - no reductions", {
 })
 
 testthat::test_that("utils: check_and_set_reduction - FAIL - wrong reductions", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_reduction(sample = sample, reduction = "wrong_reduction"))
 })
 
 testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, check that the output is the last computed reduction", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_reduction(sample = sample)
   last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
@@ -389,7 +393,7 @@ testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, che
 })
 
 testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_reduction(sample = sample, reduction = "umap")
   reduction_check <- "umap"
@@ -397,7 +401,7 @@ testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction
 })
 
 testthat::test_that("utils: check_and_set_reduction - PASS - umap not in reductions", {
-  sample <- SCpubr:::test_list$sample
+
 
   sample@reductions$umap <- NULL
   output <- SCpubr:::check_and_set_reduction(sample = sample)
@@ -409,25 +413,25 @@ testthat::test_that("utils: check_and_set_reduction - PASS - umap not in reducti
 # CHECK AND SET DIMENSIONS
 
 testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being a pair of values", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = "wrong_input"))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being a pair of integers", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, "wrong_input")))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being in the available list of dims", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, 20)))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - FAIL - reduction only having 1 dim", {
-  sample <- SCpubr:::test_list$sample
+
 
   test <- sample
   obj <- Seurat::CreateDimReducObject(test@reductions$umap[[]][, "UMAP_1", drop = F], key = "UMAP_", assay = "SCT")
@@ -436,21 +440,21 @@ testthat::test_that("utils: check_and_set_dimensions - FAIL - reduction only hav
 })
 
 testthat::test_that("utils: check_and_set_dimensions - PASS - NULL parameters", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample)
   testthat::expect_equal(output, c(1, 2))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - PASS - NULL dimension but provided dims", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample, dims = c(2, 1))
   testthat::expect_equal(output, c(2, 1))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - PASS - provided dimension and dims", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample, reduction = "pca", dims = c(20, 11))
   testthat::expect_equal(output, c(20, 11))
@@ -459,13 +463,13 @@ testthat::test_that("utils: check_and_set_dimensions - PASS - provided dimension
 
 # CHECK AND SET ASSAY
 testthat::test_that("utils: check_and_set_assay - FAIL - wrong assay type", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_assay(sample = sample, assay = FALSE))
 })
 
 testthat::test_that("utils: check_and_set_assay - FAIL - no assays in object", {
-  sample <- SCpubr:::test_list$sample
+
 
   test <- sample
   test@assays$RNA <- NULL
@@ -474,13 +478,13 @@ testthat::test_that("utils: check_and_set_assay - FAIL - no assays in object", {
 })
 
 testthat::test_that("utils: check_and_set_assay - FAIL - assay not present", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_and_set_assay(sample = sample, assay = "ATAC"))
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - null parameters", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_assay(sample = sample)
   testthat::expect_true(class(output$sample) == "Seurat")
@@ -488,7 +492,7 @@ testthat::test_that("utils: check_and_set_assay - PASS - null parameters", {
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - providing assay", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::check_and_set_assay(sample = sample, assay = "SCT")
   testthat::expect_true(class(output$sample) == "Seurat")
@@ -496,7 +500,7 @@ testthat::test_that("utils: check_and_set_assay - PASS - providing assay", {
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - providing non defaultassay", {
-  sample <- SCpubr:::test_list$sample
+
 
   sample@assays$RNA <- sample@assays$SCT
   output <- SCpubr:::check_and_set_assay(sample = sample, assay = "RNA")
@@ -591,13 +595,13 @@ testthat::test_that("utils: check_and_set_slot - PASS - scale.data", {
 
 # CHECK LIMITS
 testthat::test_that("utils: check_and_set_slot - FAIL - wrong limit", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 30))
 })
 
 testthat::test_that("utils: check_and_set_slot - PASS - good limit", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_silent(SCpubr:::check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 2))
 })
@@ -606,13 +610,13 @@ testthat::test_that("utils: check_and_set_slot - PASS - good limit", {
 # COMPUTE FACTOR LEVELS
 
 testthat::test_that("utils: compute_factor_levels - FAIL - wrong position", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error(SCpubr:::compute_factor_levels(sample = sample, feature = "seurat_clusters", position = "upper"))
 })
 
 testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
                                                        feature = "seurat_clusters",
@@ -676,7 +680,7 @@ testthat::test_that("utils: use_dataset - PASS - checks", {
 
 # ADD SCALE
 testthat::test_that("utils: add_scale - PASS - checks", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- do_FeaturePlot(sample, features = "CD14")
   output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
@@ -687,7 +691,7 @@ testthat::test_that("utils: add_scale - PASS - checks", {
 # COMPUTE BARPLOT ANNOTATION
 
 testthat::test_that("utils: compute_barplot_annotation - PASS - checks", {
-  sample <- SCpubr:::test_list$sample
+
 
   out <- SCpubr:::compute_barplot_annotation(sample = sample, group.by = "seurat_clusters", annotation = "orig.ident")
   testthat::expect_true("tbl" %in% class(out))
@@ -697,7 +701,7 @@ testthat::test_that("utils: compute_barplot_annotation - PASS - checks", {
 # HEATMAP INNER
 
 testthat::test_that("utils: heatmap_inner - PASS - checks", {
-  sample <- SCpubr:::test_list$sample
+
 
   `%>%`<- purrr::`%>%`
   data <- as.matrix({
@@ -940,7 +944,7 @@ testthat::test_that("utils: modify_string - PASS - checks", {
 # COMPUTE ENRICHMENT SCORES
 
 testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
-  sample <- SCpubr:::test_list$sample
+
 
   output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("CD14")))
   testthat::expect_true("Seurat" %in% class(output))
@@ -958,7 +962,7 @@ testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
 # GET DATA COLUMN
 
 testthat::test_that("utils: get data column - PASS ", {
-  sample <- SCpubr:::test_list$sample
+
 
   data <- SCpubr:::get_data_column(sample = sample, feature = "CD14", assay = "SCT", slot = "data")
   testthat::expect_true("data.frame" %in% class(data))

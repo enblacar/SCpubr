@@ -1,7 +1,10 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
 
 
 testthat::test_that("do_ChordDiagramPlot: PASS - default", {
-  sample <- SCpubr:::test_list$sample
 
   sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
   sample$orig.ident_char <- sample$orig.ident
@@ -19,7 +22,7 @@ testthat::test_that("do_ChordDiagramPlot: PASS - default", {
 
 
 testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
@@ -63,7 +66,7 @@ testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
 })
 
 testthat::test_that("do_ChordDiagramPlot: PASS - link border color", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "seurat_clusters",
@@ -73,7 +76,7 @@ testthat::test_that("do_ChordDiagramPlot: PASS - link border color", {
 })
 
 testthat::test_that("do_ChordDiagramPlot: PASS - alignment", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "seurat_clusters",
@@ -89,7 +92,7 @@ testthat::test_that("do_ChordDiagramPlot: PASS - alignment", {
 })
 
 testthat::test_that("do_ChordDiagramPlot: PASS - highlight group", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "seurat_clusters",
@@ -99,7 +102,7 @@ testthat::test_that("do_ChordDiagramPlot: PASS - highlight group", {
 })
 
 testthat::test_that("do_ChordDiagramPlot: FAILS", {
-  sample <- SCpubr:::test_list$sample
+
 
   testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
                                                       from = "seurat_clusters",
@@ -142,7 +145,7 @@ testthat::test_that("do_ChordDiagramPlot: FAILS", {
 
 
 testthat::test_that("do_ChordDiagramPlot: internal_use", {
-  sample <- SCpubr:::test_list$sample
+
 
   liana_output <- SCpubr:::test_list$liana_output
 

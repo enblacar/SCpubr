@@ -1,12 +1,15 @@
+library(SCpubr)
+suppressMessages(library("Seurat"))
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+metacell_mapping <- test_list$metacell_mapping
+infercnv_object <- test_list$infercnv_object
+infercnv_object_metacells <- test_list$infercnv_object_metacells
+human_chr_locations <- test_list$human_chr_locations
 
 testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
-  sample <- SCpubr:::test_list$sample
 
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object,
@@ -16,13 +19,6 @@ testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
 })
 
 testthat::test_that("do_BarPlot: PASS - normal cells one chromosome", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object,
@@ -33,13 +29,6 @@ testthat::test_that("do_BarPlot: PASS - normal cells one chromosome", {
 })
 
 testthat::test_that("do_BarPlot: PASS - metacells all chromosomes", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,
@@ -50,13 +39,6 @@ testthat::test_that("do_BarPlot: PASS - metacells all chromosomes", {
 })
 
 testthat::test_that("do_BarPlot: PASS - metacells one chromosome", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,
@@ -68,13 +50,6 @@ testthat::test_that("do_BarPlot: PASS - metacells one chromosome", {
 })
 
 testthat::test_that("do_BarPlot: PASS - group.by", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,
@@ -88,13 +63,6 @@ testthat::test_that("do_BarPlot: PASS - group.by", {
 
 
 testthat::test_that("do_BarPlot: PASS - legend.position", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,
@@ -116,13 +84,6 @@ testthat::test_that("do_BarPlot: PASS - legend.position", {
 })
 
 testthat::test_that("do_BarPlot: PASS - legend.position", {
-  sample <- SCpubr:::test_list$sample
-
-  metacell_mapping <- SCpubr:::test_list$metacell_mapping
-  infercnv_object <- SCpubr:::test_list$infercnv_object
-  infercnv_object_metacells <- SCpubr:::test_list$infercnv_object_metacells
-  human_chr_locations <- SCpubr:::test_list$human_chr_locations
-  suppressMessages(library("Seurat"))
 
   out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                           infercnv_object = infercnv_object_metacells,

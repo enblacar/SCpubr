@@ -1,14 +1,19 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+
 testthat::test_that("do_SankeyPlot: FAIL - no dplyr", {
-  sample <- SCpubr:::test_list$sample
-  
+
+
   testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
                                                 first_group = "seurat_clusters",
                                                 last_group = "orig.ident")})
 })
 testthat::test_that("do_SankeyPlot: PASS - default", {
-  sample <- SCpubr:::test_list$sample
+
   suppressMessages(library(dplyr))
-  
+
   p <- SCpubr::do_SankeyPlot(sample = sample,
                              first_group = "seurat_clusters",
                              last_group = "orig.ident")
@@ -17,9 +22,9 @@ testthat::test_that("do_SankeyPlot: PASS - default", {
 
 
 testthat::test_that("do_SankeyPlot: PASS - middle_groups", {
-  sample <- SCpubr:::test_list$sample
+
   suppressMessages(library(dplyr))
-  
+
   sample$middle_group <- sample$seurat_clusters
   p <- SCpubr::do_SankeyPlot(sample = sample,
                              first_group = "seurat_clusters",
@@ -29,9 +34,9 @@ testthat::test_that("do_SankeyPlot: PASS - middle_groups", {
 })
 
 testthat::test_that("do_SankeyPlot: PASS - hjust", {
-  sample <- SCpubr:::test_list$sample
+
   suppressMessages(library(dplyr))
-  
+
   sample$middle_group <- sample$seurat_clusters
   p <- SCpubr::do_SankeyPlot(sample = sample,
                              first_group = "seurat_clusters",
@@ -41,9 +46,9 @@ testthat::test_that("do_SankeyPlot: PASS - hjust", {
 })
 
 testthat::test_that("do_SankeyPlot: FAILS", {
-  sample <- SCpubr:::test_list$sample
+
   suppressMessages(library(dplyr))
-  
+
   testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
                                                 first_group = "seurat_clusters",
                                                 last_group = "orig.ident",

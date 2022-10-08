@@ -1,5 +1,10 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+
 testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -13,7 +18,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group.by", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -27,7 +32,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by", {
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -42,7 +47,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose", {
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and column_names_rot", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -58,7 +63,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and col
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and row_names_rot", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -76,7 +81,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and row
 
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - multiple variables changing cell size", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -95,7 +100,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - multiple variables changing ce
 
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - character list of genes + group by only has 1 entity", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -109,7 +114,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - character list of genes + grou
 })
 
 testthat::test_that("do_EnrichmentHeatmap: FAIL - list of genes without name", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -122,7 +127,7 @@ testthat::test_that("do_EnrichmentHeatmap: FAIL - list of genes without name", {
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group by factor", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -137,7 +142,7 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group by factor", {
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - row title and column title", {
-  sample <- SCpubr:::test_list$sample
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],

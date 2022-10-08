@@ -1,6 +1,12 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+activities <- test_list$dorothea_activities
+
 testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities)
@@ -30,8 +36,8 @@ testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -40,8 +46,8 @@ testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - plot featureplots", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -51,8 +57,8 @@ testthat::test_that("do_TFActivityPlot: PASS - plot featureplots", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - plot geysers", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -69,8 +75,8 @@ testthat::test_that("do_TFActivityPlot: PASS - plot geysers", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - all", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -81,8 +87,8 @@ testthat::test_that("do_TFActivityPlot: PASS - all", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - all group.by", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -94,8 +100,8 @@ testthat::test_that("do_TFActivityPlot: PASS - all group.by", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - all split.by", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,
@@ -107,8 +113,8 @@ testthat::test_that("do_TFActivityPlot: PASS - all split.by", {
 })
 
 testthat::test_that("do_TFActivityPlot: PASS - column.title and row.title", {
-  sample <- SCpubr:::test_list$sample
-  activities <- SCpubr:::test_list$dorothea_activities
+
+
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = activities,

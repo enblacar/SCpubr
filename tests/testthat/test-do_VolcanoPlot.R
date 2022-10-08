@@ -1,7 +1,10 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+de_genes <- test_list$de_genes
 
 testthat::test_that("do_VolcanoPlot: PASS - default", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -25,8 +28,6 @@ testthat::test_that("do_VolcanoPlot: PASS - default", {
 })
 
 testthat::test_that("do_VolcanoPlot: PASS - n_genes", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -36,8 +37,6 @@ testthat::test_that("do_VolcanoPlot: PASS - n_genes", {
 })
 
 testthat::test_that("do_VolcanoPlot: PASS - use_labels", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -52,8 +51,6 @@ testthat::test_that("do_VolcanoPlot: PASS - use_labels", {
 })
 
 testthat::test_that("do_VolcanoPlot: PASS - gene tags", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -68,8 +65,6 @@ testthat::test_that("do_VolcanoPlot: PASS - gene tags", {
 })
 
 testthat::test_that("do_VolcanoPlot: PASS - gene tags order by", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -92,8 +87,6 @@ testthat::test_that("do_VolcanoPlot: PASS - gene tags order by", {
 })
 
 testthat::test_that("do_VolcanoPlot: FAIL - wrong parameters", {
-  sample <- SCpubr:::test_list$sample
-  de_genes <- SCpubr:::test_list$de_genes
   `%>%` <- magrittr::`%>%`
 
   testthat::expect_error(SCpubr::do_VolcanoPlot(sample = sample,

@@ -1,5 +1,10 @@
+library(SCpubr)
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
+sample <- test_list$sample
+
 testthat::test_that("do_RidgePlot: PASS - default", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA")
@@ -31,7 +36,7 @@ testthat::test_that("do_RidgePlot: PASS - default", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - plot.grid", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA",
@@ -46,7 +51,7 @@ testthat::test_that("do_RidgePlot: PASS - plot.grid", {
 
 
 testthat::test_that("do_RidgePlot: PASS - split.by", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA",
@@ -55,7 +60,7 @@ testthat::test_that("do_RidgePlot: PASS - split.by", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - continuous scale", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA",
@@ -71,7 +76,7 @@ testthat::test_that("do_RidgePlot: PASS - continuous scale", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - group.by", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA",
@@ -80,7 +85,7 @@ testthat::test_that("do_RidgePlot: PASS - group.by", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - quantiles", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nCount_RNA",
@@ -99,7 +104,7 @@ testthat::test_that("do_RidgePlot: PASS - quantiles", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - distribution tails", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nFeature_RNA",
@@ -118,7 +123,7 @@ testthat::test_that("do_RidgePlot: PASS - distribution tails", {
 })
 
 testthat::test_that("do_RidgePlot: PASS - distribution tails", {
-  sample <- SCpubr:::test_list$sample
+
 
   p <- SCpubr::do_RidgePlot(sample = sample,
                             feature = "nFeature_RNA",

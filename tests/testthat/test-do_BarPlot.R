@@ -1,5 +1,6 @@
 library(SCpubr)
-test_list <- get("test_list")
+suppressWarnings(rm(test_list))
+test_list <- getAnywhere("test_list")$objs[[1]]
 sample <- test_list$sample
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
   p <- SCpubr::do_BarPlot(sample = sample,
