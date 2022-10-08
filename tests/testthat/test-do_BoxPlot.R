@@ -1,6 +1,6 @@
 library(SCpubr)
 suppressWarnings(rm(test_list))
-test_list <- getAnywhere("test_list")$objs[[1]]
+test_list <- SCpubr:::test_list
 sample <- test_list$sample
 
 testthat::test_that("do_BoxPlot: PASS - default", {

@@ -1,6 +1,6 @@
 library(SCpubr)
 suppressWarnings(rm(test_list))
-test_list <- getAnywhere("test_list")$objs[[1]]
+test_list <- SCpubr:::test_list
 suppressMessages(library(monocle3))
 sample <- test_list$monocle_sample
 cds <- test_list$monocle_cds

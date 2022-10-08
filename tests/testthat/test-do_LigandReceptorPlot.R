@@ -1,6 +1,6 @@
 library(SCpubr)
 suppressWarnings(rm(test_list))
-test_list <- getAnywhere("test_list")$objs[[1]]
+test_list <- SCpubr:::test_list
 sample <- test_list$sample
 liana_output <- SCpubr:::test_list$liana_output
 
