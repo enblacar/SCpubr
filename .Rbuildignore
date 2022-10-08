@@ -6,3 +6,8 @@
 ^doc$
 ^Meta$
 ^codecov\.yml$
+^.*\.Rproj$
+^\.Rproj\.user$
+^NEWS$
+^cran-comments\.md$
+^revdep$
