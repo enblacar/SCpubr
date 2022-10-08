@@ -1,6 +1,6 @@
 library(SCpubr)
 suppressWarnings(rm(test_list))
-test_list <- data("test.data", package = "SCpubr")
+test_list <- SCpubr::test.data
 sample <- test_list$sample
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {

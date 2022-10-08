@@ -1,7 +1,7 @@
 library(SCpubr)
 suppressMessages(library("Seurat"))
 suppressWarnings(rm(test_list))
-test_list <- data("test.data", package = "SCpubr")
+test_list <- SCpubr::test.data
 sample <- test_list$sample
 metacell_mapping <- test_list$metacell_mapping
 infercnv_object <- test_list$infercnv_object
