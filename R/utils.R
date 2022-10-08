@@ -1084,7 +1084,7 @@ check_length <- function(vector_of_parameters,
 use_dataset <- function(n_cells = 180){
   # We want this function to be completely silent.
   suppressWarnings({
-    test_list <- SCpubr:::test.data
+    test_list <- test.data
     genes <- test_list$genes
     values <- seq(0, 15, 0.1)
     counts <- matrix(ncol = n_cells, nrow = length(genes))
