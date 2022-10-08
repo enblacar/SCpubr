@@ -1,6 +1,6 @@
 library(SCpubr)
 suppressWarnings(rm(test_list))
-test_list <- SCpubr:::test_list
+test_list <- data("test.data", package = "SCpubr")
 suppressMessages(library(monocle3))
 sample <- test_list$monocle_sample
 cds <- test_list$monocle_cds

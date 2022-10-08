@@ -37,7 +37,6 @@ unsrturl.bst
 .settings
 .tm_properties
 omnipathr-log/*
-R/sysdata.rda
 tests/testthat/omnipathr-log
 tests/testthat/omnipathr-log/*
 tests/testthat/_snaps/
