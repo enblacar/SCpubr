@@ -28,7 +28,6 @@ jobs:
           - {os: ubuntu-latest,   r: '4.2.0'}
           - {os: ubuntu-latest,   r: '4.1.0'}
 
-
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
