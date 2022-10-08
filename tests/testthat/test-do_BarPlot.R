@@ -1,6 +1,6 @@
-
+test_list <- SCpubr:::test_list
+sample <- test_list$sample
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
                           position = "stack")
@@ -8,7 +8,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - stack", {
 })
 
 testthat::test_that("do_BarPlot: PASS - one variable - fill", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
                           position = "fill")
@@ -16,7 +15,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - fill", {
 })
 
 testthat::test_that("do_BarPlot: PASS - one variable - remove guides", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
                           position = "stack",
@@ -25,7 +23,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - remove guides", {
 })
 
 testthat::test_that("do_BarPlot: PASS - one variable - fill - flip", {
-  sample <- SCpubr:::test_list$sample
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
                           position = "fill",
@@ -34,7 +31,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - fill - flip", {
 })
 
 testthat::test_that("do_BarPlot: PASS - two variables - fill - flip", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
@@ -45,7 +41,6 @@ testthat::test_that("do_BarPlot: PASS - two variables - fill - flip", {
 })
 
 testthat::test_that("do_BarPlot: PASS - two variables - stack - flip", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   p <- SCpubr::do_BarPlot(sample = sample,
@@ -57,7 +52,6 @@ testthat::test_that("do_BarPlot: PASS - two variables - stack - flip", {
 })
 
 testthat::test_that("do_BarPlot: PASS - two variables - stack - flip - ordered", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
   p <- SCpubr::do_BarPlot(sample = sample,
@@ -72,7 +66,6 @@ testthat::test_that("do_BarPlot: PASS - two variables - stack - flip - ordered",
 
 
 testthat::test_that("do_BarPlot: FAIL - wrong position", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = "orig.ident",
@@ -80,7 +73,6 @@ testthat::test_that("do_BarPlot: FAIL - wrong position", {
 })
 
 testthat::test_that("do_BarPlot: FAIL - wrong font.type", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = "orig.ident",
@@ -88,14 +80,12 @@ testthat::test_that("do_BarPlot: FAIL - wrong font.type", {
 })
 
 testthat::test_that("do_BarPlot: FAIL - column not a factor or character", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = "nCount_RNA"))
 })
 
 testthat::test_that("do_BarPlot: PASS - rotate x labels", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
@@ -104,7 +94,6 @@ testthat::test_that("do_BarPlot: PASS - rotate x labels", {
 })
 
 testthat::test_that("do_BarPlot: PASS - rotate x labels", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
   p <- SCpubr::do_BarPlot(sample = sample,
@@ -113,7 +102,6 @@ testthat::test_that("do_BarPlot: PASS - rotate x labels", {
 })
 
 testthat::test_that("do_BarPlot: PASS - rotate x labels with group.by", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
   p <- SCpubr::do_BarPlot(sample = sample,
@@ -124,7 +112,6 @@ testthat::test_that("do_BarPlot: PASS - rotate x labels with group.by", {
 
 
 testthat::test_that("do_BarPlot: PASS - colors.use and group.by", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
 
@@ -146,7 +133,6 @@ testthat::test_that("do_BarPlot: PASS - colors.use and group.by", {
 })
 
 testthat::test_that("do_BarPlot: PASS - colors.use ", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   sample$seurat.clusters.factor <- factor(sample$seurat_clusters)
 
@@ -168,7 +154,6 @@ testthat::test_that("do_BarPlot: PASS - colors.use ", {
 
 
 testthat::test_that("do_BarPlot: FAIL - order by not in group.by", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
                                             group.by = c("orig.ident", "seurat_clusters"),
@@ -178,7 +163,6 @@ testthat::test_that("do_BarPlot: FAIL - order by not in group.by", {
 
 
 testthat::test_that("do_BarPlot: PASS - one variable - rotate x labels", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
@@ -188,7 +172,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - rotate x labels", {
 })
 
 testthat::test_that("do_BarPlot: PASS - one variable - xlab, ylab and title", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
@@ -202,7 +185,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - xlab, ylab and title", {
 })
 
 testthat::test_that("do_BarPlot: PASS - one variable - no legend", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
@@ -213,7 +195,6 @@ testthat::test_that("do_BarPlot: PASS - one variable - no legend", {
 
 
 testthat::test_that("do_BarPlot: PASS - group.by factor", {
-  sample <- SCpubr:::test_list$sample
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   sample$factor_seurat_clusters <- factor(sample$seurat_clusters)
   p <- SCpubr::do_BarPlot(sample = sample,
