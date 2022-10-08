@@ -1,3 +1,4 @@
+library(SCpubr)
 test_list <- SCpubr:::test_list
 sample <- test_list$sample
 testthat::test_that("do_BarPlot: PASS - one variable - stack", {
