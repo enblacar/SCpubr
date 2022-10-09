@@ -935,7 +935,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   if (isFALSE(order)){
     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
   } else if (isTRUE(order)){
-    factor_levels <- SCpubr:::get_data_column_in_context(sample = sample,
+    factor_levels <- get_data_column_in_context(sample = sample,
                                                 feature = feature,
                                                 group.by = group.by,
                                                 assay = assay,
