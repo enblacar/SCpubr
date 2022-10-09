@@ -3,7 +3,6 @@ testthat::test_that("do_TermEnrichmentPlot: PASS", {
   p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                      nterms = 2)
   testthat::expect_type(p, "list")
-  testthat::expect_equal(length(names(p)), 8)
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {

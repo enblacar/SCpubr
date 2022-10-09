@@ -38,7 +38,6 @@ Suggests:
     circlize,
     ComplexHeatmap,
     ggrepel,
-    enrichR,
     forcats,
     svglite,
     ggrastr,
