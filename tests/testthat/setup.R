@@ -21,3 +21,4 @@ data <- p.heatmap@ht_list$`Pearson coef.`@matrix
 p.pheatmap <- pheatmap::pheatmap(data)
 p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
 figure_path <- getwd()
+enriched_terms <- test.data$enriched_terms

@@ -2,16 +2,14 @@
 % Please edit documentation in R/do_TermEnrichmentPlot.R
 \name{do_TermEnrichmentPlot}
 \alias{do_TermEnrichmentPlot}
-\title{Compute the enriched terms for a given list of genes.}
+\title{Display the enriched terms for a given list of genes.}
 \usage{
 do_TermEnrichmentPlot(
-  genes,
-  dbs_use,
+  enriched_terms,
   nchar_wrap = 20,
   nterms = 10,
   font.size = 14,
   font.type = "sans",
-  site = "Enrichr",
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -28,18 +26,18 @@ do_TermEnrichmentPlot(
 )
 }
 \arguments{
-\item{genes}{\strong{\code{\link[base]{character}}} | Character vector with the genes to query.}
-
-\item{dbs_use}{\strong{\code{\link[base]{character}}} | Character vector with the desired EnrichR databases to query. This can be consulted with \code{enrichR::listEnrichrDbs()}. Alternatively, one of:
-\itemize{
-\item \emph{\code{A}}: Will perform a query to 4 databases for cell types (Azimuth, Descartes, PanglaoDB and Descartes) and 4 databases for functional terms (MsigDB, GO-BP, GO-MF and KEGG). This is the default option if this parameter is not provided.
-\item \emph{\code{B}}: Performs a query for the cell type databases (Azimuth, Descartes, PanglaoDB and Descartes).
-\item \emph{\code{C}}: Performs a query for the functional terms (MsigDB, GO-BP, GO-MF and KEGG).
-}}
+\item{enriched_terms}{\strong{\code{\link[base]{list}}} | List containing the output(s) of running Enrichr.}
 
 \item{nchar_wrap}{\strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.}
 
-\item{nterms}{\strong{\code{\link[base]{numeric}}} | Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.}
+\item{nterms}{\strong{\code{\link[base]{numeric}}} | Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.
+\itemize{
+\item \emph{\code{Enrichr}}.
+\item \emph{\code{FlyEnrichr}}.
+\item \emph{\code{WormEnrichr}}.
+\item \emph{\code{YeastEnrichr}}.
+\item \emph{\code{FishEnrichr}}.
+}}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
@@ -48,15 +46,6 @@ do_TermEnrichmentPlot(
 \item \emph{\code{mono}}: Mono spaced font.
 \item \emph{\code{serif}}: Serif font family.
 \item \emph{\code{sans}}: Default font family.
-}}
-
-\item{site}{\strong{\code{\link[base]{character}}} | Site to query the genes against. Can be one of:
-\itemize{
-\item \emph{\code{Enrichr}}.
-\item \emph{\code{FlyEnrichr}}.
-\item \emph{\code{WormEnrichr}}.
-\item \emph{\code{YeastEnrichr}}.
-\item \emph{\code{FishEnrichr}}.
 }}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
@@ -93,7 +82,7 @@ do_TermEnrichmentPlot(
 A ggplot2 object with enriched terms.
 }
 \description{
-Compute the enriched terms for a given list of genes.
+Display the enriched terms for a given list of genes.
 }
 \examples{
 \dontrun{
