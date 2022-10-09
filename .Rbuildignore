@@ -17,3 +17,9 @@
 ^_pkgdown\.yml$
 ^man/figures$
 ^man/figures/*
+^tests/testthat/output_figure.svg$
+^tests/testthat/test.jpeg$
+^tests/testthat/test.pdf$
+^tests/testthat/test.png$
+^tests/testthat/test.svg$
+^tests/testthat/test.tiff$

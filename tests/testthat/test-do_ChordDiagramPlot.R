@@ -136,6 +136,31 @@ testthat::test_that("do_ChordDiagramPlot: FAILS", {
                                                       from = "seurat_clusters",
                                                       to = "orig.ident",
                                                       direction.type = "wrong")})
+
+  testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
+                                                      from = "seurat_clusters",
+                                                      to = "orig.ident",
+                                                      self.link = 3 )})
+
+  testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
+                                                      from = "CD14",
+                                                      to = "orig.ident",
+                                                      direction.type = "wrong")})
+
+  testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
+                                                      from = "seurat_clusters",
+                                                      to = "CD14",
+                                                      direction.type = "wrong")})
+
+  testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
+                                                      from = "nCount_RNA",
+                                                      to = "orig.ident",
+                                                      direction.type = "wrong")})
+
+  testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
+                                                      from = "seurat_clusters",
+                                                      to = "nCount_RNA",
+                                                      direction.type = "wrong")})
 })
 
 

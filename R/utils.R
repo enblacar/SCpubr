@@ -921,7 +921,7 @@ check_and_set_slot <- function(slot){
 #' \dontrun{
 #' TBD
 #' }
-compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE){
+compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE, assay = "SCT", slot = "data"){
   `%>%` <- magrittr::`%>%`
 
   if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = F)}
@@ -936,95 +936,21 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   if (isFALSE(order)){
     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
   } else if (isTRUE(order)){
-    factor_levels <- get_data_column_in_context(sample = sample,
+    factor_levels <- SCpubr:::get_data_column_in_context(sample = sample,
                                                 feature = feature,
-                                                group.by = group.by) %>%
+                                                group.by = group.by,
+                                                assay = assay,
+                                                slot = slot) %>%
                      dplyr::group_by(.data$group.by) %>%
-                     dplyr::summarise(if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
-                     dplyr::mutate("feature" = if (position == "fill") {.data$feature / sum(.data$feature)} else {.data$feature}) %>%
+                     dplyr::summarise("value" = if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
+                     dplyr::mutate("feature" = if (position == "fill") {.data$value / sum(.data$value)} else {.data$value}) %>%
                      dplyr::arrange(dplyr::desc(.data$feature)) %>%
                      dplyr::pull(.data$group.by) %>%
                      as.character()
 
   }
 
-  # if (isFALSE(order.by) & !(is.null(group.by))){
-  #   if (position == "fill"){
-  #     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
-  #   } else if (position == "stack"){
-  #     factor_levels <- SCpubr:::get_data_column_in_context(sample = sample,
-  #                                                 feature = feature,
-  #                                                 group.by = group.by) %>%
-  #                      dplyr::group_by(.data$group.by) %>%
-  #                      dplyr::summarise(if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
-  #                      dplyr::arrange(dplyr::desc(.data$feature)) %>%
-  #                      dplyr::pull(.data$group.by) %>%
-  #                      as.character()
-  #   }
-  # } else if (!(isFALSE(order.by)) & !(is.null(group.by))){
-  #   if (position == "fill"){
-  #
-  #     factor_levels <- SCpubr:::get_data_column_in_context(sample = sample,
-  #                                                          feature = feature,
-  #                                                          group.by = group.by) %>%
-  #                      dplyr::group_by(.data$group.by) %>%
-  #                      dplyr::summarise(if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
-  #                      dplyr::arrange(dplyr::desc(.data$feature)) %>%
-  #                      dplyr::pull(.data$group.by) %>%
-  #                      as.character()
-  #
-  #     # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
-  #     factor_levels <- sample@meta.data %>% # Obtain metadata
-  #       dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
-  #       dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
-  #       dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
-  #       dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
-  #       dplyr::filter(.data$x_value == order.by) %>% # Filter only the values equal to the value we want to reorder the bars.
-  #       # Compute the total number of cells for each unique group in feature.
-  #       dplyr::mutate(num_cells = {sample@meta.data %>% # Obtain metadata.
-  #           dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>%  # Select the feature to plot.
-  #           dplyr::group_by(!!rlang::sym(feature)) %>% # Group the values by feature.
-  #           dplyr::summarise(n = dplyr::n()) %>% # Compute the total counts.
-  #           # This line basically removes any row for which the value of order.by is 0. This avoids mismatches.
-  #           dplyr::filter(!!rlang::sym(feature) %in% unique(sample@meta.data[, c(group.by, feature)][sample@meta.data[, c(group.by, feature)][, group.by] == order.by, ][, feature])) %>%
-  #           dplyr::pull(.data$n)}) %>% # Retrieve the number of cells.
-  #       dplyr::mutate(frac = .data$n/.data$num_cells) %>% # Compute the fraction that represent n out of the total number of cells in the group.
-  #       dplyr::arrange(dplyr::desc(.data$frac)) %>% # Arrange it in descending order.
-  #       dplyr::pull(!!rlang::sym(feature))  %>%
-  #       as.character()
-  #   } else if (position == "stack"){
-  #     # Obtain the order of the groups in feature (Y axis) according to one of the values in the X axis.
-  #     factor_levels <- sample@meta.data %>% # Obtain metadata
-  #       dplyr::select(!!rlang::sym(feature), !!rlang::sym(group.by)) %>% # Select the feature and group.by columns.
-  #       dplyr::group_by(!!rlang::sym(group.by), !!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
-  #       dplyr::summarise(n = dplyr::n()) %>% # Compute the summarized counts by feature.
-  #       dplyr::mutate(x_value = !!rlang::sym(group.by)) %>% # Pass on the values on group.by to a new variable that will store the X axis values.
-  #       dplyr::filter(.data$x_value == order.by) %>%
-  #       dplyr::arrange(dplyr::desc(.data$n)) %>% # Arrange it in descending order.
-  #       dplyr::pull(!!rlang::sym(feature))  %>%
-  #       as.character()
-  #   }
-  #
-  #   # Retrieve the total number of unique values.
-  #   total_levels <- unique(sample[[]][, feature])
-  #   # If some are missing, add them back.
-  #   if (length(factor_levels) != length(total_levels)){
-  #     factor_levels <- c(factor_levels, total_levels[!(total_levels %in% factor_levels)])
-  #   }
-  #   factor_levels <- rev(factor_levels)
-  # } else if (is.null(order.by) & is.null(group.by)){
-  #   if (position == "fill"){
-  #     factor_levels = as.character(rev(sort(unique(sample@meta.data[, feature]))))
-  #   } else if (position == "stack"){
-  #     factor_levels <- sample@meta.data %>% # Obtain metadata
-  #       dplyr::select(!!rlang::sym(feature)) %>% # Select the feature and group.by columns.
-  #       dplyr::group_by(!!rlang::sym(feature)) %>% # Group by feature first and then by group.by.
-  #       dplyr::summarise(n = dplyr::n()) %>%
-  #       dplyr::arrange(dplyr::desc(.data$n)) %>%
-  #       dplyr::pull(!!rlang::sym(feature)) %>%
-  #       as.character()
-  #   }
-  # }
+
   return(factor_levels)
 }
 

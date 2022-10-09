@@ -13,7 +13,7 @@ For further information read the [publication](https://www.biorxiv.org/content/1
 
 For installation and tutorials consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
-**SCpubr is still under development. A near future CRAN release of v1.0.0 is planned.**
+**SCpubr is still under development. A near future CRAN release of v0.1.0 is planned.**
 
 # Citation
 To cite `SCpubr` in your publications, please use: 

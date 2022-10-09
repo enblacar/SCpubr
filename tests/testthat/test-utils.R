@@ -618,7 +618,45 @@ testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by
                                                        feature = "seurat_clusters",
                                                        position = "fill",
                                                        group.by = "orig.ident",
-                                                       order.by = "Cell"), "character")
+                                                       order = TRUE), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "seurat_clusters",
+                                                       position = "fill",
+                                                       group.by = "orig.ident"), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "CD14",
+                                                       position = "fill",
+                                                       group.by = "orig.ident",
+                                                       order = TRUE), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "CD14",
+                                                       position = "fill",
+                                                       group.by = "orig.ident"), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "seurat_clusters",
+                                                       position = "stack",
+                                                       group.by = "orig.ident",
+                                                       order = TRUE), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "seurat_clusters",
+                                                       position = "stack",
+                                                       group.by = "orig.ident"), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "CD14",
+                                                       position = "stack",
+                                                       group.by = "orig.ident",
+                                                       order = TRUE), "character")
+
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "CD14",
+                                                       position = "stack",
+                                                       group.by = "orig.ident"), "character")
 })
 
 
@@ -711,6 +749,10 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
   out <- SCpubr:::heatmap_inner(data, symmetrical_scale = TRUE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(data, range.data = c(-10, 10), data_range = "both", symmetrical_scale = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
