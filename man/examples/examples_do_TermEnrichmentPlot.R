@@ -30,26 +30,26 @@
   enriched_terms <- enrichR::enrichr(genes, dbs_use)
 
   # Default plot.
-  p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021)
+  p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms)
   p
 
   # Increased number of terms.
-  p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021,
+  p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                      nterms = 15)
   p
 
   # Control the length of the terms.
-  p1 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021,
+  p1 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                       nterms = 15)
-  p2 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021,
+  p2 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                       nterms = 15,
                                       nchar_wrap = 30)
   p <- p1 / p2
   p
 
   # Modify font size of the terms.
-  p1 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021,)
-  p2 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms$GO_Biological_Process_2021,
+  p1 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms)
+  p2 <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                       text_labels_size = 6)
 
   p <- p1 / p2
