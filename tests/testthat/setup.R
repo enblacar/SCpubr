@@ -15,10 +15,4 @@ progeny_activities <- test.data$progeny_activities
 dorothea_activities <- test.data$dorothea_activities
 monocle_sample <- test.data$monocle_sample
 monocle_cds <- test.data$monocle_cds
-p <- SCpubr::do_DimPlot(sample)
-p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-p.pheatmap <- pheatmap::pheatmap(data)
-p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
-figure_path <- getwd()
 enriched_terms <- test.data$enriched_terms
