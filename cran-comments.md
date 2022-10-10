@@ -8,7 +8,7 @@ There was 1 NOTE (using the `Check` button in RStudio with --as-cran argument):
 N  checking installed package size ...
      installed size is 15.7Mb
      sub-directories of 1Mb or more:
-       R  13.3Mb
+       R  13.2Mb
 
 However, when run with `devtools::check(), this note turns into:
 N  checking installed package size ...

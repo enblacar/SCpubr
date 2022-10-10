@@ -46,12 +46,9 @@ Suggests:
     ggExtra,
     ggplotify,
     scattermore,
-    liana (>= 0.1.5),
     ggdist,
     tibble,
-    monocle3 (>= 1.2.9),
     plyr,
-    ggsankey (>= 0.0.99999),
     graphics,
     magrittr,
     ggridges,
@@ -63,7 +60,4 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
-Remotes:  
-    saezlab/liana,
-    cole-trapnell-lab/monocle3,
-    davidsjoberg/ggsankey
+
