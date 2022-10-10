@@ -150,8 +150,8 @@ given corners (enriched in both features) or in the middle of the plot (not enri
 \details{
 This plots are based on the following publications:
 \itemize{
-\item Neftel, C. \emph{et al}. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). \url{https://doi.org/10.1016/j.cell.2019.06.024}
-\item Tirosh, I., Venteicher, A., Hebert, C. \emph{et al}. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). \url{https://doi.org/10.1038/nature20123}
+\item Neftel, C. \emph{et al}. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). \doi{10.1016/j.cell.2019.06.024}
+\item Tirosh, I., Venteicher, A., Hebert, C. \emph{et al}. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). \doi{10.1038/nature20123}
 }
 }
 \examples{

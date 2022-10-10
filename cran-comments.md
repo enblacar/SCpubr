@@ -1,5 +1,16 @@
 This is the first release of SCpubr.
 
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Converted the DESCRIPTION title to title case.
+
+* Removed the package name from Description field in DESCRIPTION.
+# Reformatted the Author@R entry so that my Name and family names are used without parameters and assigned to myself the role of "aut" to the existing "cre".
+* Reformatted Title and Description so that it states that the focus is on Single Cell **Transcriptomics** data.
+* Removed `library(monocle3)` call in setup.R in `tests/testthat/` as it was a leftover from the tests for a function that I removed as it still relied on a Github package stated previously in `Remotes:`. 
+* Adapted the documentation in `SCpubr::do_CellularStatesPlot()` so that the DOI are used in the context of the `\doi` R Markdown function.
+
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 

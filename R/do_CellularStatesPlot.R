@@ -8,8 +8,8 @@
 #' given corners (enriched in both features) or in the middle of the plot (not enriched for any).
 #'
 #' This plots are based on the following publications:
-#' - Neftel, C. \emph{et al}. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). \url{https://doi.org/10.1016/j.cell.2019.06.024}
-#' - Tirosh, I., Venteicher, A., Hebert, C. \emph{et al}. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). \url{https://doi.org/10.1038/nature20123}
+#' - Neftel, C. \emph{et al}. An Integrative Model of Cellular States, Plasticity, and Genetics for Glioblastoma. Cell 178, 835-849.e21 (2019). \doi{10.1016/j.cell.2019.06.024}
+#' - Tirosh, I., Venteicher, A., Hebert, C. \emph{et al}. Single-cell RNA-seq supports a developmental hierarchy in human oligodendroglioma. Nature 539, 309–313 (2016). \doi{10.1038/nature20123}
 #' @inheritParams doc_function
 #' @param x1  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. First feature in the X axis. Will go on the right side of the X axis if y2 is not provided and top-right quadrant if provided.
 #' @param x2  \strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the X axis. Will go on the left side of the X axis if y2 is not provided and top-left quadrant if provided.
