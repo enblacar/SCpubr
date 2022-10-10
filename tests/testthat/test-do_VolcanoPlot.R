@@ -7,6 +7,8 @@ testthat::test_that("do_VolcanoPlot: PASS - default", {
 
   de_genes[1, "p_val_adj"] <- 1
   de_genes[2, "avg_log2FC"] <- 0.001
+  de_genes[3, "avg_log2FC"] <- 3
+  de_genes[3, "p_val_adj"] <- 0.003
 
   p <- SCpubr::do_VolcanoPlot(sample = sample,
                               de_genes = de_genes)

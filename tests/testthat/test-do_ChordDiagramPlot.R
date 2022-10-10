@@ -17,7 +17,9 @@ testthat::test_that("do_ChordDiagramPlot: PASS - default", {
 
 
 testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
-
+  sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
+  sample$orig.ident_char <- sample$orig.ident
+  sample$orig.ident <- factor(sample$orig.ident)
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
@@ -26,9 +28,41 @@ testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident_char",
+                                   to = "seurat_clusters",
+                                   colors.from = c("Cell" = "blue"))
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident",
+                                   to = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident_char",
+                                   to = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "seurat_clusters",
                                    to = "orig.ident",
                                    colors.to = c("Cell" = "blue"))
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "seurat_clusters",
+                                   to = "orig.ident_char",
+                                   colors.to = c("Cell" = "blue"))
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "seurat_clusters",
+                                   to = "orig.ident")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "seurat_clusters",
+                                   to = "orig.ident_char")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
@@ -43,12 +77,12 @@ testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
                                    colors.from = c("Cell" = "#345211FF"))
   testthat::expect_type(p, "list")
 
-
+  sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("0"), "A", "B")
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
                                    to = "seurat_clusters",
-                                   colors.from = c("Cell" = "#345211"),
-                                   highlight_group = "Cell")
+                                   colors.from = c("A" = "#345211", "B" = "#345222"),
+                                   highlight_group = "A")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,

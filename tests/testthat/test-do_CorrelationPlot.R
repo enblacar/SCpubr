@@ -7,7 +7,10 @@ testthat::test_that("do_CorrelationPlot: PASS - normal", {
                 "B" = Seurat::VariableFeatures(sample)[6:10],
                 "C" = Seurat::VariableFeatures(sample)[11:15])
 
-  p <- SCpubr::do_CorrelationPlot(sample = sample)
+  p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "top")
+  testthat::expect_true("HeatmapList" %in% class(p))
+
+  p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right")
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 

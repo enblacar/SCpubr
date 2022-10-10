@@ -3,6 +3,12 @@ testthat::test_that("do_TermEnrichmentPlot: PASS", {
   p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                      nterms = 2)
   testthat::expect_type(p, "list")
+
+  enriched_terms$GO_Cellular_Component_2021 <- NULL
+  enriched_terms$Azimuth_Cell_Types_2021 <- NULL
+  p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
+                                     nterms = 2)
+  testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_TermEnrichmentPlot: PASS - legend position = right", {

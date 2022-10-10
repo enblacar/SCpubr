@@ -4,6 +4,13 @@ testthat::test_that("do_BoxPlot: PASS - default", {
                           feature = "nCount_RNA")
   testthat::expect_type(p, "list")
 
+  sample$group.by <- as.character(sample$seurat_clusters)
+  p <- SCpubr::do_BoxPlot(sample = sample,
+                          feature = "nCount_RNA",
+                          group.by = "group.by",
+                          split.by = NULL)
+  testthat::expect_type(p, "list")
+
   p <- SCpubr::do_BoxPlot(sample = sample,
                           feature = "nCount_RNA",
                           split.by = "orig.ident")

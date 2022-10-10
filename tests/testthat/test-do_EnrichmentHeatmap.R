@@ -11,6 +11,16 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     input_gene_list = genes)
   testthat::expect_true("HeatmapList" %in% class(p))
+
+  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                    input_gene_list = genes,
+                                    legend.position = "top")
+  testthat::expect_true("HeatmapList" %in% class(p))
+
+  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                    input_gene_list = genes,
+                                    legend.position = "right")
+  testthat::expect_true("HeatmapList" %in% class(p))
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group.by", {
@@ -120,6 +130,11 @@ testthat::test_that("do_EnrichmentHeatmap: FAIL - list of genes without name", {
   testthat::expect_error(SCpubr::do_EnrichmentHeatmap(sample = sample,
                                                       input_gene_list = list("CD14"),
                                                       group.by = "orig.ident"))
+
+  testthat::expect_error(SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                      input_gene_list = list("A" = "CD14"),
+                                                      group.by = "wrong"))
+
 })
 
 testthat::test_that("do_EnrichmentHeatmap: PASS - group by factor", {

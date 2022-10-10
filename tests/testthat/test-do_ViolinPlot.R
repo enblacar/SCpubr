@@ -3,7 +3,13 @@ testthat::test_that("do_ViolinPlot: PASS - one variable", {
 
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
-                          feature = "CD14")
+                          feature = "CD14",
+                          plot.grid = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "CD14",
+                             plot.grid = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -142,6 +148,13 @@ testthat::test_that("do_ViolinPlot: PASS - multiple variables plot.title, subtit
                           c("CD14"),
                           group.by = "orig.ident",
                           colors.use = c("Cell" = "red"))
+  testthat::expect_type(p, "list")
+
+  sample$orig.ident <- factor(sample$orig.ident)
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             c("CD14"),
+                             group.by = "orig.ident",
+                             colors.use = c("Cell" = "red"))
   testthat::expect_type(p, "list")
 })
 

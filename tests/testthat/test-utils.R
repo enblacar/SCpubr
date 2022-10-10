@@ -761,11 +761,11 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
 
   data <- data.frame("A" = c(-0.0012, -0.0012, -0.0013, -0.0014),
                      "B" = c(-0.0014, -0.0013, -0.0012, -0.0011))
-  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = TRUE)
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_neg", zeros_are_white = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = FALSE)
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_neg", zeros_are_white = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 

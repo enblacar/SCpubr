@@ -4,7 +4,16 @@ testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE)
   testthat::expect_type(p, "list")
 
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE, plot.grid = FALSE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = FALSE, plot.grid = TRUE)
+  testthat::expect_type(p, "list")
+
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = TRUE)
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, add_missing_LR_combinations = TRUE, keep_source = c("0", "3", "5"), keep_target = c("0", "2", "4"))
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,

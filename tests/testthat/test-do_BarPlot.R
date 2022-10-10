@@ -23,6 +23,7 @@ testthat::test_that("do_BarPlot: PASS - one variable - remove guides", {
 testthat::test_that("do_BarPlot: PASS - one variable - fill - flip", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
+                          split.by = NULL,
                           position = "fill",
                           flip = T)
   testthat::expect_type(p, "list")
