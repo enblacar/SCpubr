@@ -2,7 +2,7 @@
 #'
 #' @inheritParams doc_function
 #' @param plot_boxplot Logical. Whether to plot a Box plot inside the violin or not.
-#' @param pt.size  Size of points in the VlnPlot.
+#' @param pt.size  Size of points in the Violin plot.
 #' @param y_cut  \strong{\code{\link[base]{numeric}}} | Vector with the values in which the Violins should be cut. Only works for one feature.
 #' @param line_width Integer. Width of the lines drawn in the plot. Defaults to 1.
 #' @param boxplot_width Integer. Width of the boxplots. Defaults to 0.2.

@@ -1,4 +1,4 @@
-#' Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
+#' Plot Pathway Activities from decoupleR using Progeny prior knowledge.
 #'
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with progeny regulon prior knowledge.

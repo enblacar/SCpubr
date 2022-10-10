@@ -62,7 +62,7 @@ do_BoxPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadta variable to further group (split) the output by. Has to be a character of factor column.}
+\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 

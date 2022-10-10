@@ -12,7 +12,7 @@
 #' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
-#' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combiantions will be brought back to the plot as NA values.
+#' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.
 #'
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export

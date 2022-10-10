@@ -1,4 +1,4 @@
-#' Chromosome arm locations for human gemone GRCh38.
+#' Chromosome arm locations for human genome GRCh38.
 #'
 #' A tibble containing the chromosome, arm and start and end coordinates.
 

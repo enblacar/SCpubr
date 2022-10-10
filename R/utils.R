@@ -55,7 +55,7 @@
 #' @param flip \strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.
 #' @param verbose \strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.
-#' @param split.by \strong{\code{\link[base]{character}}} | Secondary metadta variable to further group (split) the output by. Has to be a character of factor column.
+#' @param split.by \strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.
 #' @param colors.use \strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.
 #' @param plot_marginal_distributions \strong{\code{\link[base]{logical}}} |  Whether to plot marginal distributions on the figure or not.
 #' @param marginal.type \strong{\code{\link[base]{character}}} | One of:

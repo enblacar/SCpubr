@@ -110,7 +110,7 @@ do_LigandReceptorPlot(
 
 \item{compute_ChordDiagrams}{\strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
 
-\item{add_missing_LR_combinations}{\strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combiantions will be brought back to the plot as NA values.}
+\item{add_missing_LR_combinations}{\strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

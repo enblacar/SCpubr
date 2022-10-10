@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_PathwayActivityPlot.R
 \name{do_PathwayActivityPlot}
 \alias{do_PathwayActivityPlot}
-\title{Plot Pathway Activities from DecoupleR using Progeny prior knowledge.}
+\title{Plot Pathway Activities from decoupleR using Progeny prior knowledge.}
 \usage{
 do_PathwayActivityPlot(
   sample,
@@ -53,7 +53,7 @@ do_PathwayActivityPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadta variable to further group (split) the output by. Has to be a character of factor column.}
+\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.}
 
@@ -136,7 +136,7 @@ do_PathwayActivityPlot(
 A list containing several output plots according to the user's specifications.
 }
 \description{
-Plot Pathway Activities from DecoupleR using Progeny prior knowledge.
+Plot Pathway Activities from decoupleR using Progeny prior knowledge.
 }
 \examples{
 \dontrun{

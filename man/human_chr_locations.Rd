@@ -3,7 +3,7 @@
 \docType{data}
 \name{human_chr_locations}
 \alias{human_chr_locations}
-\title{Chromosome arm locations for human gemone GRCh38.}
+\title{Chromosome arm locations for human genome GRCh38.}
 \format{
 A tibble with 48 rows and 4 columns:
 \describe{

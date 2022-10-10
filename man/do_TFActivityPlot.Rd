@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_TFActivityPlot.R
 \name{do_TFActivityPlot}
 \alias{do_TFActivityPlot}
-\title{Plot TF Activities from DecoupleR using Dorothea prior knowledge.}
+\title{Plot TF Activities from decoupleR using Dorothea prior knowledge.}
 \usage{
 do_TFActivityPlot(
   sample,
@@ -56,7 +56,7 @@ do_TFActivityPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadta variable to further group (split) the output by. Has to be a character of factor column.}
+\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.}
 
@@ -139,7 +139,7 @@ do_TFActivityPlot(
 A list containing several output plots according to the user's specifications.
 }
 \description{
-Plot TF Activities from DecoupleR using Dorothea prior knowledge.
+Plot TF Activities from decoupleR using Dorothea prior knowledge.
 }
 \examples{
 \dontrun{

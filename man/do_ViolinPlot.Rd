@@ -43,7 +43,7 @@ do_ViolinPlot(
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
 
-\item{pt.size}{Size of points in the VlnPlot.}
+\item{pt.size}{Size of points in the Violin plot.}
 
 \item{line_width}{Integer. Width of the lines drawn in the plot. Defaults to 1.}
 

@@ -1,4 +1,4 @@
-#' Plot TF Activities from DecoupleR using Dorothea prior knowledge.
+#' Plot TF Activities from decoupleR using Dorothea prior knowledge.
 #'
 #'
 #' @inheritParams doc_function
