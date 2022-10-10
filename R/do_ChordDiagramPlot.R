@@ -165,9 +165,32 @@ do_ChordDiagramPlot <- function(sample = NULL,
 
 
   max_char <- max(c(max(nchar(as.character(data$from))), max(nchar(as.character(data$to))))) + padding_labels
-  data <- data %>%
-          dplyr::mutate("from" = stringr::str_pad(.data$from, width = max_char, side = "both"),
-                        "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
+
+  if (is.factor(data$to) & is.factor(data$from)){
+    levels_to <- stringr::str_pad(levels(data$to), width = max_char, side = "both")
+    levels_from <- stringr::str_pad(levels(data$from), width = max_char, side = "both")
+
+    data <- data %>%
+            dplyr::mutate("from" = factor(stringr::str_pad(.data$from, width = max_char, side = "both"), levels = levels_from),
+                          "to" = factor(stringr::str_pad(.data$to, width = max_char, side = "both"), levels = levels_to))
+  } else if (is.factor(data$to) & is.character(data$from)){
+    levels_to <- stringr::str_pad(levels(data$to), width = max_char, side = "both")
+    data <- data %>%
+            dplyr::mutate("from" = stringr::str_pad(.data$from, width = max_char, side = "both"),
+                          "to" = factor(stringr::str_pad(.data$to, width = max_char, side = "both"), levels = levels_to))
+
+  } else if (is.character(data$to) & is.factor(data$from)){
+    levels_from <- stringr::str_pad(levels(data$from), width = max_char, side = "both")
+
+    data <- data %>%
+            dplyr::mutate("from" = factor(stringr::str_pad(.data$from, width = max_char, side = "both"), levels = levels_from),
+                          "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
+  } else if (is.character(data$to) & is.character(data$from)){
+    data <- data %>%
+            dplyr::mutate("from" = stringr::str_pad(.data$from, width = max_char, side = "both"),
+                          "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
+  }
+
 
   if (!(is.null(colors.from))){
     check_colors(colors.from, parameter_name = "colors.from")

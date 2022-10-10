@@ -20,10 +20,27 @@ testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
   sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
   sample$orig.ident_char <- as.character(sample$orig.ident)
   sample$orig.ident <- factor(sample$orig.ident)
+  sample$seurat_clusters <- factor(sample$seurat_clusters)
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
                                    to = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident_char",
+                                   to = "seurat_clusters_char")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident_char",
+                                   to = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident",
+                                   to = "seurat_clusters_char")
+  testthat::expect_type(p, "list")
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
@@ -236,13 +253,16 @@ testthat::test_that("do_ChordDiagramPlot: internal_use", {
                                                       from_df = TRUE,
                                                       df = as.data.frame(liana_output))})
 
-  data <- output_copy %>%
-          dplyr::select(dplyr::all_of(c("source", "target"))) %>%
-          dplyr::group_by(.data$target, .data$source) %>%
-          dplyr::summarise(value = dplyr::n()) %>%
-          dplyr::rename("from" = .data[["source"]],
-                        "to" = .data[["target"]]) %>%
-          dplyr::select(dplyr::all_of(c("from", "to", "value")))
+  suppressMessages({
+    data <- output_copy %>%
+            dplyr::select(dplyr::all_of(c("source", "target"))) %>%
+            dplyr::group_by(.data$target, .data$source) %>%
+            dplyr::summarise(value = dplyr::n()) %>%
+            dplyr::rename("from" = .data[["source"]],
+                          "to" = .data[["target"]]) %>%
+            dplyr::select(dplyr::all_of(c("from", "to", "value")))
+  })
+
   data.test <- data
   colnames(data.test) <- c("A", "B", "C")
   testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,

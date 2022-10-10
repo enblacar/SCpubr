@@ -1,0 +1,17 @@
+---
+title: "reference_manual"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{reference_manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+For a detailed guide on how to use **SCpubr**, please visit the [reference book](https://enblacar.github.io/SCpubr-book/).
