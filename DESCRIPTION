@@ -1,7 +1,7 @@
 Package: SCpubr
 Type: Package
 Title: Generate clean visualizations of Single Cell data
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: person(given = "Enrique", family = "Blanco-Carmona", email = "scpubr@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0002-1208-1691"))
 Description: This package aims to provide a streamlined way of generating publication ready plots for known Single-Cell visualizations in a “publication ready” format (SCpubr). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. As subjective as the term “aesthetically pleasant” can be, this a set of theme modifications implemented across different plot types.
 License: GPL-3

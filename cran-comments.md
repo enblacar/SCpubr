@@ -5,8 +5,8 @@ There were no ERRORs or WARNINGs.
 
 There was 1 NOTE:
 
-* N  checking installed package size ... NOTE
-     installed size is 15.8Mb
+N  checking installed package size ...
+     installed size is 15.7Mb
      sub-directories of 1Mb or more:
        R  13.3Mb
   
