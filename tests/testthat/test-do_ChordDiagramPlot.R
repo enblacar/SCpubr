@@ -77,19 +77,19 @@ testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
                                    colors.from = c("Cell" = "#345211FF"))
   testthat::expect_type(p, "list")
 
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident",
+                                   to = "seurat_clusters",
+                                   colors.from = c("Cell" = "#345211FF"),
+                                   highlight_group = "Cell")
+  testthat::expect_type(p, "list")
+
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("0"), "A", "B")
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",
                                    to = "seurat_clusters",
                                    colors.from = c("A" = "#345211", "B" = "#345222"),
                                    highlight_group = "A")
-  testthat::expect_type(p, "list")
-
-  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
-                                   from = "orig.ident",
-                                   to = "seurat_clusters",
-                                   colors.from = c("Cell" = "#345211FF"),
-                                   highlight_group = "Cell")
   testthat::expect_type(p, "list")
 
 })

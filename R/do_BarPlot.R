@@ -86,19 +86,27 @@ do_BarPlot <- function(sample,
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
   }
-  p <- sample@meta.data %>%
-       tibble::as_tibble() %>%
-       dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
-       dplyr::mutate("{group.by}" := if(isFALSE(order)) {.data[[group.by]]} else {factor(as.character(.data[[group.by]]), levels = {sample@meta.data %>%
-                                                                                                                                    tibble::as_tibble() %>%
-                                                                                                                                    dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
-                                                                                                                                    dplyr::group_by(.data[[group.by]]) %>%
-                                                                                                                                    dplyr::summarise("n" = dplyr::n()) %>%
-                                                                                                                                    dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data$n)} else {.data$n}) %>%
-                                                                                                                                    dplyr::pull(.data[[group.by]]) %>%
-                                                                                                                                    as.character()})}) %>%
-       ggplot2::ggplot(mapping = ggplot2::aes(x = if(is.null(split.by)) {.data[[group.by]]} else {.data[[split.by]]},
-                                              fill = .data[[group.by]])) +
+  data <-  sample@meta.data %>%
+           tibble::as_tibble() %>%
+           dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
+           dplyr::mutate("{group.by}" := if(isFALSE(order)) {.data[[group.by]]} else {factor(as.character(.data[[group.by]]), levels = {sample@meta.data %>%
+                                                                                                                                        tibble::as_tibble() %>%
+                                                                                                                                        dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
+                                                                                                                                        dplyr::group_by(.data[[group.by]]) %>%
+                                                                                                                                        dplyr::summarise("n" = dplyr::n()) %>%
+                                                                                                                                        dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data$n)} else {.data$n}) %>%
+                                                                                                                                        dplyr::pull(.data[[group.by]]) %>%
+                                                                                                                                        as.character()})})
+  if (is.null(split.by)){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(x = .data[[group.by]],
+                                                fill = .data[[group.by]]))
+  } else {
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(x = .data[[split.by]],
+                                                fill = .data[[group.by]]))
+  }
+  p <- p +
        ggplot2::stat_count(geom = "bar", position = position, color = "black") +
        ggplot2::xlab(if (!is.null(split.by) & is.null(xlab)) {split.by} else {ifelse(is.null(group.by), "Idents", group.by)}) +
        ggplot2::ylab(ifelse(is.null(ylab), paste0(ifelse(position == "stack", "Count", "Frequency"), " of ", group.by), ylab)) +

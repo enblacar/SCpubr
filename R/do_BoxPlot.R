@@ -171,10 +171,18 @@ do_BoxPlot <- function(sample,
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
     stop("Parameter use_silhouetter can not be used alongside split.by.", call. = FALSE)
   } else if (isFALSE(use_silhouette)){
-    p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                y = .data$feature,
-                                                fill = if (is.null(split.by)) {.data$group.by} else {.data$split.by})) +
+    if (is.null(split.by)){
+      p <- data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
+                                                  y = .data$feature,
+                                                  fill = .data$group.by))
+    } else {
+      p <- data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
+                                                  y = .data$feature,
+                                                  fill = .data$split.by))
+    }
+    p <- p +
          ggplot2::scale_fill_manual(values = colors.use, na.value = na.value) +
          ggplot2::geom_boxplot(color = boxplot.line.color,
                                outlier.color = outlier.color,
@@ -186,45 +194,45 @@ do_BoxPlot <- function(sample,
   }
 
    p <- p +
-       ggplot2::labs(title = plot.title,
-                     subtitle = plot.subtitle,
-                     caption = plot.caption) +
-       ggplot2::xlab(if (is.null(xlab)) {"Groups"} else (xlab)) +
-       ggplot2::ylab(if (is.null(ylab)) {feature} else (ylab))  +
-       ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
-                                                    title.position = legend.title.position,
-                                                    title.hjust = 0.5)) +
-       ggplot2::theme_minimal(base_size = font.size) +
-       ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
-                                                         face = "bold"),
-                      axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
-                      axis.text.x = ggplot2::element_text(color = "black",
-                                                          face = "bold",
-                                                          angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
-                                                          hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                          vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
-                      axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
-                      axis.ticks = ggplot2::element_line(color = "black"),
-                      panel.grid.major = ggplot2::element_blank(),
-                      panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
-                      plot.title.position = "plot",
-                      plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                      plot.subtitle = ggplot2::element_text(hjust = 0),
-                      plot.caption = ggplot2::element_text(hjust = 1),
-                      panel.grid = ggplot2::element_blank(),
-                      text = ggplot2::element_text(family = font.type),
-                      plot.caption.position = "plot",
-                      legend.text = ggplot2::element_text(face = "bold"),
-                      legend.position = legend.position,
-                      legend.title = ggplot2::element_text(face = "bold"),
-                      legend.justification = "center",
-                      plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      strip.text =ggplot2::element_text(color = "black", face = "bold"))
+        ggplot2::labs(title = plot.title,
+                      subtitle = plot.subtitle,
+                      caption = plot.caption) +
+        ggplot2::xlab(if (is.null(xlab)) {"Groups"} else (xlab)) +
+        ggplot2::ylab(if (is.null(ylab)) {feature} else (ylab))  +
+        ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                     title.position = legend.title.position,
+                                                     title.hjust = 0.5)) +
+        ggplot2::theme_minimal(base_size = font.size) +
+        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
+                                                          face = "bold"),
+                       axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                       axis.text.x = ggplot2::element_text(color = "black",
+                                                           face = "bold",
+                                                           angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
+                                                           hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
+                                                           vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
+                       axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
+                       axis.ticks = ggplot2::element_line(color = "black"),
+                       panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                       panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                       plot.title.position = "plot",
+                       plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                       plot.subtitle = ggplot2::element_text(hjust = 0),
+                       plot.caption = ggplot2::element_text(hjust = 1),
+                       panel.grid = ggplot2::element_blank(),
+                       text = ggplot2::element_text(family = font.type),
+                       plot.caption.position = "plot",
+                       legend.text = ggplot2::element_text(face = "bold"),
+                       legend.position = legend.position,
+                       legend.title = ggplot2::element_text(face = "bold"),
+                       legend.justification = "center",
+                       plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                       strip.text =ggplot2::element_text(color = "black", face = "bold"))
 
   if (isTRUE(flip)){
     p <- p + ggplot2::coord_flip()
