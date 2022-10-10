@@ -3,11 +3,11 @@ testthat::test_that("do_DotPlot: PASS - one variable", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14")
+                          features = "EPC1")
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           dot_border = FALSE)
   testthat::expect_type(p, "list")
 })
@@ -16,12 +16,12 @@ testthat::test_that("do_DotPlot: PASS - plot grid", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           plot.grid = TRUE)
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           plot.grid = FALSE)
   testthat::expect_type(p, "list")
 })
@@ -30,13 +30,13 @@ testthat::test_that("do_DotPlot: PASS - use_viridis", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           use_viridis = TRUE,
                           dot_border = FALSE)
   testthat::expect_type(p, "list")
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           use_viridis = TRUE,
                           dot_border = TRUE)
   testthat::expect_type(p, "list")
@@ -46,7 +46,7 @@ testthat::test_that("do_DotPlot: PASS - one variable legend normal", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           legend.type = "normal")
   testthat::expect_type(p, "list")
 })
@@ -55,7 +55,7 @@ testthat::test_that("do_DotPlot: PASS - one variable legend colorbar", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           legend.type = "colorbar")
   testthat::expect_type(p, "list")
 })
@@ -64,7 +64,7 @@ testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           legend.type = "colorsteps")
   testthat::expect_type(p, "list")
 })
@@ -73,7 +73,7 @@ testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps legend to
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           legend.type = "colorsteps",
                           legend.position = "right")
   testthat::expect_type(p, "list")
@@ -83,7 +83,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong legend type", {
 
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                                              features = "CD14",
+                                                              features = "EPC1",
                                                               flip = T,
                                                               legend.type = "wrong")}))
 
@@ -93,7 +93,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong legend position", {
 
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                                              features = "CD14",
+                                                              features = "EPC1",
                                                               flip = T,
                                                               legend.position = "wrong")}))
 
@@ -103,7 +103,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong font.type", {
 
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                                              features = "CD14",
+                                                              features = "EPC1",
                                                               flip = T,
                                                               font.type = "wrong")}))
 
@@ -113,7 +113,7 @@ testthat::test_that("do_DotPlot: PASS - one variable flip", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           flip = T)
   testthat::expect_type(p, "list")
 })
@@ -121,10 +121,16 @@ testthat::test_that("do_DotPlot: PASS - one variable flip", {
 testthat::test_that("do_DotPlot: PASS - multiple features", {
 
 
-  genes <- c("IL7R", "CCR7", "CD14", "LYZ",
-             "S100A4", "MS4A1", "CD8A", "FCGR3A",
-             "MS4A7", "GNLY", "NKG7", "FCER1A",
-             "CST3", "PPBP")
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
+  genes <- unname(unlist(genes))
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                           features = genes)})
   testthat::expect_type(p, "list")
@@ -133,10 +139,16 @@ testthat::test_that("do_DotPlot: PASS - multiple features", {
 testthat::test_that("do_DotPlot: PASS - multiple features flip", {
 
 
-  genes <- c("IL7R", "CCR7", "CD14", "LYZ",
-             "S100A4", "MS4A1", "CD8A", "FCGR3A",
-             "MS4A7", "GNLY", "NKG7", "FCER1A",
-             "CST3", "PPBP")
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
+  genes <- unname(unlist(genes))
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             flip = T)})
@@ -146,10 +158,16 @@ testthat::test_that("do_DotPlot: PASS - multiple features flip", {
 testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels", {
 
 
-  genes <- c("IL7R", "CCR7", "CD14", "LYZ",
-             "S100A4", "MS4A1", "CD8A", "FCGR3A",
-             "MS4A7", "GNLY", "NKG7", "FCER1A",
-             "CST3", "PPBP")
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
+  genes <- unname(unlist(genes))
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             flip = T,
@@ -160,15 +178,15 @@ testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels",
 testthat::test_that("do_DotPlot: PASS - list of features", {
 
 
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                           features = genes)})
   testthat::expect_type(p, "list")
@@ -177,15 +195,15 @@ testthat::test_that("do_DotPlot: PASS - list of features", {
 testthat::test_that("do_DotPlot: FAIL - list of features flip", {
 
 
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             flip = T)}))
@@ -195,15 +213,15 @@ testthat::test_that("do_DotPlot: FAIL - list of features flip", {
 testthat::test_that("do_DotPlot: PASS - list of features cluster idents", {
 
 
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             cluster.idents = T)})
@@ -213,15 +231,15 @@ testthat::test_that("do_DotPlot: PASS - list of features cluster idents", {
 testthat::test_that("do_DotPlot: PASS - list of features cluster idents modify colors", {
 
 
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
+  genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
+                "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
+                "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
+                "B" = Seurat::VariableFeatures(sample)[6],
+                "CD8+ T" = Seurat::VariableFeatures(sample)[7],
+                "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
+                "NK" = Seurat::VariableFeatures(sample)[10:11],
+                "DC" = Seurat::VariableFeatures(sample)[12:13],
+                "Platelet" = Seurat::VariableFeatures(sample)[14])
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
                                             cluster.idents = T,
@@ -233,7 +251,7 @@ testthat::test_that("do_DotPlot: PASS - one variable split.by", {
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
@@ -243,7 +261,7 @@ testthat::test_that("do_DotPlot: PASS - one variable split.by factor", {
 
   sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           split.by = "seurat_clusters.factor")
   testthat::expect_type(p, "list")
 })
@@ -253,7 +271,7 @@ testthat::test_that("do_DotPlot: PASS - one variable xlab, ylab, title, subtitle
 
 
   p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "CD14",
+                          features = "EPC1",
                           xlab = "A",
                           ylab = "B",
                           plot.title = "C",

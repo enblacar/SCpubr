@@ -34,7 +34,9 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_title_side = "left",
                                  row_title_rot = 90,
                                  column_title = if (isFALSE(transpose)){"List of Genes"} else {"Groups"},
-                                 row_title = if (isFALSE(transpose)){"Groups"} else {"List of Genes"}){
+                                 row_title = if (isFALSE(transpose)){"Groups"} else {"List of Genes"},
+                                 nbin = 24,
+                                 ctrl = 100){
   # Checks for packages.
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
@@ -51,7 +53,9 @@ do_EnrichmentHeatmap <- function(sample,
                        "column_names_rot" = column_names_rot,
                        "cell_size" = cell_size,
                        "viridis_direction" = viridis_direction,
-                       "row_title_rot" = row_title_rot)
+                       "row_title_rot" = row_title_rot,
+                       "nbin" = nbin,
+                       "ctrl" = ctrl)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -85,7 +89,7 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   # Compute the enrichment scores.
-  sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose)
+  sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose, nbin = nbin, ctrl = ctrl)
 
   list.heatmaps <- list()
   list.legends <- list()

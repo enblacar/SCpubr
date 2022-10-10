@@ -7,15 +7,15 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable dimred compone
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T)
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "EPC1", group.by = "seurat_clusters", plot_cell_borders = T)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "CD14", group.by = "seurat_clusters", plot_cell_borders = T, raster = T, pt.size = 1)
+  p <- SCpubr::do_BeeSwarmPlot(sample = sample, feature_to_rank = "EPC1", group.by = "seurat_clusters", plot_cell_borders = T, raster = T, pt.size = 1)
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
-                               feature_to_rank = "CD14",
+                               feature_to_rank = "EPC1",
                                group.by = "seurat_clusters",
                                continuous_feature = F)
   testthat::expect_type(p, "list")
@@ -23,7 +23,7 @@ testthat::test_that("do_BeeSwarmPlot: PASS - categorical variable gene", {
 
 testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {
   p <- SCpubr::do_BeeSwarmPlot(sample = sample,
-                               feature_to_rank = "CD14",
+                               feature_to_rank = "EPC1",
                                group.by = "seurat_clusters",
                                continuous_feature = F,
                                legend.position = "right")

@@ -30,33 +30,33 @@ testthat::test_that("do_FeaturePlot: PASS - legend.title", {
 testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
 
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, idents.highlight = "1")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, idents.highlight = "1")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_FeaturePlot: PASS - enforce_symmetry", {
 
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("CD14", "nCount_RNA"), enforce_symmetry = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("EPC1", "nCount_RNA"), enforce_symmetry = T)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T, idents.highlight = c("1", "3"))
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T, idents.highlight = c("1", "3"))
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "CD14", enforce_symmetry = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
 
@@ -136,7 +136,7 @@ testthat::test_that("do_FeaturePlot: PASS - subset of cells", {
 
   cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14"),
+                              features = c("EPC1"),
                               cells.highlight = cells.plot)
   testthat::expect_type(p, "list")
 })
@@ -145,7 +145,7 @@ testthat::test_that("do_FeaturePlot: PASS - subset of identities", {
 
 
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14"),
+                              features = c("EPC1"),
                               idents.highlight = c("1", "2"))
   testthat::expect_type(p, "list")
 })
@@ -155,7 +155,7 @@ testthat::test_that("do_FeaturePlot: PASS - subset of cells and identities", {
 
   cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14"),
+                              features = c("EPC1"),
                               cells.highlight = cells.plot,
                               idents.highlight = c("1", "2"))
   testthat::expect_type(p, "list")
@@ -165,7 +165,7 @@ testthat::test_that("do_FeaturePlot: PASS - split.by", {
 
 
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14"),
+                              features = c("EPC1"),
                               split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
@@ -174,7 +174,7 @@ testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents", {
 
 
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14"),
+                              features = c("EPC1"),
                               split.by = "seurat_clusters",
                               split.by.idents = c("1", "2"))
   testthat::expect_type(p, "list")
@@ -184,7 +184,7 @@ testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents multipl
 
 
   p <- SCpubr::do_FeaturePlot(sample,
-                              features = c("CD14", "nCount_RNA"),
+                              features = c("EPC1", "nCount_RNA"),
                               split.by = "seurat_clusters",
                               split.by.idents = c("1", "2"))
   testthat::expect_type(p, "list")
@@ -210,13 +210,13 @@ testthat::test_that("do_FeaturePlot: FAIL - individual titles, subtitles or capt
 
 
   testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                features = c("nCount_RNA", "CD14"),
+                                                features = c("nCount_RNA", "EPC1"),
                                                 individual.titles = "A"))
   testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                features = c("nCount_RNA", "CD14"),
+                                                features = c("nCount_RNA", "EPC1"),
                                                 individual.subtitles = "A"))
   testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                features = c("nCount_RNA", "CD14"),
+                                                features = c("nCount_RNA", "EPC1"),
                                                 individual.captions = "A"))
 })
 

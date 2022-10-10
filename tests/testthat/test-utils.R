@@ -129,7 +129,7 @@ testthat::test_that("utils: compute_scale_limits - PASS - using a gene", {
 
 
   output <- SCpubr:::compute_scale_limits(sample = sample,
-                                          feature = "CD14")
+                                          feature = "EPC1")
   testthat::expect_length(output, 2)
 })
 
@@ -155,7 +155,7 @@ testthat::test_that("utils: check_feature - FAIL - using the wrong gene", {
 
 
   testthat::expect_error(check_feature(sample = sample,
-                                       features = "NOTCD14"))
+                                       features = "NOTEPC1"))
 })
 
 testthat::test_that("utils: check_feature - FAIL - using the wrong metadata", {
@@ -176,7 +176,7 @@ testthat::test_that("utils: check_feature - FAIL - all features failing while in
 
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
-                                                features = c("NOTCD14", "UMAP_38"),
+                                                features = c("NOTEPC1", "UMAP_38"),
                                                 permissive = TRUE))
 })
 
@@ -184,7 +184,7 @@ testthat::test_that("utils: check_feature - WARNING - using one wrong gene and o
 
 
   testthat::expect_warning(SCpubr:::check_feature(sample = sample,
-                                                  features = c("NOTCD14", "CD14"),
+                                                  features = c("NOTEPC1", "EPC1"),
                                                   permissive = TRUE))
 })
 
@@ -242,7 +242,7 @@ testthat::test_that("utils: check_feature - ERROR - using the wrong enforcer", {
 
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
-                                                features = c("CD14"),
+                                                features = c("EPC1"),
                                                 enforce_check = "Gene",
                                                 enforce_parameter = "group.by"))
 })
@@ -251,7 +251,7 @@ testthat::test_that("utils: check_feature - ERROR - using the wrong feature for 
 
 
   testthat::expect_error(SCpubr:::check_feature(sample = sample,
-                                                features = c("CD14"),
+                                                features = c("EPC1"),
                                                 enforce_check = "reductions",
                                                 enforce_parameter = "group.by"))
 })
@@ -593,13 +593,13 @@ testthat::test_that("utils: check_and_set_slot - PASS - scale.data", {
 testthat::test_that("utils: check_and_set_slot - FAIL - wrong limit", {
 
 
-  testthat::expect_error(SCpubr:::check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 30))
+  testthat::expect_error(SCpubr:::check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 30))
 })
 
 testthat::test_that("utils: check_and_set_slot - PASS - good limit", {
 
 
-  testthat::expect_silent(SCpubr:::check_limits(sample = sample, feature = "CD14", value_name = "scale.end", value = 2))
+  testthat::expect_silent(SCpubr:::check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 2))
 })
 
 
@@ -629,13 +629,13 @@ testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by
                                                        group.by = "orig.ident"), "character")
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
-                                                       feature = "CD14",
+                                                       feature = "EPC1",
                                                        position = "fill",
                                                        group.by = "orig.ident",
                                                        order = TRUE), "character")
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
-                                                       feature = "CD14",
+                                                       feature = "EPC1",
                                                        position = "fill",
                                                        group.by = "orig.ident"), "character")
 
@@ -651,13 +651,13 @@ testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by
                                                        group.by = "orig.ident"), "character")
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
-                                                       feature = "CD14",
+                                                       feature = "EPC1",
                                                        position = "stack",
                                                        group.by = "orig.ident",
                                                        order = TRUE), "character")
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
-                                                       feature = "CD14",
+                                                       feature = "EPC1",
                                                        position = "stack",
                                                        group.by = "orig.ident"), "character")
 })
@@ -719,7 +719,7 @@ testthat::test_that("utils: use_dataset - PASS - checks", {
 testthat::test_that("utils: add_scale - PASS - checks", {
 
 
-  p <- do_FeaturePlot(sample, features = "CD14")
+  p <- do_FeaturePlot(sample, features = "EPC1")
   output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
   testthat::expect_true("ggplot" %in% class(output))
 })
@@ -971,7 +971,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  sample <- SCpubr:::compute_enrichment_scores(sample, input_gene_list = "CD14")
+  sample <- SCpubr:::compute_enrichment_scores(sample, input_gene_list = "EPC1", nbin = 1, ctrl = 10)
   data <- as.matrix({
     sample@meta.data %>% dplyr::select(c(orig.ident, Input)) %>% dplyr::group_by(orig.ident) %>% dplyr::summarise(n = mean(Input)) %>% dplyr::pull(n)
   })
@@ -1016,15 +1016,15 @@ testthat::test_that("utils: modify_string - PASS - checks", {
 testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
 
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("CD14")))
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10)
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("CD14")), verbose = T)
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), verbose = T, nbin = 1, ctrl = 10)
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = c("CD14"))
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = c("EPC1"), nbin = 1, ctrl = 10)
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("Input" %in% colnames(output@meta.data))
 })
@@ -1034,7 +1034,7 @@ testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
 testthat::test_that("utils: get data column - PASS ", {
 
 
-  data <- SCpubr:::get_data_column(sample = sample, feature = "CD14", assay = "SCT", slot = "data")
+  data <- SCpubr:::get_data_column(sample = sample, feature = "EPC1", assay = "SCT", slot = "data")
   testthat::expect_true("data.frame" %in% class(data))
   testthat::expect_true("feature" %in% colnames(data))
 

@@ -107,7 +107,8 @@
 #'   \item \emph{\code{twodash}}.
 #' }
 #' @param plot.axes \strong{\code{\link[base]{logical}}} | Whether to plot axes or not.
-#'
+#' @param nbin \strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.
+#' @param ctrl \strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.
 #'
 #' @usage NULL
 #' @return Nothing. This is a mock function.

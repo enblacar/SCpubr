@@ -39,7 +39,9 @@ do_EnrichmentHeatmap(
      "Groups"
  } else {
      "List of Genes"
- }
+ },
+  nbin = 24,
+  ctrl = 100
 )
 }
 \arguments{
@@ -95,6 +97,10 @@ do_EnrichmentHeatmap(
 \item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
 
 \item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
+
+\item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
+
+\item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
 }
 \value{
 A ComplexHeatmap object.

@@ -9,17 +9,23 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
 
 
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes)
+                                    input_gene_list = genes,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     input_gene_list = genes,
-                                    legend.position = "top")
+                                    legend.position = "top",
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     input_gene_list = genes,
-                                    legend.position = "right")
+                                    legend.position = "right",
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -33,7 +39,9 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by", {
 
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     input_gene_list = genes,
-                                    group.by = "orig.ident")
+                                    group.by = "orig.ident",
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -48,7 +56,9 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose", {
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                     input_gene_list = genes,
                                     group.by = "orig.ident",
-                                    transpose = T)
+                                    transpose = T,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -64,7 +74,9 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and col
                                     input_gene_list = genes,
                                     group.by = "orig.ident",
                                     transpose = T,
-                                    column_names_rot = 0)
+                                    column_names_rot = 0,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -80,7 +92,9 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group.by and transpose and row
                                     input_gene_list = genes,
                                     group.by = "orig.ident",
                                     transpose = T,
-                                    row_names_rot = 90)
+                                    row_names_rot = 90,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -99,7 +113,9 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - multiple variables changing ce
                                     group.by = "orig.ident",
                                     transpose = T,
                                     column_names_rot = 0,
-                                    cell_size = 7)
+                                    cell_size = 7,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -114,8 +130,10 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - character list of genes + grou
                 "C" = Seurat::VariableFeatures(sample)[11:15])
 
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = c("CD14"),
-                                    group.by = "orig.ident")
+                                    input_gene_list = c("EPC1"),
+                                    group.by = "orig.ident",
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -128,12 +146,16 @@ testthat::test_that("do_EnrichmentHeatmap: FAIL - list of genes without name", {
                 "C" = Seurat::VariableFeatures(sample)[11:15])
 
   testthat::expect_error(SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                      input_gene_list = list("CD14"),
-                                                      group.by = "orig.ident"))
+                                                      input_gene_list = list("EPC1"),
+                                                      group.by = "orig.ident",
+                                                      nbin = 1,
+                                                      ctrl = 10))
 
   testthat::expect_error(SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                      input_gene_list = list("A" = "CD14"),
-                                                      group.by = "wrong"))
+                                                      input_gene_list = list("A" = "EPC1"),
+                                                      group.by = "wrong",
+                                                      nbin = 1,
+                                                      ctrl = 10))
 
 })
 
@@ -147,8 +169,10 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - group by factor", {
 
   sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = c("CD14"),
-                                    group.by = "seurat_clusters.factor")
+                                    input_gene_list = c("EPC1"),
+                                    group.by = "seurat_clusters.factor",
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 
@@ -162,11 +186,13 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - row title and column title", {
 
   sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
   p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = c("CD14"),
+                                    input_gene_list = c("EPC1"),
                                     group.by = "seurat_clusters.factor",
                                     row_title = "A",
                                     column_title = "B",
-                                    transpose = T)
+                                    transpose = T,
+                                    nbin = 1,
+                                    ctrl = 10)
   testthat::expect_true("HeatmapList" %in% class(p))
 })
 

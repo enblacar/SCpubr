@@ -178,6 +178,10 @@
 \item \emph{\code{left}}: Left of the legend.
 \item \emph{\code{right}}: Right of the legend.
 }}
+
+\item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
+
+\item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
 }
 \value{
 Nothing. This is a mock function.

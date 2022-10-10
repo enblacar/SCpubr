@@ -43,7 +43,9 @@ do_CellularStatesPlot(
   plot_features = FALSE,
   features = NULL,
   viridis_color_map = "G",
-  viridis_direction = 1
+  viridis_direction = 1,
+  nbin = 24,
+  ctrl = 100
 )
 }
 \arguments{
@@ -135,6 +137,10 @@ do_CellularStatesPlot(
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
+
+\item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

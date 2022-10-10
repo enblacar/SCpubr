@@ -15,6 +15,7 @@ testthat::test_that("do_VolcanoPlot: PASS - default", {
   testthat::expect_type(p, "list")
 
   de_genes <- de_genes %>%
+              tibble::as_tibble() %>%
               dplyr::distinct(.data$gene, .keep_all = TRUE) %>%
               tibble::column_to_rownames(var = "gene")
 

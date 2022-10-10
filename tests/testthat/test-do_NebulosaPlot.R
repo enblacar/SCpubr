@@ -3,16 +3,16 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"))
+                               features = c("EPC1"))
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_NebulosaPlot: PASS - cell_borders", {
 
 
-  p <- SCpubr::do_NebulosaPlot(sample = sample, features = "CD14", plot_cell_borders = T)
+  p <- SCpubr::do_NebulosaPlot(sample = sample, features = "EPC1", plot_cell_borders = T)
   testthat::expect_type(p, "list")
-  p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("CD14", "PC_1"), plot_cell_borders = T)})
+  p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("EPC1", "PC_1"), plot_cell_borders = T)})
   testthat::expect_type(p, "list")
 })
 
@@ -20,7 +20,7 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature legend normal", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.type = "normal")
   testthat::expect_type(p, "list")
 })
@@ -29,7 +29,7 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorbar", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.type = "colorbar")
   testthat::expect_type(p, "list")
 })
@@ -38,7 +38,7 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorsteps", 
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.type = "colorsteps")
   testthat::expect_type(p, "list")
 })
@@ -47,7 +47,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - wrong legend type ", {
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14"),
+                                                 features = c("EPC1"),
                                                  legend.type = "wrong"))
 })
 
@@ -55,7 +55,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - wrong legend position ", {
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14"),
+                                                 features = c("EPC1"),
                                                  legend.position = "wrong"))
 })
 
@@ -63,7 +63,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - wrong font.type", {
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14"),
+                                                 features = c("EPC1"),
                                                  font.type = "wrong"))
 })
 
@@ -71,7 +71,7 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature distinct dims", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                dims = c(2, 1))
   testthat::expect_type(p, "list")
 })
@@ -93,7 +93,7 @@ testthat::test_that("do_NebulosaPlot: PASS - several", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"))
+                               features = c("EPC1", "LTV1"))
   testthat::expect_type(p, "list")
 })
 
@@ -101,7 +101,7 @@ testthat::test_that("do_NebulosaPlot: PASS - several, joint", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T)
   testthat::expect_type(p, "list")
 })
@@ -110,7 +110,7 @@ testthat::test_that("do_NebulosaPlot: PASS - several, joint only joint", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = T)
   testthat::expect_type(p, "list")
@@ -120,7 +120,7 @@ testthat::test_that("do_NebulosaPlot: PASS - title", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = T,
                                plot.title = "Title")
@@ -131,7 +131,7 @@ testthat::test_that("do_NebulosaPlot: PASS - subtitle", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = T,
                                plot.subtitle = "Subtitle")
@@ -142,7 +142,7 @@ testthat::test_that("do_NebulosaPlot: PASS - caption", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = T,
                                plot.caption = "Caption")
@@ -153,7 +153,7 @@ testthat::test_that("do_NebulosaPlot: PASS - individual titles", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = F,
                                individual.titles = c("A", NA, "B"))
@@ -164,7 +164,7 @@ testthat::test_that("do_NebulosaPlot: PASS - individual subtitles", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = F,
                                individual.subtitles = c("A", NA, "B"))
@@ -175,7 +175,7 @@ testthat::test_that("do_NebulosaPlot: PASS - individual captions", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                joint = T,
                                return_only_joint = F,
                                individual.captions = c("A", NA, "B"))
@@ -186,7 +186,7 @@ testthat::test_that("do_NebulosaPlot: PASS - color map", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                viridis_color_map = "F")
   testthat::expect_type(p, "list")
 })
@@ -195,7 +195,7 @@ testthat::test_that("do_NebulosaPlot: PASS - legend top", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.position = "left")
   testthat::expect_type(p, "list")
 })
@@ -204,7 +204,7 @@ testthat::test_that("do_NebulosaPlot: PASS - legend top", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.position = "top")
   testthat::expect_type(p, "list")
 })
@@ -213,7 +213,7 @@ testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
 
 
   testthat::expect_warning(SCpubr::do_NebulosaPlot(sample = sample,
-                                                   features = list("CD14"),
+                                                   features = list("EPC1"),
                                                    viridis_color_map = "F"))
 })
 
@@ -221,7 +221,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - individual titles + joint + return 
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14", "CD8A"),
+                                                 features = c("EPC1", "LTV1"),
                                                  joint = T,
                                                  return_only_joint = T,
                                                  individual.titles = "A"))
@@ -231,7 +231,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles ", {
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14", "CD8A"),
+                                                 features = c("EPC1", "LTV1"),
                                                  joint = F,
                                                  individual.titles = "A"))
 })
@@ -240,7 +240,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles for jo
 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("CD14", "CD8A"),
+                                                 features = c("EPC1", "LTV1"),
                                                  joint = T,
                                                  individual.titles = "A"))
 })
@@ -249,7 +249,7 @@ testthat::test_that("do_NebulosaPlot: PASS - no legend", {
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14"),
+                               features = c("EPC1"),
                                legend.position = "none")
   testthat::expect_type(p, "list")
 })
@@ -258,7 +258,7 @@ testthat::test_that("do_NebulosaPlot: PASS - patchwork title, subtitle and capti
 
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
+                               features = c("EPC1", "LTV1"),
                                plot.title = "A",
                                plot.subtitle = "B",
                                plot.caption = "C")

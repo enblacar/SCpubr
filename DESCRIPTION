@@ -3,7 +3,7 @@ Type: Package
 Title: Generate Publication Ready Visualizations of Single Cell Transcriptomics Data
 Version: 1.0.0
 Authors@R: person("Enrique", "Blanco-Carmona", email = "scpubr@gmail.com", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-1208-1691"))
-Description: This package aims to provide a streamlined way of generating publication ready plots for known Single-Cell transcriptomics data in a “publication ready” format. This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article.
+Description: A system that provides a streamlined way of generating publication ready plots for known Single-Cell transcriptomics data in a “publication ready” format. This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -11,8 +11,8 @@ LazyDataCompression: xz
 Depends: R (>= 4.0.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-URL: https://github.com/enblacar/SCpubr, https://enblacar.github.io/SCpubr-book/
-BugReports: https://github.com/enblacar/SCpubr/issues
+URL: https://github.com/enblacar/SCpubr/, https://enblacar.github.io/SCpubr-book/
+BugReports: https://github.com/enblacar/SCpubr/issues/
 Suggests:
     rlang,
     Seurat,

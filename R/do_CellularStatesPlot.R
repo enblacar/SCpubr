@@ -64,7 +64,9 @@ do_CellularStatesPlot <- function(sample,
                                   plot_features = FALSE,
                                   features = NULL,
                                   viridis_color_map = "G",
-                                  viridis_direction = 1){
+                                  viridis_direction = 1,
+                                  nbin = 24,
+                                  ctrl = 100){
     # Checks for packages.
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -92,7 +94,9 @@ do_CellularStatesPlot <- function(sample,
                          "pt.size" = pt.size,
                          "border.size" = border.size,
                          "raster.dpi" = raster.dpi,
-                         "viridis_direction" = viridis_direction)
+                         "viridis_direction" = viridis_direction,
+                         "nbin" = nbin,
+                         "ctrl" = ctrl)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("input_gene_list" = input_gene_list,
@@ -156,7 +160,7 @@ do_CellularStatesPlot <- function(sample,
 
 
     # Compute the enrichment scores.
-    sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose)
+    sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose, nbin = nbin, ctrl = ctrl)
 
     # 2-variable plot.
     if (is.null(y2) & is.null(x2)){
