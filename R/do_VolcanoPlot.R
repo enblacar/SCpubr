@@ -80,7 +80,6 @@ do_VolcanoPlot <- function(sample,
 
   `.` <- plyr::.()
   `%>%` <- magrittr::`%>%`
-  pval_cutoff <- -log10(pval_cutoff)
   colors <- SCpubr::do_ColorPalette(colors.use, tetradic = T)
   names(colors) <- c("A", "C", "B", "D")
 
@@ -90,21 +89,27 @@ do_VolcanoPlot <- function(sample,
   } else {
     data <- de_genes
   }
+
+
   data <- data %>%
           tibble::as_tibble() %>%
           dplyr::select(.data$p_val_adj, .data$avg_log2FC, .data$gene) %>%
           dplyr::mutate("p_val_adj" = replace(.data$p_val_adj, .data$p_val_adj == 0, .Machine$double.xmin)) %>%
           dplyr::mutate(log_p = -log10(.data$p_val_adj)) %>%
-          dplyr::select(-.data$p_val_adj) %>%
-          dplyr::rowwise() %>%
-          dplyr::mutate(color = if(abs(.data$avg_log2FC) >= FC_cutoff & .data$log_p >= pval_cutoff) {"A"}
-                                else if (abs(.data$avg_log2FC) < FC_cutoff & .data$log_p >= pval_cutoff) {"B"}
-                                else if (abs(.data$avg_log2FC) >= FC_cutoff & .data$log_p < pval_cutoff) {"C"}
-                                else if (abs(.data$avg_log2FC) < FC_cutoff & .data$log_p < pval_cutoff) {"D"})
+          dplyr::select(-.data$p_val_adj)
+
+  pval_cutoff <- -log10(pval_cutoff)
+  data$color <- NA
+  data$color[abs(data$avg_log2FC) >= FC_cutoff & data$log_p >= pval_cutoff] <- "A"
+  data$color[abs(data$avg_log2FC) < FC_cutoff & data$log_p >= pval_cutoff] <- "B"
+  data$color[abs(data$avg_log2FC) < FC_cutoff & data$log_p < pval_cutoff] <- "C"
+  data$color[abs(data$avg_log2FC) >= FC_cutoff & data$log_p < pval_cutoff] <- "D"
 
   max_value <- max(abs(c(min(data$avg_log2FC), max(data$avg_log2FC))))
   x_lims <- c(-max_value, max_value)
 
+  # Shuffle the data.
+  data <- data[sample(rownames(data), nrow(data)), ]
   p <- data %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$avg_log2FC,
                                               y = .data$log_p)) +

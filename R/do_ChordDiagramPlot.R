@@ -175,7 +175,11 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                        colors = colors.from,
                                        grouping_variable = from)
   } else {
-    colors.from <- generate_color_scale(names_use = if(is.factor(data$from)){levels(data$from)} else {sort(unique(data$from))})
+    if (is.factor(data$from)){
+      colors.from <- generate_color_scale(names_use = levels(data$from))
+    } else {
+      colors.from <- generate_color_scale(names_use = sort(unique(data$from)))
+    }
   }
   names(colors.from) <- stringr::str_pad(names(colors.from), width = max_char, side = "both")
 
@@ -186,7 +190,11 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                        grouping_variable = to)
   } else {
     colors.to <- viridis::viridis(n = length(unique(data$to)), option = "G")
-    colors.to <- stats::setNames(colors.to, if(is.factor(data$to)){levels(data$to)} else {sort(unique(data$to))})
+    if (is.factor(data$to)){
+      colors.to <- stats::setNames(colors.to, levels(data$to))
+    } else {
+      colors.to <- stats::setNames(colors.to, sort(unique(data$to)))
+    }
   }
   names(colors.to) <- stringr::str_pad(names(colors.to), width = max_char, side = "both")
   colors.use <- c(colors.from, colors.to)

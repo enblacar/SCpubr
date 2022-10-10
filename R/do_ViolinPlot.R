@@ -84,7 +84,11 @@ do_ViolinPlot <- function(sample,
     }
   } else if (!(is.null(group.by))){
     if (is.null(colors.use)){
-      names.use <- if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}
+      if (is.factor(sample@meta.data[, group.by])){
+        names.use <- levels(sample@meta.data[, group.by])
+      } else {
+        names.use <- sort(unique(sample@meta.data[, group.by]))
+      }
       colors.use <- generate_color_scale(names.use)
     } else {
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)

@@ -98,12 +98,6 @@ do_SankeyPlot <- function(sample,
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
 
-
-  # Workaround for ggsankey bug.
-  if("dplyr" %!in% (.packages())){
-    stop("Due to an internal bug in ggsankey, package dplyr must be loaded using `library(dplyr)`. This behaviour will be corrected if this bug disappears. Thanks for your understanding.", call. = FALSE)
-  }
-
   # Wrong type.
   if (type %!in% c("alluvial", "sankey")){
     stop("Please provide either sankey or alluvial to type.", call. = FALSE)
@@ -166,7 +160,11 @@ do_SankeyPlot <- function(sample,
     }
   } else {
     colors.first <- viridis::viridis(n = length(unique(sample@meta.data[, first_group])), option = "G")
-    names(colors.first) <- if(is.factor(sample@meta.data[, first_group])) {levels(sample@meta.data[, first_group])} else {sort(unique(sample@meta.data[, first_group]))}
+    if (is.factor(sample@meta.data[, first_group])){
+      names(colors.first) <- levels(sample@meta.data[, first_group])
+    } else {
+      names(colors.first) <- sort(unique(sample@meta.data[, first_group]))
+    }
   }
 
   if (!(is.null(colors.last))){
@@ -180,7 +178,11 @@ do_SankeyPlot <- function(sample,
     }
   } else{
     colors.last <- viridis::viridis(n = length(unique(sample@meta.data[, last_group])), option = "D")
-    names(colors.last) <- if(is.factor(sample@meta.data[, last_group])) {levels(sample@meta.data[, last_group])} else {sort(unique(sample@meta.data[, last_group]))}
+    if (is.factor(sample@meta.data[, last_group])){
+      names(colors.last) <- levels(sample@meta.data[, last_group])
+    } else {
+      names(colors.last) <- sort(unique(sample@meta.data[, last_group]))
+    }
   }
 
   if (!(is.null(colors.middle))){
@@ -188,7 +190,11 @@ do_SankeyPlot <- function(sample,
 
     unique_middle_values <- c()
     for(var in middle_groups){
-      unique_middle_values <- c(unique_middle_values, if(is.factor(sample@meta.data[, var])) {levels(sample@meta.data[, var])} else {sort(unique(sample@meta.data[, var]))})
+      if (is.factor(sample@meta.data[, var])){
+        unique_middle_values <- c(unique_middle_values, levels(sample@meta.data[, var]))
+      } else {
+        unique_middle_values <- c(unique_middle_values, sort(unique(sample@meta.data[, var])))
+      }
     }
 
     if (sum(names(colors.middle) %!in% unique_middle_values) > 0){
@@ -201,7 +207,11 @@ do_SankeyPlot <- function(sample,
   } else {
     unique_middle_values <- c()
     for(var in middle_groups){
-      unique_middle_values <- c(unique_middle_values, if(is.factor(sample@meta.data[, var])) {levels(sample@meta.data[, var])} else {sort(unique(sample@meta.data[, var]))})
+      if (is.factor(sample@meta.data[, var])){
+        unique_middle_values <- c(unique_middle_values, levels(sample@meta.data[, var]))
+      } else {
+        unique_middle_values <- c(unique_middle_values, sort(unique(sample@meta.data[, var])))
+      }
     }
 
     colors.middle <- viridis::viridis(n = length(unique_middle_values), option = "C")
