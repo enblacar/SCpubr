@@ -1,5 +1,22 @@
 This is the first release of SCpubr.
 
+## Resubmission 2
+This is a second resubmission. In this version I have:
+
+* Modified Description field in DESCRIPTION so that it does not contain "This package".
+* Modified the problematic link in `README.md` that was moved to another address. If this problem still persists, it will be helpful to get further feedback on how to correctly solve it.
+* Drastically reduced the package size to be under 5 MB.
+
+R CMD CHECK runs without ERRORs and WARNINGs.
+
+After applying the changes, there is still one NOTE:
+N  checking installed package size ... 
+     installed size is  6.5Mb
+     sub-directories of 1Mb or more:
+       R   4.1Mb
+
+Which is not present when `devtools::check()` is run.
+
 ## Resubmission
 This is a resubmission. In this version I have:
 
