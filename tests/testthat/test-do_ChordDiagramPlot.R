@@ -18,8 +18,12 @@ testthat::test_that("do_ChordDiagramPlot: PASS - default", {
 
 testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
   sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
-  sample$orig.ident_char <- sample$orig.ident
+  sample$orig.ident_char <- as.character(sample$orig.ident)
   sample$orig.ident <- factor(sample$orig.ident)
+
+  p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                   from = "orig.ident",
+                                   to = "seurat_clusters")
 
   p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                    from = "orig.ident",

@@ -13,6 +13,24 @@ testthat::test_that("do_ViolinPlot: PASS - one variable", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_ViolinPlot: PASS - group.by", {
+
+
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "CD14",
+                             plot.grid = TRUE,
+                             group.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+
+  sample$seurat_clusters <- as.character(sample$seurat_clusters)
+  p <- SCpubr::do_ViolinPlot(sample = sample,
+                             feature = "CD14",
+                             plot.grid = FALSE,
+                             group.by = "seurat_clusters")
+  testthat::expect_type(p, "list")
+})
+
+
 testthat::test_that("do_ViolinPlot: PASS - without boxplot", {
 
 

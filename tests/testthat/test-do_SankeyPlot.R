@@ -11,10 +11,10 @@ testthat::test_that("do_SankeyPlot: PASS - default", {
 })
 
 testthat::test_that("do_SankeyPlot: PASS - test colors when colors.use is null", {
-  sample$first_group <- sample$orig.ident
-  sample$middle_group <- sample$orig.ident
-  sample$middle_group2 <- ifelse(sample$seurat_clusters %in% c("0"), "A", "B")
-  sample$last_group <- sample$orig.ident
+  sample$first_group <- as.character(sample$orig.ident)
+  sample$middle_group <- as.character(sample$orig.ident)
+  sample$middle_group2 <- as.character(ifelse(sample$seurat_clusters %in% c("0"), "A", "B"))
+  sample$last_group <- as.character(sample$orig.ident)
   sample$first_group_factor <- factor(sample$orig.ident)
   sample$middle_group_factor <- factor(sample$orig.ident)
   sample$middle_group2_factor <- factor(ifelse(sample$seurat_clusters %in% c("0"), "A", "B"))
