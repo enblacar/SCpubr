@@ -13,7 +13,80 @@ For further information read the [publication](https://www.biorxiv.org/content/1
 
 For installation and tutorials consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
-**SCpubr is still under development. A near future CRAN release of v0.1.0 is planned.**
+**SCpubr is still under development. A near future CRAN release of v1.0.0 is planned.**
+
+# Installation
+
+*SCpubr* can be installed:
+
+```r
+# From CRAN:
+# Future sumission to CRAN.
+
+# From GitHub.
+if(!requireNamespace("devtools", quietly = T)){
+  install.packages("devtools") # If not installed.
+}
+devtools::install_github("enblacar/SCpubr")
+```
+
+By default, dependencies should not be installed. In order to access all functions in the pacakge, the following
+packages should also be installed:
+
+```r
+# Install CRAN packages.
+cran_packages <- c("circlize",
+                   "colorspace",
+                   "dplyr",
+                   "forcats",
+                   "ggbeeswarm",
+                   "ggdist",
+                   "ggExtra",
+                   "ggplot2",
+                   "ggplotify",
+                   "ggrastr",
+                   "ggrepel",
+                   "ggridges",
+                   "ggsignif",
+                   "grDevices",
+                   "grid",
+                   "magrittr",
+                   "patchwork",
+                   "pbapply",
+                   "plyr",
+                   "rlang",
+                   "scales",
+                   "scattermore",
+                   "Seurat",
+                   "stats",
+                   "stringr",
+                   "svglite",
+                   "tibble",
+                   "tidyr",
+                   "viridis")
+
+install.packages(cran_packages)
+
+# Install bioconductor packages.
+bioconductor_packages <- c("ComplexHeatmap",
+                           "infercnv",
+                           "Nebulosa")
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(bioconductor_packages)
+
+# Install github packages.
+github_packages <- c("ggsankey",
+                     "liana",
+                     "monocle3")
+
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+
+remotes::install_github(github_packages)
+```
+
 
 # Citation
 To cite `SCpubr` in your publications, please use: 
@@ -24,23 +97,6 @@ for Single Cell transcriptomics using SCpubr. bioRxiv (2022)
 doi:10.1101/2022.02.28.482303.
 ```
 
-You can also use the following BibLaTeX entry:
-
-```
-@article{blanco-carmona_generating_2022,
-	title = {Generating publication ready visualizations for Single Cell transcriptomics using {SCpubr}},
-	url = {https://www.biorxiv.org/content/early/2022/03/01/2022.02.28.482303},
-	doi = {10.1101/2022.02.28.482303},
-	abstract = {Single Cell transcriptomic analysis has become a widespread technology of choice when it comes to understanding the differences at a transcriptomic level in heterogeneous samples. As a consequence, a plethora of analysis tools have been published to tackle the different analysis steps from count matrix generation to downstream analysis. Many of them provide ways to generate visualizations of the data. While some design choices are made, it is a common practice to provide the user with visualizations as raw as possible so that they can be customized to the user needs. However, in many cases these final customization steps are either time consuming or demand a very specific set of skills. This problem is addressed by {SCpubr}, which sacrifices some of this initial freedom of choice in aesthetics to provide the user a more streamlined way of generating high quality Single Cell transcriptomic visualizations.Competing Interest {StatementThe} authors have declared no competing interest.},
-	journaltitle = {{bioRxiv}},
-	author = {Blanco-Carmona, Enrique},
-	date = {2022},
-	note = {Publisher: Cold Spring Harbor Laboratory
-\_eprint: https://www.biorxiv.org/content/early/2022/03/01/2022.02.28.482303.full.pdf},
-}
-```
-
-
-## Contact
+# Contact
 scpubr@gmail.com
 
