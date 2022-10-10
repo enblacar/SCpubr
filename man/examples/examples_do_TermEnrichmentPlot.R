@@ -1,13 +1,18 @@
 \dontrun{
   # Run this to generate a suitable input for the function.
 
-  # Set necessary enrichR global options. This is copied from EnrichR code to avoid having to load the package.
+  # Set necessary enrichR global options.
+  # This is copied from EnrichR code to avoid having to load the package.
   suppressMessages({
     options(enrichR.base.address = "https://maayanlab.cloud/Enrichr/")
     options(enrichR.live = TRUE)
     options(modEnrichR.use = TRUE)
     options(enrichR.sites.base.address = "https://maayanlab.cloud/")
-    options(enrichR.sites = c("Enrichr", "FlyEnrichr", "WormEnrichr", "YeastEnrichr", "FishEnrichr"))
+    options(enrichR.sites = c("Enrichr",
+                              "FlyEnrichr",
+                              "WormEnrichr",
+                              "YeastEnrichr",
+                              "FishEnrichr"))
 
     # Set the search to Human genes.
     enrichR::setEnrichrSite(site = "Enrichr")
