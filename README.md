@@ -17,7 +17,7 @@ For installation and tutorials consult the [reference manual](https://enblacar.g
 
 # Installation
 
-*SCpubr* can be installed:
+**SCpubr** can be installed via:
 
 ```r
 # From CRAN:
