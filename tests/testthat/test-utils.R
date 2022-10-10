@@ -612,7 +612,10 @@ testthat::test_that("utils: compute_factor_levels - FAIL - wrong position", {
 })
 
 testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by", {
-
+  testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+                                                       feature = "seurat_clusters",
+                                                       position = "fill",
+                                                       group.by = NULL), "character")
 
   testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
                                                        feature = "seurat_clusters",
@@ -736,6 +739,35 @@ testthat::test_that("utils: compute_barplot_annotation - PASS - checks", {
 
 testthat::test_that("utils: heatmap_inner - PASS - checks", {
 
+  data <- data.frame("A" = c(0.0012, 0.0012, 0.0013, 0.0014),
+                     "B" = c(0.0014, 0.0013, 0.0012, 0.0011))
+  out <- SCpubr:::heatmap_inner(as.matrix(data), zeros_are_white = TRUE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(as.matrix(data), zeros_are_white = FALSE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  data <- data.frame("A" = c(0.0012, 0.0012, 0.0013, 0.0014),
+                     "B" = c(0.0014, 0.0013, 0.0012, 0.0011))
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = TRUE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = FALSE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  data <- data.frame("A" = c(-0.0012, -0.0012, -0.0013, -0.0014),
+                     "B" = c(-0.0014, -0.0013, -0.0012, -0.0011))
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = TRUE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+  out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = FALSE)
+  testthat::expect_true("Legends" %in% class(out$legend))
+  testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
   `%>%`<- purrr::`%>%`
   data <- as.matrix({

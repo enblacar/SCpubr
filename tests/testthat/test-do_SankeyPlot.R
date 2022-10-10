@@ -10,6 +10,67 @@ testthat::test_that("do_SankeyPlot: PASS - default", {
   testthat::expect_type(p, "list")
 })
 
+testthat::test_that("do_SankeyPlot: PASS - test colors when colors.use is null", {
+  sample$first_group <- sample$orig.ident
+  sample$middle_group <- sample$orig.ident
+  sample$middle_group2 <- ifelse(sample$seurat_clusters %in% c("0"), "A", "B")
+  sample$last_group <- sample$orig.ident
+  sample$first_group_factor <- factor(sample$orig.ident)
+  sample$middle_group_factor <- factor(sample$orig.ident)
+  sample$middle_group2_factor <- factor(ifelse(sample$seurat_clusters %in% c("0"), "A", "B"))
+  sample$last_group_factor <- factor(sample$orig.ident)
+
+  p <- SCpubr::do_SankeyPlot(sample = sample,
+                             first_group = "first_group",
+                             middle_groups = "middle_group",
+                             last_group = "last_group")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_SankeyPlot(sample = sample,
+                             first_group = "first_group",
+                             middle_groups = "middle_group",
+                             last_group = "last_group",
+                             colors.middle = c("Cell" = "red"))
+  testthat::expect_type(p, "list")
+
+
+  testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
+                                                first_group = "first_group",
+                                                middle_groups = "middle_group",
+                                                last_group = "last_group",
+                                                colors.middle = c("Cell?" = "red"))})
+
+  testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
+                                                first_group = "first_group",
+                                                middle_groups = "middle_group2",
+                                                last_group = "last_group",
+                                                colors.middle = c("A" = "red"))})
+
+  p <- SCpubr::do_SankeyPlot(sample = sample,
+                             first_group = "first_group_factor",
+                             middle_groups = "middle_group_factor",
+                             last_group = "last_group_factor")
+  testthat::expect_type(p, "list")
+
+  p <- SCpubr::do_SankeyPlot(sample = sample,
+                             first_group = "first_group_factor",
+                             middle_groups = "middle_group_factor",
+                             last_group = "last_group_factor",
+                             colors.middle = c("Cell" = "red"))
+  testthat::expect_type(p, "list")
+
+  testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
+                                                first_group = "first_group_factor",
+                                                middle_groups = "middle_group_factor",
+                                                last_group = "last_group_factor",
+                                                colors.middle = c("Cell?" = "red"))})
+
+  testthat::expect_error({SCpubr::do_SankeyPlot(sample = sample,
+                                                first_group = "first_group_factor",
+                                                middle_groups = "middle_group2_factor",
+                                                last_group = "last_group_factor",
+                                                colors.middle = c("A" = "red"))})
+})
 
 testthat::test_that("do_SankeyPlot: PASS - middle_groups", {
 
