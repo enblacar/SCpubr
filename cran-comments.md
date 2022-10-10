@@ -10,7 +10,7 @@ N  checking installed package size ...
      sub-directories of 1Mb or more:
        R  13.2Mb
 
-However, when run with `devtools::check(), this note turns into:
+However, when run with `devtools::check(), this note turns into (this uses R CMD Check with arguments --no-manual --as-cran):
 N  checking installed package size ...
      installed size is  9.1Mb
      sub-directories of 1Mb or more:
