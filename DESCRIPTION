@@ -55,9 +55,15 @@ Suggests:
     ggsignif,
     infercnv,
     rjags,
-    rgdal
+    rgdal,
+    liana,
+    monocle3,
+    ggsankey
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
-
+Remotes:  
+    saezlab/liana,
+    cole-trapnell-lab/monocle3,
+    davidsjoberg/ggsankey
