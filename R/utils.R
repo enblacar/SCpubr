@@ -283,15 +283,12 @@ check_suggests <- function(function_name){
                    "testing" = c("Does_not_exist"))
 
   # The function is not in the current list of possibilities.
-
-  if (!(function_name %in% names(pkg_list))){
-    stop(function_name, " is not an accepted function name.", call. = FALSE)
-  }
+  assertthat::assert_that(function_name %in% names(pkg_list),
+                          msg = paste0(function_name, " is not an accepted function name."))
   pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
   for (pkg in pkgs){
-    if(!requireNamespace(pkg, quietly = TRUE)){
-      stop("Package ", pkg, " must be installed to use ", function_name, ".", call. = FALSE)
-    }
+    assertthat::assert_that(requireNamespace(pkg, quietly = TRUE),
+                            msg = paste0("Package ", pkg, " must be installed to use ", function_name, "."))
   }
 }
 
@@ -351,9 +348,8 @@ state_dependencies <- function(function_name = NULL){
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){
-      if (!(func %in% names(pkg_list))){
-        stop(function_name, " is not an accepted function name.", call. = FALSE)
-      }
+      assertthat::assert_that(func %in% names(pkg_list),
+                              msg = paste0(function_name, " is not an accepted function name."))
     }
   }
   cran_packages <- c("circlize",
@@ -426,9 +422,8 @@ state_dependencies <- function(function_name = NULL){
 #' TBD
 #' }
 check_Seurat <- function(sample){
-  if (isFALSE("Seurat" %in% class(sample))){
-    stop("Object provided is not a Seurat object.", call. = FALSE)
-  }
+  assertthat::assert_that("Seurat" %in% class(sample),
+                          msg = "Object provided is not a Seurat object.")
 }
 
 #' Internal check for colors.
@@ -449,9 +444,8 @@ check_colors <- function(colors, parameter_name = "") {
              error = function(e) FALSE)
   })
   # Check for cols.highlight.
-  if (sum(check) != length(colors)){
-    stop("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code.", call. = FALSE)
-  }
+  assertthat::assert_that(sum(check) == length(colors),
+                          msg = paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."))
 }
 
 #' Internal check for named colors and unique values of the grouping variable.
@@ -479,13 +473,11 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
     colors <- colors[names(colors) %in% check_values]
   }
 
-  if (length(colors) != length(check_values)){
-    stop('The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = FALSE)
-  }
+  assertthat::assert_that(length(colors) == length(check_values),
+                          msg = "The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).")
 
-  if (sum(names(colors) %in% check_values) != length(check_values)){
-    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = FALSE)
-  }
+  assertthat::assert_that(sum(names(colors) %in% check_values) == length(check_values),
+                          msg = "The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).")
 
   return(colors)
 }
@@ -577,9 +569,10 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
   limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
 
-  if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
-    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = FALSE)
-  }
+
+  assertthat::assert_that(limits[["scale.begin"]] > value & limits[["scale.end"]] < value,
+                          msg = paste0("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], "."))
+
 }
 
 #' Check if the feature to plot is in the Seurat object.
@@ -639,9 +632,8 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   if (length(not_found_features) > 0){
     if (isTRUE(permissive)){
       # Stop if neither of the features are found.
-      if (length(unlist(not_found_features)) == length(unlist(features))){
-        stop("Neither of the provided features are found.", call. = FALSE)
-      }
+      assertthat::assert_that(length(unlist(not_found_features)) != length(unlist(features)),
+                              msg = "Neither of the provided features are found.")
       warning("The requested features (",
               not_found_features,
               ") could not be found:\n",
@@ -653,27 +645,26 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
     } else if (isFALSE(permissive)){
-      stop("The requested features (",
-           not_found_features,
-           ") could not be found:\n",
-           "    - Not matching any gene name (rownames of the provided object).\n",
-           "    - Not matching any metadata column (in sample@meta.data).\n",
-           "    - Not part of the dimension names in any of the following reductions: ",
-           paste(Seurat::Reductions(object = sample), collapse = ", "),
-           ".\n\n", call. = FALSE)
+      assertthat::assert_that(length(not_found_features) == 0,
+                              msg = paste0("The requested features (",
+                                           not_found_features,
+                                           ") could not be found:\n",
+                                           "    - Not matching any gene name (rownames of the provided object).\n",
+                                           "    - Not matching any metadata column (in sample@meta.data).\n",
+                                           "    - Not part of the dimension names in any of the following reductions: ",
+                                           paste(Seurat::Reductions(object = sample), collapse = ", "),
+                                           ".\n\n"))
     }
   } else {
     features_out <- features
   }
   # If we are enforcing a given check (i.e: the feature being in the metadata).
   if (!(is.null(enforce_check))){
-    if (!(enforce_check %in% names(check_enforcers))){
-      stop("The variable enforcer is not in the current list of checked variable types.", call. = FALSE)
-    } else {
-      if (isFALSE(check_enforcers[[enforce_check]])){
-        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".", call. = FALSE)
-      }
-    }
+    assertthat::assert_that(enforce_check %in% names(check_enforcers),
+                            msg = "The variable enforcer is not in the current list of checked variable types.")
+
+    assertthat::assert_that(isTRUE(check_enforcers[[enforce_check]]),
+                            msg = paste0("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, "."))
   }
 
   # Return options.
@@ -761,9 +752,8 @@ remove_duplicated_features <- function(features){
 #' }
 check_identity <- function(sample, identities){
   for (identity in identities){
-    if (!(identity %in% levels(sample))){
-      stop("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced.", call. = FALSE)
-    }
+    assertthat::assert_that(identity %in% levels(sample),
+                            msg = paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."))
   }
 }
 
@@ -780,7 +770,8 @@ check_identity <- function(sample, identities){
 #' }
 check_and_set_reduction <- function(sample, reduction = NULL){
   # Check if the object has a reduction computed.
-  if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!", call. = FALSE)}
+  assertthat::assert_that(length(Seurat::Reductions(sample)) != 0,
+                          msg = "This object has no reductions computed!")
   # If no reduction was provided by the user.
   if (is.null(reduction)){
     # Select umap if computed.
@@ -793,7 +784,8 @@ check_and_set_reduction <- function(sample, reduction = NULL){
   # If the user provided a value for reduction.
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
-    if (!(reduction %in% Seurat::Reductions(sample))){stop("The provided reduction could not be found in the object: ", reduction, call. = FALSE)}
+    assertthat::assert_that(reduction %in% Seurat::Reductions(sample),
+                            msg = paste0("The provided reduction could not be found in the object: ", reduction))
   }
   return(reduction)
 }
@@ -812,9 +804,8 @@ check_and_set_reduction <- function(sample, reduction = NULL){
 #' }
 check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   # Check that the dimensions is a 2 item vector.
-  if (!(is.null(dims)) & length(dims) != 2){
-    stop("Provided dimensions need to be a 2-item vector.", call. = FALSE)
-  }
+  assertthat::assert_that(is.null(dims) & length(dims) == 2,
+                          msg = "Provided dimensions need to be a 2-item vector.")
 
   # If reduction is null, select the last computed one.
   if (is.null(reduction)){
@@ -823,21 +814,21 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 
   # Check that at least 2 dimensions are present.
   aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
-  if (aval_dims < 2){
-    stop("There are less than 2 dimensions in the requested reduction: ", reduction, ".")
-  }
+
+  assertthat::assert_that(aval_dims == 2,
+                          msg = "Provided dimensions need to be a 2-item vector.")
 
   # Check that the dimensions are integers.
   null_check <- is.null(dims[1]) & is.null(dims[2])
   integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
-  if (!(is.null(dims)) & integer_check == FALSE){
-    stop("Provied dimensions need to be numerics.", call. = FALSE)
-  }
+
+  assertthat::assert_that(is.null(dims) & integer_check == TRUE,
+                          msg = "Provied dimensions need to be numerics.")
+
   # Check that the dimensions are in the requested embedding.
   if (!(is.null(dims))){
-    if (!(dims[1] %in% seq_len(aval_dims)) | !(dims[2] %in% seq_len(aval_dims))){
-      stop("Dimension could not be found in the following reduction: ", reduction, ".", call. = FALSE)
-    }
+    assertthat::assert_that(dims[1] %in% seq_len(aval_dims) | dims[2] %in% seq_len(aval_dims),
+                            msg = paste0("Dimension could not be found in the following reduction: ", reduction))
   }
   # If no dimensions were provided, fall back to first and second.
   if (is.null(dims)){
@@ -859,22 +850,19 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 #' }
 check_and_set_assay <- function(sample, assay = NULL){
   # Check that at least one assay is computed.
-  if (length(Seurat::Assays(sample)) == 0){
-    stop("There must be at least one computed assay in the object.", call. = FALSE)
-  }
+  assertthat::assert_that(length(Seurat::Assays(sample)) != 0,
+                          msg = "There must be at least one computed assay in the object.")
   # If assay is null, set it to the active one.
   if (is.null(assay)){
     assay <- Seurat::DefaultAssay(sample)
   } else {
     # Check if the assay is a character.
-    if (!(is.character(assay))){
-      stop("The value for assay has to be a character.", call. = FALSE)
-    }
+    assertthat::assert_that(is.character(assay),
+                            msg = "The value for assay has to be a character.")
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
-    if (!(assay %in% aval_assays)){
-      stop("The following assay could not be found: ", assay, ".", call. = FALSE)
-    }
+    assertthat::assert_that(ssay %in% aval_assays,
+                            msg = paste0("The following assay could not be found: ", assay))
   }
   # Set up the assay the user has defined.
   if (assay != Seurat::DefaultAssay(sample)){
@@ -910,9 +898,8 @@ check_type <- function(parameters, required_type, test_function){
         if (!(is.null(item))){
           # If not NA, if the testing function fails, report it.
           if (sum(!(is.na(item))) > 0){
-            if (sum(!(test_function(item))) > 0){
-              stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = FALSE)
-            }
+            assertthat::assert_that(sum(test_function(item)) > 0,
+                                    msg = paste0("Parameter ", parameter_name, " needs to be a ", required_type, "."))
           }
         }
       }
@@ -933,9 +920,11 @@ check_type <- function(parameters, required_type, test_function){
 check_and_set_slot <- function(slot){
   if (is.null(slot)){
     slot <- "data"
-  } else if (!(slot %in% c("counts", "data", "scale.data"))){
-    stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.", call. = FALSE)
+  } else {
+    assertthat::assert_that(slot %in% c("counts", "data", "scale.data"),
+                            msg = "Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.")
   }
+
   return(slot)
 }
 
@@ -957,7 +946,8 @@ check_and_set_slot <- function(slot){
 compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE, assay = "SCT", slot = "data"){
   `%>%` <- magrittr::`%>%`
 
-  if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = FALSE)}
+  assertthat::assert_that(position %in% c("stack", "fill"),
+                          msg = "Position needs to be either stack or fill.")
 
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident
@@ -999,11 +989,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' TBD
 #' }
 check_viridis_color_map <- function(viridis_color_map, verbose = FALSE){
-  viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
-  if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)}
-  if (verbose){
-    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.", call. = FALSE)}
-  }
+  check_parameters(viridis_color_map, parameter_name = "viridis_color_map")
 }
 
 
@@ -1026,9 +1012,8 @@ check_length <- function(vector_of_parameters,
                          vector_of_features,
                          parameters_name,
                          features_name){
-  if (length(vector_of_parameters) != length(vector_of_features)){
-    stop("Length of ", parameters_name, " not equal to ", features_name, ".", call. = FALSE)
-  }
+  assertthat::assert_that(length(vector_of_parameters) == length(vector_of_features),
+                          msg = paste0("Length of ", parameters_name, " not equal to ", features_name, "."))
 }
 
 
@@ -1243,19 +1228,16 @@ heatmap_inner <- function(data,
                           symmetrical_scale = FALSE){
   `%>%`<- magrittr::`%>%`
 
-  if (nrow(data) == 1 & ncol(data) == 1){
-    stop("Please provide a matrix that is not 1x1.", call. = FALSE)
-  }
+  assertthat::assert_that(nrow(data) > 1 & ncol(data) > 1,
+                          msg = "Please provide a matrix that is not 1x1.")
 
   if (!(is.null(range.data))){
-    if (data_range == "both" & length(range.data) != 2){
-      stop("When providing data_range = both and range data, you need to specify the two ends of the scale in range.data. Please provide two numbers to range.data.", call. = FALSE)
-    }
+    assertthat::assert_that(data_range == "both" & length(range.data) == 2,
+                            msg = "When providing data_range = both and range data, you need to specify the two ends of the scale in range.data. Please provide two numbers to range.data.")
   }
 
-  if (sum(dim(unique(data))) == 2){
-    stop("Please provide a matrix with at least 2 different values.", call. = FALSE)
-  }
+  assertthat::assert_that(sum(dim(unique(data))) > 2,
+                          msg = "Please provide a matrix with at least 2 different values.")
 
   if (legend.position %in% c("top", "bottom")){
     legend_width <- grid::unit(legend.length, "mm")
@@ -1305,14 +1287,11 @@ heatmap_inner <- function(data,
   q75 <- mean(c(q50, q100))
 
   # Checks.
-  if (data_range == "only_neg" & q0 >= 0){
-    stop("There are no negative values in the matrix.")
-  }
+  assertthat::assert_that(data_range == "only_neg" & q0 < 0,
+                          msg = "There are no negative values in the matrix.")
 
-  if (data_range == "only_pos" & q100 <= 0){
-    stop("There are no positive values in the matrix.")
-  }
-
+  assertthat::assert_that(data_range == "only_pos" & q100 > 0,
+                          msg = "There are no positive values in the matrix.")
 
   if (is.null(colors.use)){
     colors.use <- c("#023f73", "white", "#7a0213")
@@ -1792,37 +1771,53 @@ check_parameters <- function(parameter,
                              parameter_name){
   if (parameter_name == "font.type"){
     # Check font.type.
-    if (!(parameter %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = FALSE)
-    }
+    ssertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
+                           msg = "Please select one of the following for font.type: sans, serif, mono.")
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
-    if (!(parameter %in% c("normal", "colorbar", "colorsteps"))){
-      stop("Please select one of the following for legend.type: normal, colorbar, colorsteps.", call. = FALSE)
-    }
+    assertthat::assert_that(parameter %in% c("normal", "colorbar", "colorsteps"),
+                            msg = "Please select one of the following for legend.type: normal, colorbar, colorsteps.")
   } else if (parameter_name == "legend.position"){
     # Check the legend.position.
-    if (!(parameter %in% c("top", "bottom", "left", "right", "none"))){
-      stop("Please select one of the following for legend.position: top, bottom, left, right, none.", call. = FALSE)
-    }
+    assertthat::assert_that(parameter %in% c("top", "bottom", "left", "right", "none"),
+                            msg = "Please select one of the following for legend.position: top, bottom, left, right, none.")
   } else if (parameter_name == "marginal.type"){
     # Check marginal.type.
-    if (!(parameter %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
-      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = FALSE)
-    }
+    assertthat::assert_that(parameter %in% c("density", "histogram", "boxplot", "violin", "densigram"),
+                            msg = "Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.")
   } else if (parameter_name == "viridis_direction"){
-    if (!(parameter %in% c(1, -1))){
-      stop("Please provide a value for viridis_direction of -1 or 1.", call. = FALSE)
-    }
+    assertthat::assert_that(parameter %in% c(1, -1),
+                            msg = "Please provide a value for viridis_direction of -1 or 1.")
   } else if (parameter_name == "viridis_color_map"){
     viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
-    if (!(parameter %in% viridis_options)){
-      stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)
-    }
+    assertthat::assert_that(parameter %in% viridis_options,
+                            msg = "The option provided to viridis_color_map is not an accepted option.")
   } else if (parameter_name == "grid.type"){
-    if (!(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))){
-      stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = FALSE)
+    assertthat::assert_that(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+                            msg = "Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.")
+  } else if (parameter_name == "direction.type"){
+    for (item in parameter){
+      assertthat::assert_that(item %in% c("diffHeight", "arrows"),
+                              msg = "Please set direction.type as either diffHeight, arrows or both.")
     }
+  } else if (parameter_name == "self.link"){
+    assertthat::assert_that(parameter %in% c(1, 2),
+                            msg = "Please set self.link as either 1 or 2.")
+  } else if (parameter_name == "directional"){
+    assertthat::assert_that(parameter %in% c(0, 1, 2, -1),
+                            msg = "Please set directional as either 0, 1, 2 or -1.")
+  } else if (parameter_name == "link.arr.type"){
+    assertthat::assert_that(parameter %in% c("big.arrow", "triangle"),
+                            msg = "Please set link.arr.type as either big.arrow or triangle.")
+  } else if (parameter_name == "alignment"){
+    assertthat::assert_that(parameter %in% c("default", "vertical", "horizontal"),
+                            msg = "Please set alignment as either default or vertical or horizontal.")
+  } else if (parameter_name == "alpha.highlight"){
+    assertthat::assert_that(parameter %in% c(seq(1, 99), "FF"),
+                            msg = "Please provide either FF or a number between 1 and 99 to alpha.highlight.")
+  } else if (parameter_name == "scale_type"){
+    assertthat::assert_that(parameter %in% c("categorical", "continuous"),
+                            msg = "Please provide one of the following to scale_type: continuous, categorical.")
   }
 }
 

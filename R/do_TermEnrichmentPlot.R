@@ -70,9 +70,8 @@ do_TermEnrichmentPlot <- function(enriched_terms,
     # Check colors.
     if (!is.null(colors.use)){
       check_colors(colors.use)
-      if (length(colors.use) != 2){
-        stop("Provide only 2 colors.", call. = FALSE)
-      }
+      assertthat::assert_that(length(colors.use) == 2,
+                              msg = "Provide only 2 colors to colors.use.")
     } else {
       colors.use <- c("#bdc3c7", "#2c3e50")
     }

@@ -83,9 +83,8 @@ do_EnrichmentHeatmap <- function(sample,
     input_list <- list("Input" = input_gene_list)
   } else if (is.list(input_gene_list)){
     input_list <- input_gene_list
-    if (is.null(names(input_list))){
-      stop("Please provide a named list. This is, each gene list has to come with a name.", call. = FALSE)
-    }
+    assertthat::assert_that(!is.null(names(input_list)),
+                            msg = "Please provide a named list. This is, each gene list has to come with a name.")
   }
 
   # Compute the enrichment scores.
@@ -99,11 +98,8 @@ do_EnrichmentHeatmap <- function(sample,
     group.by <- "dummy"
   }
 
-  if (isFALSE(group.by %in% colnames(sample@meta.data))){
-    stop("Please provide a name to group.by that is a categorical column in sample@meta.data.", call. = FALSE)
-  }
-
-
+  assertthat::assert_that(isTRUE(group.by %in% colnames(sample@meta.data)),
+                          msg = "Please provide a name to group.by that is a categorical column in sample@meta.data.")
 
   max_value_list <- c()
   min_value_list <- c()

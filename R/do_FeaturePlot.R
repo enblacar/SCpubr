@@ -120,25 +120,16 @@ do_FeaturePlot <- function(sample,
   if (!(is.null(split.by))){check_feature(sample = sample, features = split.by, enforce_check = "metadata", enforce_parameter = "split.by")}
 
   # Check individual titles.
-  if (!(is.null(individual.titles))){
-    if(length(features) != length(individual.titles)){
-      stop('Total number of individual titles does not match the number of features provided.', call. = FALSE)
-    }
-  }
+  assertthat::assert_that(!is.null(individual.titles) & (length(features) == length(individual.subtitles)),
+                          msg = 'Total number of individual titles does not match the number of features provided.')
 
   # Check individual subtitles.
-  if (!(is.null(individual.subtitles))){
-    if(length(features) != length(individual.subtitles)){
-      stop('Total number of individual subtitles does not match the number of features provided.', call. = FALSE)
-    }
-  }
+  assertthat::assert_that(!is.null(individual.subtitles) & (length(features) == length(individual.subtitles)),
+                          msg = 'Total number of individual subtitles does not match the number of features provided.')
 
   # Check individual captions
-  if (!(is.null(individual.captions))){
-    if(length(features) != length(individual.captions)){
-      stop('Total number of individual captions does not match the number of features provided.', call. = FALSE)
-    }
-  }
+  assertthat::assert_that(!is.null(individual.captions) & (length(features) == length(individual.captions)),
+                          msg = 'Total number of individual captions does not match the number of features provided.')
 
   check_colors(border.color, parameter_name = "border.color")
   check_colors(na.value, parameter_name = "na.value")

@@ -165,16 +165,15 @@ do_CellularStatesPlot <- function(sample,
     # 2-variable plot.
     if (is.null(y2) & is.null(x2)){
       # Check that the names provided are not repeated.
-      if (sum(duplicated(c(x1, y1))) > 0){
-        stop("The names of the lists to plot can not be the same.", call. = FALSE)
-      }
+      assertthat::assert_that(sum(duplicated(c(x1, y1))) == 0,
+                              msg = "The names of the lists to plot can not be the same.")
       # Check that the names provided match the marker genes.
-      if (!(x1 %in% names(input_gene_list))){
-        stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-      }
-      if (!(y1 %in% names(input_gene_list))){
-        stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-      }
+      assertthat::assert_that(x1 %in% names(input_gene_list),
+                              msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+
+      assertthat::assert_that(y1 %in% names(input_gene_list),
+                              msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
       # And store them as a tibble.
@@ -237,19 +236,18 @@ do_CellularStatesPlot <- function(sample,
     # 3-variable plot.
     } else if (is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
-        if (sum(duplicated(c(x1, y1, x2))) > 0){
-          stop("The names of the lists to plot can not be the same.", call. = FALSE)
-        }
+        assertthat::assert_that(sum(duplicated(c(x1, y1, x2))) == 0,
+                                msg = "The names of the lists to plot can not be the same.")
         # Check that the names provided match the marker genes.
-        if (!(x1 %in% names(input_gene_list))){
-          stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
-        if (!(x2 %in% names(input_gene_list))){
-          stop(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
-        if (!(y1 %in% names(input_gene_list))){
-          stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
+        assertthat::assert_that(x1 %in% names(input_gene_list),
+                                msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+
+        assertthat::assert_that(x2 %in% names(input_gene_list),
+                                msg = paste0(x2, " is not a name of a list of genes provided to input_gene_list."))
+
+        assertthat::assert_that(y1 %in% names(input_gene_list),
+                                msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+
         # Retrieve metadata variables.
         variables_to_retrieve <- c(x1, x2, y1, group.by)
         # And store them as a tibble.
@@ -322,22 +320,22 @@ do_CellularStatesPlot <- function(sample,
     # 4-parameter plot.
     } else if (!is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
-        if (sum(duplicated(c(x1, y1, x2, y2))) > 0){
-          stop("The names of the lists to plot can not be the same.", call. = FALSE)
-        }
+        assertthat::assert_that(sum(duplicated(c(x1, y1, x2, y2))) == 0,
+                                msg = "The names of the lists to plot can not be the same.")
         # Check that the names provided match the marker genes.
-        if (!(x1 %in% names(input_gene_list))){
-          stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
-        if (!(x2 %in% names(input_gene_list))){
-          stop(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
-        if (!(y1 %in% names(input_gene_list))){
-          stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
-        if (!(y2 %in% names(input_gene_list))){
-          stop(y2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
-        }
+        assertthat::assert_that(x1 %in% names(input_gene_list),
+                                msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+
+        assertthat::assert_that(x2 %in% names(input_gene_list),
+                                msg = paste0(x2, " is not a name of a list of genes provided to input_gene_list."))
+
+        assertthat::assert_that(y1 %in% names(input_gene_list),
+                                msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+
+        assertthat::assert_that(y2 %in% names(input_gene_list),
+                                msg = paste0(y2, " is not a name of a list of genes provided to input_gene_list."))
+
+
         # Retrieve metadata variables to plot.
         variables_to_retrieve <- c(x1, x2, y1, y2)
         # And store them as a tibble.
@@ -479,9 +477,8 @@ do_CellularStatesPlot <- function(sample,
     }
 
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
-      if (is.null(features) & isFALSE(plot_enrichment_scores)){
-        stop("Please provide features to plot.", call. = FALSE)
-      }
+      assertthat::assert_that(!is.null(features) & isFALSE(plot_enrichment_scores),
+                              msg = "Please provide features to plot.")
       output_list <- list()
 
       # Generate a mock DimRed object for the plots.

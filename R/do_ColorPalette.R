@@ -52,23 +52,20 @@ do_ColorPalette <- function(colors.use,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check that the colors provided are only one.
-  if (length(colors.use) > 1){
-    stop("Please, provide a single color to colors.use.", call. = FALSE)
-  }
+  assertthat::assert_that(length(colors.use) == 1,
+                          msg = "Please, provide a single color to colors.use.")
 
   # Check that the color provided is a valid color representation.
   check_colors(colors.use, parameter_name = "colors.use")
 
   # Check that only one option is activated.
   options_list <- c(opposite, adjacent, triadic, split_complementary, tetradic, square, complete_output)
-  if (sum(options_list) > 1){
-    stop("Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.", call. = FALSE)
-  }
-  # Check that n is actually positive.
+  assertthat::assert_that(sum(options_list) == 1,
+                          msg = "Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.")
 
-  if (n <= 0){
-    stop("Please provide a positive integer value for 'n'.", call. = FALSE)
-  }
+  # Check that n is actually positive.
+  assertthat::assert_that(n > 0,
+                          msg = "Please provide a positive integer value for 'n'.")
 
   # If any option is set to TRUE, pal_length is 12
   if (sum(options_list) >= 1 & n != 12){

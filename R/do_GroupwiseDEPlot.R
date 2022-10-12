@@ -80,9 +80,8 @@ do_GroupwiseDEPlot <- function(sample,
   check_parameters(parameter = viridis_map_expression, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis_map_logfc, parameter_name = "viridis_color_map")
 
-   if (length(group.by) != length(row_title_expression)){
-     stop("Please provide the same number of row titles as the number of items in group.by.", call. = FALSE)
-   }
+  assertthat::assert_that(length(group.by) == length(row_title_expression),
+                          msg = "Please provide the same number of row titles as the number of items in group.by.")
 
 
   magnitude <- ifelse(slot == "data", "avg_log2FC", "avg_diff")

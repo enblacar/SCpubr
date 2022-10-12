@@ -99,7 +99,8 @@ do_DotPlot <- function(sample,
     features <- remove_duplicated_features(features = features)
 
     # Check that flip is not set to TRUE and features is not a named list.
-    if (isTRUE(flip) & is.list(features)){stop("Please provide the genes as a simple character vector or set flip to FALSE.", call. = FALSE)}
+    assertthat::assert_that((isTRUE(flip) & !is.list(features)) | (isFALSE(flip) & is.list(features)),
+                            msg = "Please provide the genes as a simple character vector or set flip to FALSE.")
     # Check that split.by is set and the user has not provided a correct vector of colors.
     if (!(is.null(split.by))){
       if (length(colors.use) != length(as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1])))){

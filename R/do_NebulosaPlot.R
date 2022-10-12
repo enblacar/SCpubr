@@ -98,22 +98,14 @@ do_NebulosaPlot <- function(sample,
   features <- remove_duplicated_features(features = features)
 
   # Check individual titles.
-  if (!(is.null(individual.titles))){
-    # If joint is set up.
-    if (isTRUE(joint)){
-      if (!(is.null(return_only_joint)) & isTRUE(return_only_joint)){
-        stop("If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.", call. = FALSE)
-      } else {
-        if(length(features) + 1 != length(individual.titles)){
-          stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = FALSE)
-        }
-      }
-    } else {
-      if(length(features) != length(individual.titles)){
-        stop('Total number of individual titles does not match the number of features provided.', call. = FALSE)
-      }
-    }
-  }
+  assertthat::assert_that(!is.null(individual.titles) & isTRUE(joint) & isFALSE(!is.null(return_only_joint) & isTRUE(return_only_joint)),
+                          msg = "If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.")
+
+  assertthat::assert_that(!is.null(individual.titles) & isTRUE(joint) & isFALSE(!is.null(return_only_joint) & isTRUE(return_only_joint)) & (length(features) + 1 == length(individual.titles)),
+                          msg = "Total number of individual titles does not match the number of features provided + 1 (for the joint density).")
+
+  assertthat::assert_that(!is.null(individual.titles) & isFALSE(joint) & (length(features) == length(individual.titles)),
+                          msg = "Total number of individual titles does not match the number of features provided.")
 
   # Check the colors provided to legend.framecolor and legend.tickcolor and border.color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")

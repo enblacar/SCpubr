@@ -104,7 +104,12 @@ do_ChordDiagramPlot <- function(sample = NULL,
                          "colors.to" = colors.to)
   # Checks
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-
+  check_parameters(parameter = direction.type, parameter_name = "direction.type")
+  check_parameters(parameter = self.link, parameter_name = "self.link")
+  check_parameters(parameter = directional, parameter_name = "directional")
+  check_parameters(parameter = link.arr.type, parameter_name = "link.arr.type")
+  check_parameters(parameter = alignment, parameter_name = "alignment")
+  check_parameters(parameter = alpha.highlight, parameter_name = "alpha.highlight")
   circlize::circos.clear()
 
   extra_params <- list(...)
@@ -112,47 +117,41 @@ do_ChordDiagramPlot <- function(sample = NULL,
   # Internal use only
   if ("from_df" %in% names(extra_params) & "df" %in% names(extra_params)){
     data <- extra_params[["df"]]
-    if ("data.frame" %!in% class(data)){
-      stop("Please provide a data.frame or tibble to df.", call. = FALSE)
-    }
-    if (ncol(data) != 3){
-      stop("If you pass from_df and df to this function, make sure that the df has 3 columns.", call. = FALSE)
-    } else {
-      if (sum(colnames(data) %in% c("from", "to", "value")) != 3){
-        stop("Please name the columns in the df as: from, to and value.", call. = FALSE)
-      } else {
-        if (class(data[["from"]]) %!in% c("factor", "character")){
-          stop("Please make sure that the column from is either a factor or a character column.", call. = FALSE)
-        }
 
-        if (class(data[["to"]]) %!in% c("factor", "character")){
-          stop("Please make sure that the column to is either a factor or a character column.", call. = FALSE)
-        }
+    assertthat::assert_that("data.frame" %in% class(data),
+                            msg = "Please provide a data.frame or tibble to df.")
 
-        if (class(data[["value"]]) %!in% c("integer")){
-          stop("Please make sure that the column value is either an integer column.", call. = FALSE)
-        }
-      }
-    }
+    assertthat::assert_that(ncol(data) == 3,
+                            msg = "If you pass from_df and df to this function, make sure that the df has 3 columns.")
+
+    assertthat::assert_that(sum(colnames(data) %in% c("from", "to", "value")) == 3,
+                            msg = "Please name the columns in the df as: from, to and value.")
+
+    assertthat::assert_that(class(data[["from"]]) %in% c("factor", "character"),
+                            msg = "Please make sure that the column from is either a factor or a character column.")
+
+    assertthat::assert_that(class(data[["to"]]) %in% c("factor", "character"),
+                            msg = "Please make sure that the column to is either a factor or a character column.")
+
+    assertthat::assert_that(class(data[["value"]]) %in% c("integer"),
+                            msg = "Please make sure that the column value is either an integer column.")
+
   }  else {
-    if (is.null(sample)){
-      stop("Please provide a Seurat object.", call. = FALSE)
-    } else {
-      # Check if the sample provided is a Seurat object.
-      check_Seurat(sample = sample)
-    }
+    assertthat::assert_that(!is.null(sample),
+                            msg = "Please provide a Seurat object.")
 
-    if (is.null(from) | is.null(to)){
-      stop("Please provide a value to: from or to parameters.", call. = FALSE)
-    } else {
-      if (from %!in% colnames(sample@meta.data) | to %!in% colnames(sample@meta.data)){
-        stop("From or to parameters have to be in the object metadata.", call. = FALSE)
-      }
+    # Check if the sample provided is a Seurat object.
+    check_Seurat(sample = sample)
 
-      if (class(sample@meta.data[, from]) %!in% c("factor", "character") | class(sample@meta.data[, to]) %!in% c("factor", "character")){
-        stop("Parameters from or to have to be either a factor or a character column in the object metadata.", call. = FALSE)
-      }
-    }
+    assertthat::assert_that(!is.null(from) | !is.null(to),
+                            msg = "Please provide a value to: from or to parameters.")
+
+    assertthat::assert_that(from %in% colnames(sample@meta.data) | to %in% colnames(sample@meta.data),
+                            msg = "From or to parameters have to be in the object metadata.")
+
+    assertthat::assert_that(class(sample@meta.data[, from]) %in% c("factor", "character") | class(sample@meta.data[, to]) %in% c("factor", "character"),
+                            msg = "Parameters from or to have to be either a factor or a character column in the object metadata.")
+
     data <- sample@meta.data %>%
             tibble::as_tibble() %>%
             dplyr::select(dplyr::all_of(c(from, to))) %>%
@@ -223,36 +222,11 @@ do_ChordDiagramPlot <- function(sample = NULL,
   colors.use <- c(colors.from, colors.to)
   if (is.null(link.sort)){link.sort <- "default"}
   if (isFALSE(z_index)){link.zindex <- NULL} else {link.zindex <- rank(data[["value"]])}
-  if (self.link %!in% c(1, 2)){
-    stop("Please set self.link as either 1 or 2.", call. = FALSE)
-  }
 
-  if (directional %!in% c(0, 1, 2, -1)){
-    stop("Please set directional as either 0, 1, 2 or -1.", call. = FALSE)
-  }
-
-  for (item in direction.type){
-    if (item %!in% c("diffHeight", "arrows")){
-      stop("Please set direction.type as either diffHeight, arrows or both.", call. = FALSE)
-    }
-  }
-
-  if (link.arr.type %!in% c("big.arrow", "triangle")){
-    stop("Please set link.arr.type as either big.arrow or triangle.", call. = FALSE)
-  }
-
-  if (alignment %!in% c("default", "vertical", "horizontal")){
-    stop("Please set alignment as either default or vertical or horizontal.", call. = FALSE)
-  } else {
-    if (alignment == "vertical"){
-      circlize::circos.par(start.degree = 0)
-    } else if (alignment == "horizontal"){
-      circlize::circos.par(start.degree = 90)
-    }
-  }
-
-  if (alpha.highlight %!in% c(seq(1, 99), "FF")){
-    stop("Please provide either FF or a number between 1 and 99 to alpha.highlight.", call. = FALSE)
+  if (alignment == "vertical"){
+    circlize::circos.par(start.degree = 0)
+  } else if (alignment == "horizontal"){
+    circlize::circos.par(start.degree = 90)
   }
 
   if (!is.na(link.border.color)){

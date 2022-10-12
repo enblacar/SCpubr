@@ -106,9 +106,16 @@ do_DimPlot <- function(sample,
   group_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(group.by))
   split_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(split.by))
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
-  if (group_by_and_split_by_used){stop("Either group.by or split.by has to be NULL.", call. = FALSE)}
-  if (group_by_and_highlighting_cells){stop("Either group.by or cells.highlight has to be NULL.", call. = FALSE)}
-  if (split_by_and_highlighting_cells){stop("Either split.by or cells.highlight has to be NULL.", call. = FALSE)}
+
+  assertthat::assert_that(!group_by_and_split_by_used,
+                          msg = "Either group.by or split.by has to be NULL.")
+
+  assertthat::assert_that(!group_by_and_split_by_used,
+                          msg = "Either group.by or cells.highlight has to be NULL.")
+
+  assertthat::assert_that(!split_by_and_highlighting_cells,
+                          msg = "Either split.by or cells.highlight has to be NULL.")
+
   if (order_and_shuffle_used){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
 
   # Check for label.color.
@@ -119,7 +126,8 @@ do_DimPlot <- function(sample,
   ## Check the color assigned to border.color.
   check_colors(border.color, parameter_name = "border.color")
   ## If the user provides more than one color to na.value, stop the function.
-  if (length(na.value) != 1){stop("Please provide only one color to na.value.", call. = FALSE)}
+  assertthat::assert_that(length(na.value) == 1,
+                          msg = "Please provide only one color to na.value.")
 
   # If the user provides raster = TRUE but the pt.size is less than 1, warn it.
   if (isTRUE(raster) & pt.size < 1){
@@ -197,9 +205,8 @@ do_DimPlot <- function(sample,
       # When highlighting cells.
     } else if (highlighting_cells){
       # Stop the execution if more than one color is provided to highlight the cells.
-      if (length(colors.use) > 1){
-        stop("Provide only one color if cells.highlight or idents.highlight is used.", call. = FALSE)
-      }
+      assertthat::assert_that(length(colors.use) == 1,
+                              msg = "Provide only one color if cells.highlight or idents.highlight is used.")
     }
   }
 
@@ -216,9 +223,8 @@ do_DimPlot <- function(sample,
     # When running under default parameters.
     if (group_by_and_split_by_are_null){
       # Check that idents.keep matches the values and if not, stop the execution.
-      if (isFALSE(length(idents.keep) == sum(idents.keep %in% levels(sample)))){
-        stop("All the values in idents.keep must be in levels(sample).", call. = FALSE)
-      }
+      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% levels(sample))),
+                              msg = "All the values in idents.keep must be in levels(sample).")
       # Set the identities that the user wants to exclude as NA.
       Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
 
@@ -226,18 +232,16 @@ do_DimPlot <- function(sample,
       # When using group.by, check with the values in group.by.
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
-      if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by])))){
-        stop("All the values in idents.keep must be in the group.by variable provided.", call. = FALSE)
-      }
+      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by]))),
+                              msg = "All the values in idents.keep must be in the group.by variable provided.")
       # Convert to NA values in group.by not included in the user's selected values.
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
       # If split.by is used instead.
     } else if (split_by_is_used){
       # Check that the values in idents.keep are in the unique values of split.by.
-      if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by])))){
-        stop("All the values in idents.keep must be in the split.by variable provided.", call. = FALSE)
-      }
+      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
+                              msg = "All the values in idents.keep must be in the split.by variable provided.")
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
     }
   }

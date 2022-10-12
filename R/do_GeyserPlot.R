@@ -119,6 +119,7 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = scale_type, parameter_name = "scale_type")
 
   `%>%` <- magrittr::`%>%`
   # Check the assay.
@@ -127,29 +128,17 @@ do_GeyserPlot <- function(sample,
   assay <- out[["assay"]]
   rm(out)
 
-  # Check if the scale is properly set.
-  if (!(scale_type %in% c("categorical", "continuous"))){
-    stop("Please provide one of the following to scale_type: continuous, categorical.", call. = FALSE)
-  }
-
   # Check that split.by is in metadata variables.
-  if (!(is.null(split.by))){
-    if (!(split.by %in% colnames(sample@meta.data))){
-      stop("The variable for split.by has to be on the metadata of the object.", call. = FALSE)
-    }
-  }
+  assertthat::assert_that(!is.null(split.by) & split.by %in% colnames(sample@meta.data),
+                          msg = "The variable for split.by has to be on the metadata of the object.")
 
   # Check that group.by is in metadata variables.
-  if (!(is.null(group.by))){
-    if (!(group.by %in% colnames(sample@meta.data))){
-      stop("The variable for group.by has to be on the metadata of the object.", call. = FALSE)
-    }
-  }
+  assertthat::assert_that(!is.null(group.by) & group.by %in% colnames(sample@meta.data),
+                          msg = "The variable for group.by has to be on the metadata of the object.")
 
   # Check that jitter is in range.
-  if (jitter >= 0.5 | jitter < 0){
-    stop("Value for jitter has to be betwen 0 and 0.49.", call. = FALSE)
-  }
+  assertthat::assert_that(jitter > 0 & jitter < 0.5,
+                          msg = "Value for jitter has to be betwen 0 and 0.49.")
 
   # Will contain the output.
   list.out <- list()
@@ -178,9 +167,8 @@ do_GeyserPlot <- function(sample,
       if (is.null(color.by)){
         color.by <- group.by
       } else {
-        if (!(color.by %in% colnames(sample@meta.data))){
-          stop("With a categorical scale, color.by needs to be present in sample@meta.data.", call. = FALSE)
-        }
+        assertthat::assert_that(color.by %in% colnames(sample@meta.data),
+                                msg = "With a categorical scale, color.by needs to be present in sample@meta.data.")
       }
     }
 

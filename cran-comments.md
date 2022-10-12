@@ -3,6 +3,8 @@ This is the first release of SCpubr.
 This is a third resubmission. In this version I have:
 
 * Modified examples so that `\dontrun` is removed. In the cases in which the runtime is higher than 5s (measured with `system.time()`), I used `\donttest` instead.
+* Removed the use of `T` and `F` in examples, tests and scripts. Resorted to use `TRUE` and `FALSE` instead. 
+* Moved `sysdata.rda` to `inst/extdata` so that it can be used for both examples and tests. 
 
 ## Resubmission 2
 This is a second resubmission. In this version I have:

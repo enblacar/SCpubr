@@ -103,11 +103,8 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
 
-  # Check font.type.
-  if (length(feature_to_rank) > 1){
-    stop("Please provide only one feature to feature_to_rank.", call. = FALSE)
-  }
-
+  assertthat::assert_that(length(feature_to_rank) == 1,
+                          msg = "Please provide only one feature to feature_to_rank.")
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){

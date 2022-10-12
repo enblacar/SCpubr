@@ -76,9 +76,8 @@ do_BarPlot <- function(sample,
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
   # Get the general table.
-  if (class(sample@meta.data[, group.by]) %!in% c("character", "factor")){
-    stop("This function only works with categorical metadta variables supplied to feature.", call. = FALSE)
-  }
+  assertthat::assert_that(class(sample@meta.data[, group.by]) %in% c("character", "factor"),
+                          msg = "This function only works with categorical metadta variables supplied to feature.")
 
   if (is.null(colors.use)){
     colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
