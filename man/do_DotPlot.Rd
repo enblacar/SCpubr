@@ -2,7 +2,8 @@
 % Please edit documentation in R/do_DotPlot.R
 \name{do_DotPlot}
 \alias{do_DotPlot}
-\title{Wrapper for \link[Seurat]{DotPlot}.}
+\title{This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
+You can}
 \usage{
 do_DotPlot(
   sample,
@@ -134,7 +135,8 @@ do_DotPlot(
 A ggplot2 object containing a Dot Plot.
 }
 \description{
-Wrapper for \link[Seurat]{DotPlot}.
+This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
+You can
 }
 \examples{
 \dontrun{

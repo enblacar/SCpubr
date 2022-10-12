@@ -1,6 +1,8 @@
 <!-- badges: start -->
-[![codecov](https://codecov.io/gh/enblacar/SCpubr/branch/main/graph/badge.svg?token=HK7JB08VFD)](https://app.codecov.io/gh/enblacar/SCpubr/)
+[![Build check](https://github.com/enblacar/SCpubr/actions/workflows/build.yaml/badge.svg)](https://github.com/enblacar/SCpubr/actions/workflows/build.yaml)
+[![Code Coverage](https://codecov.io/gh/enblacar/SCpubr/branch/main/graph/badge.svg?token=HK7JB08VFD)](https://app.codecov.io/gh/enblacar/SCpubr/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 <!-- badges: end -->
   
 # SCpubr

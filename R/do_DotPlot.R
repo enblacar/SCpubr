@@ -1,4 +1,5 @@
-#' Wrapper for \link[Seurat]{DotPlot}.
+#' This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
+#' You can
 #'
 #' @inheritParams doc_function
 #' @param colors.use \strong{\code{\link[base]{character}}} | Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
