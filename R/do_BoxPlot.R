@@ -158,8 +158,16 @@ do_BoxPlot <- function(sample,
                                                   dplyr::pull(.data[["group.by"]]) %>%
                                                   as.character()}))
   }
-  assertthat::assert_that(isTRUE(order) & is.null(split.by),
-                          msg = "Parameter order can not be used alongside split.by.")
+  if (isTRUE(order)){
+    assertthat::assert_that(is.null(split.by),
+                            msg = "Parameter order can not be used alongside split.by.")
+  }
+
+  if (!is.null(split.by)){
+    assertthat::assert_that(isFALSE(order),
+                            msg = "Parameter order can not be used alongside split.by.")
+  }
+
   if (isTRUE(use_silhouette) & is.null(split.by)){
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],

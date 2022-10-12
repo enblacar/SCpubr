@@ -477,8 +477,11 @@ do_CellularStatesPlot <- function(sample,
     }
 
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
-      assertthat::assert_that(!is.null(features) & isFALSE(plot_enrichment_scores),
-                              msg = "Please provide features to plot.")
+      if (isTRUE(plot_features)){
+        assertthat::assert_that(!is.null(features),
+                                msg = "Please provide features to plot.")
+      }
+
       output_list <- list()
 
       # Generate a mock DimRed object for the plots.

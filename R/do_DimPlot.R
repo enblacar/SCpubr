@@ -110,7 +110,7 @@ do_DimPlot <- function(sample,
   assertthat::assert_that(!group_by_and_split_by_used,
                           msg = "Either group.by or split.by has to be NULL.")
 
-  assertthat::assert_that(!group_by_and_split_by_used,
+  assertthat::assert_that(!group_by_and_highlighting_cells,
                           msg = "Either group.by or cells.highlight has to be NULL.")
 
   assertthat::assert_that(!split_by_and_highlighting_cells,

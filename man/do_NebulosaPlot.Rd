@@ -14,13 +14,10 @@ do_NebulosaPlot(
   combine = TRUE,
   method = c("ks", "wkde"),
   joint = FALSE,
-  return_only_joint = NULL,
+  return_only_joint = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  individual.titles = NULL,
-  individual.subtitles = NULL,
-  individual.captions = NULL,
   legend.type = "colorbar",
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
@@ -71,8 +68,6 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 \item{return_only_joint}{\strong{\code{\link[base]{logical}}} | Whether to only return the joint density panel.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
-
-\item{individual.titles, individual.subtitles, individual.captions}{\strong{\code{\link[base]{character}}} | Vector. Title, subtitle or caption to use in the plot when multiple features are passed on. Use NA to keep the original title.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{

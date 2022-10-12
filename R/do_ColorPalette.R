@@ -60,8 +60,10 @@ do_ColorPalette <- function(colors.use,
 
   # Check that only one option is activated.
   options_list <- c(opposite, adjacent, triadic, split_complementary, tetradic, square, complete_output)
-  assertthat::assert_that(sum(options_list) == 1,
-                          msg = "Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.")
+  if (sum(options_list) > 0){
+    assertthat::assert_that(sum(options_list) == 1,
+                            msg = "Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.")
+  }
 
   # Check that n is actually positive.
   assertthat::assert_that(n > 0,

@@ -667,10 +667,6 @@ testthat::test_that("utils: check_viridis_color_map - FAIL - wrong color map", {
   testthat::expect_error(SCpubr:::check_viridis_color_map("wrong_color_map"))
 })
 
-testthat::test_that("utils: check_viridis_color_map - WARNING - using turbo", {
-  testthat::expect_warning(SCpubr:::check_viridis_color_map("turbo", verbose = TRUE))
-})
-
 testthat::test_that("utils: check_viridis_color_map - PASS - using turbo with verbose = F", {
   testthat::expect_silent(SCpubr:::check_viridis_color_map("turbo"))
 })

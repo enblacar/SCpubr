@@ -19,13 +19,10 @@ do_NebulosaPlot <- function(sample,
                             combine = TRUE,
                             method = c("ks", "wkde"),
                             joint = FALSE,
-                            return_only_joint = NULL,
+                            return_only_joint = FALSE,
                             plot.title = NULL,
                             plot.subtitle = NULL,
                             plot.caption = NULL,
-                            individual.titles = NULL,
-                            individual.subtitles = NULL,
-                            individual.captions = NULL,
                             legend.type = "colorbar",
                             legend.framewidth = 1.5,
                             legend.tickwidth = 1.5,
@@ -82,7 +79,6 @@ do_NebulosaPlot <- function(sample,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
                          "slot" = slot,
-                         "individual.titles" = individual.titles,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
@@ -96,16 +92,6 @@ do_NebulosaPlot <- function(sample,
   # Check if the feature is actually in the object.
   features <- check_feature(sample = sample, features = features, permissive = TRUE)
   features <- remove_duplicated_features(features = features)
-
-  # Check individual titles.
-  assertthat::assert_that(!is.null(individual.titles) & isTRUE(joint) & isFALSE(!is.null(return_only_joint) & isTRUE(return_only_joint)),
-                          msg = "If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.")
-
-  assertthat::assert_that(!is.null(individual.titles) & isTRUE(joint) & isFALSE(!is.null(return_only_joint) & isTRUE(return_only_joint)) & (length(features) + 1 == length(individual.titles)),
-                          msg = "Total number of individual titles does not match the number of features provided + 1 (for the joint density).")
-
-  assertthat::assert_that(!is.null(individual.titles) & isFALSE(joint) & (length(features) == length(individual.titles)),
-                          msg = "Total number of individual titles does not match the number of features provided.")
 
   # Check the colors provided to legend.framecolor and legend.tickcolor and border.color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -303,40 +289,6 @@ do_NebulosaPlot <- function(sample,
              ggplot2::labs(caption = plot.caption)
       } else {
         p <- p & patchwork::plot_annotation(caption = plot.caption)
-      }
-    }
-
-
-    # Add individual titles.
-    if (!is.null(individual.titles) & !(isTRUE(return_only_joint))){
-      times <- length(features)
-      if (isTRUE(joint)){times <- times + 1}
-      for (counter in seq(1, times)){
-        if (!(is.na(individual.titles[counter]))){
-          p[[counter]]$labels$title <- individual.titles[counter]
-        }
-      }
-    }
-
-    # Add individual subtitles.
-    if (!is.null(individual.subtitles) & !(isTRUE(return_only_joint))){
-      times <- length(features)
-      if (isTRUE(joint)){times <- times + 1}
-      for (counter in seq(1, times)){
-        if (!(is.na(individual.subtitles[counter]))){
-          p[[counter]]$labels$subtitle <- individual.subtitles[counter]
-        }
-      }
-    }
-
-    # Add individual titles.
-    if (!is.null(individual.captions) & !(isTRUE(return_only_joint))){
-      times <- length(features)
-      if (isTRUE(joint)){times <- times + 1}
-      for (counter in seq(1, times)){
-        if (!(is.na(individual.captions[counter]))){
-          p[[counter]]$labels$caption <- individual.captions[counter]
-        }
       }
     }
 

@@ -149,38 +149,6 @@ testthat::test_that("do_NebulosaPlot: PASS - caption", {
   testthat::expect_type(p, "list")
 })
 
-testthat::test_that("do_NebulosaPlot: PASS - individual titles", {
-
-
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("EPC1", "LTV1"),
-                               joint = TRUE,
-                               return_only_joint = FALSE,
-                               individual.titles = c("A", NA, "B"))
-  testthat::expect_type(p, "list")
-})
-
-testthat::test_that("do_NebulosaPlot: PASS - individual subtitles", {
-
-
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("EPC1", "LTV1"),
-                               joint = TRUE,
-                               return_only_joint = FALSE,
-                               individual.subtitles = c("A", NA, "B"))
-  testthat::expect_type(p, "list")
-})
-
-testthat::test_that("do_NebulosaPlot: PASS - individual captions", {
-
-
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("EPC1", "LTV1"),
-                               joint = TRUE,
-                               return_only_joint = FALSE,
-                               individual.captions = c("A", NA, "B"))
-  testthat::expect_type(p, "list")
-})
 
 testthat::test_that("do_NebulosaPlot: PASS - color map", {
 
@@ -217,33 +185,6 @@ testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
                                                    viridis_color_map = "F"))
 })
 
-testthat::test_that("do_NebulosaPlot: FAIL - individual titles + joint + return only joint", {
-
-
-  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("EPC1", "LTV1"),
-                                                 joint = TRUE,
-                                                 return_only_joint = TRUE,
-                                                 individual.titles = "A"))
-})
-
-testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles ", {
-
-
-  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("EPC1", "LTV1"),
-                                                 joint = FALSE,
-                                                 individual.titles = "A"))
-})
-
-testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles for joint ", {
-
-
-  testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                 features = c("EPC1", "LTV1"),
-                                                 joint = TRUE,
-                                                 individual.titles = "A"))
-})
 
 testthat::test_that("do_NebulosaPlot: PASS - no legend", {
 

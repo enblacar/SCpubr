@@ -570,7 +570,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
   limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
 
 
-  assertthat::assert_that(limits[["scale.begin"]] > value & limits[["scale.end"]] < value,
+  assertthat::assert_that(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value,
                           msg = paste0("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], "."))
 
 }
@@ -803,35 +803,34 @@ check_and_set_reduction <- function(sample, reduction = NULL){
 #' TBD
 #' }
 check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
-  # Check that the dimensions is a 2 item vector.
-  assertthat::assert_that(is.null(dims) & length(dims) == 2,
-                          msg = "Provided dimensions need to be a 2-item vector.")
-
   # If reduction is null, select the last computed one.
   if (is.null(reduction)){
     reduction <- Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]
   }
 
-  # Check that at least 2 dimensions are present.
-  aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
+  # Check that the dimensions is a 2 item vector.
+  if (!is.null(dims)){
+    assertthat::assert_that(length(dims) == 2,
+                            msg = "Provided dimensions need to be a 2-item vector.")
 
-  assertthat::assert_that(aval_dims == 2,
-                          msg = "Provided dimensions need to be a 2-item vector.")
+    # Check that at least 2 dimensions are present.
+    aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
 
-  # Check that the dimensions are integers.
-  null_check <- is.null(dims[1]) & is.null(dims[2])
-  integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
+    assertthat::assert_that(aval_dims >= 2,
+                            msg = "Available dimensions need to be at least a 2-item vector.")
 
-  assertthat::assert_that(is.null(dims) & integer_check == TRUE,
-                          msg = "Provied dimensions need to be numerics.")
+    # Check that the dimensions are integers.
+    null_check <- is.null(dims[1]) & is.null(dims[2])
+    integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
 
-  # Check that the dimensions are in the requested embedding.
-  if (!(is.null(dims))){
-    assertthat::assert_that(dims[1] %in% seq_len(aval_dims) | dims[2] %in% seq_len(aval_dims),
+    assertthat::assert_that(isFALSE(null_check) &  isTRUE(integer_check),
+                            msg = "Provided dimensions need to be numerics.")
+
+    # Check that the dimensions are in the requested embedding.
+    assertthat::assert_that(dims[1] %in% seq_len(aval_dims) & dims[2] %in% seq_len(aval_dims),
                             msg = paste0("Dimension could not be found in the following reduction: ", reduction))
-  }
-  # If no dimensions were provided, fall back to first and second.
-  if (is.null(dims)){
+  } else {
+    # If no dimensions were provided, fall back to first and second.
     dims <- c(1, 2)
   }
   return(dims)
@@ -861,7 +860,7 @@ check_and_set_assay <- function(sample, assay = NULL){
                             msg = "The value for assay has to be a character.")
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
-    assertthat::assert_that(ssay %in% aval_assays,
+    assertthat::assert_that(assay %in% aval_assays,
                             msg = paste0("The following assay could not be found: ", assay))
   }
   # Set up the assay the user has defined.
@@ -1028,8 +1027,7 @@ check_length <- function(vector_of_parameters,
 use_dataset <- function(n_cells = 180){
   # We want this function to be completely silent.
   suppressWarnings({
-    test_list <- test.data
-    genes <- test_list$genes
+    genes <- readRDS(system.file("extdata/genes_example.rds", package = "SCpubr"))
     values <- seq(0, 15, 0.1)
     counts <- matrix(ncol = n_cells, nrow = length(genes))
     cols <- c()
@@ -1228,11 +1226,11 @@ heatmap_inner <- function(data,
                           symmetrical_scale = FALSE){
   `%>%`<- magrittr::`%>%`
 
-  assertthat::assert_that(nrow(data) > 1 & ncol(data) > 1,
+  assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
                           msg = "Please provide a matrix that is not 1x1.")
 
-  if (!(is.null(range.data))){
-    assertthat::assert_that(data_range == "both" & length(range.data) == 2,
+  if (!(is.null(range.data)) & data_range == "both"){
+    assertthat::assert_that(length(range.data) == 2,
                             msg = "When providing data_range = both and range data, you need to specify the two ends of the scale in range.data. Please provide two numbers to range.data.")
   }
 
@@ -1287,11 +1285,13 @@ heatmap_inner <- function(data,
   q75 <- mean(c(q50, q100))
 
   # Checks.
-  assertthat::assert_that(data_range == "only_neg" & q0 < 0,
-                          msg = "There are no negative values in the matrix.")
-
-  assertthat::assert_that(data_range == "only_pos" & q100 > 0,
-                          msg = "There are no positive values in the matrix.")
+  if (data_range == "only_neg"){
+    assertthat::assert_that(q0 < 0,
+                            msg = "There are no negative values in the matrix.")
+  } else if (data_range == "only_pos"){
+    assertthat::assert_that(q100 > 0,
+                            msg = "There are no positive values in the matrix.")
+  }
 
   if (is.null(colors.use)){
     colors.use <- c("#023f73", "white", "#7a0213")
@@ -1771,7 +1771,7 @@ check_parameters <- function(parameter,
                              parameter_name){
   if (parameter_name == "font.type"){
     # Check font.type.
-    ssertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
+    assertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
                            msg = "Please select one of the following for font.type: sans, serif, mono.")
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.

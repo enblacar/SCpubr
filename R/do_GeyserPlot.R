@@ -129,12 +129,17 @@ do_GeyserPlot <- function(sample,
   rm(out)
 
   # Check that split.by is in metadata variables.
-  assertthat::assert_that(!is.null(split.by) & split.by %in% colnames(sample@meta.data),
-                          msg = "The variable for split.by has to be on the metadata of the object.")
+  if (!is.null(split.by)){
+    assertthat::assert_that(split.by %in% colnames(sample@meta.data),
+                            msg = "The variable for split.by has to be on the metadata of the object.")
+  }
+
 
   # Check that group.by is in metadata variables.
-  assertthat::assert_that(!is.null(group.by) & group.by %in% colnames(sample@meta.data),
-                          msg = "The variable for group.by has to be on the metadata of the object.")
+  if (!is.null(group.by)){
+    assertthat::assert_that(group.by %in% colnames(sample@meta.data),
+                            msg = "The variable for group.by has to be on the metadata of the object.")
+  }
 
   # Check that jitter is in range.
   assertthat::assert_that(jitter > 0 & jitter < 0.5,
