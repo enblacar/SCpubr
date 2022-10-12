@@ -1,5 +1,6 @@
 
 testthat::test_that("save_Plot: PASS - no file", {
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             output_format = "svg"))
@@ -8,7 +9,7 @@ testthat::test_that("save_Plot: PASS - no file", {
 
 testthat::test_that("save_Plot: PASS - no file path", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             file_name = "test",
                                             output_format = "svg"))
@@ -17,7 +18,7 @@ testthat::test_that("save_Plot: PASS - no file path", {
 
 testthat::test_that("save_Plot: PASS - null file path", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             file_name = "test",
                                             output_format = "svg"))
@@ -26,7 +27,7 @@ testthat::test_that("save_Plot: PASS - null file path", {
 
 testthat::test_that("save_Plot: PASS - no file path", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = paste0(figure_path, "/deleteme"),
                                             file_name = "test",
@@ -35,7 +36,7 @@ testthat::test_that("save_Plot: PASS - no file path", {
 })
 
 testthat::test_that("save_Plot: FAIL - wrong output format", {
-
+  testthat::skip_on_ci()
   testthat::expect_error(SCpubr::save_Plot(plot = p,
                                            figure_path = figure_path,
                                            file_name = "test",
@@ -53,7 +54,7 @@ testthat::test_that("save_Plot: FAIL - all and publication at the same time.", {
 })
 
 testthat::test_that("save_Plot: PASS - all", {
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -78,7 +79,7 @@ testthat::test_that("save_Plot: PASS - all", {
 
 testthat::test_that("save_Plot: PASS - publication", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -104,7 +105,7 @@ testthat::test_that("save_Plot: PASS - publication", {
 
 testthat::test_that("save_Plot: PASS - jpeg", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -127,7 +128,7 @@ testthat::test_that("save_Plot: PASS - jpeg", {
 })
 
 testthat::test_that("save_Plot: PASS - png", {
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -146,7 +147,7 @@ testthat::test_that("save_Plot: PASS - png", {
 
 testthat::test_that("save_Plot: PASS - pdf", {
 
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -164,7 +165,7 @@ testthat::test_that("save_Plot: PASS - pdf", {
 })
 
 testthat::test_that("save_Plot: PASS - tiff", {
-
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
@@ -187,6 +188,7 @@ testthat::test_that("save_Plot: PASS - tiff", {
 })
 
 testthat::test_that("save_Plot: PASS - svg", {
+  testthat::skip_on_ci()
   testthat::expect_silent(SCpubr::save_Plot(plot = p,
                                             figure_path = figure_path,
                                             file_name = "test",
