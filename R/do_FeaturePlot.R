@@ -380,7 +380,7 @@ do_FeaturePlot <- function(sample,
                               scale = "color")
         }
         p.loop <- p.loop +
-                  ggplot2::ggtitle("")
+          ggplot2::ggtitle("")
 
         # Add cell borders.
         if (isTRUE(plot_cell_borders)){
@@ -441,7 +441,7 @@ do_FeaturePlot <- function(sample,
                                 scale = "color")
           }
           p.loop <- p.loop +
-                    ggplot2::ggtitle(iteration)
+            ggplot2::ggtitle(iteration)
 
           if (legend.position != "none"){
             p.loop <- modify_continuous_legend(p = p.loop,
@@ -499,23 +499,23 @@ do_FeaturePlot <- function(sample,
 
   # Fix the extra space and add theme parameters.
   p <- p &
-       ggplot2::theme_minimal(base_size = font.size) &
-       ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                      plot.title = ggplot2::element_text(face = "bold",
-                                                            hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
-                      plot.subtitle = ggplot2::element_text(hjust = 0),
-                      plot.caption = ggplot2::element_text(hjust = 1),
-                      panel.grid = ggplot2::element_blank(),
-                      plot.title.position = "plot",
-                      plot.caption.position = "plot",
-                      text = ggplot2::element_text(family = font.type),
-                      legend.text = ggplot2::element_text(face = "bold"),
-                      legend.position = legend.position,
-                      legend.title = ggplot2::element_text(face = "bold"),
-                      legend.justification = "center",
-                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+    ggplot2::theme_minimal(base_size = font.size) &
+    ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                   plot.title = ggplot2::element_text(face = "bold",
+                                                      hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
+                   plot.subtitle = ggplot2::element_text(hjust = 0),
+                   plot.caption = ggplot2::element_text(hjust = 1),
+                   panel.grid = ggplot2::element_blank(),
+                   plot.title.position = "plot",
+                   plot.caption.position = "plot",
+                   text = ggplot2::element_text(family = font.type),
+                   legend.text = ggplot2::element_text(face = "bold"),
+                   legend.position = legend.position,
+                   legend.title = ggplot2::element_text(face = "bold"),
+                   legend.justification = "center",
+                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by) & legend.position != "none"){
     counter <- 0
     for (feature in features){
@@ -606,10 +606,10 @@ do_FeaturePlot <- function(sample,
     # if dims is first and then second.
     if (sum(dims == c(1, 2)) == 2){
       p <- p &
-           ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
-                          axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
-                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                          axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
+        ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
+                       axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &

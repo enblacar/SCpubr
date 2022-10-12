@@ -36,7 +36,7 @@ testthat::test_that("do_ViolinPlot: PASS - without boxplot", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "EPC1",
-                          plot_boxplot = F)
+                          plot_boxplot = FALSE)
   testthat::expect_type(p, "list")
 })
 

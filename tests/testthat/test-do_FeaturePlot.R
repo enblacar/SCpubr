@@ -272,7 +272,7 @@ testthat::test_that("do_FeaturePlot: PASS - plotting a Dimensional reduction com
 testthat::test_that("do_FeaturePlot: PASS - split.by factor", {
 
 
-  sample$factor_seurat_clusters <- factor(sample$seurat_clusters, levels = c("2", "0", "1", "3","4", "5", "6", "7", "8"))
+  sample$factor_seurat_clusters <- factor(sample$seurat_clusters, levels = c("2", "0", "1", "3", "4", "5", "6", "7", "8"))
   p <- SCpubr::do_FeaturePlot(sample,
                               features = c("PC_1"),
                               split.by = "factor_seurat_clusters")

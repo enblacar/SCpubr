@@ -105,7 +105,7 @@ do_BeeSwarmPlot <- function(sample,
 
   # Check font.type.
   if (length(feature_to_rank) > 1){
-    stop("Please provide only one feature to feature_to_rank.", call. = F)
+    stop("Please provide only one feature to feature_to_rank.", call. = FALSE)
   }
 
 
@@ -120,28 +120,28 @@ do_BeeSwarmPlot <- function(sample,
 
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {
-    sample$rank_me <- sample@meta.data[, feature_to_rank]
-    sample$rank <- rank(sample$rank_me)
+    sample[["rank_me"]] <- sample@meta.data[, feature_to_rank]
+    sample[["rank"]] <- rank(sample[["rank_me"]])
   } else if (feature_to_rank %in% rownames(sample)){
-    sample$rank_me <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
-    sample$rank <- rank(sample$rank_me)
+    sample[["rank_me"]] <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
+    sample[["rank"]] <- rank(sample[["rank_me"]])
   } else if (feature_to_rank %in% dim_colnames){
     for(red in Seurat::Reductions(object = sample)){
       if (feature_to_rank %in% colnames(sample@reductions[[red]][[]])){
         reduction <- red
-        sample$rank_me <- sample@reductions[[reduction]][[]][, feature_to_rank]
-        sample$rank <- rank(sample$rank_me)
+        sample[["rank_me"]] <- sample@reductions[[reduction]][[]][, feature_to_rank]
+        sample[["rank"]] <- rank(sample[["rank_me"]])
       }
     }
   }
   # Compute the ranking
-  sample$ranked_groups <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
+  sample[["ranked_groups"]] <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
 
-  color_by <- ifelse(continuous_feature == T, "rank_me", "ranked_groups")
+  color_by <- ifelse(continuous_feature == TRUE, "rank_me", "ranked_groups")
 
   p <- ggplot2::ggplot(sample@meta.data,
-                       mapping = ggplot2::aes(x = .data$rank,
-                                              y = .data$ranked_groups,
+                       mapping = ggplot2::aes(x = .data[["rank"]],
+                                              y = .data[["ranked_groups"]],
                                               color = !!rlang::sym(color_by)))
 
   # Add raster layer if desired.
@@ -238,8 +238,8 @@ do_BeeSwarmPlot <- function(sample,
     # Generate base layer.
     if (isTRUE(raster)){
       base_layer <- ggrastr::geom_quasirandom_rast(data = sample@meta.data,
-                                                   mapping = ggplot2::aes(x = .data$rank,
-                                                                          y = .data$ranked_groups),
+                                                   mapping = ggplot2::aes(x = .data[["rank"]],
+                                                                          y = .data[["ranked_groups"]]),
                                                    groupOnX = FALSE,
                                                    raster.dpi = raster.dpi,
                                                    color = border.color,
@@ -247,14 +247,14 @@ do_BeeSwarmPlot <- function(sample,
                                                    show.legend = FALSE)
     } else if (isFALSE(raster)){
       base_layer <-ggbeeswarm::geom_quasirandom(data = sample@meta.data,
-                                                 mapping = ggplot2::aes(x = .data$rank,
-                                                                        y = .data$ranked_groups),
+                                                 mapping = ggplot2::aes(x = .data[["rank"]],
+                                                                        y = .data[["ranked_groups"]]),
                                                  groupOnX = FALSE,
                                                  color = border.color,
                                                  size = pt.size * border.size,
                                                  show.legend = FALSE)
     }
-    p$layers <- append(base_layer, p$layers)
+    p[["layers"]] <- append(base_layer, p[["layers"]])
 
   }
 

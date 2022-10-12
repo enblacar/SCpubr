@@ -8,8 +8,8 @@ do_CellularStatesPlot(
   sample,
   input_gene_list,
   x1,
-  x2 = NULL,
   y1,
+  x2 = NULL,
   y2 = NULL,
   group.by = NULL,
   colors.use = NULL,
@@ -38,7 +38,7 @@ do_CellularStatesPlot(
   border.size = 2,
   border.color = "black",
   pt.size = 2,
-  raster = F,
+  raster = FALSE,
   raster.dpi = 1024,
   plot_features = FALSE,
   features = NULL,
@@ -55,9 +55,9 @@ do_CellularStatesPlot(
 
 \item{x1}{\strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. First feature in the X axis. Will go on the right side of the X axis if y2 is not provided and top-right quadrant if provided.}
 
-\item{x2}{\strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the X axis. Will go on the left side of the X axis if y2 is not provided and top-left quadrant if provided.}
-
 \item{y1}{\strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. First feature on the Y axis. Will become the Y axis if y2 is not provided and bottom-right quadrant if provided.}
+
+\item{x2}{\strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the X axis. Will go on the left side of the X axis if y2 is not provided and top-left quadrant if provided.}
 
 \item{y2}{\strong{\code{\link[base]{character}}} | A name of a list from input_gene_list. Second feature on the Y axis. Will become the bottom-left quadrant if provided.}
 

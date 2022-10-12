@@ -54,9 +54,7 @@ do_TermEnrichmentPlot <- function(enriched_terms,
                          "legend.width" = legend.width,
                          "text_labels_size" = text_labels_size)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
-    # Check logical parameters.
-    #logical_list <- list("joint_plot" = joint_plot)
-    #check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+
     # Check character parameters.
     character_list <- list("colors.use" = colors.use,
                            "legend.position" = legend.position,

@@ -92,9 +92,9 @@ do_CopyNumberVariantPlot <- function(sample,
   # Fix for group.by.
   if (is.null(group.by)){
     group.by <- "dummy"
-    sample@meta.data$dummy <- sample@active.ident
+    sample@meta.data[["dummy"]] <- sample@active.ident
   } else {
-    sample@meta.data$dummy <- sample@meta.data[, group.by]
+    sample@meta.data[["dummy"]] <- sample@meta.data[, group.by]
     group.by <- "dummy"
   }
 
@@ -110,21 +110,21 @@ do_CopyNumberVariantPlot <- function(sample,
   for (chromosome in chromosome_list){
     # Retrieve chr locations of the chromosome.
     locations <- chr_locations %>%
-                 dplyr::filter(.data$chr == chromosome)
+                 dplyr::filter(.data[["chr"]] == chromosome)
 
     for (chr_arm in c("p", "q")){
       # Retrieve the start.
       start <- locations %>%
-               dplyr::filter(.data$arm == chr_arm) %>%
+               dplyr::filter(.data[["arm"]] == chr_arm) %>%
                dplyr::pull(start)
       # Retrieve the end.
       end <- locations %>%
-             dplyr::filter(.data$arm == chr_arm) %>%
+             dplyr::filter(.data[["arm"]] == chr_arm) %>%
              dplyr::pull(end)
 
       # Retrieve the genes present in the chromosome arm.
       genes_use <- rownames(genes %>%
-                            dplyr::filter(.data$chr == paste0("chr", chromosome),
+                            dplyr::filter(.data[["chr"]] == paste0("chr", chromosome),
                                           stop <= end))
 
       # Retrieve the CNV scores from the inferCNV object.
@@ -142,7 +142,7 @@ do_CopyNumberVariantPlot <- function(sample,
 
         # If metacells were used.
         if (isTRUE(using_metacells)){
-          sample$metacell_mapping <- metacell_mapping
+          sample[["metacell_mapping"]] <- metacell_mapping
           sample@meta.data <- sample@meta.data %>%
                               dplyr::mutate("cells" = colnames(sample)) %>%
                               dplyr::left_join(y = {sample@meta.data %>%

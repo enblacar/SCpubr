@@ -29,8 +29,8 @@
 do_CellularStatesPlot <- function(sample,
                                   input_gene_list,
                                   x1,
-                                  x2 = NULL,
                                   y1,
+                                  x2 = NULL,
                                   y2 = NULL,
                                   group.by = NULL,
                                   colors.use = NULL,
@@ -59,7 +59,7 @@ do_CellularStatesPlot <- function(sample,
                                   border.size = 2,
                                   border.color = "black",
                                   pt.size = 2,
-                                  raster = F,
+                                  raster = FALSE,
                                   raster.dpi = 1024,
                                   plot_features = FALSE,
                                   features = NULL,
@@ -146,9 +146,9 @@ do_CellularStatesPlot <- function(sample,
     # Fix for group.by.
     if (is.null(group.by)){
       group.by <- "dummy"
-      sample@meta.data$dummy <- sample@active.ident
+      sample@meta.data[["dummy"]] <- sample@active.ident
     } else {
-      sample@meta.data$dummy <- sample@meta.data[, group.by]
+      sample@meta.data[["dummy"]] <- sample@meta.data[, group.by]
       group.by <- "dummy"
     }
 
@@ -170,18 +170,18 @@ do_CellularStatesPlot <- function(sample,
       }
       # Check that the names provided match the marker genes.
       if (!(x1 %in% names(input_gene_list))){
-        stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list."), call. = FALSE)
+        stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
       }
       if (!(y1 %in% names(input_gene_list))){
-        stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list."), call. = FALSE)
+        stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
       }
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
       # And store them as a tibble.
       scores <- sample@meta.data[, variables_to_retrieve]
-      scores$cell <- rownames(scores)
+      scores[["cell"]] <- rownames(scores)
       # Shuffle the cells so that we accomplish a random plotting, not sample by sample.
-      scores <- scores[sample(scores$cell, nrow(scores)), ]
+      scores <- scores[sample(scores[["cell"]], nrow(scores)), ]
       scores <- tidyr::tibble(scores)
 
       # Compute scores for the X axis.
@@ -189,8 +189,8 @@ do_CellularStatesPlot <- function(sample,
       # Compute scores for the Y axis.
       y <- scores %>% dplyr::pull(y1)
 
-      names(x) <- scores$cell
-      names(y) <- scores$cell
+      names(x) <- scores[["cell"]]
+      names(y) <- scores[["cell"]]
 
       # Define titles.
       x_lab <- ifelse(is.null(xlab), x1, xlab)
@@ -198,11 +198,11 @@ do_CellularStatesPlot <- function(sample,
 
 
       # Plot
-      df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
+      df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[["dummy"]])
       p <- ggplot2::ggplot(data = df,
-                           mapping = ggplot2::aes(x = .data$set_x,
-                                                  y = .data$set_y,
-                                                  color = .data$group.by))
+                           mapping = ggplot2::aes(x = .data[["set_x"]],
+                                                  y = .data[["set_y"]],
+                                                  color = .data[["group.by"]]))
 
       if (isFALSE(raster)){
         p <- p +
@@ -242,24 +242,24 @@ do_CellularStatesPlot <- function(sample,
         }
         # Check that the names provided match the marker genes.
         if (!(x1 %in% names(input_gene_list))){
-          stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         if (!(x2 %in% names(input_gene_list))){
-          stop(paste0(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         if (!(y1 %in% names(input_gene_list))){
-          stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         # Retrieve metadata variables.
         variables_to_retrieve <- c(x1, x2, y1, group.by)
         # And store them as a tibble.
         scores <- sample@meta.data[, variables_to_retrieve]
-        scores$cell <- rownames(scores)
+        scores[["cell"]] <- rownames(scores)
         # Shuffle the cells so that we accomplish a random plotting, not sample by sample.
         scores <- tidyr::tibble(scores)
 
         # Compute the scores for the X axis.
-        x <- unlist(sapply(1:nrow(scores), function(x) {
+        x <- unlist(sapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
           d <- max(score_1, score_2)
@@ -267,7 +267,7 @@ do_CellularStatesPlot <- function(sample,
         }))
 
         # Compute the scores for the Y axis.
-        y <- unlist(sapply(1:nrow(scores), function(x) {
+        y <- unlist(sapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
           d <- max(score_1, score_2)
@@ -275,8 +275,8 @@ do_CellularStatesPlot <- function(sample,
           y
         }))
 
-        names(x) <- scores$cell
-        names(y) <- scores$cell
+        names(x) <- scores[["cell"]]
+        names(y) <- scores[["cell"]]
 
         # Define titles.
         x_lab <- ifelse(is.null(xlab), paste0(x2, "  <---->  ", x1), xlab)
@@ -285,8 +285,10 @@ do_CellularStatesPlot <- function(sample,
 
 
         # Plot.
-        df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores$dummy)
-        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by))
+        df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[["dummy"]])
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data[["set_x"]],
+                                                        y = .data[["set_y"]],
+                                                        color = .data[["group.by"]]))
 
         if (isFALSE(raster)){
           p <- p +
@@ -325,16 +327,16 @@ do_CellularStatesPlot <- function(sample,
         }
         # Check that the names provided match the marker genes.
         if (!(x1 %in% names(input_gene_list))){
-          stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(x1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         if (!(x2 %in% names(input_gene_list))){
-          stop(paste0(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(x2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         if (!(y1 %in% names(input_gene_list))){
-          stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(y1, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         if (!(y2 %in% names(input_gene_list))){
-          stop(paste0(y2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE))
+          stop(y2, " is not a name of a list of genes provided to input_gene_list.", call. = FALSE)
         }
         # Retrieve metadata variables to plot.
         variables_to_retrieve <- c(x1, x2, y1, y2)
@@ -346,7 +348,7 @@ do_CellularStatesPlot <- function(sample,
         d <- apply(scores, 1, function(x){max(x[c(x1, x2)]) - max(x[c(y1, y2)])})
 
         # Compute X axis values.
-        x <- sapply(1:length(d), function(x) {
+        x <- sapply(seq_along(d), function(x) {
           if (d[x] > 0) {
             d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
             ifelse(scores[x, x1] < scores[x, x2], d, -d)
@@ -367,10 +369,12 @@ do_CellularStatesPlot <- function(sample,
 
         # Plot.
         df <- data.frame(row.names = rownames(scores))
-        df$set_x <- x
-        df$set_y <- d
-        df$group.by <- sample@meta.data[, group.by]
-        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data$set_x, y = .data$set_y, color = .data$group.by))
+        df[["set_x"]] <- x
+        df[["set_y"]] <- d
+        df[["group.by"]] <- sample@meta.data[, group.by]
+        p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data[["set_x"]],
+                                                        y = .data[["set_y"]],
+                                                        color = .data[["group.by"]]))
 
         if (isFALSE(raster)){
           p <- p +
@@ -455,15 +459,15 @@ do_CellularStatesPlot <- function(sample,
     if (isTRUE(plot_cell_borders)){
       if (isFALSE(raster)){
         base_layer <-  ggplot2::geom_point(data = df,
-                                           mapping = ggplot2::aes(x = .data$set_x,
-                                                                  y = .data$set_y),
+                                           mapping = ggplot2::aes(x = .data[["set_x"]],
+                                                                  y = .data[["set_y"]]),
                                            size = pt.size * border.size,
                                            color = border.color,
                                            show.legend = FALSE)
       } else if (isTRUE(raster)){
         base_layer <-  scattermore::geom_scattermore(data = df,
-                                                     mapping = ggplot2::aes(x = .data$set_x,
-                                                                            y = .data$set_y),
+                                                     mapping = ggplot2::aes(x = .data[["set_x"]],
+                                                                            y = .data[["set_y"]]),
                                                      size = pt.size * border.size,
                                                      stroke = pt.size / 2,
                                                      color = border.color,
@@ -471,7 +475,7 @@ do_CellularStatesPlot <- function(sample,
                                                      pixels = c(raster.dpi, raster.dpi),
                                                      show.legend = FALSE)
       }
-      p$layers <- append(base_layer, p$layers)
+      p[["layers"]] <- append(base_layer, p[["layers"]])
     }
 
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
@@ -595,9 +599,9 @@ do_CellularStatesPlot <- function(sample,
       p <- ggplotify::as.ggplot(p)
 
       # Fix for the plot backgrounds after applying ggMarginal.
-      p$theme$plot.background <- ggplot2::element_rect(fill = "white", color = "white")
-      p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
-      p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
+      p[["theme"]][["plot.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
+      p[["theme"]][["legend.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
+      p[["theme"]][["panel.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
     }
 
     # Remove axis ticks?

@@ -16,19 +16,19 @@ testthat::test_that("utils: check_suggests - PASS - Correct function", {
 # STATE DEPENDENCIES
 
 testthat::test_that("utils: state_dependencies - FAIL - Wrong function", {
-  testthat::expect_error(SCpubr:::state_dependencies("wrong_name"))
+  testthat::expect_error(SCpubr::state_dependencies("wrong_name"))
 })
 
 testthat::test_that("utils: state_dependencies - PASS - Correct function, one name", {
-  suppressMessages({testthat::expect_message(SCpubr:::state_dependencies("do_DimPlot"))})
+  suppressMessages({testthat::expect_message(SCpubr::state_dependencies("do_DimPlot"))})
 })
 
 testthat::test_that("utils: state_dependencies - PASS - Correct function, several names", {
-  suppressMessages({testthat::expect_message(SCpubr:::state_dependencies(c("do_DimPlot", "do_FeaturePlot")))})
+  suppressMessages({testthat::expect_message(SCpubr::state_dependencies(c("do_DimPlot", "do_FeaturePlot")))})
 })
 
 testthat::test_that("utils: state_dependencies - PASS - Correct function, no parameters provided", {
-  suppressMessages({testthat::expect_message(SCpubr:::state_dependencies())})
+  suppressMessages({testthat::expect_message(SCpubr::state_dependencies())})
 })
 
 # CHECK SEURAT
@@ -385,7 +385,7 @@ testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, che
 
   output <- SCpubr:::check_and_set_reduction(sample = sample)
   last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
-  testthat::expect_equal(output, last_reduction)
+  testthat::expect_identical(output, last_reduction)
 })
 
 testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction", {
@@ -393,7 +393,7 @@ testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction
 
   output <- SCpubr:::check_and_set_reduction(sample = sample, reduction = "umap")
   reduction_check <- "umap"
-  testthat::expect_equal(output, reduction_check)
+  testthat::expect_identical(output, reduction_check)
 })
 
 testthat::test_that("utils: check_and_set_reduction - PASS - umap not in reductions", {
@@ -402,7 +402,7 @@ testthat::test_that("utils: check_and_set_reduction - PASS - umap not in reducti
   sample@reductions$umap <- NULL
   output <- SCpubr:::check_and_set_reduction(sample = sample)
   reduction_check <- "pca"
-  testthat::expect_equal(output, reduction_check)
+  testthat::expect_identical(output, reduction_check)
 })
 
 
@@ -430,7 +430,7 @@ testthat::test_that("utils: check_and_set_dimensions - FAIL - reduction only hav
 
 
   test <- sample
-  obj <- Seurat::CreateDimReducObject(test@reductions$umap[[]][, "UMAP_1", drop = F], key = "UMAP_", assay = "SCT")
+  obj <- Seurat::CreateDimReducObject(test@reductions$umap[[]][, "UMAP_1", drop = FALSE], key = "UMAP_", assay = "SCT")
   test@reductions$umap <- obj
   testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = test, reduction = "umap", dims = c(1, 2)))
 })
@@ -439,21 +439,21 @@ testthat::test_that("utils: check_and_set_dimensions - PASS - NULL parameters", 
 
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample)
-  testthat::expect_equal(output, c(1, 2))
+  testthat::expect_identical(output, c(1, 2))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - PASS - NULL dimension but provided dims", {
 
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample, dims = c(2, 1))
-  testthat::expect_equal(output, c(2, 1))
+  testthat::expect_identical(output, c(2, 1))
 })
 
 testthat::test_that("utils: check_and_set_dimensions - PASS - provided dimension and dims", {
 
 
   output <- SCpubr:::check_and_set_dimensions(sample = sample, reduction = "pca", dims = c(20, 11))
-  testthat::expect_equal(output, c(20, 11))
+  testthat::expect_identical(output, c(20, 11))
 })
 
 
@@ -483,16 +483,14 @@ testthat::test_that("utils: check_and_set_assay - PASS - null parameters", {
 
 
   output <- SCpubr:::check_and_set_assay(sample = sample)
-  testthat::expect_true(class(output$sample) == "Seurat")
-  testthat::expect_equal(output$assay, Seurat::DefaultAssay(sample))
+  testthat::expect_identical(output$assay, Seurat::DefaultAssay(sample))
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - providing assay", {
 
 
   output <- SCpubr:::check_and_set_assay(sample = sample, assay = "SCT")
-  testthat::expect_true(class(output$sample) == "Seurat")
-  testthat::expect_equal(output$assay, "SCT")
+  testthat::expect_identical(output$assay, "SCT")
 })
 
 testthat::test_that("utils: check_and_set_assay - PASS - providing non defaultassay", {
@@ -500,8 +498,7 @@ testthat::test_that("utils: check_and_set_assay - PASS - providing non defaultas
 
   sample@assays$RNA <- sample@assays$SCT
   output <- SCpubr:::check_and_set_assay(sample = sample, assay = "RNA")
-  testthat::expect_true(class(output$sample) == "Seurat")
-  testthat::expect_equal(output$assay, "RNA")
+  testthat::expect_identical(output$assay, "RNA")
 })
 
 
@@ -575,17 +572,17 @@ testthat::test_that("utils: check_and_set_slot - FAIL - wrong slot", {
 
 testthat::test_that("utils: check_and_set_slot - PASS - counts", {
   output <- SCpubr:::check_and_set_slot("counts")
-  testthat::expect_equal(output, "counts")
+  testthat::expect_identical(output, "counts")
 })
 
 testthat::test_that("utils: check_and_set_slot - PASS - data", {
   output <- SCpubr:::check_and_set_slot("data")
-  testthat::expect_equal(output, "data")
+  testthat::expect_identical(output, "data")
 })
 
 testthat::test_that("utils: check_and_set_slot - PASS - scale.data", {
   output <- SCpubr:::check_and_set_slot("scale.data")
-  testthat::expect_equal(output, "scale.data")
+  testthat::expect_identical(output, "scale.data")
 })
 
 
@@ -671,7 +668,7 @@ testthat::test_that("utils: check_viridis_color_map - FAIL - wrong color map", {
 })
 
 testthat::test_that("utils: check_viridis_color_map - WARNING - using turbo", {
-  testthat::expect_warning(SCpubr:::check_viridis_color_map("turbo", verbose = T))
+  testthat::expect_warning(SCpubr:::check_viridis_color_map("turbo", verbose = TRUE))
 })
 
 testthat::test_that("utils: check_viridis_color_map - PASS - using turbo with verbose = F", {
@@ -707,11 +704,10 @@ testthat::test_that("utils: check_length - PASS - correct length", {
 # USE DATASET
 testthat::test_that("utils: use_dataset - PASS - checks", {
   output <- SCpubr:::use_dataset()
-  testthat::expect_true(class(output) == "Seurat")
-  testthat::expect_equal(length(colnames(output)), 180)
-  testthat::expect_equal(length(rownames(output)), 7761)
-  testthat::expect_equal(Seurat::Assays(output), c("RNA", "SCT"))
-  testthat::expect_equal(Seurat::Reductions(output), c("pca", "umap"))
+  testthat::expect_length(colnames(output), 180)
+  testthat::expect_length(rownames(output), 7761)
+  testthat::expect_identical(Seurat::Assays(output), c("RNA", "SCT"))
+  testthat::expect_identical(Seurat::Reductions(output), c("pca", "umap"))
 })
 
 
@@ -771,7 +767,9 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
 
   `%>%`<- purrr::`%>%`
   data <- as.matrix({
-    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from=1,to=90,by=10),
+    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from = 1,
+                                                                                                                                                                  to = 90,
+                                                                                                                                                                  by = 10),
                                                                                                                                                        zeros = 0) %>% dplyr::select(-seurat_clusters)
   })
   testthat::expect_error(heatmap_inner(data, data_range = "both", range.data = 10))
@@ -836,7 +834,9 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
   data.modified <- as.matrix({
-    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from=-1,to=-90,by=-10),
+    sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from = -1,
+                                                                                                                                                                  to = -90,
+                                                                                                                                                                  by = -10),
                                                                                                                                                        zeros = 0,
                                                                                                                                                        n = -20) %>% dplyr::select(-seurat_clusters)
   })
@@ -868,7 +868,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data.modified, data_range = "only_neg", outlier.data = T, range.data = -15)
+  out <- SCpubr:::heatmap_inner(data.modified, data_range = "only_neg", outlier.data = TRUE, range.data = -15)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -879,7 +879,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, data_range = "only_pos", outlier.data = T, range.data = 15)
+  out <- SCpubr:::heatmap_inner(data, data_range = "only_pos", outlier.data = TRUE, range.data = 15)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -911,43 +911,43 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, cluster_columns = T)
+  out <- SCpubr:::heatmap_inner(data, cluster_columns = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, cluster_columns = F)
+  out <- SCpubr:::heatmap_inner(data, cluster_columns = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, cluster_rows = T)
+  out <- SCpubr:::heatmap_inner(data, cluster_rows = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, cluster_rows = F)
+  out <- SCpubr:::heatmap_inner(data, cluster_rows = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, border = T)
+  out <- SCpubr:::heatmap_inner(data, border = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, border = F)
+  out <- SCpubr:::heatmap_inner(data, border = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, row_dendogram = T)
+  out <- SCpubr:::heatmap_inner(data, row_dendogram = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, row_dendogram = F)
+  out <- SCpubr:::heatmap_inner(data, row_dendogram = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, column_dendogram = T)
+  out <- SCpubr:::heatmap_inner(data, column_dendogram = TRUE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, column_dendogram = F)
+  out <- SCpubr:::heatmap_inner(data, column_dendogram = FALSE)
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -967,7 +967,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-  out <- SCpubr:::heatmap_inner(data, outlier.data = T, range.data = c(0, 15))
+  out <- SCpubr:::heatmap_inner(data, outlier.data = TRUE, range.data = c(0, 15))
   testthat::expect_true("Legends" %in% class(out$legend))
   testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -981,7 +981,7 @@ testthat::test_that("utils: heatmap_inner - PASS - checks", {
     sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::pull(n)
   })
 
-  data[2,] <- 22
+  data[2, ] <- 22
   obj <- ComplexHeatmap::HeatmapAnnotation(orig.ident = data, col = list(orig.ident = c("20" = "red", "22" = "green")), which = "row")
   out <- SCpubr:::heatmap_inner(data, row_annotation = obj, row_annotation_side = "right")
   testthat::expect_true("Legends" %in% class(out$legend))
@@ -1020,7 +1020,7 @@ testthat::test_that("utils: compute_enrichment_scores - PASS - checks", {
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 
-  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), verbose = T, nbin = 1, ctrl = 10)
+  output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), verbose = TRUE, nbin = 1, ctrl = 10)
   testthat::expect_true("Seurat" %in% class(output))
   testthat::expect_true("test" %in% colnames(output@meta.data))
 

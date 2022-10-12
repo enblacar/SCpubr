@@ -220,7 +220,7 @@ p
 # Let's modify it so that it resembles a multi-sample Seurat object.
 sample$modified_orig.ident <- sample(x = c("Sample_A", "Sample_B", "Sample_C"),
                                      size = ncol(sample),
-                                     replace = T,
+                                     replace = TRUE,
                                      prob = c(0.2, 0.7, 0.1))
 
 # Geyser plot with categorical color scale split by seurat clusters.

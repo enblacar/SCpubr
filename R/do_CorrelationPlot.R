@@ -88,13 +88,13 @@ do_CorrelationPlot <- function(sample,
                                  t() %>%
                                  as.data.frame() %>%
                                  tibble::rownames_to_column(var = "cell") %>%
-                                 tidyr::pivot_longer(-.data$cell,
+                                 tidyr::pivot_longer(-.data[["cell"]],
                                                      names_to = "gene",
                                                      values_to = "expression")},
                             by = "cell") %>%
-           dplyr::select(-.data$cell) %>%
-           dplyr::group_by(.data[[group.by]], .data$gene) %>%
-           dplyr::summarise(mean_expression = mean(.data$expression)) %>%
+           dplyr::select(-.data[["cell"]]) %>%
+           dplyr::group_by(.data[[group.by]], .data[["gene"]]) %>%
+           dplyr::summarise(mean_expression = mean(.data[["expression"]])) %>%
            tidyr::pivot_wider(names_from = dplyr::all_of(c(group.by)),
                               values_from = "mean_expression") %>%
            as.data.frame() %>%
@@ -123,8 +123,8 @@ do_CorrelationPlot <- function(sample,
     ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
     suppressWarnings({
       grDevices::pdf(NULL)
-      h <- ComplexHeatmap::draw(out$heatmap,
-                                heatmap_legend_list = out$legend,
+      h <- ComplexHeatmap::draw(out[["heatmap"]],
+                                heatmap_legend_list = out[["legend"]],
                                 heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
                                 padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
       grDevices::dev.off()

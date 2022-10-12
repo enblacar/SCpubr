@@ -140,7 +140,7 @@ p
 # Transposing the matrix.
 p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                   input_gene_list = genes,
-                                  transpose = TRUE,
+                                  flip = TRUE,
                                   nbin = 1,
                                   ctrl = 10)
 p
@@ -148,7 +148,7 @@ p
 # Rotating the labels.
 p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                   input_gene_list = genes,
-                                  transpose = TRUE,
+                                  flip = TRUE,
                                   column_names_rot = 0,
                                   nbin = 1,
                                   ctrl = 10)
@@ -157,7 +157,7 @@ p
 # Modifying the tile size.
 p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                   input_gene_list = genes,
-                                  transpose = TRUE,
+                                  flip = TRUE,
                                   column_names_rot = 0,
                                   cluster_cols = FALSE,
                                   cluster_rows = TRUE,
@@ -170,7 +170,7 @@ p
 # Symmetrical scale viriis.
 p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                   input_gene_list = genes,
-                                  transpose = TRUE,
+                                  flip = TRUE,
                                   column_names_rot = 0,
                                   cluster_cols = FALSE,
                                   cluster_rows = TRUE,
@@ -184,7 +184,7 @@ p
 # Modifying the symmetrical scale non viridis.
 p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                   input_gene_list = genes,
-                                  transpose = TRUE,
+                                  flip = TRUE,
                                   column_names_rot = 0,
                                   cluster_cols = FALSE,
                                   cluster_rows = TRUE,

@@ -41,9 +41,6 @@ do_GroupwiseDEPlot <- function(sample,
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
-  # Check logical parameters.
-  # logical_list <- list()
-  # check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("heatmap.legend.length" = heatmap.legend.length,
                        "heatmap.legend.width" = heatmap.legend.width,

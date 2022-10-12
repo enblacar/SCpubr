@@ -80,12 +80,12 @@ do_ColorPalette <- function(colors.use,
   RGB_colors <- grDevices::col2rgb(colors.use)
 
   # Convert RGB values to HSV values.
-  HSV_colors <- grDevices::rgb2hsv(RGB_colors)[,1]
+  HSV_colors <- grDevices::rgb2hsv(RGB_colors)[, 1]
 
   # Get HSV components.
-  hue <- HSV_colors[1] # Hue
-  sat <- HSV_colors[2] # Saturation
-  val <- HSV_colors[3] # Value
+  hue <- HSV_colors[[1]] # Hue
+  sat <- HSV_colors[[2]] # Saturation
+  val <- HSV_colors[[3]] # Value
 
   # Generate a vector of hues that range a total of 1 unit, divided equally by n.
   hue_vector <- seq(hue, hue + 1, by = 1 / n)
@@ -178,20 +178,20 @@ do_ColorPalette <- function(colors.use,
         names.vector <- c(names.vector, label.use)
       }
       names(colors.use) <- names.vector
-      df$names <- factor(names(colors.use), levels = names(colors.use))
+      df[["names"]] <- factor(names(colors.use), levels = names(colors.use))
     }
 
-    p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = .data$names,
-                                                           y = .data$values,
-                                                           fill = .data$names)) +
+    p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = .data[["names"]],
+                                                           y = .data[["values"]],
+                                                           fill = .data[["names"]])) +
          ggplot2::geom_col(color = "black", size = 1) +
          ggplot2::coord_polar(start = ifelse(sum(options_list) == 1,  -0.275, 0), direction = 1, clip = "off") +
          ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
          ggplot2::ylim(limits) +
          # Add X axis title in the center of the plot.
          ggplot2::annotate(geom = "text",
-                           x = df$names[1],
-                           y = limits[1],
+                           x = df[["names"]][[1]],
+                           y = limits[[1]],
                            angle = 0,
                            hjust = 0.5,
                            vjust = 0.5,
@@ -284,13 +284,13 @@ do_ColorPalette <- function(colors.use,
     layout <- "ABCD
                EFGH"
 
-    patch <- patchwork::wrap_plots(A = return_plots$wheel,
-                                   B = return_plots$opposite,
-                                   C = return_plots$adjacent,
-                                   D = return_plots$triadic,
-                                   E = return_plots$split_complementary,
-                                   F = return_plots$tetradic,
-                                   G = return_plots$square,
+    patch <- patchwork::wrap_plots(A = return_plots[["wheel"]],
+                                   B = return_plots[["opposite"]],
+                                   C = return_plots[["adjacent"]],
+                                   D = return_plots[["triadic"]],
+                                   E = return_plots[["split_complementary"]],
+                                   F = return_plots[["tetradic"]],
+                                   G = return_plots[["square"]],
                                    H = patchwork::plot_spacer(),
                                    design = layout)
 

@@ -182,8 +182,8 @@ do_RidgePlot <- function(sample,
                                            quantiles = c(0 + prob_tails, 1 - prob_tails)) +
              ggplot2::scale_fill_manual(values = c("#134074", "grey75", "#721313"),
                                         labels = c(paste0("]0 , ", 0 + prob_tails, "]"),
-                                                   paste0("]", 0 + prob_tails , ", ",  1 - prob_tails, "]"),
-                                                   paste0("]", 1 - prob_tails , ", 1]")),
+                                                   paste0("]", 0 + prob_tails, ", ",  1 - prob_tails, "]"),
+                                                   paste0("]", 1 - prob_tails, ", 1]")),
                                         name = ifelse(is.null(legend.title), "Probability", legend.title))
       } else if (isTRUE(color_by_probabilities)){
         p <- data %>%

@@ -146,14 +146,14 @@ do_DimPlot <- function(sample,
         generate_color_scale(levels(sample))
       } else if (group_by_is_used){
         # Retrieve the unique values in group.by metadata variable.
-        data.use <- sample[[]][, group.by, drop = F]
+        data.use <- sample[[]][, group.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale to be used based on the unique values of group.by.
         generate_color_scale(names.use)
       } else if (split_by_is_used){
         # Retrieve the unique values in split.by metadata variable.
-        data.use <- sample[[]][, split.by, drop = F]
+        data.use <- sample[[]][, split.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale based on the unique values of split.by
@@ -246,19 +246,19 @@ do_DimPlot <- function(sample,
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-    df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
-                     y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
+    df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[[1]]],
+                     y = Seurat::Embeddings(sample, reduction = reduction)[, labels[[2]]])
 
     if (isFALSE(raster)){
-      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
-                                                                          y = .data$y),
+      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data[["x"]],
+                                                                          y = .data[["y"]]),
                                         colour = border.color,
                                         size = pt.size * border.size,
                                         show.legend = FALSE)
     } else if (isTRUE(raster)){
       base_layer <- scattermore::geom_scattermore(data = df,
-                                                  mapping = ggplot2::aes(x = .data$x,
-                                                                         y = .data$y),
+                                                  mapping = ggplot2::aes(x = .data[["x"]],
+                                                                         y = .data[["y"]]),
                                                   color = border.color,
                                                   size = pt.size * border.size,
                                                   stroke = pt.size / 2,
@@ -324,7 +324,7 @@ do_DimPlot <- function(sample,
     # List to store each individual plots.
     list.plots <- list()
     # Recover metadata values associated with split.by.
-    data.use <- sample@meta.data[, split.by, drop = F]
+    data.use <- sample@meta.data[, split.by, drop = FALSE]
     # Retrieve the plotting order, keep factor levels if the column is a factor.
     plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
     # If idents.keep is used, subset to only these values.
@@ -492,8 +492,8 @@ do_DimPlot <- function(sample,
                           axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                           axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                           axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
-        ggplot2::xlab(labels[1]) &
-        ggplot2::ylab(labels[2])
+        ggplot2::xlab(labels[[1]]) &
+        ggplot2::ylab(labels[[2]])
     }
     # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
   } else {
@@ -505,8 +505,8 @@ do_DimPlot <- function(sample,
                      axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                      axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                      axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
-      ggplot2::xlab(labels[1]) &
-      ggplot2::ylab(labels[2])
+      ggplot2::xlab(labels[[1]]) &
+      ggplot2::ylab(labels[[2]])
   }
 
   # Turn the labels to bold, when label is set to TRUE.
@@ -534,9 +534,9 @@ do_DimPlot <- function(sample,
     p <- ggplotify::as.ggplot(p)
 
     # Fix for the plot backgrounds after applying ggMarginal.
-    p$theme$plot.background <- ggplot2::element_rect(fill = "white", color = "white")
-    p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
-    p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
+    p[["theme"]][["plot.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
+    p[["theme"]][["legend.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
+    p[["theme"]][["panel.background"]] <- ggplot2::element_rect(fill = "white", color = "white")
   } else if (isTRUE(plot_marginal_distributions)) {
     stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells or plotting cell borders .", call. = FALSE)
   }

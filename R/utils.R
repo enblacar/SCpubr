@@ -285,12 +285,12 @@ check_suggests <- function(function_name){
   # The function is not in the current list of possibilities.
 
   if (!(function_name %in% names(pkg_list))){
-    stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+    stop(function_name, " is not an accepted function name.", call. = FALSE)
   }
   pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
   for (pkg in pkgs){
     if(!requireNamespace(pkg, quietly = TRUE)){
-      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = FALSE)
+      stop("Package ", pkg, " must be installed to use ", function_name, ".", call. = FALSE)
     }
   }
 }
@@ -352,7 +352,7 @@ state_dependencies <- function(function_name = NULL){
   if (!(is.null(function_name))){
     for (func in function_name){
       if (!(func %in% names(pkg_list))){
-        stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+        stop(function_name, " is not an accepted function name.", call. = FALSE)
       }
     }
   }
@@ -450,7 +450,7 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   if (sum(check) != length(colors)){
-    stop(paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."), call. = FALSE)
+    stop("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code.", call. = FALSE)
   }
 }
 
@@ -504,12 +504,12 @@ generate_color_scale <- function(names_use){
   colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
   colors <- grDevices::col2rgb(colors)
   colors <- grDevices::rgb2hsv(colors)
-  colors["v",] <- colors["v", ] - 0.1
-  colors["s",] <- colors["s", ] + 0.2
-  colors["s",][colors["s",] > 1] <- 1
+  colors["v", ] <- colors["v", ] - 0.1
+  colors["s", ] <- colors["s", ] + 0.2
+  colors["s", ][colors["s", ] > 1] <- 1
   colors <- grDevices::hsv(h = colors["h", ],
-                           s = colors["s",],
-                           v = colors["v",],
+                           s = colors["s", ],
+                           v = colors["v", ],
                            alpha = 1)
   names(colors) <- names_use
   return(colors)
@@ -543,8 +543,8 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (feature %in% rownames(sample)){
-    scale.begin <- min(sample@assays[[assay]]@data[feature,])
-    scale.end <- max(sample@assays[[assay]]@data[feature,])
+    scale.begin <- min(sample@assays[[assay]]@data[feature, ])
+    scale.end <- max(sample@assays[[assay]]@data[feature, ])
   } else if (feature %in% colnames(sample@meta.data)){
     if (is.factor(sample@meta.data[, feature])){
       sample@meta.data[, feature] <- as.character(sample@meta.data[, feature])
@@ -642,25 +642,25 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       if (length(unlist(not_found_features)) == length(unlist(features))){
         stop("Neither of the provided features are found.", call. = FALSE)
       }
-      warning(paste0("The requested features (",
-                     not_found_features,
-                     ") could not be found:\n",
-                     "    - Not matching any gene name (rownames of the provided object).\n",
-                     "    - Not matching any metadata column (in sample@meta.data).\n",
-                     "    - Not part of the dimension names in any of the following reductions: ",
-                     paste(Seurat::Reductions(object = sample), collapse = ", "),
-                     ".\n\n"), call. = FALSE)
+      warning("The requested features (",
+              not_found_features,
+              ") could not be found:\n",
+              "    - Not matching any gene name (rownames of the provided object).\n",
+              "    - Not matching any metadata column (in sample@meta.data).\n",
+              "    - Not part of the dimension names in any of the following reductions: ",
+              paste(Seurat::Reductions(object = sample), collapse = ", "),
+              ".\n\n", call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
     } else if (isFALSE(permissive)){
-      stop(paste0("The requested features (",
-                  not_found_features,
-                  ") could not be found:\n",
-                  "    - Not matching any gene name (rownames of the provided object).\n",
-                  "    - Not matching any metadata column (in sample@meta.data).\n",
-                  "    - Not part of the dimension names in any of the following reductions: ",
-                  paste(Seurat::Reductions(object = sample), collapse = ", "),
-                  ".\n\n"), call. = FALSE)
+      stop("The requested features (",
+           not_found_features,
+           ") could not be found:\n",
+           "    - Not matching any gene name (rownames of the provided object).\n",
+           "    - Not matching any metadata column (in sample@meta.data).\n",
+           "    - Not part of the dimension names in any of the following reductions: ",
+           paste(Seurat::Reductions(object = sample), collapse = ", "),
+           ".\n\n", call. = FALSE)
     }
   } else {
     features_out <- features
@@ -762,7 +762,7 @@ remove_duplicated_features <- function(features){
 check_identity <- function(sample, identities){
   for (identity in identities){
     if (!(identity %in% levels(sample))){
-      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."), call. = FALSE)
+      stop("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced.", call. = FALSE)
     }
   }
 }
@@ -1321,11 +1321,11 @@ heatmap_inner <- function(data,
   }
   if (data_range == "both"){
     if (isTRUE(symmetrical_scale)){
-      breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1)
+      breaks <-  round(c(-abs_value, (-abs_value / 2), 0, (abs_value / 2), abs_value), 1)
       counter <- 0
       while (sum(duplicated(breaks)) > 0){
         counter <- counter + 1
-        breaks <-  round(c(-abs_value, (-abs_value / 2) , 0, (abs_value / 2), abs_value), 1 + counter)
+        breaks <-  round(c(-abs_value, (-abs_value / 2), 0, (abs_value / 2), abs_value), 1 + counter)
       }
     } else if (isFALSE(symmetrical_scale)){
       breaks <-  round(c(q0, q25, q50, q75, q100), 1)
@@ -1750,10 +1750,10 @@ get_data_column <- function(sample,
 #' }
 get_data_column_in_context <- function(sample,
                                        feature,
-                                       group.by = NULL,
-                                       split.by = NULL,
                                        assay,
-                                       slot){
+                                       slot,
+                                       group.by = NULL,
+                                       split.by = NULL){
   `%>%` <- magrittr::`%>%`
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident

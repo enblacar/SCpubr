@@ -111,7 +111,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
 
   # Internal use only
   if ("from_df" %in% names(extra_params) & "df" %in% names(extra_params)){
-    data <- extra_params$df
+    data <- extra_params[["df"]]
     if ("data.frame" %!in% class(data)){
       stop("Please provide a data.frame or tibble to df.", call. = FALSE)
     }
@@ -121,15 +121,15 @@ do_ChordDiagramPlot <- function(sample = NULL,
       if (sum(colnames(data) %in% c("from", "to", "value")) != 3){
         stop("Please name the columns in the df as: from, to and value.", call. = FALSE)
       } else {
-        if (class(data$from) %!in% c("factor", "character")){
+        if (class(data[["from"]]) %!in% c("factor", "character")){
           stop("Please make sure that the column from is either a factor or a character column.", call. = FALSE)
         }
 
-        if (class(data$to) %!in% c("factor", "character")){
+        if (class(data[["to"]]) %!in% c("factor", "character")){
           stop("Please make sure that the column to is either a factor or a character column.", call. = FALSE)
         }
 
-        if (class(data$value) %!in% c("integer")){
+        if (class(data[["value"]]) %!in% c("integer")){
           stop("Please make sure that the column value is either an integer column.", call. = FALSE)
         }
       }
@@ -164,31 +164,31 @@ do_ChordDiagramPlot <- function(sample = NULL,
   }
 
 
-  max_char <- max(c(max(nchar(as.character(data$from))), max(nchar(as.character(data$to))))) + padding_labels
+  max_char <- max(c(max(nchar(as.character(data[["from"]]))), max(nchar(as.character(data[["to"]]))))) + padding_labels
 
-  if (is.factor(data$to) & is.factor(data$from)){
-    levels_to <- stringr::str_pad(levels(data$to), width = max_char, side = "both")
-    levels_from <- stringr::str_pad(levels(data$from), width = max_char, side = "both")
-
-    data <- data %>%
-            dplyr::mutate("from" = factor(stringr::str_pad(.data$from, width = max_char, side = "both"), levels = levels_from),
-                          "to" = factor(stringr::str_pad(.data$to, width = max_char, side = "both"), levels = levels_to))
-  } else if (is.factor(data$to) & is.character(data$from)){
-    levels_to <- stringr::str_pad(levels(data$to), width = max_char, side = "both")
-    data <- data %>%
-            dplyr::mutate("from" = stringr::str_pad(.data$from, width = max_char, side = "both"),
-                          "to" = factor(stringr::str_pad(.data$to, width = max_char, side = "both"), levels = levels_to))
-
-  } else if (is.character(data$to) & is.factor(data$from)){
-    levels_from <- stringr::str_pad(levels(data$from), width = max_char, side = "both")
+  if (is.factor(data[["to"]]) & is.factor(data[["from"]])){
+    levels_to <- stringr::str_pad(levels(data[["to"]]), width = max_char, side = "both")
+    levels_from <- stringr::str_pad(levels(data[["from"]]), width = max_char, side = "both")
 
     data <- data %>%
-            dplyr::mutate("from" = factor(stringr::str_pad(.data$from, width = max_char, side = "both"), levels = levels_from),
-                          "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
-  } else if (is.character(data$to) & is.character(data$from)){
+            dplyr::mutate("from" = factor(stringr::str_pad(.data[["from"]], width = max_char, side = "both"), levels = levels_from),
+                          "to" = factor(stringr::str_pad(.data[["to"]], width = max_char, side = "both"), levels = levels_to))
+  } else if (is.factor(data[["to"]]) & is.character(data[["from"]])){
+    levels_to <- stringr::str_pad(levels(data[["to"]]), width = max_char, side = "both")
     data <- data %>%
-            dplyr::mutate("from" = stringr::str_pad(.data$from, width = max_char, side = "both"),
-                          "to" = stringr::str_pad(.data$to, width = max_char, side = "both"))
+            dplyr::mutate("from" = stringr::str_pad(.data[["from"]], width = max_char, side = "both"),
+                          "to" = factor(stringr::str_pad(.data[["to"]], width = max_char, side = "both"), levels = levels_to))
+
+  } else if (is.character(data[["to"]]) & is.factor(data[["from"]])){
+    levels_from <- stringr::str_pad(levels(data[["from"]]), width = max_char, side = "both")
+
+    data <- data %>%
+            dplyr::mutate("from" = factor(stringr::str_pad(.data[["from"]], width = max_char, side = "both"), levels = levels_from),
+                          "to" = stringr::str_pad(.data[["to"]], width = max_char, side = "both"))
+  } else if (is.character(data[["to"]]) & is.character(data[["from"]])){
+    data <- data %>%
+            dplyr::mutate("from" = stringr::str_pad(.data[["from"]], width = max_char, side = "both"),
+                          "to" = stringr::str_pad(.data[["to"]], width = max_char, side = "both"))
   }
 
 
@@ -198,10 +198,10 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                        colors = colors.from,
                                        grouping_variable = from)
   } else {
-    if (is.factor(data$from)){
-      colors.from <- generate_color_scale(names_use = levels(data$from))
+    if (is.factor(data[["from"]])){
+      colors.from <- generate_color_scale(names_use = levels(data[["from"]]))
     } else {
-      colors.from <- generate_color_scale(names_use = sort(unique(data$from)))
+      colors.from <- generate_color_scale(names_use = sort(unique(data[["from"]])))
     }
   }
   names(colors.from) <- stringr::str_pad(names(colors.from), width = max_char, side = "both")
@@ -212,17 +212,17 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                        colors = colors.to,
                                        grouping_variable = to)
   } else {
-    colors.to <- viridis::viridis(n = length(unique(data$to)), option = "G")
-    if (is.factor(data$to)){
-      colors.to <- stats::setNames(colors.to, levels(data$to))
+    colors.to <- viridis::viridis(n = length(unique(data[["to"]])), option = "G")
+    if (is.factor(data[["to"]])){
+      colors.to <- stats::setNames(colors.to, levels(data[["to"]]))
     } else {
-      colors.to <- stats::setNames(colors.to, sort(unique(data$to)))
+      colors.to <- stats::setNames(colors.to, sort(unique(data[["to"]])))
     }
   }
   names(colors.to) <- stringr::str_pad(names(colors.to), width = max_char, side = "both")
   colors.use <- c(colors.from, colors.to)
   if (is.null(link.sort)){link.sort <- "default"}
-  if (isFALSE(z_index)){link.zindex <- NULL} else {link.zindex <- rank(data$value)}
+  if (isFALSE(z_index)){link.zindex <- NULL} else {link.zindex <- rank(data[["value"]])}
   if (self.link %!in% c(1, 2)){
     stop("Please set self.link as either 1 or 2.", call. = FALSE)
   }
@@ -304,7 +304,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                          preAllocateTracks = list(track.height = max(graphics::strwidth(unlist(dimnames(data))))))
   circlize::circos.track(track.index = 1,
                          panel.fun = function(x, y){circlize::circos.text(circlize::CELL_META$xcenter,
-                                                                          circlize::CELL_META$ylim[1],
+                                                                          circlize::CELL_META$ylim[[1]],
                                                                           circlize::CELL_META$sector.index,
                                                                           facing = "clockwise",
                                                                           niceFacing = TRUE,

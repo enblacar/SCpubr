@@ -56,13 +56,9 @@ Suggests:
     infercnv,
     rjags,
     rgdal,
-    assertthat,
-    liana,
-    ggsankey
+    assertthat
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization, 
-Remotes:  
-    saezlab/liana,
-    davidsjoberg/ggsankey
+

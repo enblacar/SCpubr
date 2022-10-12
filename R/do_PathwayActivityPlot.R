@@ -95,7 +95,6 @@ do_PathwayActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "legend.framecolor" = legend.framecolor,
                          "geyser_color.by" = geyser_color.by,
                          "geyser_scale_type" = geyser_scale_type,
                          "viridis_color_map" = viridis_color_map)

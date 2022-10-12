@@ -2,24 +2,32 @@ suppressMessages(library(Seurat))
 suppressMessages(library(magrittr))
 suppressMessages(library(dplyr))
 test.data <- SCpubr:::test.data
-sample <- test.data$sample
-metacell_mapping <- test.data$metacell_mapping
-infercnv_object <- test.data$infercnv_object
-infercnv_object_metacells <- test.data$infercnv_object_metacells
-human_chr_locations <- test.data$human_chr_locations
-de_genes <- test.data$de_genes
+#sample <- test.data$sample
+sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+#metacell_mapping <- test.data$metacell_mapping
+metacell_mapping <- readRDS(system.file("extdata/metacell_mapping_example.rds", package = "SCpubr"))
+#infercnv_object <- test.data$infercnv_object
+infercnv_object <- readRDS(system.file("extdata/infercnv_object_example.rds", package = "SCpubr"))
+#infercnv_object_metacells <- test.data$infercnv_object_metacells
+infercnv_object_metacells <- readRDS(system.file("extdata/infercnv_object_metacells_example.rds", package = "SCpubr"))
+human_chr_locations <- SCpubr::human_chr_locations
+#de_genes <- test.data$de_genes
+de_genes <- readRDS(system.file("extdata/de_genes_example.rds", package = "SCpubr"))
 de_genes_scaled <- de_genes %>% dplyr::rename("avg_diff" = "avg_log2FC")
-progeny_activities <- test.data$progeny_activities
-dorothea_activities <- test.data$dorothea_activities
-enriched_terms <- test.data$enriched_terms
+#progeny_activities <- test.data$progeny_activities
+progeny_activities <- readRDS(system.file("extdata/progeny_activities_example.rds", package = "SCpubr"))
+#dorothea_activities <- test.data$dorothea_activities
+dorothea_activities <- readRDS(system.file("extdata/dorothea_activities_example.rds", package = "SCpubr"))
+#enriched_terms <- test.data$enriched_terms
+enriched_terms <- readRDS(system.file("extdata/enriched_terms_example.rds", package = "SCpubr"))
 
 # Remove this for publication in CRAN.
-liana_output <- test.data$liana_output
-p <- SCpubr::do_DimPlot(sample)
-p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-p.pheatmap <- pheatmap::pheatmap(data)
-p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
-figure_path <- getwd()
-monocle_sample <- sample
-monocle_cds <- test.data$monocle_cds
+# liana_output <- test.data$liana_output
+# p <- SCpubr::do_DimPlot(sample)
+# p.heatmap <- SCpubr::do_CorrelationPlot(sample)
+# data <- p.heatmap@ht_list$`Pearson coef.`@matrix
+# p.pheatmap <- pheatmap::pheatmap(data)
+# p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
+# figure_path <- getwd()
+# monocle_sample <- sample
+# monocle_cds <- test.data$monocle_cds

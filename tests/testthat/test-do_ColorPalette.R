@@ -57,7 +57,7 @@ testthat::test_that("do_BarPlot: PASS - color vectors plot = TRUERUE", {
 
 testthat::test_that("do_BarPlot: PASS - complete output = TRUE", {
   out <- SCpubr::do_ColorPalette(colors.use = "steelblue", complete_output = TRUE)
-  testthat::expect_equal(length(names(out)), 3)
+  testthat::expect_length(names(out), 3)
   testthat::expect_type(out, "list")
 })
 

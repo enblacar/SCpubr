@@ -34,7 +34,7 @@ do_BarPlot <- function(sample,
                        plot.caption = NULL,
                        plot.grid = TRUE,
                        grid.color = "grey75",
-                       grid.type = "dashed"){
+                       grid.type = "dashed") {
 
   check_suggests(function_name = "do_BarPlot")
   check_Seurat(sample)
@@ -94,7 +94,7 @@ do_BarPlot <- function(sample,
                                                                                                                                         dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
                                                                                                                                         dplyr::group_by(.data[[group.by]]) %>%
                                                                                                                                         dplyr::summarise("n" = dplyr::n()) %>%
-                                                                                                                                        dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data$n)} else {.data$n}) %>%
+                                                                                                                                        dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["n"]])} else {.data[["n"]]}) %>%
                                                                                                                                         dplyr::pull(.data[[group.by]]) %>%
                                                                                                                                         as.character()})})
   if (is.null(split.by)){

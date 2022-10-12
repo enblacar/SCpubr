@@ -148,15 +148,15 @@ do_DotPlot <- function(sample,
     if (isTRUE(dot_border)){
       suppressMessages({
         p <- p +
-          ggplot2::geom_point(mapping = ggplot2::aes(x = p$data$features.plot,
-                                                     y = p$data$id,
-                                                     fill = p$data$avg.exp.scaled,
-                                                     size = p$data$pct.exp),
+          ggplot2::geom_point(mapping = ggplot2::aes(x = p[["data"]][["features.plot"]],
+                                                     y = p[["data"]][["id"]],
+                                                     fill = p[["data"]][["avg.exp.scaled"]],
+                                                     size = p[["data"]][["pct.exp"]]),
                               shape = 21) +
           ggplot2::scale_size_continuous(range = c(0, dot.scale))
       })
 
-      p$layers[[1]] <- NULL
+      p[["layers"]][[1]] <- NULL
     }
     if (isTRUE(use_viridis)){
       if (isFALSE(dot_border)){

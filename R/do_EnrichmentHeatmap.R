@@ -173,8 +173,8 @@ do_EnrichmentHeatmap <- function(sample,
                          legend.framecolor = heatmap.legend.framecolor,
                          data_range = "both",
                          symmetrical_scale = symmetrical_scale)
-    list.heatmaps[[variant]] <- out$heatmap
-    list.legends[[variant]] <- out$legend
+    list.heatmaps[[variant]] <- out[["heatmap"]]
+    list.legends[[variant]] <- out[["legend"]]
   }
 
 
@@ -197,7 +197,7 @@ do_EnrichmentHeatmap <- function(sample,
 
   # Draw final heatmap.
   h <- ComplexHeatmap::draw(ht_list,
-                            heatmap_legend_list = list.legends[1],
+                            heatmap_legend_list = list.legends[[1]],
                             heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
                             padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
                             ht_gap = ggplot2::unit(heatmap_gap, "cm"))

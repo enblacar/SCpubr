@@ -155,7 +155,6 @@ testthat::test_that("do_BarPlot: PASS - colors.use ", {
 testthat::test_that("do_BarPlot: FAIL - order by not in group.by", {
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   testthat::expect_error(SCpubr::do_BarPlot(sample = sample,
-                                            group.by = c("orig.ident", "seurat_clusters"),
                                             group.by = "seurat_clusters",
                                             order.by = "wrong"))
 })

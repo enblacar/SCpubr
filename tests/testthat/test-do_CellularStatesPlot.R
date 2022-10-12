@@ -469,7 +469,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks
                                       input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
-                                      axis.ticks = F,
+                                      axis.ticks = FALSE,
                                      nbin = 1,
                                      ctrl = 10)
   testthat::expect_type(p, "list")
@@ -488,7 +488,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text"
                                       input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
-                                      axis.text = F,
+                                      axis.text = FALSE,
                                      nbin = 1,
                                      ctrl = 10)
   testthat::expect_type(p, "list")

@@ -119,16 +119,20 @@ do_BoxPlot <- function(sample,
 
 
   if (is.null(group.by)){
-    sample$group.by <- Seurat::Idents(sample)
+    sample[["group.by"]] <- Seurat::Idents(sample)
     group.by <- "group.by"
   } else {
-    sample$group.by <- sample@meta.data[, group.by]
+    sample[["group.by"]] <- sample@meta.data[, group.by]
     group.by <- "group.by"
   }
 
   if (is.null(colors.use)){
     if (is.null(split.by)){
-      colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
+      colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {
+        levels(sample@meta.data[, group.by])
+      } else {
+        sort(unique(sample@meta.data[, group.by]))
+      })
     } else {
       colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, split.by])) {levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))})
     }
@@ -145,22 +149,22 @@ do_BoxPlot <- function(sample,
                                      split.by = split.by)
   if (isTRUE(order) & is.null(split.by)){
     data <- data %>%
-      dplyr::mutate("group.by" = factor(as.character(.data$group.by),
+      dplyr::mutate("group.by" = factor(as.character(.data[["group.by"]]),
                                         levels = {data %>%
                                                   tibble::as_tibble() %>%
-                                                  dplyr::group_by(.data$group.by) %>%
-                                                  dplyr::summarise("mean" = mean(.data$feature)) %>%
-                                                  dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data$mean)} else {.data$mean}) %>%
-                                                  dplyr::pull(.data$group.by) %>%
+                                                  dplyr::group_by(.data[["group.by"]]) %>%
+                                                  dplyr::summarise("mean" = mean(.data[["feature"]])) %>%
+                                                  dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["mean"]])} else {.data[["mean"]]}) %>%
+                                                  dplyr::pull(.data[["group.by"]]) %>%
                                                   as.character()}))
   } else if (isTRUE(order) & !is.null(split.by)){
     stop("Parameter order can not be used alongside split.by.", call. = FALSE)
   }
   if (isTRUE(use_silhouette) & is.null(split.by)){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                y = .data$feature,
-                                                color = .data$group.by)) +
+         ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                y = .data[["feature"]],
+                                                color = .data[["group.by"]])) +
          ggplot2::scale_color_manual(values = colors.use, na.value = na.value) +
          ggplot2::geom_boxplot(outlier.color = outlier.color,
                                outlier.alpha = outlier.alpha,
@@ -173,14 +177,14 @@ do_BoxPlot <- function(sample,
   } else if (isFALSE(use_silhouette)){
     if (is.null(split.by)){
       p <- data %>%
-           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                  y = .data$feature,
-                                                  fill = .data$group.by))
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                  y = .data[["feature"]],
+                                                  fill = .data[["group.by"]]))
     } else {
       p <- data %>%
-           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                  y = .data$feature,
-                                                  fill = .data$split.by))
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                  y = .data[["feature"]],
+                                                  fill = .data[["split.by"]]))
     }
     p <- p +
          ggplot2::scale_fill_manual(values = colors.use, na.value = na.value) +

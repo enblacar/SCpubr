@@ -100,7 +100,6 @@ do_TFActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "legend.framecolor" = legend.framecolor,
                          "geyser_scale_type" = geyser_scale_type,
                          "viridis_color_map" = viridis_color_map)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)

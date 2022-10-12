@@ -125,8 +125,8 @@ do_VolcanoPlot <- function(sample,
                                                      title.position = "top",
                                                      title.hjust = 0.5)) +
        ggplot2::xlim(x_lims) +
-       ggplot2::xlab(expression(bold(paste("Avg. ", log["2"],"(FC)")))) +
-       ggplot2::ylab(expression(bold(paste("-", log["10"],"(p-value adjusted)"))))
+       ggplot2::xlab(expression(bold(paste("Avg. ", log["2"], "(FC)")))) +
+       ggplot2::ylab(expression(bold(paste("-", log["10"], "(p-value adjusted)"))))
 
   if (isTRUE(plot_lines)){
     p <- p +
