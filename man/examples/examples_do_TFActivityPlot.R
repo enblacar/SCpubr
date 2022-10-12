@@ -25,7 +25,7 @@
                                    activities = dorothea_activities,
                                    plot_FeaturePlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
-  p2 <- out$feature_plots$GLI2
+  p2 <- out$feature_plots$ARID2
   p <- p1 | p2
   p
 
@@ -34,7 +34,7 @@
                                    activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
-  p2 <- out$geyser_plots$GLI2
+  p2 <- out$geyser_plots$ARID2
   p <- p1 | p2
   p
 
@@ -64,14 +64,14 @@
                                    plot_GeyserPlots = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = FALSE)
-  p1 <- out$geyser_plots$GLI2
+  p1 <- out$geyser_plots$ARID2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE)
-  p2 <- out$geyser_plots$GLI2
+  p2 <- out$geyser_plots$ARID2
 
   p <- p1 | p2
   p
@@ -82,14 +82,14 @@
                                    plot_GeyserPlots = TRUE,
                                    geyser_color.by = "seurat_clusters",
                                    geyser_scale_type = "categorical")
-  p1 <- out$geyser_plots$GLI2
+  p1 <- out$geyser_plots$ARID2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    geyser_color.by = "nCount_RNA",
                                    geyser_scale_type = "continuous")
-  p2 <- out$geyser_plots$GLI2
+  p2 <- out$geyser_plots$ARID2
 
   p <- p1 | p2
   p

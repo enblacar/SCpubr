@@ -218,6 +218,7 @@ do_VolcanoPlot <- function(sample,
                       axis.title.y = ggplot2::element_text(face = "bold", angle = 90, color = "black"),
                       axis.text = ggplot2::element_text(face = "bold", color = "black"),
                       axis.line = ggplot2::element_line(color = "black"),
+                      axis.ticks = ggplot2::element_line(color = "black"),
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
