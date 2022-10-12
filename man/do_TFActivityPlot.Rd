@@ -16,7 +16,7 @@ do_TFActivityPlot(
   geyser_color.by = NULL,
   row_title = NULL,
   column_title = NULL,
-  transpose = FALSE,
+  flip = FALSE,
   cluster_cols = TRUE,
   cluster_rows = TRUE,
   row_names_rot = 0,
@@ -70,7 +70,7 @@ do_TFActivityPlot(
 
 \item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
 
-\item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
 
@@ -142,40 +142,31 @@ A list containing several output plots according to the user's specifications.
 Plot TF Activities from decoupleR using Dorothea prior knowledge.
 }
 \examples{
-\dontrun{
-  # Define your sample and assay.
-  # sample <- your_seurat_object
-  # assay <- "your_normalized_data_assay"
+\donttest{
+  # Define your Seurat object.
+  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds",
+                                package = "SCpubr"))
 
-  # Retrieve prior knowledge network.
-  # network <- decoupleR::get_dorothea(organism = "human",
-  #                                    levels = c("A", "B", "C"))
-  #
-  # # Run weighted means algorithm.
-  # activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays[[assay]]@data),
-  #                                    network = network,
-  #                                    .source = "source",
-  #                                    .targe = "target",
-  #                                    .mor = "mor",
-  #                                    times = 100,
-  #                                    minsize = 5)
+  # Define your activities object.
+  dorothea_activities <- readRDS(system.file("extdata/dorothea_activities_example.rds",
+                                             package = "SCpubr"))
 
   # General heatmap.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities)
+                                   activities = dorothea_activities)
   p <- out$heatmaps$average_scores
   p
 
   # Increase number of TFs included in the analysis.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    n_tfs = 40)
   p <- out$heatmaps$average_scores
   p
 
   # Retrieve feature plots.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_FeaturePlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
   p2 <- out$feature_plots$GLI2
@@ -184,7 +175,7 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
 
   # Retrieve Geyser plots.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
   p2 <- out$geyser_plots$GLI2
@@ -193,7 +184,7 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
 
   # Use non-symmetrical color scale.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
                                    enforce_symmetry = FALSE)
@@ -201,7 +192,7 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
   p2 <- out$geyser_plots$GLI2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    plot_FeaturePlots = TRUE,
                                    enforce_symmetry = TRUE)
@@ -213,14 +204,14 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
 
   # Not order Geyser plot by mean values.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$GLI2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    enforce_symmetry = TRUE,
                                    geyser_order_by_mean = TRUE)
@@ -231,14 +222,14 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
 
   # Plot a third variable in Geyser plots.
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    geyser_color.by = "seurat_clusters",
                                    geyser_scale_type = "categorical")
   p1 <- out$geyser_plots$GLI2
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    plot_GeyserPlots = TRUE,
                                    geyser_color.by = "nCount_RNA",
                                    geyser_scale_type = "continuous")
@@ -251,7 +242,7 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
   sample$split.me <- ifelse(sample$seurat_clusters \%in\% c("0", "3", "7"), "Group A","Group B")
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                   activities = activities,
+                                   activities = dorothea_activities,
                                    split.by = "split.me")
   p <- out$heatmaps$average_scores
   p

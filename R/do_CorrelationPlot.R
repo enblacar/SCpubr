@@ -73,7 +73,7 @@ do_CorrelationPlot <- function(sample,
     # Subset sample according to the variable genes.
     sample <- sample[variable_genes, ]
     # Scale the data
-    sample <- Seurat::ScaleData(sample, verbose = F)
+    sample <- Seurat::ScaleData(sample, verbose = FALSE)
 
     expr_mat <- data.frame("rownames" = rownames(sample))
 

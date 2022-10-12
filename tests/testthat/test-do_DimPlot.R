@@ -30,17 +30,17 @@ testthat::test_that("do_DimPlot: PASS - sample cell_borders", {
 
 
 
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T)
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, pt.size = 1)
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE, raster = TRUE, pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, idents.highlight = "1")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE, idents.highlight = "1")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE, raster = TRUE, idents.highlight = "1", pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
+  p <- SCpubr::do_DimPlot(sample = sample, plot_cell_borders = TRUE, raster = TRUE, split.by = "seurat_clusters", pt.size = 1)
   testthat::expect_type(p, "list")
 })
 
@@ -94,7 +94,7 @@ testthat::test_that("do_DimPlot: PASS - sample marginal group", {
 
   p <- SCpubr::do_DimPlot(sample = sample,
                           plot_marginal_distributions = TRUE,
-                          marginal.group = F,
+                          marginal.group = FALSE,
                           plot_cell_borders = FALSE)
   testthat::expect_type(p, "list")
 })
@@ -203,14 +203,14 @@ testthat::test_that("do_DimPlot: PASS - legend.nrow", {
 testthat::test_that("do_DimPlot: PASS - label", {
 
 
-  p <- SCpubr::do_DimPlot(sample = sample, label = T)
+  p <- SCpubr::do_DimPlot(sample = sample, label = TRUE)
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_DimPlot: PASS - order", {
 
 
-  p <- SCpubr::do_DimPlot(sample = sample, order = "5", shuffle = F)
+  p <- SCpubr::do_DimPlot(sample = sample, order = "5", shuffle = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -279,7 +279,7 @@ testthat::test_that("do_DimPlot: FAIL - split.by and cells.highlights used", {
 testthat::test_that("do_DimPlot: WARNING - order and shuffle used", {
 
 
-  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, order = "4", shuffle = T))
+  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, order = "4", shuffle = TRUE))
 })
 
 testthat::test_that("do_DimPlot: FAIL - more than one NA values", {
@@ -288,10 +288,10 @@ testthat::test_that("do_DimPlot: FAIL - more than one NA values", {
   testthat::expect_error(SCpubr::do_DimPlot(sample = sample, na.value = c("red", "blue")))
 })
 
-testthat::test_that("do_DimPlot: WARNING - raster = T and pt.size lower than 1", {
+testthat::test_that("do_DimPlot: WARNING - raster = TRUE and pt.size lower than 1", {
 
 
-  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, raster = T, pt.size = 0.5))
+  testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, raster = TRUE, pt.size = 0.5))
 })
 
 colors <- c("0" = "#001219",

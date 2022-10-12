@@ -16,7 +16,7 @@ testthat::test_that("do_BarPlot: PASS - one variable - remove guides", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "seurat_clusters",
                           position = "stack",
-                          plot.grid = F)
+                          plot.grid = FALSE)
   testthat::expect_type(p, "list")
 })
 
@@ -25,7 +25,7 @@ testthat::test_that("do_BarPlot: PASS - one variable - fill - flip", {
                           group.by = "seurat_clusters",
                           split.by = NULL,
                           position = "fill",
-                          flip = T)
+                          flip = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -35,7 +35,7 @@ testthat::test_that("do_BarPlot: PASS - two variables - fill - flip", {
                           group.by = "seurat_clusters",
                           split.by = "orig.ident",
                           position = "fill",
-                          flip = T)
+                          flip = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -46,7 +46,7 @@ testthat::test_that("do_BarPlot: PASS - two variables - stack - flip", {
                           group.by = "seurat_clusters",
                           split.by = "orig.ident",
                           position = "stack",
-                          flip = T)
+                          flip = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -57,8 +57,8 @@ testthat::test_that("do_BarPlot: PASS - two variables - stack - flip - ordered",
                           group.by = "orig.ident",
                           split.by = "seurat_clusters",
                           position = "stack",
-                          flip = T,
-                          order = T)
+                          flip = TRUE,
+                          order = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -88,7 +88,7 @@ testthat::test_that("do_BarPlot: PASS - rotate x labels", {
   sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
-                          rotate_x_axis_labels  = T)
+                          rotate_x_axis_labels  = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -166,7 +166,7 @@ testthat::test_that("do_BarPlot: PASS - one variable - rotate x labels", {
   p <- SCpubr::do_BarPlot(sample = sample,
                           group.by = "orig.ident",
                           position = "stack",
-                          rotate_x_axis_labels = T)
+                          rotate_x_axis_labels = TRUE)
   testthat::expect_type(p, "list")
 })
 

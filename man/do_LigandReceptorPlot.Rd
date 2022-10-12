@@ -91,7 +91,7 @@ do_LigandReceptorPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
@@ -119,7 +119,8 @@ A ggplot2 plot with the results of the Ligand-Receptor analysis.
 This function makes use of \href{https://github.com/saezlab/liana}{liana} package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 }
 \examples{
-\dontrun{
+\donttest{
+  liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
   # Ligand Receptor analysis plot.
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output)
   p

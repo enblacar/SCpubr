@@ -100,7 +100,7 @@ do_BeeSwarmPlot(
 
 \item{remove_x_axis, remove_y_axis}{\strong{\code{\link[base]{logical}}} | Remove X axis labels and ticks from the plot.}
 
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
@@ -125,19 +125,20 @@ A ggplot2 object containing a Bee Swarm plot.
 BeeSwarm plot.
 }
 \examples{
-\dontrun{
-  # Basic Bee Swarm plot - categorical coloring.
-  # This will color based on the unique values of seurat_clusters.
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
-                               feature_to_rank = "PC_1",
-                               group.by = "seurat_clusters",
-                               continuous_feature = FFALSE)
+# Define your Seurat object.
+sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
-  # Basic Bee Swarm plot - continuous coloring.
-  # This will color based on the PC_1 values.
-  p <- SCpubr::do_BeeSwarmPlot(sample = sample,
-                               feature_to_rank = "PC_1",
-                               group.by = "seurat_clusters",
-                               continuous_feature = TRUE)
-}
+# Basic Bee Swarm plot - categorical coloring.
+# This will color based on the unique values of seurat_clusters.
+p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                             feature_to_rank = "PC_1",
+                             group.by = "seurat_clusters",
+                             continuous_feature = FALSE)
+
+# Basic Bee Swarm plot - continuous coloring.
+# This will color based on the PC_1 values.
+p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                             feature_to_rank = "PC_1",
+                             group.by = "seurat_clusters",
+                             continuous_feature = TRUE)
 }

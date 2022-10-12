@@ -52,7 +52,7 @@
 #' @param rotate_x_axis_labels \strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.
 #' @param xlab,ylab \strong{\code{\link[base]{character}}} | Titles for the X and Y axis.
 #' @param pt.size \strong{\code{\link[base]{numeric}}} | Size of the dots.
-#' @param flip \strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.
+#' @param flip \strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.
 #' @param verbose \strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.
 #' @param split.by \strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.
@@ -83,7 +83,6 @@
 #' @param row_title_side \strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.
 #' @param heatmap.legend.length,heatmap.legend.width \strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.
 #' @param heatmap.legend.framecolor \strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.
-#' @param transpose \strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.
 #' @param scale_direction \strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.
 #' @param heatmap_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.
 #' @param legend_gap \strong{\code{\link[base]{numeric}}} | Gap in cm between legends.
@@ -177,7 +176,6 @@ doc_function <- function(sample,
                          heatmap.legend.length,
                          heatmap.legend.width,
                          heatmap.legend.framecolor,
-                         transpose,
                          scale_direction,
                          heatmap_gap,
                          legend_gap,
@@ -240,41 +238,59 @@ named_list <- function(){}
 #' TBD
 #' }
 check_suggests <- function(function_name){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_BoxPlot" = c("magrittr", "ggplot2", "dplyr", "tidyr", "tibble", "ggsignif", "Seurat"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
-                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"),
-                   "do_ColorPalette" = c("grDevices", "stringr", "ggplot2", "patchwork"),
-                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c("Seurat", "ggplot2"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
-                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
-                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"),
+  pkg_list <- list("core" = c("Seurat",
+                              "rlang",
+                              "dplyr",
+                              "magrittr",
+                              "dplyr",
+                              "tidyr",
+                              "tibble",
+                              "stringr",
+                              "patchwork",
+                              "plyr",
+                              "grDevices",
+                              "stats",
+                              "viridis",
+                              "forcats",
+                              "scales",
+                              "grid",
+                              "assertthat"),
+                   "do_BarPlot" = c("colorspace", "ggrepel"),
+                   "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
+                   "do_BoxPlot" = c("ggsignif"),
+                   "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
+                   "do_ChordDiagramPlot" = c("circlize"),
+                   "do_ColorPalette" = c(),
+                   "do_CopyNumberVariantPlot" = c("ggdist"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "ComplexHeatmap", "circlize"),
+                   "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
+                   "do_DotPlot" = c(),
+                   "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
+                   "do_FeaturePlot" = c("scattermore"),
+                   "do_GeyserPlot" = c("ggdist"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
+                   "do_LigandReceptorPlot" = c("liana"),
+                   "do_NebulosaPlot" = c("Nebulosa"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap"),
+                   "do_PseudotimePlot" = c("monocle3", "ggdist"),
+                   "do_RidgePlot" = c("ggridges"),
+                   "do_SankeyPlot" = c("ggsankey"),
+                   "do_TermEnrichmentPlot" = c(),
+                   "do_TFActivityPlot" = c("ComplexHeatmap"),
+                   "do_ViolinPlot" = c(),
+                   "do_VolcanoPlot" = c("ggrepel"),
+                   "save_Plot" = c("ComplexHeatmap", "svglite"),
                    "testing" = c("Does_not_exist"))
 
   # The function is not in the current list of possibilities.
+
   if (!(function_name %in% names(pkg_list))){
     stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
   }
-  pkgs <- pkg_list[[function_name]]
+  pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
   for (pkg in pkgs){
-    if(!requireNamespace(pkg, quietly = T)){
-      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = F)
+    if(!requireNamespace(pkg, quietly = TRUE)){
+      stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = FALSE)
     }
   }
 }
@@ -290,31 +306,48 @@ check_suggests <- function(function_name){
 #' TBD
 #' }
 state_dependencies <- function(function_name = NULL){
-  pkg_list <- list("do_BarPlot" = c("Seurat", "colorspace", "dplyr", "ggplot2", "magrittr", "rlang", "ggrepel"),
-                   "do_BeeSwarmPlot" = c("Seurat", "ggplot2", "viridis", "colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_BoxPlot" = c("magrittr", "ggplot2", "dplyr", "tidyr", "tibble", "ggsignif", "Seurat"),
-                   "do_CellularStatesPlot" = c("Seurat", "tidyr", "pbapply", "dplyr", "ggplot2", "viridis", "magrittr", "rlang", "ggExtra", "ggplotify", "scattermore"),
-                   "do_ChordDiagramPlot" = c("magrittr", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "stats", "circlize", "stringr", "grDevices"),
-                   "do_ColorPalette" = c("grDevices", "stringr", "ggplot2", "patchwork"),
-                   "do_CopyNumberVariantPlot" = c("magrittr", "dplyr", "tibble", "ggplot2", "ggdist", "rlang"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "magrittr", "Seurat", "rlang", "ggplot2", "patchwork", "dplyr", "grDevices", "ComplexHeatmap", "circlize", "grid"),
-                   "do_DimPlot" = c("colorspace", "Seurat", "ggplot2", "patchwork", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c("Seurat", "ggplot2"),
-                   "do_EnrichmentHeatmap" = c("ggplot2", "stringr", "dplyr", "patchwork", "magrittr", "ComplexHeatmap", "Seurat", "rlang", "grDevices", "circlize", "grid"),
-                   "do_FeaturePlot" = c("Seurat", "viridis", "ggplot2", "patchwork", "scales", "scattermore"),
-                   "do_GeyserPlot" = c("magrittr", "Seurat", "dplyr", "tibble", "ggplot2", "ggdist"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "plyr"),
-                   "do_LigandReceptorPlot" = c("stringr", "Seurat", "liana", "dplyr", "rlang", "tibble", "tidyr", "ggplot2", "magrittr"),
-                   "do_NebulosaPlot" = c("Seurat", "ggplot2", "Nebulosa", "patchwork"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_PseudotimePlot" = c("monocle3", "magrittr", "ggplot2", "dplyr", "ggdist", "patchwork"),
-                   "do_RidgePlot" = c("magrittr", "ggridges", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_SankeyPlot" = c("magrittr", "ggsankey", "dplyr", "tibble", "tidyr", "Seurat", "rlang", "ggplot2", "viridis"),
-                   "do_TermEnrichmentPlot" = c("ggplot2", "stringr", "dplyr", "patchwork", "forcats"),
-                   "do_TFActivityPlot" = c("ComplexHeatmap", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "stats", "ggplot2", "grDevices", "rlang"),
-                   "do_ViolinPlot" = c("Seurat", "ggplot2"),
-                   "do_VolcanoPlot" = c("plyr", "magrittr", "dplyr", "tidyr", "tibble", "Seurat", "grDevices", "rlang", "ggplot2", "stats", "ggrepel"),
-                   "save_Plot" = c("ggplot2", "ComplexHeatmap", "grDevices", "svglite"))
+  pkg_list <- list("core" = c("Seurat",
+                              "rlang",
+                              "dplyr",
+                              "magrittr",
+                              "dplyr",
+                              "tidyr",
+                              "tibble",
+                              "stringr",
+                              "patchwork",
+                              "plyr",
+                              "grDevices",
+                              "stats",
+                              "viridis",
+                              "forcats",
+                              "scales",
+                              "grid",
+                              "assertthat"),
+                   "do_BarPlot" = c("colorspace", "ggrepel"),
+                   "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
+                   "do_BoxPlot" = c("ggsignif"),
+                   "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
+                   "do_ChordDiagramPlot" = c("circlize"),
+                   "do_ColorPalette" = c(),
+                   "do_CopyNumberVariantPlot" = c("ggdist"),
+                   "do_CorrelationPlot" = c("ComplexHeatmap", "ComplexHeatmap", "circlize"),
+                   "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
+                   "do_DotPlot" = c(),
+                   "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
+                   "do_FeaturePlot" = c("scattermore"),
+                   "do_GeyserPlot" = c("ggdist"),
+                   "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
+                   "do_LigandReceptorPlot" = c("liana"),
+                   "do_NebulosaPlot" = c("Nebulosa"),
+                   "do_PathwayActivityPlot" = c("ComplexHeatmap"),
+                   "do_PseudotimePlot" = c("monocle3", "ggdist"),
+                   "do_RidgePlot" = c("ggridges"),
+                   "do_SankeyPlot" = c("ggsankey"),
+                   "do_TermEnrichmentPlot" = c(),
+                   "do_TFActivityPlot" = c("ComplexHeatmap"),
+                   "do_ViolinPlot" = c(),
+                   "do_VolcanoPlot" = c("ggrepel"),
+                   "save_Plot" = c("ComplexHeatmap", "svglite"))
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){
@@ -367,7 +400,7 @@ state_dependencies <- function(function_name = NULL){
 
   message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
   for (func in func_list){
-    packages <- pkg_list[[func]]
+    packages <- c(pkg_list[[func]], pkg_list[["core"]])
     cran_packages_individual <- sort(packages[packages %in% cran_packages])
     bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
     github_packages_individual <- sort(packages[packages %in% github_packages])
@@ -394,7 +427,7 @@ state_dependencies <- function(function_name = NULL){
 #' }
 check_Seurat <- function(sample){
   if (isFALSE("Seurat" %in% class(sample))){
-    stop("Object provided is not a Seurat object.", call. = F)
+    stop("Object provided is not a Seurat object.", call. = FALSE)
   }
 }
 
@@ -417,7 +450,7 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   if (sum(check) != length(colors)){
-    stop(paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."), call. = F)
+    stop(paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."), call. = FALSE)
   }
 }
 
@@ -447,11 +480,11 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   }
 
   if (length(colors) != length(check_values)){
-    stop('The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
+    stop('The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = FALSE)
   }
 
   if (sum(names(colors) %in% check_values) != length(check_values)){
-    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = F)
+    stop('The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).', call. = FALSE)
   }
 
   return(colors)
@@ -545,7 +578,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
   limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
 
   if (!(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value)){
-    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = F)
+    stop("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], ".", call. = FALSE)
   }
 }
 
@@ -607,7 +640,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     if (isTRUE(permissive)){
       # Stop if neither of the features are found.
       if (length(unlist(not_found_features)) == length(unlist(features))){
-        stop("Neither of the provided features are found.", call. = F)
+        stop("Neither of the provided features are found.", call. = FALSE)
       }
       warning(paste0("The requested features (",
                      not_found_features,
@@ -616,7 +649,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                      "    - Not matching any metadata column (in sample@meta.data).\n",
                      "    - Not part of the dimension names in any of the following reductions: ",
                      paste(Seurat::Reductions(object = sample), collapse = ", "),
-                     ".\n\n"), call. = F)
+                     ".\n\n"), call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
     } else if (isFALSE(permissive)){
@@ -627,7 +660,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                   "    - Not matching any metadata column (in sample@meta.data).\n",
                   "    - Not part of the dimension names in any of the following reductions: ",
                   paste(Seurat::Reductions(object = sample), collapse = ", "),
-                  ".\n\n"), call. = F)
+                  ".\n\n"), call. = FALSE)
     }
   } else {
     features_out <- features
@@ -635,10 +668,10 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   # If we are enforcing a given check (i.e: the feature being in the metadata).
   if (!(is.null(enforce_check))){
     if (!(enforce_check %in% names(check_enforcers))){
-      stop("The variable enforcer is not in the current list of checked variable types.", call. = F)
+      stop("The variable enforcer is not in the current list of checked variable types.", call. = FALSE)
     } else {
       if (isFALSE(check_enforcers[[enforce_check]])){
-        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".", call. = F)
+        stop("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, ".", call. = FALSE)
       }
     }
   }
@@ -688,7 +721,7 @@ remove_duplicated_features <- function(features){
   if (is.character(features)){
     check <- sum(duplicated(features))
     if (check > 0){
-      warning("Found duplicated features (", paste(features[duplicated(features)], collapse = ", "), "). Excluding them from the analysis.", call. = F)
+      warning("Found duplicated features (", paste(features[duplicated(features)], collapse = ", "), "). Excluding them from the analysis.", call. = FALSE)
       features <- features[!(duplicated(features))]
     }
   } else if (is.list(features)){
@@ -698,7 +731,7 @@ remove_duplicated_features <- function(features){
       genes <- features[[list_name]]
       # Remove genes duplicated within the list.
       if (sum(duplicated(genes)) > 0){
-        warning("Found duplicated features (", paste(genes[duplicated(genes)], collapse = ", "), ") in the list '", list_name, "'. Excluding them from the analysis.", call. = F)
+        warning("Found duplicated features (", paste(genes[duplicated(genes)], collapse = ", "), ") in the list '", list_name, "'. Excluding them from the analysis.", call. = FALSE)
       }
       genes <- genes[!(duplicated(genes))]
       # Remove genes duplicated in the vector of all genes.
@@ -706,7 +739,7 @@ remove_duplicated_features <- function(features){
       all_genes <- c(all_genes, genes[!(genes %in% all_genes)])
       genes <- genes[!(genes %in% duplicated_features)]
       if (length(duplicated_features) > 0){
-        warning("Found duplicated features (", paste(duplicated_features, collapse = ", "), ") in list '", list_name, "' with regard to lists. Excluding them from the analysis.", call. = F)
+        warning("Found duplicated features (", paste(duplicated_features, collapse = ", "), ") in list '", list_name, "' with regard to lists. Excluding them from the analysis.", call. = FALSE)
       }
       features_out[[list_name]] <- genes
     }
@@ -729,7 +762,7 @@ remove_duplicated_features <- function(features){
 check_identity <- function(sample, identities){
   for (identity in identities){
     if (!(identity %in% levels(sample))){
-      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."), call. = F)
+      stop(paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."), call. = FALSE)
     }
   }
 }
@@ -747,7 +780,7 @@ check_identity <- function(sample, identities){
 #' }
 check_and_set_reduction <- function(sample, reduction = NULL){
   # Check if the object has a reduction computed.
-  if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!", call. = F)}
+  if (length(Seurat::Reductions(sample)) == 0){stop("This object has no reductions computed!", call. = FALSE)}
   # If no reduction was provided by the user.
   if (is.null(reduction)){
     # Select umap if computed.
@@ -760,7 +793,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
   # If the user provided a value for reduction.
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
-    if (!(reduction %in% Seurat::Reductions(sample))){stop("The provided reduction could not be found in the object: ", reduction, call. = F)}
+    if (!(reduction %in% Seurat::Reductions(sample))){stop("The provided reduction could not be found in the object: ", reduction, call. = FALSE)}
   }
   return(reduction)
 }
@@ -780,7 +813,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
 check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   # Check that the dimensions is a 2 item vector.
   if (!(is.null(dims)) & length(dims) != 2){
-    stop("Provided dimensions need to be a 2-item vector.", call. = F)
+    stop("Provided dimensions need to be a 2-item vector.", call. = FALSE)
   }
 
   # If reduction is null, select the last computed one.
@@ -798,12 +831,12 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   null_check <- is.null(dims[1]) & is.null(dims[2])
   integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
   if (!(is.null(dims)) & integer_check == FALSE){
-    stop("Provied dimensions need to be numerics.", call. = F)
+    stop("Provied dimensions need to be numerics.", call. = FALSE)
   }
   # Check that the dimensions are in the requested embedding.
   if (!(is.null(dims))){
     if (!(dims[1] %in% seq_len(aval_dims)) | !(dims[2] %in% seq_len(aval_dims))){
-      stop("Dimension could not be found in the following reduction: ", reduction, ".", call. = F)
+      stop("Dimension could not be found in the following reduction: ", reduction, ".", call. = FALSE)
     }
   }
   # If no dimensions were provided, fall back to first and second.
@@ -827,7 +860,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 check_and_set_assay <- function(sample, assay = NULL){
   # Check that at least one assay is computed.
   if (length(Seurat::Assays(sample)) == 0){
-    stop("There must be at least one computed assay in the object.", call. = F)
+    stop("There must be at least one computed assay in the object.", call. = FALSE)
   }
   # If assay is null, set it to the active one.
   if (is.null(assay)){
@@ -835,12 +868,12 @@ check_and_set_assay <- function(sample, assay = NULL){
   } else {
     # Check if the assay is a character.
     if (!(is.character(assay))){
-      stop("The value for assay has to be a character.", call. = F)
+      stop("The value for assay has to be a character.", call. = FALSE)
     }
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
     if (!(assay %in% aval_assays)){
-      stop("The following assay could not be found: ", assay, ".", call. = F)
+      stop("The following assay could not be found: ", assay, ".", call. = FALSE)
     }
   }
   # Set up the assay the user has defined.
@@ -878,7 +911,7 @@ check_type <- function(parameters, required_type, test_function){
           # If not NA, if the testing function fails, report it.
           if (sum(!(is.na(item))) > 0){
             if (sum(!(test_function(item))) > 0){
-              stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = F)
+              stop("Parameter ", parameter_name, " needs to be a ", required_type, ".", call. = FALSE)
             }
           }
         }
@@ -901,7 +934,7 @@ check_and_set_slot <- function(slot){
   if (is.null(slot)){
     slot <- "data"
   } else if (!(slot %in% c("counts", "data", "scale.data"))){
-    stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.", call. = F)
+    stop("Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.", call. = FALSE)
   }
   return(slot)
 }
@@ -924,7 +957,7 @@ check_and_set_slot <- function(slot){
 compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE, assay = "SCT", slot = "data"){
   `%>%` <- magrittr::`%>%`
 
-  if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = F)}
+  if (!(position %in% c("stack", "fill"))){stop("Position needs to be either stack or fill.", call. = FALSE)}
 
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident
@@ -942,7 +975,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
                                                 assay = assay,
                                                 slot = slot) %>%
                      dplyr::group_by(.data$group.by) %>%
-                     dplyr::summarise("value" = if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {feature = dplyr::n()}) %>%
+                     dplyr::summarise("value" = if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {"feature" <- dplyr::n()}) %>%
                      dplyr::mutate("feature" = if (position == "fill") {.data$value / sum(.data$value)} else {.data$value}) %>%
                      dplyr::arrange(dplyr::desc(.data$feature)) %>%
                      dplyr::pull(.data$group.by) %>%
@@ -965,11 +998,11 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' \dontrun{
 #' TBD
 #' }
-check_viridis_color_map <- function(viridis_color_map, verbose = F){
+check_viridis_color_map <- function(viridis_color_map, verbose = FALSE){
   viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
   if (!(viridis_color_map %in% viridis_options)){stop("The option provided to viridis_color_map is not an accepted option.\nPossible options: ", paste(viridis_options, collapse = ", "), call. = FALSE)}
   if (verbose){
-    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.", call. = F)}
+    if (viridis_color_map %in% c("H", "turbo")){warning("The selected option is not the most adequate for a continuous color scale.", call. = FALSE)}
   }
 }
 
@@ -994,7 +1027,7 @@ check_length <- function(vector_of_parameters,
                          parameters_name,
                          features_name){
   if (length(vector_of_parameters) != length(vector_of_features)){
-    stop("Length of ", parameters_name, " not equal to ", features_name, ".", call. = F)
+    stop("Length of ", parameters_name, " not equal to ", features_name, ".", call. = FALSE)
   }
 }
 
@@ -1016,7 +1049,7 @@ use_dataset <- function(n_cells = 180){
     counts <- matrix(ncol = n_cells, nrow = length(genes))
     cols <- c()
     for (i in seq(1, n_cells)){
-      cts <- sample(values, size = length(genes), replace = T, prob = c(0.66, rep((0.34 / 150), length(values) - 1)))
+      cts <- sample(values, size = length(genes), replace = TRUE, prob = c(0.66, rep((0.34 / 150), length(values) - 1)))
       counts[, i] <- cts
       cols <- c(cols, paste0("Cell_", i))
     }
@@ -1381,7 +1414,7 @@ heatmap_inner <- function(data,
 
 
 
-  lgd = ComplexHeatmap::Legend(at = breaks,
+  lgd <- ComplexHeatmap::Legend(at = breaks,
                                labels = labels,
                                col_fun = col_fun,
                                title = legend.title,
@@ -1464,8 +1497,8 @@ heatmap_inner <- function(data,
                                cell_fun = function(j, i, x, y, w, h, fill) {
                                  grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
                                },
-                               column_names_centered = F,
-                               row_names_centered = F)
+                               column_names_centered = FALSE,
+                               row_names_centered = FALSE)
 
   return_list <- list("heatmap" = h,
                       "legend" = lgd)
@@ -1508,7 +1541,7 @@ modify_string <- function(string_to_modify){
 #' \dontrun{
 #' TBD
 #' }
-compute_enrichment_scores <- function(sample, input_gene_list, verbose = F, nbin = 24, ctrl = 100){
+compute_enrichment_scores <- function(sample, input_gene_list, verbose = FALSE, nbin = 24, ctrl = 100){
   if (!is.list(input_gene_list) & is.character(input_gene_list)){
     input_gene_list <- list("Input" = input_gene_list)
   }
@@ -1521,7 +1554,7 @@ compute_enrichment_scores <- function(sample, input_gene_list, verbose = F, nbin
                                        list_markers,
                                        name = celltype,
                                        search = TRUE,
-                                       verbose = T,
+                                       verbose = TRUE,
                                        nbin = nbin,
                                        ctrl = ctrl)
     } else {
@@ -1529,7 +1562,7 @@ compute_enrichment_scores <- function(sample, input_gene_list, verbose = F, nbin
                                                                          list_markers,
                                                                          name = celltype,
                                                                          search = TRUE,
-                                                                         verbose = F,
+                                                                         verbose = FALSE,
                                                                          nbin = nbin,
                                                                          ctrl = ctrl)))
     }
@@ -1686,7 +1719,7 @@ get_data_column <- function(sample,
   } else if (isTRUE(feature %in% rownames(sample))){
     feature_column <- Seurat::GetAssayData(object = sample,
                                            assay = assay,
-                                           slot = slot)[feature, , drop = F] %>%
+                                           slot = slot)[feature, , drop = FALSE] %>%
       as.matrix() %>%
       t() %>%
       as.data.frame() %>%
@@ -1760,7 +1793,7 @@ check_parameters <- function(parameter,
   if (parameter_name == "font.type"){
     # Check font.type.
     if (!(parameter %in% c("sans", "serif", "mono"))){
-      stop("Please select one of the following for font.type: sans, serif, mono.", call. = F)
+      stop("Please select one of the following for font.type: sans, serif, mono.", call. = FALSE)
     }
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
@@ -1775,7 +1808,7 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "marginal.type"){
     # Check marginal.type.
     if (!(parameter %in% c("density", "histogram", "boxplot", "violin", "densigram"))){
-      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = F)
+      stop("Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.", call. = FALSE)
     }
   } else if (parameter_name == "viridis_direction"){
     if (!(parameter %in% c(1, -1))){
@@ -1788,7 +1821,7 @@ check_parameters <- function(parameter,
     }
   } else if (parameter_name == "grid.type"){
     if (!(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))){
-      stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = F)
+      stop("Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.", call. = FALSE)
     }
   }
 }

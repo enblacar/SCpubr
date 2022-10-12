@@ -106,7 +106,7 @@ do_LigandReceptorPlot <- function(liana_output,
 
   if (!is.null(split.by)){
     if (!(split.by %in% c("receptor.complex", "ligand.complex"))){
-      stop("Please select one of the following for split.by: ligand.complex, receptor.complex.", call. = F)
+      stop("Please select one of the following for split.by: ligand.complex, receptor.complex.", call. = FALSE)
     }
   }
 
@@ -128,14 +128,14 @@ do_LigandReceptorPlot <- function(liana_output,
   }
 
   if (x_labels_angle == 0){
-    hjust = 0.5
-    vjust = 1
+    hjust <- 0.5
+    vjust <- 1
   } else if (x_labels_angle == 45){
-    hjust = 1
-    vjust = 1
+    hjust <- 1
+    vjust <- 1
   } else if (x_labels_angle == 90){
-    hjust = 1
-    vjust = 0.5
+    hjust <- 1
+    vjust <- 0.5
   }
 
 

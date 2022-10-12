@@ -1,6 +1,5 @@
-\dontrun{
-# Your Seurat object.
-sample <- my_seurat_object
+# Define your Seurat object.
+sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
 # Basic DimPlot.
 p <- SCpubr::do_DimPlot(sample = sample)
@@ -42,7 +41,7 @@ p <- SCpubr::do_DimPlot(sample = sample,
 # Changing the order of plotting.
 # Using order with one identity value.
 p <- SCpubr::do_DimPlot(sample = sample,
-                        shuffle = TRUE,
+                        shuffle = FALSE,
                         order = "5")
 
 # Using order with all identity values.
@@ -87,35 +86,33 @@ p <- SCpubr::do_DimPlot(sample = sample,
 
 # Highlight cells.
 # Select 1000 random cells out of clusters 1, 5 and 7.
-cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 50)
 p <- SCpubr::do_DimPlot(sample = sample,
                         cells.highlight = cells.use)
 
 # Highlight cells and use custom color.
 # Select 1000 random cells out of clusters 1, 5 and 7.
-cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 50)
 p <- SCpubr::do_DimPlot(sample = sample,
                         cells.highlight = cells.use,
                         colors.use = "black")
 
 # Change the size of the highlighted cells.
 # Select 1000 random cells out of clusters 1, 5 and 7.
-cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 50)
 p <- SCpubr::do_DimPlot(sample = sample,
                         cells.highlight = cells.use,
                         colors.use = "black",
                         sizes.highlight = 1)
 
 # Highlight given identities
-p <- Seurat::DimPlot(sample,
-                     idents.highlight = c("1", "3"))
+p <- SCpubr::do_DimPlot(sample,
+                        idents.highlight = c("1", "3"))
 
 # Highlight given cells and given identities.
-cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 1000)
-p <- Seurat::DimPlot(sample,
-                     cells.highlight = cells.use,
-                     idents.highlight = c("2", "4"))
-
-}
+cells.use <- sample(colnames(sample[, sample$seurat_clusters %in% c("1", "5", "7")]), 50)
+p <- SCpubr::do_DimPlot(sample,
+                        cells.highlight = cells.use,
+                        idents.highlight = c("2", "4"))
 
 

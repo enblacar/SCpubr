@@ -84,7 +84,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong legend type", {
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                                               features = "EPC1",
-                                                              flip = T,
+                                                              flip = TRUE,
                                                               legend.type = "wrong")}))
 
 })
@@ -94,7 +94,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong legend position", {
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                                               features = "EPC1",
-                                                              flip = T,
+                                                              flip = TRUE,
                                                               legend.position = "wrong")}))
 
 })
@@ -104,7 +104,7 @@ testthat::test_that("do_DotPlot: FAIL - wrong font.type", {
 
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                                               features = "EPC1",
-                                                              flip = T,
+                                                              flip = TRUE,
                                                               font.type = "wrong")}))
 
 })
@@ -114,7 +114,7 @@ testthat::test_that("do_DotPlot: PASS - one variable flip", {
 
   p <- SCpubr::do_DotPlot(sample = sample,
                           features = "EPC1",
-                          flip = T)
+                          flip = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -151,7 +151,7 @@ testthat::test_that("do_DotPlot: PASS - multiple features flip", {
   genes <- unname(unlist(genes))
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
-                                            flip = T)})
+                                            flip = TRUE)})
   testthat::expect_type(p, "list")
 })
 
@@ -170,8 +170,8 @@ testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels",
   genes <- unname(unlist(genes))
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
-                                            flip = T,
-                                            rotate_x_axis_labels = T)})
+                                            flip = TRUE,
+                                            rotate_x_axis_labels = TRUE)})
   testthat::expect_type(p, "list")
 })
 
@@ -206,7 +206,7 @@ testthat::test_that("do_DotPlot: FAIL - list of features flip", {
                 "Platelet" = Seurat::VariableFeatures(sample)[14])
   testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
-                                            flip = T)}))
+                                            flip = TRUE)}))
 
 })
 
@@ -224,7 +224,7 @@ testthat::test_that("do_DotPlot: PASS - list of features cluster idents", {
                 "Platelet" = Seurat::VariableFeatures(sample)[14])
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
-                                            cluster.idents = T)})
+                                            cluster.idents = TRUE)})
   testthat::expect_type(p, "list")
 })
 
@@ -242,7 +242,7 @@ testthat::test_that("do_DotPlot: PASS - list of features cluster idents modify c
                 "Platelet" = Seurat::VariableFeatures(sample)[14])
   p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                             features = genes,
-                                            cluster.idents = T,
+                                            cluster.idents = TRUE,
                                             colors.use = c("#001219", "#e9d8a6"))})
   testthat::expect_type(p, "list")
 })

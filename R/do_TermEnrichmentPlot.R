@@ -73,7 +73,7 @@ do_TermEnrichmentPlot <- function(enriched_terms,
     if (!is.null(colors.use)){
       check_colors(colors.use)
       if (length(colors.use) != 2){
-        stop("Provide only 2 colors.", call. = F)
+        stop("Provide only 2 colors.", call. = FALSE)
       }
     } else {
       colors.use <- c("#bdc3c7", "#2c3e50")
@@ -178,7 +178,7 @@ do_TermEnrichmentPlot <- function(enriched_terms,
                                alpha = 1,
                                angle = 0,
                                size = text_labels_size,
-                               inherit.aes = F) +
+                               inherit.aes = FALSE) +
            # Add the number of genes in each term below y = 0.
            ggplot2::geom_text(data = label_data,
                               mapping = ggplot2::aes(x = .data$id,
@@ -191,7 +191,7 @@ do_TermEnrichmentPlot <- function(enriched_terms,
                               size = text_labels_size,
                               alpha = 1,
                               angle = 0,
-                              inherit.aes = F) +
+                              inherit.aes = FALSE) +
            # Add black line at y = 0.
            ggplot2::geom_hline(yintercept = 0,
                                color = "black") +

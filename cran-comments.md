@@ -1,4 +1,8 @@
 This is the first release of SCpubr.
+## Resubmission 3
+This is a third resubmission. In this version I have:
+
+* Modified examples so that `\dontrun` is removed. In the cases in which the runtime is higher than 5s (measured with `system.time()`), I used `\donttest` instead.
 
 ## Resubmission 2
 This is a second resubmission. In this version I have:

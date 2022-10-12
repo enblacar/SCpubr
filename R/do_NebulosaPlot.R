@@ -72,7 +72,7 @@ do_NebulosaPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
-    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = F)
+    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = FALSE)
     features <- unique(unlist(features))
   }
   character_list <- list("legend.position" = legend.position,
@@ -102,15 +102,15 @@ do_NebulosaPlot <- function(sample,
     # If joint is set up.
     if (isTRUE(joint)){
       if (!(is.null(return_only_joint)) & isTRUE(return_only_joint)){
-        stop("If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.", call. = F)
+        stop("If return_only_joint is set to TRUE, then only one title is needed. Use plot.title instead.", call. = FALSE)
       } else {
         if(length(features) + 1 != length(individual.titles)){
-          stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = F)
+          stop('Total number of individual titles does not match the number of features provided + 1 (for the joint density).', call. = FALSE)
         }
       }
     } else {
       if(length(features) != length(individual.titles)){
-        stop('Total number of individual titles does not match the number of features provided.', call. = F)
+        stop('Total number of individual titles does not match the number of features provided.', call. = FALSE)
       }
     }
   }

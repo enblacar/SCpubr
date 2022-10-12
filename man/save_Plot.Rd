@@ -46,7 +46,10 @@ Nothing.
 Save a plot as png, pdf and svg.
 }
 \examples{
-\dontrun{
+\donttest{
+  # Define your Seurat object.
+  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+
   # Generate a plot.
   p <- SCpubr::do_DimPlot(sample = sample)
 

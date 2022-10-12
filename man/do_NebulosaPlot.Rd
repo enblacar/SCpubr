@@ -130,40 +130,27 @@ A ggplot2 object containing a Nebulosa plot.
 Wrapper for Nebulosa::plot_density in Seurat.
 }
 \examples{
-\dontrun{
-  # Basic Nebulosa plot.
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                              features = "CD14")
+# Define your Seurat object.
+sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
-  # Querying multiple features.
-  p <- SCpubr::do_NebulosaPlot(sample,
-                               features = c("CD14", "CD8A"))
+# Basic Nebulosa plot.
+p <- SCpubr::do_NebulosaPlot(sample = sample,
+                             features = "EPC1")
 
-  # Compute joint density.
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
-                               joint = TRUE)
+# Compute joint density.
+p <- SCpubr::do_NebulosaPlot(sample = sample,
+                             features = c("EPC1", "TOX2"),
+                             joint = TRUE)
 
-  # Return only the joint density panel and modify the plot.title.
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
-                               joint = TRUE)
+# Return only the joint density panel and modify the plot.title.
+p <- SCpubr::do_NebulosaPlot(sample = sample,
+                             features = c("EPC1", "TOX2"),
+                             joint = TRUE)
 
-  # Modify individual titles and also add a general one.
-  # Use NA when you don't want to modify the panel title.
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = c("CD14", "CD8A"),
-                               joint = TRUE,
-                               individual.titles = c("Plot A",
-                                                     NA,
-                                                     "Combined density"),
-                               plot.title = "Density analysis")
 
-  # Modify viridis color maps.
-  p <- SCpubr::do_NebulosaPlot(sample = sample,
-                               features = "CD8A",
-                               viridis_color_map = "A",
-                               plot.title = "Magma")
-
-}
+# Modify viridis color maps.
+p <- SCpubr::do_NebulosaPlot(sample = sample,
+                             features = "TOX2",
+                             viridis_color_map = "A",
+                             plot.title = "Magma")
 }

@@ -87,7 +87,7 @@ do_FeaturePlot <- function(sample,
   # Check character parameters.
   # Workaround for features.
   if (is.list(features)){
-    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = F)
+    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = FALSE)
     features <- unique(unlist(features))
   }
   character_list <- list("legend.position" = legend.position,
@@ -122,21 +122,21 @@ do_FeaturePlot <- function(sample,
   # Check individual titles.
   if (!(is.null(individual.titles))){
     if(length(features) != length(individual.titles)){
-      stop('Total number of individual titles does not match the number of features provided.', call. = F)
+      stop('Total number of individual titles does not match the number of features provided.', call. = FALSE)
     }
   }
 
   # Check individual subtitles.
   if (!(is.null(individual.subtitles))){
     if(length(features) != length(individual.subtitles)){
-      stop('Total number of individual subtitles does not match the number of features provided.', call. = F)
+      stop('Total number of individual subtitles does not match the number of features provided.', call. = FALSE)
     }
   }
 
   # Check individual captions
   if (!(is.null(individual.captions))){
     if(length(features) != length(individual.captions)){
-      stop('Total number of individual captions does not match the number of features provided.', call. = F)
+      stop('Total number of individual captions does not match the number of features provided.', call. = FALSE)
     }
   }
 
@@ -163,7 +163,7 @@ do_FeaturePlot <- function(sample,
 
   # Check for raster and pt.size.
   if (isTRUE(raster) & pt.size < 1){
-    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
+    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = FALSE)
   }
 
 
@@ -391,7 +391,7 @@ do_FeaturePlot <- function(sample,
         # Recover all metadata.
         data <- sample[[]]
         # Retrieve the metadata column belonging to the split.by parameter.
-        data.use <- data[, split.by, drop = F]
+        data.use <- data[, split.by, drop = FALSE]
         # Retrieve the plotting order, keep factor levels if the column is a factor.
         if (is.null(split.by.idents)){
           plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}

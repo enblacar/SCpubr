@@ -8,12 +8,12 @@ testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = dorothea_activities,
-                                   transpose = TRUE)
+                                   flip = TRUE)
   testthat::expect_type(out, "list")
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = dorothea_activities,
-                                   transpose = TRUE,
+                                   flip = TRUE,
                                    split.by = "orig.ident")
   testthat::expect_type(out, "list")
 
@@ -35,7 +35,7 @@ testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
 
   out <- SCpubr::do_TFActivityPlot(sample = sample,
                                    activities = dorothea_activities,
-                                   transpose = TRUE)
+                                   flip = TRUE)
   testthat::expect_type(out, "list")
 })
 

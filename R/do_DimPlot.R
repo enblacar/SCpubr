@@ -106,9 +106,9 @@ do_DimPlot <- function(sample,
   group_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(group.by))
   split_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(split.by))
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
-  if (group_by_and_split_by_used){stop("Either group.by or split.by has to be NULL.", call. = F)}
-  if (group_by_and_highlighting_cells){stop("Either group.by or cells.highlight has to be NULL.", call. = F)}
-  if (split_by_and_highlighting_cells){stop("Either split.by or cells.highlight has to be NULL.", call. = F)}
+  if (group_by_and_split_by_used){stop("Either group.by or split.by has to be NULL.", call. = FALSE)}
+  if (group_by_and_highlighting_cells){stop("Either group.by or cells.highlight has to be NULL.", call. = FALSE)}
+  if (split_by_and_highlighting_cells){stop("Either split.by or cells.highlight has to be NULL.", call. = FALSE)}
   if (order_and_shuffle_used){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
 
   # Check for label.color.
@@ -123,7 +123,7 @@ do_DimPlot <- function(sample,
 
   # If the user provides raster = TRUE but the pt.size is less than 1, warn it.
   if (isTRUE(raster) & pt.size < 1){
-    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = F)
+    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = FALSE)
   }
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -198,7 +198,7 @@ do_DimPlot <- function(sample,
     } else if (highlighting_cells){
       # Stop the execution if more than one color is provided to highlight the cells.
       if (length(colors.use) > 1){
-        stop("Provide only one color if cells.highlight or idents.highlight is used.", call. = F)
+        stop("Provide only one color if cells.highlight or idents.highlight is used.", call. = FALSE)
       }
     }
   }
@@ -217,7 +217,7 @@ do_DimPlot <- function(sample,
     if (group_by_and_split_by_are_null){
       # Check that idents.keep matches the values and if not, stop the execution.
       if (isFALSE(length(idents.keep) == sum(idents.keep %in% levels(sample)))){
-        stop("All the values in idents.keep must be in levels(sample).", call. = F)
+        stop("All the values in idents.keep must be in levels(sample).", call. = FALSE)
       }
       # Set the identities that the user wants to exclude as NA.
       Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
@@ -227,7 +227,7 @@ do_DimPlot <- function(sample,
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
       if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by])))){
-        stop("All the values in idents.keep must be in the group.by variable provided.", call. = F)
+        stop("All the values in idents.keep must be in the group.by variable provided.", call. = FALSE)
       }
       # Convert to NA values in group.by not included in the user's selected values.
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
@@ -236,7 +236,7 @@ do_DimPlot <- function(sample,
     } else if (split_by_is_used){
       # Check that the values in idents.keep are in the unique values of split.by.
       if (isFALSE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by])))){
-        stop("All the values in idents.keep must be in the split.by variable provided.", call. = F)
+        stop("All the values in idents.keep must be in the split.by variable provided.", call. = FALSE)
       }
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
     }
@@ -519,14 +519,14 @@ do_DimPlot <- function(sample,
     # Remove annoying warnings when violin is used as marginal distribution.
     if (marginal.type == "violin"){
       p <- suppressWarnings({ggExtra::ggMarginal(p = p,
-                                                 groupColour = ifelse(isTRUE(marginal.group), T, F),
-                                                 groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                                 groupColour = ifelse(isTRUE(marginal.group), TRUE, FALSE),
+                                                 groupFill = ifelse(isTRUE(marginal.group), TRUE, FALSE),
                                                  type = marginal.type,
                                                  size = marginal.size)})
     } else {
       p <- ggExtra::ggMarginal(p = p,
-                               groupColour = ifelse(isTRUE(marginal.group), T, F),
-                               groupFill = ifelse(isTRUE(marginal.group), T, F),
+                               groupColour = ifelse(isTRUE(marginal.group), TRUE, FALSE),
+                               groupFill = ifelse(isTRUE(marginal.group), TRUE, FALSE),
                                type = marginal.type,
                                size = marginal.size)
     }
@@ -538,7 +538,7 @@ do_DimPlot <- function(sample,
     p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
     p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
   } else if (isTRUE(plot_marginal_distributions)) {
-    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells or plotting cell borders .", call. = F)
+    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells or plotting cell borders .", call. = FALSE)
   }
 
 

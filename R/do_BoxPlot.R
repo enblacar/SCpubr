@@ -120,10 +120,10 @@ do_BoxPlot <- function(sample,
 
   if (is.null(group.by)){
     sample$group.by <- Seurat::Idents(sample)
-    group.by = "group.by"
+    group.by <- "group.by"
   } else {
     sample$group.by <- sample@meta.data[, group.by]
-    group.by = "group.by"
+    group.by <- "group.by"
   }
 
   if (is.null(colors.use)){

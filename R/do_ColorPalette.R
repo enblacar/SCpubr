@@ -62,46 +62,46 @@ do_ColorPalette <- function(colors.use,
   # Check that only one option is activated.
   options_list <- c(opposite, adjacent, triadic, split_complementary, tetradic, square, complete_output)
   if (sum(options_list) > 1){
-    stop("Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.", call. = F)
+    stop("Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.", call. = FALSE)
   }
   # Check that n is actually positive.
 
   if (n <= 0){
-    stop("Please provide a positive integer value for 'n'.", call. = F)
+    stop("Please provide a positive integer value for 'n'.", call. = FALSE)
   }
 
   # If any option is set to TRUE, pal_length is 12
   if (sum(options_list) >= 1 & n != 12){
-    warning("When an color output option is selected, n parameter becomes by default 12. Please consider not using n for these purposes.", call. = F)
+    warning("When an color output option is selected, n parameter becomes by default 12. Please consider not using n for these purposes.", call. = FALSE)
     n <- 12
   }
 
   # Convert input to RGB colors: Input can be either color names, hex code.
-  RGB_colors = grDevices::col2rgb(colors.use)
+  RGB_colors <- grDevices::col2rgb(colors.use)
 
   # Convert RGB values to HSV values.
-  HSV_colors = grDevices::rgb2hsv(RGB_colors)[,1]
+  HSV_colors <- grDevices::rgb2hsv(RGB_colors)[,1]
 
   # Get HSV components.
-  hue = HSV_colors[1] # Hue
-  sat = HSV_colors[2] # Saturation
-  val = HSV_colors[3] # Value
+  hue <- HSV_colors[1] # Hue
+  sat <- HSV_colors[2] # Saturation
+  val <- HSV_colors[3] # Value
 
   # Generate a vector of hues that range a total of 1 unit, divided equally by n.
-  hue_vector = seq(hue, hue + 1, by = 1 / n)
+  hue_vector <- seq(hue, hue + 1, by = 1 / n)
   # Subset only the n colors.
-  hue_vector = hue_vector[1:n]
+  hue_vector <- hue_vector[1:n]
   # As this will generate hues over 1, anything over it, we deduct 1.
   hue_vector[hue_vector > 1] <- hue_vector[hue_vector > 1] - 1
 
   # Transform HSV values into HEX codes.
-  colors = grDevices::hsv(hue_vector, sat, val)
+  colors <- grDevices::hsv(hue_vector, sat, val)
 
   # Add transparency value of the original color to the generated color scale.
   # This only works in the case the original color has a transparency value.
   if (substr(colors.use, 1, 1) == "#" && nchar(colors.use) == 9){
-    alpha = substr(colors.use, 8, 9)
-    colors = paste(colors, alpha, sep="")
+    alpha <- substr(colors.use, 8, 9)
+    colors <- paste(colors, alpha, sep="")
   }
 
   # If opposite is TRUE, select the first and middle colors.

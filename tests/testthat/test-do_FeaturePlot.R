@@ -30,33 +30,33 @@ testthat::test_that("do_FeaturePlot: PASS - legend.title", {
 testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
 
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE, raster = TRUE, pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, idents.highlight = "1")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE, idents.highlight = "1")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, idents.highlight = "1", pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE, raster = TRUE, idents.highlight = "1", pt.size = 1)
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = T, raster = T, split.by = "seurat_clusters", pt.size = 1)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE, raster = TRUE, split.by = "seurat_clusters", pt.size = 1)
   testthat::expect_type(p, "list")
 })
 
 testthat::test_that("do_FeaturePlot: PASS - enforce_symmetry", {
 
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("EPC1", "nCount_RNA"), enforce_symmetry = T)
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = c("EPC1", "nCount_RNA"), enforce_symmetry = TRUE)
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T, idents.highlight = c("1", "3"))
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = TRUE, idents.highlight = c("1", "3"))
   testthat::expect_type(p, "list")
 
-  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = T, split.by = "seurat_clusters")
+  p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = TRUE, split.by = "seurat_clusters")
   testthat::expect_type(p, "list")
 })
 
@@ -234,7 +234,7 @@ testthat::test_that("do_FeaturePlot: WARNING - raster and small point size", {
 
   testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
                                                   features = c("nCount_RNA"),
-                                                  raster = T,
+                                                  raster = TRUE,
                                                   pt.size = 0.5))
 })
 

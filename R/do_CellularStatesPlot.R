@@ -127,7 +127,7 @@ do_CellularStatesPlot <- function(sample,
         if (is.null(group.by)){
           generate_color_scale(levels(sample))
         } else if (!(is.null(group.by))){
-          data.use <- sample[[]][, group.by, drop = F]
+          data.use <- sample[[]][, group.by, drop = FALSE]
           names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
           generate_color_scale(names.use)
         }
@@ -170,10 +170,10 @@ do_CellularStatesPlot <- function(sample,
       }
       # Check that the names provided match the marker genes.
       if (!(x1 %in% names(input_gene_list))){
-        stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list."), call. = F)
+        stop(paste0(x1, " is not a name of a list of genes provided to input_gene_list."), call. = FALSE)
       }
       if (!(y1 %in% names(input_gene_list))){
-        stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list."), call. = F)
+        stop(paste0(y1, " is not a name of a list of genes provided to input_gene_list."), call. = FALSE)
       }
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
@@ -476,7 +476,7 @@ do_CellularStatesPlot <- function(sample,
 
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
       if (is.null(features) & isFALSE(plot_enrichment_scores)){
-        stop("Please provide features to plot.", call. = F)
+        stop("Please provide features to plot.", call. = FALSE)
       }
       output_list <- list()
 
@@ -579,14 +579,14 @@ do_CellularStatesPlot <- function(sample,
       # Remove annoying warnings when violin is used as marginal distribution.
       if (marginal.type == "violin"){
         p <- suppressWarnings({ggExtra::ggMarginal(p = p,
-                                                   groupColour = ifelse(isTRUE(marginal.group), T, F),
-                                                   groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                                   groupColour = ifelse(isTRUE(marginal.group), TRUE, FALSE),
+                                                   groupFill = ifelse(isTRUE(marginal.group), TRUE, FALSE),
                                                    type = marginal.type,
                                                    size = marginal.size)})
       } else {
         p <- ggExtra::ggMarginal(p = p,
-                                 groupColour = ifelse(isTRUE(marginal.group), T, F),
-                                 groupFill = ifelse(isTRUE(marginal.group), T, F),
+                                 groupColour = ifelse(isTRUE(marginal.group), TRUE, FALSE),
+                                 groupFill = ifelse(isTRUE(marginal.group), TRUE, FALSE),
                                  type = marginal.type,
                                  size = marginal.size)
       }

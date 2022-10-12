@@ -80,7 +80,7 @@ do_VolcanoPlot <- function(sample,
 
   `.` <- plyr::.()
   `%>%` <- magrittr::`%>%`
-  colors <- SCpubr::do_ColorPalette(colors.use, tetradic = T)
+  colors <- SCpubr::do_ColorPalette(colors.use, tetradic = TRUE)
   names(colors) <- c("A", "C", "B", "D")
 
   if (!("gene" %in% colnames(de_genes))){

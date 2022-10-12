@@ -13,7 +13,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  input_gene_list,
                                  group.by = NULL,
                                  verbose = FALSE,
-                                 transpose = FALSE,
+                                 flip = FALSE,
                                  cluster_cols = FALSE,
                                  cluster_rows = FALSE,
                                  legend.title = "Enrichment",
@@ -33,8 +33,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_names_side = "right",
                                  row_title_side = "left",
                                  row_title_rot = 90,
-                                 column_title = if (isFALSE(transpose)){"List of Genes"} else {"Groups"},
-                                 row_title = if (isFALSE(transpose)){"Groups"} else {"List of Genes"},
+                                 column_title = if (isFALSE(flip)){"List of Genes"} else {"Groups"},
+                                 row_title = if (isFALSE(flip)){"Groups"} else {"List of Genes"},
                                  nbin = 24,
                                  ctrl = 100){
   # Checks for packages.
@@ -84,7 +84,7 @@ do_EnrichmentHeatmap <- function(sample,
   } else if (is.list(input_gene_list)){
     input_list <- input_gene_list
     if (is.null(names(input_list))){
-      stop("Please provide a named list. This is, each gene list has to come with a name.", call. = F)
+      stop("Please provide a named list. This is, each gene list has to come with a name.", call. = FALSE)
     }
   }
 
@@ -139,7 +139,7 @@ do_EnrichmentHeatmap <- function(sample,
             tibble::column_to_rownames(var = variant) %>%
             as.matrix()
 
-    if (isTRUE(transpose)){
+    if (isTRUE(flip)){
       data <- t(data)
       row_title_use <- column_title
       column_title_use <- row_title
@@ -184,10 +184,10 @@ do_EnrichmentHeatmap <- function(sample,
   # Append heatmaps vertically.
   suppressWarnings({
     for (heatmap in list.heatmaps){
-      if (isTRUE(transpose)){
-        ht_list = ht_list + heatmap
-      } else if (isFALSE(transpose)){
-        ht_list = ht_list %v% heatmap
+      if (isTRUE(flip)){
+        ht_list <- ht_list + heatmap
+      } else if (isFALSE(flip)){
+        ht_list <- ht_list %v% heatmap
       }
     }
   })

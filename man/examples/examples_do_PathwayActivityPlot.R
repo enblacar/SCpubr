@@ -1,29 +1,21 @@
-\dontrun{
-  # Define your sample and assay.
-  # sample <- your_seurat_object
-  # assay <- "your_normalized_data_assay"
+\donttest{
+  # Define your Seurat object.
+  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds",
+                                package = "SCpubr"))
 
-  # Retrieve prior knowledge network.
-  # network <- decoupleR::get_progeny(organism = "human")
-  #
-  # # Run weighted means algorithm.
-  # activities <- decoupleR::run_wmean(mat = as.matrix(sample@assays[[assay]]@data),
-  #                                    network = network,
-  #                                    .source = "source",
-  #                                    .targe = "target",
-  #                                    .mor = "weight",
-  #                                    times = 100,
-  #                                    minsize = 5)
+  # Define your activities object.
+  progeny_activities <- readRDS(system.file("extdata/progeny_activities_example.rds",
+                                            package = "SCpubr"))
 
   # General heatmap.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities)
+                                        activities = progeny_activities)
   p <- out$heatmaps$average_scores
   p
 
   # Retrieve feature plots.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_FeaturePlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
   p2 <- out$feature_plots$EGFR
@@ -32,7 +24,7 @@
 
   # Retrieve Geyser plots.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE)
   p1 <- SCpubr::do_DimPlot(sample)
   p2 <- out$geyser_plots$EGFR
@@ -41,7 +33,7 @@
 
   # Use non-symmetrical color scale.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
                                         enforce_symmetry = FALSE)
@@ -49,7 +41,7 @@
   p2 <- out$geyser_plots$EGFR
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         plot_FeaturePlots = TRUE,
                                         enforce_symmetry = TRUE)
@@ -61,14 +53,14 @@
 
   # Not order Geyser plot by mean values.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         enforce_symmetry = TRUE,
                                         geyser_order_by_mean = FALSE)
   p1 <- out$geyser_plots$EGFR
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         enforce_symmetry = TRUE,
                                         geyser_order_by_mean = TRUE)
@@ -79,14 +71,14 @@
 
   # Plot a third variable in Geyser plots.
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         geyser_color.by = "seurat_clusters",
                                         geyser_scale_type = "categorical")
   p1 <- out$geyser_plots$EGFR
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         plot_GeyserPlots = TRUE,
                                         geyser_color.by = "nCount_RNA",
                                         geyser_scale_type = "continuous")
@@ -99,7 +91,7 @@
   sample$split.me <- ifelse(sample$seurat_clusters %in% c("0", "3", "7"), "Group A","Group B")
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                        activities = activities,
+                                        activities = progeny_activities,
                                         split.by = "split.me")
   p <- out$heatmaps$average_scores
   p

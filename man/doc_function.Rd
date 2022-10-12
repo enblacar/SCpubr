@@ -69,7 +69,7 @@
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis using \link[ggplot2]{coord_flip}.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
@@ -129,8 +129,6 @@
 \item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
 
 \item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
-
-\item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
 
 \item{scale_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the viridis scales. Either -1 or 1.}
 

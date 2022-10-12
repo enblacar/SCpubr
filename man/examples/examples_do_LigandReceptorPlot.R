@@ -1,4 +1,5 @@
-\dontrun{
+\donttest{
+  liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
   # Ligand Receptor analysis plot.
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output)
   p

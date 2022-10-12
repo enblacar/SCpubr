@@ -23,7 +23,7 @@ do_PathwayActivityPlot <- function(sample,
                                    plot_GeyserPlots = FALSE,
                                    row_title = NULL,
                                    column_title = NULL,
-                                   transpose = FALSE,
+                                   flip = FALSE,
                                    cluster_cols = TRUE,
                                    cluster_rows = TRUE,
                                    row_names_rot = 0,
@@ -63,7 +63,7 @@ do_PathwayActivityPlot <- function(sample,
   logical_list <- list("plot_FeaturePlots" = plot_FeaturePlots,
                        "plot_Heatmaps" = plot_Heatmaps,
                        "plot_GeyserPlots" = plot_GeyserPlots,
-                       "transpose" = transpose,
+                       "flip" = flip,
                        "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
@@ -244,7 +244,7 @@ do_PathwayActivityPlot <- function(sample,
           ""
         }}
 
-      if (isTRUE(transpose)){
+      if (isTRUE(flip)){
         data <- t(data)
       }
 
@@ -305,7 +305,7 @@ do_PathwayActivityPlot <- function(sample,
         row_title <- split.value
         column_title <- ""
 
-        if (isTRUE(transpose)){
+        if (isTRUE(flip)){
           data <- t(data)
         }
 
@@ -334,7 +334,7 @@ do_PathwayActivityPlot <- function(sample,
         grDevices::pdf(NULL)
         ht_list <- NULL
         for (name in names(list.heatmaps)){
-          ht_list = ht_list %v% list.heatmaps[[name]]
+          ht_list <- ht_list %v% list.heatmaps[[name]]
         }
         h <- ComplexHeatmap::draw(ht_list,
                                   heatmap_legend_list = h_legend,

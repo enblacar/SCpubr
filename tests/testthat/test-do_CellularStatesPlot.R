@@ -411,7 +411,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry"
                                       input_gene_list = genes,
                                       x1 = "A",
                                       y1 = "B",
-                                      enforce_symmetry = T,
+                                      enforce_symmetry = TRUE,
                                      nbin = 1,
                                      ctrl = 10)
   testthat::expect_type(p, "list")
@@ -647,7 +647,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry"
                                       x1 = "A",
                                       y1 = "B",
                                       x2 = "C",
-                                      enforce_symmetry = T,
+                                      enforce_symmetry = TRUE,
                                      nbin = 1,
                                      ctrl = 10)
   testthat::expect_type(p, "list")
@@ -794,7 +794,7 @@ testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry"
                                       y1 = "B",
                                       x2 = "C",
                                       y2 = "D",
-                                      enforce_symmetry = T,
+                                      enforce_symmetry = TRUE,
                                      nbin = 1,
                                      ctrl = 10)
   testthat::expect_type(p, "list")

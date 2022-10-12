@@ -10,9 +10,9 @@ testthat::test_that("do_NebulosaPlot: PASS - single feature", {
 testthat::test_that("do_NebulosaPlot: PASS - cell_borders", {
 
 
-  p <- SCpubr::do_NebulosaPlot(sample = sample, features = "EPC1", plot_cell_borders = T)
+  p <- SCpubr::do_NebulosaPlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE)
   testthat::expect_type(p, "list")
-  p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("EPC1", "PC_1"), plot_cell_borders = T)})
+  p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("EPC1", "PC_1"), plot_cell_borders = TRUE)})
   testthat::expect_type(p, "list")
 })
 
@@ -102,7 +102,7 @@ testthat::test_that("do_NebulosaPlot: PASS - several, joint", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T)
+                               joint = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -111,8 +111,8 @@ testthat::test_that("do_NebulosaPlot: PASS - several, joint only joint", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = T)
+                               joint = TRUE,
+                               return_only_joint = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -121,8 +121,8 @@ testthat::test_that("do_NebulosaPlot: PASS - title", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = T,
+                               joint = TRUE,
+                               return_only_joint = TRUE,
                                plot.title = "Title")
   testthat::expect_type(p, "list")
 })
@@ -132,8 +132,8 @@ testthat::test_that("do_NebulosaPlot: PASS - subtitle", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = T,
+                               joint = TRUE,
+                               return_only_joint = TRUE,
                                plot.subtitle = "Subtitle")
   testthat::expect_type(p, "list")
 })
@@ -143,8 +143,8 @@ testthat::test_that("do_NebulosaPlot: PASS - caption", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = T,
+                               joint = TRUE,
+                               return_only_joint = TRUE,
                                plot.caption = "Caption")
   testthat::expect_type(p, "list")
 })
@@ -154,8 +154,8 @@ testthat::test_that("do_NebulosaPlot: PASS - individual titles", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = F,
+                               joint = TRUE,
+                               return_only_joint = FALSE,
                                individual.titles = c("A", NA, "B"))
   testthat::expect_type(p, "list")
 })
@@ -165,8 +165,8 @@ testthat::test_that("do_NebulosaPlot: PASS - individual subtitles", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = F,
+                               joint = TRUE,
+                               return_only_joint = FALSE,
                                individual.subtitles = c("A", NA, "B"))
   testthat::expect_type(p, "list")
 })
@@ -176,8 +176,8 @@ testthat::test_that("do_NebulosaPlot: PASS - individual captions", {
 
   p <- SCpubr::do_NebulosaPlot(sample = sample,
                                features = c("EPC1", "LTV1"),
-                               joint = T,
-                               return_only_joint = F,
+                               joint = TRUE,
+                               return_only_joint = FALSE,
                                individual.captions = c("A", NA, "B"))
   testthat::expect_type(p, "list")
 })
@@ -222,8 +222,8 @@ testthat::test_that("do_NebulosaPlot: FAIL - individual titles + joint + return 
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
                                                  features = c("EPC1", "LTV1"),
-                                                 joint = T,
-                                                 return_only_joint = T,
+                                                 joint = TRUE,
+                                                 return_only_joint = TRUE,
                                                  individual.titles = "A"))
 })
 
@@ -232,7 +232,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles ", {
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
                                                  features = c("EPC1", "LTV1"),
-                                                 joint = F,
+                                                 joint = FALSE,
                                                  individual.titles = "A"))
 })
 
@@ -241,7 +241,7 @@ testthat::test_that("do_NebulosaPlot: FAIL - not enough individual titles for jo
 
   testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
                                                  features = c("EPC1", "LTV1"),
-                                                 joint = T,
+                                                 joint = TRUE,
                                                  individual.titles = "A"))
 })
 

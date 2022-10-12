@@ -109,8 +109,8 @@ do_GroupwiseDEPlot <- function(sample,
                tibble::column_to_rownames(var = "cluster") %>%
                as.matrix() %>%
                replace(is.na(.), 0) %>%
-               heatmap_inner(cluster_columns = F,
-                             cluster_rows = F,
+               heatmap_inner(cluster_columns = FALSE,
+                             cluster_rows = FALSE,
                              legend.title = ifelse(slot == "data", "Avg. log2(FC)", "Avg. Diff."),
                              data_range = "only_pos",
                              row_title = row_title_logfc,
@@ -144,8 +144,8 @@ do_GroupwiseDEPlot <- function(sample,
                 replace(is.na(.), 0)
 
   pvalue_out <- heatmap_inner(data = pvalue_out,
-                              cluster_columns = F,
-                              cluster_rows = F,
+                              cluster_columns = FALSE,
+                              cluster_rows = FALSE,
                               row_names_side = row_names_side,
                               row_title = row_title_p_values,
                               legend.title = "-log10(Adjusted P-value)",
@@ -256,8 +256,8 @@ do_GroupwiseDEPlot <- function(sample,
                       tibble::column_to_rownames(var = variable) %>%
                       dplyr::select(dplyr::all_of(genes.use)) %>%
                       as.matrix() %>%
-                      heatmap_inner(cluster_columns = F,
-                                    cluster_rows = F,
+                      heatmap_inner(cluster_columns = FALSE,
+                                    cluster_rows = FALSE,
                                     row_names_side = row_names_side,
                                     legend.title = "Mean expression",
                                     data_range = data_range,
@@ -293,7 +293,7 @@ do_GroupwiseDEPlot <- function(sample,
   # Append heatmaps vertically.
   suppressWarnings({
     for (heatmap in list_heatmaps){
-      ht_list = ht_list %v% heatmap
+      ht_list <- ht_list %v% heatmap
     }
   })
 

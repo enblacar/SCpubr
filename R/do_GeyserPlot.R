@@ -210,7 +210,7 @@ do_GeyserPlot <- function(sample,
     } else if (isTRUE(color.by %in% rownames(sample))){
       color.by_column <- Seurat::GetAssayData(object = sample,
                                               assay = assay,
-                                              slot = slot)[color.by, , drop = F] %>%
+                                              slot = slot)[color.by, , drop = FALSE] %>%
                          as.matrix() %>%
                          t() %>%
                          as.data.frame() %>%
@@ -235,7 +235,7 @@ do_GeyserPlot <- function(sample,
     } else if (isTRUE(feature %in% rownames(sample))){
       data <- Seurat::GetAssayData(object = sample,
                                    assay = assay,
-                                   slot = slot)[feature, , drop = F] %>%
+                                   slot = slot)[feature, , drop = FALSE] %>%
               as.matrix() %>%
               t() %>%
               as.data.frame() %>%

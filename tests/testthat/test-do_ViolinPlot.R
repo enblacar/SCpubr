@@ -45,7 +45,7 @@ testthat::test_that("do_ViolinPlot: PASS - rotate axis", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = "EPC1",
-                          rotate_x_axis_labels = T)
+                          rotate_x_axis_labels = TRUE)
   testthat::expect_type(p, "list")
 })
 
@@ -66,7 +66,7 @@ testthat::test_that("do_ViolinPlot: PASS - one feature ycut", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("EPC1"),
-                          rotate_x_axis_labels = T,
+                          rotate_x_axis_labels = TRUE,
                           y_cut = 2)
   testthat::expect_type(p, "list")
 })
@@ -77,7 +77,7 @@ testthat::test_that("do_ViolinPlot: PASS - one feature line width", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("EPC1"),
-                          rotate_x_axis_labels = T,
+                          rotate_x_axis_labels = TRUE,
                           y_cut = 2,
                           line_width = 3)
   testthat::expect_type(p, "list")
@@ -88,7 +88,7 @@ testthat::test_that("do_ViolinPlot: PASS - one feature boxplot width", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("EPC1"),
-                          rotate_x_axis_labels = T,
+                          rotate_x_axis_labels = TRUE,
                           y_cut = 2,
                           boxplot_width = 0.1)
   testthat::expect_type(p, "list")
@@ -99,7 +99,7 @@ testthat::test_that("do_ViolinPlot: PASS - change colors", {
 
   p <- SCpubr::do_ViolinPlot(sample = sample,
                           feature = c("EPC1"),
-                          rotate_x_axis_labels = T,
+                          rotate_x_axis_labels = TRUE,
                           y_cut = 2,
                           boxplot_width = 0.1,
                           colors.use = c("0" = "#001219",

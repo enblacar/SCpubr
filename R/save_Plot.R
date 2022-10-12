@@ -55,7 +55,7 @@ save_Plot <- function(plot,
 
   # Create directory.
   if (!(dir.exists(figure_path))){
-    if (isTRUE(create_path)){dir.create(figure_path, recursive = T)}
+    if (isTRUE(create_path)){dir.create(figure_path, recursive = TRUE)}
   }
 
 
@@ -63,8 +63,8 @@ save_Plot <- function(plot,
 
   # Handle devices:
   output_options <- c("all", "publication", "pdf", "png", "jpeg", "svg", "tiff")
-  if (sum(output_format %in% output_options) < 1){stop("Please select a valid output format from the available options.", call. = F)}
-  if ("all" %in% output_format & "publication" %in% output_format){stop("Please select either `all` or `publication`.", call. = F)}
+  if (sum(output_format %in% output_options) < 1){stop("Please select a valid output format from the available options.", call. = FALSE)}
+  if ("all" %in% output_format & "publication" %in% output_format){stop("Please select either `all` or `publication`.", call. = FALSE)}
   if (output_format == "publication"){
     devices_use <- c("pdf", "png", "svg")
   } else if (output_format == "all"){

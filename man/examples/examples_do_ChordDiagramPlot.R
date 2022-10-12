@@ -1,4 +1,7 @@
-\dontrun{
+\donttest{
+  # Define your Seurat object.
+  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+
   # Basic chord diagram.
   sample$assignment <- ifelse(sample$seurat_clusters %in% c("0", "4", "7"), "A", "B")
   sample$assignment[sample$seurat_clusters %in% c("1", "2")] <- "C"

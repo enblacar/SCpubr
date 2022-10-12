@@ -9,12 +9,12 @@ testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = progeny_activities,
-                                        transpose = TRUE)
+                                        flip = TRUE)
   testthat::expect_type(out, "list")
 
   out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                         activities = progeny_activities,
-                                        transpose = TRUE,
+                                        flip = TRUE,
                                         split.by = "orig.ident")
   testthat::expect_type(out, "list")
 

@@ -107,7 +107,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
 
   circlize::circos.clear()
 
-  extra_params = list(...)
+  extra_params <- list(...)
 
   # Internal use only
   if ("from_df" %in% names(extra_params) & "df" %in% names(extra_params)){

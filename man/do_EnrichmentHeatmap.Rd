@@ -9,7 +9,7 @@ do_EnrichmentHeatmap(
   input_gene_list,
   group.by = NULL,
   verbose = FALSE,
-  transpose = FALSE,
+  flip = FALSE,
   cluster_cols = FALSE,
   cluster_rows = FALSE,
   legend.title = "Enrichment",
@@ -29,13 +29,12 @@ do_EnrichmentHeatmap(
   row_names_side = "right",
   row_title_side = "left",
   row_title_rot = 90,
-  column_title = if (isFALSE(transpose)) {
+  column_title = if (isFALSE(flip)) {
      "List of Genes"
  } else {
      "Groups"
-
-    },
-  row_title = if (isFALSE(transpose)) {
+ },
+  row_title = if (isFALSE(flip)) {
      "Groups"
  } else {
      "List of Genes"
@@ -53,7 +52,7 @@ do_EnrichmentHeatmap(
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
-\item{transpose}{\strong{\code{\link[base]{logical}}} | Transpose the resulting heatmap.}
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
 
@@ -109,76 +108,90 @@ A ComplexHeatmap object.
 This function computes the enrichment scores for the cells using \link[Seurat]{AddModuleScore} and then aggregates the scores by the metadata variables provided by the user and displays it as a heatmap, computed by \link[ComplexHeatmap]{Heatmap}.
 }
 \examples{
-\dontrun{
-  # Define list of genes.
-  genes <- list("Naive CD4+ T" = c("IL7R", "CCR7"),
-                "CD14+ Mono" = c("CD14", "LYZ"),
-                "Memory CD4+" = c("S100A4"),
-                "B" = c("MS4A1"),
-                "CD8+ T" = c("CD8A"),
-                "FCGR3A+ Mono" = c("FCGR3A", "MS4A7"),
-                "NK" = c("GNLY", "NKG7"),
-                "DC" = c("FCER1A", "CST3"),
-                "Platelet" = c("PPBP"))
+# Define your Seurat object.
+sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
-  # Default parameters.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes)
-  p
+# Genes have to be unique.
+genes <- list("Naive CD4+ T" = rownames(sample)[1:2],
+              "EPC1+ Mono" = rownames(sample)[3:4],
+              "Memory CD4+" = rownames(sample)[5],
+              "B" = rownames(sample)[6],
+              "CD8+ T" = rownames(sample)[7],
+              "FCGR3A+ Mono" = rownames(sample)[8:9],
+              "NK" = rownames(sample)[10:11],
+              "DC" = rownames(sample)[12:13],
+              "Platelet" = rownames(sample)[14])
 
-  # Custom aggregated values.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    group.by = "orig.ident")
-  p
+# Default parameters.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 
-  # Transposing the matrix.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    transpose = TRUE)
-  p
+# Custom aggregated values.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  group.by = "orig.ident",
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 
-  # Rotating the labels.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0)
-  p
+# Transposing the matrix.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  transpose = TRUE,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 
-  # Modifying the tile size.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    split.by = "custom_group",
-                                    cell_size = 7)
-  p
+# Rotating the labels.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  transpose = TRUE,
+                                  column_names_rot = 0,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
+
+# Modifying the tile size.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  transpose = TRUE,
+                                  column_names_rot = 0,
+                                  cluster_cols = FALSE,
+                                  cluster_rows = TRUE,
+                                  cell_size = 7,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 
 
-  # Symmetrical scale viriis.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    cell_size = 7,
-                                    symmetrical_scale = TRUE)
-  p
+# Symmetrical scale viriis.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  transpose = TRUE,
+                                  column_names_rot = 0,
+                                  cluster_cols = FALSE,
+                                  cluster_rows = TRUE,
+                                  cell_size = 7,
+                                  symmetrical_scale = TRUE,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 
 
-  # Modifying the symmetrical scale non viridis.
-  p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                    input_gene_list = genes,
-                                    transpose = TRUE,
-                                    column_names_rot = 0,
-                                    cluster_cols = F,
-                                    cluster_rows = T,
-                                    cell_size = 7,
-                                    symmetrical_scale = TRUE,
-                                    use_viridis = FALSE)
-  p
-}
+# Modifying the symmetrical scale non viridis.
+p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                  input_gene_list = genes,
+                                  transpose = TRUE,
+                                  column_names_rot = 0,
+                                  cluster_cols = FALSE,
+                                  cluster_rows = TRUE,
+                                  cell_size = 7,
+                                  symmetrical_scale = TRUE,
+                                  use_viridis = FALSE,
+                                  nbin = 1,
+                                  ctrl = 10)
+p
 }
