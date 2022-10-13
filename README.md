@@ -90,6 +90,8 @@ if (!requireNamespace("remotes", quietly = TRUE))
 remotes::install_github(github_packages)
 ```
 
+# Updates
+Please keep of our new updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/master/NEWS.md)
 
 # Citation
 To cite `SCpubr` in your publications, please use: 
