@@ -13,13 +13,16 @@ progeny_activities <- readRDS(system.file("extdata/progeny_activities_example.rd
 dorothea_activities <- readRDS(system.file("extdata/dorothea_activities_example.rds", package = "SCpubr"))
 enriched_terms <- readRDS(system.file("extdata/enriched_terms_example.rds", package = "SCpubr"))
 
+
+
+
 # Remove this for publication in CRAN.
-# liana_output <- test.data$liana_output
-# p <- SCpubr::do_DimPlot(sample)
-# p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-# data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-# p.pheatmap <- pheatmap::pheatmap(data)
-# p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
-# figure_path <- getwd()
+liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
+p <- SCpubr::do_DimPlot(sample)
+p.heatmap <- SCpubr::do_CorrelationPlot(sample)
+data <- p.heatmap@ht_list$`Pearson coef.`@matrix
+p.pheatmap <- pheatmap::pheatmap(data)
+p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
+figure_path <- getwd()
 # monocle_sample <- sample
 # monocle_cds <- test.data$monocle_cds

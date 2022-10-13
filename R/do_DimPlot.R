@@ -154,14 +154,14 @@ do_DimPlot <- function(sample,
         generate_color_scale(levels(sample))
       } else if (group_by_is_used){
         # Retrieve the unique values in group.by metadata variable.
-        data.use <- sample[[]][, group.by, drop = F]
+        data.use <- sample[[]][, group.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale to be used based on the unique values of group.by.
         generate_color_scale(names.use)
       } else if (split_by_is_used){
         # Retrieve the unique values in split.by metadata variable.
-        data.use <- sample[[]][, split.by, drop = F]
+        data.use <- sample[[]][, split.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale based on the unique values of split.by
@@ -328,7 +328,7 @@ do_DimPlot <- function(sample,
     # List to store each individual plots.
     list.plots <- list()
     # Recover metadata values associated with split.by.
-    data.use <- sample@meta.data[, split.by, drop = F]
+    data.use <- sample@meta.data[, split.by, drop = FALSE]
     # Retrieve the plotting order, keep factor levels if the column is a factor.
     plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
     # If idents.keep is used, subset to only these values.
