@@ -174,7 +174,7 @@ This function makes use of \href{https://github.com/saezlab/liana}{liana} packag
 
   # Ligand Receptor analysis plot with inverted axes with filtered source and targets.
   p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                     flip = F,
+                                     flip = FALSE,
                                      keep_source = c("0", "3", "9"),
                                      keep_target = c("3", "4", "9"))
   p

@@ -286,6 +286,16 @@ check_suggests <- function(function_name){
   assertthat::assert_that(function_name %in% names(pkg_list),
                           msg = paste0(function_name, " is not an accepted function name."))
   pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
+
+  non_seurat_functions <- c("save_Plot",
+                            "do_VolcanoPlot",
+                            "do_LigandReceptorPlot",
+                            "do_ColorPalette")
+
+  if (function_name %in% non_seurat_functions){
+    pkgs <- pkgs[pkgs != "Seurat"]
+  }
+
   for (pkg in pkgs){
     assertthat::assert_that(requireNamespace(pkg, quietly = TRUE),
                             msg = paste0("Package ", pkg, " must be installed to use ", function_name, "."))
