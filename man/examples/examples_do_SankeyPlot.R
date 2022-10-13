@@ -1,4 +1,5 @@
 \donttest{
+  library(dplyr)
   # Define your Seurat object.
   sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
