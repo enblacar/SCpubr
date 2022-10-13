@@ -91,7 +91,9 @@ remotes::install_github(github_packages)
 ```
 
 # Updates
-Please keep of our new updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/master/NEWS.md)
+*SCpubr* is an active package currently aiming to improve and add new functionalities.
+
+Keep track of our new updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/master/NEWS.md)!
 
 # Citation
 To cite `SCpubr` in your publications, please use: 
