@@ -91,7 +91,7 @@ remotes::install_github(github_packages)
 ```
 
 # Updates
-*SCpubr* is an active package currently aiming to improve and add new functionalities.
+**SCpubr** is an active package currently aiming to improve and add new functionalities.
 
 Keep track of our new updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/master/NEWS.md)!
 
