@@ -4,6 +4,7 @@ This is a fourth resubmission. In this version I have:
 
 * Modified examples so that `\dontrun` is removed, even for internal functions, as it was not necessary. The later two cases was an oversight from my side. This should be fixed now.
 
+R CMD CHECK runs without ERRORs, WARNINGs and NOTEs.
 
 ## Resubmission 3
 This is a third resubmission. In this version I have:
