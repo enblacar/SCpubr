@@ -34,7 +34,7 @@ if(!requireNamespace("devtools", quietly = TRUE)){
 devtools::install_github("enblacar/SCpubr", ref = "v1.0.0-dev-stable")
 ```
 
-By default, dependencies should not be installed. In order to access all functions in the package, the following
+By default, dependencies are not installed. In order to access all functions in the package, the following
 packages should also be installed:
 
 ```r
