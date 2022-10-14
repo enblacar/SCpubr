@@ -113,9 +113,9 @@
 #' @return Nothing. This is a mock function.
 #' @keywords internal
 #' @examples
-#' \dontrun{
-#' TBD
-#' }
+#'
+#' # This a mock function that stores the documentation for many other functions.
+#' # It is not intended for user usage.
 doc_function <- function(sample,
                          font.size,
                          font.type,
@@ -234,7 +234,7 @@ named_list <- function(){}
 #' @noRd
 #' @return None
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_suggests <- function(function_name){
@@ -309,9 +309,12 @@ check_suggests <- function(function_name){
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' TBD
-#' }
+#'
+#' # See all dependencies.
+#' SCpubr::state_dependencies()
+#'
+#' # See the dependencies for a single package.
+#' SCpubr::state_dependencies(function_name = "do_DimPlot")
 state_dependencies <- function(function_name = NULL){
   pkg_list <- list("core" = c("Seurat",
                               "rlang",
@@ -428,7 +431,7 @@ state_dependencies <- function(function_name = NULL){
 #' @return None
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_Seurat <- function(sample){
@@ -445,7 +448,7 @@ check_Seurat <- function(sample){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_colors <- function(colors, parameter_name = "") {
@@ -466,7 +469,7 @@ check_colors <- function(colors, parameter_name = "") {
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL){
@@ -498,7 +501,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 generate_color_scale <- function(names_use){
@@ -528,7 +531,7 @@ generate_color_scale <- function(names_use){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL){
@@ -573,7 +576,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
@@ -595,7 +598,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_feature <- function(sample, features, permissive = FALSE, dump_reduction_names = FALSE, enforce_check = NULL, enforce_parameter = NULL){
@@ -691,7 +694,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 remove_not_found_features <- function(features, not_found_features){
@@ -715,7 +718,7 @@ remove_not_found_features <- function(features, not_found_features){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 remove_duplicated_features <- function(features){
@@ -757,7 +760,7 @@ remove_duplicated_features <- function(features){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_identity <- function(sample, identities){
@@ -775,7 +778,7 @@ check_identity <- function(sample, identities){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_and_set_reduction <- function(sample, reduction = NULL){
@@ -809,7 +812,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
@@ -854,7 +857,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_and_set_assay <- function(sample, assay = NULL){
@@ -891,7 +894,7 @@ check_and_set_assay <- function(sample, assay = NULL){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_type <- function(parameters, required_type, test_function){
@@ -923,7 +926,7 @@ check_type <- function(parameters, required_type, test_function){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_and_set_slot <- function(slot){
@@ -949,7 +952,7 @@ check_and_set_slot <- function(slot){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE, assay = "SCT", slot = "data"){
@@ -994,7 +997,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_viridis_color_map <- function(viridis_color_map, verbose = FALSE){
@@ -1014,7 +1017,7 @@ check_viridis_color_map <- function(viridis_color_map, verbose = FALSE){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_length <- function(vector_of_parameters,
@@ -1031,7 +1034,7 @@ check_length <- function(vector_of_parameters,
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 use_dataset <- function(n_cells = 180){
@@ -1092,7 +1095,7 @@ use_dataset <- function(n_cells = 180){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
@@ -1130,7 +1133,7 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 compute_barplot_annotation <- function(sample,
@@ -1188,7 +1191,7 @@ compute_barplot_annotation <- function(sample,
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 heatmap_inner <- function(data,
@@ -1503,7 +1506,7 @@ heatmap_inner <- function(data,
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 modify_string <- function(string_to_modify){
@@ -1527,7 +1530,7 @@ modify_string <- function(string_to_modify){
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 compute_enrichment_scores <- function(sample, input_gene_list, verbose = FALSE, nbin = 24, ctrl = 100){
@@ -1585,7 +1588,7 @@ compute_enrichment_scores <- function(sample, input_gene_list, verbose = FALSE, 
 #' @return None
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 modify_continuous_legend <- function(p,
@@ -1682,7 +1685,7 @@ modify_continuous_legend <- function(p,
 #'
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 get_data_column <- function(sample,
@@ -1734,7 +1737,7 @@ get_data_column <- function(sample,
 #'
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 get_data_column_in_context <- function(sample,
@@ -1774,7 +1777,7 @@ get_data_column_in_context <- function(sample,
 #'
 #' @noRd
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' TBD
 #' }
 check_parameters <- function(parameter,

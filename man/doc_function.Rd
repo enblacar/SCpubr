@@ -188,8 +188,8 @@ Nothing. This is a mock function.
 Mock function used to document all main function.
 }
 \examples{
-\dontrun{
-TBD
-}
+
+# This a mock function that stores the documentation for many other functions.
+# It is not intended for user usage.
 }
 \keyword{internal}

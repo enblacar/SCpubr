@@ -1,5 +1,6 @@
-# SCpubr v1.0.0.9000
+# SCpubr v1.0.0.9000 (not released)
 - Modified internal checks so that the functions that do not use `Seurat` do not require this to be installed. This is just for the very side case in which somebody downloads the package just for the `SCpubr::do_ColorPalette()` function.
+- Removed the option to use `individual.titles`, 'individual.subtitles` and `individual.captions` in `SCpubr::do_NebulosaPlot()` as the benefit of such parameters did not surpass the problems the code was causing. The feature might come back in the future, once fully optimized.
 
 # SCpubr v1.0.0-dev-stable
 - Same as v1.0.0, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.

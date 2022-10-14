@@ -27,10 +27,15 @@ For installation and tutorials consult the [reference manual](https://enblacar.g
 # Future sumission to CRAN.
 
 # From GitHub.
-if(!requireNamespace("devtools", quietly = T)){
+if(!requireNamespace("devtools", quietly = TRUE)){
   install.packages("devtools") # If not installed.
 }
-devtools::install_github("enblacar/SCpubr")
+
+## Latest stable development version.
+devtools::install_github("enblacar/SCpubr", ref = "v1.0.0-dev-stable")
+
+## Latest release
+devtools::install_github("enblacar/SCpubr", ref = "v1.0.0")
 ```
 
 By default, dependencies should not be installed. In order to access all functions in the package, the following

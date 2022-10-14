@@ -16,7 +16,10 @@ None
 State SCpubr current function dependencies.
 }
 \examples{
-\dontrun{
-TBD
-}
+
+# See all dependencies.
+SCpubr::state_dependencies()
+
+# See the dependencies for a single package.
+SCpubr::state_dependencies(function_name = "do_DimPlot")
 }
