@@ -54,7 +54,6 @@ do_BoxPlot <- function(sample,
                        map_signif_level = TRUE){
 
   check_suggests(function_name = "do_BoxPlot")
-
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

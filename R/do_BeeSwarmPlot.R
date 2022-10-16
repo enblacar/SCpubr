@@ -43,7 +43,6 @@ do_BeeSwarmPlot <- function(sample,
                             border.size = 1.5,
                             border.color = "black",
                             pt.size = 2){
-  # Checks for packages.
   check_suggests(function_name = "do_BeeSwarmPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

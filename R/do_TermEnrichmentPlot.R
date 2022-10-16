@@ -36,10 +36,7 @@ do_TermEnrichmentPlot <- function(enriched_terms,
                                   legend.framecolor = "grey50",
                                   legend.tickcolor = "white"){
 
-    # Checks for packages.
     check_suggests(function_name = "do_TermEnrichmentPlot")
-
-
     # Define pipe operator internally.
     `%>%` <- magrittr::`%>%`
 

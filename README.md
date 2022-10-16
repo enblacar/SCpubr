@@ -16,8 +16,6 @@ For further information read the [publication](https://www.biorxiv.org/content/1
 
 For installation and tutorials consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
-**SCpubr is still under development. A near future CRAN release of v1.0.0 is planned.**
-
 # Installation
 
 **SCpubr** can be installed via:
@@ -32,63 +30,6 @@ if(!requireNamespace("devtools", quietly = TRUE)){
 }
 
 devtools::install_github("enblacar/SCpubr", ref = "v1.0.0-dev-stable")
-```
-
-By default, dependencies are not installed. In order to access all functions in the package, the following
-packages should also be installed:
-
-```r
-# Install CRAN packages.
-cran_packages <- c("circlize",
-                   "colorspace",
-                   "dplyr",
-                   "forcats",
-                   "ggbeeswarm",
-                   "ggdist",
-                   "ggExtra",
-                   "ggplot2",
-                   "ggplotify",
-                   "ggrastr",
-                   "ggrepel",
-                   "ggridges",
-                   "ggsignif",
-                   "grDevices",
-                   "grid",
-                   "magrittr",
-                   "patchwork",
-                   "pbapply",
-                   "plyr",
-                   "rlang",
-                   "scales",
-                   "scattermore",
-                   "Seurat",
-                   "stats",
-                   "stringr",
-                   "svglite",
-                   "tibble",
-                   "tidyr",
-                   "viridis")
-
-install.packages(cran_packages)
-
-# Install bioconductor packages.
-bioconductor_packages <- c("ComplexHeatmap",
-                           "infercnv",
-                           "Nebulosa")
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install(bioconductor_packages)
-
-# Install github packages.
-github_packages <- c("ggsankey",
-                     "liana",
-                     "monocle3")
-
-if (!requireNamespace("remotes", quietly = TRUE))
-    install.packages("remotes")
-
-remotes::install_github(github_packages)
 ```
 
 # Updates

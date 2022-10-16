@@ -228,7 +228,6 @@ named_list <- function(){}
 `%!in%` <- function(x, y) {return(!(x %in% y))}
 
 
-
 #' Checks for Suggests.
 #'
 #' @noRd
@@ -237,7 +236,7 @@ named_list <- function(){}
 #' \donttest{
 #' TBD
 #' }
-check_suggests <- function(function_name){
+check_suggests <- function(function_name, passive = FALSE){
   pkg_list <- list("core" = c("Seurat",
                               "rlang",
                               "dplyr",
@@ -251,7 +250,6 @@ check_suggests <- function(function_name){
                               "grDevices",
                               "stats",
                               "viridis",
-                              "forcats",
                               "scales",
                               "grid",
                               "assertthat"),
@@ -283,8 +281,9 @@ check_suggests <- function(function_name){
                    "testing" = c("Does_not_exist"))
 
   # The function is not in the current list of possibilities.
-  assertthat::assert_that(function_name %in% names(pkg_list),
-                          msg = paste0(function_name, " is not an accepted function name."))
+  if (function_name %!in% names(pkg_list)){
+    stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+  }
   pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
 
   non_seurat_functions <- c("save_Plot",
@@ -296,15 +295,22 @@ check_suggests <- function(function_name){
     pkgs <- pkgs[pkgs != "Seurat"]
   }
 
+  value <- TRUE
   for (pkg in pkgs){
-    assertthat::assert_that(requireNamespace(pkg, quietly = TRUE),
-                            msg = paste0("Package ", pkg, " must be installed to use ", function_name, "."))
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      if (isFALSE(passive)){
+        stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = FALSE)
+      } else{
+        value <- FALSE
+      }
+    }
   }
+  if (isTRUE(passive)) {return(value)}
 }
-
 #' State SCpubr current function dependencies.
 #'
-#' @param function_name Name of an exported function from SCpubr. If NULL, return all functions.
+#' @param function_name \strong{\code{\link[base]{character}}} | Name of an exported function from SCpubr. If NULL, return all functions.
+#' @param return_dependencies \strong{\code{\link[base]{logical}}} | Whether to have the dependencies as an output object instead of a printed message.
 #' @return None
 #' @export
 #'
@@ -315,7 +321,7 @@ check_suggests <- function(function_name){
 #'
 #' # See the dependencies for a single package.
 #' SCpubr::state_dependencies(function_name = "do_DimPlot")
-state_dependencies <- function(function_name = NULL){
+state_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
   pkg_list <- list("core" = c("Seurat",
                               "rlang",
                               "dplyr",
@@ -361,8 +367,9 @@ state_dependencies <- function(function_name = NULL){
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){
-      assertthat::assert_that(func %in% names(pkg_list),
-                              msg = paste0(function_name, " is not an accepted function name."))
+      if (func %!in% names(pkg_list)){
+        stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+      }
     }
   }
   cran_packages <- c("circlize",
@@ -407,19 +414,31 @@ state_dependencies <- function(function_name = NULL){
     func_list <- names(pkg_list)
   }
 
-  message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
-  for (func in func_list){
-    packages <- c(pkg_list[[func]], pkg_list[["core"]])
-    cran_packages_individual <- sort(packages[packages %in% cran_packages])
-    bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
-    github_packages_individual <- sort(packages[packages %in% github_packages])
-    message("Dependencies for ", func, ":")
-    if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
-    if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
-    if (length(github_packages_individual >= 1)){message("  Github packages: ", paste(github_packages_individual, collapse = ", "))}
-    message("")
+  if (isFALSE(return_dependencies)){
+    message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
+    for (func in func_list){
+      packages <- c(pkg_list[[func]], pkg_list[["core"]])
+      cran_packages_individual <- sort(packages[packages %in% cran_packages])
+      bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
+      github_packages_individual <- sort(packages[packages %in% github_packages])
+      message("Dependencies for ", func, ":")
+      if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
+      if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
+      if (length(github_packages_individual >= 1)){message("  Github packages: ", paste(github_packages_individual, collapse = ", "))}
+      message("")
+    }
+  } else {
+    list_output <- list()
+    for (func in func_list){
+      packages <- c(pkg_list[[func]], pkg_list[["core"]])
+      list_output[[func]] <- packages
+    }
+    return(list_output)
   }
+
 }
+
+
 
 
 

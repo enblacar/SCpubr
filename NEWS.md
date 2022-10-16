@@ -1,3 +1,6 @@
+# SCpubr v1.0.1
+- Rework on unit tests and examples so that it can pass CRAN R CMD Check without packages in Suggests. This is, rework to make sure Suggested packages are used conditionally. 
+
 # SCpubr v1.0.0-dev-stable
 - Same as v1.0.0, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
  

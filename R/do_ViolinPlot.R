@@ -35,7 +35,6 @@ do_ViolinPlot <- function(sample,
                           plot.grid = TRUE,
                           grid.color = "grey75",
                           grid.type = "dashed"){
-  # Checks for packages.
   check_suggests(function_name = "do_ViolinPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

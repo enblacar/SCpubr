@@ -4,10 +4,12 @@
 \alias{state_dependencies}
 \title{State SCpubr current function dependencies.}
 \usage{
-state_dependencies(function_name = NULL)
+state_dependencies(function_name = NULL, return_dependencies = FALSE)
 }
 \arguments{
-\item{function_name}{Name of an exported function from SCpubr. If NULL, return all functions.}
+\item{function_name}{\strong{\code{\link[base]{character}}} | Name of an exported function from SCpubr. If NULL, return all functions.}
+
+\item{return_dependencies}{\strong{\code{\link[base]{logical}}} | Whether to have the dependencies as an output object instead of a printed message.}
 }
 \value{
 None

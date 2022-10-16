@@ -51,8 +51,6 @@ do_FeaturePlot <- function(sample,
                            verbose = TRUE,
                            plot.axes = FALSE){
 
-
-  # Checks for packages.
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

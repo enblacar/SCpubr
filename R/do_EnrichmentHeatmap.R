@@ -37,7 +37,6 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_title = if (isFALSE(flip)){"Groups"} else {"List of Genes"},
                                  nbin = 24,
                                  ctrl = 100){
-  # Checks for packages.
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

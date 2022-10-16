@@ -100,52 +100,60 @@ Wrapper for \link[Seurat]{VlnPlot}.
 }
 \examples{
 \donttest{
-  # Define your Seurat object.
-  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_ViolinPlot", passive = TRUE)
 
-  # Basic violin plot.
-  p <- SCpubr::do_ViolinPlot(sample = sample,
-                             feature = "nCount_RNA")
-  p
+  if (isTRUE(value)){
+    # Define your Seurat object.
+    sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
-  # Remove the box plots.
-  p <- SCpubr::do_ViolinPlot(sample = sample,
-                             feature = "nCount_RNA",
-                             plot_boxplot = FALSE)
-  p
+    # Basic violin plot.
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               feature = "nCount_RNA")
+    p
 
-  # Rotate x axis labels.
-  p <- SCpubr::do_ViolinPlot(sample = sample,
-                             feature = c("nCount_RNA"),
-                             rotate_x_axis_labels = FALSE)
-  p
+    # Remove the box plots.
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               feature = "nCount_RNA",
+                               plot_boxplot = FALSE)
+    p
 
-  # Add horizontal lines.
-  p <- SCpubr::do_ViolinPlot(sample = sample,
-                             feature = "nCount_RNA",
-                             y_cut = 25000)
-  p
+    # Rotate x axis labels.
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               feature = c("nCount_RNA"),
+                               rotate_x_axis_labels = FALSE)
+    p
 
-  # Increase line width.
-  p1 <- SCpubr::do_ViolinPlot(sample = sample,
-                              feature = "nCount_RNA")
+    # Add horizontal lines.
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               feature = "nCount_RNA",
+                               y_cut = 25000)
+    p
 
-  p2 <- SCpubr::do_ViolinPlot(sample = sample,
-                              feature = "nCount_RNA",
-                              line_width = 2)
+    # Increase line width.
+    p1 <- SCpubr::do_ViolinPlot(sample = sample,
+                                feature = "nCount_RNA")
 
-  p <- p1 / p2
-  p
+    p2 <- SCpubr::do_ViolinPlot(sample = sample,
+                                feature = "nCount_RNA",
+                                line_width = 2)
 
-  # Decrease boxplot width.
-  p1 <- SCpubr::do_ViolinPlot(sample = sample,
-                              feature = "nCount_RNA")
+    p <- p1 / p2
+    p
 
-  p2 <- SCpubr::do_ViolinPlot(sample = sample,
-                              feature = "nCount_RNA",
-                              boxplot_width = 0.1)
+    # Decrease boxplot width.
+    p1 <- SCpubr::do_ViolinPlot(sample = sample,
+                                feature = "nCount_RNA")
 
-  p <- p1 / p2
-  p
+    p2 <- SCpubr::do_ViolinPlot(sample = sample,
+                                feature = "nCount_RNA",
+                                boxplot_width = 0.1)
+
+    p <- p1 / p2
+    p
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
 }
 }

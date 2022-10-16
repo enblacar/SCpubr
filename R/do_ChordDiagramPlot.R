@@ -73,9 +73,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 padding_labels = 4,
                                 ...){
   `%>%` <- magrittr::`%>%`
-  # Checks for packages.
   check_suggests(function_name = "do_ChordDiagramPlot")
-
   # Check logical parameters.
   logical_list <- list("link.decreasing" = link.decreasing,
                        "z_index" = z_index,

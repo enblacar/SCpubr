@@ -26,8 +26,6 @@ do_CorrelationPlot <- function(sample,
                                legend.width = 5,
                                legend.framecolor = "black"){
 
-  # Checks for packages.
-  check_suggests(function_name = "do_CorrelationPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
   # Check logical parameters.

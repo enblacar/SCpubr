@@ -53,7 +53,6 @@ do_DimPlot <- function(sample,
                        marginal.size = 5,
                        marginal.group = TRUE,
                        plot.axes = FALSE){
-  # Checks for packages.
   check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

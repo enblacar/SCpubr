@@ -57,8 +57,6 @@ do_TFActivityPlot <- function(sample,
                               geyser_scale_type = "continuous",
                               viridis_color_map = "G",
                               viridis_direction = 1){
-
-  #Checks for packages.
   check_suggests(function_name = "do_TFActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

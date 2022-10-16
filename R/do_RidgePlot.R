@@ -51,10 +51,9 @@ do_RidgePlot <- function(sample,
                          plot.grid = TRUE,
                          grid.color = "grey75",
                          grid.type = "dashed"){
+  check_suggests(function_name = "do_RidgePlot")
   `%>%` <- magrittr::`%>%`
 
-  # Checks for packages.
-  check_suggests(function_name = "do_RidgePlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

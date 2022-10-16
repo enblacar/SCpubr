@@ -1,47 +1,55 @@
 \donttest{
-  # Define your Seurat object.
-  sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_DotPlot", passive = TRUE)
 
-  # Basic Dot plot.
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = "EPC1")
+  if (isTRUE(value)){
+    # Define your Seurat object.
+    sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
-  # Querying multiple features.
-  genes <- rownames(sample)[1:14]
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = genes)
+    # Basic Dot plot.
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1")
 
-  # Inverting the axes.
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = genes,
-                          cluster.idents = TRUE,
-                          plot.title = "Clustered",
-                          flip = TRUE)
+    # Querying multiple features.
+    genes <- rownames(sample)[1:14]
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = genes)
 
-  # Modifying default colors.
-  # Two colors to generate a gradient.
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = genes,
-                          colors.use = c("#001219", "#e9d8a6"))
+    # Inverting the axes.
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = genes,
+                            cluster.idents = TRUE,
+                            plot.title = "Clustered",
+                            flip = TRUE)
 
-  # Querying multiple features as a named list - splitting by each item in list.
-  # Genes have to be unique.
-  genes <- list("Naive CD4+ T" = rownames(sample)[1:2],
-                "EPC1+ Mono" = rownames(sample)[3:4],
-                "Memory CD4+" = rownames(sample)[5],
-                "B" = rownames(sample)[6],
-                "CD8+ T" = rownames(sample)[7],
-                "FCGR3A+ Mono" = rownames(sample)[8:9],
-                "NK" = rownames(sample)[10:11],
-                "DC" = rownames(sample)[12:13],
-                "Platelet" = rownames(sample)[14])
+    # Modifying default colors.
+    # Two colors to generate a gradient.
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = genes,
+                            colors.use = c("#001219", "#e9d8a6"))
 
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = genes)
+    # Querying multiple features as a named list - splitting by each item in list.
+    # Genes have to be unique.
+    genes <- list("Naive CD4+ T" = rownames(sample)[1:2],
+                  "EPC1+ Mono" = rownames(sample)[3:4],
+                  "Memory CD4+" = rownames(sample)[5],
+                  "B" = rownames(sample)[6],
+                  "CD8+ T" = rownames(sample)[7],
+                  "FCGR3A+ Mono" = rownames(sample)[8:9],
+                  "NK" = rownames(sample)[10:11],
+                  "DC" = rownames(sample)[12:13],
+                  "Platelet" = rownames(sample)[14])
 
-  # Clustering the identities.
-  p <- SCpubr::do_DotPlot(sample = sample,
-                          features = genes,
-                          cluster.idents = TRUE,
-                          plot.title = "Clustered")
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = genes)
+
+    # Clustering the identities.
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = genes,
+                            cluster.idents = TRUE,
+                            plot.title = "Clustered")
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
 }

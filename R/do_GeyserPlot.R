@@ -62,7 +62,6 @@ do_GeyserPlot <- function(sample,
                           xlab = "Groups",
                           ylab = feature){
 
-  # Checks for packages.
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

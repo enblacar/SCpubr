@@ -35,7 +35,6 @@ do_BarPlot <- function(sample,
                        plot.grid = TRUE,
                        grid.color = "grey75",
                        grid.type = "dashed") {
-
   check_suggests(function_name = "do_BarPlot")
   check_Seurat(sample)
 

@@ -37,7 +37,6 @@ do_VolcanoPlot <- function(sample,
                            n_genes = 5,
                            use_labels = FALSE,
                            colors.use = "steelblue"){
-  # Checks for packages.
   check_suggests(function_name = "do_VolcanoPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
