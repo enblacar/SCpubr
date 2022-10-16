@@ -47,5 +47,5 @@ doi:10.1101/2022.02.28.482303.
 ```
 
 # Contact
-scpubr@gmail.com
+`scpubr@gmail.com`
 
