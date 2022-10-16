@@ -25,6 +25,22 @@ enriched_terms <- readRDS(system.file("extdata/enriched_terms_example.rds", pack
 
 # Get packages.
 dependencies <- SCpubr::state_dependencies(return_dependencies = TRUE)
+
+dependencies[["utils"]] <- c("Seurat",
+                             "rlang",
+                             "dplyr",
+                             "magrittr",
+                             "dplyr",
+                             "tidyr",
+                             "tibble",
+                             "stringr",
+                             "plyr",
+                             "grDevices",
+                             "stats",
+                             "grid",
+                             "assertthat",
+                             "ComplexHeatmap")
+
 # Check them.
 dep_check <- list()
 for (func in names(dependencies)){
@@ -37,20 +53,7 @@ for (func in names(dependencies)){
   }
   dep_check[[func]] <- value
 }
-dep_check[["utils"]] <- c("Seurat",
-                          "rlang",
-                          "dplyr",
-                          "magrittr",
-                          "dplyr",
-                          "tidyr",
-                          "tibble",
-                          "stringr",
-                          "plyr",
-                          "grDevices",
-                          "stats",
-                          "grid",
-                          "assertthat",
-                          "ComplexHeatmap")
+
 
 # Remove this for publication in CRAN.
 #liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
