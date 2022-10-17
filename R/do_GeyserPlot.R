@@ -311,7 +311,7 @@ do_GeyserPlot <- function(sample,
         limits <- c(min(data[, "color.by"]),
                     max(data[, "color.by"]))
         end_value <- max(abs(limits))
-        scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+        scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                     limits = c(-end_value, end_value),
                                                     na.value = na.value)
       } else if (isFALSE(enforce_symmetry)){

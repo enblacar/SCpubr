@@ -31,7 +31,8 @@ do_CopyNumberVariantPlot(
   legend.title = NULL,
   na.value = "grey75",
   viridis_color_map = "G",
-  viridis_direction = 1
+  viridis_direction = 1,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -101,6 +102,8 @@ do_CopyNumberVariantPlot(
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }
 \value{
 A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..

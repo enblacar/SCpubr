@@ -56,12 +56,23 @@ for (func in names(dependencies)){
 
 
 # Remove this for publication in CRAN.
-liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
-p <- SCpubr::do_DimPlot(sample)
-p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-p.pheatmap <- pheatmap::pheatmap(data)
-p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
-figure_path <- getwd()
+if (isFALSE(dep_check[["do_LigandReceptorPlot"]])){
+  liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
+}
+
+if (isFALSE(dep_check[["do_DimPlot"]]) &
+    isFALSE(dep_check[["do_CorrelationPlot"]]) &
+    isFALSE(dep_check[["do_ChordDiagramPlot"]]) &
+    isTRUE(requireNamespace(pkg, quietly = TRUE)) &
+    isFALSE(dep_check[["save_Plot"]])){
+  p <- SCpubr::do_DimPlot(sample)
+  p.heatmap <- SCpubr::do_CorrelationPlot(sample)
+  data <- p.heatmap@ht_list$`Pearson coef.`@matrix
+  p.pheatmap <- pheatmap::pheatmap(data)
+  p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
+  figure_path <- getwd()
+}
+
+
 #monocle_sample <- sample
 #monocle_cds <- test.data$monocle_cds

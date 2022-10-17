@@ -221,13 +221,18 @@ do_FeaturePlot <- function(sample,
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p)
           feature.select <- gsub("-", ".", features)
+          scale.name <- feature.select
+          if (stringr::str_starts(feature.select, "[0-9]")){
+            feature.select <- paste0("x", feature.select)
+          }
           limits <- c(min(p.build$plot$data[, feature.select]),
                       max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p <- add_scale(p = p,
-                         function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                         function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                                        limits = c(-end_value, end_value),
-                                                                       na.value = na.value),
+                                                                       na.value = na.value,
+                                                                       name = scale.name),
                          scale = "color")
         }
       } else if (num_plots > 1){
@@ -240,13 +245,18 @@ do_FeaturePlot <- function(sample,
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p[[counter]])
           feature.select <- gsub("-", ".",  features[counter])
+          scale.name <- feature.select
+          if (stringr::str_starts(feature.select, "[0-9]")){
+            feature.select <- paste0("x", feature.select)
+          }
           limits <- c(min(p.build$plot$data[, feature.select]),
                       max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p[[counter]] <- add_scale(p = p[[counter]],
-                                    function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                    function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                                                   limits = c(-end_value, end_value),
-                                                                                  na.value = na.value),
+                                                                                  na.value = na.value,
+                                                                                  name = scale.name),
                                     scale = "color")
         }
       }
@@ -363,13 +373,18 @@ do_FeaturePlot <- function(sample,
         } else if (isTRUE(enforce_symmetry)){
           p.build <- ggplot2::ggplot_build(p.loop)
           feature.select <- gsub("-", ".", feature.use)
+          scale.name <- feature.select
+          if (stringr::str_starts(feature.select, "[0-9]")){
+            feature.select <- paste0("x", feature.select)
+          }
           limits <- c(min(p.build$plot$data[, feature.select]),
                       max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
           p.loop <- add_scale(p = p.loop,
-                              function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                              function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                                             limits = c(-end_value, end_value),
-                                                                            na.value = na.value),
+                                                                            na.value = na.value,
+                                                                            name = scale.name),
                               scale = "color")
         }
         p.loop <- p.loop +
@@ -427,10 +442,19 @@ do_FeaturePlot <- function(sample,
           } else if (isTRUE(enforce_symmetry)){
             p.build <- ggplot2::ggplot_build(p.loop)
             end_value <- max(abs(limits))
+            feature.select <- gsub("-", ".", feature.use)
+            scale.name <- feature.select
+            if (stringr::str_starts(feature.select, "[0-9]")){
+              feature.select <- paste0("x", feature.select)
+            }
+            limits <- c(min(p.build$plot$data[, feature.select]),
+                        max(p.build$plot$data[, feature.select]))
+            end_value <- max(abs(limits))
             p.loop <- add_scale(p = p.loop,
-                                function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "#fdf0d5", "#c94040", "#65010C"),
+                                function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                                               limits = c(-end_value, end_value),
-                                                                              na.value = na.value),
+                                                                              na.value = na.value,
+                                                                              name = scale.name),
                                 scale = "color")
           }
           p.loop <- p.loop +
