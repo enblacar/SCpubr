@@ -54,6 +54,7 @@ Suggests:
     rmarkdown,
     stringr,
     svglite,
+    ggalluvial,
     testthat (>= 3.0.0),
     viridis
 VignetteBuilder: knitr
