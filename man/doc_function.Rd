@@ -177,6 +177,8 @@
 \item \emph{\code{right}}: Right of the legend.
 }}
 
+\item{repel}{\strong{\code{\link[base]{logical}}} | Whether to repel the text labels.}
+
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}

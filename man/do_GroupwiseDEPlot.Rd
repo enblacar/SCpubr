@@ -28,7 +28,8 @@ do_GroupwiseDEPlot(
   row_names_side = "right",
   row_title_side = "left",
   row_title_rot = 90,
-  cell_size = 5
+  column_names_rot = 45,
+  cell_size = 6
 )
 }
 \arguments{

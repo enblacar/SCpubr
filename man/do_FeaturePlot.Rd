@@ -10,7 +10,7 @@ do_FeaturePlot(
   assay = NULL,
   reduction = NULL,
   slot = NULL,
-  order = TRUE,
+  order = FALSE,
   split.by = NULL,
   split.by.idents = NULL,
   cells.highlight = NULL,

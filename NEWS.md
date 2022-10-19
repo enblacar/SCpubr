@@ -5,6 +5,8 @@ Take this a teaser of things to come in the next version.
 - Fixed potential bugs in `SCpubr::do_FeaturePlot` when setting `enforce_symmetry = TRUE`.
 - Change color palette when using `enforce_symmetry = TRUE` to have the middle color as `grey95` instead of the previous one, which made middle values seem closer to the positive end of the scale.
 - Include the `verbose` argument to `SCpubr::do_CopyNumberVariantPlot` to silence the messages when there are not enough genes in the chromosome to perfom the analysis.
+- Fixed bug in `SCpubr::do_GroupwiseDEPlot` in which the heatmap could not be computed.
+- Changed default value of `order` in `SCpubr::do_FeaturePlot()` from `TRUE` to `FALSE`.
 
 # SCpubr v1.0.1
 

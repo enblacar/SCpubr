@@ -35,7 +35,8 @@ do_GroupwiseDEPlot <- function(sample,
                                row_names_side = "right",
                                row_title_side = "left",
                                row_title_rot = 90,
-                               cell_size = 5){
+                               column_names_rot = 45,
+                               cell_size = 6){
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -48,7 +49,8 @@ do_GroupwiseDEPlot <- function(sample,
                        "top_genes" = top_genes,
                        "heatmap_gap" = heatmap_gap,
                        "legend_gap" = legend_gap,
-                       "row_title_rot" = row_title_rot)
+                       "row_title_rot" = row_title_rot,
+                       "column_names_rot" = column_names_rot)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -120,6 +122,7 @@ do_GroupwiseDEPlot <- function(sample,
                              zeros_are_white = TRUE,
                              row_title_rotation = row_title_rot,
                              row_title_side = row_title_side,
+                             column_names_rot = column_names_rot,
                              cell_size = cell_size)
 
   # Compute heatmap of -log10FC.
@@ -151,8 +154,8 @@ do_GroupwiseDEPlot <- function(sample,
                               legend.framecolor = heatmap.legend.framecolor,
                               na.value = "grey75",
                               column_title = column_title,
-                              outlier.data = if(sum(pvalue_out == -log10(.Machine$double.xmin)) > 0) {TRUE} else {FALSE},
-                              range.data = if(sum(pvalue_out == -log10(.Machine$double.xmin)) > 0) {max(pvalue_out[pvalue_out < 307])} else {NULL},
+                              outlier.data = FALSE,
+                              range.data = NULL,
                               outlier.up.label = "Inf",
                               use_viridis = TRUE,
                               viridis_color_map = viridis_map_pvalues,
@@ -160,6 +163,7 @@ do_GroupwiseDEPlot <- function(sample,
                               zeros_are_white = TRUE,
                               row_title_rotation = row_title_rot,
                               row_title_side = row_title_side,
+                              column_names_rot = column_names_rot,
                               cell_size = cell_size)
 
   # Compute heatmap of expression.
@@ -268,6 +272,7 @@ do_GroupwiseDEPlot <- function(sample,
                                     range.data = range.data,
                                     row_title_rotation = row_title_rot,
                                     row_title_side = row_title_side,
+                                    column_names_rot = column_names_rot,
                                     cell_size = cell_size)
     list.expression.heatmaps[[variable]] <- expression_out$heatmap
     list.expression.legends[[variable]] <- expression_out$legend

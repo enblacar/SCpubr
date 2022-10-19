@@ -108,6 +108,8 @@
 #' @param plot.axes \strong{\code{\link[base]{logical}}} | Whether to plot axes or not.
 #' @param nbin \strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.
 #' @param ctrl \strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.
+#' @param repel \strong{\code{\link[base]{logical}}} | Whether to repel the text labels.
+#'
 #'
 #' @usage NULL
 #' @return Nothing. This is a mock function.
@@ -194,7 +196,8 @@ doc_function <- function(sample,
                          individual.titles,
                          individual.subtitles,
                          individual.captions,
-                         legend.title.position){}
+                         legend.title.position,
+                         repel){}
 
 #' Named vector.
 #'
@@ -1856,7 +1859,105 @@ check_parameters <- function(parameter,
   }
 }
 
-
+#' Helper for do_AlluvialPlot.
+#'
+#' @param data  Data to plot.
+#' @param vars.use  Names of the variables.
+#'
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+prepare_ggplot_alluvial_plot <- function(data,
+                                         vars.use){
+  items <- length(vars.use)
+  assertthat::assert_that(items <= 10,
+                          msg = "Please provide between first_group, middle_groups, and last_group only up to 10 different elements.")
+  if (items == 2){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]]))
+  } else if (items == 3){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]]))
+  } else if (items == 4){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]]))
+  } else if (items == 5){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]]))
+  } else if (items == 6){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]],
+                                                axis6 = data[[vars.use[6]]]))
+  } else if (items == 7){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]],
+                                                axis6 = data[[vars.use[6]]],
+                                                axis7 = data[[vars.use[7]]]))
+  } else if (items == 8) {
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]],
+                                                axis6 = data[[vars.use[6]]],
+                                                axis7 = data[[vars.use[7]]],
+                                                axis8 = data[[vars.use[8]]]))
+  } else if (items == 9){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]],
+                                                axis6 = data[[vars.use[6]]],
+                                                axis7 = data[[vars.use[7]]],
+                                                axis8 = data[[vars.use[8]]],
+                                                axis9 = data[[vars.use[9]]]))
+  } else if (items == 10){
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                                axis1 = data[[vars.use[1]]],
+                                                axis2 = data[[vars.use[2]]],
+                                                axis3 = data[[vars.use[3]]],
+                                                axis4 = data[[vars.use[4]]],
+                                                axis5 = data[[vars.use[5]]],
+                                                axis6 = data[[vars.use[6]]],
+                                                axis7 = data[[vars.use[7]]],
+                                                axis8 = data[[vars.use[8]]],
+                                                axis9 = data[[vars.use[9]]],
+                                                axis10 = data[[vars.use[10]]]))
+  }
+  return(p)
+}
 
 
 
