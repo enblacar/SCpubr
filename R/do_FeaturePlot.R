@@ -50,8 +50,8 @@ do_FeaturePlot <- function(sample,
                            na.value = "grey75",
                            verbose = TRUE,
                            plot.axes = FALSE,
-                           min.cutoff = NA,
-                           max.cutoff = NA){
+                           min.cutoff = rep(NA, length(features)),
+                           max.cutoff = rep(NA, length(features))){
 
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
@@ -473,7 +473,7 @@ do_FeaturePlot <- function(sample,
                                 function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                                               limits = c(-end_value, end_value),
                                                                               na.value = na.value,
-                                                                              name = scale.name),
+                                                                              name = feature),
                                 scale = "color")
           }
           p.loop <- p.loop +
