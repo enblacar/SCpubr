@@ -4,7 +4,7 @@
 #' @param split.by.idents \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
 #' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the cells based on expression.
-#'
+#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{Numeric}}} | Min/max end of the color scale. Any cell with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. Provide as many values as features. Use NAs to skip a feature.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -49,7 +49,9 @@ do_FeaturePlot <- function(sample,
                            border.color = "black",
                            na.value = "grey75",
                            verbose = TRUE,
-                           plot.axes = FALSE){
+                           plot.axes = FALSE,
+                           min.cutoff = NA,
+                           max.cutoff = NA){
 
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
@@ -80,7 +82,9 @@ do_FeaturePlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.width" = legend.width,
                        "border.size" = border.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -159,6 +163,12 @@ do_FeaturePlot <- function(sample,
     warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = FALSE)
   }
 
+  # Check for min.cutoff and max.cutoff.
+  assertthat::assert_that(length(min.cutoff) == length(features),
+                          msg = "Please provide the same number of min.cutoffs as number of features. Use NA to skip for a given feature.")
+
+  assertthat::assert_that(length(max.cutoff) == length(features),
+                          msg = "Please provide the same number of max.cutoffs as number of features. Use NA to skip for a given feature.")
 
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
@@ -204,7 +214,9 @@ do_FeaturePlot <- function(sample,
                              pt.size = pt.size,
                              ncol = ncol,
                              raster = raster,
-                             raster.dpi = c(raster.dpi, raster.dpi)) &
+                             raster.dpi = c(raster.dpi, raster.dpi),
+                             min.cutoff = min.cutoff,
+                             max.cutoff = max.cutoff) &
       # Remove Seurat::FeaturePlot() default plot title.
       ggplot2::ggtitle("")
 
@@ -327,8 +339,13 @@ do_FeaturePlot <- function(sample,
     list.plots <- list()
     # Counter depicting the feature used. Will increase each feature used.
     count_iteration <- 0
+    cutoff.counter <- 0
     # Iterate over the features.
     for (feature in features){
+      cutoff.counter <- cutoff.counter + 1
+      min.cutoff.use <- min.cutoff[cutoff.counter]
+      max.cutoff.use <- max.cutoff[cutoff.counter]
+
       # A "dummy" metadata column is generated using the values of the selected feature.
       ## Based on whether the feature is in the metadata of the object.
       if (feature %in% colnames(sample@meta.data)) {
@@ -352,6 +369,7 @@ do_FeaturePlot <- function(sample,
       # If split.by is not used.
       if (is.null(split.by)){
         feature.use <- "dummy"
+
         p.loop <- Seurat::FeaturePlot(sample,
                                       feature.use,
                                       reduction = reduction,
@@ -360,7 +378,9 @@ do_FeaturePlot <- function(sample,
                                       dims = dims,
                                       pt.size = pt.size,
                                       raster = raster,
-                                      raster.dpi = c(raster.dpi, raster.dpi))
+                                      raster.dpi = c(raster.dpi, raster.dpi),
+                                      min.cutoff = min.cutoff.use,
+                                      max.cutoff = max.cutoff.use)
 
         # Add scale.
 
@@ -377,8 +397,8 @@ do_FeaturePlot <- function(sample,
           if (stringr::str_starts(feature.select, "[0-9]")){
             feature.select <- paste0("x", feature.select)
           }
-          limits <- c(min(p.build$plot$data[, feature.select]),
-                      max(p.build$plot$data[, feature.select]))
+          limits <- c(min(p.build$plot$data[, feature.select], na.rm = TRUE),
+                      max(p.build$plot$data[, feature.select], na.rm = TRUE))
           end_value <- max(abs(limits))
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
@@ -412,6 +432,12 @@ do_FeaturePlot <- function(sample,
         # Compute the limits of the variable.
         ## This should be replaced by a function in utils.R
         limits <- c(min(sample$dummy[!is.na(sample$dummy)]), max(sample$dummy[!is.na(sample$dummy)]))
+        if (!is.na(min.cutoff.use)){
+          limits[1] <- min.cutoff.use
+        }
+        if (!is.na(max.cutoff.use)){
+          limits[2] <- max.cutoff.use
+        }
         # For each value in split.by.
         for (iteration in plot_order){
           feature.use <- "dummy2"
@@ -430,7 +456,9 @@ do_FeaturePlot <- function(sample,
                                         dims = dims,
                                         pt.size = pt.size,
                                         raster = raster,
-                                        raster.dpi = c(raster.dpi, raster.dpi))
+                                        raster.dpi = c(raster.dpi, raster.dpi),
+                                        min.cutoff = min.cutoff.use,
+                                        max.cutoff = max.cutoff.use)
 
           if (isFALSE(enforce_symmetry)){
             p.loop <- add_scale(p = p.loop,
@@ -440,15 +468,6 @@ do_FeaturePlot <- function(sample,
                                                                               direction = viridis_direction),
                                 scale = "color")
           } else if (isTRUE(enforce_symmetry)){
-            p.build <- ggplot2::ggplot_build(p.loop)
-            end_value <- max(abs(limits))
-            feature.select <- gsub("-", ".", feature.use)
-            scale.name <- feature.select
-            if (stringr::str_starts(feature.select, "[0-9]")){
-              feature.select <- paste0("x", feature.select)
-            }
-            limits <- c(min(p.build$plot$data[, feature.select]),
-                        max(p.build$plot$data[, feature.select]))
             end_value <- max(abs(limits))
             p.loop <- add_scale(p = p.loop,
                                 function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
@@ -458,7 +477,7 @@ do_FeaturePlot <- function(sample,
                                 scale = "color")
           }
           p.loop <- p.loop +
-            ggplot2::ggtitle(iteration)
+                    ggplot2::ggtitle(iteration)
 
           if (legend.position != "none"){
             p.loop <- modify_continuous_legend(p = p.loop,

@@ -7,6 +7,7 @@ Take this a teaser of things to come in the next version.
 - Include the `verbose` argument to `SCpubr::do_CopyNumberVariantPlot` to silence the messages when there are not enough genes in the chromosome to perfom the analysis.
 - Fixed bug in `SCpubr::do_GroupwiseDEPlot` in which the heatmap could not be computed.
 - Changed default value of `order` in `SCpubr::do_FeaturePlot()` from `TRUE` to `FALSE`.
+- Added `min.cutoff` and `max.cutoff` parameters to `SCpubr::do_FeaturePlot()`. This allows to effectively subset the color scale to the values provided. Cells outside the range will be converted to the min or max values provided, respectively.
 
 # SCpubr v1.0.1
 

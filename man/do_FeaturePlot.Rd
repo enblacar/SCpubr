@@ -45,7 +45,9 @@ do_FeaturePlot(
   border.color = "black",
   na.value = "grey75",
   verbose = TRUE,
-  plot.axes = FALSE
+  plot.axes = FALSE,
+  min.cutoff = NA,
+  max.cutoff = NA
 )
 }
 \arguments{
@@ -133,6 +135,8 @@ do_FeaturePlot(
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
 \item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{Numeric}}} | Min/max end of the color scale. Any cell with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. Provide as many values as features. Use NAs to skip a feature.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.
