@@ -4,7 +4,7 @@
 #' @param split.by.idents \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
 #' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the cells based on expression.
-#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{Numeric}}} | Min/max end of the color scale. Any cell with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. Provide as many values as features. Use NAs to skip a feature.
+#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Min/max end of the color scale. Any cell with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. Provide as many values as features. Use NAs to skip a feature.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
