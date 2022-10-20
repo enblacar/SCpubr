@@ -58,7 +58,9 @@ do_EnrichmentHeatmap(
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
-\item{column_names_rot, row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.}
+\item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
+
+\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
 
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 

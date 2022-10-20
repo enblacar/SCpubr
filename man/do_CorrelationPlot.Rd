@@ -42,7 +42,9 @@ do_CorrelationPlot(
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
-\item{column_names_rot, row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.}
+\item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
+
+\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 

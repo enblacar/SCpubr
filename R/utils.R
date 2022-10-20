@@ -72,7 +72,8 @@
 #' @param column_title \strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.
 #' @param row_title \strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.
 #' @param cluster_cols,cluster_rows \strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.
-#' @param column_names_rot,row_names_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column and row labels.
+#' @param column_names_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.
+#' @param row_names_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.
 #' @param cell_size \strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.
 #' @param input_gene_list \strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.
 #' @param column_title_rot \strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column titles.
@@ -1872,6 +1873,7 @@ check_parameters <- function(parameter,
 prepare_ggplot_alluvial_plot <- function(data,
                                          vars.use){
   items <- length(vars.use)
+  `%>%` <- magrittr::`%>%`
   assertthat::assert_that(items <= 10,
                           msg = "Please provide between first_group, middle_groups, and last_group only up to 10 different elements.")
   if (items == 2){
