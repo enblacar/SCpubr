@@ -7,7 +7,7 @@
 do_GroupwiseDEPlot(
   sample,
   de_genes,
-  group.by = "seurat_clusters",
+  group.by = NULL,
   viridis_map_pvalues = "B",
   viridis_map_logfc = "D",
   viridis_map_expression = "G",

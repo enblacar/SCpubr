@@ -514,7 +514,7 @@ do_DimPlot <- function(sample,
 
   # Turn the labels to bold, when label is set to TRUE.
   if (label == TRUE && is.null(cells.highlight)){
-    p$layers[[2]]$aes_params$fontface <- "bold"
+    p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
   }
 
   # Add marginal plots.
