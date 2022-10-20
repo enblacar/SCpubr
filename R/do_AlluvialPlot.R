@@ -14,9 +14,9 @@
 #' @param stratum.fill \strong{\code{\link[base]{character}}} | Color to fill the stratum.
 #' @param stratum.width \strong{\code{\link[base]{logical}}} | Width of the stratum.
 #' @param stratum.fill.conditional \strong{\code{\link[base]{logical}}} | Whether to fill the stratum with the same colors as the alluvium/flow.
-#' @param use_geom_flow \strong{\code{\link[base]{logical}}} | Whether to use \code{\link[ggalluvium]{geom_flow}} instead of \code{\link[ggalluvium]{geom_alluvium}}. Visual results might differ.
+#' @param use_geom_flow \strong{\code{\link[base]{logical}}} | Whether to use \code{\link[ggalluvial]{geom_flow}} instead of \code{\link[ggalluvial]{geom_alluvium}}. Visual results might differ.
 #' @param label.color \strong{\code{\link[base]{character}}} | Color for the text labels.
-#' @param curve_type \strong{\code{\link[base]{character}}} | Type of curve used in \code{\link[ggalluvium]{geom_alluvium}}. One of:
+#' @param curve_type \strong{\code{\link[base]{character}}} | Type of curve used in \code{\link[ggalluvial]{geom_alluvium}}. One of:
 #' \itemize{
 #'   \item \emph{\code{linear}}.
 #'   \item \emph{\code{cubic}}.
@@ -98,17 +98,17 @@ do_AlluvialPlot <- function(sample,
   # COLORS.
   if (is.null(colors.use)){
     if (is.factor(data[[last_group]])){
-      colors.use = SCpubr:::generate_color_scale(levels(data[[last_group]]))
+      colors.use = generate_color_scale(levels(data[[last_group]]))
     } else {
-      colors.use = SCpubr:::generate_color_scale(sort(unique(data[[last_group]])))
+      colors.use = generate_color_scale(sort(unique(data[[last_group]])))
     }
   } else {
-    SCpubr:::check_colors(colors.use)
+    check_colors(colors.use)
   }
 
 
-  p <- SCpubr:::prepare_ggplot_alluvial_plot(data = data,
-                                             vars.use = vars.use)
+  p <- prepare_ggplot_alluvial_plot(data = data,
+                                    vars.use = vars.use)
 
   if (isTRUE(use_geom_flow)){
     p <- p +
@@ -128,7 +128,7 @@ do_AlluvialPlot <- function(sample,
   } else if (isFALSE(stratum.fill.conditional)){
     p <- p +
          ggalluvial::geom_stratum(color = stratum.color,
-                                  fill = srtatum_fill,
+                                  fill = stratum.fill,
                                   width = stratum.width)
   }
   p <- p  +

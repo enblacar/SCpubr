@@ -3,4 +3,5 @@ utils::globalVariables(c(".data",
                        "..x..",
                        "..quantile..",
                        "..ecdf..",
-                       "summarise"))
+                       "summarise",
+                       "stratum"))
