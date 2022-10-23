@@ -106,8 +106,8 @@ do_DimPlot <- function(sample,
   split_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(split.by))
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
 
-  assertthat::assert_that(!group_by_and_split_by_used,
-                          msg = "Either group.by or split.by has to be NULL.")
+  #assertthat::assert_that(!group_by_and_split_by_used,
+  #                        msg = "Either group.by or split.by has to be NULL.")
 
   assertthat::assert_that(!group_by_and_highlighting_cells,
                           msg = "Either group.by or cells.highlight has to be NULL.")
@@ -148,24 +148,24 @@ do_DimPlot <- function(sample,
       split_by_is_used <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
       # Cells.highlight or idents.highlight was used.
       highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
-      if (default_parameters){
+      if (isTRUE(default_parameters)){
         # Generate the color scale based on the levels assigned to the sample.
         generate_color_scale(levels(sample))
-      } else if (group_by_is_used){
+      } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
         # Retrieve the unique values in group.by metadata variable.
         data.use <- sample[[]][, group.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale to be used based on the unique values of group.by.
         generate_color_scale(names.use)
-      } else if (split_by_is_used){
+      } else if (isTRUE(split_by_is_used)){
         # Retrieve the unique values in split.by metadata variable.
         data.use <- sample[[]][, split.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale based on the unique values of split.by
         generate_color_scale(names.use)
-      } else if (highlighting_cells){
+      } else if (isTRUE(highlighting_cells)){
         # If the user wants to highlight some cells, use this color.
         colors.use <- "#0A305F"
       }
@@ -183,18 +183,18 @@ do_DimPlot <- function(sample,
     # When either cells.highlight or idents.highlight was used.
     highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
     # When running under default parameters.
-    if (default_parameters){
+    if (isTRUE(default_parameters)){
       # Check that the color palette has the right amount of named colors with regards to the current identities.
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use)
-      # When using group.by.
-    } else if (group_by_is_used){
+      # When using group.by or a combination of group.by and split.by.
+    } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
       # Check that the color palette has the right amount of named colors with regards to group.by values.
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use,
                                                        grouping_variable = group.by)
       # When using split.by.
-    } else if (split_by_is_used){
+    } else if (isTRUE(split_by_is_used)){
       if (length(colors.use) != 1){
         # Check that the color palette has the right amount of named colors with regards to split.by values.
         colors.use <- check_consistency_colors_and_names(sample = sample,
@@ -202,7 +202,7 @@ do_DimPlot <- function(sample,
                                                          grouping_variable = split.by)
       }
       # When highlighting cells.
-    } else if (highlighting_cells){
+    } else if (isTRUE(highlighting_cells)){
       # Stop the execution if more than one color is provided to highlight the cells.
       assertthat::assert_that(length(colors.use) == 1,
                               msg = "Provide only one color if cells.highlight or idents.highlight is used.")
@@ -212,7 +212,7 @@ do_DimPlot <- function(sample,
   # Set cells to NA according to idents.keep.
   # If the user does not want to highlight cells or split by identities but wants to remove some identities.
   idents_keep_used <- is.null(cells.highlight) & is.null(idents.highlight) & !(is.null(idents.keep))
-  if (idents_keep_used){
+  if (isTRUE(idents_keep_used)){
     # CONDITION: both group.by and split.by are not used.
     group_by_and_split_by_are_null <- is.null(group.by) & is.null(split.by)
     # CONDITION: group.by is used.
@@ -220,7 +220,7 @@ do_DimPlot <- function(sample,
     # CONDITION: split.by is used.
     split_by_is_used <- is.null(group.by) & !(is.null(split.by))
     # When running under default parameters.
-    if (group_by_and_split_by_are_null){
+    if (isTRUE(group_by_and_split_by_are_null)){
       # Check that idents.keep matches the values and if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% levels(sample))),
                               msg = "All the values in idents.keep must be in levels(sample).")
@@ -237,7 +237,7 @@ do_DimPlot <- function(sample,
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
       # If split.by is used instead.
-    } else if (split_by_is_used){
+    } else if (split_by_is_used | group_by_and_split_by_used){
       # Check that the values in idents.keep are in the unique values of split.by.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
                               msg = "All the values in idents.keep must be in the split.by variable provided.")
@@ -309,6 +309,7 @@ do_DimPlot <- function(sample,
       p <- add_scale(p = p,
                      function_use = ggplot2::scale_fill_manual(values = colors.use),
                      scale = "fill")
+      p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
     }
     if (!(is.null(group.by))){
       # Remove automatic title inserted by Seurat.
@@ -319,6 +320,59 @@ do_DimPlot <- function(sample,
     if (isTRUE(plot_cell_borders)){
       p$layers <- append(base_layer, p$layers)
     }
+  } else if (group_by_and_split_by_used){
+    list.plots <- list()
+    unique_values <- if(is.factor(sample@meta.data[, split.by])){levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))}
+    num_values <- length(unique_values)
+    for (i in seq_len(num_values)){
+      value <- unique_values[i]
+      # Generate a middle layer for the missing values after split.by.
+      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+      df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
+                       y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
+      na_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
+                                                                        y = .data$y),
+                                      colour = na.value,
+                                      size = pt.size,
+                                      show.legend = FALSE)
+
+      p.loop <- Seurat::DimPlot(sample[, sample@meta.data[, split.by] == value],
+                           reduction = reduction,
+                           group.by = group.by,
+                           label = label,
+                           dims = dims,
+                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                           na.value = na.value,
+                           shuffle = shuffle,
+                           order = order,
+                           pt.size = pt.size,
+                           cols = colors.use,
+                           raster = raster,
+                           raster.dpi = c(raster.dpi, raster.dpi),
+                           ncol = ncol) +
+                ggplot2::ggtitle(value) +
+                ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
+                                                              ncol = legend.ncol,
+                                                              nrow = legend.nrow,
+                                                              byrow = legend.byrow,
+                                                              override.aes = list(size = legend.icon.size),
+                                                              title.position = legend.title.position))
+      if (isTRUE(label)){
+        p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"
+      }
+      # Add NA layer.
+      p.loop$layers <- append(na_layer, p.loop$layers)
+
+      # Add cell borders.
+      if (isTRUE(plot_cell_borders)){
+        p.loop$layers <- append(base_layer, p.loop$layers)
+      }
+      list.plots[[value]] <- p.loop
+    }
+    p <- patchwork::wrap_plots(list.plots, ncol = ncol, guides = "collect") +
+         ggplot2::theme(legend.position = legend.position)
   }
   # If split.by is used, the UMAP has to be split in multiple panes.
   else if (split_by_used){
@@ -510,11 +564,6 @@ do_DimPlot <- function(sample,
                      axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
-  }
-
-  # Turn the labels to bold, when label is set to TRUE.
-  if (label == TRUE && is.null(cells.highlight)){
-    p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
   }
 
   # Add marginal plots.

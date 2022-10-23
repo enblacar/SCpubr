@@ -282,14 +282,6 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     testthat::expect_type(p, "list")
   })
 
-
-  testthat::test_that("do_DimPlot: FAIL - group.by and split.by used", {
-
-
-
-    testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", split.by = "seurat_clusters"))
-  })
-
   testthat::test_that("do_DimPlot: FAIL - group.by and cells.highlights used", {
 
 
