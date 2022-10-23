@@ -18,7 +18,12 @@ do_GroupwiseDEPlot(
   viridis_direction = -1,
   row_title_p_values = "",
   row_title_logfc = "Clusters",
-  row_title_expression = c(""),
+  row_title_expression = if (is.null(group.by)) {
+     ""
+ } else {
+     rep("",
+    length(group.by))
+ },
   column_title = "DE genes",
   heatmap_gap = 0.5,
   legend_gap = 1,

@@ -17,6 +17,7 @@ do_ViolinPlot <- function(sample,
                           assay = NULL,
                           slot = NULL,
                           group.by = NULL,
+                          split.by = NULL,
                           colors.use = NULL,
                           pt.size = 0,
                           line_width = 1,
@@ -69,7 +70,8 @@ do_ViolinPlot <- function(sample,
                          "ylab" = ylab,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
-                         "grid.type" = grid.color)
+                         "grid.type" = grid.color,
+                         "split.by" = split.by)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check the feature.
@@ -99,55 +101,63 @@ do_ViolinPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
-    p <- Seurat::VlnPlot(sample,
-                         features = feature,
-                         cols = colors.use,
-                         group.by = group.by,
-                         pt.size = pt.size) +
-         ggplot2::xlab(xlab) +
-         ggplot2::ylab(ylab) +
-         ggplot2::labs(title = plot.title,
-                       subtitle = plot.subtitle,
-                       caption = plot.caption) +
-         ggplot2::theme_minimal(base_size = font.size) +
-         ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
-                                                            face = "bold",
-                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
-                                                            hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
-                        axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
-                        axis.title.y = ggplot2::element_text(face = "bold"),
-                        axis.title.x = ggplot2::element_text(face = "bold"),
-                        axis.line.y = ggplot2::element_blank(),
-                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                        plot.subtitle = ggplot2::element_text(hjust = 0),
-                        plot.caption = ggplot2::element_text(hjust = 1),
-                        plot.title.position = "plot",
-                        panel.grid.major.x = ggplot2::element_blank(),
-                        panel.grid.minor = ggplot2::element_blank(),
-                        panel.grid.major.y = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
-                        text = ggplot2::element_text(family = font.type),
-                        plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold"),
-                        legend.position = legend.position,
-                        legend.title = ggplot2::element_text(face = "bold"),
-                        legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                        axis.ticks = ggplot2::element_line(color = "black"),
-                        axis.line = ggplot2::element_line(color = "black"),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
-
-    # Modify line width of violin plots.
-    p$layers[[1]]$aes_params$size <- line_width
-    # Modify color of the line.
-    p$layers[[1]]$aes_params$colour <- "black"
-
-    if (plot_boxplot == TRUE){
-      p <- p &
-           ggplot2::geom_boxplot(lwd = line_width, width = boxplot_width, fill = "white", outlier.colour = NA, color = "black", fatten = 1)
-    }
+  p <- SCpubr:::get_data_column_in_context(sample = sample,
+                                           feature = feature,
+                                           assay = assay,
+                                           slot = slot,
+                                           group.by = group.by,
+                                           split.by = split.by) %>%
+       ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
+                                              y = .data$feature,
+                                              fill = if (!is.null(split.by)){.data$split.by} else {.data$group.by})) +
+       ggplot2::geom_violin(color = "black",
+                            lwd = line_width)
+  if (isTRUE(plot_boxplot)){
+    assertthat::assert_that(is.null(split.by),
+                            msg = "Boxplots are not implemented when split.by is set.s")
+    p <- p +
+         ggplot2::geom_boxplot(fill = "white",
+                               color = "black",
+                               lwd = line_width,
+                               width = boxplot_width,
+                               outlier.shape = NA,
+                               fatten = 1)
+  }
+  p <- p +
+       ggplot2::xlab(xlab) +
+       ggplot2::ylab(ylab) +
+       ggplot2::labs(title = plot.title,
+                     subtitle = plot.subtitle,
+                     caption = plot.caption) +
+       ggplot2::theme_minimal(base_size = font.size) +
+       ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
+                                                          face = "bold",
+                                                          angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
+                                                          hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
+                                                          vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
+                      axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
+                      axis.title.y = ggplot2::element_text(face = "bold"),
+                      axis.title.x = ggplot2::element_text(face = "bold"),
+                      axis.line.y = ggplot2::element_blank(),
+                      plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                      plot.subtitle = ggplot2::element_text(hjust = 0),
+                      plot.caption = ggplot2::element_text(hjust = 1),
+                      plot.title.position = "plot",
+                      panel.grid.major.x = ggplot2::element_blank(),
+                      panel.grid.minor = ggplot2::element_blank(),
+                      panel.grid.major.y = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
+                      text = ggplot2::element_text(family = font.type),
+                      plot.caption.position = "plot",
+                      legend.text = ggplot2::element_text(face = "bold"),
+                      legend.position = legend.position,
+                      legend.title = ggplot2::element_text(face = "bold"),
+                      legend.justification = "center",
+                      plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                      axis.ticks = ggplot2::element_line(color = "black"),
+                      axis.line = ggplot2::element_line(color = "black"),
+                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
     if (!(is.null(y_cut))){
       p <- p +
@@ -156,5 +166,6 @@ do_ViolinPlot <- function(sample,
                                colour = "black",
                                size = 1)
     }
+
   return(p)
 }
