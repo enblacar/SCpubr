@@ -106,7 +106,7 @@ do_GroupwiseDEPlot <- function(sample,
     dplyr::arrange(.data$p_val_adj, dplyr::desc(.data[[magnitude]])) %>%
     dplyr::group_by(.data$cluster) %>%
     dplyr::slice_head(n = top_genes) %>%
-    dplyr::pull(.data$gene) %>%
+    dplyr::pull("gene") %>%
     unique()
 
   # Compute heatmap of log2FC.
@@ -114,9 +114,9 @@ do_GroupwiseDEPlot <- function(sample,
     dplyr::arrange(.data$p_val_adj, dplyr::desc(.data[[magnitude]])) %>%
     dplyr::group_by(.data$cluster) %>%
     dplyr::slice_head(n = top_genes) %>%
-    dplyr::select(.data$gene, .data$cluster, .data[[magnitude]]) %>%
-    tidyr::pivot_wider(names_from = .data$gene,
-                       values_from = .data[[magnitude]]) %>%
+    dplyr::select(dplyr::all_of(c("gene", "cluster", magnitude))) %>%
+    tidyr::pivot_wider(names_from = "gene",
+                       values_from = dplyr::all_of(c(magnitude))) %>%
     as.data.frame() %>%
     tibble::column_to_rownames(var = "cluster") %>%
     as.matrix() %>%
@@ -145,12 +145,12 @@ do_GroupwiseDEPlot <- function(sample,
     dplyr::arrange(.data$p_val_adj, dplyr::desc(.data[[magnitude]])) %>%
     dplyr::group_by(.data$cluster) %>%
     dplyr::slice_head(n = top_genes) %>%
-    dplyr::select(.data$gene, .data$cluster, .data$p_val_adj) %>%
+    dplyr::select(dplyr::all_of(c("gene", "cluster", "p_val_adj"))) %>%
     dplyr::mutate("p_val_adj" = replace(.data$p_val_adj, .data$p_val_adj == 0, .Machine$double.xmin)) %>%
     dplyr::mutate("log10pval" = -log10(.data$p_val_adj)) %>%
-    dplyr::select(-.data$p_val_adj) %>%
-    tidyr::pivot_wider(names_from = .data$gene,
-                       values_from = .data$log10pval) %>%
+    dplyr::select(-"p_val_adj") %>%
+    tidyr::pivot_wider(names_from = "gene",
+                       values_from = "log10pval") %>%
     as.data.frame() %>%
     tibble::column_to_rownames(var = "cluster") %>%
     as.matrix() %>%
@@ -190,48 +190,49 @@ do_GroupwiseDEPlot <- function(sample,
   # Compute the max values for all heatmaps.
   for (variable in group.by){
     max_value <- sample@meta.data %>%
-      dplyr::select(.data[[variable]]) %>%
+      dplyr::select(dplyr::all_of(c(variable))) %>%
       tibble::rownames_to_column(var = "cell") %>%
       dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
                                                  slot = slot,
                                                  assay = assay)[genes.use, ] %>%
-          as.matrix() %>%
-          t() %>%
-          as.data.frame() %>%
-          tibble::rownames_to_column(var = "cell")},
-          by = "cell") %>%
-      dplyr::select(-.data$cell) %>%
-      tidyr::pivot_longer(cols = -.data[[variable]],
+                                                 as.matrix() %>%
+                                                 t() %>%
+                                                 as.data.frame() %>%
+                                                 tibble::rownames_to_column(var = "cell")},
+                                                 by = "cell") %>%
+      dplyr::select(-"cell") %>%
+      tidyr::pivot_longer(cols = -dplyr::all_of(c(variable)),
                           names_to = "gene",
                           values_to = "expression") %>%
       dplyr::group_by(.data[[variable]], .data$gene) %>%
       dplyr::summarise(mean_expression = mean(.data$expression)) %>%
-      tidyr::pivot_wider(names_from = .data$gene,
-                         values_from = .data$mean_expression) %>%
+      tidyr::pivot_wider(names_from = "gene",
+                         values_from = "mean_expression") %>%
       as.data.frame() %>%
       tibble::column_to_rownames(var = variable) %>%
       dplyr::select(dplyr::all_of(genes.use)) %>%
       as.matrix() %>%
       max()
+
     min_value <- sample@meta.data %>%
-      dplyr::select(.data[[variable]]) %>%
+      dplyr::select(dplyr::all_of(c(variable))) %>%
       tibble::rownames_to_column(var = "cell") %>%
       dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
                                                  slot = slot,
                                                  assay = assay)[genes.use, ] %>%
-          as.matrix() %>%
-          t() %>%
-          as.data.frame() %>%
-          tibble::rownames_to_column(var = "cell")},
-          by = "cell") %>%
-      dplyr::select(-.data$cell) %>%
-      tidyr::pivot_longer(cols = -.data[[variable]],
+                                                 as.matrix() %>%
+                                                 t() %>%
+                                                 as.data.frame() %>%
+                                                 tibble::rownames_to_column(var = "cell")},
+                                                 by = "cell") %>%
+      dplyr::select(-"cell") %>%
+      tidyr::pivot_longer(cols = -dplyr::all_of(c(variable)),
                           names_to = "gene",
                           values_to = "expression") %>%
       dplyr::group_by(.data[[variable]], .data$gene) %>%
       dplyr::summarise(mean_expression = mean(.data$expression)) %>%
-      tidyr::pivot_wider(names_from = .data$gene,
-                         values_from = .data$mean_expression) %>%
+      tidyr::pivot_wider(names_from = "gene",
+                         values_from = "mean_expression") %>%
       as.data.frame() %>%
       tibble::column_to_rownames(var = variable) %>%
       dplyr::select(dplyr::all_of(genes.use)) %>%
@@ -248,7 +249,7 @@ do_GroupwiseDEPlot <- function(sample,
     data_range <- if(slot == "data") {"only_pos"} else if (slot == "scale.data"){"both"}
     range.data <- if(slot == "data") {max(max_value_list)} else if (slot == "scale.data") {c(min(min_value_list), max(max_value_list))}
     expression_out <- sample@meta.data %>%
-      dplyr::select(.data[[variable]]) %>%
+      dplyr::select(dplyr::all_of(c(variable))) %>%
       tibble::rownames_to_column(var = "cell") %>%
       dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
                                                  slot = slot,
@@ -258,14 +259,14 @@ do_GroupwiseDEPlot <- function(sample,
           as.data.frame() %>%
           tibble::rownames_to_column(var = "cell")},
           by = "cell") %>%
-      dplyr::select(-.data$cell) %>%
-      tidyr::pivot_longer(cols = -.data[[variable]],
+      dplyr::select(-"cell") %>%
+      tidyr::pivot_longer(cols = -dplyr::all_of(c(variable)),
                           names_to = "gene",
                           values_to = "expression") %>%
       dplyr::group_by(.data[[variable]], .data$gene) %>%
       dplyr::summarise(mean_expression = mean(.data$expression)) %>%
-      tidyr::pivot_wider(names_from = .data$gene,
-                         values_from = .data$mean_expression) %>%
+      tidyr::pivot_wider(names_from = "gene",
+                         values_from = "mean_expression") %>%
       as.data.frame() %>%
       tibble::column_to_rownames(var = variable) %>%
       dplyr::select(dplyr::all_of(genes.use)) %>%

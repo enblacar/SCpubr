@@ -179,13 +179,20 @@ do_LigandReceptorPlot <- function(liana_output,
   liana_output <- liana_output %>%
                   # Filter based on the top X interactions of ascending sensibilities.
                   dplyr::inner_join(y = {liana_output %>%
-                                         dplyr::distinct_at(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
+                                         dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
                                          dplyr::slice_head(n = top_interactions)},
                                     by = c("ligand.complex", "receptor.complex"))
   if (isTRUE(add_missing_LR_combinations)){
     # Fix to add missing "NA" interactions.
     liana_output <- liana_output %>%
-      dplyr::select(dplyr::all_of(c("interacting_clusters", "source", "target", "interaction", "ligand.complex", "receptor.complex", "magnitude", "specificity")))
+      dplyr::select(dplyr::all_of(c("interacting_clusters",
+                                    "source",
+                                    "target",
+                                    "interaction",
+                                    "ligand.complex",
+                                    "receptor.complex",
+                                    "magnitude",
+                                    "specificity")))
 
     # Iterate over each possible interaction and each interacting pair.
     not_found_interaction_pairs <- possible_interacting_clusters[possible_interacting_clusters %!in% unique(liana_output$interacting_clusters)]
@@ -415,8 +422,8 @@ do_LigandReceptorPlot <- function(liana_output,
             dplyr::select(dplyr::all_of(c("source", "target"))) %>%
             dplyr::group_by(.data$target, .data$source) %>%
             dplyr::summarise(value = dplyr::n()) %>%
-            dplyr::rename("from" = .data[["source"]],
-                          "to" = .data[["target"]]) %>%
+            dplyr::rename("from" = "source",
+                          "to" = "target") %>%
             dplyr::select(dplyr::all_of(c("from", "to", "value")))
     p.source_target <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
 
@@ -425,8 +432,8 @@ do_LigandReceptorPlot <- function(liana_output,
             dplyr::select(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
             dplyr::group_by(.data$ligand.complex, .data$receptor.complex) %>%
             dplyr::summarise(value = dplyr::n()) %>%
-            dplyr::rename("from" = .data[["ligand.complex"]],
-                          "to" = .data[["receptor.complex"]]) %>%
+            dplyr::rename("from" = "ligand.complex",
+                          "to" = "receptor.complex") %>%
             dplyr::select(dplyr::all_of(c("from", "to", "value")))
     p.ligand_receptor <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
     return(list("dotplot" = p,

@@ -155,8 +155,8 @@ do_ChordDiagramPlot <- function(sample = NULL,
             dplyr::select(dplyr::all_of(c(from, to))) %>%
             dplyr::group_by(.data[[to]], .data[[from]]) %>%
             dplyr::summarize(value = dplyr::n()) %>%
-            dplyr::rename("from" = .data[[from]],
-                          "to" = .data[[to]]) %>%
+            dplyr::rename("from" = dplyr::all_of(c(from)),
+                          "to" = dplyr::all_of(c(to))) %>%
             dplyr::select(dplyr::all_of(c("from", "to", "value")))
   }
 

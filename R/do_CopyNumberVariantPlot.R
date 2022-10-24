@@ -161,11 +161,11 @@ do_CopyNumberVariantPlot <- function(sample,
           sample@meta.data <- sample@meta.data %>%
                               dplyr::mutate("cells" = colnames(sample)) %>%
                               dplyr::left_join(y = {sample@meta.data %>%
-                                                    dplyr::select(.data[["metacell_mapping"]]) %>%
+                                                    dplyr::select(dplyr::all_of(c("metacell_mapping"))) %>%
                                                     tibble::rownames_to_column(var = "cells") %>%
-                                                    dplyr::left_join(y = {CNV_scores_final %>% dplyr::rename("metacell_mapping" = "cells")},
+                                                    dplyr::left_join(y = {CNV_scores_final %>% dplyr::rename("metacell_mapping" = dplyr::all_of(c("cells")))},
                                                                      by = "metacell_mapping") %>%
-                                                    dplyr::select(-.data[["metacell_mapping"]])},
+                                                    dplyr::select(-dplyr::all_of(c("metacell_mapping")))},
                                                by = "cells") %>%
                               tibble::column_to_rownames(var = "cells")
           # If no metacells were used.

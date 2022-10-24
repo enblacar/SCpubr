@@ -74,6 +74,8 @@ do_ViolinPlot <- function(sample,
                          "split.by" = split.by)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
+  `%>%` <- magrittr::`%>%`
+
   # Check the feature.
   feature <- check_feature(sample = sample, features = feature, permissive = TRUE)
 
@@ -101,12 +103,12 @@ do_ViolinPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
 
-  p <- SCpubr:::get_data_column_in_context(sample = sample,
-                                           feature = feature,
-                                           assay = assay,
-                                           slot = slot,
-                                           group.by = group.by,
-                                           split.by = split.by) %>%
+  p <- get_data_column_in_context(sample = sample,
+                                  feature = feature,
+                                  assay = assay,
+                                  slot = slot,
+                                  group.by = group.by,
+                                  split.by = split.by) %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
                                               y = .data$feature,
                                               fill = if (!is.null(split.by)){.data$split.by} else {.data$group.by})) +

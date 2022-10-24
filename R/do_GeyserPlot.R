@@ -196,9 +196,9 @@ do_GeyserPlot <- function(sample,
     # Generate a column for the color.by parameter that will be added later on to the data dataframe.
     if (isTRUE(color.by %in% colnames(sample@meta.data))){
       color.by_column <- sample@meta.data %>%
-                         dplyr::select(.data[[color.by]]) %>%
+                         dplyr::select(dplyr::all_of(c(color.by))) %>%
                          tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = .data[[color.by]])
+                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
     } else if (isTRUE(color.by %in% rownames(sample))){
       color.by_column <- Seurat::GetAssayData(object = sample,
                                               assay = assay,
@@ -207,19 +207,19 @@ do_GeyserPlot <- function(sample,
                          t() %>%
                          as.data.frame() %>%
                          tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = .data[[color.by]])
+                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
     } else if (isTRUE(color.by %in% dim_colnames)){
       color.by_column <- sample@reductions[[reduction_color.by]][[]][, color.by, drop = FALSE] %>%
                          as.data.frame() %>%
                          tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = .data[[color.by]])
+                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
     }
 
 
     # Depending on where the feature is, generate a tibble accordingly.
     if (isTRUE(feature %in% colnames(sample@meta.data))){
       data <- sample@meta.data %>%
-              dplyr::select(c(.data[[group.by]], .data[[feature]])) %>%
+              dplyr::select(dplyr::all_of(c(group.by, feature))) %>%
               tibble::rownames_to_column(var = "cell") %>%
               dplyr::left_join(y = color.by_column,
                                by = "cell") %>%
@@ -236,7 +236,7 @@ do_GeyserPlot <- function(sample,
               dplyr::left_join(y = color.by_column,
                                by = "cell") %>%
               dplyr::left_join(y = {sample@meta.data %>%
-                                    dplyr::select(.data[[group.by]]) %>%
+                                    dplyr::select(dplyr::all_of(c(group.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
                                by = "cell")
     } else if (isTRUE(feature %in% dim_colnames)){
@@ -247,7 +247,7 @@ do_GeyserPlot <- function(sample,
                                by = "cell") %>%
               tibble::tibble() %>%
               dplyr::left_join(y = {sample@meta.data %>%
-                                    dplyr::select(.data[[group.by]]) %>%
+                                    dplyr::select(dplyr::all_of(c(group.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
                                     by = "cell")
     }
@@ -256,11 +256,11 @@ do_GeyserPlot <- function(sample,
     if (!(is.null(split.by))){
       data <- data %>%
               dplyr::left_join(y = {sample@meta.data %>%
-                                    dplyr::select(.data[[split.by]]) %>%
+                                    dplyr::select(dplyr::all_of(c(split.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
                                by = "cell") %>%
               dplyr::mutate("split.by" = .data[[split.by]]) %>%
-              dplyr::select(-.data[[split.by]])
+              dplyr::select(-dplyr::all_of(c(split.by)))
 
     }
 

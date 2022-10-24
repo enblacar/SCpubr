@@ -90,10 +90,10 @@ do_VolcanoPlot <- function(sample,
 
   data <- data %>%
           tibble::as_tibble() %>%
-          dplyr::select(.data$p_val_adj, .data$avg_log2FC, .data$gene) %>%
+          dplyr::select(c("p_val_adj", "avg_log2FC", "gene")) %>%
           dplyr::mutate("p_val_adj" = replace(.data$p_val_adj, .data$p_val_adj == 0, .Machine$double.xmin)) %>%
           dplyr::mutate(log_p = -log10(.data$p_val_adj)) %>%
-          dplyr::select(-.data$p_val_adj)
+          dplyr::select(-"p_val_adj")
 
   pval_cutoff <- -log10(pval_cutoff)
   data$color <- NA

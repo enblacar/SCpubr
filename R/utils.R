@@ -1168,15 +1168,15 @@ compute_barplot_annotation <- function(sample,
   `%>%`<- magrittr::`%>%`
   # Compute column/row annotation. Obtain the percentage of a group per variable.
   annotation <- sample@meta.data %>%
-                dplyr::select(!!rlang::sym(group.by), !!rlang::sym(annotation)) %>%
+                dplyr::select(dplyr::all_of(c(group.by, annotation))) %>%
                 dplyr::mutate(cluster = !!rlang::sym(group.by)) %>%
                 dplyr::mutate(subgroup = !!rlang::sym(annotation)) %>%
-                dplyr::select(.data$cluster, .data$subgroup) %>%
+                dplyr::select(dplyr::all_of(c("cluster", "subgroup"))) %>%
                 dplyr::group_by(.data$cluster, .data$subgroup) %>%
                 dplyr::summarise(n = dplyr::n()) %>%
                 dplyr::mutate(freq = .data$n / sum(.data$n)) %>%
-                dplyr::select(.data$cluster, .data$subgroup, .data$freq) %>%
-                tidyr::pivot_wider(values_from = .data$freq, names_from = .data$subgroup)
+                dplyr::select(dplyr::all_of(c("cluster", "subgroup", "freq"))) %>%
+                tidyr::pivot_wider(values_from = "freq", names_from = "subgroup")
   return(annotation)
 }
 
@@ -1731,9 +1731,9 @@ get_data_column <- function(sample,
 
   if (isTRUE(feature %in% colnames(sample@meta.data))){
     feature_column <- sample@meta.data %>%
-      dplyr::select(.data[[feature]]) %>%
-      tibble::rownames_to_column(var = "cell") %>%
-      dplyr::rename("feature" = .data[[feature]])
+                      dplyr::select(dplyr::all_of(c(feature))) %>%
+                      tibble::rownames_to_column(var = "cell") %>%
+                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
     feature_column <- Seurat::GetAssayData(object = sample,
                                            assay = assay,
@@ -1742,12 +1742,12 @@ get_data_column <- function(sample,
       t() %>%
       as.data.frame() %>%
       tibble::rownames_to_column(var = "cell") %>%
-      dplyr::rename("feature" = .data[[feature]])
+      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% dim_colnames)){
     feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
       as.data.frame() %>%
       tibble::rownames_to_column(var = "cell") %>%
-      dplyr::rename("feature" = .data[[feature]])
+      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   }
   return(feature_column)
 }
@@ -1789,7 +1789,10 @@ get_data_column_in_context <- function(sample,
   data <- sample@meta.data %>%
           tibble::rownames_to_column(var = "cell") %>%
           dplyr::select(dplyr::all_of(vars)) %>%
-          dplyr::left_join(y = get_data_column(sample = sample, feature = feature, assay = assay, slot = slot),
+          dplyr::left_join(y = get_data_column(sample = sample,
+                                               feature = feature,
+                                               assay = assay,
+                                               slot = slot),
                            by = "cell") %>%
           tibble::as_tibble()
 

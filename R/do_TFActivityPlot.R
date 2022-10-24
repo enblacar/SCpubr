@@ -141,7 +141,7 @@ do_TFActivityPlot <- function(sample,
           dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
                                 tibble::rownames_to_column(var = "cell")},
                                 by = "cell") %>%
-          dplyr::select(-.data$cell) %>%
+          dplyr::select(-"cell") %>%
           tidyr::pivot_longer(cols = -"group.by",
                               names_to = "source",
                               values_to = "score") %>%
@@ -304,7 +304,7 @@ do_TFActivityPlot <- function(sample,
                                         tibble::rownames_to_column(var = "cell")},
                                         by = "cell") %>%
                   dplyr::filter(.data[[split.by]] == split.value) %>%  # This is key.
-                  dplyr::select(c(-.data$cell, -.data[[split.by]])) %>%
+                  dplyr::select(-dplyr::all_of(c("cell", split.by))) %>%
                   tidyr::pivot_longer(cols = -"group.by",
                                       names_to = "source",
                                       values_to = "score") %>%

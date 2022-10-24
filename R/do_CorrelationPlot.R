@@ -86,11 +86,11 @@ do_CorrelationPlot <- function(sample,
                                  t() %>%
                                  as.data.frame() %>%
                                  tibble::rownames_to_column(var = "cell") %>%
-                                 tidyr::pivot_longer(-.data[["cell"]],
+                                 tidyr::pivot_longer(-"cell",
                                                      names_to = "gene",
                                                      values_to = "expression")},
                             by = "cell") %>%
-           dplyr::select(-.data[["cell"]]) %>%
+           dplyr::select(-"cell") %>%
            dplyr::group_by(.data[[group.by]], .data[["gene"]]) %>%
            dplyr::summarise(mean_expression = mean(.data[["expression"]])) %>%
            tidyr::pivot_wider(names_from = dplyr::all_of(c(group.by)),

@@ -213,15 +213,15 @@ do_PathwayActivityPlot <- function(sample,
                 as.data.frame() %>%
                 tibble::rownames_to_column(var = "cell") %>%
                 dplyr::left_join(y = {sample@meta.data[, group.by, drop = FALSE] %>%
-                    tibble::rownames_to_column(var = "cell")},
-                    by = "cell") %>%
-                dplyr::select(c(-.data$cell)) %>%
-                tidyr::pivot_longer(cols = -.data[[group.by]],
+                                      tibble::rownames_to_column(var = "cell")},
+                                      by = "cell") %>%
+                dplyr::select(-dplyr::all_of(c("cell"))) %>%
+                tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
                                     names_to = "source",
                                     values_to = "score") %>%
                 dplyr::group_by(.data[[group.by]], .data$source) %>%
                 dplyr::summarise(mean = mean(.data$score)) %>%
-                tidyr::pivot_wider(id_cols = group.by,
+                tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
                                    names_from = 'source',
                                    values_from = 'mean') %>%
                 tibble::column_to_rownames(group.by) %>%
@@ -284,16 +284,16 @@ do_PathwayActivityPlot <- function(sample,
                   as.data.frame() %>%
                   tibble::rownames_to_column(var = "cell") %>%
                   dplyr::left_join(y = {sample@meta.data[, c(group.by, split.by)] %>%
-                      tibble::rownames_to_column(var = "cell")},
-                      by = "cell") %>%
+                                        tibble::rownames_to_column(var = "cell")},
+                                        by = "cell") %>%
                   dplyr::filter(.data[[split.by]] == split.value) %>%  # This is key.
-                  dplyr::select(c(-.data$cell, -.data[[split.by]])) %>%
-                  tidyr::pivot_longer(cols = -.data[[group.by]],
+                  dplyr::select(-dplyr::all_of(c("cell", split.by))) %>%
+                  tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
                                       names_to = "source",
                                       values_to = "score") %>%
                   dplyr::group_by(.data[[group.by]], .data$source) %>%
                   dplyr::summarise(mean = mean(.data$score)) %>%
-                  tidyr::pivot_wider(id_cols = group.by,
+                  tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
                                      names_from = 'source',
                                      values_from = 'mean') %>%
                   tibble::column_to_rownames(group.by) %>%
