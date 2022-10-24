@@ -95,7 +95,7 @@ if (isFALSE(dep_check[["do_BarPlot"]])){
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
     p <- SCpubr::do_BarPlot(sample = sample,
                             group.by = "orig.ident",
-                            rotate_x_axis_labels  = TRUE)
+                            rotate_x_axis_labels  = 0)
     testthat::expect_type(p, "list")
   })
 
@@ -178,7 +178,7 @@ if (isFALSE(dep_check[["do_BarPlot"]])){
     p <- SCpubr::do_BarPlot(sample = sample,
                             group.by = "orig.ident",
                             position = "stack",
-                            rotate_x_axis_labels = TRUE)
+                            rotate_x_axis_labels = 0)
     testthat::expect_type(p, "list")
   })
 

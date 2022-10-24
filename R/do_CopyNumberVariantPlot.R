@@ -32,7 +32,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      font.type = "sans",
                                      border.size = 2,
                                      border.color = "black",
-                                     rotate_x_axis_labels = TRUE,
+                                     rotate_x_axis_labels = 45,
                                      plot_cell_borders = TRUE,
                                      enforce_symmetry = TRUE,
                                      legend.title = NULL,
@@ -44,7 +44,6 @@ do_CopyNumberVariantPlot <- function(sample,
 
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "enforce_symmetry" = enforce_symmetry,
                        "plot_cell_borders" = plot_cell_borders)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
@@ -56,7 +55,8 @@ do_CopyNumberVariantPlot <- function(sample,
                        "legend.tickwidth" = legend.tickwidth,
                        "pt.size" = pt.size,
                        "border.size" = border.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -82,6 +82,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
   if (is.null(chromosome_focus)){
     chromosome_list <- c(as.character(seq(1, 22)))

@@ -46,7 +46,7 @@ do_GeyserPlot <- function(sample,
                           legend.type = "colorbar",
                           font.size = 14,
                           font.type = "sans",
-                          rotate_x_axis_labels = TRUE,
+                          rotate_x_axis_labels = 45,
                           viridis_color_map = "G",
                           viridis_direction = 1,
                           colors.use = NULL,
@@ -60,7 +60,8 @@ do_GeyserPlot <- function(sample,
                           plot.subtitle = NULL,
                           plot.caption = NULL,
                           xlab = "Groups",
-                          ylab = feature){
+                          ylab = feature,
+                          flip = FALSE){
 
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
@@ -69,8 +70,8 @@ do_GeyserPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "order_by_mean" = order_by_mean,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "flip" = flip)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -84,7 +85,8 @@ do_GeyserPlot <- function(sample,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
                        "legend.icon.size" = legend.icon.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -119,6 +121,7 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
+  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
   `%>%` <- magrittr::`%>%`
   # Check the assay.
@@ -364,12 +367,13 @@ do_GeyserPlot <- function(sample,
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                            face = "bold"),
-                        axis.line.x = ggplot2::element_line(color = "black"),
+                        axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                        axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                         axis.text.x = ggplot2::element_text(color = "black",
                                                             face = "bold",
-                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
-                                                            hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
+                                                            angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
+                                                            hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
+                                                            vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
                         axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         panel.grid.major = ggplot2::element_blank(),
@@ -419,6 +423,11 @@ do_GeyserPlot <- function(sample,
                                                          title.hjust = 0.5))
     }
     list.out[[feature]] <- p
+  }
+
+  if (isTRUE(flip)){
+    p <- p +
+         ggplot2::coord_flip()
   }
   return(if (length(features) > 1) {list.out} else {p})
 }

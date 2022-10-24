@@ -25,7 +25,7 @@ do_CopyNumberVariantPlot(
   font.type = "sans",
   border.size = 2,
   border.color = "black",
-  rotate_x_axis_labels = TRUE,
+  rotate_x_axis_labels = 45,
   plot_cell_borders = TRUE,
   enforce_symmetry = TRUE,
   legend.title = NULL,
@@ -89,7 +89,7 @@ do_CopyNumberVariantPlot(
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 

@@ -5,7 +5,8 @@ Take this a teaser of things to come in the next version.
 ## General changes
 
 -   Change color palette when using `enforce_symmetry = TRUE` to have the middle color as `grey95` instead of the previous one, which made middle values seem closer to the positive end of the scale.
-- Modify internal structure of all functions to abide with [tidyselect v1.2.0 lifecycle modifications](https://tidyselect.r-lib.org/news/index.html#lifecycle-changes-1-2-0).
+-   Modified internal structure of all functions to abide with [tidyselect v1.2.0 lifecycle modifications](https://tidyselect.r-lib.org/news/index.html#lifecycle-changes-1-2-0).
+-   Modified `rotate_x_axis_labels` parameter in all functions that made use of it. Now, instead of accepting a `logical`, accepts a `numeric`: either `0`, `45` or `90`, corresponding to the degrees in which the X axis labels should be rotated. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
 
 ## `SCpubr::do_CopyNumberVariantPlot`
 
@@ -13,28 +14,38 @@ Take this a teaser of things to come in the next version.
 -   Include the `verbose` argument to `SCpubr::do_CopyNumberVariantPlot` to silence the messages when there are not enough genes in the chromosome to perform the analysis.
 
 ## `SCpubr::do_DimPlot()`
-
 -   Fixed a typo that prevented labels to be bold in `SCpubr::do_DimPlot()` when cell borders are displayed.
 -   Added `group.by` and `split.by` functionality to `SCpubr::do_DimPlot()`. ([#4](https://github.com/enblacar/SCpubr/issues/4))
 
-## `SCpubr::do_FeaturePlot()`
+## `SCpubr::do_DotPLot()`
+-   Added ticks to axes.
+-   Modified default colors to convey a better aesthetic. 
 
+## `SCpubr::do_FeaturePlot()`
 -   Fixed potential bugs in `SCpubr::do_FeaturePlot` when setting `enforce_symmetry = TRUE`.
 -   Changed default value of `order` in `SCpubr::do_FeaturePlot()` from `TRUE` to `FALSE`.
 -   Added `min.cutoff` and `max.cutoff` parameters to `SCpubr::do_FeaturePlot()`. This allows to effectively subset the color scale to the values provided. Cells outside the range will be converted to the min or max values provided, respectively. ([#2](https://github.com/enblacar/SCpubr/issues/2))
 
-## `SCpubr::do_GroupwiseDEPlot()`
+## `SCpubr::do_GeyserPlot()`
+-   Added `flip` parameter.
 
+## `SCpubr::do_GroupwiseDEPlot()`
 -   Fixed bug in `SCpubr::do_GroupwiseDEPlot` in which the heatmap could not be computed. ([#3](https://github.com/enblacar/SCpubr/issues/3))
 -   Added extra checks to ensure proper input in `SCpubr::do_GroupwiseDEPlot`. ([#3](https://github.com/enblacar/SCpubr/issues/3))
 
-## `SCpubr::do_RidgePlot()`
+## `SCpubr::do_LigandReceptorPlot()` (development release)
+- Changed parameter `x_labels_angle` to `rotate_x_axis_labels` to keep a consistent terminology.
 
+## `SCpubr::do_RidgePlot()`
 -   Fixed a typo that made the lines in `panel.grid.minor` to be displayed in `SCpubr::do_Ridgeplot()`.
+-   Added `flip` parameter.
 
 ## `SCpubr::do_ViolinPlot()`
-
 -   Added `split.by` functionality to `SCpubr::do_ViolinPlot()`. ([#4](https://github.com/enblacar/SCpubr/issues/4), [#5](https://github.com/enblacar/SCpubr/issues/5))
+-   Added `flip` parameter.
+-   Now multiple features can be queried ad the same time. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
+-   Changed `feature` parameter to `features`, to better reflect the multiple feature behavior.
+-   Recreated `Seurat`'s `share.y.lims` behavior and set it to `share.y.lims` parameter. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
 
 # SCpubr v1.0.1
 

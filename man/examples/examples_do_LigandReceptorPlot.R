@@ -36,7 +36,7 @@
     # Ligand Receptor analysis plot with inverted axes.
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        flip = TRUE,
-                                       x_labels_angle = 90,
+                                       rotate_x_axis_labels = 90,
                                        rotate_strip_text = TRUE)
     p
 
@@ -45,7 +45,7 @@
                                        plot.grid = TRUE,
                                        grid.color = "grey90",
                                        grid.type = "dotted",
-                                       x_labels_angle = 90,
+                                       rotate_x_axis_labels = 90,
                                        rotate_strip_text = TRUE,
                                        split.by = "ligand.complex")
     p

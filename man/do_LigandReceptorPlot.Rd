@@ -12,7 +12,7 @@ do_LigandReceptorPlot(
   top_interactions = 25,
   dot_border = TRUE,
   border.color = "black",
-  x_labels_angle = 45,
+  rotate_x_axis_labels = 45,
   rotate_strip_text = FALSE,
   legend.position = "bottom",
   legend.type = "colorbar",
@@ -48,7 +48,7 @@ do_LigandReceptorPlot(
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
 
-\item{x_labels_angle}{\strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.}
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{rotate_strip_text}{\strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.}
 
@@ -157,7 +157,7 @@ This function makes use of \href{https://github.com/saezlab/liana}{liana} packag
     # Ligand Receptor analysis plot with inverted axes.
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        flip = TRUE,
-                                       x_labels_angle = 90,
+                                       rotate_x_axis_labels = 90,
                                        rotate_strip_text = TRUE)
     p
 
@@ -166,7 +166,7 @@ This function makes use of \href{https://github.com/saezlab/liana}{liana} packag
                                        plot.grid = TRUE,
                                        grid.color = "grey90",
                                        grid.type = "dotted",
-                                       x_labels_angle = 90,
+                                       rotate_x_axis_labels = 90,
                                        rotate_strip_text = TRUE,
                                        split.by = "ligand.complex")
     p

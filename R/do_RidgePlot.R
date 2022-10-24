@@ -34,7 +34,7 @@ do_RidgePlot <- function(sample,
                          colors.use = NULL,
                          font.size = 14,
                          font.type = "sans",
-                         rotate_x_axis_labels = TRUE,
+                         rotate_x_axis_labels = 45,
                          plot.title = NULL,
                          plot.subtitle = NULL,
                          plot.caption = NULL,
@@ -50,7 +50,8 @@ do_RidgePlot <- function(sample,
                          viridis_direction = 1,
                          plot.grid = TRUE,
                          grid.color = "grey75",
-                         grid.type = "dashed"){
+                         grid.type = "dashed",
+                         flip = FALSE){
   check_suggests(function_name = "do_RidgePlot")
   `%>%` <- magrittr::`%>%`
 
@@ -59,12 +60,12 @@ do_RidgePlot <- function(sample,
 
   # Check logical parameters.
   logical_list <- list("continuous_scale" = continuous_scale,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "compute_quantiles" = compute_quantiles,
                        "compute_custom_quantiles" = compute_custom_quantiles,
                        "compute_distribution_tails" = compute_distribution_tails,
                        "color_by_probabilities" = color_by_probabilities,
-                       "plot.grid" = plot.grid)
+                       "plot.grid" = plot.grid,
+                       "flip" = flip)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("legend.width" = legend.width,
@@ -74,7 +75,8 @@ do_RidgePlot <- function(sample,
                        "font.size" = font.size,
                        "quantiles" = quantiles,
                        "prob_tails" = prob_tails,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -107,6 +109,7 @@ do_RidgePlot <- function(sample,
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
+  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
   if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
 
@@ -237,12 +240,13 @@ do_RidgePlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = "bold"),
-                      axis.line.y = ggplot2::element_line(color = "black"),
+                      axis.line.y = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      axis.line.x = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = "bold",
-                                                          angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
-                                                          hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                          vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
+                                                          angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
+                                                          hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
+                                                          vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
                       axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       panel.grid.major = ggplot2::element_blank(),
@@ -264,6 +268,11 @@ do_RidgePlot <- function(sample,
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                       strip.text = ggplot2::element_text(color = "black", face = "bold"))
+
+  if (isTRUE(flip)){
+    p <- p +
+         ggplot2::coord_flip()
+  }
 
 
   return(p)

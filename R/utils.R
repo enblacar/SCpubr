@@ -49,7 +49,7 @@
 #' @param border.size \strong{\code{\link[base]{numeric}}} | Width of the border of the cells.
 #' @param border.color \strong{\code{\link[base]{character}}} | Color to use for the border of the cells.
 #' @param na.value \strong{\code{\link[base]{character}}} | Color value for NA.
-#' @param rotate_x_axis_labels \strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.
+#' @param rotate_x_axis_labels \strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.
 #' @param xlab,ylab \strong{\code{\link[base]{character}}} | Titles for the X and Y axis.
 #' @param pt.size \strong{\code{\link[base]{numeric}}} | Size of the dots.
 #' @param flip \strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.
@@ -1860,6 +1860,9 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "scale_type"){
     assertthat::assert_that(parameter %in% c("categorical", "continuous"),
                             msg = "Please provide one of the following to scale_type: continuous, categorical.")
+  } else if (parameter_name == "rotate_x_axis_labels"){
+    assertthat::assert_that(parameter %in% c(0, 45, 90),
+                            msg = "Please provide one of the following to rotate_x_axis_labels: 0, 45, 90.")
   }
 }
 
@@ -1962,6 +1965,50 @@ prepare_ggplot_alluvial_plot <- function(data,
                                                 axis10 = data[[vars.use[10]]]))
   }
   return(p)
+}
+
+#' Helper for rotate_x_axis_labels.
+#'
+#' @param angle Angle of rotation.
+#' @param flip Whether the plot if flipped or not.
+#'
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+get_axis_parameters <- function(angle,
+                               flip){
+  if (isTRUE(flip)){
+    if (angle == 0){
+      out <- list("angle" = angle,
+                  "hjust" = 0.5,
+                  "vjust" = 0.5)
+    } else if (angle == 45){
+      out <- list("angle" = angle,
+                  "hjust" = 1,
+                  "vjust" = 1)
+    } else if (angle == 90){
+      out <- list("angle" = angle,
+                  "hjust" = 0.5,
+                  "vjust" = 0.5)
+    }
+  } else if (isFALSE(flip)){
+    if (angle == 0){
+      out <- list("angle" = angle,
+                  "hjust" = 0.5,
+                  "vjust" = 0)
+    } else if (angle == 45){
+      out <- list("angle" = angle,
+                  "hjust" = 1,
+                  "vjust" = 1)
+    } else if (angle == 90){
+      out <- list("angle" = angle,
+                  "hjust" = 0.5,
+                  "vjust" = 0.5)
+    }
+  }
+  return(out)
 }
 
 

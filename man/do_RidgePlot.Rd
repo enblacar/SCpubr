@@ -24,7 +24,7 @@ do_RidgePlot(
   colors.use = NULL,
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = TRUE,
+  rotate_x_axis_labels = 45,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -40,7 +40,8 @@ do_RidgePlot(
   viridis_direction = 1,
   plot.grid = TRUE,
   grid.color = "grey75",
-  grid.type = "dashed"
+  grid.type = "dashed",
+  flip = FALSE
 )
 }
 \arguments{
@@ -95,7 +96,7 @@ do_RidgePlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
@@ -131,6 +132,8 @@ do_RidgePlot(
 \item \emph{\code{longdash}}.
 \item \emph{\code{twodash}}.
 }}
+
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }
 \value{
 A ggplot2 object.

@@ -8,7 +8,6 @@
 #' @param keep_source,keep_target \strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.
 #' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
 #' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.
-#' @param x_labels_angle \strong{\code{\link[base]{numeric}}} | One of 0 (horizontal), 45 (diagonal), 90 (vertical). Adjusts to 0 if flip = FALSE and 45 if flip = TRUE.
 #' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
@@ -26,7 +25,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                   top_interactions = 25,
                                   dot_border = TRUE,
                                   border.color = "black",
-                                  x_labels_angle = 45,
+                                  rotate_x_axis_labels = 45,
                                   rotate_strip_text = FALSE,
                                   legend.position = "bottom",
                                   legend.type = "colorbar",
@@ -67,7 +66,7 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
-                       "x_labels_angle" = x_labels_angle,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
@@ -102,14 +101,12 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
+  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
                             msg = "Please select one of the following for split.by: ligand.complex, receptor.complex.")
   }
-
-  assertthat::assert_that(x_labels_angle %in% c(0, 45, 90),
-                          msg = "Please provide one of the following for x_labels_angle: 0, 45, 90.")
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
@@ -123,19 +120,6 @@ do_LigandReceptorPlot <- function(liana_output,
     size_title <- stringr::str_wrap("Interaction specificity", width = 10)
     fill.title <- stringr::str_wrap("Expression Magnitude", width = 10)
   }
-
-  if (x_labels_angle == 0){
-    hjust <- 0.5
-    vjust <- 1
-  } else if (x_labels_angle == 45){
-    hjust <- 1
-    vjust <- 1
-  } else if (x_labels_angle == 90){
-    hjust <- 1
-    vjust <- 0.5
-  }
-
-
 
   liana_output <- liana_output %>%
                   liana::liana_aggregate(verbose = FALSE)
@@ -383,15 +367,11 @@ do_LigandReceptorPlot <- function(liana_output,
                       axis.text.y = ggplot2::element_text(face = "bold"),
                       axis.text = ggplot2::element_text(face = "bold", color = "black"),
                       axis.ticks = ggplot2::element_line(color = "black"),
-                      axis.text.x = if (isFALSE(flip)){
-                        ggplot2::element_text(angle = x_labels_angle,
-                                              hjust = hjust,
-                                              vjust = vjust)
-                        } else {
-                          ggplot2::element_text(angle = x_labels_angle,
-                                                   hjust = hjust,
-                                                   vjust = vjust)
-                        },
+                      axis.text.x = ggplot2::element_text(color = "black",
+                                                          face = "bold",
+                                                          angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
+                                                          hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
+                                                          vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
                       strip.text.x = if (isFALSE(flip)) {ggplot2::element_text(face = "bold",
                                                                                angle = strip_text_angle)}
                                      else {ggplot2::element_blank()},

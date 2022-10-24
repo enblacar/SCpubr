@@ -51,7 +51,7 @@ do_TFActivityPlot <- function(sample,
                               legend.type = "colorbar",
                               font.size = 14,
                               font.type = "sans",
-                              rotate_x_axis_labels = TRUE,
+                              rotate_x_axis_labels = 45,
                               enforce_symmetry = TRUE,
                               geyser_order_by_mean = TRUE,
                               geyser_scale_type = "continuous",
@@ -68,7 +68,6 @@ do_TFActivityPlot <- function(sample,
                        "flip" = flip,
                        "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
                        "enforce_symmetry" = enforce_symmetry)
@@ -87,7 +86,8 @@ do_TFActivityPlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -115,6 +115,7 @@ do_TFActivityPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
   sample[['dorothea']] <- activities %>%
                           dplyr::filter(.data$statistic == 'norm_wmean') %>%

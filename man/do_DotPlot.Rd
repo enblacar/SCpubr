@@ -20,7 +20,7 @@ do_DotPlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   dot.scale = 6,
-  colors.use = c("#1BFFFF", "#2E3192"),
+  colors.use = c("#1BFFFF25", "#2E3192"),
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -30,7 +30,7 @@ do_DotPlot(
   font.type = "sans",
   cluster.idents = FALSE,
   flip = FALSE,
-  rotate_x_axis_labels = TRUE,
+  rotate_x_axis_labels = 45,
   scale.by = "size",
   use_viridis = FALSE,
   viridis_color_map = "G",
@@ -98,7 +98,7 @@ do_DotPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{scale.by}{\strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
 \itemize{

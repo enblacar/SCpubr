@@ -20,7 +20,7 @@
     # Rotate x axis labels.
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                feature = c("nCount_RNA"),
-                               rotate_x_axis_labels = FALSE)
+                               rotate_x_axis_labels = 0)
     p
 
     # Add horizontal lines.

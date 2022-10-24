@@ -101,7 +101,7 @@
                                 scale_type = "categorical",
                                 group.by = "modified_orig.ident",
                                 split.by = "seurat_clusters",
-                                rotate_x_axis_labels = TRUE)
+                                rotate_x_axis_labels = 45)
 
     # Geyser plot with continuous color scale split by seurat clusters rotating labels.
     p2 <- SCpubr::do_GeyserPlot(sample = sample,
@@ -110,7 +110,7 @@
                                 enforce_symmetry = TRUE,
                                 group.by = "modified_orig.ident",
                                 split.by = "seurat_clusters",
-                                rotate_x_axis_labels = TRUE)
+                                rotate_x_axis_labels = 45)
 
 
     p <- p1 / p2

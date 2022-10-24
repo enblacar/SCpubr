@@ -30,7 +30,7 @@ do_DotPlot <- function(sample,
                        legend.framecolor = "grey50",
                        legend.tickcolor = "white",
                        dot.scale = 6,
-                       colors.use = c("#1BFFFF", "#2E3192"),
+                       colors.use = c("#1BFFFF25", "#2E3192"),
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
@@ -40,7 +40,7 @@ do_DotPlot <- function(sample,
                        font.type = "sans",
                        cluster.idents = FALSE,
                        flip = FALSE,
-                       rotate_x_axis_labels = TRUE,
+                       rotate_x_axis_labels = 45,
                        scale.by = "size",
                        use_viridis = FALSE,
                        viridis_color_map = "G",
@@ -60,7 +60,6 @@ do_DotPlot <- function(sample,
     # Check logical parameters.
     logical_list <- list("flip" = flip,
                          "cluster.idents" = cluster.idents,
-                         "rotate_x_axis_labels" = rotate_x_axis_labels,
                          "use_viridis" = use_viridis,
                          "dot_border" = dot_border,
                          "plot.grid" = plot.grid)
@@ -72,7 +71,8 @@ do_DotPlot <- function(sample,
                          "legend.tickwidth" = legend.tickwidth,
                          "legend.length" = legend.length,
                          "legend.width" = legend.width,
-                         "viridis_direction" = viridis_direction)
+                         "viridis_direction" = viridis_direction,
+                         "rotate_x_axis_labels" = rotate_x_axis_labels)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -125,6 +125,7 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
     check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
     check_parameters(parameter = grid.type, parameter_name = "grid.type")
+    check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
 
     # Check colors.
     check_colors(colors.use)
@@ -200,10 +201,11 @@ do_DotPlot <- function(sample,
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
                                                             face = "bold",
-                                                            angle = ifelse(isTRUE(rotate_x_axis_labels), 45, 0),
-                                                            hjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 0.5),
-                                                            vjust = ifelse(isTRUE(rotate_x_axis_labels), 1, 1)),
+                                                            angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
+                                                            hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
+                                                            vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
                         axis.text.y = ggplot2::element_text(face = "bold", color = "black"),
+                        axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),
                         axis.title = ggplot2::element_text(face = "bold"),
                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),

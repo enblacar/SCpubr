@@ -13,7 +13,7 @@ do_BarPlot(
   font.size = 14,
   font.type = "sans",
   legend.position = "bottom",
-  rotate_x_axis_labels = TRUE,
+  rotate_x_axis_labels = 45,
   legend.title = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -60,7 +60,7 @@ do_BarPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Whether to rotate X axis labels.}
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
