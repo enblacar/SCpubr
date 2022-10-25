@@ -1,6 +1,23 @@
 if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
-  testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
+  testthat::test_that("do_GroupwiseDEPlot: CRAN essentials", {
 
+    sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data")
+    testthat::expect_type(p, "S4")
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes_scaled,
+                                    assay = "SCT",
+                                    slot = "scale.data")
+    testthat::expect_type(p, "S4")
+  })
+
+  testthat::test_that("do_GroupwiseDEPlot: PASS - default", {
+    testthat::skip_on_cran()
 
 
     sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
@@ -19,7 +36,7 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   })
 
   testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
-
+    testthat::skip_on_cran()
 
     sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
 
@@ -40,7 +57,7 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
 
 
   testthat::test_that("do_GroupwiseDEPlot: PASS - multiple grouping", {
-
+    testthat::skip_on_cran()
 
     sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
 
@@ -62,7 +79,7 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   })
 
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong number of titles", {
-
+    testthat::skip_on_cran()
 
     sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
 
@@ -81,7 +98,7 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   })
 
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong direction", {
-
+    testthat::skip_on_cran()
 
     sample@assays$SCT@scale.data <- as.matrix(sample@assays$SCT@data)
 

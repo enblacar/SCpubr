@@ -1,6 +1,22 @@
 if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
-  testthat::test_that("do_ChordDiagramPlot: PASS - default", {
 
+  testthat::test_that("do_ChordDiagramPlot: CRAN essentials", {
+    sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
+    sample$orig.ident_char <- sample$orig.ident
+    sample$orig.ident <- factor(sample$orig.ident)
+    p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                     from = "seurat_clusters",
+                                     to = "orig.ident")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_ChordDiagramPlot(sample = sample,
+                                     from = "seurat_clusters_char",
+                                     to = "orig.ident_char")
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_ChordDiagramPlot: PASS - default", {
+    testthat::skip_on_cran()
 
     sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
     sample$orig.ident_char <- sample$orig.ident
@@ -18,7 +34,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
 
 
   testthat::test_that("do_ChordDiagramPlot: PASS - colors", {
-
+    testthat::skip_on_cran()
     sample$seurat_clusters_char <- as.character(sample$seurat_clusters)
     sample$orig.ident_char <- as.character(sample$orig.ident)
     sample$orig.ident <- factor(sample$orig.ident)
@@ -119,7 +135,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
 
   testthat::test_that("do_ChordDiagramPlot: PASS - link border color", {
 
-
+    testthat::skip_on_cran()
 
     p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                      from = "seurat_clusters",
@@ -129,7 +145,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
   })
 
   testthat::test_that("do_ChordDiagramPlot: PASS - alignment", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ChordDiagramPlot(sample = sample,
@@ -146,7 +162,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
   })
 
   testthat::test_that("do_ChordDiagramPlot: PASS - highlight group", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ChordDiagramPlot(sample = sample,
@@ -157,7 +173,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
   })
 
   testthat::test_that("do_ChordDiagramPlot: FAILS", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,

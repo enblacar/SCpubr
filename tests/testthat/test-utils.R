@@ -777,7 +777,7 @@ if (isFALSE(dep_check[["utils"]])){
 
   # USE DATASET
   testthat::test_that("utils: use_dataset - PASS - checks", {
-
+    testthat::skip_on_cran()
     output <- SCpubr:::use_dataset()
     testthat::expect_length(colnames(output), 180)
     testthat::expect_length(rownames(output), 7761)

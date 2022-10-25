@@ -1,7 +1,17 @@
 if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
+
+  testthat::test_that("do_BarPlot: CRAN essentials", {
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            chromosome_locations = human_chr_locations,
+                                            chromosome_focus = "2")
+    testthat::expect_type(out, "list")
+  })
+
   testthat::test_that("do_BarPlot: PASS - normal cells all chromosomes", {
 
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object,
@@ -12,7 +22,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
 
   testthat::test_that("do_BarPlot: PASS - normal cells one chromosome", {
 
-
+    testthat::skip_on_cran()
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
@@ -22,7 +32,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
   })
 
   testthat::test_that("do_BarPlot: PASS - metacells all chromosomes", {
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
@@ -33,7 +43,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
   })
 
   testthat::test_that("do_BarPlot: PASS - metacells one chromosome", {
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
@@ -45,7 +55,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
   })
 
   testthat::test_that("do_BarPlot: PASS - group.by", {
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
@@ -59,7 +69,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
 
 
   testthat::test_that("do_BarPlot: PASS - legend.position", {
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
@@ -81,7 +91,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
   })
 
   testthat::test_that("do_BarPlot: PASS - legend.position", {
-
+    testthat::skip_on_cran()
 
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object_metacells,

@@ -3,6 +3,8 @@
   value <- SCpubr:::check_suggests(function_name = "do_EnrichmentHeatmap", passive = TRUE)
 
   if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
     # Define your Seurat object.
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
@@ -24,71 +26,6 @@
                                       ctrl = 10)
     p
 
-    # Custom aggregated values.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      group.by = "orig.ident",
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
-
-    # Transposing the matrix.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flip = TRUE,
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
-
-    # Rotating the labels.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flip = TRUE,
-                                      column_names_rot = 0,
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
-
-    # Modifying the tile size.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flip = TRUE,
-                                      column_names_rot = 0,
-                                      cluster_cols = FALSE,
-                                      cluster_rows = TRUE,
-                                      cell_size = 7,
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
-
-
-    # Symmetrical scale viriis.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flip = TRUE,
-                                      column_names_rot = 0,
-                                      cluster_cols = FALSE,
-                                      cluster_rows = TRUE,
-                                      cell_size = 7,
-                                      symmetrical_scale = TRUE,
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
-
-
-    # Modifying the symmetrical scale non viridis.
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flip = TRUE,
-                                      column_names_rot = 0,
-                                      cluster_cols = FALSE,
-                                      cluster_rows = TRUE,
-                                      cell_size = 7,
-                                      symmetrical_scale = TRUE,
-                                      use_viridis = FALSE,
-                                      nbin = 1,
-                                      ctrl = 10)
-    p
   } else if (isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

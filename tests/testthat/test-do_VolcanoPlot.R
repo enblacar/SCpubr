@@ -1,6 +1,15 @@
 if(isFALSE(dep_check[["do_VolcanoPlot"]])){
-  testthat::test_that("do_VolcanoPlot: PASS - default", {
+  testthat::test_that("do_VolcanoPlot: CRAN essentials", {
 
+    `%>%` <- magrittr::`%>%`
+
+    p <- SCpubr::do_VolcanoPlot(sample = sample,
+                                de_genes = de_genes)
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_VolcanoPlot: PASS - default", {
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -27,7 +36,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - n_genes", {
-
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -37,7 +46,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - use_labels", {
-
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -52,7 +61,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - gene tags", {
-
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -67,7 +76,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - gene tags order by", {
-
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
@@ -90,7 +99,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
   })
 
   testthat::test_that("do_VolcanoPlot: FAIL - wrong parameters", {
-
+    testthat::skip_on_cran()
     `%>%` <- magrittr::`%>%`
 
     testthat::expect_error(SCpubr::do_VolcanoPlot(sample = sample,

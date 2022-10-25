@@ -1,6 +1,15 @@
 if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
-  testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
 
+  testthat::test_that("do_PathwayActivityPlot: CRAN essentials", {
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities)
+    testthat::expect_type(out, "list")
+  })
+
+
+  testthat::test_that("do_PathwayActivityPlot: PASS - minimal input", {
+    testthat::skip_on_cran()
 
 
 
@@ -32,7 +41,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - plot featureplots", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -44,7 +53,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - plot geysers", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -63,7 +72,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - all", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -76,7 +85,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - all group.by", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -90,7 +99,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - all split.by", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -104,7 +113,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - column.title and row.title", {
-
+    testthat::skip_on_cran()
 
 
 

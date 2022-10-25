@@ -3,6 +3,8 @@
   value <- SCpubr:::check_suggests(function_name = "do_BeeSwarmPlot", passive = TRUE)
 
   if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
     # Define your Seurat object.
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 

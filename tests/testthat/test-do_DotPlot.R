@@ -1,6 +1,19 @@
 if (isFALSE(dep_check[["do_DotPlot"]])){
-  testthat::test_that("do_DotPlot: PASS - one variable", {
 
+  testthat::test_that("do_DotPlot: CRAN essentials", {
+
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = FALSE)
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_DotPlot: PASS - one variable", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -14,7 +27,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - plot grid", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -29,7 +42,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - use_viridis", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -46,7 +59,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend normal", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -56,7 +69,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend colorbar", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -66,7 +79,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -76,7 +89,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps legend to the right", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -87,7 +100,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: FAIL - wrong legend type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
@@ -98,7 +111,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: FAIL - wrong legend position", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
@@ -109,7 +122,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(suppressWarnings({SCpubr::do_DotPlot(sample = sample,
@@ -120,7 +133,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable flip", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -130,7 +143,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -149,7 +162,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features flip", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -169,7 +182,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -190,7 +203,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - list of features", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -208,7 +221,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: FAIL - list of features flip", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -227,7 +240,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - list of features cluster idents", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -246,7 +259,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - list of features cluster idents modify colors", {
-
+    testthat::skip_on_cran()
 
 
     genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
@@ -266,7 +279,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,
@@ -276,7 +289,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable split.by factor", {
-
+    testthat::skip_on_cran()
 
 
     sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
@@ -288,7 +301,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
 
 
   testthat::test_that("do_DotPlot: PASS - one variable xlab, ylab, title, subtitle, caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DotPlot(sample = sample,

@@ -1,6 +1,22 @@
 if(isFALSE(dep_check[["do_NebulosaPlot"]])){
-  testthat::test_that("do_NebulosaPlot: PASS - single feature", {
+  testthat::test_that("do_NebulosaPlot: CRAN essentials", {
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1"))
+    testthat::expect_type(p, "list")
 
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"))
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 joint = TRUE)
+    testthat::expect_type(p, "list")
+  })
+
+
+  testthat::test_that("do_NebulosaPlot: PASS - single feature", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -9,7 +25,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - cell_borders", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE)
@@ -19,7 +35,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature legend normal", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -29,7 +45,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorbar", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -40,7 +56,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorsteps", {
 
-
+    testthat::skip_on_cran()
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1"),
@@ -49,7 +65,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: FAIL - wrong legend type ", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
@@ -58,7 +74,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: FAIL - wrong legend position ", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
@@ -67,7 +83,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
@@ -76,7 +92,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature distinct dims", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -86,7 +102,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - diffusion", {
-
+    testthat::skip_on_cran()
 
 
     test <- sample@reductions$umap[[]]
@@ -100,7 +116,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -109,7 +125,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several, joint", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -119,7 +135,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several, joint only joint", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -130,7 +146,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - title", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -142,7 +158,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - subtitle", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -154,7 +170,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -167,7 +183,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
   testthat::test_that("do_NebulosaPlot: PASS - color map", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -177,7 +193,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - legend top", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -187,7 +203,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - legend top", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -197,7 +213,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_warning(SCpubr::do_NebulosaPlot(sample = sample,
@@ -207,7 +223,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
   testthat::test_that("do_NebulosaPlot: PASS - no legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -217,7 +233,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - patchwork title, subtitle and caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -229,7 +245,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - plot axis", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, plot.axes = TRUE, features = "nCount_RNA")

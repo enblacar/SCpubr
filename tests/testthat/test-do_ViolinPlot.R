@@ -1,6 +1,13 @@
 if(isFALSE(dep_check[["do_ViolinPlot"]])){
-  testthat::test_that("do_ViolinPlot: PASS - one variable", {
+  testthat::test_that("do_ViolinPlot: CRAN essentials", {
 
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = "EPC1")
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_ViolinPlot: PASS - one variable", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -15,7 +22,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - two variable", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -44,7 +51,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - group.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -63,7 +70,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - without boxplot", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -73,7 +80,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - rotate axis", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -83,7 +90,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - plot.grid", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -96,7 +103,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - one features ycut", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -108,7 +115,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - one features line width", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -120,7 +127,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - one features boxplot width", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -132,7 +139,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - change colors", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -155,7 +162,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: FAIL - split.by", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,
@@ -167,7 +174,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - one variable, group by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -177,7 +184,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: PASS - one variable, xlab y lab", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -189,7 +196,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - one variable, plot.title, subtitle and caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -202,7 +209,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
 
   testthat::test_that("do_ViolinPlot: PASS - multiple variables plot.title, subtitle and caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
@@ -220,7 +227,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
   })
 
   testthat::test_that("do_ViolinPlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,

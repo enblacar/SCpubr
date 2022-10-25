@@ -1,6 +1,22 @@
 if (isFALSE(dep_check[["do_DimPlot"]])){
-  testthat::test_that("do_DimPlot: PASS - sample", {
 
+  testthat::test_that("do_DimPlot: CRAN essentials", {
+    p <- SCpubr::do_DimPlot(sample = sample)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample, idents.highlight = "0")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters")
+    testthat::expect_type(p, "list")
+
+    sample$orig.ident <- sample(c("A", "B"), ncol(sample), replace = T)
+    p <- SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", split.by = "orig.ident")
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_DimPlot: PASS - sample", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample)
@@ -8,7 +24,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - plot axis", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -29,7 +45,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - sample cell_borders", {
-
+    testthat::skip_on_cran()
 
 
 
@@ -49,7 +65,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
   testthat::test_that("do_DimPlot: PASS - sample marginal", {
 
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -84,7 +100,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - sample marginal size", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -96,7 +112,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
   testthat::test_that("do_DimPlot: PASS - sample marginal group", {
 
-
+    testthat::skip_on_cran()
 
     p <- SCpubr::do_DimPlot(sample = sample,
                             plot_marginal_distributions = TRUE,
@@ -106,7 +122,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: FAIL - sample marginal wrong marginal.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
@@ -116,7 +132,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: FAIL - sample marginal used alongside split.by or cells.highlight", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
@@ -136,7 +152,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - title", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -145,7 +161,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - subtitle", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -154,7 +170,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -163,7 +179,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - sample + group.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters")
@@ -172,14 +188,14 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
   testthat::test_that("do_DimPlot: PASS - sample + split.by", {
 
-
+    testthat::skip_on_cran()
 
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters")
     testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_DimPlot: PASS - sample + split.by + idents.keep", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", idents.keep = c("1", "3", "5"))
@@ -187,7 +203,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - dims", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, dims = c(1, 2))
@@ -195,7 +211,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - legend.position", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, legend.position = "top")
@@ -203,7 +219,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - legend.ncol", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, legend.ncol = 2)
@@ -211,7 +227,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - legend.nrow", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, legend.nrow = 2)
@@ -219,7 +235,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - label", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, label = TRUE)
@@ -227,7 +243,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - order", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, order = "5", shuffle = FALSE)
@@ -235,7 +251,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - colors.use", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, colors.use = c("0" = "#001219",
@@ -251,7 +267,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - cells.highlight", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, cells.highlight = sample(colnames(sample), 50))
@@ -259,7 +275,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - idents.highlight", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, idents.highlight = "5")
@@ -267,7 +283,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - cells.highlight and idents.highlight", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, cells.highlight = sample(colnames(sample), 50), idents.highlight = "2")
@@ -275,7 +291,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - idents.keep", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, idents.keep = "5")
@@ -283,35 +299,35 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: FAIL - group.by and cells.highlights used", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", cells.highlight = colnames(sample)))
   })
 
   testthat::test_that("do_DimPlot: FAIL - split.by and cells.highlights used", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", cells.highlight = colnames(sample)))
   })
 
   testthat::test_that("do_DimPlot: WARNING - order and shuffle used", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, order = "4", shuffle = TRUE))
   })
 
   testthat::test_that("do_DimPlot: FAIL - more than one NA values", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, na.value = c("red", "blue")))
   })
 
   testthat::test_that("do_DimPlot: WARNING - raster = TRUE and pt.size lower than 1", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_warning(SCpubr::do_DimPlot(sample = sample, raster = TRUE, pt.size = 0.5))
@@ -328,7 +344,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
               "8" = "#ae2012")
 
   testthat::test_that("do_DimPlot: PASS - group.by + colors", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", colors.use = colors)
@@ -336,7 +352,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - split.by + colors", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", colors.use = colors)
@@ -344,28 +360,28 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: FAIL - more than 1 color with cells highlight", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, colors.use = colors, idents.highlight = "4"))
   })
 
   testthat::test_that("do_DimPlot: FAIL - idents.keep not in the levels of the sample", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, idents.keep = c("4", "Not an ident")))
   })
 
   testthat::test_that("do_DimPlot: FAIL - idents.keep not in the unique values of group.by", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, group.by = "orig.ident", idents.keep = c("4", "Not an ident")))
   })
 
   testthat::test_that("do_DimPlot: FAIL - idents.keep not in the unique values of split.by", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident", idents.keep = c("4", "Not an ident")))
@@ -373,7 +389,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
 
   testthat::test_that("do_DimPlot: PASS - split.by + plot.title, subtitle and caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "orig.ident",
@@ -384,7 +400,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - legend.position none", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -393,7 +409,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - dims different", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -402,7 +418,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - diffusion maps", {
-
+    testthat::skip_on_cran()
 
 
     sample@reductions$diffusion <- sample@reductions$umap
@@ -412,7 +428,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - group.by + idents.keep", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -423,7 +439,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
 
   testthat::test_that("do_DimPlot: PASS - split.by + factor", {
-
+    testthat::skip_on_cran()
 
 
     sample$seurat_clusters <- factor(sample$seurat_clusters)
@@ -432,7 +448,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: PASS - split.by + factor + idents.keep", {
-
+    testthat::skip_on_cran()
 
 
     sample$seurat_clusters <- factor(sample$seurat_clusters)
@@ -441,7 +457,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
   })
 
   testthat::test_that("do_DimPlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_DimPlot(sample = sample, font.type = "wrong"))

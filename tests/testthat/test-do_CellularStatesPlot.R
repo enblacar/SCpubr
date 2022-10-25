@@ -1,6 +1,53 @@
 if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
-  testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
 
+  testthat::test_that("do_CellularStatesPlot: CRAN essentials", {
+
+    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                  "B" = Seurat::VariableFeatures(sample)[6:10],
+                  "C" = Seurat::VariableFeatures(sample)[11:15],
+                  "D" = Seurat::VariableFeatures(sample)[16:20])
+
+
+    p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                       input_gene_list = genes,
+                                       x1 = "A",
+                                       y1 = "B",
+                                       nbin = 1,
+                                       ctrl = 10)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                       input_gene_list = genes,
+                                       x1 = "A",
+                                       y1 = "B",
+                                       x2 = "C",
+                                       plot_cell_borders = TRUE,
+                                       plot_features = TRUE,
+                                       features = "EPC1",
+                                       plot_enrichment_scores = TRUE,
+                                       nbin = 1,
+                                       ctrl = 10)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_CellularStatesPlot(sample = sample,
+                                       input_gene_list = genes,
+                                       x1 = "A",
+                                       y1 = "B",
+                                       x2 = "C",
+                                       y2 = "D",
+                                       plot_cell_borders = TRUE,
+                                       plot_features = TRUE,
+                                       features = "EPC1",
+                                       nbin = 1,
+                                       ctrl = 10)
+    testthat::expect_type(p, "list")
+
+  })
+
+  testthat::test_that("do_CellularStatesPlot: PASS - 2 variables", {
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -28,7 +75,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -102,7 +149,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -234,7 +281,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -255,7 +302,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.size", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -277,7 +324,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.group FALSE", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -299,7 +346,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribution types", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -365,7 +412,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -386,7 +433,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
 
 
   testthat::test_that("do_CellularStatesPlot: PASS - title, subtitle and caption", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -408,7 +455,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -428,7 +475,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -449,7 +496,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -469,7 +516,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -489,7 +536,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -509,7 +556,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and colors.use", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -530,7 +577,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables same parameters", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -548,7 +595,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables x1 not in the list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -566,7 +613,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables y1 not in the list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -584,7 +631,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables provide features", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -603,7 +650,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 3 variables", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -633,7 +680,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -655,7 +702,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -677,7 +724,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
 
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables duplicated parameters", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -696,7 +743,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x1 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -715,7 +762,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables x2 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -734,7 +781,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 3 variables y1 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -753,7 +800,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 4 variables", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -785,7 +832,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -808,7 +855,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -832,7 +879,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
 
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables repeated parameters", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -852,7 +899,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x1 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -872,7 +919,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y1 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -892,7 +939,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables x2 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -912,7 +959,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 4 variables y2 not in list", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
@@ -932,7 +979,7 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
     genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],

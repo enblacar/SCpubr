@@ -1,6 +1,4 @@
-# SCpubr v1.0.1.9000 (current in-development version)
-
-Take this a teaser of things to come in the next version.
+# SCpubr v1.0.2
 
 ## General changes
 

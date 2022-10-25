@@ -1,6 +1,21 @@
 if(isFALSE(dep_check[["do_GeyserPlot"]])){
-  testthat::test_that("do_GeyserPlot: PASS - default parameters", {
 
+  testthat::test_that("do_GeyserPlot: CRAN essentials", {
+
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1")
+    testthat::expect_type(p, "list")
+
+    sample$orig.ident <- sample(c("A", "B"), ncol(sample), replace = TRUE)
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1",
+                               split.by = "orig.ident")
+    testthat::expect_type(p, "list")
+
+  })
+
+  testthat::test_that("do_GeyserPlot: PASS - default parameters", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -9,7 +24,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - default parameters = symmetrical scale", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -25,7 +40,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
 
 
   testthat::test_that("do_GeyserPlot: PASS - default parameters = categorical scale", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -35,7 +50,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - default parameters = color.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -77,7 +92,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
 
 
   testthat::test_that("do_GeyserPlot: PASS - categorical colors.use", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -96,7 +111,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - order by mean", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -113,7 +128,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - plot cell borders", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -130,7 +145,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -150,7 +165,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
 
 
   testthat::test_that("do_BarPlot: FAIL - wrong paramters", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_GeyserPlot(sample = sample,
@@ -172,7 +187,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - show legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -185,7 +200,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - several features", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
@@ -195,7 +210,7 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
   })
 
   testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
-
+    testthat::skip_on_cran()
 
 
     sample$seurat_clusters_factor <- as.factor(sample$seurat_clusters)

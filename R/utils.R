@@ -257,6 +257,7 @@ check_suggests <- function(function_name, passive = FALSE){
                               "scales",
                               "grid",
                               "assertthat"),
+                   "do_AlluvialPlot" = c("ggalluvial", "ggrepel"),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = c("ggsignif"),

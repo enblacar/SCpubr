@@ -1,6 +1,18 @@
 if (isFALSE(dep_check[["do_FeaturePlot"]])){
-  testthat::test_that("do_FeaturePlot: PASS - single feature", {
+  testthat::test_that("do_FeaturePlot: CRAN essential", {
 
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                split.by = "seurat_clusters")
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_FeaturePlot: PASS - single feature", {
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -9,7 +21,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - legend.title", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -30,7 +42,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - cell_borders", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE)
@@ -48,7 +60,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - enforce_symmetry", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample, features = "EPC1", enforce_symmetry = TRUE)
@@ -65,7 +77,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - multiple features", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -74,7 +86,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - title", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -84,7 +96,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - subtitle", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -94,7 +106,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - caption", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -104,7 +116,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - individual titles", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -114,7 +126,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - individual subtitles ", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -124,7 +136,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - individual captions", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -134,7 +146,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - dims", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -144,7 +156,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - subset of cells", {
-
+    testthat::skip_on_cran()
 
 
     cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
@@ -155,7 +167,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - subset of identities", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -165,7 +177,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - subset of cells and identities", {
-
+    testthat::skip_on_cran()
 
 
     cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
@@ -177,7 +189,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -187,7 +199,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -198,7 +210,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents multiple features", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -209,7 +221,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - modify color maps", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -219,7 +231,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: WARNING - features as a list", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
@@ -227,7 +239,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: FAIL - individual titles, subtitles or captions do not match with number of features", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
@@ -242,7 +254,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - legend position = right", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -252,7 +264,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: WARNING - raster and small point size", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
@@ -262,7 +274,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - ussing diffusion reduction", {
-
+    testthat::skip_on_cran()
 
 
     test <- sample@reductions$umap[[]]
@@ -276,7 +288,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - duplicated split.by.idents", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_message(SCpubr::do_FeaturePlot(sample,
@@ -287,7 +299,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
   testthat::test_that("do_FeaturePlot: PASS - plotting a Dimensional reduction component", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -296,7 +308,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by factor", {
-
+    testthat::skip_on_cran()
 
 
     sample$factor_seurat_clusters <- factor(sample$seurat_clusters, levels = c("2", "0", "1", "3", "4", "5", "6", "7", "8"))
@@ -307,7 +319,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by and plot.title", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -320,7 +332,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by and pca", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -331,7 +343,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - split.by and diffusion", {
-
+    testthat::skip_on_cran()
 
 
     test <- sample@reductions$umap[[]]
@@ -346,7 +358,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - remove legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -356,7 +368,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - normal legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -366,7 +378,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - colorbar legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -376,7 +388,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - colorsteps legend", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -386,7 +398,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - normal legend - split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -397,7 +409,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - colorbar legend - split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -408,7 +420,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - colorsteps legend - split.by", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
@@ -419,7 +431,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: FAIL - wrong legend type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
@@ -428,7 +440,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: FAIL - wrong legend position", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
@@ -436,7 +448,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
                                                   legend.position = "wrong"))
   })
   testthat::test_that("do_FeaturePlot: FAIL - wrong font.type", {
-
+    testthat::skip_on_cran()
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
@@ -445,7 +457,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
   })
 
   testthat::test_that("do_FeaturePlot: PASS - plot axis", {
-
+    testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample = sample, plot.axes = TRUE, features = "nCount_RNA")
