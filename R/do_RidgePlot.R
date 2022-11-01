@@ -119,8 +119,8 @@ do_RidgePlot <- function(sample,
 
   data <- get_data_column_in_context(sample = sample,
                                      feature = feature,
-                                     assay = "SCT",
-                                     slot = "data",
+                                     assay = assay,
+                                     slot = slot,
                                      group.by = group.by,
                                      split.by = split.by)
   if (isTRUE(continuous_scale)){

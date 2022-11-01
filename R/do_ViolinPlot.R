@@ -7,6 +7,7 @@
 #' @param line_width \strong{\code{\link[base]{numeric}}} | Width of the lines drawn in the plot. Defaults to 1.
 #' @param boxplot_width \strong{\code{\link[base]{numeric}}} | Width of the boxplots. Defaults to 0.2.
 #' @param share.y.lims \strong{\code{\link[base]{logical}}} | When querying multiple features, force the Y axis of all of them to be on the same range of values (this being the max and min of all features combined).
+#' @param legend.ncol \strong{\code{\link[base]{numeric}}} | Number of columns in the legend.
 
 
 #' @return A ggplot2 object containing a Violin Plot.
@@ -39,7 +40,9 @@ do_ViolinPlot <- function(sample,
                           grid.type = "dashed",
                           flip = FALSE,
                           ncol = NULL,
-                          share.y.lims = FALSE){
+                          share.y.lims = FALSE,
+                          legend.title = NULL,
+                          legend.ncol = NULL){
   check_suggests(function_name = "do_ViolinPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -63,7 +66,8 @@ do_ViolinPlot <- function(sample,
                        "line_width" = line_width,
                        "boxplot_width" = boxplot_width,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "ncol" = ncol)
+                       "ncol" = ncol,
+                       "legend.ncol" = legend.ncol)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -78,7 +82,8 @@ do_ViolinPlot <- function(sample,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
                          "grid.type" = grid.color,
-                         "split.by" = split.by)
+                         "split.by" = split.by,
+                         "legend.title" = legend.title)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%>%` <- magrittr::`%>%`
@@ -173,6 +178,9 @@ do_ViolinPlot <- function(sample,
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
+         ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                      ncol = legend.ncol,
+                                                      title.position = "top")) +
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
                                                             face = "bold",

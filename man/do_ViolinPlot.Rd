@@ -31,7 +31,9 @@ do_ViolinPlot(
   grid.type = "dashed",
   flip = FALSE,
   ncol = NULL,
-  share.y.lims = FALSE
+  share.y.lims = FALSE,
+  legend.title = NULL,
+  legend.ncol = NULL
 )
 }
 \arguments{
@@ -103,6 +105,10 @@ do_ViolinPlot(
 \item{ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.}
 
 \item{share.y.lims}{\strong{\code{\link[base]{logical}}} | When querying multiple features, force the Y axis of all of them to be on the same range of values (this being the max and min of all features combined).}
+
+\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
 }
 \value{
 A ggplot2 object containing a Violin Plot.

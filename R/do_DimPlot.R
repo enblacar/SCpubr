@@ -330,13 +330,29 @@ do_DimPlot <- function(sample,
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
                        y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
-      na_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
-                                                                        y = .data$y),
-                                      colour = na.value,
-                                      size = pt.size,
-                                      show.legend = FALSE)
 
-      p.loop <- Seurat::DimPlot(sample[, sample@meta.data[, split.by] == value],
+
+      if (isFALSE(raster)){
+        na_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
+                                                                          y = .data$y),
+                                        colour = na.value,
+                                        size = pt.size,
+                                        show.legend = FALSE)
+      } else if (isTRUE(raster)){
+        na_layer <- scattermore::geom_scattermore(data = df,
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = na.value,
+                                                  size = pt.size,
+                                                  stroke = pt.size / 2,
+                                                  show.legend = FALSE,
+                                                  pointsize = pt.size,
+                                                  pixels = c(raster.dpi, raster.dpi))
+      }
+
+      sample.use <- sample[, sample@meta.data[, split.by] == value]
+
+      p.loop <- Seurat::DimPlot(sample.use,
                            reduction = reduction,
                            group.by = group.by,
                            label = label,
@@ -350,8 +366,7 @@ do_DimPlot <- function(sample,
                            pt.size = pt.size,
                            cols = colors.use,
                            raster = raster,
-                           raster.dpi = c(raster.dpi, raster.dpi),
-                           ncol = ncol) +
+                           raster.dpi = c(raster.dpi, raster.dpi)) +
                 ggplot2::ggtitle(value) +
                 ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
                                                               ncol = legend.ncol,
@@ -361,6 +376,31 @@ do_DimPlot <- function(sample,
                                                               title.position = legend.title.position))
       if (isTRUE(label)){
         p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"
+      }
+
+      # Add another layer of black dots to make the colored ones stand up.
+      if (isTRUE(plot_cell_borders)){
+        df.subset <- data.frame(x = Seurat::Embeddings(sample.use, reduction = reduction)[, labels[1]],
+                                y = Seurat::Embeddings(sample.use, reduction = reduction)[, labels[2]])
+
+        if (isFALSE(raster)){
+          base_layer.subset <- ggplot2::geom_point(data = df.subset, mapping = ggplot2::aes(x = .data$x,
+                                                                              y = .data$y),
+                                                   colour = border.color,
+                                                   size = pt.size * border.size,
+                                                   show.legend = FALSE)
+        } else if (isTRUE(raster)){
+          base_layer.subset <- scattermore::geom_scattermore(data = df.subset,
+                                                             mapping = ggplot2::aes(x = .data$x,
+                                                                                    y = .data$y),
+                                                             color = border.color,
+                                                             size = pt.size * border.size,
+                                                             stroke = pt.size / 2,
+                                                             show.legend = FALSE,
+                                                             pointsize = pt.size * border.size,
+                                                             pixels = c(raster.dpi, raster.dpi))
+        }
+        p.loop$layers <- append(base_layer.subset, p.loop$layers)
       }
       # Add NA layer.
       p.loop$layers <- append(na_layer, p.loop$layers)

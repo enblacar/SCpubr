@@ -1,3 +1,18 @@
+# SCpubr v1.0.2.9000
+
+## `SCpubr::do_DimPlot()`
+-   Implemented a change in which when using `split.by` and `group.by` in combination, the cells colored on top of the UMAP also have a border.
+-   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, the extra new layers would not raster if `raster = TRUE`.
+-   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, no plots will appear if `ncol` is set.
+
+## `SCpubr::do_RidgePlot()`
+-   Implemented a bug-fix in which using `assay = "RNA"` or, in fact, any other assay rather than `SCT` will result in an error.
+
+
+## `SCpubr::do_ViolinPlot()`
+-   Corrected a bug in which legend title when using `split.by` was an actual line of code.
+-   Added `legend.title` parameter to control the title of the legend.
+
 # SCpubr v1.0.2
 
 ## General changes
@@ -15,7 +30,7 @@
 -   Fixed a typo that prevented labels to be bold in `SCpubr::do_DimPlot()` when cell borders are displayed.
 -   Added `group.by` and `split.by` functionality to `SCpubr::do_DimPlot()`. ([#4](https://github.com/enblacar/SCpubr/issues/4))
 
-## `SCpubr::do_DotPLot()`
+## `SCpubr::do_DotPlot()`
 -   Added ticks to axes.
 -   Modified default colors to convey a better aesthetic. 
 
@@ -44,6 +59,12 @@
 -   Now multiple features can be queried ad the same time. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
 -   Changed `feature` parameter to `features`, to better reflect the multiple feature behavior.
 -   Recreated `Seurat`'s `share.y.lims` behavior and set it to `share.y.lims` parameter. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
+
+## SCpubr v1.0.2-dev-stable
+
+-   Same as v1.0.2, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
+
+This version can be obtained in the [v1.0.2-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.2-dev-stable) release.
 
 # SCpubr v1.0.1
 
