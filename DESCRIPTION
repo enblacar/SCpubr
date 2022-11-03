@@ -57,7 +57,7 @@ Suggests:
     viridis,
     liana (>= 0.1.6),
     ggsankey (>= 0.0.99999),
-    UCell
+    UCell (>= 2.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
