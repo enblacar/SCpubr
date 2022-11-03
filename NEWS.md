@@ -5,9 +5,11 @@
 -   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, the extra new layers would not raster if `raster = TRUE`.
 -   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, no plots will appear if `ncol` is set.
 -   Implemented a new feature to add density line contours using `plot_density_contour`.
+-   Implemented the conditional use of `raster.dpi` to Seurat versions higher or equal to 4.1.0.
 
 ## `SCpubr::do_FeaturePlot()`
 -   Implemented a new feature to add density line contours using `plot_density_contour`.
+-   Implemented the conditional use of `raster.dpi` to Seurat versions higher or equal to 4.1.0.
 
 
 ## `SCpubr::do_RidgePlot()`

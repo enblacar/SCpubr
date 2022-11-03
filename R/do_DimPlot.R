@@ -117,9 +117,6 @@ do_DimPlot <- function(sample,
   split_by_and_highlighting_cells <- (!(is.null(cells.highlight)) | !(is.null(idents.highlight))) & !(is.null(split.by))
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
 
-  #assertthat::assert_that(!group_by_and_split_by_used,
-  #                        msg = "Either group.by or split.by has to be NULL.")
-
   assertthat::assert_that(!group_by_and_highlighting_cells,
                           msg = "Either group.by or cells.highlight has to be NULL.")
 
@@ -308,22 +305,41 @@ do_DimPlot <- function(sample,
   highlighting_cells <- !(is.null(cells.highlight)) | !(is.null(idents.highlight))
   # When running under default parameters or using group.by
   if (not_highlighting_and_not_split_by){
-    p <- Seurat::DimPlot(sample,
-                         reduction = reduction,
-                         label = label,
-                         dims = dims,
-                         repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                         label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                         label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
-                         na.value = na.value,
-                         shuffle = shuffle,
-                         order = order,
-                         pt.size = pt.size,
-                         group.by = group.by,
-                         cols = colors.use,
-                         raster = raster,
-                         raster.dpi = c(raster.dpi, raster.dpi),
-                         ncol = ncol) &
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
+      p <- Seurat::DimPlot(sample,
+                           reduction = reduction,
+                           label = label,
+                           dims = dims,
+                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                           na.value = na.value,
+                           shuffle = shuffle,
+                           order = order,
+                           pt.size = pt.size,
+                           group.by = group.by,
+                           cols = colors.use,
+                           raster = raster,
+                           raster.dpi = c(raster.dpi, raster.dpi),
+                           ncol = ncol)
+    } else {
+      p <- Seurat::DimPlot(sample,
+                           reduction = reduction,
+                           label = label,
+                           dims = dims,
+                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                           na.value = na.value,
+                           shuffle = shuffle,
+                           order = order,
+                           pt.size = pt.size,
+                           group.by = group.by,
+                           cols = colors.use,
+                           raster = raster,
+                           ncol = ncol)
+    }
+    p <- p &
       ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                     nrow = legend.nrow,
                                                     byrow = legend.byrow,
@@ -401,21 +417,39 @@ do_DimPlot <- function(sample,
 
       sample.use <- sample[, sample@meta.data[, split.by] == value]
 
-      p.loop <- Seurat::DimPlot(sample.use,
-                           reduction = reduction,
-                           group.by = group.by,
-                           label = label,
-                           dims = dims,
-                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
-                           na.value = na.value,
-                           shuffle = shuffle,
-                           order = order,
-                           pt.size = pt.size,
-                           cols = colors.use,
-                           raster = raster,
-                           raster.dpi = c(raster.dpi, raster.dpi)) +
+      if (utils::packageVersion("Seurat") >= "4.1.0"){
+        p.loop <- Seurat::DimPlot(sample.use,
+                                  reduction = reduction,
+                                  group.by = group.by,
+                                  label = label,
+                                  dims = dims,
+                                  repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                                  na.value = na.value,
+                                  shuffle = shuffle,
+                                  order = order,
+                                  pt.size = pt.size,
+                                  cols = colors.use,
+                                  raster = raster,
+                                  raster.dpi = c(raster.dpi, raster.dpi))
+      } else {
+        p.loop <- Seurat::DimPlot(sample.use,
+                                  reduction = reduction,
+                                  group.by = group.by,
+                                  label = label,
+                                  dims = dims,
+                                  repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
+                                  label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                                  na.value = na.value,
+                                  shuffle = shuffle,
+                                  order = order,
+                                  pt.size = pt.size,
+                                  cols = colors.use,
+                                  raster = raster)
+      }
+      p.loop <- p.loop +
                 ggplot2::ggtitle(value) +
                 ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
                                                               ncol = legend.ncol,
@@ -511,15 +545,28 @@ do_DimPlot <- function(sample,
     for (iteration in plot_order){
       # Retrieve the cells that do belong to the iteration's split.by value.
       cells.highlight <- rownames(data.use)[which(data.use == iteration)]
-      p <- Seurat::DimPlot(sample,
-                           reduction = reduction,
-                           dims = dims,
-                           cells.highlight = cells.highlight,
-                           sizes.highlight = sizes.highlight,
-                           pt.size = pt.size,
-                           raster = raster,
-                           raster.dpi = c(raster.dpi, raster.dpi),
-                           ncol = ncol) &
+
+      if (utils::packageVersion("Seurat") >= "4.1.0"){
+        p <- Seurat::DimPlot(sample,
+                             reduction = reduction,
+                             dims = dims,
+                             cells.highlight = cells.highlight,
+                             sizes.highlight = sizes.highlight,
+                             pt.size = pt.size,
+                             raster = raster,
+                             raster.dpi = c(raster.dpi, raster.dpi),
+                             ncol = ncol)
+      } else {
+        p <- Seurat::DimPlot(sample,
+                             reduction = reduction,
+                             dims = dims,
+                             cells.highlight = cells.highlight,
+                             sizes.highlight = sizes.highlight,
+                             pt.size = pt.size,
+                             raster = raster,
+                             ncol = ncol)
+      }
+      p <- p &
         ggplot2::labs(title = iteration)
       p <- add_scale(p = p,
                      function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
@@ -588,15 +635,28 @@ do_DimPlot <- function(sample,
       cells.2 <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% idents.highlight])
       cells.use <- unique(c(cells.1, cells.2))
     }
-    p <- Seurat::DimPlot(sample,
-                         reduction = reduction,
-                         cells.highlight = cells.use,
-                         sizes.highlight = sizes.highlight,
-                         dims = dims,
-                         pt.size = pt.size,
-                         raster = raster,
-                         raster.dpi = c(raster.dpi, raster.dpi),
-                         ncol = ncol)
+
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
+      p <- Seurat::DimPlot(sample,
+                           reduction = reduction,
+                           cells.highlight = cells.use,
+                           sizes.highlight = sizes.highlight,
+                           dims = dims,
+                           pt.size = pt.size,
+                           raster = raster,
+                           raster.dpi = c(raster.dpi, raster.dpi),
+                           ncol = ncol)
+    } else {
+      p <- Seurat::DimPlot(sample,
+                           reduction = reduction,
+                           cells.highlight = cells.use,
+                           sizes.highlight = sizes.highlight,
+                           dims = dims,
+                           pt.size = pt.size,
+                           raster = raster,
+                           ncol = ncol)
+    }
+
     p <- add_scale(p = p,
                    function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected"),
                                                               values = c(na.value, colors.use),

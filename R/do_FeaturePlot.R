@@ -228,18 +228,34 @@ do_FeaturePlot <- function(sample,
                               permissive = TRUE)
     # Remove duplicated features.
     features <- remove_duplicated_features(features = features)
-    p <- Seurat::FeaturePlot(sample,
-                             features,
-                             slot = slot,
-                             reduction = reduction,
-                             order = order,
-                             dims = dims,
-                             pt.size = pt.size,
-                             ncol = ncol,
-                             raster = raster,
-                             raster.dpi = c(raster.dpi, raster.dpi),
-                             min.cutoff = min.cutoff,
-                             max.cutoff = max.cutoff) &
+
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
+      p <- Seurat::FeaturePlot(sample,
+                               features,
+                               slot = slot,
+                               reduction = reduction,
+                               order = order,
+                               dims = dims,
+                               pt.size = pt.size,
+                               ncol = ncol,
+                               raster = raster,
+                               raster.dpi = c(raster.dpi, raster.dpi),
+                               min.cutoff = min.cutoff,
+                               max.cutoff = max.cutoff)
+    } else {
+      p <- Seurat::FeaturePlot(sample,
+                               features,
+                               slot = slot,
+                               reduction = reduction,
+                               order = order,
+                               dims = dims,
+                               pt.size = pt.size,
+                               ncol = ncol,
+                               raster = raster,
+                               min.cutoff = min.cutoff,
+                               max.cutoff = max.cutoff)
+    }
+     p <- p &
       # Remove Seurat::FeaturePlot() default plot title.
       ggplot2::ggtitle("")
 
@@ -425,17 +441,31 @@ do_FeaturePlot <- function(sample,
       if (is.null(split.by)){
         feature.use <- "dummy"
 
-        p.loop <- Seurat::FeaturePlot(sample,
-                                      feature.use,
-                                      reduction = reduction,
-                                      slot = slot,
-                                      order = order,
-                                      dims = dims,
-                                      pt.size = pt.size,
-                                      raster = raster,
-                                      raster.dpi = c(raster.dpi, raster.dpi),
-                                      min.cutoff = min.cutoff.use,
-                                      max.cutoff = max.cutoff.use)
+        if (utils::packageVersion("Seurat") >= "4.1.0"){
+          p.loop <- Seurat::FeaturePlot(sample,
+                                        feature.use,
+                                        reduction = reduction,
+                                        slot = slot,
+                                        order = order,
+                                        dims = dims,
+                                        pt.size = pt.size,
+                                        raster = raster,
+                                        raster.dpi = c(raster.dpi, raster.dpi),
+                                        min.cutoff = min.cutoff.use,
+                                        max.cutoff = max.cutoff.use)
+        } else {
+          p.loop <- Seurat::FeaturePlot(sample,
+                                        feature.use,
+                                        reduction = reduction,
+                                        slot = slot,
+                                        order = order,
+                                        dims = dims,
+                                        pt.size = pt.size,
+                                        raster = raster,
+                                        min.cutoff = min.cutoff.use,
+                                        max.cutoff = max.cutoff.use)
+        }
+
 
         # Add scale.
 
@@ -531,17 +561,33 @@ do_FeaturePlot <- function(sample,
           cells.iteration <- sample@meta.data[, split.by] == iteration
           # Assign the cells that are not part of the iteration to NA.
           sample$dummy2[!(cells.iteration)] <- NA
-          p.loop <- Seurat::FeaturePlot(sample,
-                                        feature.use,
-                                        slot = slot,
-                                        reduction = reduction,
-                                        order = order,
-                                        dims = dims,
-                                        pt.size = pt.size,
-                                        raster = raster,
-                                        raster.dpi = c(raster.dpi, raster.dpi),
-                                        min.cutoff = min.cutoff.use,
-                                        max.cutoff = max.cutoff.use)
+
+          if (utils::packageVersion("Seurat") >= "4.1.0"){
+            p.loop <- Seurat::FeaturePlot(sample,
+                                          feature.use,
+                                          slot = slot,
+                                          reduction = reduction,
+                                          order = order,
+                                          dims = dims,
+                                          pt.size = pt.size,
+                                          raster = raster,
+                                          raster.dpi = c(raster.dpi, raster.dpi),
+                                          min.cutoff = min.cutoff.use,
+                                          max.cutoff = max.cutoff.use)
+          } else {
+            p.loop <- Seurat::FeaturePlot(sample,
+                                          feature.use,
+                                          slot = slot,
+                                          reduction = reduction,
+                                          order = order,
+                                          dims = dims,
+                                          pt.size = pt.size,
+                                          raster = raster,
+                                          min.cutoff = min.cutoff.use,
+                                          max.cutoff = max.cutoff.use)
+          }
+
+
 
           if (isFALSE(enforce_symmetry)){
             p.loop <- add_scale(p = p.loop,
