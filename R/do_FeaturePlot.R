@@ -51,7 +51,13 @@ do_FeaturePlot <- function(sample,
                            verbose = TRUE,
                            plot.axes = FALSE,
                            min.cutoff = rep(NA, length(features)),
-                           max.cutoff = rep(NA, length(features))){
+                           max.cutoff = rep(NA, length(features)),
+                           plot_density_contour = FALSE,
+                           contour.position = "bottom",
+                           contour.color = "grey90",
+                           contour.lineend = "butt",
+                           contour.linejoin = "round",
+                           contour_expand_axes = 0.25){
 
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
@@ -70,7 +76,8 @@ do_FeaturePlot <- function(sample,
                        "plot_cell_borders" = plot_cell_borders,
                        "order" = order,
                        "enforce_symmetry" = enforce_symmetry,
-                       "plot.axes" = plot.axes)
+                       "plot.axes" = plot.axes,
+                       "plot_density_contour" = plot_density_contour)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -84,7 +91,8 @@ do_FeaturePlot <- function(sample,
                        "border.size" = border.size,
                        "viridis_direction" = viridis_direction,
                        "min.cutoff" = min.cutoff,
-                       "max.cutoff" = max.cutoff)
+                       "max.cutoff" = max.cutoff,
+                       "contour_expand_axes" = contour_expand_axes)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -112,7 +120,11 @@ do_FeaturePlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "legend.title" = legend.title,
-                         "na.value" = na.value)
+                         "na.value" = na.value,
+                         "contour.position" = contour.position,
+                         "contour.color" = contour.color,
+                         "contour.lineend" = contour.lineend,
+                         "contour.linejoin" = contour.linejoin)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -137,17 +149,28 @@ do_FeaturePlot <- function(sample,
                             msg = 'Total number of individual captions does not match the number of features provided.')
   }
 
+  ## Check that the contour_expand_axes is between 0 and 1.
+  assertthat::assert_that(contour_expand_axes <= 1,
+                          msg = "Please provide a value to contour_expand_axes lower or equal than 1.")
+
+  assertthat::assert_that(contour_expand_axes >= 0,
+                          msg = "Please provide a value to contour_expand_axes higher or equal than 1.")
+
+
   check_colors(border.color, parameter_name = "border.color")
   check_colors(na.value, parameter_name = "na.value")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(contour.color, parameter_name = "contour.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
-
+  check_parameters(parameter = contour.lineend, parameter_name = "contour.lineend")
+  check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
+  check_parameters(parameter = contour.position, parameter_name = "contour.position")
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
@@ -289,6 +312,38 @@ do_FeaturePlot <- function(sample,
         p[[counter]]$layers <- append(base_layer, p[[counter]]$layers)
       }
     }
+    if (isTRUE(plot_density_contour)){
+      counter <- 0
+      for (feature in features){
+        counter <- counter + 1
+
+        data <- ggplot2::ggplot_build(p[[counter]])
+
+        density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = contour.color,
+                                                  lineend = contour.lineend,
+                                                  linejoin = contour.linejoin)
+        if (contour.position == "bottom"){
+          p[[counter]]$layers <- append(density_layer, p[[counter]]$layers)
+        } else if (contour.position == "top"){
+          p[[counter]]$layers <- append(p[[counter]]$layers, density_layer)
+        }
+
+        min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+        max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+        min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+        max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+        # Expand axes limits to allocate the new contours.
+        suppressMessages({
+          p[[counter]] <- p[[counter]] +
+            ggplot2::xlim(c(min_x, max_x)) +
+            ggplot2::ylim(c(min_y, max_y))
+        })
+
+      }
+      }
 
     # Modified FeaturePlot including only a subset of cells.
   } else {
@@ -415,6 +470,34 @@ do_FeaturePlot <- function(sample,
           p.loop$layers <- append(base_layer, p.loop$layers)
         }
 
+        if (isTRUE(plot_density_contour)){
+          data <- ggplot2::ggplot_build(p.loop)
+
+          density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                    mapping = ggplot2::aes(x = .data$x,
+                                                                           y = .data$y),
+                                                    color = contour.color,
+                                                    lineend = contour.lineend,
+                                                    linejoin = contour.linejoin)
+          if (contour.position == "bottom"){
+            p.loop$layers <- append(density_layer, p.loop$layers)
+          } else if (contour.position == "top"){
+            p.loop$layers <- append(p.loop$layers, density_layer)
+          }
+
+          min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+          max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+          min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+          max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+          # Expand axes limits to allocate the new contours.
+          suppressMessages({
+            p.loop <- p.loop +
+              ggplot2::xlim(c(min_x, max_x)) +
+              ggplot2::ylim(c(min_y, max_y))
+          })
+
+        }
+
       } else if (!(is.null(split.by))){
         # Recover all metadata.
         data <- sample[[]]
@@ -500,6 +583,34 @@ do_FeaturePlot <- function(sample,
           # Add cell borders.
           if (isTRUE(plot_cell_borders)){
             p.loop$layers <- append(base_layer, p.loop$layers)
+          }
+
+          if (isTRUE(plot_density_contour)){
+            data <- ggplot2::ggplot_build(p.loop)
+
+            density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                      mapping = ggplot2::aes(x = .data$x,
+                                                                             y = .data$y),
+                                                      color = contour.color,
+                                                      lineend = contour.lineend,
+                                                      linejoin = contour.linejoin)
+            if (contour.position == "bottom"){
+              p.loop$layers <- append(density_layer, p.loop$layers)
+            } else if (contour.position == "top"){
+              p.loop$layers <- append(p.loop$layers, density_layer)
+            }
+
+            min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+            max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+            min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+            max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+            # Expand axes limits to allocate the new contours.
+            suppressMessages({
+              p.loop <- p.loop +
+                ggplot2::xlim(c(min_x, max_x)) +
+                ggplot2::ylim(c(min_y, max_y))
+            })
+
           }
 
           list.plots.split.by[[iteration]] <- p.loop

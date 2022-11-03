@@ -4,6 +4,11 @@
 -   Implemented a change in which when using `split.by` and `group.by` in combination, the cells colored on top of the UMAP also have a border.
 -   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, the extra new layers would not raster if `raster = TRUE`.
 -   Implemented a bug-fix in which when using `split.by` and `group.by` in combination, no plots will appear if `ncol` is set.
+-   Implemented a new feature to add density line contours using `plot_density_contour`.
+
+## `SCpubr::do_FeaturePlot()`
+-   Implemented a new feature to add density line contours using `plot_density_contour`.
+
 
 ## `SCpubr::do_RidgePlot()`
 -   Implemented a bug-fix in which using `assay = "RNA"` or, in fact, any other assay rather than `SCT` will result in an error.

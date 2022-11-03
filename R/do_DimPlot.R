@@ -9,7 +9,6 @@
 #' @param repel \strong{\code{\link[base]{logical}}} | Whether to repel the labels if label is set to TRUE.
 #' @param label.color \strong{\code{\link[base]{character}}} | HEX code for the color of the text in the labels if label is set to TRUE.
 #' @return  A ggplot2 object containing a DimPlot.
-#'
 #' @export
 #'
 #' @example man/examples/examples_do_DimPlot.R
@@ -52,7 +51,13 @@ do_DimPlot <- function(sample,
                        marginal.type = "density",
                        marginal.size = 5,
                        marginal.group = TRUE,
-                       plot.axes = FALSE){
+                       plot.axes = FALSE,
+                       plot_density_contour = FALSE,
+                       contour.position = "bottom",
+                       contour.color = "grey90",
+                       contour.lineend = "butt",
+                       contour.linejoin = "round",
+                       contour_expand_axes = 0.25){
   check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -69,7 +74,8 @@ do_DimPlot <- function(sample,
                        "plot_marginal_distributions" = plot_marginal_distributions,
                        "marginal.group" = marginal.group,
                        "plot_cell_borders" = plot_cell_borders,
-                       "plot.axes" = plot.axes)
+                       "plot.axes" = plot.axes,
+                       "plot_density_contour" = plot_density_contour)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -81,7 +87,8 @@ do_DimPlot <- function(sample,
                        "ncol" = ncol,
                        "raster.dpi" = raster.dpi,
                        "marginal.size" = marginal.size,
-                       "border.size" = border.size)
+                       "border.size" = border.size,
+                       "contour_expand_axes" = contour_expand_axes)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -97,7 +104,11 @@ do_DimPlot <- function(sample,
                          "legend.title.position" = legend.title.position,
                          "font.type" = font.type,
                          "marginal.type" = marginal.type,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "contour.position" = contour.position,
+                         "contour.color" = contour.color,
+                         "contour.lineend" = contour.lineend,
+                         "contour.linejoin" = contour.linejoin)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Checks to ensure proper function.
@@ -124,9 +135,19 @@ do_DimPlot <- function(sample,
   check_colors(na.value, parameter_name = "na.value")
   ## Check the color assigned to border.color.
   check_colors(border.color, parameter_name = "border.color")
+  ## Check the color assigned to contour.color.
+  check_colors(contour.color, parameter_name = "contour.color")
+
   ## If the user provides more than one color to na.value, stop the function.
   assertthat::assert_that(length(na.value) == 1,
                           msg = "Please provide only one color to na.value.")
+
+  ## Check that the contour_expand_axes is between 0 and 1.
+  assertthat::assert_that(contour_expand_axes <= 1,
+                          msg = "Please provide a value to contour_expand_axes lower or equal than 1.")
+
+  assertthat::assert_that(contour_expand_axes >= 0,
+                          msg = "Please provide a value to contour_expand_axes higher or equal than 1.")
 
   # If the user provides raster = TRUE but the pt.size is less than 1, warn it.
   if (isTRUE(raster) & pt.size < 1){
@@ -136,6 +157,9 @@ do_DimPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = marginal.type, parameter_name = "marginal.type")
+  check_parameters(parameter = contour.lineend, parameter_name = "contour.lineend")
+  check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
+  check_parameters(parameter = contour.position, parameter_name = "contour.position")
 
   # If the user has not provided colors.
   if (is.null(colors.use)){
@@ -320,6 +344,31 @@ do_DimPlot <- function(sample,
     if (isTRUE(plot_cell_borders)){
       p$layers <- append(base_layer, p$layers)
     }
+
+    if (isTRUE(plot_density_contour)){
+      data <- ggplot2::ggplot_build(p)
+
+      density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                mapping = ggplot2::aes(x = .data$x,
+                                                                       y = .data$y),
+                                                color = contour.color,
+                                                lineend = contour.lineend,
+                                                linejoin = contour.linejoin)
+      if (contour.position == "bottom"){
+        p$layers <- append(density_layer, p$layers)
+      } else if (contour.position == "top"){
+        p$layers <- append(p$layers, density_layer)
+      }
+
+      min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+      max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+      min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+      max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+      # Expand axes limits to allocate the new contours.
+      p <- p +
+           ggplot2::xlim(c(min_x, max_x)) +
+           ggplot2::ylim(c(min_y, max_y))
+    }
   } else if (group_by_and_split_by_used){
     list.plots <- list()
     unique_values <- if(is.factor(sample@meta.data[, split.by])){levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))}
@@ -409,6 +458,32 @@ do_DimPlot <- function(sample,
       if (isTRUE(plot_cell_borders)){
         p.loop$layers <- append(base_layer, p.loop$layers)
       }
+
+      if (isTRUE(plot_density_contour)){
+        data <- ggplot2::ggplot_build(p.loop)
+
+        density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = contour.color,
+                                                  lineend = contour.lineend,
+                                                  linejoin = contour.linejoin)
+        if (contour.position == "bottom"){
+          p.loop$layers <- append(density_layer, p.loop$layers)
+        } else if (contour.position == "top"){
+          p.loop$layers <- append(p.loop$layers, density_layer)
+        }
+
+        min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+        max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+        min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+        max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+        # Expand axes limits to allocate the new contours.
+        p.loop <- p.loop +
+          ggplot2::xlim(c(min_x, max_x)) +
+          ggplot2::ylim(c(min_y, max_y))
+      }
+
       list.plots[[value]] <- p.loop
     }
     p <- patchwork::wrap_plots(list.plots, ncol = ncol, guides = "collect") +
@@ -461,6 +536,32 @@ do_DimPlot <- function(sample,
       if (isTRUE(plot_cell_borders)){
         p$layers <- append(base_layer, p$layers)
       }
+
+      if (isTRUE(plot_density_contour)){
+        data <- ggplot2::ggplot_build(p)
+
+        density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                  mapping = ggplot2::aes(x = .data$x,
+                                                                         y = .data$y),
+                                                  color = contour.color,
+                                                  lineend = contour.lineend,
+                                                  linejoin = contour.linejoin)
+        if (contour.position == "bottom"){
+          p$layers <- append(density_layer, p$layers)
+        } else if (contour.position == "top"){
+          p$layers <- append(p$layers, density_layer)
+        }
+
+        min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+        max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+        min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+        max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+        # Expand axes limits to allocate the new contours.
+        p <- p +
+          ggplot2::xlim(c(min_x, max_x)) +
+          ggplot2::ylim(c(min_y, max_y))
+      }
+
       list.plots[[iteration]] <- p
     }
     # Assemble individual plots as a patch.
@@ -511,6 +612,31 @@ do_DimPlot <- function(sample,
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){
       p$layers <- append(base_layer, p$layers)
+    }
+
+    if (isTRUE(plot_density_contour)){
+      data <- ggplot2::ggplot_build(p)
+
+      density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
+                                                mapping = ggplot2::aes(x = .data$x,
+                                                                       y = .data$y),
+                                                color = contour.color,
+                                                lineend = contour.lineend,
+                                                linejoin = contour.linejoin)
+      if (contour.position == "bottom"){
+        p$layers <- append(density_layer, p$layers)
+      } else if (contour.position == "top"){
+        p$layers <- append(p$layers, density_layer)
+      }
+
+      min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
+      max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
+      min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
+      max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
+      # Expand axes limits to allocate the new contours.
+      p <- p +
+        ggplot2::xlim(c(min_x, max_x)) +
+        ggplot2::ylim(c(min_y, max_y))
     }
 
   }

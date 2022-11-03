@@ -40,7 +40,10 @@ do_EnrichmentHeatmap(
      "List of Genes"
  },
   nbin = 24,
-  ctrl = 100
+  ctrl = 100,
+  flavor = "Seurat",
+  ncores = 1,
+  storeRanks = TRUE
 )
 }
 \arguments{
@@ -102,6 +105,12 @@ do_EnrichmentHeatmap(
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
+
+\item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
+
+\item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
+
+\item{storeRanks}{\strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.}
 }
 \value{
 A ComplexHeatmap object.

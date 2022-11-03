@@ -4,7 +4,9 @@
 #'
 #' @inheritParams doc_function
 #' @param symmetrical_scale \strong{\code{\link[base]{logical}}} | Whether to make the color scale symmetrical. Works best when use_viridis = FALSE.
-#'
+#' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
+#' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
+#' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -36,7 +38,10 @@ do_EnrichmentHeatmap <- function(sample,
                                  column_title = if (isFALSE(flip)){"List of Genes"} else {"Groups"},
                                  row_title = if (isFALSE(flip)){"Groups"} else {"List of Genes"},
                                  nbin = 24,
-                                 ctrl = 100){
+                                 ctrl = 100,
+                                 flavor = "Seurat",
+                                 ncores = 1,
+                                 storeRanks = TRUE){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -54,7 +59,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "row_title_rot" = row_title_rot,
                        "nbin" = nbin,
-                       "ctrl" = ctrl)
+                       "ctrl" = ctrl,
+                       "ncores" = ncores)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -66,13 +72,16 @@ do_EnrichmentHeatmap <- function(sample,
                          "legend.position" = legend.position,
                          "viridis_color_map" = viridis_color_map,
                          "row_names_side" = row_names_side,
-                         "row_title_side" = row_title_side)
+                         "row_title_side" = row_title_side,
+                         "flavor" = flavor)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   check_colors(na.value)
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
 
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = flavor, parameter_name = "flavor")
+
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
@@ -87,7 +96,14 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   # Compute the enrichment scores.
-  sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose, nbin = nbin, ctrl = ctrl)
+  sample <- compute_enrichment_scores(sample = sample,
+                                      input_gene_list = input_gene_list,
+                                      verbose = verbose,
+                                      nbin = nbin,
+                                      ctrl = ctrl,
+                                      flavor = flavor,
+                                      ncores = ncores,
+                                      storeRanks = storeRanks)
 
   list.heatmaps <- list()
   list.legends <- list()
