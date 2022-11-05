@@ -43,7 +43,9 @@ do_EnrichmentHeatmap(
   ctrl = 100,
   flavor = "Seurat",
   ncores = 1,
-  storeRanks = TRUE
+  storeRanks = TRUE,
+  min.cutoff = NULL,
+  max.cutoff = NULL
 )
 }
 \arguments{
@@ -111,6 +113,8 @@ do_EnrichmentHeatmap(
 \item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
 
 \item{storeRanks}{\strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Min and max values to subset the color scale. They have to be within the min and max values of the enrichment matrix.}
 }
 \value{
 A ComplexHeatmap object.

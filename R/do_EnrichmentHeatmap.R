@@ -7,6 +7,7 @@
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
+#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Min and max values to subset the color scale. They have to be within the min and max values of the enrichment matrix.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -41,7 +42,9 @@ do_EnrichmentHeatmap <- function(sample,
                                  ctrl = 100,
                                  flavor = "Seurat",
                                  ncores = 1,
-                                 storeRanks = TRUE){
+                                 storeRanks = TRUE,
+                                 min.cutoff = NULL,
+                                 max.cutoff = NULL){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -60,7 +63,9 @@ do_EnrichmentHeatmap <- function(sample,
                        "row_title_rot" = row_title_rot,
                        "nbin" = nbin,
                        "ctrl" = ctrl,
-                       "ncores" = ncores)
+                       "ncores" = ncores,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -113,8 +118,14 @@ do_EnrichmentHeatmap <- function(sample,
     group.by <- "dummy"
   }
 
-  assertthat::assert_that(isTRUE(group.by %in% colnames(sample@meta.data)),
-                          msg = "Please provide a name to group.by that is a categorical column in sample@meta.data.")
+  for (g in group.by){
+    assertthat::assert_that(g %in% colnames(sample@meta.data),
+                            msg = paste0("Value ", g, " in group.by is not in the sample metadata."))
+
+    assertthat::assert_that(class(sample@meta.data[, g]) %in% c("character", "factor"),
+                            msg = paste0("Value ", g, " in group.by is not a character or factor column in the metadata."))
+  }
+
 
   max_value_list <- c()
   min_value_list <- c()
@@ -140,6 +151,19 @@ do_EnrichmentHeatmap <- function(sample,
     min_value_list <- c(min_value_list, min_value)
   }
   range.data <- c(min(min_value_list), max(max_value_list))
+
+  if (!is.null(min.cutoff)){
+    assertthat::assert_that(min.cutoff >= range.data[1],
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
+    range.data <- c(min.cutoff, range.data[2])
+  }
+
+  if (!is.null(max.cutoff)){
+    assertthat::assert_that(max.cutoff <= range.data[2],
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
+    range.data <- c(range.data[1], max.cutoff)
+
+  }
 
 
   for (variant in group.by){
