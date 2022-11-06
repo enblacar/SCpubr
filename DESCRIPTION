@@ -55,8 +55,13 @@ Suggests:
     ggalluvial,
     testthat (>= 3.0.0),
     viridis,
-    UCell (>= 2.0)
+    UCell (>= 2.0),
+    liana (>= 0.1.6),
+    ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization
+Remotes: 
+    saezlab/liana,
+    davidsjoberg/ggsankey
