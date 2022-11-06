@@ -39,7 +39,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                      na.value = "grey75",
                                      viridis_color_map = "G",
                                      viridis_direction = 1,
-                                     verbose = FALSE){
+                                     verbose = FALSE,
+                                     min.cutoff = NULL,
+                                     max.cutoff = NULL){
 
 
   # Check logical parameters.
@@ -56,7 +58,9 @@ do_CopyNumberVariantPlot <- function(sample,
                        "pt.size" = pt.size,
                        "border.size" = border.size,
                        "viridis_direction" = viridis_direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -92,12 +96,11 @@ do_CopyNumberVariantPlot <- function(sample,
 
   # Fix for group.by.
   if (is.null(group.by)){
-    group.by <- "dummy"
-    sample@meta.data[["dummy"]] <- sample@active.ident
-  } else {
-    sample@meta.data[["dummy"]] <- sample@meta.data[, group.by]
-    group.by <- "dummy"
+    aggr_entities <- levels(sample)
+    sample@meta.data[, "Groups"] <- sample@active.ident
+    group.by <- "Groups"
   }
+
 
   # Retrieve the genes.
   genes <- infercnv_object@gene_order
@@ -181,7 +184,7 @@ do_CopyNumberVariantPlot <- function(sample,
   }
 
   sample@meta.data <- sample@meta.data %>%
-                      dplyr::mutate("group" = .data[["dummy"]],
+                      dplyr::mutate("group" = .data[[group.by]],
                                     "cells" = colnames(sample))
   for (event in events_list){
 
@@ -189,7 +192,7 @@ do_CopyNumberVariantPlot <- function(sample,
                        assay = NULL,
                        slot = NULL,
                        features = event,
-                       group.by = "group",
+                       group.by = group.by,
                        color.by = event,
                        pt.size = pt.size,
                        border.size = border.size,
@@ -206,12 +209,14 @@ do_CopyNumberVariantPlot <- function(sample,
                        legend.tickwidth = legend.tickwidth,
                        legend.length = legend.length,
                        legend.width = legend.width,
-                       xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
+                       xlab = group.by,
                        ylab = paste0(event, " score"),
                        legend.title = paste0(event, " scores"),
                        rotate_x_axis_labels = rotate_x_axis_labels,
                        viridis_color_map = viridis_color_map,
-                       viridis_direction = viridis_direction)
+                       viridis_direction = viridis_direction,
+                       min.cutoff = min.cutoff,
+                       max.cutoff = max.cutoff)
 
     # Plot the scores!
     p.f <- do_FeaturePlot(sample = sample,
@@ -231,7 +236,9 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.width = legend.width,
                           viridis_color_map = viridis_color_map,
                           viridis_direction = viridis_direction,
-                          legend.title = paste0(event, " scores"))
+                          legend.title = paste0(event, " scores"),
+                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
+                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),

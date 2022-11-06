@@ -4,9 +4,9 @@
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with dorothea regulon prior knowledge.
 #' @param n_tfs \strong{\code{\link[base]{numeric}}} | Number of top regulons to consider for downstream analysis.
-#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.
+#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
 #' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
-#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output dotplot for each of the top regulons and group.by variable.
+#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
 #' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
 #' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
@@ -202,7 +202,9 @@ do_TFActivityPlot <- function(sample,
                           legend.length = legend.length,
                           legend.width = legend.width,
                           viridis_color_map = viridis_color_map,
-                          viridis_direction = viridis_direction)
+                          viridis_direction = viridis_direction,
+                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
+                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
 
       list.features[[regulon]] <- p
     }
@@ -239,7 +241,9 @@ do_TFActivityPlot <- function(sample,
                          legend.title = if (is.null(geyser_color.by)) {paste0(regulon, " activity")} else {geyser_color.by},
                          rotate_x_axis_labels = rotate_x_axis_labels,
                          viridis_color_map = viridis_color_map,
-                         viridis_direction = viridis_direction)
+                         viridis_direction = viridis_direction,
+                         min.cutoff = min.cutoff,
+                         max.cutoff = max.cutoff)
       list.geysers[[regulon]] <- p
     }
     list.out[["geyser_plots"]] <- list.geysers

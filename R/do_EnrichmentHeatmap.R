@@ -3,16 +3,24 @@
 #' This function computes the enrichment scores for the cells using \link[Seurat]{AddModuleScore} and then aggregates the scores by the metadata variables provided by the user and displays it as a heatmap, computed by \link[ComplexHeatmap]{Heatmap}.
 #'
 #' @inheritParams doc_function
-#' @param symmetrical_scale \strong{\code{\link[base]{logical}}} | Whether to make the color scale symmetrical. Works best when use_viridis = FALSE.
+#' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
+#' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
+#' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
+#' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
+#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the gene lists.
+#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the gene lists and group.by variable.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
 #' @example /man/examples/examples_do_EnrichmentHeatmap.R
 do_EnrichmentHeatmap <- function(sample,
                                  input_gene_list,
+                                 assay = NULL,
+                                 slot = NULL,
+                                 reduction = NULL,
                                  group.by = NULL,
                                  verbose = FALSE,
                                  flip = FALSE,
@@ -30,7 +38,17 @@ do_EnrichmentHeatmap <- function(sample,
                                  heatmap.legend.length = 75,
                                  heatmap.legend.width = 5,
                                  heatmap.legend.framecolor = "black",
-                                 symmetrical_scale = FALSE,
+                                 legend.width = 1,
+                                 legend.length = 20,
+                                 legend.framewidth = 1.5,
+                                 legend.tickwidth = 1.5,
+                                 legend.framecolor = "grey50",
+                                 legend.tickcolor = "white",
+                                 legend.type = "colorbar",
+                                 font.size = 14,
+                                 font.type = "sans",
+                                 rotate_x_axis_labels = 45,
+                                 enforce_symmetry = FALSE,
                                  heatmap_gap = 0.5,
                                  row_names_side = "right",
                                  row_title_side = "left",
@@ -43,7 +61,15 @@ do_EnrichmentHeatmap <- function(sample,
                                  ncores = 1,
                                  storeRanks = TRUE,
                                  min.cutoff = NULL,
-                                 max.cutoff = NULL){
+                                 max.cutoff = NULL,
+                                 plot_FeaturePlots = FALSE,
+                                 plot_GeyserPlots = FALSE,
+                                 pt.size = 1,
+                                 plot_cell_borders = TRUE,
+                                 border.size = 2,
+                                 geyser_color.by = NULL,
+                                 geyser_order_by_mean = TRUE,
+                                 geyser_scale_type = "continuous"){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -52,7 +78,11 @@ do_EnrichmentHeatmap <- function(sample,
   logical_list <- list("cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
                        "use_viridis" = use_viridis,
-                       "symmetrical_scale" = symmetrical_scale)
+                       "enforce_symmetry" = enforce_symmetry,
+                       "plot_FeaturePlots" = plot_FeaturePlots,
+                       "plot_GeyserPlots" = plot_GeyserPlots,
+                       "plot_cell_borders" = plot_cell_borders,
+                       "geyser_order_by_mean" = geyser_order_by_mean)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -63,6 +93,15 @@ do_EnrichmentHeatmap <- function(sample,
                        "nbin" = nbin,
                        "ctrl" = ctrl,
                        "ncores" = ncores,
+                       "pt.size" = pt.size,
+                       "border.size" = border.size,
+                       "font.size" = font.size,
+                       "legend.width" = legend.width,
+                       "legend.length" = legend.length,
+                       "legend.framewidth" = legend.framewidth,
+                       "legend.tickwidth" = legend.tickwidth,
+                       "viridis_direction" = viridis_direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -71,13 +110,18 @@ do_EnrichmentHeatmap <- function(sample,
                          "column_title" = column_title,
                          "row_title" = row_title,
                          "legend.title" = legend.title,
+                         "legend.position" = legend.position,
+                         "legend.framecolor" = legend.framecolor,
+                         "font.type" = font.type,
                          "group.by" = group.by,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
                          "viridis_color_map" = viridis_color_map,
                          "row_names_side" = row_names_side,
                          "row_title_side" = row_title_side,
-                         "flavor" = flavor)
+                         "flavor" = flavor,
+                         "geyser_color.by" = geyser_color.by,
+                         "geyser_scale_type" = geyser_scale_type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   check_colors(na.value)
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
@@ -89,6 +133,14 @@ do_EnrichmentHeatmap <- function(sample,
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
+
+  if (!(is.null(assay)) & flavor == "UCell"){
+    stop("If setting flavor = UCell, do not use assay parameter. Instead, make sure the assay you want is set as default.", .call = FALSE)
+  }
+
+  if (!(is.null(slot)) & flavor == "Seurat"){
+    stop("If setting flavor = Seurat, do not use slot parameter. The slot is determined by default in Seurat.", .call = FALSE)
+  }
 
   if (is.character(input_gene_list)){
     # If input_gene_list is a character of genes.
@@ -107,14 +159,16 @@ do_EnrichmentHeatmap <- function(sample,
                                       ctrl = ctrl,
                                       flavor = flavor,
                                       ncores = ncores,
-                                      storeRanks = storeRanks)
+                                      storeRanks = storeRanks,
+                                      assay = assay,
+                                      slot = slot)
 
   list.heatmaps <- list()
   list.legends <- list()
   if (is.null(group.by)){
     aggr_entities <- levels(sample)
-    sample@meta.data[, "dummy"] <- sample@active.ident
-    group.by <- "dummy"
+    sample@meta.data[, "Groups"] <- sample@active.ident
+    group.by <- "Groups"
   }
 
   for (g in group.by){
@@ -217,7 +271,7 @@ do_EnrichmentHeatmap <- function(sample,
                          legend.width = heatmap.legend.width,
                          legend.framecolor = heatmap.legend.framecolor,
                          data_range = "both",
-                         symmetrical_scale = symmetrical_scale)
+                         symmetrical_scale = enforce_symmetry)
     list.heatmaps[[variant]] <- out[["heatmap"]]
     list.legends[[variant]] <- out[["legend"]]
   }
@@ -248,6 +302,88 @@ do_EnrichmentHeatmap <- function(sample,
                             ht_gap = ggplot2::unit(heatmap_gap, "cm"))
   grDevices::dev.off()
 
+  out.list <- list()
+  out.list[["heatmap"]] <- h
 
-  return(h)
+  if (isTRUE(plot_FeaturePlots)){
+    list.FeaturePlots <- list()
+    for (sig in names(input_gene_list)){
+      p <- do_FeaturePlot(sample = sample,
+                          features = sig,
+                          assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                          reduction = if(is.null(reduction)){Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]} else {reduction},
+                          slot = if (is.null(slot)){"data"} else {slot},
+                          pt.size = pt.size,
+                          order = FALSE,
+                          border.size = border.size,
+                          enforce_symmetry = enforce_symmetry,
+                          plot_cell_borders = plot_cell_borders,
+                          font.size = font.size,
+                          font.type = font.type,
+                          legend.position = legend.position,
+                          legend.type = legend.type,
+                          legend.framecolor = legend.framecolor,
+                          legend.tickcolor = legend.tickcolor,
+                          legend.framewidth = legend.framewidth,
+                          legend.tickwidth = legend.tickwidth,
+                          legend.length = legend.length,
+                          legend.width = legend.width,
+                          viridis_color_map = viridis_color_map,
+                          viridis_direction = viridis_direction,
+                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
+                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
+      list.FeaturePlots[[sig]] <- p
+    }
+    out.list[["FeaturePlots"]] <- list.FeaturePlots
+  }
+
+  for (var in group.by){
+    list.group.by = list()
+    if (isTRUE(plot_GeyserPlots)){
+      list.GeyserPlots <- list()
+      for (sig in names(input_gene_list)){
+        p <- do_GeyserPlot(sample = sample,
+                           assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                           slot = if (is.null(slot)){"data"} else {slot},
+                           features = sig,
+                           group.by = var,
+                           color.by = geyser_color.by,
+                           pt.size = pt.size,
+                           border.size = border.size,
+                           enforce_symmetry = enforce_symmetry,
+                           scale_type = geyser_scale_type,
+                           order_by_mean = geyser_order_by_mean,
+                           plot_cell_borders = plot_cell_borders,
+                           font.size = font.size,
+                           font.type = font.type,
+                           legend.position = legend.position,
+                           legend.type = legend.type,
+                           legend.framecolor = legend.framecolor,
+                           legend.tickcolor = legend.tickcolor,
+                           legend.framewidth = legend.framewidth,
+                           legend.tickwidth = legend.tickwidth,
+                           legend.length = legend.length,
+                           legend.width = legend.width,
+                           xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
+                           ylab = paste0(sig, " enrichment"),
+                           legend.title = if (is.null(geyser_color.by)) {paste0(sig, " enrichment")} else {geyser_color.by},
+                           rotate_x_axis_labels = rotate_x_axis_labels,
+                           viridis_color_map = viridis_color_map,
+                           viridis_direction = viridis_direction,
+                           min.cutoff = min.cutoff,
+                           max.cutoff = max.cutoff)
+        list.GeyserPlots[[sig]] <- p
+      }
+      list.group.by[[var]] <- list.GeyserPlots
+    }
+    out.list[["GeyserPlots"]] <- list.group.by
+  }
+
+  if (isFALSE(plot_GeyserPlots) & isFALSE(plot_FeaturePlots)){
+    return_object <- h
+  } else {
+    return_object <- out.list
+  }
+
+  return(return_object)
 }

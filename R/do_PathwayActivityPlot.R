@@ -2,7 +2,7 @@
 #'
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with progeny regulon prior knowledge.
-#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.
+#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
 #' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
 #' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
 #' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
@@ -158,7 +158,9 @@ do_PathwayActivityPlot <- function(sample,
                           legend.length = legend.length,
                           legend.width = legend.width,
                           viridis_color_map = viridis_color_map,
-                          viridis_direction = viridis_direction)
+                          viridis_direction = viridis_direction,
+                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
+                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
 
       list.features[[pathway]] <- p
     }
@@ -195,7 +197,9 @@ do_PathwayActivityPlot <- function(sample,
                          legend.title = if (is.null(geyser_color.by)) {paste0(pathway, " activity")} else {geyser_color.by},
                          rotate_x_axis_labels = rotate_x_axis_labels,
                          viridis_color_map = viridis_color_map,
-                         viridis_direction = viridis_direction)
+                         viridis_direction = viridis_direction,
+                         min.cutoff = min.cutoff,
+                         max.cutoff = max.cutoff)
       list.geysers[[pathway]] <- p
     }
     list.out[["geyser_plots"]] <- list.geysers

@@ -45,7 +45,9 @@ do_GeyserPlot(
   plot.caption = NULL,
   xlab = "Groups",
   ylab = feature,
-  flip = FALSE
+  flip = FALSE,
+  min.cutoff = NULL,
+  max.cutoff = NULL
 )
 }
 \arguments{
@@ -139,6 +141,8 @@ do_GeyserPlot(
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 }
 \value{
 Either a plot of a list of plots, depending on the number of features provided.

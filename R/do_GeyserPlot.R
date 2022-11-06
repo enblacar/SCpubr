@@ -61,7 +61,9 @@ do_GeyserPlot <- function(sample,
                           plot.caption = NULL,
                           xlab = "Groups",
                           ylab = feature,
-                          flip = FALSE){
+                          flip = FALSE,
+                          min.cutoff = NULL,
+                          max.cutoff = NULL){
 
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
@@ -152,11 +154,9 @@ do_GeyserPlot <- function(sample,
 
   # Assign group.by to a metadata variable.
   if (is.null(group.by)){
-    sample@meta.data[, "dummy"] <- sample@active.ident
-  } else {
-    sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
+    sample@meta.data[, "Groups"] <- sample@active.ident
+    group.by <- "Groups"
   }
-  group.by <- "dummy"
 
   # Iterate for each feature.
   for (feature in features){
@@ -178,6 +178,7 @@ do_GeyserPlot <- function(sample,
                                 msg = "With a categorical scale, color.by needs to be present in sample@meta.data.")
       }
     }
+
 
     # Get a vector of all dimensional reduction compontents.
     dim_colnames <- c()
@@ -267,7 +268,6 @@ do_GeyserPlot <- function(sample,
 
     }
 
-
     # Proceed with the regular plot.
     if (isTRUE(order_by_mean)){
       data <- data %>%
@@ -292,13 +292,39 @@ do_GeyserPlot <- function(sample,
 
     data <- data %>%
             dplyr::select(dplyr::all_of(cols.use))
+    # Define cutoffs.
+    range.data <- c(min(data[, "values"], na.rm = TRUE), max(data[, "values"], na.rm = TRUE))
 
-    # Plot
+    if (!is.null(min.cutoff) & !is.null(max.cutoff)){
+      assertthat::assert_that(min.cutoff < max.cutoff,
+                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
 
+      assertthat::assert_that(max.cutoff > min.cutoff,
+                              msg = paste0("The value provided for max.cutoff (", max.cutoff, ") has to be higher than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+      assertthat::assert_that(max.cutoff != min.cutoff,
+                              msg = paste0("The value provided for max.cutoff (", max.cutoff, ") can not be the same than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+    }
+
+    if (!is.null(min.cutoff)){
+      assertthat::assert_that(min.cutoff >= range.data[1],
+                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
+      range.data <- c(min.cutoff, range.data[2])
+    }
+
+    if (!is.null(max.cutoff)){
+      assertthat::assert_that(max.cutoff <= range.data[2],
+                              msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
+      range.data <- c(range.data[1], max.cutoff)
+    }
+
+
+    # Plot.
     p <- ggplot2::ggplot(data = data,
-                         mapping = ggplot2::aes(x = .data$group.by,
-                                                y = .data$values,
-                                                color = .data$color.by))
+                         mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                y = .data[["values"]],
+                                                color = .data[["color.by"]]))
 
     if (isTRUE(plot_cell_borders)){
       p <- p +
@@ -311,20 +337,29 @@ do_GeyserPlot <- function(sample,
 
     if (isTRUE(scale_type == "continuous")){
       if (isTRUE(enforce_symmetry)){
-        limits <- c(min(data[, "color.by"]),
-                    max(data[, "color.by"]))
+        limits <- c(min(data[, "color.by"], na.rm = TRUE),
+                    max(data[, "color.by"], na.rm = TRUE))
+        if (limits[1] != range.data[1]){
+          limits <- c(range.data[1], limits[2])
+        }
+
+        if (limits[2] != range.data[2]){
+          limits <- c(limits[1], range.data[2])
+        }
         end_value <- max(abs(limits))
         scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                                     limits = c(-end_value, end_value),
                                                     na.value = na.value)
+
       } else if (isFALSE(enforce_symmetry)){
         scale.use <- ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                                     na.value = na.value,
-                                                    direction = viridis_direction)
+                                                    direction = viridis_direction,
+                                                    limits = range.data)
       }
     } else if (isTRUE(scale_type == "categorical")){
       if (is.null(colors.use)){
-        values <- data %>% dplyr::pull(.data$color.by)
+        values <- data %>% dplyr::pull(.data[["color.by"]])
         names.use <- if (is.factor(values)){levels(values)} else {sort(unique(values))}
         colors.use <- generate_color_scale(names_use = names.use)
       } else {
@@ -333,6 +368,7 @@ do_GeyserPlot <- function(sample,
       scale.use <- ggplot2::scale_color_manual(values = colors.use,
                                                na.value = na.value)
     }
+
     p <- p +
          ggplot2::geom_point(position = ggplot2::position_jitter(width = jitter,
                                                                  seed = 0),
@@ -358,7 +394,8 @@ do_GeyserPlot <- function(sample,
            ggplot2::facet_grid(. ~ split.by)
     }
     p <- p +
-         ggplot2::scale_y_continuous(labels = scales::label_number()) +
+         ggplot2::scale_y_continuous(labels = scales::label_number(),
+                                     limits = if (isTRUE(enforce_symmetry)) {c(-end_value, end_value)} else {range.data}) +
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
@@ -422,6 +459,7 @@ do_GeyserPlot <- function(sample,
                                                          title.position = "top",
                                                          title.hjust = 0.5))
     }
+
     list.out[[feature]] <- p
   }
 

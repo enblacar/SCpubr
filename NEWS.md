@@ -1,6 +1,7 @@
 # SCpubr v1.0.2.9000
 ## General
 -   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ComplexHeatmap-based functions.
+-   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ggplot2-based functions susceptible to be biased by outliers.
 
 
 ## `SCpubr::do_DimPlot()`
@@ -12,11 +13,16 @@
 
 ## `SCpubr::do_EnrichmentHeatmap()`
 -   Implemented a bug fix for internal checks in the function.
+-   Added `plot_FeaturePlots` and `plot_GeyserPlots` to also report the enrichment scores in a gene set-based manner.
+-   Added `flavor` parameter, that accepts `Seurat` and `UCell` to allow for different enrichment scoring methods. It requires `R 4.2.0` to run.
+-   Renamed `symmetrical_scale` to `enforce_symmetry` to have a greater coherence accross functions.
 
 ## `SCpubr::do_FeaturePlot()`
 -   Implemented a new feature to add density line contours using `plot_density_contour`.
 -   Implemented the conditional use of `raster.dpi` to Seurat versions higher or equal to 4.1.0.
 
+## `SCpubr::do_GeyserPlot()`
+-   Fixed bug in which internal parameter names made it to the X axis title.
 
 ## `SCpubr::do_RidgePlot()`
 -   Implemented a bug-fix in which using `assay = "RNA"` or, in fact, any other assay rather than `SCT` will result in an error.

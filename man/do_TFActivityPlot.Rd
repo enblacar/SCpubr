@@ -60,11 +60,11 @@ do_TFActivityPlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.}
+\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 
 \item{plot_Heatmaps}{\strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.}
 
-\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output dotplot for each of the top regulons and group.by variable.}
+\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
 \item{geyser_color.by}{\strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 

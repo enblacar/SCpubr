@@ -57,7 +57,7 @@ do_PathwayActivityPlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output feature plots for each of the top regulons.}
+\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 
 \item{plot_Heatmaps}{\strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.}
 
