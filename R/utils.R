@@ -116,7 +116,7 @@
 #' @param contour.lineend \strong{\code{\link[base]{character}}} | Line end style (round, butt, square).
 #' @param contour.linejoin \strong{\code{\link[base]{character}}} | Line join style (round, mitre, bevel).
 #' @param contour_expand_axes \strong{\code{\link[base]{numeric}}} | To make the contours fit the plot, the limits of the X and Y axis are expanding a given percentage from the min and max values for each axis. This controls such percentage.
-#'
+#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal

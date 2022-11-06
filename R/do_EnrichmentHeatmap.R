@@ -7,7 +7,6 @@
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
-#' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Min and max values to subset the color scale. They have to be within the min and max values of the enrichment matrix.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -151,6 +150,17 @@ do_EnrichmentHeatmap <- function(sample,
     min_value_list <- c(min_value_list, min_value)
   }
   range.data <- c(min(min_value_list), max(max_value_list))
+  if (!is.null(min.cutoff) & !is.null(max.cutoff)){
+    assertthat::assert_that(min.cutoff < max.cutoff,
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
+
+    assertthat::assert_that(max.cutoff > min.cutoff,
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") has to be higher than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+    assertthat::assert_that(max.cutoff != min.cutoff,
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") can not be the same than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+  }
 
   if (!is.null(min.cutoff)){
     assertthat::assert_that(min.cutoff >= range.data[1],

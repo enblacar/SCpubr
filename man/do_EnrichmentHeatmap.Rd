@@ -114,7 +114,7 @@ do_EnrichmentHeatmap(
 
 \item{storeRanks}{\strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.}
 
-\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Min and max values to subset the color scale. They have to be within the min and max values of the enrichment matrix.}
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 }
 \value{
 A ComplexHeatmap object.

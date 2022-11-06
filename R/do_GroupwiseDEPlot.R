@@ -36,7 +36,9 @@ do_GroupwiseDEPlot <- function(sample,
                                row_title_side = "left",
                                row_title_rot = 90,
                                column_names_rot = 45,
-                               cell_size = 6){
+                               cell_size = 6,
+                               min.cutoff = NULL,
+                               max.cutoff = NULL){
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -50,7 +52,9 @@ do_GroupwiseDEPlot <- function(sample,
                        "heatmap_gap" = heatmap_gap,
                        "legend_gap" = legend_gap,
                        "row_title_rot" = row_title_rot,
-                       "column_names_rot" = column_names_rot)
+                       "column_names_rot" = column_names_rot,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -242,12 +246,35 @@ do_GroupwiseDEPlot <- function(sample,
     max_value_list <- c(max_value_list, max_value)
     min_value_list <- c(min_value_list, min_value)
   }
+  range.data <- c(min(min_value_list), max(max_value_list))
 
+  if (!is.null(min.cutoff) & !is.null(max.cutoff)){
+    assertthat::assert_that(min.cutoff < max.cutoff,
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
+
+    assertthat::assert_that(max.cutoff > min.cutoff,
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") has to be higher than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+    assertthat::assert_that(max.cutoff != min.cutoff,
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") can not be the same than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+  }
+
+  if (!is.null(min.cutoff)){
+    assertthat::assert_that(min.cutoff >= range.data[1],
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
+    range.data <- c(min.cutoff, range.data[2])
+  }
+
+  if (!is.null(max.cutoff)){
+    assertthat::assert_that(max.cutoff <= range.data[2],
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
+    range.data <- c(range.data[1], max.cutoff)
+  }
   counter <- 0
   for (variable in group.by){
     counter <- counter + 1
-    data_range <- if(slot == "data") {"only_pos"} else if (slot == "scale.data"){"both"}
-    range.data <- if(slot == "data") {max(max_value_list)} else if (slot == "scale.data") {c(min(min_value_list), max(max_value_list))}
+
     expression_out <- sample@meta.data %>%
       dplyr::select(dplyr::all_of(c(variable))) %>%
       tibble::rownames_to_column(var = "cell") %>%
@@ -275,7 +302,7 @@ do_GroupwiseDEPlot <- function(sample,
                     cluster_rows = FALSE,
                     row_names_side = row_names_side,
                     legend.title = "Mean expression",
-                    data_range = data_range,
+                    data_range = "both",
                     row_title = row_title_expression[counter],
                     legend.position = legend.position,
                     legend.length = heatmap.legend.length,

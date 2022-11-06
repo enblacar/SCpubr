@@ -32,7 +32,7 @@ do_TFActivityPlot <- function(sample,
                               cluster_cols = TRUE,
                               cluster_rows = TRUE,
                               row_names_rot = 0,
-                              column_names_rot = 90,
+                              column_names_rot = 45,
                               cell_size = 5,
                               pt.size = 1,
                               plot_cell_borders = TRUE,
@@ -56,7 +56,9 @@ do_TFActivityPlot <- function(sample,
                               geyser_order_by_mean = TRUE,
                               geyser_scale_type = "continuous",
                               viridis_color_map = "G",
-                              viridis_direction = 1){
+                              viridis_direction = 1,
+                              min.cutoff = NULL,
+                              max.cutoff = NULL){
   check_suggests(function_name = "do_TFActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -87,7 +89,9 @@ do_TFActivityPlot <- function(sample,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "viridis_direction" = viridis_direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -264,6 +268,21 @@ do_TFActivityPlot <- function(sample,
         data <- top_acts_mat_wide
       }
 
+      range.data <- c(min(data), max(data))
+
+      if (!is.null(min.cutoff)){
+        assertthat::assert_that(min.cutoff >= range.data[1],
+                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
+        range.data <- c(min.cutoff, range.data[2])
+      }
+
+      if (!is.null(max.cutoff)){
+        assertthat::assert_that(max.cutoff <= range.data[2],
+                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
+        range.data <- c(range.data[1], max.cutoff)
+
+      }
+
       out <- heatmap_inner(data,
                            legend.title = "TF activity",
                            column_title = column_title,
@@ -274,6 +293,8 @@ do_TFActivityPlot <- function(sample,
                            row_names_rot = row_names_rot,
                            cell_size = cell_size,
                            na.value = na.value,
+                           data_range = "both",
+                           range.data = range.data,
                            legend.position = legend.position,
                            legend.length = heatmap.legend.length,
                            legend.width = heatmap.legend.width,
@@ -294,7 +315,33 @@ do_TFActivityPlot <- function(sample,
       split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
       list.heatmaps <- list()
       # Get the maximum range.
-      range <- max(abs(top_acts_mat_wide))
+      range.data <- range.data <- c(min(top_acts_mat_wide), max(top_acts_mat_wide))
+
+      if (!is.null(min.cutoff) & !is.null(max.cutoff)){
+        assertthat::assert_that(min.cutoff < max.cutoff,
+                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
+
+        assertthat::assert_that(max.cutoff > min.cutoff,
+                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") has to be higher than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+        assertthat::assert_that(max.cutoff != min.cutoff,
+                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") can not be the same than the value provided to min.cutoff (", min.cutoff, "). Please select another value."))
+
+      }
+
+      if (!is.null(min.cutoff)){
+        assertthat::assert_that(min.cutoff >= range.data[1],
+                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
+        range.data <- c(min.cutoff, range.data[2])
+      }
+
+      if (!is.null(max.cutoff)){
+        assertthat::assert_that(max.cutoff <= range.data[2],
+                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
+        range.data <- c(range.data[1], max.cutoff)
+
+      }
+
       for (split.value in split.values){
         suppressMessages({
           data <- sample@assays$dorothea@scale.data[tfs, ] %>%
@@ -339,6 +386,8 @@ do_TFActivityPlot <- function(sample,
                              row_names_rot = row_names_rot,
                              cell_size = cell_size,
                              na.value = na.value,
+                             data_range = "both",
+                             range.data = range.data,
                              legend.position = legend.position,
                              legend.length = heatmap.legend.length,
                              legend.width = heatmap.legend.width,

@@ -1,4 +1,7 @@
 # SCpubr v1.0.2.9000
+## General
+-   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ComplexHeatmap-based functions.
+
 
 ## `SCpubr::do_DimPlot()`
 -   Implemented a change in which when using `split.by` and `group.by` in combination, the cells colored on top of the UMAP also have a border.
@@ -9,7 +12,6 @@
 
 ## `SCpubr::do_EnrichmentHeatmap()`
 -   Implemented a bug fix for internal checks in the function.
--   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in the matrix.
 
 ## `SCpubr::do_FeaturePlot()`
 -   Implemented a new feature to add density line contours using `plot_density_contour`.
