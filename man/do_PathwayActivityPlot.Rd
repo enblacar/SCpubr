@@ -19,7 +19,6 @@ do_PathwayActivityPlot(
   cluster_rows = TRUE,
   row_names_rot = 0,
   column_names_rot = 45,
-  geyser_color.by = NULL,
   cell_size = 5,
   pt.size = 1,
   plot_cell_borders = TRUE,
@@ -74,8 +73,6 @@ do_PathwayActivityPlot(
 \item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
 
 \item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
-
-\item{geyser_color.by}{\strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 

@@ -7,7 +7,6 @@
 #' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
 #' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
 #' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
-#' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
 #' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
@@ -25,7 +24,6 @@ do_TFActivityPlot <- function(sample,
                               plot_FeaturePlots = FALSE,
                               plot_Heatmaps = TRUE,
                               plot_GeyserPlots = FALSE,
-                              geyser_color.by = NULL,
                               row_title = NULL,
                               column_title = NULL,
                               flip = FALSE,
@@ -219,7 +217,6 @@ do_TFActivityPlot <- function(sample,
                          slot = "scale.data",
                          features = regulon,
                          group.by = group.by,
-                         color.by = geyser_color.by,
                          pt.size = pt.size,
                          border.size = border.size,
                          enforce_symmetry = enforce_symmetry,
@@ -238,7 +235,7 @@ do_TFActivityPlot <- function(sample,
                          legend.width = legend.width,
                          xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
                          ylab = paste0(regulon, " activity"),
-                         legend.title = if (is.null(geyser_color.by)) {paste0(regulon, " activity")} else {geyser_color.by},
+                         legend.title = paste0(regulon, " activity"),
                          rotate_x_axis_labels = rotate_x_axis_labels,
                          viridis_color_map = viridis_color_map,
                          viridis_direction = viridis_direction,

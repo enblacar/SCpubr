@@ -5,7 +5,6 @@
 #' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
 #' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
 #' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
-#' @param geyser_color.by \strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.
 #' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
 #'
@@ -28,7 +27,6 @@ do_PathwayActivityPlot <- function(sample,
                                    cluster_rows = TRUE,
                                    row_names_rot = 0,
                                    column_names_rot = 45,
-                                   geyser_color.by = NULL,
                                    cell_size = 5,
                                    pt.size = 1,
                                    plot_cell_borders = TRUE,
@@ -98,7 +96,6 @@ do_PathwayActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "geyser_color.by" = geyser_color.by,
                          "geyser_scale_type" = geyser_scale_type,
                          "viridis_color_map" = viridis_color_map)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -175,7 +172,6 @@ do_PathwayActivityPlot <- function(sample,
                          slot = "scale.data",
                          features = pathway,
                          group.by = group.by,
-                         color.by = geyser_color.by,
                          pt.size = pt.size,
                          border.size = border.size,
                          enforce_symmetry = enforce_symmetry,
@@ -194,7 +190,7 @@ do_PathwayActivityPlot <- function(sample,
                          legend.width = legend.width,
                          xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
                          ylab = paste0(pathway, " activity"),
-                         legend.title = if (is.null(geyser_color.by)) {paste0(pathway, " activity")} else {geyser_color.by},
+                         legend.title = paste0(pathway, " activity"),
                          rotate_x_axis_labels = rotate_x_axis_labels,
                          viridis_color_map = viridis_color_map,
                          viridis_direction = viridis_direction,
@@ -312,7 +308,25 @@ do_PathwayActivityPlot <- function(sample,
       split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
       list.heatmaps <- list()
       # Get the maximum range.
-      range.data <- c(min(abs(sample@assays$progeny@scale.data)), max(abs(sample@assays$progeny@scale.data)))
+      data <- sample@assays$progeny@scale.data %>%
+        t() %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(var = "cell") %>%
+        dplyr::left_join(y = {sample@meta.data[, c(group.by, split.by)] %>%
+            tibble::rownames_to_column(var = "cell")},
+            by = "cell") %>%
+        dplyr::select(-dplyr::all_of(c("cell", split.by))) %>%
+        tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
+                            names_to = "source",
+                            values_to = "score") %>%
+        dplyr::group_by(.data[[group.by]], .data$source) %>%
+        dplyr::summarise(mean = mean(.data$score)) %>%
+        tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
+                           names_from = 'source',
+                           values_from = 'mean') %>%
+        tibble::column_to_rownames(group.by) %>%
+        as.matrix()
+      range.data <- c(min(data), max(data))
 
       if (!is.null(min.cutoff)){
         assertthat::assert_that(min.cutoff >= range.data[1],
@@ -363,6 +377,7 @@ do_PathwayActivityPlot <- function(sample,
                              row_title = row_title,
                              cluster_columns = cluster_cols,
                              cluster_rows = cluster_rows,
+                             range.data = range.data,
                              column_names_rot = column_names_rot,
                              row_names_rot = row_names_rot,
                              cell_size = cell_size,

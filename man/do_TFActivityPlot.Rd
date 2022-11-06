@@ -13,7 +13,6 @@ do_TFActivityPlot(
   plot_FeaturePlots = FALSE,
   plot_Heatmaps = TRUE,
   plot_GeyserPlots = FALSE,
-  geyser_color.by = NULL,
   row_title = NULL,
   column_title = NULL,
   flip = FALSE,
@@ -65,8 +64,6 @@ do_TFActivityPlot(
 \item{plot_Heatmaps}{\strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.}
 
 \item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
-
-\item{geyser_color.by}{\strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 
 \item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
 

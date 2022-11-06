@@ -49,47 +49,6 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_GeyserPlot: PASS - default parameters = color.by", {
-    testthat::skip_on_cran()
-
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               scale_type = "categorical",
-                               color.by = "orig.ident")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               scale_type = "continuous",
-                               color.by = "PC_1")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "PC_2",
-                               scale_type = "categorical",
-                               color.by = "orig.ident")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "PC_2",
-                               scale_type = "continuous",
-                               color.by = "nCount_RNA")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "nCount_RNA",
-                               scale_type = "categorical",
-                               color.by = "orig.ident")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "nCount_RNA",
-                               scale_type = "continuous",
-                               color.by = "EPC1")
-    testthat::expect_type(p, "list")
-  })
-
 
   testthat::test_that("do_GeyserPlot: PASS - categorical colors.use", {
     testthat::skip_on_cran()
@@ -180,10 +139,6 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
     testthat::expect_error(SCpubr::do_GeyserPlot(sample = sample,
                                                  features = "EPC1",
                                                  jitter = 1))
-    testthat::expect_error(SCpubr::do_GeyserPlot(sample = sample,
-                                                 features = "EPC1",
-                                                 scale_type = "categorical",
-                                                 color.by = "EPC1"))
   })
 
   testthat::test_that("do_GeyserPlot: PASS - show legend", {
@@ -207,35 +162,6 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
                                features = c("EPC1", "PC_1"))
     testthat::expect_type(p, "list")
     testthat::expect_length(p, 2)
-  })
-
-  testthat::test_that("do_GeyserPlot: PASS - color.by factor", {
-    testthat::skip_on_cran()
-
-
-    sample$seurat_clusters_factor <- as.factor(sample$seurat_clusters)
-    sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               color.by = "seurat_clusters_factor")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               color.by = "seurat_clusters_character")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               scale_type = "categorical",
-                               color.by = "seurat_clusters_character")
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_GeyserPlot(sample = sample,
-                               features = "EPC1",
-                               scale_type = "categorical",
-                               color.by = "seurat_clusters_factor")
-    testthat::expect_type(p, "list")
   })
 
 }

@@ -62,13 +62,6 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
                                           plot_GeyserPlots = TRUE)
     testthat::expect_type(out, "list")
     testthat::expect_length(out, 2)
-
-    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                          activities = progeny_activities,
-                                          plot_GeyserPlots = TRUE,
-                                          geyser_color.by = "nCount_RNA")
-    testthat::expect_type(out, "list")
-    testthat::expect_length(out, 2)
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - all", {

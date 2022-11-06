@@ -23,6 +23,7 @@
 
 ## `SCpubr::do_GeyserPlot()`
 -   Fixed bug in which internal parameter names made it to the X axis title.
+-   Removed `color.by` implementation due to it being very buggy. This will be re-implemented in a future patch.
 
 ## `SCpubr::do_RidgePlot()`
 -   Implemented a bug-fix in which using `assay = "RNA"` or, in fact, any other assay rather than `SCT` will result in an error.

@@ -72,13 +72,6 @@ if(isFALSE(dep_check[["do_TFActivityPlot"]])){
                                      plot_GeyserPlots = TRUE)
     testthat::expect_type(out, "list")
     testthat::expect_length(out, 2)
-
-    out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                     activities = dorothea_activities,
-                                     plot_GeyserPlots = TRUE,
-                                     geyser_color.by = "nCount_RNA")
-    testthat::expect_type(out, "list")
-    testthat::expect_length(out, 2)
   })
 
   testthat::test_that("do_TFActivityPlot: PASS - all", {

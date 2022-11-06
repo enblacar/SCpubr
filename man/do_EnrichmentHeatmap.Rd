@@ -64,7 +64,6 @@ do_EnrichmentHeatmap(
   pt.size = 1,
   plot_cell_borders = TRUE,
   border.size = 2,
-  geyser_color.by = NULL,
   geyser_order_by_mean = TRUE,
   geyser_scale_type = "continuous"
 )
@@ -178,8 +177,6 @@ do_EnrichmentHeatmap(
 \item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
-
-\item{geyser_color.by}{\strong{\code{\link[base]{character}}} | Additional variable to color the Geyser plots by, as the Y axis and the color scale are repeated. Has to be a continuous variable.}
 
 \item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
 

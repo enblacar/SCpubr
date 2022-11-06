@@ -9,13 +9,12 @@
 #' @inheritParams doc_function
 #' @param scale_type \strong{\code{\link[base]{character}}} | Type of color scale to use.  One of:
 #' \itemize{
-#'   \item \emph{\code{categorical}}: Use a categorical color scale based on the values of "color.by" or "group.by".
-#'   \item \emph{\code{continuous}}: Use a continuous color scale based on the values of "color.by" or "feature".
+#'   \item \emph{\code{categorical}}: Use a categorical color scale based on the values of "group.by".
+#'   \item \emph{\code{continuous}}: Use a continuous color scale based on the values of "feature".
 #' }
-#' @param color.by \strong{\code{\link[base]{character}}} | Metadata variable to color the cells by if scale is categorical or continuous variable if the scale is continuous.
 #' @param order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the groups by the mean of the data (highest to lowest).
 #' @param jitter \strong{\code{\link[base]{numeric}}} | Amount of jitter in the plot along the X axis. The lower the value, the more compacted the dots are.
-#' @param colors.use \strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.
+#' @param colors.use \strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by when scale_type is set to categorical.
 #'
 #' @return Either a plot of a list of plots, depending on the number of features provided.
 #' @export
@@ -29,7 +28,6 @@ do_GeyserPlot <- function(sample,
                           split.by = NULL,
                           enforce_symmetry = FALSE,
                           scale_type = "continuous",
-                          color.by = NULL,
                           order_by_mean = TRUE,
                           plot_cell_borders = TRUE,
                           jitter = 0.45,
@@ -165,21 +163,6 @@ do_GeyserPlot <- function(sample,
                   features = feature)
 
 
-    # If the user wants additional coloring, if not default to feature or group.by.
-    if (isTRUE(scale_type == "continuous")){
-      if (is.null(color.by)){
-        color.by <- feature
-      }
-    } else if (isTRUE(scale_type == "categorical")){
-      if (is.null(color.by)){
-        color.by <- group.by
-      } else {
-        assertthat::assert_that(color.by %in% colnames(sample@meta.data),
-                                msg = "With a categorical scale, color.by needs to be present in sample@meta.data.")
-      }
-    }
-
-
     # Get a vector of all dimensional reduction compontents.
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
@@ -189,34 +172,6 @@ do_GeyserPlot <- function(sample,
         # Get the reduction in which the feature is, if this is the case.
         reduction <- red
       }
-
-      if (color.by %in% col.names){
-        # Get the reduction in which the feature is, if this is the case.
-        reduction_color.by <- red
-      }
-    }
-
-
-    # Generate a column for the color.by parameter that will be added later on to the data dataframe.
-    if (isTRUE(color.by %in% colnames(sample@meta.data))){
-      color.by_column <- sample@meta.data %>%
-                         dplyr::select(dplyr::all_of(c(color.by))) %>%
-                         tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
-    } else if (isTRUE(color.by %in% rownames(sample))){
-      color.by_column <- Seurat::GetAssayData(object = sample,
-                                              assay = assay,
-                                              slot = slot)[color.by, , drop = FALSE] %>%
-                         as.matrix() %>%
-                         t() %>%
-                         as.data.frame() %>%
-                         tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
-    } else if (isTRUE(color.by %in% dim_colnames)){
-      color.by_column <- sample@reductions[[reduction_color.by]][[]][, color.by, drop = FALSE] %>%
-                         as.data.frame() %>%
-                         tibble::rownames_to_column(var = "cell") %>%
-                         dplyr::rename("color.by" = dplyr::all_of(c(color.by)))
     }
 
 
@@ -225,8 +180,6 @@ do_GeyserPlot <- function(sample,
       data <- sample@meta.data %>%
               dplyr::select(dplyr::all_of(c(group.by, feature))) %>%
               tibble::rownames_to_column(var = "cell") %>%
-              dplyr::left_join(y = color.by_column,
-                               by = "cell") %>%
               tibble::as_tibble()
     } else if (isTRUE(feature %in% rownames(sample))){
       data <- Seurat::GetAssayData(object = sample,
@@ -237,8 +190,6 @@ do_GeyserPlot <- function(sample,
               as.data.frame() %>%
               tibble::rownames_to_column(var = "cell") %>%
               tibble::tibble() %>%
-              dplyr::left_join(y = color.by_column,
-                               by = "cell") %>%
               dplyr::left_join(y = {sample@meta.data %>%
                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
@@ -247,8 +198,6 @@ do_GeyserPlot <- function(sample,
       data <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
               as.data.frame() %>%
               tibble::rownames_to_column(var = "cell") %>%
-              dplyr::left_join(y = color.by_column,
-                               by = "cell") %>%
               tibble::tibble() %>%
               dplyr::left_join(y = {sample@meta.data %>%
                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
@@ -285,15 +234,17 @@ do_GeyserPlot <- function(sample,
     }
 
     # Get the final column names.
-    cols.use <- c("values", "group.by", "color.by")
+    cols.use <- c("values", "group.by")
     if (!(is.null(split.by))){
       cols.use <- append(cols.use, "split.by")
     }
 
     data <- data %>%
             dplyr::select(dplyr::all_of(cols.use))
+
     # Define cutoffs.
     range.data <- c(min(data[, "values"], na.rm = TRUE), max(data[, "values"], na.rm = TRUE))
+
 
     if (!is.null(min.cutoff) & !is.null(max.cutoff)){
       assertthat::assert_that(min.cutoff < max.cutoff,
@@ -324,7 +275,7 @@ do_GeyserPlot <- function(sample,
     p <- ggplot2::ggplot(data = data,
                          mapping = ggplot2::aes(x = .data[["group.by"]],
                                                 y = .data[["values"]],
-                                                color = .data[["color.by"]]))
+                                                color = if (scale_type == "categorical"){.data[["group.by"]]} else {.data[["values"]]}))
 
     if (isTRUE(plot_cell_borders)){
       p <- p +
@@ -337,8 +288,8 @@ do_GeyserPlot <- function(sample,
 
     if (isTRUE(scale_type == "continuous")){
       if (isTRUE(enforce_symmetry)){
-        limits <- c(min(data[, "color.by"], na.rm = TRUE),
-                    max(data[, "color.by"], na.rm = TRUE))
+        limits <- c(min(data[, "values"], na.rm = TRUE),
+                    max(data[, "values"], na.rm = TRUE))
         if (limits[1] != range.data[1]){
           limits <- c(range.data[1], limits[2])
         }
@@ -358,8 +309,18 @@ do_GeyserPlot <- function(sample,
                                                     limits = range.data)
       }
     } else if (isTRUE(scale_type == "categorical")){
+      limits <- c(min(data[, "values"], na.rm = TRUE),
+                  max(data[, "values"], na.rm = TRUE))
+      if (limits[1] != range.data[1]){
+        limits <- c(range.data[1], limits[2])
+      }
+
+      if (limits[2] != range.data[2]){
+        limits <- c(limits[1], range.data[2])
+      }
+      end_value <- max(abs(limits))
       if (is.null(colors.use)){
-        values <- data %>% dplyr::pull(.data[["color.by"]])
+        values <- data %>% dplyr::pull(.data[["values"]])
         names.use <- if (is.factor(values)){levels(values)} else {sort(unique(values))}
         colors.use <- generate_color_scale(names_use = names.use)
       } else {
@@ -433,7 +394,7 @@ do_GeyserPlot <- function(sample,
 
     if (isTRUE(scale_type == "continuous")){
       if (is.null(legend.title)){
-        legend.title <- color.by
+        legend.title <- feature
       }
       p <- modify_continuous_legend(p = p,
                                     legend.title = legend.title,
