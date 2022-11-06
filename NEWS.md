@@ -1,4 +1,4 @@
-# SCpubr v1.0.2.9000
+# SCpubr v1.0.3
 ## General
 -   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ComplexHeatmap-based functions.
 -   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ggplot2-based functions susceptible to be biased by outliers.
