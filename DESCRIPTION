@@ -1,7 +1,7 @@
 Package: SCpubr
 Type: Package
 Title: Generate Publication Ready Visualizations of Single Cell Transcriptomics Data
-Version: 1.0.4
+Version: 1.0.4.9000
 Authors@R: person("Enrique", "Blanco-Carmona", email = "scpubr@gmail.com", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-1208-1691"))
 Description: A system that provides a streamlined way of generating publication ready plots for known Single-Cell transcriptomics data in a “publication ready” format. This is, the goal is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article.
 License: GPL-3
@@ -55,9 +55,13 @@ Suggests:
     ggalluvial,
     testthat (>= 3.0.0),
     viridis,
-    UCell (>= 2.0)
+    UCell (>= 2.0),
+    liana (>= 0.1.6),
+    ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization
-
+Remotes: 
+    saezlab/liana,
+    davidsjoberg/ggsankey

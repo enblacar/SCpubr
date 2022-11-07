@@ -1,5 +1,8 @@
+# Resubmission.
+Fixed broken link in NEWS.md.
+
 # Submission version 1.0.4
-This version aims perform a hotfix to an unintended bug introduced in 1.0.3.
+This version aims perform a hotfix to an unintended bug that breaks functionality in an unexpected way not covered by the tests, introduced in 1.0.3.
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 
