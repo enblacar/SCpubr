@@ -1,5 +1,5 @@
-# Submission version 1.0.3
-This version aims to add multiple user-requested functionalities and several bug fixes.
+# Submission version 1.0.4
+This version aims perform a hotfix to an unintended bug introduced in 1.0.3.
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 

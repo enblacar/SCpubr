@@ -1,5 +1,10 @@
+# SCpubr v1.0.4
+-   Hotfix for v1.0.3 in which `do_GeyserPlot` with categorical variables had a bug that mapped the legend to the continuous axis.
+
 # SCpubr v1.0.3
-## General
+
+## General changes
+
 -   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ComplexHeatmap-based functions.
 -   Added `min.cutoff` and `max.cutoff` parameter to effectively subset the color scale and remove the effect of extreme outliers in all ggplot2-based functions susceptible to be biased by outliers.
 
@@ -32,6 +37,16 @@
 ## `SCpubr::do_ViolinPlot()`
 -   Corrected a bug in which legend title when using `split.by` was an actual line of code.
 -   Added `legend.title` parameter to control the title of the legend.
+
+This version can be obtained in the [v1.0.3 release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.3) release or **downloading it from CRAN** using:
+
+
+### SCpubr v.1.0.3-dev-stable
+-   Same as v1.0.3, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
+
+This version can be obtained in the [v1.0.3-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v.1.0.3-dev-stable) release.
+
+
 
 # SCpubr v1.0.2
 
@@ -80,27 +95,25 @@
 -   Changed `feature` parameter to `features`, to better reflect the multiple feature behavior.
 -   Recreated `Seurat`'s `share.y.lims` behavior and set it to `share.y.lims` parameter. ([#5](https://github.com/enblacar/SCpubr/issues/5#issuecomment-1289203453))
 
-## SCpubr v1.0.2-dev-stable
+### SCpubr v1.0.2-dev-stable
 
 -   Same as v1.0.2, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
 
 This version can be obtained in the [v1.0.2-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.2-dev-stable) release.
 
+
+
 # SCpubr v1.0.1
 
 -   Rework on unit tests and examples so that it can pass CRAN R CMD Check without packages in Suggests. This is, to make sure all Suggested packages are used conditionally.
-
-This version can be obtained in the [v1.0.1 release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.1) release or **downloading it from CRAN** using:
-
-``` r
-install.packages("SCpubr")
-```
 
 ## SCpubr v1.0.1-dev-stable
 
 -   Same as v1.0.1, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
 
 This version can be obtained in the [v1.0.1-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.1-dev-stable) release.
+
+
 
 # SCpubr v1.0.0
 
@@ -117,6 +130,8 @@ This version can be obtained in the [v1.0.0 release](https://github.com/enblacar
 -   Same as v1.0.0, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
 
 This version can be obtained in the [v1.0.0-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.0-dev-stable) release.
+
+
 
 # SCpubr 0.0.0.9000
 

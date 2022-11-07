@@ -320,7 +320,7 @@ do_GeyserPlot <- function(sample,
       }
       end_value <- max(abs(limits))
       if (is.null(colors.use)){
-        values <- data %>% dplyr::pull(.data[["values"]])
+        values <- data %>% dplyr::pull(.data[["group.by"]])
         names.use <- if (is.factor(values)){levels(values)} else {sort(unique(values))}
         colors.use <- generate_color_scale(names_use = names.use)
       } else {
