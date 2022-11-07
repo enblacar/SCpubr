@@ -38,13 +38,9 @@
 -   Corrected a bug in which legend title when using `split.by` was an actual line of code.
 -   Added `legend.title` parameter to control the title of the legend.
 
-This version can be obtained in the [v1.0.3 release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.3) release or **downloading it from CRAN** using:
-
 
 ### SCpubr v.1.0.3-dev-stable
 -   Same as v1.0.3, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
-
-This version can be obtained in the [v1.0.3-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v.1.0.3-dev-stable) release.
 
 
 
@@ -99,9 +95,6 @@ This version can be obtained in the [v1.0.3-dev-stable release](https://github.c
 
 -   Same as v1.0.2, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
 
-This version can be obtained in the [v1.0.2-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.2-dev-stable) release.
-
-
 
 # SCpubr v1.0.1
 
@@ -110,9 +103,6 @@ This version can be obtained in the [v1.0.2-dev-stable release](https://github.c
 ## SCpubr v1.0.1-dev-stable
 
 -   Same as v1.0.1, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
-
-This version can be obtained in the [v1.0.1-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.1-dev-stable) release.
-
 
 
 # SCpubr v1.0.0
@@ -123,13 +113,9 @@ This version can be obtained in the [v1.0.1-dev-stable release](https://github.c
 -   Removed `SCpubr::do_LigandReceptorPlot()`, `SCpubr::do_SankeyPlot()` and `SCpubr::do_PseudotimePlot()` to align with CRAN policies and make it possible to publish the package. These functions can still be accessed in the v0.0.0.0.9000 release in Github.
 -   Removed `SCpubr::do_PseudotimePlot()` for the reason above and because the dependency `Matrix.utils` was removed from CRAN on *09-10-2022*.
 
-This version can be obtained in the [v1.0.0 release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.0) release.
-
 ## SCpubr v1.0.0-dev-stable
 
 -   Same as v1.0.0, but with all the functions that do not pass CRAN checks. These functions are: `SCpubr::save_Plot()` `SCpubr::do_LigandReceptorPlot()` and `SCpubr::do_SankeyPlot()`.
-
-This version can be obtained in the [v1.0.0-dev-stable release](https://github.com/enblacar/SCpubr/releases/tag/v1.0.0-dev-stable) release.
 
 
 
