@@ -17,7 +17,7 @@ do_CorrelationPlot(
   row_names_rot = 0,
   column_names_rot = 0,
   viridis_color_map = "G",
-  cell_size = 5,
+  cell_size = 8,
   na.value = "grey75",
   legend.position = "bottom",
   legend.length = 75,

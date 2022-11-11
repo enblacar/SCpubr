@@ -1,3 +1,11 @@
+# SCpubr v1.0.4.9000
+
+## General
+-   Increased the cell size of all heatmap-based functions from 5 to 8.
+
+## `SCpubr::do_CellularStatesPlot()`
+-   Fixed a bug that prevented FeaturePlots to have symmetrical axes with respect to the main plot.
+
 # SCpubr v1.0.4
 -   Hotfix for v1.0.3 in which `do_GeyserPlot` with categorical variables had a bug that mapped the legend to the continuous axis.
 

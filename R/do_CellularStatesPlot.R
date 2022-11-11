@@ -309,10 +309,12 @@ do_CellularStatesPlot <- function(sample,
           # Define limits of polots.
           lim <- max(abs(x))
           lim_x <- c(-lim, lim)
-          lim_y <- NULL
+          lim <- max(abs(y))
+          lim_y <- c(-lim, lim)
 
           p <- p +
-               ggplot2::xlim(lim_x)
+               ggplot2::xlim(lim_x) +
+               ggplot2::ylim(lim_y)
 
         }
 
@@ -532,7 +534,8 @@ do_CellularStatesPlot <- function(sample,
           if (isTRUE(enforce_symmetry)){
             suppressMessages({
               p.feature <- p.feature +
-                           ggplot2::xlim(lim_x)
+                           ggplot2::xlim(lim_x) +
+                           ggplot2::ylim(lim_y)
             })
 
           }

@@ -294,6 +294,8 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
                    "save_Plot" = c("ComplexHeatmap", "svglite"),
+                   "do_AlluvialPlot" = c("ggalluvial"),
+                   "do_AzimuthAnalysisPlot" = c(),
                    "testing" = c("Does_not_exist"))
 
   # The function is not in the current list of possibilities.
@@ -379,7 +381,9 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_TFActivityPlot" = c("ComplexHeatmap"),
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
-                   "save_Plot" = c("ComplexHeatmap", "svglite"))
+                   "save_Plot" = c("ComplexHeatmap", "svglite"),
+                   "do_AlluvialPlot" = c("ggalluvial"),
+                   "do_AzimuthAnalysisPlot" = c())
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){

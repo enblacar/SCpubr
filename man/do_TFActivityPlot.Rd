@@ -20,7 +20,7 @@ do_TFActivityPlot(
   cluster_rows = TRUE,
   row_names_rot = 0,
   column_names_rot = 45,
-  cell_size = 5,
+  cell_size = 8,
   pt.size = 1,
   plot_cell_borders = TRUE,
   border.size = 2,
