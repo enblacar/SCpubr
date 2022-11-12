@@ -19,7 +19,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     SCpubr::do_EnrichmentHeatmap(sample = sample,
                                  input_gene_list = c("EPC1"),
                                  flavor = "Seurat",
-                                 slot = "data",
+                                 assay = "SCT",
                                  nbin = 1,
                                  ctrl = 10)
     testthat::expect_true("HeatmapList" %in% class(p))
