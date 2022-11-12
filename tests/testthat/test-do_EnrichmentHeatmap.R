@@ -250,7 +250,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                   "B" = Seurat::VariableFeatures(sample)[6:10],
                   "C" = Seurat::VariableFeatures(sample)[11:15])
 
-    testhat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = c("EPC1"),
                                       flavor = "Seurat",
                                       slot = "data",
@@ -264,7 +264,24 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                         nbin = 1,
                                                         ctrl = 10)})
 
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = c("EPC1"),
+                                                         min.cutoff = -10,
+                                                         nbin = 1,
+                                                         ctrl = 10)})
 
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                        input_gene_list = c("EPC1"),
+                                                        max.cutoff = 200,
+                                                        nbin = 1,
+                                                        ctrl = 10)})
+
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = c("EPC1"),
+                                                         max.cutoff = 1,
+                                                         min.cutoff = 2,
+                                                         nbin = 1,
+                                                         ctrl = 10)})
   })
 }
 

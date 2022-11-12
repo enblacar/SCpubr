@@ -146,5 +146,29 @@ if(isFALSE(dep_check[["do_TFActivityPlot"]])){
                                      row_title = "B")
     testthat::expect_type(out, "list")
   })
+
+  testthat::test_that("do_PathwayActivityPlot: FAIL", {
+    testthat::skip_on_cran()
+
+    testthat::expect_error({SCpubr::do_TFActivityPlot(sample = sample,
+                                                           activities = progeny_activities,
+                                                           plot_GeyserPlots = FALSE,
+                                                           plot_FeaturePlots = FALSE,
+                                                           min.cutoff = -10)})
+
+    testthat::expect_error({SCpubr::do_TFActivityPlot(sample = sample,
+                                                           activities = progeny_activities,
+                                                           plot_GeyserPlots = FALSE,
+                                                           plot_FeaturePlots = FALSE,
+                                                           max.cutoff = 200)})
+
+    testthat::expect_error({SCpubr::do_TFActivityPlot(sample = sample,
+                                                           activities = progeny_activities,
+                                                           plot_GeyserPlots = FALSE,
+                                                           plot_FeaturePlots = FALSE,
+                                                           max.cutoff = 1,
+                                                           min.cutoff = 2)})
+
+  })
 }
 

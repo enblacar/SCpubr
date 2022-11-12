@@ -25,3 +25,21 @@ testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
 
   testthat::expect_true("HeatmapList" %in% class(p))
 })
+
+
+testthat::test_that("do_ExpressionHeatmap: FAIL", {
+  testthat::skip_on_cran()
+  testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
+                                                       features = c("EPC1"),
+                                                       min.cutoff = -10)})
+
+  testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
+                                                       features = c("EPC1"),
+                                                       max.cutoff = 200)})
+
+  testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
+                                                       features = c("EPC1"),
+                                                       max.cutoff = 1,
+                                                       min.cutoff = 2)})
+
+})

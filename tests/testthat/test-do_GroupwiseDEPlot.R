@@ -114,4 +114,31 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
                                                        scale_direction = 0)})
   })
 
+  testthat::test_that("do_ExpressionHeatmap: FAIL", {
+    testthat::skip_on_cran()
+    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                                       de_genes = de_genes,
+                                                       assay = "SCT",
+                                                       slot = "data",
+                                                       scale_direction = 0,
+                                                       min.cutoff = -10)})
+
+    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                                       de_genes = de_genes,
+                                                       assay = "SCT",
+                                                       slot = "data",
+                                                       scale_direction = 0,
+                                                       max.cutoff = 200)})
+
+    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                                       de_genes = de_genes,
+                                                       assay = "SCT",
+                                                       slot = "data",
+                                                       scale_direction = 0,
+                                                       max.cutoff = 1,
+                                                       min.cutoff = 2)})
+
+  })
+
 }
+
