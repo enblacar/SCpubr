@@ -2,6 +2,7 @@
 
 ## General
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
+-   Added three new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()` and `do_ExpressionHeatmap()`.
 
 ## `SCpubr::do_CellularStatesPlot()`
 -   Fixed a bug that prevented FeaturePlots to have symmetrical axes with respect to the main plot.

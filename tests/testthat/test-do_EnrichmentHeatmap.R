@@ -15,6 +15,23 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("HeatmapList" %in% class(p))
   })
 
+  testthat::test_that("do_EnrichmentHeatmap: PASS -flavors"){
+    SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                 input_gene_list = c("EPC1"),
+                                 flavor = "Seurat",
+                                 slot = "data",
+                                 nbin = 1,
+                                 ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                 input_gene_list = c("EPC1"),
+                                 flavor = "UCell",
+                                 slot = "data",
+                                 nbin = 1,
+                                 ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+  }
   testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {
     testthat::skip_on_cran()
 
@@ -220,6 +237,34 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       nbin = 1,
                                       ctrl = 10)
     testthat::expect_true("HeatmapList" %in% class(p))
+
+
+  })
+
+  testthat::test_that("do_EnrichmentHeatmap: ERROR - wrong arguments", {
+    testthat::skip_on_cran()
+
+    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                  "B" = Seurat::VariableFeatures(sample)[6:10],
+                  "C" = Seurat::VariableFeatures(sample)[11:15])
+
+    testhat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      flavor = "Seurat",
+                                      slot = "data",
+                                      nbin = 1,
+                                      ctrl = 10)})
+
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                        input_gene_list = c("EPC1"),
+                                                        flavor = "UCell",
+                                                        assay = "SCT",
+                                                        nbin = 1,
+                                                        ctrl = 10)})
+
+
   })
 }
 

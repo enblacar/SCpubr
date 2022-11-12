@@ -132,11 +132,11 @@ do_EnrichmentHeatmap <- function(sample,
   `%>%` <- magrittr::`%>%`
 
   if (!(is.null(assay)) & flavor == "UCell"){
-    stop("If setting flavor = UCell, do not use assay parameter. Instead, make sure the assay you want is set as default.", .call = FALSE)
+    stop("If setting flavor = UCell, do not use assay parameter. Instead, make sure the assay you want is set as default.", call. = FALSE)
   }
 
   if (!(is.null(slot)) & flavor == "Seurat"){
-    stop("If setting flavor = Seurat, do not use slot parameter. The slot is determined by default in Seurat.", .call = FALSE)
+    stop("If setting flavor = Seurat, do not use slot parameter. The slot is determined by default in Seurat.", call. = FALSE)
   }
 
   if (is.character(input_gene_list)){
