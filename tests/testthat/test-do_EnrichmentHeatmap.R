@@ -16,7 +16,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
   })
 
   testthat::test_that("do_EnrichmentHeatmap: PASS -flavors", {
-    SCpubr::do_EnrichmentHeatmap(sample = sample,
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                  input_gene_list = c("EPC1"),
                                  flavor = "Seurat",
                                  assay = "SCT",
@@ -24,7 +24,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                  ctrl = 10)
     testthat::expect_true("HeatmapList" %in% class(p))
 
-    SCpubr::do_EnrichmentHeatmap(sample = sample,
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                  input_gene_list = c("EPC1"),
                                  flavor = "UCell",
                                  slot = "data",
