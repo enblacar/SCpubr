@@ -52,8 +52,25 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
                             group.by = "seurat_clusters",
                             split.by = "annotation",
                             raster = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "annotation",
+                            raster = TRUE,
                             label = TRUE,
                             plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "annotation",
+                            raster = TRUE,
+                            label = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -65,8 +82,23 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     p <- SCpubr::do_DimPlot(sample = sample,
                             split.by = "annotation",
                             raster = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            split.by = "annotation",
+                            raster = TRUE,
                             label = TRUE,
                             plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            split.by = "annotation",
+                            raster = TRUE,
+                            label = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_DimPlot(sample = sample,
@@ -78,8 +110,23 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     p <- SCpubr::do_DimPlot(sample = sample,
                             idents.highlight = "0",
                             raster = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            idents.highlight = "0",
+                            raster = TRUE,
                             label = TRUE,
                             plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            idents.highlight = "0",
+                            raster = TRUE,
+                            label = TRUE,
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
     testthat::expect_type(p, "list")
   })
 
@@ -102,6 +149,13 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
                             group.by = "seurat_clusters",
                             split.by = "annotation",
                             raster = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "annotation",
+                            raster = TRUE,
+                            label = TRUE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_DimPlot(sample = sample,

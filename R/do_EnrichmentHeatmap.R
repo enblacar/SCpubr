@@ -150,7 +150,7 @@ do_EnrichmentHeatmap <- function(sample,
 
   # Compute the enrichment scores.
   sample <- compute_enrichment_scores(sample = sample,
-                                      input_gene_list = input_gene_list,
+                                      input_gene_list = input_list,
                                       verbose = verbose,
                                       nbin = nbin,
                                       ctrl = ctrl,
@@ -297,7 +297,7 @@ do_EnrichmentHeatmap <- function(sample,
 
   if (isTRUE(plot_FeaturePlots)){
     list.FeaturePlots <- list()
-    for (sig in names(input_gene_list)){
+    for (sig in names(input_list)){
       p <- do_FeaturePlot(sample = sample,
                           features = sig,
                           assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
@@ -332,7 +332,7 @@ do_EnrichmentHeatmap <- function(sample,
     list.group.by = list()
     if (isTRUE(plot_GeyserPlots)){
       list.GeyserPlots <- list()
-      for (sig in names(input_gene_list)){
+      for (sig in names(input_list)){
         p <- do_GeyserPlot(sample = sample,
                            assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
                            slot = if (is.null(slot)){"data"} else {slot},

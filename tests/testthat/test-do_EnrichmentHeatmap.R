@@ -245,12 +245,6 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
   testthat::test_that("do_EnrichmentHeatmap: PASS - row title and column title", {
     testthat::skip_on_cran()
 
-    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
-
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
-
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = c("EPC1"),
                                       group.by = "seurat_clusters",
