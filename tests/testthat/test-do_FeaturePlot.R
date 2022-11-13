@@ -20,6 +20,45 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
+  testthat::test_that("do_FeaturePlot: PASS - contour", {
+    testthat::skip_on_cran()
+
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                            plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                            plot_density_contour = TRUE,
+                            contour.position = "bottom")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                            split.by = "annotation",
+                            raster = TRUE,
+                            plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                            idents.highlight = "0",
+                            raster = TRUE,
+                            plot_density_contour = TRUE)
+    testthat::expect_type(p, "list")
+
+  })
+
+
   testthat::test_that("do_FeaturePlot: PASS - legend.title", {
     testthat::skip_on_cran()
 

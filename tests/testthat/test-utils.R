@@ -12,6 +12,10 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot"))
   })
 
+  testthat::test_that("utils: check_suggests - PASS - Correct function", {
+    testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot", passive = TRUE))
+  })
+
 
   # STATE DEPENDENCIES
 

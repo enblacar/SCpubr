@@ -77,6 +77,8 @@ do_AzimuthAnalysisPlot(
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
 
+\item{label}{\strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
+
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
 \item \emph{\code{top}}: Top of the figure.

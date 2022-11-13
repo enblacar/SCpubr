@@ -15,15 +15,8 @@ if (isFALSE(dep_check[["do_AzimuthAnalysisPlot"]])){
     p <- SCpubr::do_AzimuthAnalysisPlot(sample,
                                         annotation.labels = "annotation",
                                         annotation.scoring = "annotation.score",
-                                        ref.obj = sample)
-
-    testthat::expect_type(p, "list")
-
-    p <- SCpubr::do_AzimuthAnalysisPlot(sample,
-                                        annotation.labels = "annotation",
-                                        annotation.scoring = "annotation.score",
                                         ref.obj = sample,
-                                        label = FALSE)
+                                        raster = TRUE)
 
     testthat::expect_type(p, "list")
 
@@ -32,7 +25,44 @@ if (isFALSE(dep_check[["do_AzimuthAnalysisPlot"]])){
                                         annotation.scoring = "annotation.score",
                                         ref.obj = sample,
                                         label = FALSE,
-                                        legend.position = "right")
+                                        raster = TRUE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_AzimuthAnalysisPlot(sample,
+                                        annotation.labels = "annotation",
+                                        annotation.scoring = "annotation.score",
+                                        ref.obj = sample,
+                                        label = FALSE,
+                                        legend.position = "right",
+                                        raster = TRUE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_AzimuthAnalysisPlot(sample,
+                                        annotation.labels = "annotation",
+                                        annotation.scoring = "annotation.score",
+                                        ref.obj = sample,
+                                        raster = FALSE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_AzimuthAnalysisPlot(sample,
+                                        annotation.labels = "annotation",
+                                        annotation.scoring = "annotation.score",
+                                        ref.obj = sample,
+                                        label = FALSE,
+                                        raster = FALSE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_AzimuthAnalysisPlot(sample,
+                                        annotation.labels = "annotation",
+                                        annotation.scoring = "annotation.score",
+                                        ref.obj = sample,
+                                        label = FALSE,
+                                        legend.position = "right",
+                                        raster = FALSE)
 
     testthat::expect_type(p, "list")
 

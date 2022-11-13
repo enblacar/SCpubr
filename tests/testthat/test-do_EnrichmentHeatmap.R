@@ -242,6 +242,44 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
   })
 
+  testthat::test_that("do_EnrichmentHeatmap: PASS - row title and column title", {
+    testthat::skip_on_cran()
+
+    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+
+    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
+                  "B" = Seurat::VariableFeatures(sample)[6:10],
+                  "C" = Seurat::VariableFeatures(sample)[11:15])
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = "seurat_clusters",
+                                      row_title = "A",
+                                      column_title = "B",
+                                      flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      plot_FeaturePlots = TRUE,
+                                      plot_GeyserPlots = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = "seurat_clusters",
+                                      row_title = "A",
+                                      column_title = "B",
+                                      flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      plot_FeaturePlots = TRUE,
+                                      plot_GeyserPlots = TRUE,
+                                      min.cutoff = 0.1,
+                                      max.cutoff = 0.5)
+    testthat::expect_type(p, "list")
+
+
+  })
+
   testthat::test_that("do_EnrichmentHeatmap: ERROR - wrong arguments", {
     testthat::skip_on_cran()
 

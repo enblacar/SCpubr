@@ -13,6 +13,7 @@
 #' @param mapping.cutoff \strong{\code{\link[base]{numeric}}} | Value from 0 to 1 to use as cutoff to assign the labels to the object. This is used in conjunction with annotation.cutoff.
 #' @param ref.obj  \strong{\code{\link[SeuratObject]{Seurat}}} | Seurat object used for reference mapping. Providing this object will add an extra plot with the UMAP of the reference and add its silhouette to the UMAP in which the original cells are showed in the context of the UMAP embedding of the reference object.
 #' @param ref.reduction \strong{\code{\link[base]{character}}} | Name of the reduction embedding used to plot the UMAP in the reference object.
+#' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @return A list containing multiple plots.
 #' @export
 #'

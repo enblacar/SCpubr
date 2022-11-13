@@ -21,6 +21,46 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
     testthat::expect_type(p, "list")
   })
 
+  testthat::test_that("do_ViolinPlot: PASS - split.by", {
+    testthat::skip_on_cran()
+
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = "EPC1",
+                               split.by = "annotation",
+                               plot_boxplot = FALSE)
+    testthat::expect_type(p, "list")
+
+  })
+
+  testthat::test_that("do_ViolinPlot: PASS - xlab and ylab", {
+    testthat::skip_on_cran()
+
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = "EPC1",
+                               xlab = "Hi",
+                               ylab = "Hi")
+    testthat::expect_type(p, "list")
+
+  })
+
+  testthat::test_that("do_ViolinPlot: PASS - flip", {
+    testthat::skip_on_cran()
+
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = "EPC1",
+                               flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = "EPC1",
+                               flip = FALSE)
+    testthat::expect_type(p, "list")
+
+  })
+
   testthat::test_that("do_ViolinPlot: PASS - two variable", {
     testthat::skip_on_cran()
 
@@ -233,6 +273,15 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
     testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,
                                                  features = c("EPC1"),
                                                  font.type = "wrong"))
+  })
+
+  testthat::test_that("do_ViolinPlot: FAIL - split.by with boxplots", {
+    testthat::skip_on_cran()
+
+
+    testthat::expect_error(SCpubr::do_ViolinPlot(sample = sample,
+                                                 features = c("EPC1"),
+                                                 split.by = "annotation"))
   })
 }
 
