@@ -4,6 +4,14 @@
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
 -   Added three new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()` and `do_ExpressionHeatmap()`.
 
+## `SCpubr::do_BeeSwarmPlot()`
+-   Added `min.cutoff` and `max.cutoff` parameter.
+-   Added ticks to the plot, that were missing.
+-   Added missing axes titles.
+-   Added `viridis_direction` parameter to control how the continuous color scale is formed.
+-   Added `return_object` parameter to return the Seurat object with the enrichment scores computed.
+-   Added BoxPlots, BeeSwarmPlots and ViolinPlots to the possible outputs the user can choose from.
+
 ## `SCpubr::do_CellularStatesPlot()`
 -   Fixed a bug that prevented FeaturePlots to have symmetrical axes with respect to the main plot.
 
@@ -32,7 +40,7 @@
 -   Implemented a bug fix for internal checks in the function.
 -   Added `plot_FeaturePlots` and `plot_GeyserPlots` to also report the enrichment scores in a gene set-based manner.
 -   Added `flavor` parameter, that accepts `Seurat` and `UCell` to allow for different enrichment scoring methods. It requires `R 4.2.0` to run.
--   Renamed `symmetrical_scale` to `enforce_symmetry` to have a greater coherence accross functions.
+-   Renamed `symmetrical_scale` to `enforce_symmetry` to have a greater coherence across functions.
 
 ## `SCpubr::do_FeaturePlot()`
 -   Implemented a new feature to add density line contours using `plot_density_contour`.

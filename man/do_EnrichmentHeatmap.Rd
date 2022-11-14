@@ -61,11 +61,18 @@ do_EnrichmentHeatmap(
   max.cutoff = NULL,
   plot_FeaturePlots = FALSE,
   plot_GeyserPlots = FALSE,
+  plot_BeeSwarmPlots = FALSE,
+  plot_BoxPlots = FALSE,
+  plot_ViolinPlots = FALSE,
   pt.size = 1,
   plot_cell_borders = TRUE,
   border.size = 2,
   geyser_order_by_mean = TRUE,
-  geyser_scale_type = "continuous"
+  geyser_scale_type = "continuous",
+  boxplot_order_by_mean = TRUE,
+  violin_plot_boxplot = TRUE,
+  violin_boxplot_width = 0.2,
+  return_object = FALSE
 )
 }
 \arguments{
@@ -168,9 +175,7 @@ do_EnrichmentHeatmap(
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the gene lists.}
-
-\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the gene lists and group.by variable.}
+\item{plot_FeaturePlots, plot_GeyserPlots, plot_BeeSwarmPlots, plot_BoxPlots, plot_ViolinPlots}{\strong{\code{\link[base]{logical}}} | Compute extra visualizations for each of the gene lists.}
 
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
@@ -178,9 +183,11 @@ do_EnrichmentHeatmap(
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
+\item{geyser_order_by_mean, boxplot_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
 
 \item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
+
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
 }
 \value{
 A ComplexHeatmap object.

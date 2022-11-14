@@ -7,10 +7,10 @@
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
-#' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
+#' @param geyser_order_by_mean,boxplot_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
-#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the gene lists.
-#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the gene lists and group.by variable.
+#' @param plot_FeaturePlots,plot_GeyserPlots,plot_BeeSwarmPlots,plot_BoxPlots,plot_ViolinPlots \strong{\code{\link[base]{logical}}} | Compute extra visualizations for each of the gene lists.
+#' @param return_object \strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
@@ -63,11 +63,18 @@ do_EnrichmentHeatmap <- function(sample,
                                  max.cutoff = NULL,
                                  plot_FeaturePlots = FALSE,
                                  plot_GeyserPlots = FALSE,
+                                 plot_BeeSwarmPlots = FALSE,
+                                 plot_BoxPlots = FALSE,
+                                 plot_ViolinPlots = FALSE,
                                  pt.size = 1,
                                  plot_cell_borders = TRUE,
                                  border.size = 2,
                                  geyser_order_by_mean = TRUE,
-                                 geyser_scale_type = "continuous"){
+                                 geyser_scale_type = "continuous",
+                                 boxplot_order_by_mean = TRUE,
+                                 violin_plot_boxplot = TRUE,
+                                 violin_boxplot_width = 0.2,
+                                 return_object = FALSE){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -80,7 +87,12 @@ do_EnrichmentHeatmap <- function(sample,
                        "plot_FeaturePlots" = plot_FeaturePlots,
                        "plot_GeyserPlots" = plot_GeyserPlots,
                        "plot_cell_borders" = plot_cell_borders,
-                       "geyser_order_by_mean" = geyser_order_by_mean)
+                       "geyser_order_by_mean" = geyser_order_by_mean,
+                       "plot_BoxPlots" = plot_BoxPlots,
+                       "plot_BeeSwarmPlots" = plot_BeeSwarmPlots,
+                       "plot_ViolinPlots" = plot_ViolinPlots,
+                       "boxplot_order_by_mean" = boxplot_order_by_mean,
+                       "violin_plot_boxplot" = violin_plot_boxplot)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -101,7 +113,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
-                       "max.cutoff" = max.cutoff)
+                       "max.cutoff" = max.cutoff,
+                       "violin_boxplot_width" = violin_boxplot_width)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -163,6 +176,9 @@ do_EnrichmentHeatmap <- function(sample,
   list.heatmaps <- list()
   list.legends <- list()
   if (is.null(group.by)){
+    assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
+                            msg = "Please make sure you provide a value for group.by or do not have a metadata column named `Groups`.")
+
     aggr_entities <- levels(sample)
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
@@ -298,31 +314,31 @@ do_EnrichmentHeatmap <- function(sample,
   if (isTRUE(plot_FeaturePlots)){
     list.FeaturePlots <- list()
     for (sig in names(input_list)){
-      p <- do_FeaturePlot(sample = sample,
-                          features = sig,
-                          assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
-                          reduction = if(is.null(reduction)){Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]} else {reduction},
-                          slot = if (is.null(slot)){"data"} else {slot},
-                          pt.size = pt.size,
-                          order = FALSE,
-                          border.size = border.size,
-                          enforce_symmetry = enforce_symmetry,
-                          plot_cell_borders = plot_cell_borders,
-                          font.size = font.size,
-                          font.type = font.type,
-                          legend.position = legend.position,
-                          legend.type = legend.type,
-                          legend.framecolor = legend.framecolor,
-                          legend.tickcolor = legend.tickcolor,
-                          legend.framewidth = legend.framewidth,
-                          legend.tickwidth = legend.tickwidth,
-                          legend.length = legend.length,
-                          legend.width = legend.width,
-                          legend.title = paste0(sig, " enrichment"),
-                          viridis_color_map = viridis_color_map,
-                          viridis_direction = viridis_direction,
-                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
-                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
+      p <- SCpubr::do_FeaturePlot(sample = sample,
+                                  features = sig,
+                                  assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                                  reduction = if(is.null(reduction)){Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]} else {reduction},
+                                  slot = if (is.null(slot)){"data"} else {slot},
+                                  pt.size = pt.size,
+                                  order = FALSE,
+                                  border.size = border.size,
+                                  enforce_symmetry = enforce_symmetry,
+                                  plot_cell_borders = plot_cell_borders,
+                                  font.size = font.size,
+                                  font.type = font.type,
+                                  legend.position = legend.position,
+                                  legend.type = legend.type,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.title = paste0(sig, " enrichment"),
+                                  viridis_color_map = viridis_color_map,
+                                  viridis_direction = viridis_direction,
+                                  min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
+                                  max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
       list.FeaturePlots[[sig]] <- p
     }
     out.list[["FeaturePlots"]] <- list.FeaturePlots
@@ -333,43 +349,133 @@ do_EnrichmentHeatmap <- function(sample,
     if (isTRUE(plot_GeyserPlots)){
       list.GeyserPlots <- list()
       for (sig in names(input_list)){
-        p <- do_GeyserPlot(sample = sample,
-                           assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
-                           slot = if (is.null(slot)){"data"} else {slot},
-                           features = sig,
-                           group.by = var,
-                           pt.size = pt.size,
-                           border.size = border.size,
-                           enforce_symmetry = enforce_symmetry,
-                           scale_type = geyser_scale_type,
-                           order_by_mean = geyser_order_by_mean,
-                           plot_cell_borders = plot_cell_borders,
-                           font.size = font.size,
-                           font.type = font.type,
-                           legend.position = legend.position,
-                           legend.type = legend.type,
-                           legend.framecolor = legend.framecolor,
-                           legend.tickcolor = legend.tickcolor,
-                           legend.framewidth = legend.framewidth,
-                           legend.tickwidth = legend.tickwidth,
-                           legend.length = legend.length,
-                           legend.width = legend.width,
-                           xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
-                           ylab = paste0(sig, " enrichment"),
-                           legend.title = paste0(sig, " enrichment"),
-                           rotate_x_axis_labels = rotate_x_axis_labels,
-                           viridis_color_map = viridis_color_map,
-                           viridis_direction = viridis_direction,
-                           min.cutoff = min.cutoff,
-                           max.cutoff = max.cutoff)
+        p <- SCpubr::do_GeyserPlot(sample = sample,
+                                   assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                                   slot = if (is.null(slot)){"data"} else {slot},
+                                   features = sig,
+                                   group.by = var,
+                                   pt.size = pt.size,
+                                   border.size = border.size,
+                                   enforce_symmetry = enforce_symmetry,
+                                   scale_type = geyser_scale_type,
+                                   order_by_mean = geyser_order_by_mean,
+                                   plot_cell_borders = plot_cell_borders,
+                                   font.size = font.size,
+                                   font.type = font.type,
+                                   legend.position = legend.position,
+                                   legend.type = legend.type,
+                                   legend.framecolor = legend.framecolor,
+                                   legend.tickcolor = legend.tickcolor,
+                                   legend.framewidth = legend.framewidth,
+                                   legend.tickwidth = legend.tickwidth,
+                                   legend.length = legend.length,
+                                   legend.width = legend.width,
+                                   xlab = if (is.null(group.by)) {"Clusters"} else {var},
+                                   ylab = paste0(sig, " enrichment"),
+                                   legend.title = paste0(sig, " enrichment"),
+                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   viridis_color_map = viridis_color_map,
+                                   viridis_direction = viridis_direction,
+                                   min.cutoff = min.cutoff,
+                                   max.cutoff = max.cutoff)
         list.GeyserPlots[[sig]] <- p
       }
       list.group.by[[var]] <- list.GeyserPlots
     }
     out.list[["GeyserPlots"]] <- list.group.by
+
+    for (var in group.by){
+      list.group.by = list()
+      if (isTRUE(plot_BeeSwarmPlots)){
+        list.BeeSwarmPlots <- list()
+        for (sig in names(input_list)){
+          p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                       feature_to_rank = sig,
+                                       assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                                       slot = if (is.null(slot)){"data"} else {slot},
+                                       group.by = var,
+                                       pt.size = pt.size,
+                                       border.size = border.size,
+                                       font.size = font.size,
+                                       font.type = font.type,
+                                       legend.position = legend.position,
+                                       legend.type = legend.type,
+                                       legend.framecolor = legend.framecolor,
+                                       legend.tickcolor = legend.tickcolor,
+                                       legend.framewidth = legend.framewidth,
+                                       legend.tickwidth = legend.tickwidth,
+                                       legend.length = legend.length,
+                                       legend.width = legend.width,
+                                       continuous_feature = TRUE,
+                                       min.cutoff = min.cutoff,
+                                       max.cutoff = max.cutoff,
+                                       ylab = if (is.null(group.by)) {"Clusters"} else {var},
+                                       xlab = paste0(sig, " enrichment"),
+                                       viridis_color_map = viridis_color_map,
+                                       viridis_direction = viridis_direction)
+          list.BeeSwarmPlots[[sig]] <- p
+        }
+        list.group.by[[var]] <- list.BeeSwarmPlots
+      }
+      out.list[["BeeSwarmPlots"]] <- list.group.by
+    }
+
+    for (var in group.by){
+      list.group.by = list()
+      if (isTRUE(plot_BoxPlots)){
+        list.BoxPlots <- list()
+        for (sig in names(input_list)){
+          p <- SCpubr::do_BoxPlot(sample = sample,
+                                  feature = sig,
+                                  assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                                  slot = if (is.null(slot)){"data"} else {slot},
+                                  group.by = var,
+                                  legend.position = legend.position,
+                                  font.size = font.size,
+                                  font.type = font.type,
+                                  xlab = if (is.null(group.by)) {"Clusters"} else {var},
+                                  ylab = paste0(sig, " enrichment"),
+                                  order = boxplot_order_by_mean)
+          list.BoxPlots[[sig]] <- p
+        }
+        list.group.by[[var]] <- list.BoxPlots
+      }
+      out.list[["BoxPlots"]] <- list.group.by
+    }
+
+    for (var in group.by){
+      list.group.by = list()
+      if (isTRUE(plot_ViolinPlots)){
+        list.ViolinPlots <- list()
+        for (sig in names(input_list)){
+          p <- SCpubr::do_ViolinPlot(sample = sample,
+                                     features = sig,
+                                     plot_boxplot = violin_plot_boxplot,
+                                     boxplot_width = violin_boxplot_width,
+                                     assay = if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay},
+                                     slot = if (is.null(slot)){"data"} else {slot},
+                                     group.by = var,
+                                     legend.position = legend.position,
+                                     font.size = font.size,
+                                     font.type = font.type,
+                                     xlab = if (is.null(group.by)) {"Clusters"} else {var},
+                                     ylab = paste0(sig, " enrichment"))
+          list.ViolinPlots[[sig]] <- p
+        }
+        list.group.by[[var]] <- list.ViolinPlots
+      }
+      out.list[["ViolinPlots"]] <- list.group.by
+    }
   }
 
-  if (isFALSE(plot_GeyserPlots) & isFALSE(plot_FeaturePlots)){
+  if (isTRUE(return_object)){
+    if (isTRUE("Groups" %in% colnames(sample@meta.data))){
+      sample$Groups <- NULL
+    }
+    out.list[["object"]] <- sample
+  }
+
+  if (isFALSE(plot_GeyserPlots) & isFALSE(plot_FeaturePlots) & isFALSE(plot_BeeSwarmPlots) & isFALSE(plot_BoxPlots) & isFALSE(return_object)){
     return_object <- h
   } else {
     return_object <- out.list
