@@ -29,7 +29,7 @@ do_GroupwiseDEPlot <- function(sample,
                                column_title = "DE genes",
                                heatmap_gap = 0.5,
                                legend_gap = 1,
-                               assay = "SCT",
+                               assay = NULL,
                                slot = "data",
                                legend.position = "bottom",
                                row_names_side = "right",
@@ -84,6 +84,11 @@ do_GroupwiseDEPlot <- function(sample,
   check_parameters(parameter = viridis_map_pvalues, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis_map_expression, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis_map_logfc, parameter_name = "viridis_color_map")
+
+  # Check the assay.
+  out <- check_and_set_assay(sample = sample, assay = assay)
+  sample <- out[["sample"]]
+  assay <- out[["assay"]]
 
   if (!is.null(group.by)){
     for (value in group.by){

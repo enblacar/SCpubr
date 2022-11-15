@@ -17,6 +17,7 @@ do_CorrelationPlot(
   row_names_rot = 0,
   column_names_rot = 0,
   viridis_color_map = "G",
+  viridis_direction = 1,
   cell_size = 8,
   na.value = "grey75",
   legend.position = "bottom",
@@ -47,6 +48,8 @@ do_CorrelationPlot(
 \item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 

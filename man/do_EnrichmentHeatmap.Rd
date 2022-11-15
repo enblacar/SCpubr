@@ -187,6 +187,10 @@ do_EnrichmentHeatmap(
 
 \item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
 
+\item{violin_plot_boxplot}{\strong{\code{\link[base]{logical}}} | Whether to plot the boxplots inside the violin plots.}
+
+\item{violin_boxplot_width}{\strong{\code{\link[base]{numeric}}} | Width of the boxplots in the violin plots.}
+
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
 }
 \value{

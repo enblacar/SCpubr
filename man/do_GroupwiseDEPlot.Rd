@@ -27,7 +27,7 @@ do_GroupwiseDEPlot(
   column_title = "DE genes",
   heatmap_gap = 0.5,
   legend_gap = 1,
-  assay = "SCT",
+  assay = NULL,
   slot = "data",
   legend.position = "bottom",
   row_names_side = "right",

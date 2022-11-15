@@ -19,6 +19,7 @@ do_CorrelationPlot <- function(sample,
                                row_names_rot = 0,
                                column_names_rot = 0,
                                viridis_color_map = "G",
+                               viridis_direction = 1,
                                cell_size = 8,
                                na.value = "grey75",
                                legend.position = "bottom",
@@ -60,11 +61,13 @@ do_CorrelationPlot <- function(sample,
 
   if (mode == "hvg"){
     if (is.null(group.by)){
-      sample@meta.data[, "dummy"] <- sample@active.ident
-      group.by <- "dummy"
-    } else {
-      sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
+      assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
+                              msg = "Please make sure you provide a value for group.by or do not have a metadata column named `Groups`.")
+
+      sample@meta.data[, "Groups"] <- sample@active.ident
+      group.by <- "Groups"
     }
+
     # Generate a correlation matrix of the HVG.
     variable_genes <- Seurat::VariableFeatures(sample)
 
@@ -111,6 +114,7 @@ do_CorrelationPlot <- function(sample,
                          cluster_columns = cluster_cols,
                          cluster_rows = cluster_rows,
                          viridis_color_map = viridis_color_map,
+                         viridis_direction = viridis_direction,
                          cell_size = cell_size,
                          na.value = na.value,
                          legend.position = legend.position,

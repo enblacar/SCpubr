@@ -12,11 +12,20 @@
 -   Added `return_object` parameter to return the Seurat object with the enrichment scores computed.
 -   Added BoxPlots, BeeSwarmPlots and ViolinPlots to the possible outputs the user can choose from.
 
+## `SCpubr::do_BoxPlot()`
+-   Set `assay` to NULL and will default to the default assay in the seurat object.
+
 ## `SCpubr::do_CellularStatesPlot()`
 -   Fixed a bug that prevented FeaturePlots to have symmetrical axes with respect to the main plot.
 
+## `SCpubr::do_CorrelationPlot()`
+-   Added `viridis_direction` parameter. 
+
 ## `SCpubr::do_EnrichmentHeatmap()`
 -   Fixed a bug in the code that prevented the feature plots and the geyser plots to be computed if the input gene list was not a named list of genes.
+
+## `SCpubr::do_GroupwiseDEPlot()`
+-   Set `assay` to NULL and will default to the default assay in the seurat object.
 
 # SCpubr v1.0.4
 -   Hotfix for v1.0.3 in which `do_GeyserPlot` with categorical variables had a bug that mapped the legend to the continuous axis.

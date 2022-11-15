@@ -9,7 +9,7 @@ do_BoxPlot(
   feature,
   group.by = NULL,
   split.by = NULL,
-  assay = "SCT",
+  assay = NULL,
   slot = "data",
   font.size = 14,
   font.type = "sans",

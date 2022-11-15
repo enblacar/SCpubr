@@ -9,6 +9,8 @@
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
 #' @param geyser_order_by_mean,boxplot_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
+#' @param violin_plot_boxplot \strong{\code{\link[base]{logical}}} | Whether to plot the boxplots inside the violin plots.
+#' @param violin_boxplot_width \strong{\code{\link[base]{numeric}}} | Width of the boxplots in the violin plots.
 #' @param plot_FeaturePlots,plot_GeyserPlots,plot_BeeSwarmPlots,plot_BoxPlots,plot_ViolinPlots \strong{\code{\link[base]{logical}}} | Compute extra visualizations for each of the gene lists.
 #' @param return_object \strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.
 #' @return A ComplexHeatmap object.

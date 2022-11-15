@@ -142,13 +142,13 @@ do_CellularStatesPlot <- function(sample,
     # Check border color.
     check_colors(border.color, parameter_name = "border.color")
 
-    # Fix for group.by.
+    # Check group.by
     if (is.null(group.by)){
-      group.by <- "dummy"
-      sample@meta.data[["dummy"]] <- sample@active.ident
-    } else {
-      sample@meta.data[["dummy"]] <- sample@meta.data[, group.by]
-      group.by <- "dummy"
+      assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
+                              msg = "Please make sure you provide a value for group.by or do not have a metadata column named `Groups`.")
+
+      sample@meta.data[, "Groups"] <- sample@active.ident
+      group.by <- "Groups"
     }
 
     check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -196,7 +196,7 @@ do_CellularStatesPlot <- function(sample,
 
 
       # Plot
-      df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[["dummy"]])
+      df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[[group.by]])
       p <- ggplot2::ggplot(data = df,
                            mapping = ggplot2::aes(x = .data[["set_x"]],
                                                   y = .data[["set_y"]],
@@ -282,7 +282,7 @@ do_CellularStatesPlot <- function(sample,
 
 
         # Plot.
-        df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[["dummy"]])
+        df <- data.frame("set_x" = x, "set_y" = y, "group.by" = scores[[group.by]])
         p <- ggplot2::ggplot(df, mapping = ggplot2::aes(x = .data[["set_x"]],
                                                         y = .data[["set_y"]],
                                                         color = .data[["group.by"]]))
