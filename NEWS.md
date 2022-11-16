@@ -27,6 +27,9 @@
 ## `SCpubr::do_GroupwiseDEPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
 
+## `SCpubr::do_ViolinPlot()`
+-   Fixed a bug in the code in which no different colors could be passed to `colors.use`. 
+
 # SCpubr v1.0.4
 -   Hotfix for v1.0.3 in which `do_GeyserPlot` with categorical variables had a bug that mapped the legend to the continuous axis.
 

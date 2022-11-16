@@ -170,7 +170,8 @@ do_ViolinPlot <- function(sample,
                                  lwd = line_width,
                                  width = boxplot_width,
                                  outlier.shape = NA,
-                                 fatten = 1)
+                                 fatten = 1) +
+           ggplot2::scale_fill_manual(values = colors.use)
     }
     p <- p +
          ggplot2::xlab(if (!is.na(xlab[counter])) {xlab[counter]} else {"Groups"}) +
