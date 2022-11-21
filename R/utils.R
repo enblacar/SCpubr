@@ -35,7 +35,8 @@
 #' @param legend.tickcolor \strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.
 #' @param legend.length,legend.width \strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param legend.icon.size \strong{\code{\link[base]{numeric}}} | Size of the icons in legend.
-#' @param legend.ncol,legend.nrow \strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.
+#' @param legend.ncol \strong{\code{\link[base]{numeric}}} | Number of columns in the legend.
+#' @param legend.nrow \strong{\code{\link[base]{numeric}}} | Number of rows in the legend.
 #' @param legend.byrow \strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.
 #' @param plot.title,plot.subtitle,plot.caption \strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.
 #' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Vector. Title, subtitle or caption to use in the plot when multiple features are passed on. Use NA to keep the original title.
@@ -1585,6 +1586,8 @@ compute_enrichment_scores <- function(sample,
                                       flavor = "Seurat",
                                       ncores = 1,
                                       storeRanks = TRUE){
+  `%>%` <- magrittr::`%>%`
+
   # Checks for UCell.
   if (flavor == "UCell"){
     R_version <- paste0(R.version$major, ".", R.version$minor)
@@ -1665,6 +1668,36 @@ compute_enrichment_scores <- function(sample,
         sample@meta.data[, mod.name] <- NULL
       }
     }
+  }
+
+  if (flavor == "AUCell"){
+    if (is.null(assay)){
+      assay <- Seurat::DefaultAssay(sample)
+    }
+
+    if (is.null(slot)){
+      slot <- "data"
+    }
+    scores <- AUCell::AUCell_run(exprMat = Seurat::GetAssayData(sample, assay = assay, slot = slot),
+                                 geneSets = input_gene_list)
+    scores <- scores@assays@data$AUC %>%
+              as.matrix() %>%
+              t() %>%
+              as.data.frame() %>%
+              tibble::rownames_to_column(var = "cell")
+
+    # This is to remove some head title that prevents the left join afterwards.
+    col.names <- colnames(scores)
+    row.names <- rownames(scores)
+    scores <- unname(scores)
+    colnames(scores) <- col.names
+    row.names(scores) <- row.names
+
+    sample@meta.data <- sample@meta.data %>%
+                        tibble::rownames_to_column(var = "cell") %>%
+                        dplyr::left_join(y = scores,
+                                         by = "cell") %>%
+                        tibble::column_to_rownames(var = "cell")
   }
   return(sample)
 }
@@ -1945,7 +1978,7 @@ check_parameters <- function(parameter,
     assertthat::assert_that(parameter %in% c("bottom", "top"),
                             msg = "Please provide one of the following to contour_position: top, bottom.")
   } else if (parameter_name == "flavor"){
-    assertthat::assert_that(parameter %in% c("Seurat", "UCell"),
+    assertthat::assert_that(parameter %in% c("Seurat", "UCell", "AUCell"),
                             msg = "Please provide one of the following to contour_position: Seurat, UCell")
   }
 }

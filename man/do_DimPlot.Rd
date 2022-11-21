@@ -105,7 +105,9 @@ do_DimPlot(
 \item \emph{\code{right}}: Right of the legend.
 }}
 
-\item{legend.ncol, legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.}
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
 
 \item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
 

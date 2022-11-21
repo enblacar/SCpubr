@@ -76,7 +76,9 @@ do_CellularStatesPlot(
 
 \item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
 
-\item{legend.ncol, legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.}
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 

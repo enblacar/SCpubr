@@ -83,7 +83,9 @@
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
-\item{legend.ncol, legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of columns/rows in the legend.}
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
 
 \item{plot_marginal_distributions}{\strong{\code{\link[base]{logical}}} |  Whether to plot marginal distributions on the figure or not.}
 

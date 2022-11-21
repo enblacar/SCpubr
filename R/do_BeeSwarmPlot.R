@@ -18,13 +18,15 @@ do_BeeSwarmPlot <- function(sample,
                             colors.use = NULL,
                             legend.title = NULL,
                             legend.type = "colorbar",
-                            legend.position = "bottom",
+                            legend.position = if (isTRUE(continuous_feature)) {"bottom"} else {"none"},
                             legend.framewidth = 1.5,
                             legend.tickwidth = 1.5,
                             legend.length = 20,
                             legend.width = 1,
                             legend.framecolor = "grey50",
                             legend.tickcolor = "white",
+                            legend.ncol = NULL,
+                            legend.icon.size = 4,
                             plot.title = NULL,
                             plot.subtitle = NULL,
                             plot.caption = NULL,
@@ -75,7 +77,9 @@ do_BeeSwarmPlot <- function(sample,
                        "border.size" = border.size,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "legend.ncol" = legend.ncol,
+                       "legend.icon.size" = legend.icon.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -244,7 +248,12 @@ do_BeeSwarmPlot <- function(sample,
     }
     p <- p +
          ggplot2::scale_color_manual(values = colors.use) +
-         ggplot2::theme(legend.position = "none")
+         ggplot2::guides(color = ggplot2::guide_legend(title = if (is.null(legend.title)) {"Groups"} else {legend.title},
+                                                       title.position = "top",
+                                                       title.hjust = 0.5,
+                                                       ncol = legend.ncol,
+                                                       override.aes = list(size = legend.icon.size))) +
+         ggplot2::theme(legend.position = legend.position)
   }
 
   if (remove_x_axis == TRUE){

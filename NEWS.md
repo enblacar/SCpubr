@@ -11,6 +11,12 @@
 -   Added `viridis_direction` parameter to control how the continuous color scale is formed.
 -   Added `return_object` parameter to return the Seurat object with the enrichment scores computed.
 -   Added BoxPlots, BeeSwarmPlots and ViolinPlots to the possible outputs the user can choose from.
+-   Added `legend.ncol` parameter.
+-   Make `legend.position` conditional of whether `continuous_feature` is set to TRUE. If it is false, legend is not displayed unless the user specifies otherwise.
+
+## `SCpubr::do_BarPlot()`
+-   Added the possibility to control the number of columns displayed in the legend using `legend.ncol` paramter.
+-   Fixed bug in which axes titles were not displaying correctly under certain combinations of `flip` and `split.by`.
 
 ## `SCpubr::do_BoxPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
@@ -21,8 +27,12 @@
 ## `SCpubr::do_CorrelationPlot()`
 -   Added `viridis_direction` parameter. 
 
+## `SCpubr::do_DimPlot()`
+-   Fixed a bug in which the legend title will not show up in regular basic plots even though the parameter `legend.title` was used.
+
 ## `SCpubr::do_EnrichmentHeatmap()`
 -   Fixed a bug in the code that prevented the feature plots and the geyser plots to be computed if the input gene list was not a named list of genes.
+-   Added `flavor = "AUCell"`, that lets the user compute AUCell scoring of the gene sets. 
 
 ## `SCpubr::do_GroupwiseDEPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.

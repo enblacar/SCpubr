@@ -15,13 +15,20 @@ do_BeeSwarmPlot(
   colors.use = NULL,
   legend.title = NULL,
   legend.type = "colorbar",
-  legend.position = "bottom",
+  legend.position = if (isTRUE(continuous_feature)) {
+     "bottom"
+ } else {
+    
+    "none"
+ },
   legend.framewidth = 1.5,
   legend.tickwidth = 1.5,
   legend.length = 20,
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
+  legend.ncol = NULL,
+  legend.icon.size = 4,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -87,6 +94,10 @@ do_BeeSwarmPlot(
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 

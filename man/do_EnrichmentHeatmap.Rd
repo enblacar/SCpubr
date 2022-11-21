@@ -15,7 +15,6 @@ do_EnrichmentHeatmap(
   flip = FALSE,
   cluster_cols = FALSE,
   cluster_rows = FALSE,
-  legend.title = "Enrichment",
   row_names_rot = 0,
   column_names_rot = 45,
   cell_size = 8,
@@ -55,6 +54,11 @@ do_EnrichmentHeatmap(
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",
+  legend.title = if (flavor != "AUCell") {
+     "Enrichment"
+ } else {
+     "AUC"
+ },
   ncores = 1,
   storeRanks = TRUE,
   min.cutoff = NULL,
@@ -93,8 +97,6 @@ do_EnrichmentHeatmap(
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
 
@@ -168,6 +170,8 @@ do_EnrichmentHeatmap(
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
 
 \item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
+
+\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
 

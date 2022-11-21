@@ -23,8 +23,9 @@ do_BarPlot <- function(sample,
                        font.size = 14,
                        font.type = "sans",
                        legend.position = "bottom",
-                       rotate_x_axis_labels = 45,
                        legend.title = NULL,
+                       legend.ncol = NULL,
+                       rotate_x_axis_labels = 45,
                        xlab = NULL,
                        ylab = NULL,
                        colors.use = NULL,
@@ -48,7 +49,8 @@ do_BarPlot <- function(sample,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "legend.ncol" = legend.ncol)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -64,7 +66,8 @@ do_BarPlot <- function(sample,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
                          "grid.color" = grid.color,
-                         "grid.type" = grid.type)
+                         "grid.type" = grid.type,
+                         "legend.title" = legend.title)
   # Checks
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
@@ -105,17 +108,55 @@ do_BarPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data[[split.by]],
                                                 fill = .data[[group.by]]))
   }
+
+  xlab <- {
+    if (!is.null(xlab)){
+      xlab
+    } else {
+      if (is.null(group.by) & is.null(split.by)){
+        "Groups"
+      } else if (!is.null(group.by) & is.null(split.by)){
+        group.by
+      } else if (is.null(group.by) & !is.null(split.by)){
+        split.by
+      } else if (!is.null(group.by) & !is.null(split.by)){
+        split.by
+      }
+    }
+  }
+
+ ylab <- {
+   ifelse(is.null(ylab),
+          paste0(ifelse(position == "stack", "Count", "Frequency"), " of ", group.by),
+          ylab)
+ }
+
+ legend.title <- {
+   if (!is.null(legend.title)){
+     legend.title
+   } else {
+     if (!is.null(split.by) & is.null(group.by)){
+       "Groups"
+     } else if (!is.null(split.by) & !is.null(group.by)){
+       group.by
+     } else if (is.null(split.by) & !is.null(group.by)) {
+       group.by
+     }
+   }
+ }
+
   p <- p +
        ggplot2::stat_count(geom = "bar", position = position, color = "black") +
-       ggplot2::xlab(if (!is.null(split.by) & is.null(xlab)) {split.by} else {ifelse(is.null(group.by), "Idents", group.by)}) +
-       ggplot2::ylab(ifelse(is.null(ylab), paste0(ifelse(position == "stack", "Count", "Frequency"), " of ", group.by), ylab)) +
+       ggplot2::xlab(if (isTRUE(flip)) {ylab} else {xlab}) +
+       ggplot2::ylab(if (isFALSE(flip)) {ylab} else {xlab}) +
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
                      caption = plot.caption) +
        ggplot2::scale_fill_manual(values = colors.use) +
-       ggplot2::guides(fill = ggplot2::guide_legend(title = if (!is.null(split.by) & is.null(legend.title)) {ifelse(is.null(group.by), "Idents", group.by)} else {legend.title},
+       ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                     title.position = "top",
-                                                    title.hjust = 0.5)) +
+                                                    title.hjust = 0.5,
+                                                    ncol = legend.ncol)) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = "bold"),

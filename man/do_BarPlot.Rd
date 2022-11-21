@@ -13,8 +13,9 @@ do_BarPlot(
   font.size = 14,
   font.type = "sans",
   legend.position = "bottom",
-  rotate_x_axis_labels = 45,
   legend.title = NULL,
+  legend.ncol = NULL,
+  rotate_x_axis_labels = 45,
   xlab = NULL,
   ylab = NULL,
   colors.use = NULL,
@@ -60,9 +61,11 @@ do_BarPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
-
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 
