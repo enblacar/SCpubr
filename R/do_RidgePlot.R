@@ -23,6 +23,9 @@ do_RidgePlot <- function(sample,
                          slot = "data",
                          continuous_scale = FALSE,
                          legend.title = NULL,
+                         legend.ncol = NULL,
+                         legend.nrow = NULL,
+                         legend.byrow = FALSE,
                          legend.position = NULL,
                          legend.width = 1,
                          legend.length = 20,
@@ -65,7 +68,8 @@ do_RidgePlot <- function(sample,
                        "compute_distribution_tails" = compute_distribution_tails,
                        "color_by_probabilities" = color_by_probabilities,
                        "plot.grid" = plot.grid,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "legend.nrow" = legend.nrow)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("legend.width" = legend.width,
@@ -76,7 +80,9 @@ do_RidgePlot <- function(sample,
                        "quantiles" = quantiles,
                        "prob_tails" = prob_tails,
                        "viridis_direction" = viridis_direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "legend.ncol" = legend.ncol,
+                       "legend.nrow" = legend.nrow)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -170,7 +176,13 @@ do_RidgePlot <- function(sample,
                                            quantiles = quantiles) +
              ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis_color_map, direction = viridis_direction),
                                         name = ifelse(is.null(legend.title), "Probability", legend.title),
-                                        labels = unique(labels))
+                                        labels = unique(labels)) +
+             ggplot2::guides(fill = ggplot2::guide_legend(title = ifelse(is.null(legend.title), "Probability", legend.title),
+                                                          title.position = "top",
+                                                          title.hjust = 0.5,
+                                                          ncol = legend.ncol,
+                                                          nrow = legend.nrow,
+                                                          byrow = legend.byrow))
       } else if (isTRUE(compute_distribution_tails)){
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
@@ -186,7 +198,11 @@ do_RidgePlot <- function(sample,
                                         labels = c(paste0("]0 , ", 0 + prob_tails, "]"),
                                                    paste0("]", 0 + prob_tails, ", ",  1 - prob_tails, "]"),
                                                    paste0("]", 1 - prob_tails, ", 1]")),
-                                        name = ifelse(is.null(legend.title), "Probability", legend.title))
+                                        name = ifelse(is.null(legend.title), "Probability", legend.title))  +
+             ggplot2::guides(fill = ggplot2::guide_legend(title = ifelse(is.null(legend.title), "Probability", legend.title),
+                                                          title.position = "top",
+                                                          title.hjust = 0.5,
+                                                          ncol = legend.ncol))
       } else if (isTRUE(color_by_probabilities)){
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
@@ -221,7 +237,11 @@ do_RidgePlot <- function(sample,
          ggridges::geom_density_ridges(color = "black",
                                        size = 1.25) +
          ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}})} else {colors.use},
-                                    name = legend.title)
+                                    name = legend.title) +
+         ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                      title.position = "top",
+                                                      title.hjust = 0.5,
+                                                      ncol = legend.ncol))
   }
 
   if (!is.null(split.by)){

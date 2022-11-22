@@ -25,6 +25,8 @@ do_BarPlot <- function(sample,
                        legend.position = "bottom",
                        legend.title = NULL,
                        legend.ncol = NULL,
+                       legend.nrow = NULL,
+                       legend.byrow = FALSE,
                        rotate_x_axis_labels = 45,
                        xlab = NULL,
                        ylab = NULL,
@@ -45,12 +47,14 @@ do_BarPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("order" = order,
                        "flip" = flip,
-                       "plot.grid" = plot.grid)
+                       "plot.grid" = plot.grid,
+                       "legend.byrow" = legend.byrow)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "legend.ncol" = legend.ncol)
+                       "legend.ncol" = legend.ncol,
+                       "legend.nrow" = legend.nrow)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -156,7 +160,9 @@ do_BarPlot <- function(sample,
        ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                     title.position = "top",
                                                     title.hjust = 0.5,
-                                                    ncol = legend.ncol)) +
+                                                    ncol = legend.ncol,
+                                                    nrow = legend.nrow,
+                                                    byrow = legend.byrow)) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = "bold"),

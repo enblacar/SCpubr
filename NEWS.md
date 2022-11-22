@@ -3,6 +3,7 @@
 ## General
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
 -   Added three new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()` and `do_ExpressionHeatmap()`.
+-   Added `legend.ncol`, `legend.nrow`, `legend.title` and `legend.byrow` to as many functions as possible to further customize legend appearance.
 
 ## `SCpubr::do_BeeSwarmPlot()`
 -   Added `min.cutoff` and `max.cutoff` parameter.
@@ -11,11 +12,9 @@
 -   Added `viridis_direction` parameter to control how the continuous color scale is formed.
 -   Added `return_object` parameter to return the Seurat object with the enrichment scores computed.
 -   Added BoxPlots, BeeSwarmPlots and ViolinPlots to the possible outputs the user can choose from.
--   Added `legend.ncol` parameter.
 -   Make `legend.position` conditional of whether `continuous_feature` is set to TRUE. If it is false, legend is not displayed unless the user specifies otherwise.
 
 ## `SCpubr::do_BarPlot()`
--   Added the possibility to control the number of columns displayed in the legend using `legend.ncol` paramter.
 -   Fixed bug in which axes titles were not displaying correctly under certain combinations of `flip` and `split.by`.
 
 ## `SCpubr::do_BoxPlot()`

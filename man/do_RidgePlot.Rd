@@ -13,6 +13,7 @@ do_RidgePlot(
   slot = "data",
   continuous_scale = FALSE,
   legend.title = NULL,
+  legend.ncol = NULL,
   legend.position = NULL,
   legend.width = 1,
   legend.length = 20,
@@ -60,6 +61,8 @@ do_RidgePlot(
 \item{continuous_scale}{\strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on a categorical or continuous scale.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
