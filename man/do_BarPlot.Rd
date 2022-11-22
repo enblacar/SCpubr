@@ -15,6 +15,8 @@ do_BarPlot(
   legend.position = "bottom",
   legend.title = NULL,
   legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   rotate_x_axis_labels = 45,
   xlab = NULL,
   ylab = NULL,
@@ -64,6 +66,10 @@ do_BarPlot(
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
