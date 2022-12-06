@@ -99,6 +99,12 @@ do_AlluvialPlot <- function(sample,
                             msg = "Please make sure that the variables provided to first_group, middle_groups and last_group are either characters or factors.")
   }
 
+  assertthat::assert_that(length(fill.by) == 1,
+                          msg = "Parameter fill.by has to be a single value.")
+
+
+  assertthat::assert_that(isTRUE(fill.by %in% vars.use),
+                          msg = "Parameter fill.by has to be the same as one of the values in first_group, last_group or middle_groups.")
   suppressMessages({
     data <- sample@meta.data %>%
             dplyr::select(dplyr::all_of(vars.use)) %>%
@@ -109,10 +115,10 @@ do_AlluvialPlot <- function(sample,
 
   # COLORS.
   if (is.null(colors.use)){
-    if (is.factor(data[[last_group]])){
-      colors.use = generate_color_scale(levels(data[[last_group]]))
+    if (is.factor(data[[fill.by]])){
+      colors.use = generate_color_scale(levels(data[[fill.by]]))
     } else {
-      colors.use = generate_color_scale(sort(unique(data[[last_group]])))
+      colors.use = generate_color_scale(sort(unique(data[[fill.by]])))
     }
   } else {
     check_colors(colors.use)

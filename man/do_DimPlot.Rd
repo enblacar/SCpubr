@@ -15,7 +15,9 @@ do_DimPlot(
   pt.size = 1,
   label = FALSE,
   label.color = "white",
-  repel = TRUE,
+  label.size = 4,
+  label.box = TRUE,
+  repel = FALSE,
   cells.highlight = NULL,
   idents.highlight = NULL,
   idents.keep = NULL,
@@ -72,9 +74,13 @@ do_DimPlot(
 
 \item{label}{\strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
-\item{label.color}{\strong{\code{\link[base]{character}}} | HEX code for the color of the text in the labels if label is set to TRUE.}
+\item{label.color}{\strong{\code{\link[base]{character}}} | Color of the labels in the plot.}
 
-\item{repel}{\strong{\code{\link[base]{logical}}} | Whether to repel the labels if label is set to TRUE.}
+\item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
+
+\item{label.box}{\strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).}
+
+\item{repel}{\strong{\code{\link[base]{logical}}} | Whether to repel the text labels.}
 
 \item{cells.highlight, idents.highlight}{\strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.}
 

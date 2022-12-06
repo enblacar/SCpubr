@@ -195,6 +195,14 @@
 
 \item{contour_expand_axes}{\strong{\code{\link[base]{numeric}}} | To make the contours fit the plot, the limits of the X and Y axis are expanding a given percentage from the min and max values for each axis. This controls such percentage.}
 
+\item{label}{\strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
+
+\item{label.color}{\strong{\code{\link[base]{character}}} | Color of the labels in the plot.}
+
+\item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
+
+\item{label.box}{\strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).}
+
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}

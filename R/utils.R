@@ -118,6 +118,10 @@
 #' @param contour.linejoin \strong{\code{\link[base]{character}}} | Line join style (round, mitre, bevel).
 #' @param contour_expand_axes \strong{\code{\link[base]{numeric}}} | To make the contours fit the plot, the limits of the X and Y axis are expanding a given percentage from the min and max values for each axis. This controls such percentage.
 #' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.
+#' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
+#' @param label.color \strong{\code{\link[base]{character}}} | Color of the labels in the plot.
+#' @param label.size \strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.
+#' @param label.box \strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -210,7 +214,11 @@ doc_function <- function(sample,
                          contour.color,
                          contour.lineend,
                          contour.linejoin,
-                         contour_expand_axes){}
+                         contour_expand_axes,
+                         label,
+                         label.color,
+                         label.size,
+                         label.box){}
 
 #' Named vector.
 #'
@@ -1970,16 +1978,16 @@ check_parameters <- function(parameter,
                             msg = "Please provide one of the following to rotate_x_axis_labels: 0, 45, 90.")
   } else if (parameter_name == "contour.lineend"){
     assertthat::assert_that(parameter %in% c("round", "butt", "square"),
-                            msg = "Please provide one of the following to contour_lineend: round, butt, square.")
+                            msg = "Please provide one of the following to contour.lineend: round, butt, square.")
   } else if (parameter_name == "contour.linejoin"){
     assertthat::assert_that(parameter %in% c("round", "mitre", "bevel"),
-                            msg = "Please provide one of the following to contour_linejoin: round, mitre, bevel.")
+                            msg = "Please provide one of the following to contour.linejoin: round, mitre, bevel.")
   } else if (parameter_name == "contour.position"){
     assertthat::assert_that(parameter %in% c("bottom", "top"),
-                            msg = "Please provide one of the following to contour_position: top, bottom.")
+                            msg = "Please provide one of the following to contour.position: top, bottom.")
   } else if (parameter_name == "flavor"){
     assertthat::assert_that(parameter %in% c("Seurat", "UCell", "AUCell"),
-                            msg = "Please provide one of the following to contour_position: Seurat, UCell")
+                            msg = "Please provide one of the following to flavor: Seurat, UCell, AUCell.")
   }
 }
 

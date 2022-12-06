@@ -97,7 +97,12 @@ do_ExpressionHeatmap <- function(sample,
     group.by <- "Groups"
   }
 
-  features <- check_feature(sample = sample, features = features, permissive = TRUE)
+  features <- remove_duplicated_features(features)
+
+  # Generate the heatmap data.
+  if (sum(!features %in% rownames(sample)) >= 1){
+    warning("The following features are not found in the data: ", paste0(features[!features %in% rownames(sample)], collapse = ", "), call. = FALSE)
+  }
 
   list.data <- list()
   list.heatmaps <- list()
@@ -112,30 +117,37 @@ do_ExpressionHeatmap <- function(sample,
                             msg = paste0("Value ", variant, " in group.by is not a character or factor column in the metadata."))
   }
 
+  features <- features[features %in% rownames(sample)]
 
-  # Generate the heatmap data.
+  assertthat::assert_that(length(features) >= 1,
+                          msg = "None of the provided features are present in the data.")
+
   for (variant in group.by){
+    data.merge <- Seurat::GetAssayData(object = sample,
+                                       assay = assay,
+                                       slot = slot)[features, ] %>%
+                  as.data.frame() %>%
+                  as.matrix() %>%
+                  t() %>%
+                  as.data.frame() %>%
+                  tibble::rownames_to_column(var = "cell") %>%
+                  tibble::tibble()
+
+    colnames(data.merge) <- c("cell", features)
+
     data <- sample@meta.data %>%
-      tibble::rownames_to_column(var = "cell") %>%
-      dplyr::select(dplyr::all_of(c("cell", variant))) %>%
-      tibble::tibble() %>%
-      dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
-                                                 assay = assay,
-                                                 slot = slot)[features, ] %>%
-          as.data.frame() %>%
-          as.matrix() %>%
-          t() %>%
-          as.data.frame() %>%
-          tibble::rownames_to_column(var = "cell") %>%
-          tibble::tibble()},
-          by = "cell") %>%
-      dplyr::select(-dplyr::all_of(c("cell"))) %>%
-      dplyr::group_by(.data[[variant]]) %>%
-      dplyr::summarise_at(.vars = features,
-                          .funs = mean) %>%
-      as.data.frame() %>%
-      tibble::column_to_rownames(var = variant) %>%
-      as.matrix()
+            tibble::rownames_to_column(var = "cell") %>%
+            dplyr::select(dplyr::all_of(c("cell", variant))) %>%
+            tibble::tibble() %>%
+            dplyr::left_join(y = data.merge,
+                             by = "cell") %>%
+            dplyr::select(-dplyr::all_of(c("cell"))) %>%
+            dplyr::group_by(.data[[variant]]) %>%
+            dplyr::summarise_at(.vars = features,
+                                .funs = mean) %>%
+            as.data.frame() %>%
+            tibble::column_to_rownames(var = variant) %>%
+            as.matrix()
     list.data[[variant]] <- data
   }
 
@@ -170,22 +182,61 @@ do_ExpressionHeatmap <- function(sample,
 
   }
 
-  # Plot the heatmaps.
-  for (variant in group.by){
-    data <- list.data[[variant]]
+  # Fix for automatic row and column titles.
+  if (length(group.by) > 1){
     if (isTRUE(flip)){
-      data <- t(data)
-      row_title_use <- column_title
-      column_title_use <- row_title
-    } else {
-      row_title_use <- row_title
-      column_title_use <- column_title
-    }
+      if (length(column_title) == 1){
+        if (column_title == "Groups"){
+          column_title <- rep("Groups", length(group.by))
+        }
+      } else {
+        assertthat::assert_that(length(column_title) == length(group.by),
+                                msg = "Please provide as many different column titles as unique values in group.by.")
+      }
 
-    out <- heatmap_inner(data,
+      if (length(row_title) == 1){
+        if (row_title == "Genes"){
+          row_title <- c("Genes", rep("", length(group.by) - 1))
+        }
+      } else {
+        assertthat::assert_that(length(row_title) == length(group.by),
+                                msg = "Please provide as many different row titles as unique values in group.by.")
+      }
+
+
+    } else if (isFALSE(flip)){
+      if (length(row_title) == 1){
+        if (row_title == "Groups"){
+          row_title <- rep("Groups", length(group.by))
+        }
+      } else {
+        assertthat::assert_that(length(row_title) == length(group.by),
+                                msg = "Please provide as many different row titles as unique values in group.by.")
+      }
+
+      if (length(column_title) == 1){
+        if (column_title == "Genes"){
+          column_title <- c("Genes", rep("", length(group.by) - 1))
+        }
+      } else {
+        assertthat::assert_that(length(column_title) == length(group.by),
+                                msg = "Please provide as many different column titles as unique values in group.by.")
+      }
+    }
+  }
+
+  # Plot the heatmaps.
+  counter <- 0
+  for (variant in group.by){
+    counter <- counter + 1
+    data <- list.data[[variant]]
+    row_title_use <- row_title[counter]
+    column_title_use <- column_title[counter]
+
+    out <- heatmap_inner(if (isTRUE(flip)) {t(data)} else {data},
                          legend.title = legend.title,
-                         column_title = column_title,
-                         row_title = row_title,
+                         column_title = column_title_use,
+                         row_title = row_title_use,
                          cluster_columns = cluster_cols,
                          cluster_rows = cluster_rows,
                          column_names_rot = column_names_rot,

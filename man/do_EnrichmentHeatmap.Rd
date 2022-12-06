@@ -76,7 +76,8 @@ do_EnrichmentHeatmap(
   boxplot_order_by_mean = TRUE,
   violin_plot_boxplot = TRUE,
   violin_boxplot_width = 0.2,
-  return_object = FALSE
+  return_object = FALSE,
+  return_matrix = FALSE
 )
 }
 \arguments{
@@ -196,6 +197,8 @@ do_EnrichmentHeatmap(
 \item{violin_boxplot_width}{\strong{\code{\link[base]{numeric}}} | Width of the boxplots in the violin plots.}
 
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
+
+\item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
 }
 \value{
 A ComplexHeatmap object.

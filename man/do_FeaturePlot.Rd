@@ -53,7 +53,10 @@ do_FeaturePlot(
   contour.color = "grey90",
   contour.lineend = "butt",
   contour.linejoin = "round",
-  contour_expand_axes = 0.25
+  contour_expand_axes = 0.25,
+  label = FALSE,
+  label.color = "black",
+  label.size = 4
 )
 }
 \arguments{
@@ -155,6 +158,12 @@ do_FeaturePlot(
 \item{contour.linejoin}{\strong{\code{\link[base]{character}}} | Line join style (round, mitre, bevel).}
 
 \item{contour_expand_axes}{\strong{\code{\link[base]{numeric}}} | To make the contours fit the plot, the limits of the X and Y axis are expanding a given percentage from the min and max values for each axis. This controls such percentage.}
+
+\item{label}{\strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
+
+\item{label.color}{\strong{\code{\link[base]{character}}} | Color of the labels in the plot.}
+
+\item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

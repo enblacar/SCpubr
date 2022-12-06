@@ -255,15 +255,30 @@ do_AzimuthAnalysisPlot <- function(sample,
              GGGHHH
              GGGHHH"
 
-  p.combined <- patchwork::wrap_plots(A = if (!is.null(ref.obj)) {p.ref} else {patchwork::plot_spacer()},
-                                      B = p.umap.cluster,
-                                      C = p.umap.ref,
-                                      D = p.umap,
-                                      E = p.prediction,
-                                      F = p.mapping,
-                                      G = p.barplot2,
-                                      H = p.barplot,
-                                      design = layout)
+  p.combined.portrait <- patchwork::wrap_plots(A = if (!is.null(ref.obj)) {p.ref} else {patchwork::plot_spacer()},
+                                               B = p.umap.cluster,
+                                               C = p.umap.ref,
+                                               D = p.umap,
+                                               E = p.prediction,
+                                               F = p.mapping,
+                                               G = p.barplot2,
+                                               H = p.barplot,
+                                               design = layout)
+
+  layout <- "AABBCCGGG
+             AABBCCGGG
+             DDEEFFHHH
+             DDEEFFHHH"
+
+  p.combined.landscape <- patchwork::wrap_plots(A = if (!is.null(ref.obj)) {p.ref} else {patchwork::plot_spacer()},
+                                                B = p.umap.cluster,
+                                                C = p.umap.ref,
+                                                D = p.umap,
+                                                E = p.prediction,
+                                                F = p.mapping,
+                                                G = p.barplot2,
+                                                H = p.barplot,
+                                                design = layout)
 
   # Generate the output list.
   output_list[["mapping_scores"]] <- p.mapping
@@ -275,7 +290,8 @@ do_AzimuthAnalysisPlot <- function(sample,
   output_list[["barplot_orig"]] <- p.barplot2
   output_list[["annotation_scores"]] <- p.prediction
   output_list[["mapping_scores"]] <- p.mapping
-  output_list[["combined"]] <- p.combined
+  output_list[["report_portrait"]] <- p.combined.portrait
+  output_list[["report_landscape"]] <- p.combined.landscape
 
   return(output_list)
 }

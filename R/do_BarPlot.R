@@ -91,6 +91,7 @@ do_BarPlot <- function(sample,
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    colors.use <- colors.use[unique(sample@meta.data[, group.by])]
   }
   data <-  sample@meta.data %>%
            tibble::as_tibble() %>%
@@ -151,8 +152,8 @@ do_BarPlot <- function(sample,
 
   p <- p +
        ggplot2::stat_count(geom = "bar", position = position, color = "black") +
-       ggplot2::xlab(if (isTRUE(flip)) {ylab} else {xlab}) +
-       ggplot2::ylab(if (isFALSE(flip)) {ylab} else {xlab}) +
+       ggplot2::xlab(xlab) +
+       ggplot2::ylab(ylab) +
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
                      caption = plot.caption) +

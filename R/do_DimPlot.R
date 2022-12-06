@@ -1,13 +1,10 @@
 #' Wrapper for \link[Seurat]{DimPlot}.
 #'
 #' @inheritParams doc_function
-#' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
 #' @param shuffle \strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param order \strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param sizes.highlight \strong{\code{\link[base]{numeric}}} | Point size of highlighted cells using cells.highlight parameter.
-#' @param repel \strong{\code{\link[base]{logical}}} | Whether to repel the labels if label is set to TRUE.
-#' @param label.color \strong{\code{\link[base]{character}}} | HEX code for the color of the text in the labels if label is set to TRUE.
 #' @return  A ggplot2 object containing a DimPlot.
 #' @export
 #'
@@ -22,7 +19,9 @@ do_DimPlot <- function(sample,
                        pt.size = 1,
                        label = FALSE,
                        label.color = "white",
-                       repel = TRUE,
+                       label.size = 4,
+                       label.box = TRUE,
+                       repel = FALSE,
                        cells.highlight = NULL,
                        idents.highlight = NULL,
                        idents.keep = NULL,
@@ -75,7 +74,8 @@ do_DimPlot <- function(sample,
                        "marginal.group" = marginal.group,
                        "plot_cell_borders" = plot_cell_borders,
                        "plot.axes" = plot.axes,
-                       "plot_density_contour" = plot_density_contour)
+                       "plot_density_contour" = plot_density_contour,
+                       "label.box" = label.box)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -88,7 +88,8 @@ do_DimPlot <- function(sample,
                        "raster.dpi" = raster.dpi,
                        "marginal.size" = marginal.size,
                        "border.size" = border.size,
-                       "contour_expand_axes" = contour_expand_axes)
+                       "contour_expand_axes" = contour_expand_axes,
+                       "label.size" = label.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -262,7 +263,12 @@ do_DimPlot <- function(sample,
       # Check that the values in idents.keep are in the unique values of split.by.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
                               msg = "All the values in idents.keep must be in the split.by variable provided.")
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+      if (is.null(group.by)){
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+      } else {
+        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+      }
+
     }
   }
 
@@ -310,9 +316,10 @@ do_DimPlot <- function(sample,
                            reduction = reduction,
                            label = label,
                            dims = dims,
-                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                           repel = repel,
+                           label.box = label.box,
+                           label.color = label.color,
+                           label.size = label.size,
                            na.value = na.value,
                            shuffle = shuffle,
                            order = order,
@@ -327,9 +334,10 @@ do_DimPlot <- function(sample,
                            reduction = reduction,
                            label = label,
                            dims = dims,
-                           repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                           label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                           repel = repel,
+                           label.box = label.box,
+                           label.color = label.color,
+                           label.size = label.size,
                            na.value = na.value,
                            shuffle = shuffle,
                            order = order,
@@ -346,12 +354,12 @@ do_DimPlot <- function(sample,
                                                     override.aes = list(size = legend.icon.size),
                                                     title = legend.title,
                                                     title.position = legend.title.position))
+
     if (isTRUE(label)){
-      p <- add_scale(p = p,
-                     function_use = ggplot2::scale_fill_manual(values = colors.use),
-                     scale = "fill")
+
       p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
     }
+
     if (!(is.null(group.by))){
       # Remove automatic title inserted by Seurat.
       p <- p & ggplot2::ggtitle("")
@@ -386,9 +394,12 @@ do_DimPlot <- function(sample,
            ggplot2::xlim(c(min_x, max_x)) +
            ggplot2::ylim(c(min_y, max_y))
     }
-  } else if (group_by_and_split_by_used){
+  } else if (isTRUE(group_by_and_split_by_used) | isTRUE(split_by_used)){
     list.plots <- list()
     unique_values <- if(is.factor(sample@meta.data[, split.by])){levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))}
+    if (!is.null(idents.keep)){
+      unique_values <- unique_values[unique_values %in% idents.keep]
+    }
     num_values <- length(unique_values)
     for (i in seq_len(num_values)){
       value <- unique_values[i]
@@ -421,12 +432,13 @@ do_DimPlot <- function(sample,
       if (utils::packageVersion("Seurat") >= "4.1.0"){
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
-                                  group.by = group.by,
+                                  group.by = if (is.null(group.by)) {split.by} else {group.by},
                                   label = label,
                                   dims = dims,
-                                  repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                  label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                  label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                                  repel = repel,
+                                  label.box = label.box,
+                                  label.color = label.color,
+                                  label.size = label.size,
                                   na.value = na.value,
                                   shuffle = shuffle,
                                   order = order,
@@ -437,12 +449,13 @@ do_DimPlot <- function(sample,
       } else {
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
-                                  group.by = group.by,
+                                  group.by = if (is.null(group.by)) {split.by} else {group.by},
                                   label = label,
                                   dims = dims,
-                                  repel = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                  label.box = ifelse(is.null(label) == TRUE, NULL, TRUE),
-                                  label.color = ifelse(is.null(label) == TRUE, NULL, label.color),
+                                  repel = repel,
+                                  label.box = label.box,
+                                  label.color = label.color,
+                                  label.size = label.size,
                                   na.value = na.value,
                                   shuffle = shuffle,
                                   order = order,
@@ -524,100 +537,7 @@ do_DimPlot <- function(sample,
     p <- patchwork::wrap_plots(list.plots, ncol = ncol, guides = "collect") +
          ggplot2::theme(legend.position = legend.position)
   }
-  # If split.by is used, the UMAP has to be split in multiple panes.
-  else if (split_by_used){
-    # If the user provided multiple highlighting colors.
-    multiple_colors <- ifelse(length(colors.use) > 1, TRUE, FALSE)
-    # List to store each individual plots.
-    list.plots <- list()
-    # Recover metadata values associated with split.by.
-    data.use <- sample@meta.data[, split.by, drop = FALSE]
-    # Retrieve the plotting order, keep factor levels if the column is a factor.
-    plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-    # If idents.keep is used, subset to only these values.
-    if (!(is.null(idents.keep))){
-      plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])[levels(data.use[, 1]) %in% idents.keep]} else {sort(unique(data.use[, 1])[unique(data.use[, 1]) %in% idents.keep])}
-      # If the user wants more than one color.
-      if (isTRUE(multiple_colors)){
-        colors.use <- colors.use[names(colors.use) %in% idents.keep]
-      }
-    }
-    # Iterate over each unique value in split.by parameter.
-    for (iteration in plot_order){
-      # Retrieve the cells that do belong to the iteration's split.by value.
-      cells.highlight <- rownames(data.use)[which(data.use == iteration)]
-
-      if (utils::packageVersion("Seurat") >= "4.1.0"){
-        p <- Seurat::DimPlot(sample,
-                             reduction = reduction,
-                             dims = dims,
-                             cells.highlight = cells.highlight,
-                             sizes.highlight = sizes.highlight,
-                             pt.size = pt.size,
-                             raster = raster,
-                             raster.dpi = c(raster.dpi, raster.dpi),
-                             ncol = ncol)
-      } else {
-        p <- Seurat::DimPlot(sample,
-                             reduction = reduction,
-                             dims = dims,
-                             cells.highlight = cells.highlight,
-                             sizes.highlight = sizes.highlight,
-                             pt.size = pt.size,
-                             raster = raster,
-                             ncol = ncol)
-      }
-      p <- p &
-        ggplot2::labs(title = iteration)
-      p <- add_scale(p = p,
-                     function_use = ggplot2::scale_color_manual(labels = c("Not selected", iteration),
-                                                                values = c(na.value, ifelse(multiple_colors == TRUE, colors.use[[iteration]], colors.use)),
-                                                                na.value = na.value),
-                     scale = "color") &
-        ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
-                                                      ncol = legend.ncol,
-                                                      nrwo = legend.nrow,
-                                                      byrow = legend.byrow,
-                                                      override.aes = list(size = legend.icon.size),
-                                                      title.position = legend.title.position))
-      # Add cell borders.
-      if (isTRUE(plot_cell_borders)){
-        p$layers <- append(base_layer, p$layers)
-      }
-
-      if (isTRUE(plot_density_contour)){
-        data <- ggplot2::ggplot_build(p)
-
-        density_layer <- ggplot2::stat_density_2d(data = data$data[[1]],
-                                                  mapping = ggplot2::aes(x = .data$x,
-                                                                         y = .data$y),
-                                                  color = contour.color,
-                                                  lineend = contour.lineend,
-                                                  linejoin = contour.linejoin)
-        if (contour.position == "bottom"){
-          p$layers <- append(density_layer, p$layers)
-        } else if (contour.position == "top"){
-          p$layers <- append(p$layers, density_layer)
-        }
-
-        min_x <- min(data$data[[1]]$x) * (1 + contour_expand_axes)
-        max_x <- max(data$data[[1]]$x) * (1 + contour_expand_axes)
-        min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
-        max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
-        # Expand axes limits to allocate the new contours.
-        p <- p +
-          ggplot2::xlim(c(min_x, max_x)) +
-          ggplot2::ylim(c(min_y, max_y))
-      }
-
-      list.plots[[iteration]] <- p
-    }
-    # Assemble individual plots as a patch.
-    p <- patchwork::wrap_plots(list.plots, ncol = ncol)
-  }
-
-
-  # If the user wants to highlight some of the cells.
+   # If the user wants to highlight some of the cells.
   else if (highlighting_cells){
     # Compute the cells to highlight.
     if (is.null(idents.highlight) & !(is.null(cells.highlight))){

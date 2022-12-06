@@ -15,7 +15,8 @@
 -   Make `legend.position` conditional of whether `continuous_feature` is set to TRUE. If it is false, legend is not displayed unless the user specifies otherwise.
 
 ## `SCpubr::do_BarPlot()`
--   Fixed bug in which axes titles were not displaying correctly under certain combinations of `flip` and `split.by`.
+-   Fixed a bug in which axes titles were not displaying correctly under certain combinations of `flip` and `split.by`.
+-   Fixed a bug in which `x_lab` and `y_lab` would not rotate accordingly when using `flip = TRUE`. 
 
 ## `SCpubr::do_BoxPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
@@ -28,10 +29,18 @@
 
 ## `SCpubr::do_DimPlot()`
 -   Fixed a bug in which the legend title will not show up in regular basic plots even though the parameter `legend.title` was used.
+-   Completely reformatted the way `split.by` works, so that now only one legend is displayed for the whole group and cells have border.
+-   Added `label.size` and `label.box` parameters for further customize the appearance of the plot when using `label = TRUE`. 
+-   Changed `repel` to `FALSE` by default. 
 
 ## `SCpubr::do_EnrichmentHeatmap()`
 -   Fixed a bug in the code that prevented the feature plots and the geyser plots to be computed if the input gene list was not a named list of genes.
 -   Added `flavor = "AUCell"`, that lets the user compute AUCell scoring of the gene sets. 
+-   Added the option to query multiple `group.by` parameters at the same time. 
+-   Fixed a bug in the code that prevented multiple outputs with different values of `group.by` to be returned properly, leading to the last value of `group.by` replacing all the rest.
+
+## `SCpubr::do_EnrichmentHeatmap()`
+-   Added `label`, `label.size` and `label.color` parameter to reproduce the same behavior as in `Seurat::FeaturePlot()`. 
 
 ## `SCpubr::do_GroupwiseDEPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
