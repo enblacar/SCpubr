@@ -92,6 +92,8 @@ do_ExpressionHeatmap <- function(sample,
 
   assay <- if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay}
 
+  Seurat::DefaultAssay(sample) <- assay
+
   if (is.null(group.by)){
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
@@ -101,7 +103,7 @@ do_ExpressionHeatmap <- function(sample,
 
   # Generate the heatmap data.
   if (sum(!features %in% rownames(sample)) >= 1){
-    warning("The following features are not found in the data: ", paste0(features[!features %in% rownames(sample)], collapse = ", "), call. = FALSE)
+    warning("The following features are not found in the rownames of the provided assay (default assay if not specified): ", paste0(features[!features %in% rownames(sample)], collapse = ", "), call. = FALSE)
   }
 
   list.data <- list()
