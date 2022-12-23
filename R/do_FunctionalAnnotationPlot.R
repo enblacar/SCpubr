@@ -2,8 +2,6 @@
 #'
 #'
 #' @inheritParams doc_function
-#' @param genes \strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.
-#' @param org.db \strong{\code{OrgDB}} | Database object to use for the query.
 #' @param organism  \strong{\code{\link[base]{character}}} | Supported KEGG organism.
 #' @param database \strong{\code{\link[base]{character}}} | Database to run the analysis on. One of:
 #' \itemize{
@@ -11,13 +9,6 @@
 #'   \item \emph{\code{KEGG}}.
 #'   \item \emph{\code{MKEGG}}.
 #' }
-#' @param GO_ontology \strong{\code{\link[base]{character}}} | GO ontology to use. One of:
-#' \itemize{
-#'   \item \emph{\code{BP}}: For \strong{B}iological \strong{P}rocess.
-#'   \item \emph{\code{MF}}: For \strong{M}olecular \strong{F}unction.
-#'   \item \emph{\code{CC}}: For \strong{C}ellular \strong{C}omponent.
-#' } BP, MF or CC.
-#' @param min.overlap \strong{\code{\link[base]{numeric}}} | Filter the output result to the enriched terms which are supported by this many genes.
 #' @param p.adjust.cutoff \strong{\code{\link[base]{numeric}}} | Significance cutoff used to filter non-significant terms.
 #' @param pAdjustMethod \strong{\code{\link[base]{character}}} | Method to adjust for multiple testing.  One of:
 #' \itemize{
@@ -83,6 +74,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         nWords = 4,
                                         nCluster = 5){
 
+  check_suggests(function_name = "do_FunctionalAnnotationPlot")
+
   # Check logical parameters.
   logical_list <- list("flip" = flip,
                        "cluster_columns" = cluster_columns,
@@ -124,7 +117,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                          "organism" = organism,
                          "database" = database,
                          "GO_ontology" = GO_ontology,
-                         "pAdjustMethod" = pAdjustMethod)
+                         "pAdjustMethod" = pAdjustMethod,
+                         "genes" = genes)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 

@@ -68,9 +68,9 @@ do_FunctionalAnnotationPlot(
 \item \emph{\code{BP}}: For \strong{B}iological \strong{P}rocess.
 \item \emph{\code{MF}}: For \strong{M}olecular \strong{F}unction.
 \item \emph{\code{CC}}: For \strong{C}ellular \strong{C}omponent.
-} BP, MF or CC.}
+}}
 
-\item{min.overlap}{\strong{\code{\link[base]{numeric}}} | Filter the output result to the enriched terms which are supported by this many genes.}
+\item{min.overlap}{\strong{\code{\link[base]{numeric}}} | Filter the output result to the terms which are supported by this many genes.}
 
 \item{p.adjust.cutoff}{\strong{\code{\link[base]{numeric}}} | Significance cutoff used to filter non-significant terms.}
 

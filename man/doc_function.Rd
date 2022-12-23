@@ -203,6 +203,19 @@
 
 \item{label.box}{\strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).}
 
+\item{min.overlap}{\strong{\code{\link[base]{numeric}}} | Filter the output result to the terms which are supported by this many genes.}
+
+\item{GO_ontology}{\strong{\code{\link[base]{character}}} | GO ontology to use. One of:
+\itemize{
+\item \emph{\code{BP}}: For \strong{B}iological \strong{P}rocess.
+\item \emph{\code{MF}}: For \strong{M}olecular \strong{F}unction.
+\item \emph{\code{CC}}: For \strong{C}ellular \strong{C}omponent.
+}}
+
+\item{genes}{\strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.}
+
+\item{org.db}{\strong{\code{OrgDB}} | Database object to use for the query.}
+
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}

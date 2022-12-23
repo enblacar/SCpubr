@@ -56,9 +56,12 @@ Suggests:
     testthat (>= 3.0.0),
     viridis,
     UCell,
+    AUCell,
+    clusterProfiler,
+    enrichplot,
+    ggnewscale,
     liana (>= 0.1.6),
-    ggsankey (>= 0.0.99999),
-    AUCell
+    ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 

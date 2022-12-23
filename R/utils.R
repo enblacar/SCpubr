@@ -122,6 +122,15 @@
 #' @param label.color \strong{\code{\link[base]{character}}} | Color of the labels in the plot.
 #' @param label.size \strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.
 #' @param label.box \strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).
+#' @param min.overlap \strong{\code{\link[base]{numeric}}} | Filter the output result to the terms which are supported by this many genes.
+#' @param GO_ontology \strong{\code{\link[base]{character}}} | GO ontology to use. One of:
+#' \itemize{
+#'   \item \emph{\code{BP}}: For \strong{B}iological \strong{P}rocess.
+#'   \item \emph{\code{MF}}: For \strong{M}olecular \strong{F}unction.
+#'   \item \emph{\code{CC}}: For \strong{C}ellular \strong{C}omponent.
+#' }
+#' @param genes \strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.
+#' @param org.db \strong{\code{OrgDB}} | Database object to use for the query.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -218,7 +227,11 @@ doc_function <- function(sample,
                          label,
                          label.color,
                          label.size,
-                         label.box){}
+                         label.box,
+                         min.overlap,
+                         GO_ontology,
+                         genes,
+                         org.db){}
 
 #' Named vector.
 #'
@@ -290,7 +303,9 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_DotPlot" = c(),
                    "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
                    "do_FeaturePlot" = c("scattermore"),
+                   "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale"),
                    "do_GeyserPlot" = c("ggdist"),
+                   "do_GroupedGOPlot" = c("clusterProfiler"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_NebulosaPlot" = c("Nebulosa"),
@@ -379,6 +394,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
                    "do_FeaturePlot" = c("scattermore"),
                    "do_GeyserPlot" = c("ggdist"),
+                   "do_GroupedGOPlot" = c("clusterProfiler"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_NebulosaPlot" = c("Nebulosa"),
@@ -408,6 +424,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                      "ggbeeswarm",
                      "ggdist",
                      "ggExtra",
+                     "ggnewscale",
                      "ggplot2",
                      "ggplotify",
                      "ggrastr",
@@ -432,9 +449,14 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                      "svglite",
                      "viridis")
 
-  bioconductor_packages <- c("ComplexHeatmap",
+  bioconductor_packages <- c("AUCell",
+                             "ComplexHeatmap",
+                             "clusterProfiler",
+                             "enrichplot",
                              "infercnv",
-                             "Nebulosa")
+                             "Nebulosa",
+                             "UCell")
+
   github_packages <- c("ggsankey",
                        "liana",
                        "monocle3")
@@ -2271,7 +2293,9 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                            cluster_columns = TRUE,
                                            cell_size = 5,
                                            reverse.levels = TRUE,
-                                           colors.use = c("white", "#29353d")){
+                                           colors.use = c("white", "#29353d"),
+                                           rotate_x_axis_labels = 45,
+                                           font.size = 10){
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
 
@@ -2312,12 +2336,13 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                   row_title = if (isFALSE(flip)) {level} else {"Genes in signature"},
                                   column_title = if(isTRUE(flip)) {level} else {"Genes in signature"},
                                   row_title_side = "right",
-                                  column_names_rot = 45,
+                                  column_names_rot = rotate_x_axis_labels,
                                   row_title_rotation = 0,
                                   cluster_rows = cluster_rows,
                                   cluster_columns = cluster_columns,
                                   cell_size = cell_size,
-                                  colors.use = colors.use)
+                                  colors.use = colors.use,
+                                  fontsize = font.size)
 
       grDevices::pdf(NULL)
       out <- ComplexHeatmap::draw(h[["heatmap"]],
