@@ -13,7 +13,6 @@
 #' @param mapping.cutoff \strong{\code{\link[base]{numeric}}} | Value from 0 to 1 to use as cutoff to assign the labels to the object. This is used in conjunction with annotation.cutoff.
 #' @param ref.obj  \strong{\code{\link[SeuratObject]{Seurat}}} | Seurat object used for reference mapping. Providing this object will add an extra plot with the UMAP of the reference and add its silhouette to the UMAP in which the original cells are showed in the context of the UMAP embedding of the reference object.
 #' @param ref.reduction \strong{\code{\link[base]{character}}} | Name of the reduction embedding used to plot the UMAP in the reference object.
-#' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @return A list containing multiple plots.
 #' @export
 #'
@@ -37,7 +36,9 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    font.type = "sans",
                                    colors.use = NULL,
                                    label = TRUE,
-                                   legend.position = "bottom"){
+                                   legend.position = "bottom",
+                                   viridis_color_map = "G",
+                                   viridis_direction = 1){
 
 
 
@@ -54,7 +55,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                        "pt.size" = pt.size,
                        "raster.dpi" = raster.dpi,
                        "border.size" = border.size,
-                       "font.size" = font.size)
+                       "font.size" = font.size,
+                       "viridis_direction" = viridis_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("annotation.labels" = annotation.labels,
@@ -65,7 +67,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "na.value" = na.value,
-                         "ref.reduction" = ref.reduction)
+                         "ref.reduction" = ref.reduction,
+                         "viridis_color_map" = viridis_color_map)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value, parameter_name = "na.value")
@@ -83,6 +86,13 @@ do_AzimuthAnalysisPlot <- function(sample,
   if (is.null(group.by)){
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
+  }
+
+  if (!is.null(colors.use)){
+    SCpubr:::check_colors(colors.use)
+    SCpubr:::check_consistency_colors_and_names(sample = sample,
+                                                colors = colors.use,
+                                                grouping_variable = group.by)
   }
 
   # Prepare sample metadata and apply desired cutoffs.
@@ -110,7 +120,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    plot.title = "Cells in reference UMAP embedding",
                                    pt.size = pt.size,
                                    font.size = font.size,
-                                   font.type = font.type)
+                                   font.type = font.type,
+                                   colors.use = colors.use)
 
   # If the user has provided a UMAP of the reference, add its silhouette.
   if (!is.null(ref.obj)){
@@ -196,7 +207,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                                        plot.title = "Original annotation",
                                        pt.size = pt.size,
                                        font.size = font.size,
-                                       font.type = font.type)
+                                       font.type = font.type,
+                                       colors.use = colors.use)
 
   # BarPlot with the proportion of inferred identities per original cluster.
   p.barplot <- SCpubr::do_BarPlot(sample = sample,
@@ -231,7 +243,9 @@ do_AzimuthAnalysisPlot <- function(sample,
                                          plot.title = "Azimuth annotation scores",
                                          pt.size = pt.size,
                                          font.size = font.size,
-                                         font.type = font.type)
+                                         font.type = font.type,
+                                         viridis_color_map = viridis_color_map,
+                                         viridis_direction = viridis_direction)
 
   # FeaturePlot with the mapping scores.
   p.mapping <- SCpubr::do_FeaturePlot(sample = sample,
@@ -244,7 +258,9 @@ do_AzimuthAnalysisPlot <- function(sample,
                                       na.value = na.value,
                                       pt.size = pt.size,
                                       font.size = font.size,
-                                      font.type = font.type)
+                                      font.type = font.type,
+                                      viridis_color_map = viridis_color_map,
+                                      viridis_direction = viridis_direction)
 
 
   # Generate a combined report.

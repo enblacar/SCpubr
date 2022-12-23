@@ -55,7 +55,7 @@ Suggests:
     ggalluvial,
     testthat (>= 3.0.0),
     viridis,
-    UCell (>= 2.0),
+    UCell,
     liana (>= 0.1.6),
     ggsankey (>= 0.0.99999),
     AUCell

@@ -356,7 +356,11 @@ do_DimPlot <- function(sample,
                                                     title.position = legend.title.position))
 
     if (isTRUE(label)){
-
+      if (isTRUE(label.box)){
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_fill_manual(values = colors.use),
+                       scale = "fill")
+      }
       p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
     }
 
@@ -472,6 +476,11 @@ do_DimPlot <- function(sample,
                                                               override.aes = list(size = legend.icon.size),
                                                               title.position = legend.title.position))
       if (isTRUE(label)){
+        if (isTRUE(label.box)){
+          p.loop <- add_scale(p = p.loop,
+                              function_use = ggplot2::scale_fill_manual(values = colors.use),
+                              scale = "fill")
+        }
         p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"
       }
 

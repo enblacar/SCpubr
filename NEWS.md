@@ -2,7 +2,7 @@
 
 ## General
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
--   Added three new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()` and `do_ExpressionHeatmap()`.
+-   Added four new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()`, `do_ExpressionHeatmap()` and `do_FunctionalAnnotationPlot()`.
 -   Added `legend.ncol`, `legend.nrow`, `legend.title` and `legend.byrow` to as many functions as possible to further customize legend appearance.
 
 ## `SCpubr::do_BeeSwarmPlot()`
@@ -39,11 +39,15 @@
 -   Added the option to query multiple `group.by` parameters at the same time. 
 -   Fixed a bug in the code that prevented multiple outputs with different values of `group.by` to be returned properly, leading to the last value of `group.by` replacing all the rest.
 
-## `SCpubr::do_EnrichmentHeatmap()`
+## `SCpubr::do_FeaturePlot()`
 -   Added `label`, `label.size` and `label.color` parameter to reproduce the same behavior as in `Seurat::FeaturePlot()`. 
 
 ## `SCpubr::do_GroupwiseDEPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
+
+## `SCpubr::do_LigandReceptorPlot()`
+-   Added `arrange_interactions_by` to control how output interactions are arranged (either by aggreagate_rank, specificity, magnitude or a combination of magnitude and specificity).
+-   Added `sort_interactions_alphabetically` to control whether the output dotplot has the interactions ordered alphabetically or as they come in the original matrix (meaning, they follow the arrangement specified in `arrange_interactions_by`). (([liana's issue  #72](https://github.com/saezlab/liana/issues/72)))
 
 ## `SCpubr::do_ViolinPlot()`
 -   Fixed a bug in the code in which no different colors could be passed to `colors.use`. 

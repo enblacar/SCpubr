@@ -12,7 +12,15 @@
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.
-#'
+#' @param arrange_interactions_by \strong{\code{\link[base]{character}}} | Select the method in which the output matrix of interactions is arranged for plotting. One of:
+#' \itemize{
+#'   \item \emph{\code{aggregate_rank}}: Uses the output matrix of \strong{\code{\link[liana]{liana_aggregate}}}. Interactions are ordered based on \strong{\code{aggregate_rank}}.
+#'   \item \emph{\code{specificity}}: Uses the \strong{\code{natmi.edge_specificity}} column to arrange the interactions by their specificity.
+#'   \item \emph{\code{magnitude}}: Uses the \strong{\code{sca.LRscore}} column to arrange the interactions by their specificity.
+#'   \item \emph{\code{both}}: Uses both \strong{\code{sca.LRscore}} and \strong{\code{natmi.edge_specificity}} columns to arrange the interactions by their specificity and magnitude altogether.
+#' }
+#' #' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).
+
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
 #'
@@ -45,7 +53,9 @@ do_LigandReceptorPlot <- function(liana_output,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
                                   compute_ChordDiagrams = FALSE,
-                                  add_missing_LR_combinations = TRUE){
+                                  add_missing_LR_combinations = TRUE,
+                                  arrange_interactions_by = "both",
+                                  sort_interactions_alphabetically = FALSE){
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
@@ -56,7 +66,8 @@ do_LigandReceptorPlot <- function(liana_output,
                        "flip" = flip,
                        "rotate_strip_text" = rotate_strip_text,
                        "plot.grid" = plot.grid,
-                       "add_missing_LR_combinations" = add_missing_LR_combinations)
+                       "add_missing_LR_combinations" = add_missing_LR_combinations,
+                       "sort_interactions_alphabetically" = sort_interactions_alphabetically)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -81,7 +92,8 @@ do_LigandReceptorPlot <- function(liana_output,
                          "legend.tickcolor" = legend.tickcolor,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
-                         "grid.type" = grid.type)
+                         "grid.type" = grid.type,
+                         "arrange_interactions_by" = arrange_interactions_by)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check border color.
@@ -102,6 +114,7 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
 
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
@@ -142,9 +155,22 @@ do_LigandReceptorPlot <- function(liana_output,
 
   liana_output <- liana_output %>%
                   dplyr::mutate(magnitude = .data$sca.LRscore) %>%
-                  dplyr::mutate(specificity = .data$natmi.edge_specificity) %>%
-                  dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+                  dplyr::mutate(specificity = .data$natmi.edge_specificity)
 
+  # Differential arrangement of the interactions.
+  if (arrange_interactions_by == "aggregate_rank"){
+    liana_output <- liana_output %>%
+                    dplyr::arrange(.data$aggregate_rank)
+  } else if (arrange_interactions_by == "specificity"){
+    liana_output <- liana_output %>%
+                    dplyr::arrange(dplyr::desc(.data$specificity))
+  } else if (arrange_interactions_by == "magnitude"){
+    liana_output <- liana_output %>%
+                    dplyr::arrange(dplyr::desc(.data$magnitude))
+  } else if (arrange_interactions_by == "both"){
+    liana_output <- liana_output %>%
+                    dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+  }
 
   liana_output <- liana_output %>%
                   # Merge ligand.complex and receptor.complex columns into one, that will be used for the Y axis.
@@ -221,9 +247,16 @@ do_LigandReceptorPlot <- function(liana_output,
   }
 
   # Make source and target factors, so that they do not get dropped by the plot.
-  liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
-  liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
-  liana_output$interaction <- factor(liana_output$interaction, levels = rev(sort(unique(liana_output$interaction))))
+  if (isTRUE(sort_interactions_alphabetically)){
+    liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
+    liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
+    liana_output$interaction <- factor(liana_output$interaction, levels = rev(sort(unique(liana_output$interaction))))
+  } else if (isFALSE(sort_interactions_alphabetically)){
+    liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
+    liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
+    liana_output$interaction <- factor(liana_output$interaction, levels = rev(unique(liana_output$interaction)))
+  }
+
 
   # Plot.
   if (isTRUE(flip)){

@@ -32,7 +32,9 @@ do_LigandReceptorPlot(
   grid.color = "grey90",
   grid.type = "dotted",
   compute_ChordDiagrams = FALSE,
-  add_missing_LR_combinations = TRUE
+  add_missing_LR_combinations = TRUE,
+  arrange_interactions_by = "both",
+  sort_interactions_alphabetically = FALSE
 )
 }
 \arguments{
@@ -111,6 +113,15 @@ do_LigandReceptorPlot(
 \item{compute_ChordDiagrams}{\strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
 
 \item{add_missing_LR_combinations}{\strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.}
+
+\item{arrange_interactions_by}{\strong{\code{\link[base]{character}}} | Select the method in which the output matrix of interactions is arranged for plotting. One of:
+\itemize{
+\item \emph{\code{aggregate_rank}}: Uses the output matrix of \strong{\code{\link[liana]{liana_aggregate}}}. Interactions are ordered based on \strong{\code{aggregate_rank}}.
+\item \emph{\code{specificity}}: Uses the \strong{\code{natmi.edge_specificity}} column to arrange the interactions by their specificity.
+\item \emph{\code{magnitude}}: Uses the \strong{\code{sca.LRscore}} column to arrange the interactions by their specificity.
+\item \emph{\code{both}}: Uses both \strong{\code{sca.LRscore}} and \strong{\code{natmi.edge_specificity}} columns to arrange the interactions by their specificity and magnitude altogether.
+}
+#' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

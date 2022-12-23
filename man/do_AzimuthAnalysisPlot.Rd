@@ -32,7 +32,9 @@ do_AzimuthAnalysisPlot(
   font.type = "sans",
   colors.use = NULL,
   label = TRUE,
-  legend.position = "bottom"
+  legend.position = "bottom",
+  viridis_color_map = "G",
+  viridis_direction = 1
 )
 }
 \arguments{
@@ -87,6 +89,10 @@ do_AzimuthAnalysisPlot(
 \item \emph{\code{right}}: Right of the figure.
 \item \emph{\code{none}}: No legend is displayed.
 }}
+
+\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 }
 \value{
 A list containing multiple plots.

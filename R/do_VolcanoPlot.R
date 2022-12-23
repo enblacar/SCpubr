@@ -72,7 +72,7 @@ do_VolcanoPlot <- function(sample,
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
 
-  assertthat::assert_that(order_tags_by %in% c("both", "p_value", "logfc"),
+  assertthat::assert_that(order_tags_by %in% c("both", "pvalue", "logfc"),
                           msg = "Please use either both, pvalue or logfc in order_tags_by.")
 
   `.` <- plyr::.()
