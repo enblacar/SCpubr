@@ -2186,7 +2186,8 @@ do_GroupedGO_matrices <- function(genes,
                                   org.db,
                                   levels.use = NULL,
                                   ontologies = c("BP", "CC", "MF"),
-                                  min.overlap = 3){
+                                  min.overlap = 3,
+                                  verbose = TRUE){
   # Convert genes to ENTREZIDs.
   suppressMessages({
     conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
@@ -2198,7 +2199,9 @@ do_GroupedGO_matrices <- function(genes,
   # Iterate over the three ontologies.
   result_ontologies <- list()
   for (ont in ontologies){
-    message(ont)
+    if(isTRUE(verbose)){
+      message(paste0("Computing grouped GO terms for the ontology: ", ont))
+    }
     result_list <- list()
 
     # To break out of the while loop.
@@ -2208,10 +2211,15 @@ do_GroupedGO_matrices <- function(genes,
     counter <- 0
 
     if (is.null(levels.use)){
+      if (isTRUE(verbose)){
+        message("Computing for all possible ontology levels...")
+      }
       while(isFALSE(breakpoint)){
         # Set the ontology level.
         counter <- counter + 1
-        message(counter)
+        if (isTRUE(verbose)){
+          message(paste0("Computing level ", counter, "..."))
+        }
 
         grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
                                                   OrgDb = org.db,
@@ -2233,19 +2241,28 @@ do_GroupedGO_matrices <- function(genes,
           result <- result %>%
             dplyr::filter(.data$Count > min.overlap)
           if (highest_count < min.overlap){
-            result_list[[paste0("Lv. ", counter)]] <- "Results filtered out due to min.overlap."
+            if (isTRUE(verbose)){
+              message("Results filtered out due to min.overlap.")
+            }
           } else {
             result_list[[paste0("Lv. ", counter)]] <- result
           }
 
         } else {
+          if (isTRUE(verbose)){
+            message("This level did not yield any result.")
+          }
           breakpoint <- TRUE
         }
       }
     } else {
+      if (isTRUE(verbose)){
+        message("Computing for the requested levels...")
+      }
       for (level in levels.use){
-        # Set the ontology level.
-        message(level)
+        if (isTRUE(verbose)){
+          message(paste0("Computing level ", level, "..."))
+        }
 
         grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
                                                   OrgDb = org.db,
@@ -2268,16 +2285,24 @@ do_GroupedGO_matrices <- function(genes,
             dplyr::filter(.data$Count >= min.overlap)
 
           if (highest_count < min.overlap){
-            result_list[[paste0("Lv. ", level)]] <- "Results filtered out due to min.overlap."
+            if (isTRUE(verbose)){
+              message("Results filtered out due to min.overlap.")
+            }
           } else {
             result_list[[paste0("Lv. ", level)]] <- result
+          }
+        } else {
+          if (isTRUE(verbose)){
+            message("This level did not yield any result.")
           }
         }
       }
     }
-
-
     result_ontologies[[ont]] <- result_list
+  }
+
+  if (isTRUE(verbose)){
+    message("Finished computing!")
   }
   return(result_ontologies)
 }
@@ -2295,7 +2320,11 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                            reverse.levels = TRUE,
                                            colors.use = c("white", "#29353d"),
                                            rotate_x_axis_labels = 45,
-                                           font.size = 10){
+                                           font.size = 10,
+                                           verbose = TRUE){
+  if (isTRUE(verbose)){
+    message("Plotting heatmaps...")
+  }
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
 
@@ -2307,6 +2336,8 @@ do_GroupedGO_analysis_heatmaps <- function(result,
 
     if (is.null(levels.use)){
       levels.use <- names(result[[ont]])
+    } else {
+      levels.use <- sapply(levels.use, function(x){paste0("Lv. ", x)})
     }
 
     if (isTRUE(reverse.levels)){
@@ -2333,8 +2364,8 @@ do_GroupedGO_analysis_heatmaps <- function(result,
 
       h <- SCpubr:::heatmap_inner(data = df,
                                   legend.title = " ",
-                                  row_title = if (isFALSE(flip)) {level} else {"Genes in signature"},
-                                  column_title = if(isTRUE(flip)) {level} else {"Genes in signature"},
+                                  row_title = if (isFALSE(flip)) {level} else {NULL},
+                                  column_title = if(isTRUE(flip)) {level} else {NULL},
                                   row_title_side = "right",
                                   column_names_rot = rotate_x_axis_labels,
                                   row_title_rotation = 0,

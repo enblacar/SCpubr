@@ -19,7 +19,8 @@ do_GroupedGOPlot(
   reverse.levels = TRUE,
   colors.use = c("white", "#29353d"),
   rotate_x_axis_labels = 45,
-  font.size = 10
+  font.size = 10,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ do_GroupedGOPlot(
 
 \item{org.db}{\strong{\code{OrgDB}} | Database object to use for the query.}
 
-\item{levels.use}{\strong{\code{\link[base]{character}}} | Vector of characters corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.}
+\item{levels.use}{\strong{\code{\link[base]{numeric}}} | Vector of numerics corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.}
 
 \item{GO_ontology}{\strong{\code{\link[base]{character}}} | GO ontology to use. One of:
 \itemize{
@@ -60,6 +61,8 @@ do_GroupedGOPlot(
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
+
+\item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }
 \value{
 A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.

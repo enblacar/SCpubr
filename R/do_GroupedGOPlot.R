@@ -1,7 +1,7 @@
 #' Compute an overview of the GO terms associated with the input list of genes.
 #'
 #' @inheritParams doc_function
-#' @param levels.use \strong{\code{\link[base]{character}}} | Vector of characters corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.
+#' @param levels.use \strong{\code{\link[base]{numeric}}} | Vector of numerics corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.
 #' @param reverse.levels \strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.
 #' @param colors.use \strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.
 #'
@@ -23,7 +23,8 @@ do_GroupedGOPlot <- function(genes,
                              reverse.levels = TRUE,
                              colors.use = c("white", "#29353d"),
                              rotate_x_axis_labels = 45,
-                             font.size = 10){
+                             font.size = 10,
+                             verbose = FALSE){
   check_suggests(function_name = "do_GroupedGOPlot")
 
   # Check logical parameters.
@@ -36,7 +37,8 @@ do_GroupedGOPlot <- function(genes,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "cell_size" = cell_size,
                        "heatmap_gap" = heatmap_gap,
-                       "min.overlap" = min.overlap)
+                       "min.overlap" = min.overlap,
+                       "levels.use" = levels.use)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -61,7 +63,8 @@ do_GroupedGOPlot <- function(genes,
                                     org.db = org.db,
                                     levels.use = levels.use,
                                     ontologies = GO_ontology,
-                                    min.overlap = min.overlap)
+                                    min.overlap = min.overlap,
+                                    verbose = verbose)
   # Compute associated plots.
   plots <- do_GroupedGO_analysis_heatmaps(result = matrices,
                                           genes = genes,
@@ -76,7 +79,8 @@ do_GroupedGOPlot <- function(genes,
                                           reverse.levels = reverse.levels,
                                           colors.use = colors.use,
                                           rotate_x_axis_labels = rotate_x_axis_labels,
-                                          font.size = font.size)
+                                          font.size = font.size,
+                                          verbose = verbose)
 
   # Return output.
   return_object <- list("Matrices" = matrices,
