@@ -2227,30 +2227,19 @@ do_GroupedGO_matrices <- function(genes,
                                                   level = counter,
                                                   readable = TRUE)
 
-        result <- grouped_terms@result
-        # Arrange the dataframe by descending count.
-        result <- result %>%
-          dplyr::arrange(dplyr::desc(.data$Count))
+        # Arrange the dataframe by descending count and filter.
+        result <- grouped_terms@result %>%
+                  dplyr::arrange(dplyr::desc(.data$Count)) %>%
+                  dplyr::filter(.data$Count >= min.overlap)
 
-        # Get the highest count value.
-        highest_count <- result %>%
-          dplyr::slice_head(n = 1) %>%
-          dplyr::pull(.data$Count)
 
-        if (highest_count > 0){
+        if (dim(result)[1] > 0){
           result <- result %>%
-            dplyr::filter(.data$Count > min.overlap)
-          if (highest_count < min.overlap){
-            if (isTRUE(verbose)){
-              message("Results filtered out due to min.overlap.")
-            }
-          } else {
-            result_list[[paste0("Lv. ", counter)]] <- result
-          }
-
+                    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
+          result_list[[paste0("Lv. ", counter)]] <- result
         } else {
           if (isTRUE(verbose)){
-            message("This level did not yield any result.")
+            message("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes.")
           }
           breakpoint <- TRUE
         }
@@ -2270,31 +2259,20 @@ do_GroupedGO_matrices <- function(genes,
                                                   level = level,
                                                   readable = TRUE)
 
-        result <- grouped_terms@result
-        # Arrange the dataframe by descending count.
-        result <- result %>%
-          dplyr::arrange(dplyr::desc(.data$Count))
+        # Arrange the dataframe by descending count and filter.
+        result <- grouped_terms@result %>%
+                  dplyr::arrange(dplyr::desc(.data$Count)) %>%
+                  dplyr::filter(.data$Count >= min.overlap)
 
-        # Get the highest count value.
-        highest_count <- result %>%
-          dplyr::slice_head(n = 1) %>%
-          dplyr::pull(.data$Count)
-
-        if (highest_count > 0){
+        if (dim(result)[1] > 0){
           result <- result %>%
-            dplyr::filter(.data$Count >= min.overlap)
-
-          if (highest_count < min.overlap){
-            if (isTRUE(verbose)){
-              message("Results filtered out due to min.overlap.")
-            }
-          } else {
-            result_list[[paste0("Lv. ", level)]] <- result
-          }
+                    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
+          result_list[[paste0("Lv. ", level)]] <- result
         } else {
           if (isTRUE(verbose)){
-            message("This level did not yield any result.")
+            message("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes.")
           }
+          breakpoint <- TRUE
         }
       }
     }
@@ -2312,7 +2290,7 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                            flip = TRUE,
                                            levels.use = NULL,
                                            legend.position = "none",
-                                           heatmap_gap = 1,
+                                           heatmap_gap = 0.5,
                                            ontologies = c("BP", "CC", "MF"),
                                            cluster_rows = TRUE,
                                            cluster_columns = TRUE,
@@ -2334,11 +2312,8 @@ do_GroupedGO_analysis_heatmaps <- function(result,
     list.legends <- list()
     list.individual <- list()
 
-    if (is.null(levels.use)){
-      levels.use <- names(result[[ont]])
-    } else {
-      levels.use <- sapply(levels.use, function(x){paste0("Lv. ", x)})
-    }
+
+    levels.use <- names(result[[ont]])
 
     if (isTRUE(reverse.levels)){
       levels.use <- rev(levels.use)
@@ -2362,28 +2337,57 @@ do_GroupedGO_analysis_heatmaps <- function(result,
         df <- t(df)
       }
 
-      h <- SCpubr:::heatmap_inner(data = df,
-                                  legend.title = " ",
-                                  row_title = if (isFALSE(flip)) {level} else {NULL},
-                                  column_title = if(isTRUE(flip)) {level} else {NULL},
-                                  row_title_side = "right",
-                                  column_names_rot = rotate_x_axis_labels,
-                                  row_title_rotation = 0,
-                                  cluster_rows = cluster_rows,
-                                  cluster_columns = cluster_columns,
-                                  cell_size = cell_size,
-                                  colors.use = colors.use,
-                                  fontsize = font.size)
+      data <- df
+      breaks <- c(0, 1)
+      col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
+      h <- ComplexHeatmap::Heatmap(matrix = data,
+                                   name = " ",
+                                   col = col_fun,
+                                   na_col = "grey75",
+                                   show_heatmap_legend = FALSE,
+                                   cluster_rows = cluster_rows,
+                                   cluster_columns = cluster_columns,
+                                   show_row_dend = FALSE,
+                                   show_column_dend = FALSE,
+                                   top_annotation = NULL,
+                                   bottom_annotation = NULL,
+                                   right_annotation = NULL,
+                                   left_annotation = NULL,
+                                   width = ncol(data)*grid::unit(cell_size, "mm"),
+                                   height = nrow(data)*grid::unit(cell_size, "mm"),
+                                   column_names_gp = grid::gpar(fontsize = font.size,
+                                                                fontface = "bold"),
+                                   row_names_gp = grid::gpar(fontsize = font.size,
+                                                             fontface = "bold"),
+                                   row_names_side = "left",
+                                   column_names_side = "bottom",
+                                   row_title = if (isFALSE(flip)) {level} else {NULL},
+                                   column_title = if(isTRUE(flip)) {level} else {NULL},
+                                   column_title_side = "top",
+                                   row_title_side = "right",
+                                   column_title_rot = 0,
+                                   row_title_rot = 0,
+                                   column_names_rot = 45,
+                                   row_names_rot = 0,
+                                   column_title_gp = grid::gpar(fontsize = font.size,
+                                                                fontface = "bold"),
+                                   row_title_gp = grid::gpar(fontsize = font.size,
+                                                             fontface = "bold"),
+                                   border = TRUE,
+                                   rect_gp = grid::gpar(col= "grey50"),
+                                   cell_fun = function(j, i, x, y, w, h, fill) {
+                                     grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
+                                   },
+                                   column_names_centered = FALSE,
+                                   row_names_centered = FALSE)
+
 
       grDevices::pdf(NULL)
-      out <- ComplexHeatmap::draw(h[["heatmap"]],
-                                  heatmap_legend_list = if (legend.position != "none") {h$legend} else {NULL},
-                                  heatmap_legend_side = if (legend.position != "none") {if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"}} else {NULL},
+      out <- ComplexHeatmap::draw(h,
                                   padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
       grDevices::dev.off()
 
-      list.heatmaps[[level]] <- h$heatmap
-      list.legends[[level]] <- h$legend
+      list.heatmaps[[level]] <- h
       list.individual[[level]] <- out
     }
 
@@ -2406,8 +2410,6 @@ do_GroupedGO_analysis_heatmaps <- function(result,
 
     # Draw final heatmap.
     h <- ComplexHeatmap::draw(ht_list,
-                              heatmap_legend_list = if (legend.position != "none") {list.legends[[1]]} else {NULL},
-                              heatmap_legend_side = if (legend.position != "none") {if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"}} else {NULL},
                               padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
                               ht_gap = ggplot2::unit(heatmap_gap, "cm"))
     grDevices::dev.off()
@@ -2436,7 +2438,8 @@ do_EnrichedTermMatrix <- function(genes,
 
   df.presence <- data.frame(row.names = genes)
   results <- result@result %>%
-    dplyr::arrange(result@result, dplyr::desc(.data$Count))
+             dplyr::arrange(result@result, dplyr::desc(.data$Count)) %>%
+             dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
   df.count <- data.frame(row.names = unique(results$Description),
                          "Gene count" = results$Count)
   df.count <- as.matrix(df.count)
@@ -2730,6 +2733,7 @@ do_EnrichedTermBarPlot <- function(result,
   data <- result@result
   p <- dplyr::select(data, dplyr::all_of(c("Description", "Count", "p.adjust"))) %>%
     dplyr::arrange(dplyr::desc(.data$Count)) %>%
+    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " "))) %>%
     dplyr::mutate("p.adjust" = -log10(.data$p.adjust),
                   "Description" = factor(.data$Description, levels = rev(.data$Description))) %>%
     ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Count,
@@ -2826,6 +2830,7 @@ do_EnrichedTermDotPlot <- function(result,
   data <- result@result
   p <- dplyr::select(data, dplyr::all_of(c("Description", "Count", "p.adjust"))) %>%
     dplyr::arrange(dplyr::desc(.data$Count)) %>%
+    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " "))) %>%
     dplyr::mutate("p.adjust" = -log10(.data$p.adjust),
                   "Description" = factor(.data$Description, levels = rev(.data$Description))) %>%
     ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Count,
@@ -2916,8 +2921,11 @@ do_EnrichedTermTreePlot <- function(result,
                                     nWords = 4,
                                     nCluster = 5){
   `%>%` <- magrittr::`%>%`
-
+  result <- result %>%
+            dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
   result2 <- enrichplot::pairwise_termsim(result)
+  result2 <- result2 %>%
+             dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
   p <- enrichplot::treeplot(x = result2,
                             showCategory = showCategory,
                             nWords = nWords,

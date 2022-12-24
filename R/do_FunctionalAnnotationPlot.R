@@ -227,9 +227,9 @@ do_FunctionalAnnotationPlot <- function(genes,
 
   # Filter out non-significant results
   result@result <-  result@result %>%
-    dplyr::arrange(dplyr::desc(.data$Count)) %>%
-    dplyr::filter(.data$p.adjust <= p.adjust.cutoff,
-                  .data$Count >= min.overlap)
+                    dplyr::arrange(dplyr::desc(.data$Count)) %>%
+                    dplyr::filter(.data$p.adjust <= p.adjust.cutoff,
+                                  .data$Count >= min.overlap)
 
   if (nrow(result@result) == 0){
     output.list <- "With current presets of p.adjust.cutoff and min.overlap, no enriched terms surpass the cutoffs."

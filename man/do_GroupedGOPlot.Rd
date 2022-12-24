@@ -12,7 +12,7 @@ do_GroupedGOPlot(
   min.overlap = 3,
   flip = TRUE,
   legend.position = "none",
-  heatmap_gap = 1,
+  heatmap_gap = 0.5,
   cluster_rows = TRUE,
   cluster_columns = TRUE,
   cell_size = 5,
