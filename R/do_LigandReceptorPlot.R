@@ -19,7 +19,7 @@
 #'   \item \emph{\code{magnitude}}: Uses the \strong{\code{sca.LRscore}} column to arrange the interactions by their specificity.
 #'   \item \emph{\code{both}}: Uses both \strong{\code{sca.LRscore}} and \strong{\code{natmi.edge_specificity}} columns to arrange the interactions by their specificity and magnitude altogether.
 #' }
-#' #' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).
+#' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).
 
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export

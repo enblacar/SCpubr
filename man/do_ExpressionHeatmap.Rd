@@ -62,7 +62,9 @@ do_ExpressionHeatmap(
 
 \item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
 
-\item{cluster_cols, cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
+\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
+
+\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
@@ -114,5 +116,17 @@ A ComplexHeatmap object.
 This function generates a heatmap with averaged expression values by the unique groups of the metadata variables provided by the user.
 }
 \examples{
-NULL
+\donttest{
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_ExpressionHeatmap", passive = TRUE)
+
+  if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
+
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
+}
 }

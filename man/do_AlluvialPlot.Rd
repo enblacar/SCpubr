@@ -137,5 +137,17 @@ A ggplot2 object.
 This function is based on the \pkg{ggalluvial} package. It allows you to generate alluvial plots from a given Seurat object.
 }
 \examples{
-NULL
+\donttest{
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_AlluvialPlot", passive = TRUE)
+
+  if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
+
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
+}
 }

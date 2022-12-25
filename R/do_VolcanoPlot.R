@@ -8,7 +8,7 @@
 #' @param line_color \strong{\code{\link[base]{character}}} | Color for the lines.
 #' @param line_size \strong{\code{\link[base]{numeric}}} | Size of the lines in the plot.
 #' @param add_gene_tags \strong{\code{\link[base]{logical}}} | Whether to plot the top genes.
-#' @param order_tags_by \strong{\code{\link[base]{character}}} | Either "both", "p_value" or "logfc".
+#' @param order_tags_by \strong{\code{\link[base]{character}}} | Either "both", "pvalue" or "logfc".
 #' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes in each side to plot.
 #' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.
 #' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.
@@ -154,7 +154,7 @@ do_VolcanoPlot <- function(sample,
                                   .data$avg_log2FC) %>%
                    as.data.frame() %>%
                    utils::head(n_genes)
-    } else if (order_tags_by == "p_value"){
+    } else if (order_tags_by == "pvalue"){
       data.up <- data %>%
                  dplyr::filter(.data$avg_log2FC > 0) %>%
                  dplyr::arrange(dplyr::desc(.data$log_p),

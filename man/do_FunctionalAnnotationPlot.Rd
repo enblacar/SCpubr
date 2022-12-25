@@ -15,7 +15,7 @@ do_FunctionalAnnotationPlot(
   pAdjustMethod = "BH",
   minGSSize = 10,
   maxGSSize = 500,
-  cluster_columns = TRUE,
+  cluster_cols = TRUE,
   cluster_rows = TRUE,
   cell_size = 5,
   heatmap_gap = 0.5,
@@ -89,6 +89,10 @@ do_FunctionalAnnotationPlot(
 \item{minGSSize}{\strong{\code{\link[base]{numeric}}} | Minimal size of genes annotated by Ontology term for testing.}
 
 \item{maxGSSize}{\strong{\code{\link[base]{numeric}}} | Maximal size of genes annotated for testing.}
+
+\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
+
+\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
 
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 
@@ -169,4 +173,19 @@ A list containing a heatmap of the presence/absence of the genes in the enriched
 }
 \description{
 Compute functional annotation plots using GO or KEGG ontologies
+}
+\examples{
+\donttest{
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_FunctionalAnnotationPlot", passive = TRUE)
+
+  if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
+
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
+}
 }

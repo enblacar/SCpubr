@@ -8,28 +8,30 @@
 #' @return A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.
 #' @export
 #'
-#' @examples
-do_GroupedGOPlot <- function(genes,
-                             org.db,
-                             levels.use = NULL,
-                             GO_ontology = "BP",
-                             min.overlap = 3,
-                             flip = TRUE,
-                             legend.position = "none",
-                             heatmap_gap = 0.5,
-                             cluster_rows = TRUE,
-                             cluster_columns = TRUE,
-                             cell_size = 5,
-                             reverse.levels = TRUE,
-                             colors.use = c("white", "#29353d"),
-                             rotate_x_axis_labels = 45,
-                             font.size = 10,
-                             verbose = FALSE){
-  check_suggests(function_name = "do_GroupedGOPlot")
+#' @example /man/examples/examples_do_GroupedGOTermPlot.R
+do_GroupedGOTermPlot <- function(genes,
+                                 org.db,
+                                 levels.use = NULL,
+                                 GO_ontology = "BP",
+                                 min.overlap = 3,
+                                 flip = TRUE,
+                                 legend.position = "none",
+                                 heatmap_gap = 0.5,
+                                 cluster_rows = TRUE,
+                                 cluster_cols = TRUE,
+                                 cell_size = 5,
+                                 reverse.levels = TRUE,
+                                 colors.use = c("white", "#29353d"),
+                                 rotate_x_axis_labels = 45,
+                                 font.size = 10,
+                                 verbose = FALSE){
+  `%>%` <- magrittr::`%>%`
+
+  check_suggests(function_name = "do_GroupedGOTermPlot")
 
   # Check logical parameters.
   logical_list <- list("flip" = flip,
-                       "cluster_columns" = cluster_columns,
+                       "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
@@ -74,7 +76,7 @@ do_GroupedGOPlot <- function(genes,
                                           heatmap_gap = heatmap_gap,
                                           ontologies = GO_ontology,
                                           cluster_rows = cluster_rows,
-                                          cluster_columns = cluster_columns,
+                                          cluster_cols = cluster_cols,
                                           cell_size = cell_size,
                                           reverse.levels = reverse.levels,
                                           colors.use = colors.use,

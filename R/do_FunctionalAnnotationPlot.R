@@ -30,7 +30,7 @@
 #' @return A list containing a heatmap of the presence/absence of the genes in the enriched term, as well as a bar plot, dot plot and tree plot of the enriched terms.
 #' @export
 #'
-#' @examples
+#' @example /man/examples/examples_do_FunctionalAnnotationPlot.R
 do_FunctionalAnnotationPlot <- function(genes,
                                         org.db,
                                         organism = "hsa",
@@ -41,7 +41,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         pAdjustMethod = "BH",
                                         minGSSize = 10,
                                         maxGSSize = 500,
-                                        cluster_columns = TRUE,
+                                        cluster_cols = TRUE,
                                         cluster_rows = TRUE,
                                         cell_size = 5,
                                         heatmap_gap = 0.5,
@@ -73,12 +73,13 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         showCategory = 30,
                                         nWords = 4,
                                         nCluster = 5){
+  `%>%` <- magrittr::`%>%`
 
   check_suggests(function_name = "do_FunctionalAnnotationPlot")
 
   # Check logical parameters.
   logical_list <- list("flip" = flip,
-                       "cluster_columns" = cluster_columns,
+                       "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
                        "plot.grid" = plot.grid)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
@@ -238,7 +239,7 @@ do_FunctionalAnnotationPlot <- function(genes,
     h.enriched <- do_EnrichedTermMatrix(genes = genes,
                                         result = result,
                                         flip = flip,
-                                        cluster_columns = cluster_columns,
+                                        cluster_cols = cluster_cols,
                                         cluster_rows = cluster_rows,
                                         cell_size = cell_size,
                                         heatmap_gap = heatmap_gap,

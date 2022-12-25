@@ -103,5 +103,17 @@ generates a set of visualizations and a combined output from the results of such
 provide the reference object used for the mapping (if available) to produce a more complete output.
 }
 \examples{
-NULL
+\donttest{
+  # Check Suggests.
+  value <- SCpubr:::check_suggests(function_name = "do_AzimuthAnalysisPlot", passive = TRUE)
+
+  if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+
+
+  } else if (isFALSE(value)){
+    message("This function can not be used without its suggested packages.")
+    message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
+  }
+}
 }

@@ -8,7 +8,7 @@
 #' @return A ComplexHeatmap object.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_ExpressionHeatmap.R
 do_ExpressionHeatmap <- function(sample,
                                  features,
                                  group.by = NULL,

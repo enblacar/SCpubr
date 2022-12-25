@@ -88,7 +88,7 @@ if(isFALSE(dep_check[["do_VolcanoPlot"]])){
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 add_gene_tags = TRUE,
-                                order_tags_by = "p_value")
+                                order_tags_by = "pvalue")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,

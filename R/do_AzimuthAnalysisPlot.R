@@ -16,7 +16,7 @@
 #' @return A list containing multiple plots.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_AzimuthAnalysisPlot.R
 do_AzimuthAnalysisPlot <- function(sample,
                                    annotation.labels,
                                    annotation.scoring,
@@ -89,10 +89,10 @@ do_AzimuthAnalysisPlot <- function(sample,
   }
 
   if (!is.null(colors.use)){
-    SCpubr:::check_colors(colors.use)
-    SCpubr:::check_consistency_colors_and_names(sample = sample,
-                                                colors = colors.use,
-                                                grouping_variable = group.by)
+    check_colors(colors.use)
+    check_consistency_colors_and_names(sample = sample,
+                                       colors = colors.use,
+                                       grouping_variable = group.by)
   }
 
   # Prepare sample metadata and apply desired cutoffs.
@@ -109,34 +109,34 @@ do_AzimuthAnalysisPlot <- function(sample,
                       tibble::column_to_rownames(var = "cell")
 
   # DimPlot with the original cells mapped to the reference dataset.
-  p.umap.ref <- SCpubr::do_DimPlot(sample = sample,
-                                   group.by = group.by,
-                                   reduction = "ref.umap",
-                                   label = label,
-                                   legend.position = if (isTRUE(label)){"none"} else {legend.position},
-                                   na.value = na.value,
-                                   raster = raster,
-                                   raster.dpi = raster.dpi,
-                                   plot.title = "Cells in reference UMAP embedding",
-                                   pt.size = pt.size,
-                                   font.size = font.size,
-                                   font.type = font.type,
-                                   colors.use = colors.use)
+  p.umap.ref <- do_DimPlot(sample = sample,
+                           group.by = group.by,
+                           reduction = "ref.umap",
+                           label = label,
+                           legend.position = if (isTRUE(label)){"none"} else {legend.position},
+                           na.value = na.value,
+                           raster = raster,
+                           raster.dpi = raster.dpi,
+                           plot.title = "Cells in reference UMAP embedding",
+                           pt.size = pt.size,
+                           font.size = font.size,
+                           font.type = font.type,
+                           colors.use = colors.use)
 
   # If the user has provided a UMAP of the reference, add its silhouette.
   if (!is.null(ref.obj)){
     suppressMessages({
-      p.ref <- SCpubr::do_DimPlot(sample = ref.obj,
-                                  label = label,
-                                  reduction = ref.reduction,
-                                  legend.position = if (isTRUE(label)){"none"} else {legend.position},
-                                  plot.title = "Reference UMAP",
-                                  na.value = na.value,
-                                  raster = raster,
-                                  raster.dpi = raster.dpi,
-                                  pt.size = pt.size,
-                                  font.size = font.size,
-                                  font.type = font.type)
+      p.ref <- do_DimPlot(sample = ref.obj,
+                          label = label,
+                          reduction = ref.reduction,
+                          legend.position = if (isTRUE(label)){"none"} else {legend.position},
+                          plot.title = "Reference UMAP",
+                          na.value = na.value,
+                          raster = raster,
+                          raster.dpi = raster.dpi,
+                          pt.size = pt.size,
+                          font.size = font.size,
+                          font.type = font.type)
     })
 
 
@@ -184,83 +184,83 @@ do_AzimuthAnalysisPlot <- function(sample,
 
 
   # DimPlot with the  inferred annotation.
-  p.umap <- SCpubr::do_DimPlot(sample = sample,
-                               group.by = "inferred_annotation",
+  p.umap <- do_DimPlot(sample = sample,
+                       group.by = "inferred_annotation",
+                       label = label,
+                       legend.position = if (isTRUE(label)){"none"} else {legend.position},
+                       na.value = na.value,
+                       raster = raster,
+                       raster.dpi = raster.dpi,
+                       plot.title = "Inferred annotation",
+                       pt.size = pt.size,
+                       font.size = font.size,
+                       font.type = font.type)
+
+  # DimPlot with the original annotation.
+  p.umap.cluster <- do_DimPlot(sample = sample,
+                               group.by = group.by,
                                label = label,
                                legend.position = if (isTRUE(label)){"none"} else {legend.position},
                                na.value = na.value,
                                raster = raster,
                                raster.dpi = raster.dpi,
-                               plot.title = "Inferred annotation",
+                               plot.title = "Original annotation",
                                pt.size = pt.size,
                                font.size = font.size,
-                               font.type = font.type)
-
-  # DimPlot with the original annotation.
-  p.umap.cluster <- SCpubr::do_DimPlot(sample = sample,
-                                       group.by = group.by,
-                                       label = label,
-                                       legend.position = if (isTRUE(label)){"none"} else {legend.position},
-                                       na.value = na.value,
-                                       raster = raster,
-                                       raster.dpi = raster.dpi,
-                                       plot.title = "Original annotation",
-                                       pt.size = pt.size,
-                                       font.size = font.size,
-                                       font.type = font.type,
-                                       colors.use = colors.use)
+                               font.type = font.type,
+                               colors.use = colors.use)
 
   # BarPlot with the proportion of inferred identities per original cluster.
-  p.barplot <- SCpubr::do_BarPlot(sample = sample,
-                                  group.by = "inferred_annotation",
-                                  legend.position = legend.position,
-                                  split.by = group.by,
-                                  position = "fill",
-                                  plot.grid = FALSE,
-                                  plot.title = "Proportion of inferred identities per original cluster",
-                                  font.size = font.size,
-                                  font.type = font.type)
+  p.barplot <- do_BarPlot(sample = sample,
+                          group.by = "inferred_annotation",
+                          legend.position = legend.position,
+                          split.by = group.by,
+                          position = "fill",
+                          plot.grid = FALSE,
+                          plot.title = "Proportion of inferred identities per original cluster",
+                          font.size = font.size,
+                          font.type = font.type)
 
   # BarPlot with the proportion of individual datasets per original cluster.
-  p.barplot2 <- SCpubr::do_BarPlot(sample = sample,
-                                   group.by = "orig.ident",
-                                   split.by = group.by,
-                                   position = "fill",
-                                   legend.position = legend.position,
-                                   plot.grid = FALSE,
-                                   plot.title = "Proportion of individual datasets per original cluster",
-                                   font.size = font.size,
-                                   font.type = font.type)
+  p.barplot2 <- do_BarPlot(sample = sample,
+                           group.by = "orig.ident",
+                           split.by = group.by,
+                           position = "fill",
+                           legend.position = legend.position,
+                           plot.grid = FALSE,
+                           plot.title = "Proportion of individual datasets per original cluster",
+                           font.size = font.size,
+                           font.type = font.type)
 
   # FeaturePlot with the prediction scores.
-  p.prediction <- SCpubr::do_FeaturePlot(sample = sample,
-                                         features = annotation.scoring,
-                                         legend.title = "Azimuth annotation scores",
-                                         na.value = na.value,
-                                         raster = raster,
-                                         legend.position = legend.position,
-                                         raster.dpi = raster.dpi,
-                                         plot.title = "Azimuth annotation scores",
-                                         pt.size = pt.size,
-                                         font.size = font.size,
-                                         font.type = font.type,
-                                         viridis_color_map = viridis_color_map,
-                                         viridis_direction = viridis_direction)
+  p.prediction <- do_FeaturePlot(sample = sample,
+                                 features = annotation.scoring,
+                                 legend.title = "Azimuth annotation scores",
+                                 na.value = na.value,
+                                 raster = raster,
+                                 legend.position = legend.position,
+                                 raster.dpi = raster.dpi,
+                                 plot.title = "Azimuth annotation scores",
+                                 pt.size = pt.size,
+                                 font.size = font.size,
+                                 font.type = font.type,
+                                 viridis_color_map = viridis_color_map,
+                                 viridis_direction = viridis_direction)
 
   # FeaturePlot with the mapping scores.
-  p.mapping <- SCpubr::do_FeaturePlot(sample = sample,
-                                      features = mapping.scoring,
-                                      legend.position = legend.position,
-                                      legend.title = "Azimuth mapping scores",
-                                      plot.title = "Azimuth mapping scores",
-                                      raster = raster,
-                                      raster.dpi = raster.dpi,
-                                      na.value = na.value,
-                                      pt.size = pt.size,
-                                      font.size = font.size,
-                                      font.type = font.type,
-                                      viridis_color_map = viridis_color_map,
-                                      viridis_direction = viridis_direction)
+  p.mapping <- do_FeaturePlot(sample = sample,
+                              features = mapping.scoring,
+                              legend.position = legend.position,
+                              legend.title = "Azimuth mapping scores",
+                              plot.title = "Azimuth mapping scores",
+                              raster = raster,
+                              raster.dpi = raster.dpi,
+                              na.value = na.value,
+                              pt.size = pt.size,
+                              font.size = font.size,
+                              font.type = font.type,
+                              viridis_color_map = viridis_color_map,
+                              viridis_direction = viridis_direction)
 
 
   # Generate a combined report.

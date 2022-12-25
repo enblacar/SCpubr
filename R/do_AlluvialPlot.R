@@ -30,7 +30,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_AlluvialPlot.R
 do_AlluvialPlot <- function(sample,
                             first_group,
                             last_group,
