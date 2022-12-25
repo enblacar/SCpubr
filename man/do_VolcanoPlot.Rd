@@ -61,7 +61,7 @@ do_VolcanoPlot(
 
 \item{add_gene_tags}{\strong{\code{\link[base]{logical}}} | Whether to plot the top genes.}
 
-\item{order_tags_by}{\strong{\code{\link[base]{character}}} | Either "both", "p_value" or "logfc".}
+\item{order_tags_by}{\strong{\code{\link[base]{character}}} | Either "both", "pvalue" or "logfc".}
 
 \item{n_genes}{\strong{\code{\link[base]{numeric}}} | Number of top genes in each side to plot.}
 
