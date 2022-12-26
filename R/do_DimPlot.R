@@ -311,7 +311,7 @@ do_DimPlot <- function(sample,
   highlighting_cells <- !(is.null(cells.highlight)) | !(is.null(idents.highlight))
   # When running under default parameters or using group.by
   if (not_highlighting_and_not_split_by){
-    if (utils::packageVersion("Seurat") >= "4.1.0"){
+    if (utils::packageVersion("Seurat") >= "4.1.0"){# nocov start
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            label = label,
@@ -346,7 +346,7 @@ do_DimPlot <- function(sample,
                            cols = colors.use,
                            raster = raster,
                            ncol = ncol)
-    }
+    } # nocov end
     p <- p &
       ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
                                                     nrow = legend.nrow,
@@ -433,7 +433,7 @@ do_DimPlot <- function(sample,
 
       sample.use <- sample[, sample@meta.data[, split.by] == value]
 
-      if (utils::packageVersion("Seurat") >= "4.1.0"){
+      if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
                                   group.by = if (is.null(group.by)) {split.by} else {group.by},
@@ -466,7 +466,7 @@ do_DimPlot <- function(sample,
                                   pt.size = pt.size,
                                   cols = colors.use,
                                   raster = raster)
-      }
+      } # nocov end
       p.loop <- p.loop +
                 ggplot2::ggtitle(value) +
                 ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
@@ -566,7 +566,7 @@ do_DimPlot <- function(sample,
       cells.use <- unique(c(cells.1, cells.2))
     }
 
-    if (utils::packageVersion("Seurat") >= "4.1.0"){
+    if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            cells.highlight = cells.use,
@@ -585,7 +585,7 @@ do_DimPlot <- function(sample,
                            pt.size = pt.size,
                            raster = raster,
                            ncol = ncol)
-    }
+    } # nocov end
 
     p <- add_scale(p = p,
                    function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected"),

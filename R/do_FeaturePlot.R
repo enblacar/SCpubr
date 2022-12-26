@@ -235,7 +235,7 @@ do_FeaturePlot <- function(sample,
     # Remove duplicated features.
     features <- remove_duplicated_features(features = features)
 
-    if (utils::packageVersion("Seurat") >= "4.1.0"){
+    if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
       p <- Seurat::FeaturePlot(sample,
                                features,
                                slot = slot,
@@ -266,7 +266,7 @@ do_FeaturePlot <- function(sample,
                                label = label,
                                label.size = label.size,
                                label.color = label.color)
-    }
+    } # nocov end
     p$layers[[length(p$layers)]]$aes_params$fontface = "bold"
      p <- p &
       # Remove Seurat::FeaturePlot() default plot title.
@@ -454,7 +454,7 @@ do_FeaturePlot <- function(sample,
       if (is.null(split.by)){
         feature.use <- "dummy"
 
-        if (utils::packageVersion("Seurat") >= "4.1.0"){
+        if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
           p.loop <- Seurat::FeaturePlot(sample,
                                         feature.use,
                                         reduction = reduction,
@@ -483,7 +483,7 @@ do_FeaturePlot <- function(sample,
                                         label = label,
                                         label.size = label.size,
                                         label.color = label.color)
-        }
+        } # nocov end
         p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface = "bold"
 
         # Add scale.
@@ -581,7 +581,7 @@ do_FeaturePlot <- function(sample,
           # Assign the cells that are not part of the iteration to NA.
           sample$dummy2[!(cells.iteration)] <- NA
 
-          if (utils::packageVersion("Seurat") >= "4.1.0"){
+          if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
             p.loop <- Seurat::FeaturePlot(sample,
                                           feature.use,
                                           slot = slot,
@@ -610,7 +610,7 @@ do_FeaturePlot <- function(sample,
                                           label = label,
                                           label.size = label.size,
                                           label.color = label.color)
-          }
+          } # nocov end
           p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface = "bold"
 
 
