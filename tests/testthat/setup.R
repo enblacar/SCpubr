@@ -3,6 +3,10 @@ if (requireNamespace("Seurat", quietly = TRUE)) {
  suppressMessages(library("Seurat"))
 }
 
+if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+  suppressMessages(library("org.Hs.eg.db"))
+}
+
 if (requireNamespace("magrittr", quietly = TRUE)) {
  suppressMessages(library("magrittr"))
 }
