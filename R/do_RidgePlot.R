@@ -134,7 +134,7 @@ do_RidgePlot <- function(sample,
       p <- data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                   y = .data$group.by,
-                                                  fill = ..x..)) +
+                                                  fill = ggplot2::after_stat(x))) +
            ggridges::geom_density_ridges_gradient(color = "black",
                                                   size = 1.25) +
            ggplot2::scale_fill_viridis_c(option = viridis_color_map,
@@ -167,7 +167,7 @@ do_RidgePlot <- function(sample,
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                     y = .data$group.by,
-                                                    fill = ..quantile..)) +
+                                                    fill = ggplot2::after_stat(quantile))) +
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            quantile_lines = TRUE,
@@ -187,7 +187,7 @@ do_RidgePlot <- function(sample,
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                     y = .data$group.by,
-                                                    fill = ..quantile..)) +
+                                                    fill = ggplot2::after_stat(quantile))) +
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            quantile_lines = TRUE,
@@ -207,7 +207,7 @@ do_RidgePlot <- function(sample,
         p <- data %>%
              ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                     y = .data$group.by,
-                                                    fill = 0.5 - abs(0.5 - ..ecdf..))) +
+                                                    fill = 0.5 - abs(0.5 - ggplot2::after_stat(ecdf)))) +
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            calc_ecdf = TRUE,

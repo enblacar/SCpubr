@@ -183,7 +183,7 @@ do_ColorPalette <- function(colors.use,
     p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = .data[["names"]],
                                                            y = .data[["values"]],
                                                            fill = .data[["names"]])) +
-         ggplot2::geom_col(color = "black", size = 1) +
+         ggplot2::geom_col(color = "black", linewidth = 1) +
          ggplot2::coord_polar(start = ifelse(sum(options_list) == 1,  -0.275, 0), direction = 1, clip = "off") +
          ggplot2::scale_fill_manual(values = colors.use, na.value = "grey75") +
          ggplot2::ylim(limits) +

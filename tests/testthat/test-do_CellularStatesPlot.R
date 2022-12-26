@@ -399,16 +399,16 @@ if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        ctrl = 10)
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_CellularStatesPlot(sample = sample,
-                                       input_gene_list = genes,
-                                       x1 = "A",
-                                       y1 = "B",
-                                       plot_marginal_distributions = TRUE,
-                                       plot_cell_borders = FALSE,
-                                       marginal.type = "densigram",
-                                       nbin = 1,
-                                       ctrl = 10)
-    testthat::expect_type(p, "list")
+    #p <- SCpubr::do_CellularStatesPlot(sample = sample,
+    #                                   input_gene_list = genes,
+    #                                   x1 = "A",
+    #                                   y1 = "B",
+    #                                   plot_marginal_distributions = TRUE,
+    #                                   plot_cell_borders = FALSE,
+    #                                   marginal.type = "densigram",
+    #                                   nbin = 1,
+    #                                   ctrl = 10)
+    #testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {

@@ -254,7 +254,7 @@ do_CopyNumberVariantPlot <- function(sample,
              ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = 1),
                                  color = "grey50",
                                  linetype = "dashed",
-                                 size = 1) +
+                                 linewidth = 1) +
              ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
                                             limits = scale_limit,
                                             na.value = na.value)

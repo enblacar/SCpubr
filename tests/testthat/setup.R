@@ -25,6 +25,7 @@ human_chr_locations <- SCpubr::human_chr_locations
 progeny_activities <- readRDS(system.file("extdata/progeny_activities_example.rds", package = "SCpubr"))
 dorothea_activities <- readRDS(system.file("extdata/dorothea_activities_example.rds", package = "SCpubr"))
 enriched_terms <- readRDS(system.file("extdata/enriched_terms_example.rds", package = "SCpubr"))
+org.db <- AnnotationDbi::loadDb(system.file("./extdata/org.Hs.eg.sqlite", package = "org.Hs.eg.db"))
 
 
 # Get packages.

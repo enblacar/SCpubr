@@ -129,15 +129,15 @@ do_VolcanoPlot <- function(sample,
     p <- p +
          ggplot2::geom_hline(yintercept = pval_cutoff,
                              color = line_color,
-                             size = line_size,
+                             linewidth = line_size,
                              linetype = "dashed") +
          ggplot2::geom_vline(xintercept = FC_cutoff,
                              color = line_color,
-                             size = line_size,
+                             linewidth = line_size,
                              linetype = "dashed") +
          ggplot2::geom_vline(xintercept = -FC_cutoff,
                              color = line_color,
-                             size = line_size,
+                             linewidth = line_size,
                              linetype = "dashed")
   }
 

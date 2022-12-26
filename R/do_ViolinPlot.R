@@ -163,14 +163,14 @@ do_ViolinPlot <- function(sample,
                                                 y = .data$feature,
                                                 fill = if (!is.null(split.by)){.data$split.by} else {.data$group.by})) +
          ggplot2::geom_violin(color = "black",
-                              lwd = line_width)
+                              linewidth = line_width)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
                               msg = "Boxplots are not implemented when split.by is set.")
       p <- p +
            ggplot2::geom_boxplot(fill = "white",
                                  color = "black",
-                                 lwd = line_width,
+                                 linewidth = line_width,
                                  width = boxplot_width,
                                  outlier.shape = NA,
                                  fatten = 1) +
@@ -228,7 +228,7 @@ do_ViolinPlot <- function(sample,
            ggplot2::geom_hline(yintercept = y_cut[counter],
                                linetype = "longdash",
                                colour = "black",
-                               size = 1,
+                               linewidth = 1,
                                na.rm = TRUE)
     }
 
