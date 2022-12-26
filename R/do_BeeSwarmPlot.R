@@ -187,13 +187,11 @@ do_BeeSwarmPlot <- function(sample,
   # Add raster layer if desired.
   if (isTRUE(raster)){
     p <- p +
-         ggrastr::geom_quasirandom_rast(groupOnX = FALSE,
-                                        raster.dpi = raster.dpi,
+         ggrastr::geom_quasirandom_rast(raster.dpi = raster.dpi,
                                         size = pt.size)
   } else {
     p <- p +
-         ggbeeswarm::geom_quasirandom(groupOnX = FALSE,
-                                      size = pt.size)
+         ggbeeswarm::geom_quasirandom(size = pt.size)
   }
 
   p <- p +
@@ -289,7 +287,6 @@ do_BeeSwarmPlot <- function(sample,
       base_layer <- ggrastr::geom_quasirandom_rast(data = sample@meta.data,
                                                    mapping = ggplot2::aes(x = .data[["rank"]],
                                                                           y = .data[["ranked_groups"]]),
-                                                   groupOnX = FALSE,
                                                    raster.dpi = raster.dpi,
                                                    color = border.color,
                                                    size = pt.size * border.size,
@@ -298,7 +295,6 @@ do_BeeSwarmPlot <- function(sample,
       base_layer <-ggbeeswarm::geom_quasirandom(data = sample@meta.data,
                                                  mapping = ggplot2::aes(x = .data[["rank"]],
                                                                         y = .data[["ranked_groups"]]),
-                                                 groupOnX = FALSE,
                                                  color = border.color,
                                                  size = pt.size * border.size,
                                                  show.legend = FALSE)

@@ -235,11 +235,11 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
                             plot_cell_borders = FALSE)
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_DimPlot(sample = sample,
-                            plot_marginal_distributions = TRUE,
-                            marginal.type = "densigram",
-                            plot_cell_borders = FALSE)
-    testthat::expect_type(p, "list")
+    #p <- SCpubr::do_DimPlot(sample = sample,
+    #                        plot_marginal_distributions = TRUE,
+    #                        marginal.type = "densigram",
+    #                        plot_cell_borders = FALSE)
+    #testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_DimPlot: PASS - sample marginal size", {
