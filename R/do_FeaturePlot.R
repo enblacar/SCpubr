@@ -26,8 +26,8 @@ do_FeaturePlot <- function(sample,
                            legend.title = NULL,
                            legend.type = "colorbar",
                            legend.position = "bottom",
-                           legend.framewidth = 1.5,
-                           legend.tickwidth = 1.5,
+                           legend.framewidth = 0.5,
+                           legend.tickwidth = 0.5,
                            legend.length = 20,
                            legend.width = 1,
                            legend.framecolor = "grey50",
@@ -235,7 +235,7 @@ do_FeaturePlot <- function(sample,
     # Remove duplicated features.
     features <- remove_duplicated_features(features = features)
 
-    if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
       p <- Seurat::FeaturePlot(sample,
                                features,
                                slot = slot,
@@ -251,7 +251,7 @@ do_FeaturePlot <- function(sample,
                                label = label,
                                label.size = label.size,
                                label.color = label.color)
-    } else {
+    } else { # nocov start
       p <- Seurat::FeaturePlot(sample,
                                features,
                                slot = slot,
@@ -454,7 +454,7 @@ do_FeaturePlot <- function(sample,
       if (is.null(split.by)){
         feature.use <- "dummy"
 
-        if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
+        if (utils::packageVersion("Seurat") >= "4.1.0"){
           p.loop <- Seurat::FeaturePlot(sample,
                                         feature.use,
                                         reduction = reduction,
@@ -469,7 +469,7 @@ do_FeaturePlot <- function(sample,
                                         label = label,
                                         label.size = label.size,
                                         label.color = label.color)
-        } else {
+        } else { # nocov start
           p.loop <- Seurat::FeaturePlot(sample,
                                         feature.use,
                                         reduction = reduction,
@@ -581,7 +581,7 @@ do_FeaturePlot <- function(sample,
           # Assign the cells that are not part of the iteration to NA.
           sample$dummy2[!(cells.iteration)] <- NA
 
-          if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
+          if (utils::packageVersion("Seurat") >= "4.1.0"){
             p.loop <- Seurat::FeaturePlot(sample,
                                           feature.use,
                                           slot = slot,
@@ -596,7 +596,7 @@ do_FeaturePlot <- function(sample,
                                           label = label,
                                           label.size = label.size,
                                           label.color = label.color)
-          } else {
+          } else { # nocov start
             p.loop <- Seurat::FeaturePlot(sample,
                                           feature.use,
                                           slot = slot,

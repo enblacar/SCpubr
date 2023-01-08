@@ -2300,7 +2300,7 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                            cluster_cols = TRUE,
                                            cell_size = 5,
                                            reverse.levels = TRUE,
-                                           colors.use = c("white", "#29353d"),
+                                           colors.use = c("grey90", "#29353d"),
                                            rotate_x_axis_labels = 45,
                                            font.size = 10,
                                            verbose = TRUE){
@@ -2309,6 +2309,11 @@ do_GroupedGO_analysis_heatmaps <- function(result,
   }
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
+
+  # Use a custom legend for all heatmaps
+  legend.use <- ComplexHeatmap::Legend(labels = c("Present", "Absent"),
+                                       legend_gp = grid::gpar(fill = c("Present" = colors.use[2], "Absent" = colors.use[1])),
+                                       labels_gp = grid::gpar(font.size = font.size))
 
   list.h <- list()
   for (ont in ontologies){
@@ -2388,6 +2393,8 @@ do_GroupedGO_analysis_heatmaps <- function(result,
 
       grDevices::pdf(NULL)
       out <- ComplexHeatmap::draw(h,
+                                  heatmap_legend_list = if (legend.position != "none") {list(legend.use)} else {NULL},
+                                  heatmap_legend_side = if (legend.position != "none") {legend.position} else {NULL},
                                   padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
       grDevices::dev.off()
 
@@ -2414,6 +2421,8 @@ do_GroupedGO_analysis_heatmaps <- function(result,
 
     # Draw final heatmap.
     h <- ComplexHeatmap::draw(ht_list,
+                              heatmap_legend_list = if (legend.position != "none") {list(legend.use)} else {NULL},
+                              heatmap_legend_side = if (legend.position != "none") {legend.position} else {NULL},
                               padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
                               ht_gap = ggplot2::unit(heatmap_gap, "cm"))
     grDevices::dev.off()
@@ -2464,7 +2473,7 @@ do_EnrichedTermMatrix <- function(genes,
   }
 
 
-  df <- as.matrix(df)
+  df.presence <- as.matrix(df.presence)
 
   if (isTRUE(flip)){
     df.presence <- t(df.presence)

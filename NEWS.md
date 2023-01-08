@@ -2,6 +2,7 @@
 
 ## General
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
+-   Decreased the thickness of frame and ticks of all ggplot2-based continuous legends to retrieve a similar behavior as in previous versions of ggplot2, as with the new update, the overall thickness of the frame and ticks increased, probably due to the changes related to `element_line`,
 -   Added four new functions: `do_AlluvialPlot()`, `do_AzimuthAnalysisPlot()`, `do_ExpressionHeatmap()` and `do_FunctionalAnnotationPlot()`.
 -   Added `legend.ncol`, `legend.nrow`, `legend.title` and `legend.byrow` to as many functions as possible to further customize legend appearance.
 

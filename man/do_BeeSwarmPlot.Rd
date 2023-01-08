@@ -21,8 +21,8 @@ do_BeeSwarmPlot(
     
     "none"
  },
-  legend.framewidth = 1.5,
-  legend.tickwidth = 1.5,
+  legend.framewidth = 0.5,
+  legend.tickwidth = 0.5,
   legend.length = 20,
   legend.width = 1,
   legend.framecolor = "grey50",

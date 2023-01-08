@@ -10,14 +10,18 @@ do_FunctionalAnnotationPlot(
   organism = "hsa",
   database = "GO",
   GO_ontology = "BP",
-  min.overlap = 3,
+  min.overlap = if (length(genes) <= 4) {
+     1
+ } else {
+     3
+ },
   p.adjust.cutoff = 0.05,
   pAdjustMethod = "BH",
   minGSSize = 10,
   maxGSSize = 500,
   cluster_cols = TRUE,
   cluster_rows = TRUE,
-  cell_size = 5,
+  cell_size = 8,
   heatmap_gap = 0.5,
   font.size = 10,
   font.type = "sans",
@@ -33,8 +37,8 @@ do_FunctionalAnnotationPlot(
   flip = TRUE,
   legend.type = "colorbar",
   legend.position = "bottom",
-  legend.framewidth = 1.5,
-  legend.tickwidth = 1.5,
+  legend.framewidth = 0.5,
+  legend.tickwidth = 0.5,
   legend.length = 20,
   legend.width = 1,
   legend.framecolor = "grey50",

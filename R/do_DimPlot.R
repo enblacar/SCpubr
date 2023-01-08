@@ -311,7 +311,7 @@ do_DimPlot <- function(sample,
   highlighting_cells <- !(is.null(cells.highlight)) | !(is.null(idents.highlight))
   # When running under default parameters or using group.by
   if (not_highlighting_and_not_split_by){
-    if (utils::packageVersion("Seurat") >= "4.1.0"){# nocov start
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            label = label,
@@ -329,7 +329,7 @@ do_DimPlot <- function(sample,
                            raster = raster,
                            raster.dpi = c(raster.dpi, raster.dpi),
                            ncol = ncol)
-    } else {
+    } else { # nocov start
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            label = label,
@@ -433,7 +433,7 @@ do_DimPlot <- function(sample,
 
       sample.use <- sample[, sample@meta.data[, split.by] == value]
 
-      if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
+      if (utils::packageVersion("Seurat") >= "4.1.0"){
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
                                   group.by = if (is.null(group.by)) {split.by} else {group.by},
@@ -450,7 +450,7 @@ do_DimPlot <- function(sample,
                                   cols = colors.use,
                                   raster = raster,
                                   raster.dpi = c(raster.dpi, raster.dpi))
-      } else {
+      } else { # nocov start
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
                                   group.by = if (is.null(group.by)) {split.by} else {group.by},
@@ -566,7 +566,7 @@ do_DimPlot <- function(sample,
       cells.use <- unique(c(cells.1, cells.2))
     }
 
-    if (utils::packageVersion("Seurat") >= "4.1.0"){ # nocov start
+    if (utils::packageVersion("Seurat") >= "4.1.0"){
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            cells.highlight = cells.use,
@@ -576,7 +576,7 @@ do_DimPlot <- function(sample,
                            raster = raster,
                            raster.dpi = c(raster.dpi, raster.dpi),
                            ncol = ncol)
-    } else {
+    } else { # nocov start
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
                            cells.highlight = cells.use,

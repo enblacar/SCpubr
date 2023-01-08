@@ -9,15 +9,19 @@ do_GroupedGOTermPlot(
   org.db,
   levels.use = NULL,
   GO_ontology = "BP",
-  min.overlap = 3,
+  min.overlap = if (length(genes) <= 4) {
+     1
+ } else {
+     3
+ },
   flip = TRUE,
-  legend.position = "none",
+  legend.position = "right",
   heatmap_gap = 0.5,
   cluster_rows = TRUE,
   cluster_cols = TRUE,
-  cell_size = 5,
+  cell_size = 8,
   reverse.levels = TRUE,
-  colors.use = c("white", "#29353d"),
+  colors.use = c("grey90", "#29353d"),
   rotate_x_axis_labels = 45,
   font.size = 10,
   verbose = FALSE
