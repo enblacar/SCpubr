@@ -217,5 +217,90 @@ if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                  flip = TRUE)
     testthat::expect_type(p, "list")
   })
+
+  testthat::test_that("do_BeeSwarmPlot: PASS - all NULL", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = NULL,
+                                 flip = TRUE)
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_BeeSwarmPlot: PASS - labs", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = NULL,
+                                 xlab = "A",
+                                 ylab = "B",
+                                 flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = NULL,
+                                 xlab = "A",
+                                 ylab = "B",
+                                 flip = FALSE)
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_BeeSwarmPlot: PASS - continuous feature cutoffs", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = "seurat_clusters",
+                                 flip = TRUE,
+                                 continuous_feature = TRUE,
+                                 min.cutoff = -1,
+                                 max.cutoff = 1)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = "seurat_clusters",
+                                 flip = TRUE,
+                                 continuous_feature = TRUE,
+                                 min.cutoff = -1)
+    testthat::expect_type(p, "list")
+
+
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = "seurat_clusters",
+                                 flip = TRUE,
+                                 continuous_feature = TRUE,
+                                 max.cutoff = 1)
+    testthat::expect_type(p, "list")
+
+    testthat::expect_error({
+      SCpubr::do_BeeSwarmPlot(sample = sample,
+                              feature_to_rank = "PC_1",
+                              group.by = "seurat_clusters",
+                              flip = TRUE,
+                              continuous_feature = TRUE,
+                              max.cutoff = 2328443)
+    })
+
+    testthat::expect_error({
+      SCpubr::do_BeeSwarmPlot(sample = sample,
+                              feature_to_rank = "PC_1",
+                              group.by = "seurat_clusters",
+                              flip = TRUE,
+                              continuous_feature = TRUE,
+                              min.cutoff = -2328443)
+    })
+
+    testthat::expect_error({
+      SCpubr::do_BeeSwarmPlot(sample = sample,
+                              feature_to_rank = "PC_1",
+                              group.by = "seurat_clusters",
+                              flip = TRUE,
+                              continuous_feature = TRUE,
+                              min.cutoff = 2328443,
+                              max.cutoff = -2328443)
+    })
+  })
 }
 

@@ -118,12 +118,8 @@ do_BarPlot <- function(sample,
     if (!is.null(xlab)){
       xlab
     } else {
-      if (is.null(group.by) & is.null(split.by)){
-        "Groups"
-      } else if (!is.null(group.by) & is.null(split.by)){
+      if (!is.null(group.by) & is.null(split.by)){
         group.by
-      } else if (is.null(group.by) & !is.null(split.by)){
-        split.by
       } else if (!is.null(group.by) & !is.null(split.by)){
         split.by
       }
@@ -140,13 +136,7 @@ do_BarPlot <- function(sample,
    if (!is.null(legend.title)){
      legend.title
    } else {
-     if (!is.null(split.by) & is.null(group.by)){
-       "Groups"
-     } else if (!is.null(split.by) & !is.null(group.by)){
-       group.by
-     } else if (is.null(split.by) & !is.null(group.by)) {
-       group.by
-     }
+     group.by
    }
  }
 

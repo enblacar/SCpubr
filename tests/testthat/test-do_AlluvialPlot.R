@@ -152,6 +152,15 @@ if (isFALSE(dep_check[["do_AlluvialPlot"]])){
 
   })
 
+  testthat::test_that("do_AlluvialPlot: colors.use", {
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "seurat_clusters",
+                                 last_group = "orig.ident",
+                                 colors.use = c("Cell" = "blue"))
+
+    testthat::expect_type(p, "list")
+  })
+
   testthat::test_that("do_AlluvialPlot: test_numbers", {
     sample$annotation2 <- sample$annotation
     sample$annotation3 <- sample$annotation

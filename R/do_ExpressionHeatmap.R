@@ -99,6 +99,11 @@ do_ExpressionHeatmap <- function(sample,
     group.by <- "Groups"
   }
 
+  if (is.list(features)){
+    message("Provided features are a list. Transforming into a character vector.")
+    features <- unname(unlist(features))
+  }
+
   features <- remove_duplicated_features(features)
 
   # Generate the heatmap data.

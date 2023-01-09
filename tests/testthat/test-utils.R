@@ -428,7 +428,7 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, check that the output is the last computed reduction", {
 
 
-
+    sample@reductions$ref.umap <- NULL
     output <- SCpubr:::check_and_set_reduction(sample = sample)
     last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
     testthat::expect_identical(output, last_reduction)
@@ -437,7 +437,7 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: check_and_set_reduction - PASS - provide a reduction", {
 
 
-
+    sample@reductions$ref.umap <- NULL
     output <- SCpubr:::check_and_set_reduction(sample = sample, reduction = "umap")
     reduction_check <- "umap"
     testthat::expect_identical(output, reduction_check)
@@ -448,6 +448,7 @@ if (isFALSE(dep_check[["utils"]])){
 
 
     sample@reductions$umap <- NULL
+    sample@reductions$ref.umap <- NULL
     output <- SCpubr:::check_and_set_reduction(sample = sample)
     reduction_check <- "pca"
     testthat::expect_identical(output, reduction_check)
@@ -911,7 +912,19 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::expect_true("Legends" %in% class(out$legend))
     testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
-    out <- SCpubr:::heatmap_inner(data, colors.use = c("red", "yellow"))
+    out <- SCpubr:::heatmap_inner(data, colors.use = c("red", "yellow"), use_middle_white = TRUE)
+    testthat::expect_true("Legends" %in% class(out$legend))
+    testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+    out <- SCpubr:::heatmap_inner(data, colors.use = c("red", "yellow"), use_middle_white = FALSE)
+    testthat::expect_true("Legends" %in% class(out$legend))
+    testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+    out <- SCpubr:::heatmap_inner(data, use_middle_white = TRUE)
+    testthat::expect_true("Legends" %in% class(out$legend))
+    testthat::expect_true("Heatmap" %in% class(out$heatmap))
+
+    out <- SCpubr:::heatmap_inner(data, use_middle_white = FALSE)
     testthat::expect_true("Legends" %in% class(out$legend))
     testthat::expect_true("Heatmap" %in% class(out$heatmap))
 
@@ -1104,6 +1117,14 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
+    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10, flavor = "UCell")
+    testthat::expect_true("Seurat" %in% class(output))
+    testthat::expect_true("test" %in% colnames(output@meta.data))
+
+    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10, flavor = "AUCell")
+    testthat::expect_true("Seurat" %in% class(output))
+    testthat::expect_true("test" %in% colnames(output@meta.data))
+
     output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), verbose = TRUE, nbin = 1, ctrl = 10)
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
@@ -1137,6 +1158,28 @@ if (isFALSE(dep_check[["utils"]])){
 
     testthat::expect_error({SCpubr:::check_parameters(parameter = -2, parameter_name = "viridis_direction")})
     testthat::expect_error({SCpubr:::check_parameters(parameter = "ERROR", parameter_name = "viridis_color_map")})
+  })
+
+  # GET AXIS PARAMETERS
+  testthat::test_that("utils: check get_axis_parameters - PASS ", {
+
+    out <- SCpubr:::get_axis_parameters(angle = 0, flip = FALSE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr:::get_axis_parameters(angle = 0, flip = TRUE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr:::get_axis_parameters(angle = 45, flip = FALSE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr:::get_axis_parameters(angle = 45, flip = TRUE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr:::get_axis_parameters(angle = 90, flip = FALSE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr:::get_axis_parameters(angle = 90, flip = TRUE)
+    testthat::expect_type(out, "list")
   })
 }
 

@@ -106,6 +106,8 @@ do_FunctionalAnnotationPlot <- function(genes,
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
                          "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
                          "xlab" = xlab,
                          "ylab" = ylab,
                          "legend.framecolor" = legend.framecolor,
@@ -146,9 +148,11 @@ do_FunctionalAnnotationPlot <- function(genes,
 
   # Convert genes to ENTREZIDs.
   suppressMessages({
-    conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
-                                       toType = c("ENTREZID"),
-                                       OrgDb = org.db)
+    suppressWarnings({
+      conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
+                                         toType = c("ENTREZID"),
+                                         OrgDb = org.db)
+    })
   })
 
 

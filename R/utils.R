@@ -292,6 +292,7 @@ check_suggests <- function(function_name, passive = FALSE){
                               "grid",
                               "assertthat"),
                    "do_AlluvialPlot" = c("ggalluvial", "ggrepel"),
+                   "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = c("ggsignif"),
@@ -320,8 +321,6 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
                    "save_Plot" = c("ComplexHeatmap", "svglite"),
-                   "do_AlluvialPlot" = c("ggalluvial"),
-                   "do_AzimuthAnalysisPlot" = c(),
                    "testing" = c("Does_not_exist"))
 
   # The function is not in the current list of possibilities.
@@ -345,7 +344,9 @@ check_suggests <- function(function_name, passive = FALSE){
       if (isFALSE(passive)){
         stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = FALSE)
       } else{
+        # nocov start
         value <- FALSE
+        # nocov end
       }
     }
   }
@@ -383,6 +384,8 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                               "scales",
                               "grid",
                               "assertthat"),
+                   "do_AlluvialPlot" = c("ggalluvial"),
+                   "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = c("ggsignif"),
@@ -396,6 +399,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
                    "do_ExpressionHeatmap" = c("ComplexHeatmap", "circlize"),
                    "do_FeaturePlot" = c("scattermore"),
+                   "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale"),
                    "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
@@ -409,9 +413,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_TFActivityPlot" = c("ComplexHeatmap"),
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
-                   "save_Plot" = c("ComplexHeatmap", "svglite"),
-                   "do_AlluvialPlot" = c("ggalluvial"),
-                   "do_AzimuthAnalysisPlot" = c())
+                   "save_Plot" = c("ComplexHeatmap", "svglite"))
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){
@@ -1638,7 +1640,9 @@ compute_enrichment_scores <- function(sample,
     assertthat::assert_that(R_version >= "4.2.0",
                             msg = "To run UCell scoring, R version 4.2.0 is required. Please select flavor = 'Seurat' if you are running a version inferior to this.")
     if (!requireNamespace("UCell", quietly = TRUE)) {
+      # nocov start
       stop(paste0("Package UCell must be installed to run UCell scoring."), call. = FALSE)
+      # nocov end
     }
   }
 
@@ -1709,7 +1713,9 @@ compute_enrichment_scores <- function(sample,
       sample@meta.data[, old.name] <- sample@meta.data[, mod.name]
       # Remove old metadata.
       if (old.name != mod.name){
+        # nocov start
         sample@meta.data[, mod.name] <- NULL
+        # nocov end
       }
     }
   }

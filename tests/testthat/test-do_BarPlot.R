@@ -265,6 +265,76 @@ if (isFALSE(dep_check[["do_BarPlot"]])){
                             legend.position = "none")
     testthat::expect_type(p, "list")
   })
+
+  testthat::test_that("do_BarPlot: PASS - labs", {
+    testthat::skip_on_cran()
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+
+
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = NULL,
+                            ylab = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+  })
 }
 
 

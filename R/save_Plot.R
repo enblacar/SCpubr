@@ -30,7 +30,7 @@ save_Plot <- function(plot,
                       output_format = "publication",
                       width = 8,
                       height = 8){
-
+  # nocov start
 
   # Checks for packages.
   check_suggests(function_name = "save_Plot")
@@ -199,4 +199,5 @@ save_Plot <- function(plot,
       }
     })
   }
+  # nocov end
 }

@@ -11,4 +11,90 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
     testthat::expect_type(p, "list")
   })
 
+
+  testthat::test_that("do_GroupedGOTermPlot: PASS", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      min.overlap = 1)
+
+    testthat::expect_type(p, "list")
+
+
+    suppressMessages({
+      p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                        org.db = org.db,
+                                        GO_ontology = "BP",
+                                        verbose = TRUE,
+                                        min.overlap = 1)
+    })
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2),
+                                      min.overlap = 1)
+
+    testthat::expect_type(p, "list")
+
+
+    suppressMessages({
+      p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                        org.db = org.db,
+                                        GO_ontology = "BP",
+                                        verbose = TRUE,
+                                        levels.use = c(1, 2),
+                                        min.overlap = 1)
+    })
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2),
+                                      min.overlap = 1,
+                                      flip = FALSE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2),
+                                      min.overlap = 1,
+                                      flip = TRUE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2),
+                                      min.overlap = 1,
+                                      flip = FALSE,
+                                      legend.position = "right")
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2),
+                                      min.overlap = 1,
+                                      flip = FALSE,
+                                      legend.position = "none")
+
+    testthat::expect_type(p, "list")
+  })
+
 }
