@@ -78,16 +78,38 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
+                               scale_type = "categorical",
                                min.cutoff = 1)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
+                               scale_type = "continuous",
+                               min.cutoff = 1)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1",
+                               scale_type = "categorical",
                                max.cutoff = 2)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
+                               scale_type = "continuous",
+                               max.cutoff = 2)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1",
+                               scale_type = "categorical",
+                               min.cutoff = 1,
+                               max.cutoff = 2)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1",
+                               scale_type = "continuous",
                                min.cutoff = 1,
                                max.cutoff = 2)
     testthat::expect_type(p, "list")

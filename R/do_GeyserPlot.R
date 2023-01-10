@@ -265,10 +265,18 @@ do_GeyserPlot <- function(sample,
 
 
     # Plot.
-    p <- ggplot2::ggplot(data = data,
-                         mapping = ggplot2::aes(x = .data[["group.by"]],
-                                                y = .data[["values"]],
-                                                color = if (scale_type == "categorical"){.data[["group.by"]]} else {.data[["values"]]}))
+    if (scale_type == "categorical"){
+      p <- ggplot2::ggplot(data = data,
+                           mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                  y = .data[["values"]],
+                                                  color = .data[["group.by"]]))
+    } else if (scale_type == "continuous"){
+      p <- ggplot2::ggplot(data = data,
+                           mapping = ggplot2::aes(x = .data[["group.by"]],
+                                                  y = .data[["values"]],
+                                                  color = .data[["values"]]))
+    }
+
 
     if (isTRUE(plot_cell_borders)){
       p <- p +

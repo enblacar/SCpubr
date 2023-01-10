@@ -410,6 +410,11 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     p <- SCpubr::do_DimPlot(sample = sample, colors.use = c("Cell" = "#001219"),
                             split.by = "orig.ident")
     testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample, colors.use = c("Cell" = "#001219"),
+                            group.by = "orig.ident",
+                            split.by = "seurat_clusters")
+    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_DimPlot: PASS - cells.highlight", {
