@@ -383,7 +383,7 @@ do_PathwayActivityPlot <- function(sample,
                              legend.width = heatmap.legend.width,
                              legend.framecolor = heatmap.legend.framecolor,
                              symmetrical_scale = enforce_symmetry,
-                             uuse_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
+                             use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
                              viridis_color_map = viridis_color_map,
                              viridis_direction = viridis_direction)
         h <- out[["heatmap"]]
