@@ -17,7 +17,33 @@ if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
     p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
                                              org.db = org.Hs.eg.db,
                                              organism = "hsa",
-                                             database = "GO")
+                                             database = "GO",
+                                             flip = FALSE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
+                                             org.db = org.Hs.eg.db,
+                                             organism = "hsa",
+                                             database = "GO",
+                                             flip = TRUE)
+
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
+                                             org.db = org.Hs.eg.db,
+                                             organism = "hsa",
+                                             database = "GO",
+                                             legend.position = "top")
+
+    testthat::expect_type(p, "list")
+
+
+    p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
+                                             org.db = org.Hs.eg.db,
+                                             organism = "hsa",
+                                             database = "GO",
+                                             legend.position = "right")
 
     testthat::expect_type(p, "list")
 
@@ -26,6 +52,15 @@ if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
                                              organism = "hsa",
                                              database = "GO",
                                              min.overlap = 1)
+
+    testthat::expect_type(p, "list")
+
+
+    p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
+                                             org.db = org.Hs.eg.db,
+                                             organism = "hsa",
+                                             database = "GO",
+                                             legend.position = "none")
 
     testthat::expect_type(p, "list")
 

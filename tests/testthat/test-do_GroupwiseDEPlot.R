@@ -120,21 +120,21 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
                                                        de_genes = de_genes,
                                                        assay = "SCT",
                                                        slot = "data",
-                                                       viridis_direction = 0,
+                                                       viridis_direction = 1,
                                                        min.cutoff = -10)})
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
                                                        assay = "SCT",
                                                        slot = "data",
-                                                       viridis_direction = 0,
+                                                       viridis_direction = 1,
                                                        max.cutoff = 200)})
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
                                                        assay = "SCT",
                                                        slot = "data",
-                                                       viridis_direction = 0,
+                                                       viridis_direction = 1,
                                                        max.cutoff = 1,
                                                        min.cutoff = 2)})
 

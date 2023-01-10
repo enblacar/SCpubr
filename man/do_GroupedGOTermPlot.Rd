@@ -9,11 +9,7 @@ do_GroupedGOTermPlot(
   org.db,
   levels.use = NULL,
   GO_ontology = "BP",
-  min.overlap = if (length(genes) <= 4) {
-     1
- } else {
-     3
- },
+  min.overlap = NULL,
   flip = TRUE,
   legend.position = "right",
   heatmap_gap = 0.5,

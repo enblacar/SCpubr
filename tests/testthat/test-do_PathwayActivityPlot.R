@@ -144,6 +144,45 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
                                           min.cutoff = -0.1,
                                           split.by = "orig.ident")
     testthat::expect_type(out, "list")
+
+
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          min.cutoff = NULL)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          min.cutoff = NULL,
+                                          split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          max.cutoff = NULL)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          max.cutoff = NULL,
+                                          split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          max.cutoff = NULL,
+                                          min.cutoff = NULL)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          max.cutoff = NULL,
+                                          min.cutoff = NULL,
+                                          split.by = "orig.ident")
+    testthat::expect_type(out, "list")
   })
 
   testthat::test_that("do_PathwayActivityPlot: PASS - column.title and row.title", {

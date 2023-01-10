@@ -232,6 +232,18 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
                                xlab = "y",
                                ylab = "x")
     testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = c("EPC1", "TOX2"),
+                               xlab = c("A", "B"),
+                               ylab = c("C", "D"))
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_ViolinPlot(sample = sample,
+                               features = c("EPC1", "TOX2"),
+                               xlab = c(NA, "B"),
+                               ylab = c("C", NA))
+    testthat::expect_type(p, "list")
   })
 
 

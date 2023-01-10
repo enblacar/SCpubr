@@ -13,7 +13,7 @@ do_GroupedGOTermPlot <- function(genes,
                                  org.db,
                                  levels.use = NULL,
                                  GO_ontology = "BP",
-                                 min.overlap = if(length(genes) <= 4){1} else {3},
+                                 min.overlap = NULL,
                                  flip = TRUE,
                                  legend.position = "right",
                                  heatmap_gap = 0.5,
@@ -59,6 +59,14 @@ do_GroupedGOTermPlot <- function(genes,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = GO_ontology, parameter_name = "GO_ontology")
+
+  if (is.null(min.overlap)){
+    if (length(genes) < 4){
+      min.overlap <- 1
+    } else {
+      min.overlap <- 3
+    }
+  }
 
   # Compute the GO terms associated with each gene.
   matrices <- do_GroupedGO_matrices(genes = genes,

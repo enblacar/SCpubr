@@ -2772,17 +2772,20 @@ do_EnrichedTermBarPlot <- function(result,
                                     option = viridis_color_map,
                                     direction = viridis_direction)
   })
-  p <- modify_continuous_legend(p = p,
-                                legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
-                                legend.aes = "fill",
-                                legend.type = legend.type,
-                                legend.position = legend.position,
-                                legend.length = legend.length,
-                                legend.width = legend.width,
-                                legend.framecolor = legend.framecolor,
-                                legend.tickcolor = legend.tickcolor,
-                                legend.framewidth = legend.framewidth,
-                                legend.tickwidth = legend.tickwidth)
+  if (legend.position != "none"){
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                  legend.aes = "fill",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
+  }
+
   p <- p +
     ggplot2::theme_minimal(base_size = font.size) +
     ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
@@ -2865,17 +2868,21 @@ do_EnrichedTermDotPlot <- function(result,
                                     option = viridis_color_map,
                                     direction = viridis_direction)
   })
-  p <- modify_continuous_legend(p = p,
-                                legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
-                                legend.aes = "fill",
-                                legend.type = legend.type,
-                                legend.position = legend.position,
-                                legend.length = legend.length,
-                                legend.width = legend.width,
-                                legend.framecolor = legend.framecolor,
-                                legend.tickcolor = legend.tickcolor,
-                                legend.framewidth = legend.framewidth,
-                                legend.tickwidth = legend.tickwidth)
+
+  if (legend.position != "none"){
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                  legend.aes = "fill",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
+  }
+
   p <- p +
     ggplot2::xlab(xlab) +
     ggplot2::ylab(ylab) +
@@ -3003,17 +3010,20 @@ do_EnrichedTermTreePlot <- function(result,
     ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                   direction = viridis_direction)
 
-  p <- modify_continuous_legend(p = p,
-                                legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
-                                legend.aes = "fill",
-                                legend.type = legend.type,
-                                legend.position = legend.position,
-                                legend.length = legend.length,
-                                legend.width = legend.width,
-                                legend.framecolor = legend.framecolor,
-                                legend.tickcolor = legend.tickcolor,
-                                legend.framewidth = legend.framewidth,
-                                legend.tickwidth = legend.tickwidth)
+  if (legend.position != "none"){
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                  legend.aes = "fill",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
+  }
+
   p <- p +
     ggplot2::labs(title = plot.title,
                   subtitle = plot.subtitle,

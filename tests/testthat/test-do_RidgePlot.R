@@ -173,6 +173,21 @@ if(isFALSE(dep_check[["do_RidgePlot"]])){
                               color_by_probabilities = TRUE)
     testthat::expect_type(p, "list")
   })
+
+  testthat::test_that("do_RidgePlot: PASS - flip", {
+    testthat::skip_on_cran()
+
+
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              flip = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              flip = FALSE)
+    testthat::expect_type(p, "list")
+  })
 }
 
 

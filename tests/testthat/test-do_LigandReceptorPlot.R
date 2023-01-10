@@ -174,11 +174,49 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
                                        legend.position = "bottom",
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
+
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        top_interactions = 50,
                                        flip = TRUE,
                                        legend.position = "right",
                                        add_missing_LR_combinations = FALSE)
+    testthat::expect_type(p, "list")
+  })
+
+
+  testthat::test_that("do_LigandReceptorPlot: PASS - arrange interactions", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       arrange_interactions_by = "aggregate_rank")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       arrange_interactions_by = "specificity")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       arrange_interactions_by = "magnitude")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       arrange_interactions_by = "both")
+    testthat::expect_type(p, "list")
+  })
+
+  testthat::test_that("do_LigandReceptorPlot: PASS - sort interactions", {
+    testthat::skip_on_cran()
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       sort_interactions_alphabetically =  TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
+                                       top_interactions = 50,
+                                       sort_interactions_alphabetically =  FALSE)
     testthat::expect_type(p, "list")
   })
 
