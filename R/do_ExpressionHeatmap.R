@@ -134,8 +134,11 @@ do_ExpressionHeatmap <- function(sample,
                                        assay = assay,
                                        slot = slot)[features, ] %>%
                   as.data.frame() %>%
-                  as.matrix() %>%
-                  t() %>%
+                  as.matrix()
+    if (length(features) > 1){
+      data.merge <- t(data.merge)
+    }
+    data.merge <- data.merge %>%
                   as.data.frame() %>%
                   tibble::rownames_to_column(var = "cell") %>%
                   tibble::tibble()

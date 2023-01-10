@@ -176,9 +176,21 @@ do_ViolinPlot <- function(sample,
                                  fatten = 1) +
            ggplot2::scale_fill_manual(values = colors.use)
     }
+    if (is.na(xlab[counter])){
+      xlab.use <- "Groups"
+    } else {
+      xlab.use <- xlab[counter]
+    }
+
+    if (is.na(ylab[counter])){
+      ylab.use <- feature
+    } else {
+      ylab.use <- ylab[counter]
+    }
+
     p <- p +
-         ggplot2::xlab(if (!is.na(xlab[counter])) {xlab[counter]} else {"Groups"}) +
-         ggplot2::ylab(if (!is.na(ylab[counter])) {ylab[counter]} else {feature}) +
+         ggplot2::xlab(xlab.use) +
+         ggplot2::ylab(ylab.use) +
          ggplot2::labs(title = plot.title,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +

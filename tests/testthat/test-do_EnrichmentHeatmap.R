@@ -21,7 +21,17 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                  flavor = "Seurat",
                                  assay = "SCT",
                                  nbin = 1,
-                                 ctrl = 10)
+                                 ctrl = 10,
+                                 viridis_direction = 1)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      flavor = "Seurat",
+                                      assay = "SCT",
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      viridis_direction = -1)
     testthat::expect_true("HeatmapList" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -29,7 +39,35 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                  flavor = "UCell",
                                  slot = "data",
                                  nbin = 1,
-                                 ctrl = 10)
+                                 ctrl = 10,
+                                 viridis_direction = 1)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      flavor = "UCell",
+                                      slot = "data",
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      viridis_direction = -1)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      flavor = "AUCell",
+                                      assay = "SCT",
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      viridis_direction = 1)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      flavor = "AUCell",
+                                      assay = "SCT",
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      viridis_direction = -1)
     testthat::expect_true("HeatmapList" %in% class(p))
   })
 
@@ -92,7 +130,15 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
-                                      group.by = "orig.ident",
+                                      group.by = c("orig.ident", "seurat_clusters"),
+                                      flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("orig.ident"),
                                       flip = TRUE,
                                       nbin = 1,
                                       ctrl = 10)
@@ -254,7 +300,29 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       nbin = 1,
                                       ctrl = 10,
                                       plot_FeaturePlots = TRUE,
-                                      plot_GeyserPlots = TRUE)
+                                      plot_GeyserPlots = TRUE,
+                                      plot_BeeSwarmPlots = TRUE,
+                                      plot_BoxPlots = TRUE,
+                                      plot_ViolinPlots = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = "seurat_clusters",
+                                      row_title = "A",
+                                      column_title = "B",
+                                      flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      plot_FeaturePlots = TRUE,
+                                      plot_GeyserPlots = TRUE,
+                                      plot_BeeSwarmPlots = TRUE,
+                                      plot_BoxPlots = TRUE,
+                                      plot_ViolinPlots = TRUE,
+                                      assay = "SCT",
+                                      slot = "data",
+                                      reduction = "umap",
+                                      flavor = "AUCell")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -268,7 +336,10 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       plot_FeaturePlots = TRUE,
                                       plot_GeyserPlots = TRUE,
                                       min.cutoff = 0.1,
-                                      max.cutoff = 0.5)
+                                      max.cutoff = 0.5,
+                                      plot_BeeSwarmPlots = TRUE,
+                                      plot_BoxPlots = TRUE,
+                                      plot_ViolinPlots = TRUE)
     testthat::expect_type(p, "list")
 
 

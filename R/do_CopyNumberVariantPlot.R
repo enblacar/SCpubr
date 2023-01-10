@@ -178,7 +178,9 @@ do_CopyNumberVariantPlot <- function(sample,
         }
         events_list <- append(events_list, scores_name)
       } else {
+        #nocov start
         if(isTRUE(verbose)){message(paste0("Your sample has only one gene in ", chromosome, chr_arm, ". Skipping this chromosome arm."))}
+        #nocov end
       }
     }
   }
@@ -187,6 +189,12 @@ do_CopyNumberVariantPlot <- function(sample,
                       dplyr::mutate("group" = .data[[group.by]],
                                     "cells" = colnames(sample))
   for (event in events_list){
+    # Fix the legend.
+    if (is.null(legend.title)){
+      legend.title.use <- paste0(event, " scores")
+    } else {
+      legend.title.use <- legend.title
+    }
 
     p <- do_GeyserPlot(sample = sample,
                        assay = NULL,
@@ -210,14 +218,27 @@ do_CopyNumberVariantPlot <- function(sample,
                        legend.width = legend.width,
                        xlab = group.by,
                        ylab = paste0(event, " score"),
-                       legend.title = paste0(event, " scores"),
+                       legend.title = legend.title.use,
                        rotate_x_axis_labels = rotate_x_axis_labels,
                        viridis_color_map = viridis_color_map,
                        viridis_direction = viridis_direction,
                        min.cutoff = min.cutoff,
                        max.cutoff = max.cutoff)
 
-    # Plot the scores!
+    # Modify cutoff variable to adapt to do_FeaturePlot.
+    if (is.null(min.cutoff)){
+      min.cutoff.use <- NA
+    } else {
+      min.cutoff.use <- min.cutoff
+    }
+
+    if (is.null(max.cutoff)){
+      max.cutoff.use <- NA
+    } else {
+      max.cutoff.use <- max.cutoff
+    }
+
+
     p.f <- do_FeaturePlot(sample = sample,
                           features = event,
                           plot_cell_borders = plot_cell_borders,
@@ -235,9 +256,9 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.width = legend.width,
                           viridis_color_map = viridis_color_map,
                           viridis_direction = viridis_direction,
-                          legend.title = paste0(event, " scores"),
-                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
-                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
+                          legend.title = legend.title.use,
+                          min.cutoff = min.cutoff.use,
+                          max.cutoff = max.cutoff.use)
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),

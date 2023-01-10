@@ -74,9 +74,24 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
                                 feature = "nCount_RNA",
+                                plot_density_contour = TRUE,
+                                contour.position = "bottom",
+                                enforce_symmetry = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                                plot_density_contour = TRUE,
+                                contour.position = "top",
+                                enforce_symmetry = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
                             split.by = "annotation",
                             raster = TRUE,
-                            plot_density_contour = TRUE)
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -87,12 +102,31 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
                                 contour.position = "bottom")
     testthat::expect_type(p, "list")
 
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                                split.by = "annotation",
+                                raster = TRUE,
+                                plot_density_contour = TRUE,
+                                contour.position = "top",
+                                enforce_symmetry = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                                split.by = "annotation",
+                                raster = TRUE,
+                                plot_density_contour = TRUE,
+                                contour.position = "bottom",
+                                enforce_symmetry = TRUE)
+    testthat::expect_type(p, "list")
+
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
                                 feature = "nCount_RNA",
                             idents.highlight = "0",
                             raster = TRUE,
-                            plot_density_contour = TRUE)
+                            plot_density_contour = TRUE,
+                            contour.position = "top")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
@@ -101,6 +135,24 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
                                 raster = TRUE,
                                 plot_density_contour = TRUE,
                                 contour.position = "bottom")
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                                idents.highlight = "0",
+                                raster = TRUE,
+                                plot_density_contour = TRUE,
+                                contour.position = "top",
+                                enforce_symmetry = TRUE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                feature = "nCount_RNA",
+                                idents.highlight = "0",
+                                raster = TRUE,
+                                plot_density_contour = TRUE,
+                                contour.position = "bottom",
+                                enforce_symmetry = TRUE)
     testthat::expect_type(p, "list")
 
   })

@@ -334,6 +334,43 @@ if (isFALSE(dep_check[["do_BarPlot"]])){
                             split.by = "orig.ident",
                             flip = FALSE)
     testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            legend.title = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            legend.title = NULL,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            legend.title = "C",
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = FALSE)
+    testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            xlab = "A",
+                            ylab = "B",
+                            legend.title = "C",
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
   })
 }
 

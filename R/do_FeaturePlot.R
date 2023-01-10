@@ -286,9 +286,11 @@ do_FeaturePlot <- function(sample,
           p.build <- ggplot2::ggplot_build(p)
           feature.select <- gsub("-", ".", features)
           scale.name <- feature.select
+          # nocov start
           if (stringr::str_starts(feature.select, "[0-9]")){
             feature.select <- paste0("x", feature.select)
           }
+          # nocov end
           limits <- c(min(p.build$plot$data[, feature.select]),
                       max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
@@ -310,9 +312,11 @@ do_FeaturePlot <- function(sample,
           p.build <- ggplot2::ggplot_build(p[[counter]])
           feature.select <- gsub("-", ".",  features[counter])
           scale.name <- feature.select
+          # nocov start
           if (stringr::str_starts(feature.select, "[0-9]")){
             feature.select <- paste0("x", feature.select)
           }
+          # nocov end
           limits <- c(min(p.build$plot$data[, feature.select]),
                       max(p.build$plot$data[, feature.select]))
           end_value <- max(abs(limits))
@@ -498,9 +502,11 @@ do_FeaturePlot <- function(sample,
           p.build <- ggplot2::ggplot_build(p.loop)
           feature.select <- gsub("-", ".", feature.use)
           scale.name <- feature.select
+          # nocov start
           if (stringr::str_starts(feature.select, "[0-9]")){
             feature.select <- paste0("x", feature.select)
           }
+          # nocov end
           limits <- c(min(p.build$plot$data[, feature.select], na.rm = TRUE),
                       max(p.build$plot$data[, feature.select], na.rm = TRUE))
           end_value <- max(abs(limits))

@@ -35,7 +35,16 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
                                       group.by = c("orig.ident", "seurat_clusters"),
+                                      column_title = c("A", "B"),
+                                      row_title = c("C", "D"),
                                       flip = FALSE)
+
+    p <- SCpubr::do_ExpressionHeatmap(sample,
+                                      features = rownames(sample)[1:5],
+                                      group.by = c("orig.ident", "seurat_clusters"),
+                                      column_title = c("A", "B"),
+                                      row_title = c("C", "D"),
+                                      flip = TRUE)
 
     testthat::expect_true("HeatmapList" %in% class(p))
   })
@@ -119,6 +128,11 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
                                                          features = c("EPC1"),
                                                          max.cutoff = 1,
                                                          min.cutoff = 2)})
+
+    testthat::expect_message({SCpubr::do_ExpressionHeatmap(sample = sample,
+                                                         features = list("A" = c("EPC1")))})
+    testthat::expect_warning({SCpubr::do_ExpressionHeatmap(sample = sample,
+                                                           features =c("EPC1", "NOTFOUND"))})
 
   })
 

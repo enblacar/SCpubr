@@ -170,8 +170,10 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         pool = FALSE)
 
     if (is.null(result)){
+      # nocov start
       return_obj <- "No gene could be mapped, try another database."
       return(return_obj)
+      # nocov end
     }
 
   } else if (database == "KEGG"){
@@ -186,8 +188,10 @@ do_FunctionalAnnotationPlot <- function(genes,
     })
 
     if (is.null(result)){
+      # nocov start
       return_obj <- "No gene could be mapped, try another database."
       return(return_obj)
+      # nocov end
     }
 
     geneID_column <- c()
@@ -212,8 +216,10 @@ do_FunctionalAnnotationPlot <- function(genes,
                                              minGSSize = minGSSize,
                                              maxGSSize = maxGSSize)
       if (is.null(result)){
+        # nocov start
         return_obj <- "No gene could be mapped, try another database."
         return(return_obj)
+        # nocov end
       }
     })
 
@@ -300,7 +306,11 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         legend.tickcolor = legend.tickcolor,
                                         viridis_color_map = viridis_color_map,
                                         viridis_direction = viridis_direction)
-
+    # nocov start
+    if (nrow(result@result) < nCluster){
+      nCluster <- nrow(result@result) - 1
+    }
+    # nocov end
     p.tree <- do_EnrichedTermTreePlot(result = result,
                                       legend.type = legend.type,
                                       legend.position = legend.position,
@@ -319,7 +329,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                       plot.caption = plot.caption,
                                       showCategory = showCategory,
                                       nWords = nWords,
-                                      nCluster = if (nrow(result@result) < nCluster) {nrow(result@result) - 1} else (nCluster))
+                                      nCluster = nCluster)
 
     output.list <- list("Heatmap" = h.enriched,
                         "BarPlot" = p.barplot,

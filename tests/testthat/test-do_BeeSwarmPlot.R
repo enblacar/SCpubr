@@ -21,6 +21,19 @@ if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                  group.by = "seurat_clusters",
                                  continuous_feature = FALSE)
     testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 legend.title = NULL)
+
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "PC_1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 legend.title = "A")
+    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_BeeSwarmPlot: PASS - cell_borders", {

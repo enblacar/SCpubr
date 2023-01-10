@@ -244,9 +244,13 @@ do_BeeSwarmPlot <- function(sample,
     } else {
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }
+    # Adapt the legend to categorical variables.
+    if (is.null(legend.title)){
+      legend.title <- "Groups"
+    }
     p <- p +
          ggplot2::scale_color_manual(values = colors.use) +
-         ggplot2::guides(color = ggplot2::guide_legend(title = if (is.null(legend.title)) {"Groups"} else {legend.title},
+         ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
                                                        title.position = "top",
                                                        title.hjust = 0.5,
                                                        ncol = legend.ncol,
