@@ -11,9 +11,6 @@
 
 This package aims to provide a streamlined way of generating publication ready plots for known **S**ingle-**C**ell visualizations in a "**pub**lication **r**eady" format (**SCpubr**). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. 
 
-
-For further information read the [publication](https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1).
-
 For installation and tutorials consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
 # Installation
