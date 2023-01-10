@@ -47,6 +47,13 @@ do_GroupedGOTermPlot <- function(genes,
                          "GO_ontology" = GO_ontology,
                          "colors.use" = colors.use,
                          "genes" = genes)
+  if (is.null(min.overlap)){
+    if (length(genes) < 4){
+      min.overlap <- 1
+    } else {
+      min.overlap <- 3
+    }
+  }
 
   assertthat::assert_that(min.overlap >= 1,
                           msg = "Please provide a positive value higher or equal to 1 to min.overlap.")
@@ -60,13 +67,7 @@ do_GroupedGOTermPlot <- function(genes,
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = GO_ontology, parameter_name = "GO_ontology")
 
-  if (is.null(min.overlap)){
-    if (length(genes) < 4){
-      min.overlap <- 1
-    } else {
-      min.overlap <- 3
-    }
-  }
+
 
   # Compute the GO terms associated with each gene.
   matrices <- do_GroupedGO_matrices(genes = genes,
