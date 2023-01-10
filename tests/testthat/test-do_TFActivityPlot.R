@@ -115,6 +115,61 @@ if(isFALSE(dep_check[["do_TFActivityPlot"]])){
     testthat::expect_length(out, 3)
   })
 
+  testthat::test_that("do_TFActivityPlot: PASS - all split.by", {
+    testthat::skip_on_cran()
+
+
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                          activities = dorothea_activities,
+                                          plot_GeyserPlots = TRUE,
+                                          plot_FeaturePlots = TRUE,
+                                          split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+    testthat::expect_length(out, 3)
+  })
+
+  testthat::test_that("do_TFActivityPlot: PASS - all split.by 2", {
+    testthat::skip_on_cran()
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     min.cutoff = -0.1)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     min.cutoff = -0.1,
+                                     split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     max.cutoff = 0.1)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     max.cutoff = 0.1,
+                                     split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     max.cutoff = 0.1,
+                                     min.cutoff = -0.1)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     max.cutoff = 0.1,
+                                     min.cutoff = -0.1,
+                                     split.by = "orig.ident")
+    testthat::expect_type(out, "list")
+  })
+
   testthat::test_that("do_TFActivityPlot: PASS - column.title and row.title", {
     testthat::skip_on_cran()
 

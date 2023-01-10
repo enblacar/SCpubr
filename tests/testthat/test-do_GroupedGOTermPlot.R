@@ -42,6 +42,14 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
+    p <- SCpubr::do_GroupedGOTermPlot(genes = c("CCL1", "CCL4", "CENPE", "CENPK", "OLIG1"),
+                                      org.db = org.db,
+                                      GO_ontology = "BP",
+                                      verbose = FALSE,
+                                      levels.use = c(1, 2))
+
+    testthat::expect_type(p, "list")
+
 
     suppressMessages({
       p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),

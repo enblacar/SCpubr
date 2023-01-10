@@ -217,11 +217,35 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                   "C" = Seurat::VariableFeatures(sample)[11:15])
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       group.by = "orig.ident",
                                       nbin = 1,
                                       ctrl = 10)
     testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      return_object = TRUE,
+                                      return_matrix = TRUE)
+    testthat::expect_true("list" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      return_object = TRUE,
+                                      return_matrix = TRUE)
+    testthat::expect_true("list" %in% class(p))
   })
 
   testthat::test_that("do_EnrichmentHeatmap: FAIL - list of genes without name", {
@@ -281,6 +305,38 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       row_title = "A",
                                       column_title = "B",
                                       flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = "seurat_clusters.factor",
+                                      row_title = "A",
+                                      column_title = "B",
+                                      flip = FALSE,
+                                      nbin = 1,
+                                      ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = c("seurat_clusters", "annotation"),
+                                      row_title = c("A", "B"),
+                                      column_title = c("C", "D"),
+                                      flip = TRUE,
+                                      nbin = 1,
+                                      ctrl = 10)
+    testthat::expect_true("HeatmapList" %in% class(p))
+
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = c("EPC1"),
+                                      group.by = c("seurat_clusters", "annotation"),
+                                      row_title = c("A", "B"),
+                                      column_title = c("C", "D"),
+                                      flip = FALSE,
                                       nbin = 1,
                                       ctrl = 10)
     testthat::expect_true("HeatmapList" %in% class(p))
@@ -386,6 +442,22 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                          min.cutoff = 2,
                                                          nbin = 1,
                                                          ctrl = 10)})
+
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = c("EPC1"),
+                                                         group.by = c("seurat_clusters", "annotation"),
+                                                         column_title = c("A"),
+                                                         nbin = 1,
+                                                         ctrl = 10,
+                                                         flip = TRUE)})
+
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = c("EPC1"),
+                                                         group.by = c("seurat_clusters", "annotation"),
+                                                         row_title = c("A"),
+                                                         nbin = 1,
+                                                         ctrl = 10,
+                                                         flip = FALSE)})
   })
 }
 

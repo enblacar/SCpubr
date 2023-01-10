@@ -64,7 +64,6 @@ do_FunctionalAnnotationPlot(
 \itemize{
 \item \emph{\code{GO}}.
 \item \emph{\code{KEGG}}.
-\item \emph{\code{MKEGG}}.
 }}
 
 \item{GO_ontology}{\strong{\code{\link[base]{character}}} | GO ontology to use. One of:

@@ -300,7 +300,10 @@ do_TFActivityPlot <- function(sample,
                            legend.length = heatmap.legend.length,
                            legend.width = heatmap.legend.width,
                            legend.framecolor = heatmap.legend.framecolor,
-                           symmetrical_scale = enforce_symmetry)
+                           symmetrical_scale = enforce_symmetry,
+                           use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
+                           viridis_color_map = viridis_color_map,
+                           viridis_direction = viridis_direction)
       h <- out[["heatmap"]]
       h_legend <- out[["legend"]]
       ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
@@ -386,7 +389,10 @@ do_TFActivityPlot <- function(sample,
                              legend.length = heatmap.legend.length,
                              legend.width = heatmap.legend.width,
                              legend.framecolor = heatmap.legend.framecolor,
-                             symmetrical_scale = enforce_symmetry)
+                             symmetrical_scale = enforce_symmetry,
+                             use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
+                             viridis_color_map = viridis_color_map,
+                             viridis_direction = viridis_direction)
         h <- out[["heatmap"]]
         h_legend <- out[["legend"]]
         list.heatmaps[[split.value]] <- h

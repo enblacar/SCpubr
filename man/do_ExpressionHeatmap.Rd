@@ -11,16 +11,8 @@ do_ExpressionHeatmap(
   assay = NULL,
   slot = "data",
   flip = FALSE,
-  column_title = if (isFALSE(flip)) {
-     "Genes"
- } else {
-     "Groups"
- },
-  row_title = if (isFALSE(flip)) {
-     "Groups"
- } else {
-     "Genes"
- },
+  column_title = NULL,
+  row_title = NULL,
   cluster_cols = FALSE,
   cluster_rows = FALSE,
   legend.title = "Avg. Expression",

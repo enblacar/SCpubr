@@ -41,16 +41,8 @@ do_EnrichmentHeatmap(
   row_names_side = "right",
   row_title_side = "left",
   row_title_rot = 90,
-  column_title = if (isFALSE(flip)) {
-     "List of Genes"
- } else {
-     "Groups"
- },
-  row_title = if (isFALSE(flip)) {
-     "Groups"
- } else {
-     "List of Genes"
- },
+  column_title = NULL,
+  row_title = NULL,
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",

@@ -7,7 +7,6 @@
 #' \itemize{
 #'   \item \emph{\code{GO}}.
 #'   \item \emph{\code{KEGG}}.
-#'   \item \emph{\code{MKEGG}}.
 #' }
 #' @param p.adjust.cutoff \strong{\code{\link[base]{numeric}}} | Significance cutoff used to filter non-significant terms.
 #' @param pAdjustMethod \strong{\code{\link[base]{character}}} | Method to adjust for multiple testing.  One of:
@@ -193,35 +192,6 @@ do_FunctionalAnnotationPlot <- function(genes,
       return(return_obj)
       # nocov end
     }
-
-    geneID_column <- c()
-    for (input in result@result$geneID){
-      genes.use <- stringr::str_split(input, pattern = "/")[[1]]
-      suppressMessages({
-        conversion <- clusterProfiler::bitr(genes.use, fromType = "ENTREZID",
-                                            toType = c("SYMBOL"),
-                                            OrgDb = org.db)
-      })
-      geneID_column <- c(geneID_column, paste(conversion$SYMBOL, collapse = "/"))
-    }
-    result@result$geneID <- geneID_column
-  } else if (database == "MKEGG"){
-    suppressMessages({
-      genes.use <- conversion$ENTREZID
-      result <- clusterProfiler::enrichMKEGG(gene =genes,
-                                             organism = organism,
-                                             pvalueCutoff = 0.05,
-                                             qvalueCutoff = 0.05,
-                                             pAdjustMethod = pAdjustMethod,
-                                             minGSSize = minGSSize,
-                                             maxGSSize = maxGSSize)
-      if (is.null(result)){
-        # nocov start
-        return_obj <- "No gene could be mapped, try another database."
-        return(return_obj)
-        # nocov end
-      }
-    })
 
     geneID_column <- c()
     for (input in result@result$geneID){

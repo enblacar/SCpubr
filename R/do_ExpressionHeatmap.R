@@ -15,8 +15,8 @@ do_ExpressionHeatmap <- function(sample,
                                  assay = NULL,
                                  slot = "data",
                                  flip = FALSE,
-                                 column_title = if (isFALSE(flip)){"Genes"} else {"Groups"},
-                                 row_title = if (isFALSE(flip)){"Groups"} else {"Genes"},
+                                 column_title = NULL,
+                                 row_title = NULL,
                                  cluster_cols = FALSE,
                                  cluster_rows = FALSE,
                                  legend.title = "Avg. Expression",
@@ -193,46 +193,35 @@ do_ExpressionHeatmap <- function(sample,
   }
 
   # Fix for automatic row and column titles.
-  if (length(group.by) > 1){
-    if (isTRUE(flip)){
-      if (length(column_title) == 1){
-        if (column_title == "Groups"){
-          column_title <- rep("Groups", length(group.by))
-        }
+  # Fix for automatic row and column titles.
+  if (is.null(column_title)){
+    if (length(group.by) == 1){
+      column_title <- ifelse(isTRUE(flip), "Groups", "Genes")
+    } else {
+      if (isTRUE(flip)){
+        column_title <- rep("Groups", length(group.by))
       } else {
-        assertthat::assert_that(length(column_title) == length(group.by),
-                                msg = "Please provide as many different column titles as unique values in group.by.")
-      }
-
-      if (length(row_title) == 1){
-        if (row_title == "Genes"){
-          row_title <- c("Genes", rep("", length(group.by) - 1))
-        }
-      } else {
-        assertthat::assert_that(length(row_title) == length(group.by),
-                                msg = "Please provide as many different row titles as unique values in group.by.")
-      }
-
-
-    } else if (isFALSE(flip)){
-      if (length(row_title) == 1){
-        if (row_title == "Groups"){
-          row_title <- rep("Groups", length(group.by))
-        }
-      } else {
-        assertthat::assert_that(length(row_title) == length(group.by),
-                                msg = "Please provide as many different row titles as unique values in group.by.")
-      }
-
-      if (length(column_title) == 1){
-        if (column_title == "Genes"){
-          column_title <- c("Genes", rep("", length(group.by) - 1))
-        }
-      } else {
-        assertthat::assert_that(length(column_title) == length(group.by),
-                                msg = "Please provide as many different column titles as unique values in group.by.")
+        column_title <- c("Genes", rep("", length(group.by) - 1))
       }
     }
+  } else {
+    assertthat::assert_that(length(column_title) == length(group.by),
+                            msg = "Please provide as many different column titles as unique values in group.by.")
+  }
+
+  if (is.null(row_title)){
+    if (length(group.by) == 1){
+      row_title <- ifelse(isFALSE(flip), "Groups", "Genes")
+    } else {
+      if (isFALSE(flip)){
+        row_title <- rep("Groups", length(group.by))
+      } else {
+        row_title <- c("Genes", rep("", length(group.by) - 1))
+      }
+    }
+  } else {
+    assertthat::assert_that(length(row_title) == length(group.by),
+                            msg = "Please provide as many different row titles as unique values in group.by.")
   }
 
   # Plot the heatmaps.

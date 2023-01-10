@@ -1319,7 +1319,7 @@ heatmap_inner <- function(data,
   `%>%`<- magrittr::`%>%`
 
   assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
-                          msg = "Please provide a matrix that is not 1x1.")
+                          msg = "Please provide a matrix that is not 1x1. This might be caused by a categorical variable with only 1 unique value and only 1 value to plot for it. Consider increasing the number of rows or columns. In other words, either include a categorical variable with more than 1 value or more than 1 list of genes to plot in the heatmap. This should be an edge case for this specific function. If you are seeing this error way too often, please consider taking the time to open an Issue in SCpubr GitHub with as many details as you can. Thanks!")
 
   if (!(is.null(range.data)) & data_range == "both"){
     assertthat::assert_that(length(range.data) == 2,
@@ -2034,8 +2034,8 @@ check_parameters <- function(parameter,
     assertthat::assert_that(parameter %in% c("specificity", "magnitude", "both", "aggregate_rank"),
                             msg = "Please provide one of the following to arrange_interactions_by: aggregate_rank, specificity, magnitude, both.")
   } else if (parameter_name == "database"){
-    assertthat::assert_that(parameter %in% c("GO", "KEGG", "MKEGG"),
-                            msg = "Please provide one of the following to database: GO, KEGG, MKEGG.")
+    assertthat::assert_that(parameter %in% c("GO", "KEGG"),
+                            msg = "Please provide one of the following to database: GO, KEGG")
   } else if (parameter_name == "GO_ontology"){
     assertthat::assert_that(parameter %in% c("BP", "MF", "CC"),
                             msg = "Please provide one of the following to GO_ontology: BP, MF, CC")

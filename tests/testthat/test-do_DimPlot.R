@@ -406,6 +406,9 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
                                                             "6" = "#ca6702",
                                                             "7" = "#bb3e03",
                                                             "8" = "#ae2012"))
+
+    p <- SCpubr::do_DimPlot(sample = sample, colors.use = c("Cell" = "#001219"),
+                            split.by = "orig.ident")
     testthat::expect_type(p, "list")
   })
 

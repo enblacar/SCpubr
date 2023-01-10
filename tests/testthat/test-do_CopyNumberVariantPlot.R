@@ -77,6 +77,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             metacell_mapping = metacell_mapping,
                                             chromosome_focus = "2",
                                             legend.position = "right",
+                                            legend.title = "test",
                                             chromosome_locations = human_chr_locations)
     testthat::expect_type(out, "list")
 

@@ -54,8 +54,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  row_names_side = "right",
                                  row_title_side = "left",
                                  row_title_rot = 90,
-                                 column_title = if (isFALSE(flip)){"List of Genes"} else {"Groups"},
-                                 row_title = if (isFALSE(flip)){"Groups"} else {"List of Genes"},
+                                 column_title = NULL,
+                                 row_title = NULL,
                                  nbin = 24,
                                  ctrl = 100,
                                  flavor = "Seurat",
@@ -241,47 +241,36 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   # Fix for automatic row and column titles.
-  if (length(group.by) > 1){
-    if (isTRUE(flip)){
-      if (length(column_title) == 1){
-        if (column_title == "Groups"){
-          column_title <- rep("Groups", length(group.by))
-        }
+  if (is.null(column_title)){
+    if (length(group.by) == 1){
+      column_title <- ifelse(isTRUE(flip), "Groups", "List of genes")
+    } else {
+      if (isTRUE(flip)){
+        column_title <- rep("Groups", length(group.by))
       } else {
-        assertthat::assert_that(length(column_title) == length(group.by),
-                                msg = "Please provide as many different column titles as unique values in group.by.")
-      }
-
-      if (length(row_title) == 1){
-        if (row_title == "List of genes"){
-          row_title <- c("List of genes", rep("", length(group.by) - 1))
-        }
-      } else {
-        assertthat::assert_that(length(row_title) == length(group.by),
-                                msg = "Please provide as many different row titles as unique values in group.by.")
-      }
-
-
-    } else if (isFALSE(flip)){
-      if (length(row_title) == 1){
-        if (row_title == "Groups"){
-          row_title <- rep("Groups", length(group.by))
-        }
-      } else {
-        assertthat::assert_that(length(row_title) == length(group.by),
-                                msg = "Please provide as many different row titles as unique values in group.by.")
-      }
-
-      if (length(column_title) == 1){
-        if (column_title == "List of genes"){
-          column_title <- c("List of genes", rep("", length(group.by) - 1))
-        }
-      } else {
-        assertthat::assert_that(length(column_title) == length(group.by),
-                                msg = "Please provide as many different column titles as unique values in group.by.")
+        column_title <- c("List of genes", rep("", length(group.by) - 1))
       }
     }
+  } else {
+    assertthat::assert_that(length(column_title) == length(group.by),
+                            msg = "Please provide as many different column titles as unique values in group.by.")
   }
+
+  if (is.null(row_title)){
+    if (length(group.by) == 1){
+      row_title <- ifelse(isFALSE(flip), "Groups", "List of genes")
+    } else {
+      if (isFALSE(flip)){
+        row_title <- rep("Groups", length(group.by))
+      } else {
+        row_title <- c("List of genes", rep("", length(group.by) - 1))
+      }
+    }
+  } else {
+    assertthat::assert_that(length(row_title) == length(group.by),
+                            msg = "Please provide as many different row titles as unique values in group.by.")
+  }
+
 
   counter <- 0
   for (variant in group.by){
