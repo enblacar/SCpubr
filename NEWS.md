@@ -1,3 +1,6 @@
+# SCpubr v1.1.0.9000
+Nothing new for the moment in the development version.
+
 # SCpubr v1.1.0
 
 ## General
