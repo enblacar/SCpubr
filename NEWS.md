@@ -63,6 +63,7 @@
 
 ## `SCpubr::do_ViolinPlot()`
 -   Fixed a bug in the code in which no different colors could be passed to `colors.use`. 
+-   Reduced default line width from 1 to 0.5.
 
 # SCpubr v1.0.4
 -   Hotfix for v1.0.3 in which `do_GeyserPlot` with categorical variables had a bug that mapped the legend to the continuous axis.
@@ -103,6 +104,7 @@
 ## `SCpubr::do_ViolinPlot()`
 -   Corrected a bug in which legend title when using `split.by` was an actual line of code.
 -   Added `legend.title` parameter to control the title of the legend.
+
 
 
 ### SCpubr v.1.0.3-dev-stable

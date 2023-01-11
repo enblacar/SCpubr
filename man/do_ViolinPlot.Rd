@@ -13,7 +13,7 @@ do_ViolinPlot(
   split.by = NULL,
   colors.use = NULL,
   pt.size = 0,
-  line_width = 1,
+  line_width = 0.5,
   y_cut = rep(NA, length(features)),
   plot_boxplot = TRUE,
   boxplot_width = 0.2,
