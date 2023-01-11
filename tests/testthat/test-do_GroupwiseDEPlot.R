@@ -33,6 +33,39 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
                                     assay = "SCT",
                                     slot = "scale.data")
     testthat::expect_type(p, "S4")
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes_scaled,
+                                    assay = "SCT",
+                                    group.by = "annotation",
+                                    slot = "scale.data")
+    testthat::expect_type(p, "S4")
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    viridis_direction = 1,
+                                    max.cutoff = 1.2,
+                                    min.cutoff = 1)
+    testthat::expect_type(p, "S4")
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    viridis_direction = 1,
+                                    min.cutoff = 1)
+    testthat::expect_type(p, "S4")
+
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    viridis_direction = 1,
+                                    max.cutoff = 1.2)
+    testthat::expect_type(p, "S4")
+
   })
 
   testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {

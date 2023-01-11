@@ -2248,10 +2248,12 @@ do_GroupedGO_matrices <- function(genes,
                     dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
           result_list[[paste0("Lv. ", counter)]] <- result
         } else {
+          # nocov start
           if (isTRUE(verbose)){
             message("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes.")
           }
           breakpoint <- TRUE
+          # nocov end
         }
       }
     } else {

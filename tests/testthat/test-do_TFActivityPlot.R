@@ -133,6 +133,20 @@ if(isFALSE(dep_check[["do_TFActivityPlot"]])){
     testthat::skip_on_cran()
 
     out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                    activities = dorothea_activities,
+                                    min.cutoff = -0.1,
+                                    max.cutoff = NULL,
+                                    plot_FeaturePlots = TRUE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
+                                     activities = dorothea_activities,
+                                     min.cutoff = NULL,
+                                     max.cutoff = 0.1,
+                                     plot_FeaturePlots = TRUE)
+    testthat::expect_type(out, "list")
+
+    out <- SCpubr::do_TFActivityPlot(sample = sample,
                                      activities = dorothea_activities,
                                      min.cutoff = -0.1)
     testthat::expect_type(out, "list")

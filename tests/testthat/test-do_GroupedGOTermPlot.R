@@ -37,8 +37,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
-                                      levels.use = c(1, 2),
-                                      min.overlap = 1)
+                                      levels.use = c(1, 2))
 
     testthat::expect_type(p, "list")
 

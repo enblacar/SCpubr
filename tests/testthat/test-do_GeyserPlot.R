@@ -41,6 +41,12 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
                                scale_type = "continuous",
                                enforce_symmetry = TRUE)
     testthat::expect_type(p, "list")
+
+    sample$seurat_clusters <- as.character(sample$seurat_clusters)
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "EPC1",
+                               scale_type = "categorical")
+    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_GeyserPlot: PASS - flip", {

@@ -227,7 +227,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         heatmap.legend.width = 5,
                                         heatmap.legend.framecolor = "black",
                                         legend_gap = 1,
-                                        font.size = font.size)
+                                        font.size = font.size,
+                                        legend.position = legend.position)
 
     p.barplot <- do_EnrichedTermBarPlot(result = result,
                                         font.size = font.size,

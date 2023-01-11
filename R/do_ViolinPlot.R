@@ -153,20 +153,30 @@ do_ViolinPlot <- function(sample,
 
   for (feature in features){
     counter <- counter + 1
-    p <- get_data_column_in_context(sample = sample,
-                                    feature = feature,
-                                    assay = assay,
-                                    slot = slot,
-                                    group.by = group.by,
-                                    split.by = split.by) %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
-                                                y = .data$feature,
-                                                fill = if (!is.null(split.by)){.data$split.by} else {.data$group.by})) +
+    data <- get_data_column_in_context(sample = sample,
+                                       feature = feature,
+                                       assay = assay,
+                                       slot = slot,
+                                       group.by = group.by,
+                                       split.by = split.by)
+
+    if (!is.null(split.by)){
+      p <- data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
+                                                  y = .data$feature,
+                                                  fill = .data$split.by))
+    } else {
+      p <- data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
+                                                  y = .data$feature,
+                                                  fill = .data$group.by))
+    }
+    p <- p +
          ggplot2::geom_violin(color = "black",
                               linewidth = line_width)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
-                              msg = "Boxplots are not implemented when split.by is set.")
+                              msg = "Boxplots are not implemented when split.by is set. Set plot_boxplots parameter to FALSE. ")
       p <- p +
            ggplot2::geom_boxplot(fill = "white",
                                  color = "black",
