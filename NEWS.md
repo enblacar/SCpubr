@@ -1,4 +1,4 @@
-# SCpubr v1.0.4.9000
+# SCpubr v1.1.0
 
 ## General
 -   Increased the cell size of all heatmap-based functions from 5 to 8.
