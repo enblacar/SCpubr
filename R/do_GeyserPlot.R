@@ -325,7 +325,9 @@ do_GeyserPlot <- function(sample,
         if (is.factor(values)){
           names.use <- levels(values)
         } else {
+          # nocov start
           sort(unique(values))
+          # nocov end
         }
         colors.use <- generate_color_scale(names_use = names.use)
       } else {

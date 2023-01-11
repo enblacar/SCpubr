@@ -19,6 +19,11 @@
 -   Fixed a bug in which axes titles were not displaying correctly under certain combinations of `flip` and `split.by`.
 -   Fixed a bug in which `x_lab` and `y_lab` would not rotate accordingly when using `flip = TRUE`. 
 
+## `SCpubr::do_BeeSwarmPlot()`
+-   Adapted the code to the new 0.7.1 version of the package, thus deprecating the `groupOnX` parameter of `geom_quarirandom`. This will likely affect users with a lower version.
+-   A warning has been placed for the users in lower versions of the need to upgrade to 0.7.1. 
+-   This changes are subject to the new behaviors/deprecations of ggplot2 and ggplot2.
+
 ## `SCpubr::do_BoxPlot()`
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
 

@@ -49,6 +49,14 @@ do_BeeSwarmPlot <- function(sample,
                             min.cutoff = NULL,
                             max.cutoff = NULL){
   check_suggests(function_name = "do_BeeSwarmPlot")
+
+  # Check ggbeeswarm version:
+  # nocov start
+  if(utils::packageVersion("ggbeeswarm") < "0.7.1"){
+    warning("Due to recent updates in ggbeeswarm package, some internal interaction with ggplot2 have changed. Please update ggbeeswarm and ggplot2 to ensure correct plotting.", call. = FALSE)
+  }
+  # nocov end
+
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
   # Check the assay.
