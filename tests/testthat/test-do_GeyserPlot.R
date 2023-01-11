@@ -146,10 +146,11 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
                                scale_type = "categorical")
     testthat::expect_type(p, "list")
 
-    sample$seurat_clusters <- as.character(sample$seurat_clusters)
+    sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
+                               group.by = "seurat_clusters_character",
                                colors.use = NULL)
     testthat::expect_type(p, "list")
   })
