@@ -47,14 +47,14 @@
 -   Set `assay` to NULL and will default to the default assay in the seurat object.
 
 ## `SCpubr::do_LigandReceptorPlot()`
--   Added `arrange_interactions_by` to control how output interactions are arranged (either by aggreagate_rank, specificity, magnitude or a combination of magnitude and specificity).
+-   Added `arrange_interactions_by` to control how output interactions are arranged (either by aggregate_rank, specificity, magnitude or a combination of magnitude and specificity).
 -   Added `sort_interactions_alphabetically` to control whether the output dotplot has the interactions ordered alphabetically or as they come in the original matrix (meaning, they follow the arrangement specified in `arrange_interactions_by`). (([liana's issue  #72](https://github.com/saezlab/liana/issues/72)))
 
 ## `do_PathwayActivityPlot()`
--   Added a fix in which when `enforce_symmetry` is set to `FALSE`, then the color scale turns into a virdis-based one instead of a two-color gradient scale.
+-   Added a fix in which when `enforce_symmetry` is set to `FALSE`, then the color scale turns into a viridis-based one instead of a two-color gradient scale.
 
 ## `do_TFActivityPlot()`
--   Added a fix in which when `enforce_symmetry` is set to `FALSE`, then the color scale turns into a virdis-based one instead of a two-color gradient scale.
+-   Added a fix in which when `enforce_symmetry` is set to `FALSE`, then the color scale turns into a viridis-based one instead of a two-color gradient scale.
 
 ## `SCpubr::do_ViolinPlot()`
 -   Fixed a bug in the code in which no different colors could be passed to `colors.use`. 

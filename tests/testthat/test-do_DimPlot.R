@@ -343,6 +343,9 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
 
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", idents.keep = c("1", "3", "5"))
     testthat::expect_type(p, "list")
+
+    p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters", group.by = "annotation", idents.keep = c("1", "3", "5"))
+    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_DimPlot: PASS - dims", {
