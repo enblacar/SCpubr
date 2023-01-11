@@ -2553,22 +2553,25 @@ do_EnrichedTermMatrix <- function(genes,
                                column_names_centered = FALSE,
                                row_names_centered = FALSE)
 
-  lgd.presence <- ComplexHeatmap::Legend(at = breaks,
-                                labels = as.character(breaks),
-                                col_fun = col_fun,
-                                title = " ",
-                                direction = direction,
-                                legend_height = legend_height,
-                                legend_width = legend_width,
-                                grid_width = grid_width,
-                                grid_height = grid_height,
-                                border = heatmap.legend.framecolor,
-                                title_position = title_position,
-                                break_dist = rep(1, length(breaks) - 1),
-                                labels_gp = grid::gpar(fontsize = font.size,
-                                                       fontface = "bold"),
-                                title_gp = grid::gpar(fontsize = font.size,
-                                                      fontface = "bold"))
+  if (legend.position != "none"){
+    lgd.presence <- ComplexHeatmap::Legend(at = breaks,
+                                           labels = as.character(breaks),
+                                           col_fun = col_fun,
+                                           title = " ",
+                                           direction = direction,
+                                           legend_height = legend_height,
+                                           legend_width = legend_width,
+                                           grid_width = grid_width,
+                                           grid_height = grid_height,
+                                           border = heatmap.legend.framecolor,
+                                           title_position = title_position,
+                                           break_dist = rep(1, length(breaks) - 1),
+                                           labels_gp = grid::gpar(fontsize = font.size,
+                                                                  fontface = "bold"),
+                                           title_gp = grid::gpar(fontsize = font.size,
+                                                                 fontface = "bold"))
+  }
+
   data <- df.count
   breaks <- c(0, max(data))
   col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("#d8ecf3", "#2E3192"))
@@ -2613,22 +2616,25 @@ do_EnrichedTermMatrix <- function(genes,
                                         column_names_centered = FALSE,
                                         row_names_centered = FALSE)
 
-  lgd.count <- ComplexHeatmap::Legend(at = breaks,
-                                         labels = as.character(breaks),
-                                         col_fun = col_fun,
-                                         title = "Gene count",
-                                         direction = direction,
-                                         legend_height = legend_height,
-                                         legend_width = legend_width,
-                                         grid_width = grid_width,
-                                         grid_height = grid_height,
-                                         border = heatmap.legend.framecolor,
-                                         title_position = title_position,
-                                         break_dist = rep(1, length(breaks) - 1),
-                                         labels_gp = grid::gpar(fontsize = font.size,
-                                                                fontface = "bold"),
-                                         title_gp = grid::gpar(fontsize = font.size,
-                                                               fontface = "bold"))
+  if (legend.position != "none"){
+    lgd.count <- ComplexHeatmap::Legend(at = breaks,
+                                        labels = as.character(breaks),
+                                        col_fun = col_fun,
+                                        title = "Gene count",
+                                        direction = direction,
+                                        legend_height = legend_height,
+                                        legend_width = legend_width,
+                                        grid_width = grid_width,
+                                        grid_height = grid_height,
+                                        border = heatmap.legend.framecolor,
+                                        title_position = title_position,
+                                        break_dist = rep(1, length(breaks) - 1),
+                                        labels_gp = grid::gpar(fontsize = font.size,
+                                                               fontface = "bold"),
+                                        title_gp = grid::gpar(fontsize = font.size,
+                                                              fontface = "bold"))
+  }
+
 
 
   data <- df.p.adj
@@ -2675,25 +2681,31 @@ do_EnrichedTermMatrix <- function(genes,
                                      column_names_centered = FALSE,
                                      row_names_centered = FALSE)
 
-  lgd.p.adj <- ComplexHeatmap::Legend(at = breaks,
-                                      labels = as.character(breaks),
-                                      col_fun = col_fun,
-                                      title = "-log10(p.adj)",
-                                      direction = direction,
-                                      legend_height = legend_height,
-                                      legend_width = legend_width,
-                                      grid_width = grid_width,
-                                      grid_height = grid_height,
-                                      border = heatmap.legend.framecolor,
-                                      title_position = title_position,
-                                      break_dist = rep(1, length(breaks) - 1),
-                                      labels_gp = grid::gpar(fontsize = font.size,
-                                                             fontface = "bold"),
-                                      title_gp = grid::gpar(fontsize = font.size,
-                                                            fontface = "bold"))
+  if (legend.position != "none"){
+    lgd.p.adj <- ComplexHeatmap::Legend(at = breaks,
+                                        labels = as.character(breaks),
+                                        col_fun = col_fun,
+                                        title = "-log10(p.adj)",
+                                        direction = direction,
+                                        legend_height = legend_height,
+                                        legend_width = legend_width,
+                                        grid_width = grid_width,
+                                        grid_height = grid_height,
+                                        border = heatmap.legend.framecolor,
+                                        title_position = title_position,
+                                        break_dist = rep(1, length(breaks) - 1),
+                                        labels_gp = grid::gpar(fontsize = font.size,
+                                                               fontface = "bold"),
+                                        title_gp = grid::gpar(fontsize = font.size,
+                                                              fontface = "bold"))
+  }
+
 
   list.heatmaps <- list(h.presence, h.count, h.p.adj)
-  list.legends <- list(lgd.count, lgd.p.adj)
+  if (legend.position != "none"){
+    list.legends <- list(lgd.count, lgd.p.adj)
+  }
+
 
   # Compute joint heatmap.
   grDevices::pdf(NULL)
