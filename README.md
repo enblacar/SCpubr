@@ -26,7 +26,7 @@ if(!requireNamespace("devtools", quietly = TRUE)){
   install.packages("devtools") # If not installed.
 }
 
-devtools::install_github("enblacar/SCpubr", ref = "v1.1.0-dev-stable")
+devtools::install_github("enblacar/SCpubr", ref = "v1.1.1-dev-stable")
 ```
 
 # Updates
