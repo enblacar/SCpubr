@@ -1,5 +1,5 @@
-# Submission version 1.1.0
-This adds a ton of new functionalities to the package as well as providing bug fixes.
+# Submission version 1.1.1
+Hotfixes to unit tests to comply with CRAN internal testings. It was asked to be corrected before 25-01-2023.
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 

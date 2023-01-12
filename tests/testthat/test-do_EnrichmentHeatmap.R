@@ -16,6 +16,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
   })
 
   testthat::test_that("do_EnrichmentHeatmap: PASS -flavors", {
+    testthat::skip_on_cran()
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                  input_gene_list = c("EPC1"),
                                  flavor = "Seurat",
