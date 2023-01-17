@@ -1,8 +1,6 @@
-# Resubmission version 1.1.1
-Fixed the conditional use of AnnotationDbi package. If it still does not work properly, I would really appreciate some further input on how to solve it. Thanks!
-
-# Submission version 1.1.1
-Hotfixes to unit tests to comply with CRAN internal testings. It was asked to be corrected before 25-01-2023.
+# Submission version 1.1.2
+More hotfixes to unit tests to use them conditionally. A test was missing in the last update and it is rendering all the checks to ERROR.
+This should be fixed now.
 
 ## `devtools` R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 

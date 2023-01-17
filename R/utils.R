@@ -2395,7 +2395,10 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                                              fontface = "bold"),
                                    border = TRUE,
                                    rect_gp = grid::gpar(col= "grey50"),
-                                   cell_fun = function(j, i, x, y, w, h, fill) {
+                                   #cell_fun = function(j, i, x, y, w, h, fill) {
+                                   #  grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
+                                   #},
+                                   layer_fun = function(j, i, x, y, w, h, fill) {
                                      grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
                                    },
                                    column_names_centered = FALSE,

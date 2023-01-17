@@ -1,5 +1,5 @@
-# SCpubr v1.1.1.9000
-Current development release.
+# SCpubr v1.1.2
+More hotfixes in unit tests to comply with CRAN checks.
 
 # SCpubr v1.1.1
 Hotfixes in unit tests to comply with CRAN checks.
