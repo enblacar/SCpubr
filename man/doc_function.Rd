@@ -19,7 +19,6 @@
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
@@ -217,6 +216,10 @@
 \item{genes}{\strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.}
 
 \item{org.db}{\strong{\code{OrgDB}} | Database object to use for the query.}
+
+\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 

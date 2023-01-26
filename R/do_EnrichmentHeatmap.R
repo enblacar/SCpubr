@@ -62,8 +62,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  legend.title = if (flavor != "AUCell") {"Enrichment"} else {"AUC"},
                                  ncores = 1,
                                  storeRanks = TRUE,
-                                 min.cutoff = NULL,
-                                 max.cutoff = NULL,
+                                 min.cutoff = NA,
+                                 max.cutoff = NA,
                                  plot_FeaturePlots = FALSE,
                                  plot_GeyserPlots = FALSE,
                                  plot_BeeSwarmPlots = FALSE,
@@ -78,7 +78,9 @@ do_EnrichmentHeatmap <- function(sample,
                                  violin_plot_boxplot = TRUE,
                                  violin_boxplot_width = 0.2,
                                  return_object = FALSE,
-                                 return_matrix = FALSE){
+                                 return_matrix = FALSE,
+                                 disable_white_in_viridis = FALSE,
+                                 number.breaks = 5){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -96,7 +98,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "plot_BeeSwarmPlots" = plot_BeeSwarmPlots,
                        "plot_ViolinPlots" = plot_ViolinPlots,
                        "boxplot_order_by_mean" = boxplot_order_by_mean,
-                       "violin_plot_boxplot" = violin_plot_boxplot)
+                       "violin_plot_boxplot" = violin_plot_boxplot,
+                       "disable_white_in_viridis" = disable_white_in_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -118,7 +121,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "violin_boxplot_width" = violin_boxplot_width)
+                       "violin_boxplot_width" = violin_boxplot_width,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -140,9 +144,11 @@ do_EnrichmentHeatmap <- function(sample,
   check_colors(na.value)
   check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
 
+
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = flavor, parameter_name = "flavor")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
 
   `%v%` <- ComplexHeatmap::`%v%`
@@ -221,24 +227,15 @@ do_EnrichmentHeatmap <- function(sample,
     max_value_list <- c(max_value_list, max_value)
     min_value_list <- c(min_value_list, min_value)
   }
-  range.data <- c(min(min_value_list), max(max_value_list))
-  if (!is.null(min.cutoff) & !is.null(max.cutoff)){
-    assertthat::assert_that(min.cutoff < max.cutoff,
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
-  }
+  range.data <- c(min(min_value_list, na.rm = TRUE),
+                  max(max_value_list, na.rm = TRUE))
+  out <- check_cutoffs(min.cutoff = min.cutoff,
+                       max.cutoff = max.cutoff,
+                       feature = feature,
+                       limits = range.data)
 
-  if (!is.null(min.cutoff)){
-    assertthat::assert_that(min.cutoff >= range.data[1],
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-    range.data <- c(min.cutoff, range.data[2])
-  }
-
-  if (!is.null(max.cutoff)){
-    assertthat::assert_that(max.cutoff <= range.data[2],
-                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-    range.data <- c(range.data[1], max.cutoff)
-
-  }
+  range.data <- out$limits
+  outlier.data <- out$outlier.data
 
   # Fix for automatic row and column titles.
   if (is.null(column_title)){
@@ -286,6 +283,7 @@ do_EnrichmentHeatmap <- function(sample,
     column_title_use <- column_title[counter]
 
 
+
     out <- heatmap_inner(if (isTRUE(flip)){t(data)} else {data},
                          legend.title = legend.title,
                          column_title = column_title_use,
@@ -310,7 +308,10 @@ do_EnrichmentHeatmap <- function(sample,
                          legend.framecolor = heatmap.legend.framecolor,
                          data_range = "both",
                          symmetrical_scale = enforce_symmetry,
-                         zeros_are_white = if (flavor %in% c("AUCell", "UCell") & viridis_direction == -1) {TRUE} else {FALSE})
+                         outlier.data = outlier.data,
+                         outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
+                         outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
+                         disable_white_in_viridis = disable_white_in_viridis)
     list.heatmaps[[variant]] <- out[["heatmap"]]
     list.legends[[variant]] <- out[["legend"]]
     list.matrices[[variant]] <- data
@@ -334,11 +335,22 @@ do_EnrichmentHeatmap <- function(sample,
   ComplexHeatmap::ht_opt(message = FALSE)
 
   # Draw final heatmap.
-  h <- ComplexHeatmap::draw(ht_list,
-                            heatmap_legend_list = list.legends[[1]],
-                            heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                            padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
-                            ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  if (isTRUE(outlier.data)){
+    suppressWarnings({
+      h <- ComplexHeatmap::draw(ht_list,
+                                heatmap_legend_list = list.legends[[1]],
+                                heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                                ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+    })
+  } else {
+    h <- ComplexHeatmap::draw(ht_list,
+                              heatmap_legend_list = list.legends[[1]],
+                              heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                              padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                              ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  }
+
   grDevices::dev.off()
 
   out.list <- list()
@@ -371,8 +383,9 @@ do_EnrichmentHeatmap <- function(sample,
                                   legend.title = if (flavor != "AUCell") {paste0(sig, " enrichment")} else {paste0(sig, " AUC")},
                                   viridis_color_map = viridis_color_map,
                                   viridis_direction = viridis_direction,
-                                  min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
-                                  max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
+                                  min.cutoff = min.cutoff,
+                                  max.cutoff = max.cutoff,
+                                  number.breaks = number.breaks)
       list.FeaturePlots[[sig]] <- p
     }
     out.list[["FeaturePlots"]] <- list.FeaturePlots
@@ -413,7 +426,8 @@ do_EnrichmentHeatmap <- function(sample,
                                    viridis_color_map = viridis_color_map,
                                    viridis_direction = viridis_direction,
                                    min.cutoff = min.cutoff,
-                                   max.cutoff = max.cutoff)
+                                   max.cutoff = max.cutoff,
+                                   number.breaks = number.breaks)
         list.GeyserPlots[[sig]] <- p
       }
       list.group.by[[var]] <- list.GeyserPlots
@@ -450,7 +464,8 @@ do_EnrichmentHeatmap <- function(sample,
                                      ylab = if (is.null(group.by)) {"Clusters"} else {var},
                                      xlab = if (flavor != "AUCell") {paste0("Ranking of ", sig, " enrichment")} else {paste0("Ranking of ", sig, " AUC")},
                                      viridis_color_map = viridis_color_map,
-                                     viridis_direction = viridis_direction)
+                                     viridis_direction = viridis_direction,
+                                     number.breaks = number.breaks)
         list.BeeSwarmPlots[[sig]] <- p
       }
       list.group.by[[var]] <- list.BeeSwarmPlots

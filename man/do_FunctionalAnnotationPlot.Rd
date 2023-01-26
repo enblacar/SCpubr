@@ -137,7 +137,6 @@ do_FunctionalAnnotationPlot(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:

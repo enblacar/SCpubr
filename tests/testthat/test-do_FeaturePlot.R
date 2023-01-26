@@ -525,15 +525,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: PASS - colorsteps legend", {
-    testthat::skip_on_cran()
 
-
-    p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
-                                legend.type = "colorsteps")
-    testthat::expect_type(p, "list")
-  })
 
   testthat::test_that("do_FeaturePlot: PASS - normal legend - split.by", {
     testthat::skip_on_cran()
@@ -557,16 +549,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: PASS - colorsteps legend - split.by", {
-    testthat::skip_on_cran()
 
-
-    p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
-                                legend.type = "colorsteps",
-                                split.by = "seurat_clusters")
-    testthat::expect_type(p, "list")
-  })
 
   testthat::test_that("do_FeaturePlot: FAIL - wrong legend type", {
     testthat::skip_on_cran()

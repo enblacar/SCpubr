@@ -60,8 +60,9 @@ do_GeyserPlot <- function(sample,
                           xlab = "Groups",
                           ylab = feature,
                           flip = FALSE,
-                          min.cutoff = NULL,
-                          max.cutoff = NULL){
+                          min.cutoff = rep(NA, length(features)),
+                          max.cutoff = rep(NA, length(features)),
+                          number.breaks = 5){
 
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
@@ -86,7 +87,8 @@ do_GeyserPlot <- function(sample,
                        "legend.nrow" = legend.nrow,
                        "legend.icon.size" = legend.icon.size,
                        "viridis_direction" = viridis_direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -122,6 +124,7 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   `%>%` <- magrittr::`%>%`
   # Check the assay.
@@ -147,6 +150,12 @@ do_GeyserPlot <- function(sample,
   assertthat::assert_that(jitter > 0 & jitter < 0.5,
                           msg = "Value for jitter has to be betwen 0 and 0.49.")
 
+  assertthat::assert_that(length(min.cutoff) == length(features),
+                          msg = "Please provide as many values to min.cutoff as features. Use NA if you want to skip a given feature.")
+
+  assertthat::assert_that(length(max.cutoff) == length(features),
+                          msg = "Please provide as many values to max.cutoff as features. Use NA if you want to skip a given feature.")
+
   # Will contain the output.
   list.out <- list()
 
@@ -157,13 +166,19 @@ do_GeyserPlot <- function(sample,
   }
 
   # Iterate for each feature.
+  counter <- 0
   for (feature in features){
+    counter <- counter + 1
+
+    max.cutoff.use <- max.cutoff[counter]
+    min.cutoff.use <- min.cutoff[counter]
+
     # Check the feature.
     check_feature(sample = sample,
                   features = feature)
 
 
-    # Get a vector of all dimensional reduction compontents.
+    # Get a vector of all dimensional reduction components.
     dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
       col.names <- colnames(sample@reductions[[red]][[]])
@@ -243,25 +258,15 @@ do_GeyserPlot <- function(sample,
             dplyr::select(dplyr::all_of(cols.use))
 
     # Define cutoffs.
-    range.data <- c(min(data[, "values"], na.rm = TRUE), max(data[, "values"], na.rm = TRUE))
+    range.data <- c(min(data[, "values"], na.rm = TRUE),
+                    max(data[, "values"], na.rm = TRUE))
 
+    out <- check_cutoffs(min.cutoff = min.cutoff.use,
+                         max.cutoff = max.cutoff.use,
+                         feature = feature,
+                         limits = range.data)
 
-    if (!is.null(min.cutoff) & !is.null(max.cutoff)){
-      assertthat::assert_that(min.cutoff < max.cutoff,
-                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
-    }
-
-    if (!is.null(min.cutoff)){
-      assertthat::assert_that(min.cutoff >= range.data[1],
-                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-      range.data <- c(min.cutoff, range.data[2])
-    }
-
-    if (!is.null(max.cutoff)){
-      assertthat::assert_that(max.cutoff <= range.data[2],
-                              msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-      range.data <- c(range.data[1], max.cutoff)
-    }
+    range.data <- out$limits
 
 
     # Plot.
@@ -287,39 +292,51 @@ do_GeyserPlot <- function(sample,
                                na.rm = TRUE)
     }
 
-    if (isTRUE(scale_type == "continuous")){
-      if (isTRUE(enforce_symmetry)){
-        limits <- c(min(data[, "values"], na.rm = TRUE),
-                    max(data[, "values"], na.rm = TRUE))
-        if (limits[1] != range.data[1]){
-          limits <- c(range.data[1], limits[2])
-        }
+    scale.setup <- compute_scales(sample = sample,
+                                  feature = feature,
+                                  assay = assay,
+                                  reduction = NULL,
+                                  slot = slot,
+                                  number.breaks = number.breaks,
+                                  min.cutoff = min.cutoff.use,
+                                  max.cutoff = max.cutoff.use,
+                                  flavor = "Seurat",
+                                  enforce_symmetry = enforce_symmetry,
+                                  from_data = TRUE,
+                                  limits.use = range.data)
 
-        if (limits[2] != range.data[2]){
-          limits <- c(limits[1], range.data[2])
-        }
-        end_value <- max(abs(limits))
+    limits <- c(min(data[, "values"], na.rm = TRUE),
+                max(data[, "values"], na.rm = TRUE))
+
+    if (limits[1] != range.data[1]){
+      limits <- c(range.data[1], limits[2])
+    }
+
+    if (limits[2] != range.data[2]){
+      limits <- c(limits[1], range.data[2])
+    }
+    end_value <- max(abs(limits))
+
+    if (isTRUE(scale_type == "continuous")){
+
+      if (isTRUE(enforce_symmetry)){
         scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
-                                                    limits = c(-end_value, end_value),
-                                                    na.value = na.value)
+                                                    na.value = na.value,
+                                                    name = feature,
+                                                    breaks = scale.setup$breaks,
+                                                    labels = scale.setup$labels,
+                                                    limits = scale.setup$limits)
 
       } else if (isFALSE(enforce_symmetry)){
         scale.use <- ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                                     na.value = na.value,
                                                     direction = viridis_direction,
-                                                    limits = range.data)
+                                                    name = feature,
+                                                    breaks = scale.setup$breaks,
+                                                    labels = scale.setup$labels,
+                                                    limits = scale.setup$limits)
       }
     } else if (isTRUE(scale_type == "categorical")){
-      limits <- c(min(data[, "values"], na.rm = TRUE),
-                  max(data[, "values"], na.rm = TRUE))
-      if (limits[1] != range.data[1]){
-        limits <- c(range.data[1], limits[2])
-      }
-
-      if (limits[2] != range.data[2]){
-        limits <- c(limits[1], range.data[2])
-      }
-      end_value <- max(abs(limits))
       if (is.null(colors.use)){
         values <- data %>% dplyr::pull(.data[["group.by"]])
         if (is.factor(values)){

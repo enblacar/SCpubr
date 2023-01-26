@@ -55,7 +55,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                   compute_ChordDiagrams = FALSE,
                                   add_missing_LR_combinations = TRUE,
                                   arrange_interactions_by = "both",
-                                  sort_interactions_alphabetically = FALSE){
+                                  sort_interactions_alphabetically = FALSE,
+                                  number.breaks = 5){
 
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
@@ -78,7 +79,8 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("split.by" = split.by,
@@ -115,6 +117,7 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
@@ -311,13 +314,15 @@ do_LigandReceptorPlot <- function(liana_output,
          ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                        name = fill.title,
                                        direction = viridis_direction,
-                                       na.value = NA)
+                                       na.value = NA,
+                                       breaks = scales::extended_breaks(n = number.breaks))
   } else {
     p <- p +
          ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                         name = fill.title,
                                         direction = viridis_direction,
-                                        na.value = NA)
+                                        na.value = NA,
+                                        breaks = scales::extended_breaks(n = number.breaks))
   }
   # Continue plotting.
   if (isFALSE(flip)){

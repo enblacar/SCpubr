@@ -53,8 +53,8 @@ do_EnrichmentHeatmap(
  },
   ncores = 1,
   storeRanks = TRUE,
-  min.cutoff = NULL,
-  max.cutoff = NULL,
+  min.cutoff = NA,
+  max.cutoff = NA,
   plot_FeaturePlots = FALSE,
   plot_GeyserPlots = FALSE,
   plot_BeeSwarmPlots = FALSE,
@@ -69,7 +69,9 @@ do_EnrichmentHeatmap(
   violin_plot_boxplot = TRUE,
   violin_boxplot_width = 0.2,
   return_object = FALSE,
-  return_matrix = FALSE
+  return_matrix = FALSE,
+  disable_white_in_viridis = FALSE,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -132,7 +134,6 @@ do_EnrichmentHeatmap(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
@@ -193,6 +194,10 @@ do_EnrichmentHeatmap(
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
 
 \item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
+
+\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ComplexHeatmap object.

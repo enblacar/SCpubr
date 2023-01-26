@@ -33,8 +33,9 @@ do_ExpressionHeatmap(
   row_names_side = "right",
   row_title_side = "left",
   row_title_rot = 90,
-  min.cutoff = NULL,
-  max.cutoff = NULL
+  min.cutoff = NA,
+  max.cutoff = NA,
+  disable_white_in_viridis = FALSE
 )
 }
 \arguments{
@@ -100,6 +101,8 @@ do_ExpressionHeatmap(
 \item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
 }
 \value{
 A ComplexHeatmap object.

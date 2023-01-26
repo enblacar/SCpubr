@@ -45,7 +45,8 @@ do_CellularStatesPlot(
   viridis_color_map = "G",
   viridis_direction = 1,
   nbin = 24,
-  ctrl = 100
+  ctrl = 100,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -143,6 +144,8 @@ do_CellularStatesPlot(
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ggplot2 object containing a butterfly plot.

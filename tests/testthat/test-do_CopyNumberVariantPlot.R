@@ -111,26 +111,6 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             legend.type = "colorbar",
                                             chromosome_locations = human_chr_locations)
     testthat::expect_type(out, "list")
-
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
-                                            infercnv_object = infercnv_object_metacells,
-                                            using_metacells = TRUE,
-                                            metacell_mapping = metacell_mapping,
-                                            chromosome_focus = "2",
-                                            legend.type = "colorsteps",
-                                            chromosome_locations = human_chr_locations)
-    testthat::expect_type(out, "list")
-
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
-                                            infercnv_object = infercnv_object_metacells,
-                                            using_metacells = TRUE,
-                                            metacell_mapping = metacell_mapping,
-                                            chromosome_focus = "2",
-                                            legend.type = "colorsteps",
-                                            chromosome_locations = human_chr_locations,
-                                            min.cutoff = 0.95,
-                                            max.cutoff = 1.05)
-    testthat::expect_type(out, "list")
   })
 }
 

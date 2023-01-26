@@ -49,7 +49,8 @@ do_DotPlot <- function(sample,
                        dot_border = TRUE,
                        plot.grid = TRUE,
                        grid.color = "grey75",
-                       grid.type = "dashed"){
+                       grid.type = "dashed",
+                       number.breaks = 5){
     check_suggests(function_name = "do_DotPlot")
     check_Seurat(sample = sample)
     # Check the assay.
@@ -72,7 +73,8 @@ do_DotPlot <- function(sample,
                          "legend.length" = legend.length,
                          "legend.width" = legend.width,
                          "viridis_direction" = viridis_direction,
-                         "rotate_x_axis_labels" = rotate_x_axis_labels)
+                         "rotate_x_axis_labels" = rotate_x_axis_labels,
+                         "number.breaks" = number.breaks)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -126,6 +128,7 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
     check_parameters(parameter = grid.type, parameter_name = "grid.type")
     check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+    check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
     # Check colors.
     check_colors(colors.use)
@@ -172,24 +175,28 @@ do_DotPlot <- function(sample,
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                      option = viridis_color_map,
-                                                                     direction = viridis_direction),
+                                                                     direction = viridis_direction,
+                                                                     breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
              ggplot2::scale_fill_viridis_c(na.value = na.value,
                                            option = viridis_color_map,
-                                           direction = viridis_direction)
+                                           direction = viridis_direction,
+                                           breaks = scales::extended_breaks(n = number.breaks))
       }
     } else if (isFALSE(use_viridis)){
       if (isFALSE(dot_border)){
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_gradientn(na.value = na.value,
-                                                                     colors = colors.use),
+                                                                     colors = colors.use,
+                                                                     breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
              ggplot2::scale_fill_gradientn(na.value = na.value,
-                                           colors = colors.use)
+                                           colors = colors.use,
+                                           breaks = scales::extended_breaks(n = number.breaks))
       }
     }
     p <- p +

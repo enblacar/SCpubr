@@ -66,12 +66,7 @@ if(isFALSE(dep_check[["do_TermEnrichmentPlot"]])){
                                        legend.type = "colorbar")
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
-                                       nterms = 2,
-                                       colors.use = c("#e9d8a6", "#9b2226"),
-                                       legend.type = "colorsteps")
-    testthat::expect_type(p, "list")
-  })
+
 
   testthat::test_that("do_TermEnrichmentPlot: FAIL - wrong legend.type", {
     testthat::skip_on_cran()
@@ -113,16 +108,7 @@ if(isFALSE(dep_check[["do_TermEnrichmentPlot"]])){
   })
 
 
-  testthat::test_that("do_TermEnrichmentPlot: PASS - single database legend colorsteps - one pvalue", {
-    testthat::skip_on_cran()
 
-
-    p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
-                                       nterms = 2,
-                                       colors.use = c("#e9d8a6", "#9b2226"),
-                                       legend.type = "colorsteps")
-    testthat::expect_type(p, "list")
-  })
 
   testthat::test_that("do_TermEnrichmentPlot: FAIL - provide more colors than needed", {
     testthat::skip_on_cran()
@@ -131,6 +117,7 @@ if(isFALSE(dep_check[["do_TermEnrichmentPlot"]])){
     testthat::expect_error(SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms,
                                                          nterms = 2,
                                                          colors.use = c("#e9d8a6", "#9b2226", "red")))
+  })
   })
 }
 

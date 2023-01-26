@@ -55,8 +55,10 @@ do_TFActivityPlot <- function(sample,
                               geyser_scale_type = "continuous",
                               viridis_color_map = "G",
                               viridis_direction = 1,
-                              min.cutoff = NULL,
-                              max.cutoff = NULL){
+                              min.cutoff = NA,
+                              max.cutoff = NA,
+                              disable_white_in_viridis = FALSE,
+                              number.breaks = 5){
   check_suggests(function_name = "do_TFActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -70,7 +72,8 @@ do_TFActivityPlot <- function(sample,
                        "cluster_rows" = cluster_rows,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
-                       "enforce_symmetry" = enforce_symmetry)
+                       "enforce_symmetry" = enforce_symmetry,
+                       "disable_white_in_viridis" = disable_white_in_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -89,7 +92,8 @@ do_TFActivityPlot <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
-                       "max.cutoff" = max.cutoff)
+                       "max.cutoff" = max.cutoff,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -118,6 +122,7 @@ do_TFActivityPlot <- function(sample,
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   sample[['dorothea']] <- activities %>%
                           dplyr::filter(.data$statistic == 'norm_wmean') %>%
@@ -201,8 +206,9 @@ do_TFActivityPlot <- function(sample,
                           legend.width = legend.width,
                           viridis_color_map = viridis_color_map,
                           viridis_direction = viridis_direction,
-                          min.cutoff = if (is.null(min.cutoff)) {NA} else {min.cutoff},
-                          max.cutoff = if (is.null(max.cutoff)) {NA} else {max.cutoff})
+                          min.cutoff = min.cutoff,
+                          max.cutoff = max.cutoff,
+                          number.breaks = number.breaks)
 
       list.features[[regulon]] <- p
     }
@@ -240,7 +246,8 @@ do_TFActivityPlot <- function(sample,
                          viridis_color_map = viridis_color_map,
                          viridis_direction = viridis_direction,
                          min.cutoff = min.cutoff,
-                         max.cutoff = max.cutoff)
+                         max.cutoff = max.cutoff,
+                         number.breaks = number.breaks)
       list.geysers[[regulon]] <- p
     }
     list.out[["geyser_plots"]] <- list.geysers
@@ -269,20 +276,16 @@ do_TFActivityPlot <- function(sample,
         data <- top_acts_mat_wide
       }
 
-      range.data <- c(min(data), max(data))
+      range.data <- c(min(data, na.rm = TRUE),
+                      max(data, na.rm = TRUE))
 
-      if (!is.null(min.cutoff)){
-        assertthat::assert_that(min.cutoff >= range.data[1],
-                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-        range.data <- c(min.cutoff, range.data[2])
-      }
+      out <- check_cutoffs(min.cutoff = min.cutoff,
+                           max.cutoff = max.cutoff,
+                           feature = feature,
+                           limits = range.data)
 
-      if (!is.null(max.cutoff)){
-        assertthat::assert_that(max.cutoff <= range.data[2],
-                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-        range.data <- c(range.data[1], max.cutoff)
-
-      }
+      range.data <- out$limits
+      outlier.data <- out$outlier.data
 
       out <- heatmap_inner(data,
                            legend.title = "TF activity",
@@ -303,41 +306,45 @@ do_TFActivityPlot <- function(sample,
                            symmetrical_scale = enforce_symmetry,
                            use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
                            viridis_color_map = viridis_color_map,
-                           viridis_direction = viridis_direction)
+                           viridis_direction = viridis_direction,
+                           outlier.data = outlier.data,
+                           outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
+                           outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
+                           disable_white_in_viridis = disable_white_in_viridis)
       h <- out[["heatmap"]]
       h_legend <- out[["legend"]]
       ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
       suppressWarnings({
         grDevices::pdf(NULL)
-        h <- ComplexHeatmap::draw(h,
-                                  heatmap_legend_list = h_legend,
-                                  heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                  padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+        if (isTRUE(outlier.data)){
+          suppressWarnings({
+            h <- ComplexHeatmap::draw(h,
+                                      heatmap_legend_list = h_legend,
+                                      heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                      padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+          })
+        } else {
+          h <- ComplexHeatmap::draw(h,
+                                    heatmap_legend_list = h_legend,
+                                    heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                    padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+        }
         grDevices::dev.off()
       })
     } else {
       split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
       list.heatmaps <- list()
       # Get the maximum range.
-      range.data <- range.data <- c(min(top_acts_mat_wide), max(top_acts_mat_wide))
+      range.data <- c(min(top_acts_mat_wide, na.rm = TRUE),
+                      max(top_acts_mat_wide, na.rm = TRUE))
+      out <- check_cutoffs(min.cutoff = min.cutoff,
+                           max.cutoff = max.cutoff,
+                           feature = feature,
+                           limits = range.data)
 
-      if (!is.null(min.cutoff) & !is.null(max.cutoff)){
-        assertthat::assert_that(min.cutoff < max.cutoff,
-                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
-      }
+      range.data <- out$limits
+      outlier.data <- out$outlier.data
 
-      if (!is.null(min.cutoff)){
-        assertthat::assert_that(min.cutoff >= range.data[1],
-                                msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-        range.data <- c(min.cutoff, range.data[2])
-      }
-
-      if (!is.null(max.cutoff)){
-        assertthat::assert_that(max.cutoff <= range.data[2],
-                                msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-        range.data <- c(range.data[1], max.cutoff)
-
-      }
 
       for (split.value in split.values){
         suppressMessages({
@@ -392,7 +399,11 @@ do_TFActivityPlot <- function(sample,
                              symmetrical_scale = enforce_symmetry,
                              use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
                              viridis_color_map = viridis_color_map,
-                             viridis_direction = viridis_direction)
+                             viridis_direction = viridis_direction,
+                             outlier.data = outlier.data,
+                             outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
+                             outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
+                             disable_white_in_viridis = disable_white_in_viridis)
         h <- out[["heatmap"]]
         h_legend <- out[["legend"]]
         list.heatmaps[[split.value]] <- h
@@ -404,10 +415,20 @@ do_TFActivityPlot <- function(sample,
         for (name in names(list.heatmaps)){
           ht_list <- ht_list %v% list.heatmaps[[name]]
         }
-        h <- ComplexHeatmap::draw(ht_list,
-                                  heatmap_legend_list = h_legend,
-                                  heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                  padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+
+        if (isTRUE(outlier.data)){
+          suppressWarnings({
+            h <- ComplexHeatmap::draw(ht_list,
+                                      heatmap_legend_list = h_legend,
+                                      heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                      padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+          })
+        } else {
+          h <- ComplexHeatmap::draw(ht_list,
+                                    heatmap_legend_list = h_legend,
+                                    heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                    padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
+        }
         grDevices::dev.off()
       })
     }

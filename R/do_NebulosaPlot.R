@@ -40,7 +40,8 @@ do_NebulosaPlot <- function(sample,
                             viridis_direction = 1,
                             verbose = TRUE,
                             na.value = "grey75",
-                            plot.axes = FALSE){
+                            plot.axes = FALSE,
+                            number.breaks = 5){
   check_suggests(function_name = "do_NebulosaPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -64,7 +65,8 @@ do_NebulosaPlot <- function(sample,
                        "legend.width" = legend.width,
                        "dims" = dims,
                        "border.size" = border.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -103,6 +105,7 @@ do_NebulosaPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -148,7 +151,8 @@ do_NebulosaPlot <- function(sample,
                    scale = "color",
                    function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                  option = viridis_color_map,
-                                                                 direction = viridis_direction))
+                                                                 direction = viridis_direction,
+                                                                 breaks = scales::extended_breaks(n = number.breaks)))
 
     for (plot_num in seq(1:num_plots)){
       # Set size of dots.

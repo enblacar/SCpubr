@@ -40,8 +40,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                      viridis_color_map = "G",
                                      viridis_direction = 1,
                                      verbose = FALSE,
-                                     min.cutoff = NULL,
-                                     max.cutoff = NULL){
+                                     min.cutoff = NA,
+                                     max.cutoff = NA,
+                                     number.breaks = 5){
 
 
   # Check logical parameters.
@@ -60,7 +61,8 @@ do_CopyNumberVariantPlot <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
-                       "max.cutoff" = max.cutoff)
+                       "max.cutoff" = max.cutoff,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -87,6 +89,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   if (is.null(chromosome_focus)){
     chromosome_list <- c(as.character(seq(1, 22)))
@@ -223,20 +226,8 @@ do_CopyNumberVariantPlot <- function(sample,
                        viridis_color_map = viridis_color_map,
                        viridis_direction = viridis_direction,
                        min.cutoff = min.cutoff,
-                       max.cutoff = max.cutoff)
-
-    # Modify cutoff variable to adapt to do_FeaturePlot.
-    if (is.null(min.cutoff)){
-      min.cutoff.use <- NA
-    } else {
-      min.cutoff.use <- min.cutoff
-    }
-
-    if (is.null(max.cutoff)){
-      max.cutoff.use <- NA
-    } else {
-      max.cutoff.use <- max.cutoff
-    }
+                       max.cutoff = max.cutoff,
+                       number.breaks = number.breaks)
 
 
     p.f <- do_FeaturePlot(sample = sample,
@@ -257,8 +248,9 @@ do_CopyNumberVariantPlot <- function(sample,
                           viridis_color_map = viridis_color_map,
                           viridis_direction = viridis_direction,
                           legend.title = legend.title.use,
-                          min.cutoff = min.cutoff.use,
-                          max.cutoff = max.cutoff.use)
+                          min.cutoff = min.cutoff,
+                          max.cutoff = max.cutoff,
+                          number.breaks = number.breaks)
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),

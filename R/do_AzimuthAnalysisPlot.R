@@ -38,7 +38,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    label = TRUE,
                                    legend.position = "bottom",
                                    viridis_color_map = "G",
-                                   viridis_direction = 1){
+                                   viridis_direction = 1,
+                                   number.breaks = 5){
 
 
 
@@ -56,7 +57,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                        "raster.dpi" = raster.dpi,
                        "border.size" = border.size,
                        "font.size" = font.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis_direction" = viridis_direction,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("annotation.labels" = annotation.labels,
@@ -75,6 +77,7 @@ do_AzimuthAnalysisPlot <- function(sample,
   check_colors(border.color, parameter_name = "border.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   output_list <- list()
 
@@ -245,7 +248,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                                  font.size = font.size,
                                  font.type = font.type,
                                  viridis_color_map = viridis_color_map,
-                                 viridis_direction = viridis_direction)
+                                 viridis_direction = viridis_direction,
+                                 number.breaks = number.breaks)
 
   # FeaturePlot with the mapping scores.
   p.mapping <- do_FeaturePlot(sample = sample,
@@ -260,7 +264,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                               font.size = font.size,
                               font.type = font.type,
                               viridis_color_map = viridis_color_map,
-                              viridis_direction = viridis_direction)
+                              viridis_direction = viridis_direction,
+                              number.breaks = number.breaks)
 
 
   # Generate a combined report.

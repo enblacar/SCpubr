@@ -34,7 +34,8 @@ do_LigandReceptorPlot(
   compute_ChordDiagrams = FALSE,
   add_missing_LR_combinations = TRUE,
   arrange_interactions_by = "both",
-  sort_interactions_alphabetically = FALSE
+  sort_interactions_alphabetically = FALSE,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -67,7 +68,6 @@ do_LigandReceptorPlot(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
@@ -123,6 +123,8 @@ do_LigandReceptorPlot(
 }}
 
 \item{sort_interactions_alphabetically}{\strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

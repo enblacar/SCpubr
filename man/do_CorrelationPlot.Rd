@@ -16,6 +16,8 @@ do_CorrelationPlot(
   legend.title = "Pearson coef.",
   row_names_rot = 0,
   column_names_rot = 0,
+  use_viridis = FALSE,
+  symmetrical_scale = TRUE,
   viridis_color_map = "G",
   viridis_direction = 1,
   cell_size = 8,
@@ -23,7 +25,9 @@ do_CorrelationPlot(
   legend.position = "bottom",
   legend.length = 75,
   legend.width = 5,
-  legend.framecolor = "black"
+  legend.framecolor = "black",
+  min.cutoff = NA,
+  max.cutoff = NA
 )
 }
 \arguments{
@@ -49,6 +53,8 @@ do_CorrelationPlot(
 
 \item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
 
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
@@ -69,6 +75,8 @@ do_CorrelationPlot(
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 }
 \value{
 A ComplexHeatmap object.

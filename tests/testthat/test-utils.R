@@ -826,36 +826,6 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: heatmap_inner - PASS - checks", {
     testthat::skip_on_cran()
 
-    data <- data.frame("A" = c(0.0012, 0.0012, 0.0013, 0.0014),
-                       "B" = c(0.0014, 0.0013, 0.0012, 0.0011))
-    out <- SCpubr:::heatmap_inner(as.matrix(data), zeros_are_white = TRUE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-    out <- SCpubr:::heatmap_inner(as.matrix(data), zeros_are_white = FALSE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-    data <- data.frame("A" = c(0.0012, 0.0012, 0.0013, 0.0014),
-                       "B" = c(0.0014, 0.0013, 0.0012, 0.0011))
-    out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = TRUE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-    out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_pos", zeros_are_white = FALSE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-    data <- data.frame("A" = c(-0.0012, -0.0012, -0.0013, -0.0014),
-                       "B" = c(-0.0014, -0.0013, -0.0012, -0.0011))
-    out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_neg", zeros_are_white = TRUE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
-    out <- SCpubr:::heatmap_inner(as.matrix(data), data_range = "only_neg", zeros_are_white = FALSE)
-    testthat::expect_true("Legends" %in% class(out$legend))
-    testthat::expect_true("Heatmap" %in% class(out$heatmap))
-
     `%>%`<- purrr::`%>%`
     data <- as.matrix({
       sample@meta.data %>% dplyr::select(c(seurat_clusters)) %>% dplyr::group_by(seurat_clusters) %>% dplyr::summarise(n = dplyr::n()) %>% dplyr::mutate(test = seq(from = 1,
@@ -914,7 +884,6 @@ if (isFALSE(dep_check[["utils"]])){
                                   range.data = 50,
                                   data_range = "only_pos",
                                   use_viridis = TRUE,
-                                  zeros_are_white = FALSE,
                                   viridis_color_map = "G",
                                   viridis_direction = -1)
     testthat::expect_true("Legends" %in% class(out$legend))
@@ -962,8 +931,7 @@ if (isFALSE(dep_check[["utils"]])){
     out <- SCpubr:::heatmap_inner(data.modified,
                                   outlier.data = TRUE,
                                   range.data = -50,
-                                  data_range = "only_neg",
-                                  zeros_are_white = TRUE)
+                                  data_range = "only_neg")
     testthat::expect_true("Legends" %in% class(out$legend))
     testthat::expect_true("Heatmap" %in% class(out$heatmap))
 

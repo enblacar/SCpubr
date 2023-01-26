@@ -37,8 +37,9 @@ do_ExpressionHeatmap <- function(sample,
                                  row_names_side = "right",
                                  row_title_side = "left",
                                  row_title_rot = 90,
-                                 min.cutoff = NULL,
-                                 max.cutoff = NULL){
+                                 min.cutoff = NA,
+                                 max.cutoff = NA,
+                                 disable_white_in_viridis = FALSE){
 
 
   check_suggests(function_name = "do_EnrichmentHeatmap")
@@ -50,7 +51,8 @@ do_ExpressionHeatmap <- function(sample,
                        "cluster_cols" = cluster_cols,
                        "cluster_rows" = cluster_rows,
                        "use_viridis" = use_viridis,
-                       "enforce_symmetry" = enforce_symmetry)
+                       "enforce_symmetry" = enforce_symmetry,
+                       "disable_white_in_viridis" = disable_white_in_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("row_names_rot" = row_names_rot,
@@ -173,24 +175,15 @@ do_ExpressionHeatmap <- function(sample,
     min_value_list <- c(min_value_list, min(data))
   }
 
-  range.data <- c(min(min_value_list), max(max_value_list))
-  if (!is.null(min.cutoff) & !is.null(max.cutoff)){
-    assertthat::assert_that(min.cutoff < max.cutoff,
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
-  }
+  range.data <- c(min(min_value_list, na.rm = TRUE),
+                  max(max_value_list, na.rm = TRUE))
+  out <- check_cutoffs(min.cutoff = min.cutoff,
+                       max.cutoff = max.cutoff,
+                       feature = feature,
+                       limits = range.data)
 
-  if (!is.null(min.cutoff)){
-    assertthat::assert_that(min.cutoff >= range.data[1],
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-    range.data <- c(min.cutoff, range.data[2])
-  }
-
-  if (!is.null(max.cutoff)){
-    assertthat::assert_that(max.cutoff <= range.data[2],
-                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-    range.data <- c(range.data[1], max.cutoff)
-
-  }
+  range.data <- out$limits
+  outlier.data <- out$outlier.data
 
   # Fix for automatic row and column titles.
   # Fix for automatic row and column titles.
@@ -255,7 +248,11 @@ do_ExpressionHeatmap <- function(sample,
                          legend.width = heatmap.legend.width,
                          legend.framecolor = heatmap.legend.framecolor,
                          data_range = "both",
-                         symmetrical_scale = enforce_symmetry)
+                         symmetrical_scale = enforce_symmetry,
+                         outlier.data = outlier.data,
+                         outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
+                         outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
+                         disable_white_in_viridis = disable_white_in_viridis)
     list.heatmaps[[variant]] <- out[["heatmap"]]
     list.legends[[variant]] <- out[["legend"]]
   }
@@ -278,11 +275,21 @@ do_ExpressionHeatmap <- function(sample,
   ComplexHeatmap::ht_opt(message = FALSE)
 
   # Draw final heatmap.
-  h <- ComplexHeatmap::draw(ht_list,
-                            heatmap_legend_list = list.legends[[1]],
-                            heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                            padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
-                            ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  if (isTRUE(outlier.data)){
+    suppressWarnings({
+      h <- ComplexHeatmap::draw(ht_list,
+                                heatmap_legend_list = list.legends[[1]],
+                                heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                                ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+    })
+  } else {
+    h <- ComplexHeatmap::draw(ht_list,
+                              heatmap_legend_list = list.legends[[1]],
+                              heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                              padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                              ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  }
   grDevices::dev.off()
 
   return(h)

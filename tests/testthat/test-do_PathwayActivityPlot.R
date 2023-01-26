@@ -111,13 +111,13 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
                                           min.cutoff = -0.1,
-                                          max.cutoff = NULL,
+                                          max.cutoff = NA,
                                           plot_FeaturePlots = TRUE)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          min.cutoff = NULL,
+                                          min.cutoff = NA,
                                           max.cutoff = 0.1,
                                           plot_FeaturePlots = TRUE)
     testthat::expect_type(out, "list")
@@ -163,38 +163,38 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          min.cutoff = NULL)
+                                          min.cutoff = NA)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          min.cutoff = NULL,
+                                          min.cutoff = NA,
                                           split.by = "orig.ident")
     testthat::expect_type(out, "list")
 
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          max.cutoff = NULL)
+                                          max.cutoff = NA)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          max.cutoff = NULL,
+                                          max.cutoff = NA,
                                           split.by = "orig.ident")
     testthat::expect_type(out, "list")
 
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          max.cutoff = NULL,
-                                          min.cutoff = NULL)
+                                          max.cutoff = NA,
+                                          min.cutoff = NA)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          max.cutoff = NULL,
-                                          min.cutoff = NULL,
+                                          max.cutoff = NA,
+                                          min.cutoff = NA,
                                           split.by = "orig.ident")
     testthat::expect_type(out, "list")
   })

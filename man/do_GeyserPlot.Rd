@@ -45,8 +45,9 @@ do_GeyserPlot(
   xlab = "Groups",
   ylab = feature,
   flip = FALSE,
-  min.cutoff = NULL,
-  max.cutoff = NULL
+  min.cutoff = rep(NA, length(features)),
+  max.cutoff = rep(NA, length(features)),
+  number.breaks = 5
 )
 }
 \arguments{
@@ -103,7 +104,6 @@ do_GeyserPlot(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
@@ -142,6 +142,8 @@ do_GeyserPlot(
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 Either a plot of a list of plots, depending on the number of features provided.

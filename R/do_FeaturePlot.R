@@ -59,7 +59,8 @@ do_FeaturePlot <- function(sample,
                            contour_expand_axes = 0.25,
                            label = FALSE,
                            label.color = "black",
-                           label.size = 4){
+                           label.size = 4,
+                           number.breaks = 5){
 
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
@@ -96,7 +97,8 @@ do_FeaturePlot <- function(sample,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "contour_expand_axes" = contour_expand_axes,
-                       "label.size" = label.size)
+                       "label.size" = label.size,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -177,6 +179,7 @@ do_FeaturePlot <- function(sample,
   check_parameters(parameter = contour.lineend, parameter_name = "contour.lineend")
   check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
   check_parameters(parameter = contour.position, parameter_name = "contour.position")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
@@ -276,55 +279,81 @@ do_FeaturePlot <- function(sample,
     num_plots <- length(features)
     for (counter in seq(1, num_plots)){
       if (num_plots == 1){
+        #features <- gsub("-", ".", features)
+        ## nocov start
+        #if (stringr::str_starts(features, "[0-9]")){
+        #  features <- paste0("x", features)
+        #}
+        # nocov end
+
+        scale.setup <- compute_scales(sample = sample,
+                                      feature = features,
+                                      assay = assay,
+                                      reduction = NULL,
+                                      slot = slot,
+                                      number.breaks = number.breaks,
+                                      min.cutoff = min.cutoff,
+                                      max.cutoff = max.cutoff,
+                                      flavor = "Seurat",
+                                      enforce_symmetry = enforce_symmetry)
         if (isFALSE(enforce_symmetry)){
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                        option = viridis_color_map,
-                                                                       direction = viridis_direction),
+                                                                       direction = viridis_direction,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits,
+                                                                       name = features),
                          scale = "color")
         } else if (isTRUE(enforce_symmetry)){
-          p.build <- ggplot2::ggplot_build(p)
-          feature.select <- gsub("-", ".", features)
-          scale.name <- feature.select
-          # nocov start
-          if (stringr::str_starts(feature.select, "[0-9]")){
-            feature.select <- paste0("x", feature.select)
-          }
-          # nocov end
-          limits <- c(min(p.build$plot$data[, feature.select]),
-                      max(p.build$plot$data[, feature.select]))
-          end_value <- max(abs(limits))
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
-                                                                       limits = c(-end_value, end_value),
                                                                        na.value = na.value,
-                                                                       name = scale.name),
+                                                                       name = features,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits),
                          scale = "color")
         }
       } else if (num_plots > 1){
+        feature.use <- features[counter]
+        #feature.use <- gsub("-", ".", feature.use)
+        ## nocov start
+        #if (stringr::str_starts(feature.use, "[0-9]")){
+        #  feature.use <- paste0("x", feature.use)
+        #}
+        # nocov end
+
+        scale.setup <- compute_scales(sample = sample,
+                                      feature = feature.use,
+                                      assay = assay,
+                                      reduction = NULL,
+                                      slot = slot,
+                                      number.breaks = number.breaks,
+                                      min.cutoff = min.cutoff[counter],
+                                      max.cutoff = max.cutoff[counter],
+                                      flavor = "Seurat",
+                                      enforce_symmetry = enforce_symmetry)
+
         if (isFALSE(enforce_symmetry)){
           p[[counter]] <- add_scale(p = p[[counter]],
                                     function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                                   option = viridis_color_map,
-                                                                                  direction = viridis_direction),
+                                                                                  direction = viridis_direction,
+                                                                                  name = feature.use,
+                                                                                  breaks = scale.setup$breaks,
+                                                                                  labels = scale.setup$labels,
+                                                                                  limits = scale.setup$limits),
                                     scale = "color")
         } else if (isTRUE(enforce_symmetry)){
-          p.build <- ggplot2::ggplot_build(p[[counter]])
-          feature.select <- gsub("-", ".",  features[counter])
-          scale.name <- feature.select
-          # nocov start
-          if (stringr::str_starts(feature.select, "[0-9]")){
-            feature.select <- paste0("x", feature.select)
-          }
-          # nocov end
-          limits <- c(min(p.build$plot$data[, feature.select]),
-                      max(p.build$plot$data[, feature.select]))
-          end_value <- max(abs(limits))
           p[[counter]] <- add_scale(p = p[[counter]],
                                     function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
-                                                                                  limits = c(-end_value, end_value),
                                                                                   na.value = na.value,
-                                                                                  name = scale.name),
+                                                                                  name = feature.use,
+                                                                                  breaks = scale.setup$breaks,
+                                                                                  labels = scale.setup$labels,
+                                                                                  limits = scale.setup$limits),
                                     scale = "color")
         }
       }
@@ -492,33 +521,46 @@ do_FeaturePlot <- function(sample,
 
         # Add scale.
 
+        #feature.use <- gsub("-", ".", feature)
+        ## nocov start
+        #if (stringr::str_starts(feature.use, "[0-9]")){
+        #  feature.use <- paste0("x", feature.use)
+        #}
+        # nocov end
+
+        scale.setup <- compute_scales(sample = sample,
+                                      feature = feature,
+                                      assay = assay,
+                                      reduction = NULL,
+                                      slot = slot,
+                                      number.breaks = number.breaks,
+                                      min.cutoff = min.cutoff.use,
+                                      max.cutoff = max.cutoff.use,
+                                      flavor = "Seurat",
+                                      enforce_symmetry = enforce_symmetry)
+
         if (isFALSE(enforce_symmetry)){
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                             option = viridis_color_map,
-                                                                            direction = viridis_direction),
+                                                                            direction = viridis_direction,
+                                                                            name = feature.use,
+                                                                            breaks = scale.setup$breaks,
+                                                                            labels = scale.setup$labels,
+                                                                            limits = scale.setup$limits),
                               scale = "color")
         } else if (isTRUE(enforce_symmetry)){
-          p.build <- ggplot2::ggplot_build(p.loop)
-          feature.select <- gsub("-", ".", feature.use)
-          scale.name <- feature.select
-          # nocov start
-          if (stringr::str_starts(feature.select, "[0-9]")){
-            feature.select <- paste0("x", feature.select)
-          }
-          # nocov end
-          limits <- c(min(p.build$plot$data[, feature.select], na.rm = TRUE),
-                      max(p.build$plot$data[, feature.select], na.rm = TRUE))
-          end_value <- max(abs(limits))
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
-                                                                            limits = c(-end_value, end_value),
                                                                             na.value = na.value,
-                                                                            name = scale.name),
+                                                                            name = feature.use,
+                                                                            breaks = scale.setup$breaks,
+                                                                            labels = scale.setup$labels,
+                                                                            limits = scale.setup$limits),
                               scale = "color")
         }
         p.loop <- p.loop +
-          ggplot2::ggtitle("")
+                  ggplot2::ggtitle("")
 
         # Add cell borders.
         if (isTRUE(plot_cell_borders)){
@@ -620,20 +662,42 @@ do_FeaturePlot <- function(sample,
           p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface = "bold"
 
 
+          #feature.use <- gsub("-", ".", feature)
+          ## nocov start
+          #if (stringr::str_starts(feature.use, "[0-9]")){
+          #  feature.use <- paste0("x", feature.use)
+          #}
+          # nocov end
+
+          scale.setup <- compute_scales(sample = sample,
+                                        feature = feature,
+                                        assay = assay,
+                                        reduction = NULL,
+                                        slot = slot,
+                                        number.breaks = number.breaks,
+                                        min.cutoff = min.cutoff.use,
+                                        max.cutoff = max.cutoff.use,
+                                        flavor = "Seurat",
+                                        enforce_symmetry = enforce_symmetry)
+
           if (isFALSE(enforce_symmetry)){
             p.loop <- add_scale(p = p.loop,
                                 function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                               option = viridis_color_map,
-                                                                              limits = limits,
-                                                                              direction = viridis_direction),
+                                                                              direction = viridis_direction,
+                                                                              name = feature.use,
+                                                                              breaks = scale.setup$breaks,
+                                                                              labels = scale.setup$labels,
+                                                                              limits = scale.setup$limits),
                                 scale = "color")
           } else if (isTRUE(enforce_symmetry)){
-            end_value <- max(abs(limits))
             p.loop <- add_scale(p = p.loop,
                                 function_use = ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
-                                                                              limits = c(-end_value, end_value),
                                                                               na.value = na.value,
-                                                                              name = feature),
+                                                                              name = feature.use,
+                                                                              breaks = scale.setup$breaks,
+                                                                              labels = scale.setup$labels,
+                                                                              limits = scale.setup$limits),
                                 scale = "color")
           }
           p.loop <- p.loop +

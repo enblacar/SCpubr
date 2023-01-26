@@ -35,7 +35,8 @@ do_NebulosaPlot(
   viridis_direction = 1,
   verbose = TRUE,
   na.value = "grey75",
-  plot.axes = FALSE
+  plot.axes = FALSE,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -73,7 +74,6 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
@@ -117,6 +117,8 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.

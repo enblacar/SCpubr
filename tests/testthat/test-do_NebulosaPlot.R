@@ -54,15 +54,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorsteps", {
 
-    testthat::skip_on_cran()
-
-    p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
-                                 legend.type = "colorsteps")
-    testthat::expect_type(p, "list")
-  })
 
   testthat::test_that("do_NebulosaPlot: FAIL - wrong legend type ", {
     testthat::skip_on_cran()

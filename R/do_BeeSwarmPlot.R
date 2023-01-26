@@ -46,8 +46,9 @@ do_BeeSwarmPlot <- function(sample,
                             border.size = 1.5,
                             border.color = "black",
                             pt.size = 2,
-                            min.cutoff = NULL,
-                            max.cutoff = NULL){
+                            min.cutoff = NA,
+                            max.cutoff = NA,
+                            number.breaks = 5){
   check_suggests(function_name = "do_BeeSwarmPlot")
 
   # Check ggbeeswarm version:
@@ -87,7 +88,8 @@ do_BeeSwarmPlot <- function(sample,
                        "max.cutoff" = max.cutoff,
                        "viridis_direction" = viridis_direction,
                        "legend.ncol" = legend.ncol,
-                       "legend.icon.size" = legend.icon.size)
+                       "legend.icon.size" = legend.icon.size,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -116,6 +118,7 @@ do_BeeSwarmPlot <- function(sample,
   check_colors(border.color, parameter_name = "border.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
@@ -163,25 +166,21 @@ do_BeeSwarmPlot <- function(sample,
   # Compute the limits.
   if (isTRUE(continuous_feature)){
     data <- sample$rank_me
-    range.data <- c(min(data, na.rm = TRUE), max(data, na.rm = TRUE))
+    range.data <- c(min(data, na.rm = TRUE),
+                    max(data, na.rm = TRUE))
 
-    if (!is.null(min.cutoff) & !is.null(max.cutoff)){
-      assertthat::assert_that(min.cutoff < max.cutoff,
-                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
-    }
-
-    if (!is.null(min.cutoff)){
-      assertthat::assert_that(min.cutoff >= range.data[1],
-                              msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
-      range.data <- c(min.cutoff, range.data[2])
-    }
-
-    if (!is.null(max.cutoff)){
-      assertthat::assert_that(max.cutoff <= range.data[2],
-                              msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
-      range.data <- c(range.data[1], max.cutoff)
-
-    }
+    scale.setup <- compute_scales(sample = NULL,
+                                  feature = feature_to_rank,
+                                  assay = NULL,
+                                  reduction = NULL,
+                                  slot = NULL,
+                                  number.breaks = number.breaks,
+                                  min.cutoff = min.cutoff,
+                                  max.cutoff = max.cutoff,
+                                  flavor = "Seurat",
+                                  enforce_symmetry = FALSE,
+                                  from_data = TRUE,
+                                  limits.use = range.data)
 
     sample$rank_me[sample$rank_me < min.cutoff] <- min.cutoff
     sample$rank_me[sample$rank_me > max.cutoff] <- max.cutoff
@@ -230,11 +229,16 @@ do_BeeSwarmPlot <- function(sample,
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
   if (continuous_feature == TRUE){
+
+
     p <- p +
          ggplot2::scale_color_viridis_c(na.value = "grey75",
                                         option = viridis_color_map,
                                         direction = viridis_direction,
-                                        limits = range.data)
+                                        breaks = scale.setup$breaks,
+                                        labels = scale.setup$labels,
+                                        limits = scale.setup$limits,
+                                        name = feature_to_rank)
     p <- modify_continuous_legend(p = p,
                                   legend.title = legend.title,
                                   legend.aes = "color",

@@ -54,7 +54,8 @@ do_RidgePlot <- function(sample,
                          plot.grid = TRUE,
                          grid.color = "grey75",
                          grid.type = "dashed",
-                         flip = FALSE){
+                         flip = FALSE,
+                         number.breaks = 5){
   check_suggests(function_name = "do_RidgePlot")
   `%>%` <- magrittr::`%>%`
 
@@ -82,7 +83,8 @@ do_RidgePlot <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "legend.ncol" = legend.ncol,
-                       "legend.nrow" = legend.nrow)
+                       "legend.nrow" = legend.nrow,
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -116,6 +118,7 @@ do_RidgePlot <- function(sample,
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
 
@@ -139,7 +142,8 @@ do_RidgePlot <- function(sample,
                                                   size = 1.25) +
            ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                          direction = viridis_direction,
-                                         name = feature)
+                                         name = feature,
+                                         breaks = scales::extended_breaks(n = number.breaks))
 
       p <- modify_continuous_legend(p = p,
                                     legend.aes = "fill",
@@ -214,7 +218,8 @@ do_RidgePlot <- function(sample,
                                            geom = "density_ridges_gradient") +
              ggplot2::scale_fill_viridis_c(option = viridis_color_map,
                                            name = "Tail probability",
-                                           direction = viridis_direction)
+                                           direction = viridis_direction,
+                                           breaks = scales::extended_breaks(n = number.breaks))
         p <- modify_continuous_legend(p = p,
                                       legend.title = legend.title,
                                       legend.aes = "fill",

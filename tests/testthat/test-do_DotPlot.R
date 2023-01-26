@@ -78,26 +78,9 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps", {
-    testthat::skip_on_cran()
 
 
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = "EPC1",
-                            legend.type = "colorsteps")
-    testthat::expect_type(p, "list")
-  })
 
-  testthat::test_that("do_DotPlot: PASS - one variable legend colorsteps legend to the right", {
-    testthat::skip_on_cran()
-
-
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = "EPC1",
-                            legend.type = "colorsteps",
-                            legend.position = "right")
-    testthat::expect_type(p, "list")
-  })
 
   testthat::test_that("do_DotPlot: FAIL - wrong legend type", {
     testthat::skip_on_cran()

@@ -66,7 +66,8 @@ do_CellularStatesPlot <- function(sample,
                                   viridis_color_map = "G",
                                   viridis_direction = 1,
                                   nbin = 24,
-                                  ctrl = 100){
+                                  ctrl = 100,
+                                  number.breaks = 5){
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
@@ -95,7 +96,8 @@ do_CellularStatesPlot <- function(sample,
                          "raster.dpi" = raster.dpi,
                          "viridis_direction" = viridis_direction,
                          "nbin" = nbin,
-                         "ctrl" = ctrl)
+                         "ctrl" = ctrl,
+                         "number.breaks" = number.breaks)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("input_gene_list" = input_gene_list,
@@ -510,7 +512,8 @@ do_CellularStatesPlot <- function(sample,
                                             font.type = font.type,
                                             font.size = font.size,
                                             viridis_color_map = viridis_color_map,
-                                            viridis_direction = viridis_direction)
+                                            viridis_direction = viridis_direction,
+                                            number.breaks = number.breaks)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){

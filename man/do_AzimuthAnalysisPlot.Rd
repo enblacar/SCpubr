@@ -34,7 +34,8 @@ do_AzimuthAnalysisPlot(
   label = TRUE,
   legend.position = "bottom",
   viridis_color_map = "G",
-  viridis_direction = 1
+  viridis_direction = 1,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -93,6 +94,8 @@ do_AzimuthAnalysisPlot(
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A list containing multiple plots.

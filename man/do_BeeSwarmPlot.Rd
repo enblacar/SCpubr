@@ -48,8 +48,9 @@ do_BeeSwarmPlot(
   border.size = 1.5,
   border.color = "black",
   pt.size = 2,
-  min.cutoff = NULL,
-  max.cutoff = NULL
+  min.cutoff = NA,
+  max.cutoff = NA,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -75,7 +76,6 @@ do_BeeSwarmPlot(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
@@ -135,6 +135,8 @@ do_BeeSwarmPlot(
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ggplot2 object containing a Bee Swarm plot.

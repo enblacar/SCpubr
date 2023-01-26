@@ -44,7 +44,8 @@ do_RidgePlot(
   plot.grid = TRUE,
   grid.color = "grey75",
   grid.type = "dashed",
-  flip = FALSE
+  flip = FALSE,
+  number.breaks = 5
 )
 }
 \arguments{
@@ -91,7 +92,6 @@ do_RidgePlot(
 \itemize{
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-\item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 }}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.}
@@ -143,6 +143,8 @@ do_RidgePlot(
 }}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }
 \value{
 A ggplot2 object.

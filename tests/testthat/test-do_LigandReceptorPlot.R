@@ -67,16 +67,8 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       legend.type = "colorsteps",
-                                       add_missing_LR_combinations = FALSE)
-    testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       legend.type = "colorsteps",
-                                       dot_border = FALSE,
-                                       add_missing_LR_combinations = FALSE)
-    testthat::expect_type(p, "list")
+
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        legend.type = "normal",
@@ -90,10 +82,6 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       legend.type = "colorsteps",
-                                       add_missing_LR_combinations = FALSE)
-    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_LigandReceptorPlot: PASS - split.by", {

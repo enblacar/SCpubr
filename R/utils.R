@@ -12,7 +12,6 @@
 #' \itemize{
 #'   \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 #'   \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-#'   \item \emph{\code{colorsteps}}: Redefined legend with colors going by range, in steps, using \link[ggplot2]{guide_colorsteps}.
 #' }
 #' @param legend.position \strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 #' \itemize{
@@ -132,6 +131,9 @@
 #' }
 #' @param genes \strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.
 #' @param org.db \strong{\code{OrgDB}} | Database object to use for the query.
+#' @param disable_white_in_viridis \strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.
+#' @param number.breaks \strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.
+#'
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -232,7 +234,9 @@ doc_function <- function(sample,
                          min.overlap,
                          GO_ontology,
                          genes,
-                         org.db){}
+                         org.db,
+                         disable_white_in_viridis,
+                         number.breaks){}
 
 #' Named vector.
 #'
@@ -613,7 +617,7 @@ generate_color_scale <- function(names_use){
 #' \donttest{
 #' TBD
 #' }
-compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL){
+compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL, slot = NULL){
   if (is.null(assay)){
     assay <- Seurat::DefaultAssay(sample)
   }
@@ -626,22 +630,155 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
     }
   }
 
+  if (is.null(slot)){
+    slot = "data"
+  }
+
   if (feature %in% rownames(sample)){
-    scale.begin <- min(sample@assays[[assay]]@data[feature, ])
-    scale.end <- max(sample@assays[[assay]]@data[feature, ])
+    scale.begin <- min(sample@assays[[assay]]@data[feature, ], na.rm = TRUE)
+    scale.end <- max(sample@assays[[assay]]@data[feature, ], na.rm = TRUE)
   } else if (feature %in% colnames(sample@meta.data)){
     if (is.factor(sample@meta.data[, feature])){
       sample@meta.data[, feature] <- as.character(sample@meta.data[, feature])
     }
-    scale.begin <- min(sample@meta.data[, feature])
-    scale.end <- max(sample@meta.data[, feature])
+    scale.begin <- min(sample@meta.data[, feature], na.rm = TRUE)
+    scale.end <- max(sample@meta.data[, feature], na.rm = TRUE)
   } else if (feature %in% colnames(sample@reductions[[reduction]][[]])){
-    scale.begin <- min(sample@reductions[[reduction]][[]][, feature])
-    scale.end <- max(sample@reductions[[reduction]][[]][, feature])
+    scale.begin <- min(sample@reductions[[reduction]][[]][, feature], na.rm = TRUE)
+    scale.end <- max(sample@reductions[[reduction]][[]][, feature], na.rm = TRUE)
   }
   return(list("scale.begin" = scale.begin,
               "scale.end" = scale.end))
 }
+
+
+#' Check cutoffs
+#'
+#' @param min.cutoff Min cutoff.
+#' @param max.cutoff Max cutoff.
+#' @param limits Computed range.
+#' @param feature Feature name, if any.
+#' @return A list.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+check_cutoffs <- function(min.cutoff,
+                          max.cutoff,
+                          limits,
+                          feature = ""){
+  outlier.data <- FALSE
+  if (!is.na(min.cutoff) & !is.na(max.cutoff)){
+    assertthat::assert_that(min.cutoff < max.cutoff,
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") for the feature (", feature, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
+  }
+
+  if (!is.na(min.cutoff)){
+    assertthat::assert_that(min.cutoff >= limits[1],
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value (", limits[1], ") for the feature (", feature, "). Please select another value."))
+
+    assertthat::assert_that(min.cutoff <= limits[2],
+                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is higher than the maximum value (", limits[2], ") for the feature (", feature, "). Please select another value."))
+    limits <- c(min.cutoff, limits[2])
+    outlier.data <- TRUE
+  }
+
+  if (!is.na(max.cutoff)){
+    assertthat::assert_that(max.cutoff <= limits[2],
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is higher than the maximum value (", limits[2], ") for the feature (", feature, "). Please select another value."))
+
+    assertthat::assert_that(max.cutoff >= limits[1],
+                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the minimum value (", limits[1], ") for the feature (", feature, "). Please select another value."))
+
+    limits <- c(limits[1], max.cutoff)
+    outlier.data <- TRUE
+  }
+
+  return.list <- list("outlier.data" = outlier.data,
+                      "limits" = limits)
+  return(return.list)
+}
+
+
+#' Compute the scales for a given ggplot2-based plot.
+#'
+#' @param sample Seurat object.
+#' @param feature Feature to compute scales to.
+#' @param assay Assay to retrieve data from.
+#' @param reduction Reduction to use if the feature is a dimred component.
+#' @param slot Slot to retrieve the values from if feature is a gene.
+#' @param flavor Whether it is a seurat plot or ggplot2-based plots.
+#' @param number.breaks Number of desired breaks in the scale.
+#' @param min.cutoff Minimum cutoff for the scale.
+#' @param max.cutoff Maximum cutoff for the scale.
+#' @param from_data Provide a matrix already.
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+compute_scales <- function(sample,
+                           feature = "",
+                           assay = NULL,
+                           reduction = NULL,
+                           slot,
+                           flavor,
+                           number.breaks,
+                           min.cutoff,
+                           max.cutoff,
+                           enforce_symmetry,
+                           from_data = FALSE,
+                           limits.use = NULL){
+  if (isFALSE(from_data)){
+    limits <- compute_scale_limits(sample = sample,
+                                   feature = feature,
+                                   assay = assay,
+                                   reduction = reduction,
+                                   slot = slot)
+    limits <- c(limits$scale.begin, limits$scale.end)
+  } else {
+    limits <- limits.use
+  }
+
+  out <- check_cutoffs(min.cutoff = min.cutoff,
+                       max.cutoff = max.cutoff,
+                       limits = limits,
+                       feature = feature)
+
+  limits <- out$limits
+
+  if (isTRUE(enforce_symmetry)){
+    end_value <- max(abs(limits))
+    limits <- c(-end_value, end_value)
+  }
+
+  breaks <- labeling::extended(dmin = limits[1],
+                               dmax = limits[2],
+                               m = number.breaks)
+  labels <- as.character(breaks)
+
+  if (!is.na(min.cutoff)){
+    if (isTRUE(min.cutoff == breaks[1])){
+      breaks[1] <- min.cutoff
+      labels[1] <- paste0(as.character(expression("\u2264")), " ", min.cutoff)
+    }
+  }
+
+  if (!is.na(max.cutoff)){
+    if (isTRUE(max.cutoff == breaks[length(breaks)])){
+      breaks[length(breaks)] <- max.cutoff
+      labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", max.cutoff)
+    }
+  }
+
+  return.obj <- list("limits" = limits,
+                     "breaks" = breaks,
+                     "labels" = labels)
+  return(return.obj)
+}
+
 
 #' Check if a value is in the range of the values.
 #'
@@ -1266,7 +1403,6 @@ compute_barplot_annotation <- function(sample,
 #' @param use_viridis Logical. Whether to use viridis color palettes.
 #' @param viridis_color_map Character. Palette to use.
 #' @param viridis_direction Numeric. Direction of the scale.
-#' @param zeros_are_white Logical.
 #' @return None
 #' @noRd
 #' @examples
@@ -1282,6 +1418,8 @@ heatmap_inner <- function(data,
                           cell_size = 5,
                           range.data = NULL,
                           outlier.data = FALSE,
+                          outlier.data.up = FALSE,
+                          outlier.data.down = FALSE,
                           outlier.up.color = "#4b010b",
                           outlier.down.color = "#02294b",
                           outlier.up.label = NULL,
@@ -1314,9 +1452,9 @@ heatmap_inner <- function(data,
                           use_viridis = FALSE,
                           viridis_color_map = "D",
                           viridis_direction = 1,
-                          zeros_are_white = FALSE,
                           symmetrical_scale = FALSE,
-                          use_middle_white = TRUE){
+                          use_middle_white = TRUE,
+                          disable_white_in_viridis = FALSE){
   `%>%`<- magrittr::`%>%`
 
   assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
@@ -1409,6 +1547,7 @@ heatmap_inner <- function(data,
         counter <- counter + 1
         breaks <-  round(c(-abs_value, (-abs_value / 2), 0, (abs_value / 2), abs_value), 1 + counter)
       }
+
     } else if (isFALSE(symmetrical_scale)){
       breaks <-  round(c(q0, q25, q50, q75, q100), 1)
       counter <- 0
@@ -1418,70 +1557,63 @@ heatmap_inner <- function(data,
       }
     }
     labels <- as.character(breaks)
-    colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
-    if (isTRUE(outlier.data) & !is.null(range.data)){
-      breaks <- c(-abs_value - 0.00001, breaks, abs_value + 0.00001)
-      colors.use <- c(outlier.down.color, colors.use, outlier.up.color)
-      labels <- c(if(is.null(outlier.down.label)){paste0("< ", -round(abs_value, round_value_outlier))} else {outlier.down.label},
-                  labels,
-                  if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
+    if (isTRUE(outlier.data)){
+      if (isTRUE(outlier.data.up)){
+        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
+      }
+
+      if (isTRUE(outlier.data.down)){
+        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
+      }
     }
+    colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
 
     names(colors.use) <- labels
   } else if (data_range == "only_neg"){
-    if (isTRUE(zeros_are_white)){
-      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), (-abs_value * 0.01), 0), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), (-abs_value * 0.01), 0), 1 + counter)
-      }
-    } else {
-      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1 + counter)
-      }
+    breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1)
+    counter <- 0
+    while (sum(duplicated(breaks)) > 0){
+      counter <- counter + 1
+      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1 + counter)
     }
     labels <- as.character(breaks)
-    colors.use <- grDevices::colorRampPalette(colors.use[c(1, 2)])(length(breaks))
-    if (isTRUE(outlier.data) & !is.null(range.data)){
-      breaks <- c(-abs_value - 0.00001, breaks)
-      colors.use <- c(outlier.down.color, colors.use)
-      labels <- c(if(is.null(outlier.down.label)){paste0("< ", -round(abs_value, round_value_outlier))} else {outlier.down.label},
-                  labels)
+    colors.use <- grDevices::colorRampPalette(c(colors.use[c(1, 2)]))(length(breaks))
+
+    if (isTRUE(outlier.data)){
+      if (isTRUE(outlier.data.up)){
+        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
+      }
+
+      if (isTRUE(outlier.data.down)){
+        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
+      }
     }
     names(colors.use) <- labels
   } else if (data_range == "only_pos"){
-    if (isTRUE(zeros_are_white)){
-      breaks <-  round(c(0, (abs_value * 0.01), (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(0, (abs_value * 0.01), (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
-      }
-    } else {
-      breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
-      }
+    breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
+    counter <- 0
+    while (sum(duplicated(breaks)) > 0){
+      counter <- counter + 1
+      breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
     }
     labels <- as.character(breaks)
-    colors.use <- grDevices::colorRampPalette(colors.use[c(2, 3)])(length(breaks))
-    if (isTRUE(outlier.data) & !is.null(range.data)){
-      breaks <- c(breaks, abs_value + 0.00001)
-      colors.use <- c(colors.use, outlier.up.color)
-      labels <- c(labels,
-                  if(is.null(outlier.up.label)){paste0("> ", -round(abs_value, round_value_outlier))} else {outlier.up.label})
+
+    if (isTRUE(outlier.data)){
+      if (isTRUE(outlier.data.up)){
+        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
+      }
+
+      if (isTRUE(outlier.data.down)){
+        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
+      }
     }
+
+    colors.use <- grDevices::colorRampPalette(c(colors.use[c(2, 3)]))(length(breaks))
     names(colors.use) <- labels
   }
 
   if (isTRUE(use_viridis)){
-    if (isTRUE(zeros_are_white) & data_range %in% c("only_pos", "only_neg")){
+    if(viridis_direction == -1 & isFALSE(disable_white_in_viridis)){
       col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
                                                                                             option = viridis_color_map,
                                                                                             direction = viridis_direction)))
@@ -1496,22 +1628,41 @@ heatmap_inner <- function(data,
 
 
 
-  lgd <- ComplexHeatmap::Legend(at = breaks,
-                                labels = labels,
-                                col_fun = col_fun,
-                                title = legend.title,
-                                direction = direction,
-                                legend_height = legend_height,
-                                legend_width = legend_width,
-                                grid_width = grid_width,
-                                grid_height = grid_height,
-                                border = legend.framecolor,
-                                title_position = title_position,
-                                break_dist = rep(1, length(breaks) - 1),
-                                labels_gp = grid::gpar(fontsize = fontsize,
-                                                       fontface = "bold"),
-                                title_gp = grid::gpar(fontsize = fontsize,
-                                                      fontface = "bold"))
+  if (isTRUE(outlier.data)){
+    suppressWarnings({lgd <- ComplexHeatmap::Legend(at = breaks,
+                                                    labels = labels,
+                                                    col_fun = col_fun,
+                                                    title = legend.title,
+                                                    direction = direction,
+                                                    legend_height = legend_height,
+                                                    legend_width = legend_width,
+                                                    grid_width = grid_width,
+                                                    grid_height = grid_height,
+                                                    border = legend.framecolor,
+                                                    title_position = title_position,
+                                                    break_dist = rep(1, length(breaks) - 1),
+                                                    labels_gp = grid::gpar(fontsize = fontsize,
+                                                                           fontface = "bold"),
+                                                    title_gp = grid::gpar(fontsize = fontsize,
+                                                                          fontface = "bold"))})
+  } else{
+    lgd <- ComplexHeatmap::Legend(at = breaks,
+                                  labels = labels,
+                                  col_fun = col_fun,
+                                  title = legend.title,
+                                  direction = direction,
+                                  legend_height = legend_height,
+                                  legend_width = legend_width,
+                                  grid_width = grid_width,
+                                  grid_height = grid_height,
+                                  border = legend.framecolor,
+                                  title_position = title_position,
+                                  break_dist = rep(1, length(breaks) - 1),
+                                  labels_gp = grid::gpar(fontsize = fontsize,
+                                                         fontface = "bold"),
+                                  title_gp = grid::gpar(fontsize = fontsize,
+                                                        fontface = "bold"))
+  }
 
 
   if (!(is.null(row_annotation))){
@@ -1973,8 +2124,8 @@ check_parameters <- function(parameter,
                            msg = "Please select one of the following for font.type: sans, serif, mono.")
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
-    assertthat::assert_that(parameter %in% c("normal", "colorbar", "colorsteps"),
-                            msg = "Please select one of the following for legend.type: normal, colorbar, colorsteps.")
+    assertthat::assert_that(parameter %in% c("normal", "colorbar"),
+                            msg = "Please select one of the following for legend.type: normal, colorbar")
   } else if (parameter_name == "legend.position"){
     # Check the legend.position.
     assertthat::assert_that(parameter %in% c("top", "bottom", "left", "right", "none"),
@@ -2043,6 +2194,9 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "pAdjustMethod"){
     assertthat::assert_that(parameter %in% c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"),
                             msg = "Please provide one of the following to pAdjustMethod: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none")
+  } else if (parameter_name == "number.breaks"){
+    assertthat::assert_that(parameter >= 2,
+                            msg = "Please provide a value higher or equal to 2 to number.breaks.")
   }
 }
 
@@ -3082,3 +3236,4 @@ do_EnrichedTermTreePlot <- function(result,
   return(p)
 
 }
+

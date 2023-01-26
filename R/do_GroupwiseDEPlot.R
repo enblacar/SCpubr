@@ -7,6 +7,7 @@
 #' @param row_title_p_values \strong{\code{\link[base]{character}}} | Row title for the p-value heatmap. Blank by default.
 #' @param row_title_logfc \strong{\code{\link[base]{character}}} | Row title for the logfc heatmap. Clusters by default.
 #' @param row_title_expression \strong{\code{\link[base]{character}}} | Vector of titles of equal length as group.by.
+#' @param set_min_expression_to_zero \strong{\code{\link[base]{logical}}} | Sets the minimum value of mean expression to 0.
 #'
 #' @return A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
 #' @export
@@ -38,11 +39,16 @@ do_GroupwiseDEPlot <- function(sample,
                                column_names_rot = 45,
                                cell_size = 6,
                                min.cutoff = NULL,
-                               max.cutoff = NULL){
+                               max.cutoff = NULL,
+                               set_min_expression_to_zero = TRUE,
+                               disable_white_in_viridis = FALSE){
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
+  logical_list <- list("set_min_expression_to_zero" = set_min_expression_to_zero,
+                       "disable_white_in_viridis" = disable_white_in_viridis)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("heatmap.legend.length" = heatmap.legend.length,
                        "heatmap.legend.width" = heatmap.legend.width,
@@ -143,11 +149,11 @@ do_GroupwiseDEPlot <- function(sample,
                   use_viridis = TRUE,
                   viridis_color_map = viridis_map_logfc,
                   viridis_direction = viridis_direction,
-                  zeros_are_white = TRUE,
                   row_title_rotation = row_title_rot,
                   row_title_side = row_title_side,
                   column_names_rot = column_names_rot,
-                  cell_size = cell_size)
+                  cell_size = cell_size,
+                  disable_white_in_viridis = disable_white_in_viridis)
 
   # Compute heatmap of -log10FC.
   pvalue_out <- de_genes %>%
@@ -184,11 +190,11 @@ do_GroupwiseDEPlot <- function(sample,
                               use_viridis = TRUE,
                               viridis_color_map = viridis_map_pvalues,
                               viridis_direction = viridis_direction,
-                              zeros_are_white = TRUE,
                               row_title_rotation = row_title_rot,
                               row_title_side = row_title_side,
                               column_names_rot = column_names_rot,
-                              cell_size = cell_size)
+                              cell_size = cell_size,
+                              disable_white_in_viridis = disable_white_in_viridis)
 
   # Compute heatmap of expression.
   list.expression.heatmaps <- list()
@@ -253,21 +259,29 @@ do_GroupwiseDEPlot <- function(sample,
   }
   range.data <- c(min(min_value_list), max(max_value_list))
 
+  if (range.data[1] > 0){
+    if (isTRUE(set_min_expression_to_zero)){
+      range.data[1] <- 0
+    }
+  }
+
   if (!is.null(min.cutoff) & !is.null(max.cutoff)){
     assertthat::assert_that(min.cutoff < max.cutoff,
                             msg = paste0("The value provided for min.cutoff (", min.cutoff, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
   }
-
+  outlier.data <- FALSE
   if (!is.null(min.cutoff)){
     assertthat::assert_that(min.cutoff >= range.data[1],
                             msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value in the enrichment matrix (", range.data[1], "). Please select another value."))
     range.data <- c(min.cutoff, range.data[2])
+    outlier.data <- TRUE
   }
 
   if (!is.null(max.cutoff)){
     assertthat::assert_that(max.cutoff <= range.data[2],
                             msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the maximum value in the enrichment matrix (", range.data[2], "). Please select another value."))
     range.data <- c(range.data[1], max.cutoff)
+    outlier.data <- TRUE
   }
   counter <- 0
   for (variable in group.by){
@@ -309,12 +323,15 @@ do_GroupwiseDEPlot <- function(sample,
                     use_viridis = TRUE,
                     viridis_color_map = viridis_map_expression,
                     viridis_direction = viridis_direction,
-                    zeros_are_white = TRUE,
                     range.data = range.data,
                     row_title_rotation = row_title_rot,
                     row_title_side = row_title_side,
                     column_names_rot = column_names_rot,
-                    cell_size = cell_size)
+                    cell_size = cell_size,
+                    outlier.data = outlier.data,
+                    outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
+                    outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
+                    disable_white_in_viridis = disable_white_in_viridis)
     list.expression.heatmaps[[variable]] <- expression_out$heatmap
     list.expression.legends[[variable]] <- expression_out$legend
   }
@@ -343,11 +360,24 @@ do_GroupwiseDEPlot <- function(sample,
                          message = FALSE)
 
   # Draw final heatmap.
-  h <- ComplexHeatmap::draw(ht_list,
-                            heatmap_legend_list = list_legends,
-                            heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                            padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
-                            ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  if (isTRUE(outlier.data)){
+    suppressWarnings({
+      h <- ComplexHeatmap::draw(ht_list,
+                                heatmap_legend_list = list_legends,
+                                heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                                padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                                ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+    })
+  } else {
+    h <- ComplexHeatmap::draw(ht_list,
+                              heatmap_legend_list = list_legends,
+                              heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
+                              padding = ggplot2::unit(c(5, 5, 5, 5), "mm"),
+                              ht_gap = ggplot2::unit(heatmap_gap, "cm"))
+  }
+
+  # Draw final heatmap.
+
   grDevices::dev.off()
 
   # Return the final heatmap.

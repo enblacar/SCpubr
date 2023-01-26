@@ -1,3 +1,21 @@
+# SCpubr v1.1.3
+
+## General
+- Now using `min.cutoff` or `max.cutoff`, now the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. Be careful, as this interacts with `enforce_symmetry`. 
+- Added "white" color to viridis scales in heatmap-based plots when `viridis_direction` is set to -1 to prevent the heatmap from being all colored. Thus, stronger values have more contrast.
+- Added `disable_white_in_viridis` to heatmap-based plots to remove the previously described behavior.
+- Added `number.breaks` parameter to control the number of breaks in the legend of ggplot2-based plots. It will not always work, as the function will try to fit the breaks accordingly. But still, will give some range of freedom to the user.
+- Removed `colorsteps` from `legend.type` parameters as it was prone to generate unintended bugs in the code. 
+- Changed default values from `min.cutoff` and `max.cutoff` from `NULL` to `NA`. 
+
+## `SCpubr::do_CorrelationPlot`
+- Added `use_viridis` parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.
+- Added `min.cutoff` and `max.cutoff` parameter to add cutoffs to the scales.
+
+## `SCpubr::do_GroupwiseDEPlot`
+- Added `set_min_expression_to_zero` parameter to set the viridis color scale to 0 in the expression heatmap.
+
+
 # SCpubr v1.1.2
 More hotfixes in unit tests to comply with CRAN checks.
 

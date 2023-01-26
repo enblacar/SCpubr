@@ -36,7 +36,9 @@ do_GroupwiseDEPlot(
   column_names_rot = 45,
   cell_size = 6,
   min.cutoff = NULL,
-  max.cutoff = NULL
+  max.cutoff = NULL,
+  set_min_expression_to_zero = TRUE,
+  disable_white_in_viridis = FALSE
 )
 }
 \arguments{
@@ -92,6 +94,10 @@ do_GroupwiseDEPlot(
 \item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{set_min_expression_to_zero}{\strong{\code{\link[base]{logical}}} | Sets the minimum value of mean expression to 0.}
+
+\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
 }
 \value{
 A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
