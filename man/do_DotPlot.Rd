@@ -10,7 +10,6 @@ do_DotPlot(
   features,
   assay = NULL,
   group.by = NULL,
-  split.by = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 0.5,
@@ -19,8 +18,8 @@ do_DotPlot(
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
+  colors.use = NULL,
   dot.scale = 6,
-  colors.use = c("#1BFFFF25", "#2E3192"),
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -35,6 +34,8 @@ do_DotPlot(
   use_viridis = FALSE,
   viridis_color_map = "G",
   viridis_direction = -1,
+  sequential.palette = "YlGnBu",
+  sequential_direction = 1,
   na.value = "grey75",
   dot_border = TRUE,
   plot.grid = TRUE,
@@ -51,8 +52,6 @@ do_DotPlot(
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
-
-\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -77,9 +76,9 @@ do_DotPlot(
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
-\item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
+\item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
 
-\item{colors.use}{\strong{\code{\link[base]{character}}} | Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.}
+\item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
@@ -111,6 +110,10 @@ do_DotPlot(
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 

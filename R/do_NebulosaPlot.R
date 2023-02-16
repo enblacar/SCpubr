@@ -41,7 +41,11 @@ do_NebulosaPlot <- function(sample,
                             verbose = TRUE,
                             na.value = "grey75",
                             plot.axes = FALSE,
-                            number.breaks = 5){
+                            number.breaks = 5,
+                            use_viridis = TRUE,
+                            sequential.palette = "YlGnBu",
+                            sequential_direction = -1){
+  `%>%` <- magrittr::`%>%`
   check_suggests(function_name = "do_NebulosaPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -55,7 +59,8 @@ do_NebulosaPlot <- function(sample,
                        "joint" = joint,
                        "return_only_joint" = return_only_joint,
                        "plot_cell_borders" = plot_cell_borders,
-                       "plot.axes" = plot.axes)
+                       "plot.axes" = plot.axes,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -66,7 +71,8 @@ do_NebulosaPlot <- function(sample,
                        "dims" = dims,
                        "border.size" = border.size,
                        "viridis_direction" = viridis_direction,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -85,7 +91,8 @@ do_NebulosaPlot <- function(sample,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
                          "border.color" = border.color,
-                         "na.value" = na.value)
+                         "na.value" = na.value,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -146,17 +153,91 @@ do_NebulosaPlot <- function(sample,
     } else {
       num_plots <- length(features)
     }
-    p <- add_scale(p = p,
-                   num_plots = num_plots,
-                   scale = "color",
-                   function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                 option = viridis_color_map,
-                                                                 direction = viridis_direction,
-                                                                 breaks = scales::extended_breaks(n = number.breaks)))
+    for (counter in seq_len(num_plots)){
+      if (counter > length(features)){
+        name.use <-  "Joint Density"
+      } else {
+        name.use <- "Density"
+      }
+      if (num_plots == 1){
+        limits <- c(p$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::head(1) %>% dplyr::pull(.data$feature),
+                    p$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::tail(1) %>% dplyr::pull(.data$feature))
 
-    for (plot_num in seq(1:num_plots)){
+        scale.setup <- compute_scales(sample = sample,
+                                      feature = features,
+                                      assay = NULL,
+                                      reduction = NULL,
+                                      slot = slot,
+                                      number.breaks = number.breaks,
+                                      min.cutoff = NA,
+                                      max.cutoff = NA,
+                                      flavor = "Seurat",
+                                      enforce_symmetry = FALSE,
+                                      from_data = TRUE,
+                                      limits.use = limits)
+
+        if (isTRUE(use_viridis)){
+          p <- add_scale(p = p,
+                         function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                       option = viridis_color_map,
+                                                                       direction = viridis_direction,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits,
+                                                                       name = name.use),
+                         scale = "color")
+        } else {
+          p <- add_scale(p = p,
+                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                                                       na.value = na.value,
+                                                                       name = name.use,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits),
+                         scale = "color")
+        }
+      } else {
+        limits <- c(p[[counter]]$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::head(1) %>% dplyr::pull(.data$feature),
+                    p[[counter]]$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::tail(1) %>% dplyr::pull(.data$feature))
+
+        scale.setup <- compute_scales(sample = sample,
+                                      feature = features,
+                                      assay = NULL,
+                                      reduction = NULL,
+                                      slot = slot,
+                                      number.breaks = number.breaks,
+                                      min.cutoff = NA,
+                                      max.cutoff = NA,
+                                      flavor = "Seurat",
+                                      enforce_symmetry = FALSE,
+                                      from_data = TRUE,
+                                      limits.use = limits)
+
+        if (isTRUE(use_viridis)){
+          p[[counter]] <- add_scale(p = p[[counter]],
+                         function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                                       option = viridis_color_map,
+                                                                       direction = viridis_direction,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits,
+                                                                       name = name.use),
+                         scale = "color")
+        } else {
+          p[[counter]] <- add_scale(p = p[[counter]],
+                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                                                       na.value = na.value,
+                                                                       name = name.use,
+                                                                       breaks = scale.setup$breaks,
+                                                                       labels = scale.setup$labels,
+                                                                       limits = scale.setup$limits),
+                         scale = "color")
+        }
+      }
+
+
       # Set size of dots.
-      p[[plot_num]]$layers[[1]]$aes_params$size <- pt.size
+      p[[counter]]$layers[[1]]$aes_params$size <- pt.size
 
       if (legend.position != "none"){
         if (num_plots == 1){
@@ -171,7 +252,7 @@ do_NebulosaPlot <- function(sample,
                                         legend.framewidth = legend.framewidth,
                                         legend.tickwidth = legend.tickwidth)
         } else {
-          p[[plot_num]] <- modify_continuous_legend(p = p[[plot_num]],
+          p[[counter]] <- modify_continuous_legend(p = p[[counter]],
                                                     legend.aes = "color",
                                                     legend.type = legend.type,
                                                     legend.position = legend.position,
@@ -184,6 +265,7 @@ do_NebulosaPlot <- function(sample,
         }
       }
     }
+
 
     # For embeddings that are umap of tsne, we remove all axes..
     if (reduction %in% c("umap", "tsne")){

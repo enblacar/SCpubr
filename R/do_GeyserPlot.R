@@ -62,7 +62,11 @@ do_GeyserPlot <- function(sample,
                           flip = FALSE,
                           min.cutoff = rep(NA, length(features)),
                           max.cutoff = rep(NA, length(features)),
-                          number.breaks = 5){
+                          number.breaks = 5,
+                          diverging.palette = "RdBu",
+                          sequential.palette = "YlGnBu",
+                          sequential_direction = -1,
+                          use_viridis = TRUE){
 
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
@@ -72,7 +76,8 @@ do_GeyserPlot <- function(sample,
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "order_by_mean" = order_by_mean,
                        "plot_cell_borders" = plot_cell_borders,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -88,7 +93,8 @@ do_GeyserPlot <- function(sample,
                        "legend.icon.size" = legend.icon.size,
                        "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -108,7 +114,9 @@ do_GeyserPlot <- function(sample,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
                          "border.color" = border.color,
-                         "na.value" = na.value)
+                         "na.value" = na.value,
+                         "diverging.palette" = diverging.palette,
+                         "sequential.palette" = sequential.palette)
   # Checks
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
@@ -125,6 +133,7 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
 
   `%>%` <- magrittr::`%>%`
   # Check the assay.
@@ -316,11 +325,10 @@ do_GeyserPlot <- function(sample,
       limits <- c(limits[1], range.data[2])
     }
     end_value <- max(abs(limits))
-
     if (isTRUE(scale_type == "continuous")){
 
       if (isTRUE(enforce_symmetry)){
-        scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
+        scale.use <- ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                                     na.value = na.value,
                                                     name = feature,
                                                     breaks = scale.setup$breaks,
@@ -328,13 +336,22 @@ do_GeyserPlot <- function(sample,
                                                     limits = scale.setup$limits)
 
       } else if (isFALSE(enforce_symmetry)){
-        scale.use <- ggplot2::scale_color_viridis_c(option = viridis_color_map,
-                                                    na.value = na.value,
-                                                    direction = viridis_direction,
-                                                    name = feature,
-                                                    breaks = scale.setup$breaks,
-                                                    labels = scale.setup$labels,
-                                                    limits = scale.setup$limits)
+        if (isTRUE(use_viridis)){
+          scale.use <- ggplot2::scale_color_viridis_c(na.value = na.value,
+                                                      option = viridis_color_map,
+                                                      direction = viridis_direction,
+                                                      breaks = scale.setup$breaks,
+                                                      labels = scale.setup$labels,
+                                                      limits = scale.setup$limits,
+                                                      name = feature)
+        } else {
+          scale.use <- ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                                      na.value = na.value,
+                                                      name = feature,
+                                                      breaks = scale.setup$breaks,
+                                                      labels = scale.setup$labels,
+                                                      limits = scale.setup$limits)
+        }
       }
     } else if (isTRUE(scale_type == "categorical")){
       if (is.null(colors.use)){

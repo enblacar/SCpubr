@@ -35,7 +35,11 @@ do_CopyNumberVariantPlot(
   verbose = FALSE,
   min.cutoff = NA,
   max.cutoff = NA,
-  number.breaks = 5
+  number.breaks = 5,
+  diverging.palette = "RdBu",
+  sequential.palette = "YlGnBu",
+  sequential_direction = -1,
+  use_viridis = TRUE
 )
 }
 \arguments{
@@ -110,6 +114,14 @@ do_CopyNumberVariantPlot(
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 }
 \value{
 A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..

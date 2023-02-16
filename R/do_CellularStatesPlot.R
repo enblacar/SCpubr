@@ -63,8 +63,11 @@ do_CellularStatesPlot <- function(sample,
                                   raster.dpi = 1024,
                                   plot_features = FALSE,
                                   features = NULL,
+                                  use_viridis = TRUE,
                                   viridis_color_map = "G",
                                   viridis_direction = 1,
+                                  sequential.palette = "YlGnBu",
+                                  sequential_direction = -1,
                                   nbin = 24,
                                   ctrl = 100,
                                   number.breaks = 5){
@@ -83,7 +86,8 @@ do_CellularStatesPlot <- function(sample,
                          "plot_cell_borders" = plot_cell_borders,
                          "raster" = raster,
                          "plot_features" = plot_features,
-                         "plot_enrichment_scores" = plot_enrichment_scores)
+                         "plot_enrichment_scores" = plot_enrichment_scores,
+                         "use_viridis" = use_viridis)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("font.size" = font.size,
@@ -97,7 +101,8 @@ do_CellularStatesPlot <- function(sample,
                          "viridis_direction" = viridis_direction,
                          "nbin" = nbin,
                          "ctrl" = ctrl,
-                         "number.breaks" = number.breaks)
+                         "number.breaks" = number.breaks,
+                         "sequential_direction" = sequential_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("input_gene_list" = input_gene_list,
@@ -116,7 +121,8 @@ do_CellularStatesPlot <- function(sample,
                            "marginal.type" = marginal.type,
                            "border.color" = border.color,
                            "features" = features,
-                           "viridis_color_map" = viridis_color_map)
+                           "viridis_color_map" = viridis_color_map,
+                           "sequential.palette" = sequential.palette)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Define pipe operator internally.
@@ -147,7 +153,11 @@ do_CellularStatesPlot <- function(sample,
     # Check group.by
     if (is.null(group.by)){
       assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                              msg = "Please make sure you provide a value for group.by or do not have a metadata column named `Groups`.")
+                              msg = paste0(crayon_body("Please provide a value for "),
+                                           crayon_key("group.by"),
+                                           crayon_body(" and that this value is not called "),
+                                           crayon_key("Groups"),
+                                           crayon_body(".")))
 
       sample@meta.data[, "Groups"] <- sample@active.ident
       group.by <- "Groups"
@@ -167,13 +177,25 @@ do_CellularStatesPlot <- function(sample,
     if (is.null(y2) & is.null(x2)){
       # Check that the names provided are not repeated.
       assertthat::assert_that(sum(duplicated(c(x1, y1))) == 0,
-                              msg = "The names of the lists to plot can not be the same.")
+                              msg = paste0(crayon_body("The "),
+                                           crayon_key("names"),
+                                           crayon_body(" of the lists can not be "),
+                                           crayon_key("duplicated"),
+                                           crayon_body(".")))
       # Check that the names provided match the marker genes.
       assertthat::assert_that(x1 %in% names(input_gene_list),
-                              msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+                              msg = paste0(crayon_body("The name "),
+                                           crayon_key(x1),
+                                           crayon_body(" is not a name of the lists of genes provided to "),
+                                           crayon_key("input_gene_list"),
+                                           crayon_body(".")))
 
       assertthat::assert_that(y1 %in% names(input_gene_list),
-                              msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+                              msg = paste0(crayon_body("The name "),
+                                           crayon_key(y1),
+                                           crayon_body(" is not a name of the lists of genes provided to "),
+                                           crayon_key("input_gene_list"),
+                                           crayon_body(".")))
 
       # Retrieve metadata variables.
       variables_to_retrieve <- c(x1, y1, group.by)
@@ -238,16 +260,32 @@ do_CellularStatesPlot <- function(sample,
     } else if (is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
         assertthat::assert_that(sum(duplicated(c(x1, y1, x2))) == 0,
-                                msg = "The names of the lists to plot can not be the same.")
+                                msg = paste0(crayon_body("The "),
+                                             crayon_key("names"),
+                                             crayon_body(" of the lists can not be "),
+                                             crayon_key("duplicated"),
+                                             crayon_body(".")))
         # Check that the names provided match the marker genes.
         assertthat::assert_that(x1 %in% names(input_gene_list),
-                                msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(x1),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         assertthat::assert_that(x2 %in% names(input_gene_list),
-                                msg = paste0(x2, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(x1),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         assertthat::assert_that(y1 %in% names(input_gene_list),
-                                msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(y1),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         # Retrieve metadata variables.
         variables_to_retrieve <- c(x1, x2, y1, group.by)
@@ -324,19 +362,39 @@ do_CellularStatesPlot <- function(sample,
     } else if (!is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
         assertthat::assert_that(sum(duplicated(c(x1, y1, x2, y2))) == 0,
-                                msg = "The names of the lists to plot can not be the same.")
+                                msg = paste0(crayon_body("The "),
+                                             crayon_key("names"),
+                                             crayon_body(" of the lists can not be "),
+                                             crayon_key("duplicated"),
+                                             crayon_body(".")))
         # Check that the names provided match the marker genes.
         assertthat::assert_that(x1 %in% names(input_gene_list),
-                                msg = paste0(x1, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(x1),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         assertthat::assert_that(x2 %in% names(input_gene_list),
-                                msg = paste0(x2, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(x2),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         assertthat::assert_that(y1 %in% names(input_gene_list),
-                                msg = paste0(y1, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(y1),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
         assertthat::assert_that(y2 %in% names(input_gene_list),
-                                msg = paste0(y2, " is not a name of a list of genes provided to input_gene_list."))
+                                msg = paste0(crayon_body("The name "),
+                                             crayon_key(y2),
+                                             crayon_body(" is not a name of the lists of genes provided to "),
+                                             crayon_key("input_gene_list"),
+                                             crayon_body(".")))
 
 
         # Retrieve metadata variables to plot.
@@ -482,7 +540,9 @@ do_CellularStatesPlot <- function(sample,
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
       if (isTRUE(plot_features)){
         assertthat::assert_that(!is.null(features),
-                                msg = "Please provide features to plot.")
+                                msg = paste0(crayon_body("Please provide a value to "),
+                                             crayon_key("features"),
+                                             crayon_body(" .")))
       }
 
       output_list <- list()
@@ -513,7 +573,10 @@ do_CellularStatesPlot <- function(sample,
                                             font.size = font.size,
                                             viridis_color_map = viridis_color_map,
                                             viridis_direction = viridis_direction,
-                                            number.breaks = number.breaks)
+                                            number.breaks = number.breaks,
+                                            use_viridis = use_viridis,
+                                            sequential.palette = sequential.palette,
+                                            sequential_direction = sequential_direction)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){

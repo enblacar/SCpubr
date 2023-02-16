@@ -43,8 +43,11 @@ do_LigandReceptorPlot <- function(liana_output,
                                   legend.tickcolor = "white",
                                   legend.framewidth = 0.5,
                                   legend.tickwidth = 0.5,
+                                  use_viridis = FALSE,
                                   viridis_color_map = "G",
                                   viridis_direction = 1,
+                                  sequential.palette = "YlGnBu",
+                                  sequential_direction = 1,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
@@ -68,7 +71,8 @@ do_LigandReceptorPlot <- function(liana_output,
                        "rotate_strip_text" = rotate_strip_text,
                        "plot.grid" = plot.grid,
                        "add_missing_LR_combinations" = add_missing_LR_combinations,
-                       "sort_interactions_alphabetically" = sort_interactions_alphabetically)
+                       "sort_interactions_alphabetically" = sort_interactions_alphabetically,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -80,7 +84,8 @@ do_LigandReceptorPlot <- function(liana_output,
                        "dot.size" = dot.size,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "viridis_direction" = viridis_direction,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("split.by" = split.by,
@@ -95,7 +100,8 @@ do_LigandReceptorPlot <- function(liana_output,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
                          "grid.type" = grid.type,
-                         "arrange_interactions_by" = arrange_interactions_by)
+                         "arrange_interactions_by" = arrange_interactions_by,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check border color.
@@ -249,6 +255,13 @@ do_LigandReceptorPlot <- function(liana_output,
                    dplyr::filter(.data$target %in% keep_target)
   }
 
+  assertthat::assert_that(nrow(liana_output) > 0,
+                          msg = paste0(crayon_body("Whith the current presets of "),
+                                       crayon_key("keep_source"),
+                                       crayon_body(" and "),
+                                       crayon_key("keep_target"),
+                                       crayon_body(" there are no interactions left.")))
+
   # Make source and target factors, so that they do not get dropped by the plot.
   if (isTRUE(sort_interactions_alphabetically)){
     liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
@@ -307,22 +320,62 @@ do_LigandReceptorPlot <- function(liana_output,
         ggplot2::scale_size_continuous(name = size_title,
                                        range = c(1 * dot.size, 5 * dot.size))
   # Settings for bordered dots.
+  limits <- c(min(liana_output$magnitude, na.rm = TRUE),
+              max(liana_output$magnitude, na.rm = TRUE))
+  scale.setup <- compute_scales(sample = NULL,
+                                feature = NULL,
+                                assay = NULL,
+                                reduction = NULL,
+                                slot = NULL,
+                                number.breaks = number.breaks,
+                                min.cutoff = NA,
+                                max.cutoff = NA,
+                                flavor = "Seurat",
+                                enforce_symmetry = FALSE,
+                                from_data = TRUE,
+                                limits.use = limits)
+
   if (isTRUE(dot_border)){
     # Add color to aesthetics.
     p$layers[[1]]$aes_params$color <- border.color
-    p <- p +
-         ggplot2::scale_fill_viridis_c(option = viridis_color_map,
+    if (isTRUE(use_viridis)){
+      p <- p +
+           ggplot2::scale_fill_viridis_c(option = viridis_color_map,
+                                         name = fill.title,
+                                         direction = viridis_direction,
+                                         na.value = NA,
+                                         breaks = scale.setup$breaks,
+                                         labels = scale.setup$labels,
+                                         limits = scale.setup$limits)
+    } else {
+      p <- p +
+           ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                          na.value = NA,
+                                          name = fill.title,
+                                          breaks = scale.setup$breaks,
+                                          labels = scale.setup$labels,
+                                          limits = scale.setup$limits)
+    }
+
+  } else {
+    if (isTRUE(use_viridis)){
+      p <- p +
+        ggplot2::scale_color_viridis_c(option = viridis_color_map,
                                        name = fill.title,
                                        direction = viridis_direction,
                                        na.value = NA,
-                                       breaks = scales::extended_breaks(n = number.breaks))
-  } else {
-    p <- p +
-         ggplot2::scale_color_viridis_c(option = viridis_color_map,
-                                        name = fill.title,
-                                        direction = viridis_direction,
-                                        na.value = NA,
-                                        breaks = scales::extended_breaks(n = number.breaks))
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
+    } else {
+      p <- p +
+        ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                      na.value = NA,
+                                      name = fill.title,
+                                      breaks = scale.setup$breaks,
+                                      labels = scale.setup$labels,
+                                      limits = scale.setup$limits)
+    }
   }
   # Continue plotting.
   if (isFALSE(flip)){

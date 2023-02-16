@@ -3,7 +3,6 @@
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with progeny regulon prior knowledge.
 #' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
-#' @param plot_Heatmaps \strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.
 #' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
 #' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
 #' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
@@ -18,24 +17,13 @@ do_PathwayActivityPlot <- function(sample,
                                    group.by = NULL,
                                    split.by = NULL,
                                    plot_FeaturePlots = FALSE,
-                                   plot_Heatmaps = TRUE,
                                    plot_GeyserPlots = FALSE,
-                                   row_title = NULL,
-                                   column_title = NULL,
-                                   flip = FALSE,
-                                   cluster_cols = TRUE,
-                                   cluster_rows = TRUE,
                                    row_names_rot = 0,
-                                   column_names_rot = 45,
-                                   cell_size = 8,
                                    pt.size = 1,
                                    plot_cell_borders = TRUE,
                                    border.size = 2,
                                    na.value = "grey75",
                                    legend.position = "bottom",
-                                   heatmap.legend.length = 75,
-                                   heatmap.legend.width = 5,
-                                   heatmap.legend.framecolor = "black",
                                    legend.width = 1,
                                    legend.length = 20,
                                    legend.framewidth = 0.5,
@@ -53,8 +41,9 @@ do_PathwayActivityPlot <- function(sample,
                                    viridis_direction = 1,
                                    min.cutoff = NA,
                                    max.cutoff = NA,
-                                   disable_white_in_viridis = FALSE,
-                                   number.breaks = 5){
+                                   number.breaks = 5,
+                                   diverging.palette = "RdBu",
+                                   flip = FALSE){
 
   check_suggests(function_name = "do_PathwayActivityPlot")
   # Check if the sample provided is a Seurat object.
@@ -62,23 +51,14 @@ do_PathwayActivityPlot <- function(sample,
 
   # Check logical parameters.
   logical_list <- list("plot_FeaturePlots" = plot_FeaturePlots,
-                       "plot_Heatmaps" = plot_Heatmaps,
                        "plot_GeyserPlots" = plot_GeyserPlots,
-                       "flip" = flip,
-                       "cluster_cols" = cluster_cols,
-                       "cluster_rows" = cluster_rows,
                        "plot_cell_borders" = plot_cell_borders,
                        "geyser_order_by_mean" = geyser_order_by_mean,
                        "enforce_symmetry" = enforce_symmetry,
-                       "disable_white_in_viridis" = disable_white_in_viridis)
+                       "flip" = flip)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
-  numeric_list <- list("row_names_rot" = row_names_rot,
-                       "column_names_rot" = column_names_rot,
-                       "cell_size" = cell_size,
-                       "heatmap.legend.length" = heatmap.legend.length,
-                       "heatmap.legend.width" = heatmap.legend.width,
-                       "pt.size" = pt.size,
+  numeric_list <- list("pt.size" = pt.size,
                        "border.size" = border.size,
                        "font.size" = font.size,
                        "legend.width" = legend.width,
@@ -101,12 +81,12 @@ do_PathwayActivityPlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
                          "geyser_scale_type" = geyser_scale_type,
-                         "viridis_color_map" = viridis_color_map)
+                         "viridis_color_map" = viridis_color_map,
+                         "diverging.palette" = diverging.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
-  check_colors(heatmap.legend.framecolor, parameter_name = "heatmap.legend.framecolor")
   check_colors(na.value, parameter_name = "na.value")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -116,6 +96,7 @@ do_PathwayActivityPlot <- function(sample,
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
 
 
   `%v%` <- ComplexHeatmap::`%v%`
@@ -123,6 +104,7 @@ do_PathwayActivityPlot <- function(sample,
 
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(.data$statistic == "norm_wmean") %>%
+                         dplyr::mutate("score" = ifelse(.data$p_value <= 0.05, .data$score, NA)) %>%
                          tidyr::pivot_wider(id_cols = "source",
                                             names_from = "condition",
                                             values_from = "score") %>%
@@ -130,10 +112,273 @@ do_PathwayActivityPlot <- function(sample,
                          Seurat::CreateAssayObject()
 
   Seurat::DefaultAssay(sample) <- "progeny"
+
+  # Workaround to avoid the problems NA cause in the scale.data computation by seurat
   # Scale data.
-  sample <- Seurat::ScaleData(object = sample, verbose = FALSE)
+  scale.data <- sample@assays$progeny@data %>%
+                as.matrix() %>%
+                t() %>%
+                as.data.frame() %>%
+                scale() %>%
+                t()
+  sample@assays$progeny@scale.data <- scale.data
 
   list.out <- list()
+
+
+  if (is.null(group.by)) {
+    sample$Groups <- Seurat::Idents(sample)
+    sample$group.by <- sample$Groups
+    group.by = "Groups"
+  }
+  # Plotting
+  list.out <- list()
+
+  matrix.list <- list()
+  for (group in group.by){
+    # Extract activities from object as a long dataframe
+    suppressMessages({
+      sample$group.by <- sample@meta.data[, group]
+
+      df <- t(as.matrix(sample@assays$progeny@scale.data)) %>%
+            as.data.frame() %>%
+            tibble::rownames_to_column(var = "cell") %>%
+            dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
+                                  tibble::rownames_to_column(var = "cell")},
+                                  by = "cell") %>%
+            dplyr::select(-"cell") %>%
+            tidyr::pivot_longer(cols = -c("group.by"),
+                                names_to = "source",
+                                values_to = "score") %>%
+            dplyr::group_by(.data$group.by, .data$source) %>%
+            dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
+      df.order <- df
+      df.order[is.na(df.order)] <- 0
+      matrix.list[[group]][["df"]] <- df
+      matrix.list[[group]][["df.order"]] <- df.order
+    })
+  }
+
+
+  counter <- 0
+  for (group in group.by){
+    counter <- counter + 1
+
+    df <- matrix.list[[group]][["df"]]
+    df.order <- matrix.list[[group]][["df.order"]]
+
+    data <- df
+    # Transform to wide to retrieve the hclust.
+    df.order <- df.order %>%
+                tidyr::pivot_wider(id_cols = "group.by",
+                                   names_from = 'source',
+                                   values_from = 'mean') %>%
+                tibble::column_to_rownames("group.by") %>%
+                as.matrix()
+    if(length(rownames(df.order)) == 1){
+      row_order <- rownames(df.order)[1]
+    } else {
+      row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
+    }
+    if (counter == 1){
+      if (length(colnames(df.order)) == 1){
+        col_order <- colnames(df.order)[1]
+      } else {
+        col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
+      }
+    }
+
+    data <- data %>%
+            dplyr::mutate("source" = factor(.data$source, levels = rev(col_order)),
+                          "group.by" = factor(.data$group.by, levels = row_order))
+
+    if (!is.na(min.cutoff)){
+      data <- data %>%
+              dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
+    }
+
+    if (!is.na(max.cutoff)){
+      data <- data %>%
+              dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
+    }
+
+    matrix.list[[group]][["data"]] <- data
+  }
+
+  # Compute limits.
+  min.vector <- c()
+  max.vector <- c()
+
+  for (group in group.by){
+    data <- matrix.list[[group]][["data"]]
+
+    min.vector <- append(min.vector, min(data$mean, na.rm = TRUE))
+    max.vector <- append(max.vector, max(data$mean, na.rm = TRUE))
+  }
+
+  # Get the absolute limits of the datasets.
+  limits <- c(min(min.vector),
+              max(max.vector))
+
+  # Compute overarching scales for all heatmaps.
+  scale.setup <- compute_scales(sample = sample,
+                                feature = " ",
+                                assay = "progeny",
+                                reduction = NULL,
+                                slot = "scale.data",
+                                number.breaks = number.breaks,
+                                min.cutoff = min.cutoff,
+                                max.cutoff = max.cutoff,
+                                flavor = "Seurat",
+                                enforce_symmetry = enforce_symmetry,
+                                from_data = TRUE,
+                                limits.use = limits)
+
+
+  # Plot individual heatmaps.
+  counter <- 0
+  list.heatmaps <- list()
+  for (group in group.by){
+    counter <- counter + 1
+    data <- matrix.list[[group]][["data"]]
+
+    p <- ggplot2::ggplot(data,
+                         mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$source} else {.data$group.by},
+                                                y = if(isFALSE(flip)){.data$group.by} else {.data$source},
+                                                fill = .data$mean)) +
+         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::scale_y_discrete(expand = c(0, 0)) +
+         ggplot2::scale_x_discrete(expand = c(0, 0),
+                                   position = "top") +
+         ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
+                         x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) +
+         ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                       na.value = na.value,
+                                       name = "Regulon Score",
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits) +
+         ggplot2::coord_equal()
+
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = "Regulon Activity",
+                                  legend.aes = "fill",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
+    # Set axis titles.
+    if (isFALSE(flip)){
+      if (counter == 1){
+        if (length(group.by) > 1){
+          xlab <- NULL
+        } else {
+          xlab <- "Pathway"
+        }
+
+        ylab <- group
+      } else {
+        if (length(group.by) > 1){
+          if (counter == length(group.by)){
+            xlab <- "Pathway"
+          } else {
+            xlab <- NULL
+          }
+        } else {
+          xlab <- NULL
+        }
+        ylab <- group
+      }
+    } else {
+      if (counter == 1){
+        ylab <- "Pathway"
+
+        xlab <- group
+      } else {
+        ylab <- NULL
+        xlab <- group
+      }
+    }
+
+
+    axis.parameters <- handle_axis(flip = flip,
+                                   group.by = group.by,
+                                   group = group,
+                                   counter = counter,
+                                   rotate_x_axis_labels = rotate_x_axis_labels)
+
+    # Set theme
+    p <- p +
+         ggplot2::xlab(xlab) +
+         ggplot2::ylab(ylab) +
+         ggplot2::theme_minimal(base_size = font.size) +
+         ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
+                        axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
+                        axis.ticks.y.left = axis.parameters$axis.ticks.y.left,
+                        axis.ticks.y.right = axis.parameters$axis.ticks.y.right,
+                        axis.text.y.left = axis.parameters$axis.text.y.left,
+                        axis.text.y.right = axis.parameters$axis.text.y.right,
+                        axis.text.x.top = axis.parameters$axis.text.x.top,
+                        axis.text.x.bottom = axis.parameters$axis.text.x.bottom,
+                        axis.title.x.bottom = axis.parameters$axis.title.x.bottom,
+                        axis.title.x.top = axis.parameters$axis.title.x.top,
+                        axis.title.y.right = axis.parameters$axis.title.y.right,
+                        axis.title.y.left = axis.parameters$axis.title.y.left,
+                        axis.line = ggplot2::element_blank(),
+                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                        plot.subtitle = ggplot2::element_text(hjust = 0),
+                        plot.caption = ggplot2::element_text(hjust = 1),
+                        plot.title.position = "plot",
+                        panel.grid = ggplot2::element_blank(),
+                        panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
+                        text = ggplot2::element_text(family = font.type),
+                        plot.caption.position = "plot",
+                        legend.text = ggplot2::element_text(face = "bold"),
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10),
+                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.grid.major = ggplot2::element_blank(),
+                        legend.position = legend.position,
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+
+    list.heatmaps[[group]] <- p
+  }
+
+  # Plot the combined plot
+  input <- if(isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
+  p <- patchwork::wrap_plots(input,
+                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             nrow = if(isTRUE(flip)) {1} else {NULL},
+                             guides = "collect")
+  p <- p +
+       patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
+                                                         plot.title = ggplot2::element_text(size = font.size,
+                                                                                            family = font.type,
+                                                                                            color = "black",
+                                                                                            face = "bold",
+                                                                                            hjust = 0),
+                                                         plot.subtitle = ggplot2::element_text(size = font.size,
+                                                                                               family = font.type,
+                                                                                               color = "black",
+                                                                                               hjust = 0),
+                                                         plot.caption = ggplot2::element_text(size = font.size,
+                                                                                              family = font.type,
+                                                                                              color = "black",
+                                                                                              hjust = 1),
+                                                         plot.caption.position = "plot"))
+  list.out[["heatmap"]] <- p
+
+
+
+
+
 
   if (isTRUE(plot_FeaturePlots)){
     list.features <- list()
@@ -163,7 +408,8 @@ do_PathwayActivityPlot <- function(sample,
                           viridis_direction = viridis_direction,
                           min.cutoff = min.cutoff,
                           max.cutoff = max.cutoff,
-                          number.breaks = number.breaks)
+                          number.breaks = number.breaks,
+                          diverging.palette = diverging.palette)
 
       list.features[[pathway]] <- p
     }
@@ -202,233 +448,13 @@ do_PathwayActivityPlot <- function(sample,
                          viridis_direction = viridis_direction,
                          min.cutoff = min.cutoff,
                          max.cutoff = max.cutoff,
-                         number.breaks = number.breaks)
+                         number.breaks = number.breaks,
+                         diverging.palette = diverging.palette)
       list.geysers[[pathway]] <- p
     }
     list.out[["geyser_plots"]] <- list.geysers
   }
 
 
-  if (isTRUE(plot_Heatmaps)){
-    # Start the process.
-    if (is.null(group.by)){
-      sample@meta.data[, "dummy"] <- sample@active.ident
-    } else {
-      sample@meta.data[, "dummy"] <- sample@meta.data[, group.by]
-    }
-
-    group.by <- "dummy"
-    if (is.null(split.by)){
-      suppressMessages({
-        data <- sample@assays$progeny@scale.data %>%
-                t() %>%
-                as.data.frame() %>%
-                tibble::rownames_to_column(var = "cell") %>%
-                dplyr::left_join(y = {sample@meta.data[, group.by, drop = FALSE] %>%
-                                      tibble::rownames_to_column(var = "cell")},
-                                      by = "cell") %>%
-                dplyr::select(-dplyr::all_of(c("cell"))) %>%
-                tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
-                                    names_to = "source",
-                                    values_to = "score") %>%
-                dplyr::group_by(.data[[group.by]], .data$source) %>%
-                dplyr::summarise(mean = mean(.data$score)) %>%
-                tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
-                                   names_from = 'source',
-                                   values_from = 'mean') %>%
-                tibble::column_to_rownames(group.by) %>%
-                as.matrix()
-      })
-
-      row_title <- {
-        if (!(is.null(row_title))){
-          row_title
-        } else {
-          ""
-        }}
-
-      column_title <- {
-        if (!(is.null(column_title))){
-          column_title
-        } else {
-          ""
-        }}
-
-      if (isTRUE(flip)){
-        data <- t(data)
-      }
-
-      range.data <- c(min(data, na.rm = TRUE),
-                      max(data, na.rm = TRUE))
-      out <- check_cutoffs(min.cutoff = min.cutoff,
-                           max.cutoff = max.cutoff,
-                           feature = feature,
-                           limits = range.data)
-
-      range.data <- out$limits
-      outlier.data <- out$outlier.data
-
-
-
-      out <- heatmap_inner(data,
-                           legend.title = "Pathway activity",
-                           column_title = column_title,
-                           row_title = row_title,
-                           cluster_columns = cluster_cols,
-                           cluster_rows = cluster_rows,
-                           column_names_rot = column_names_rot,
-                           row_names_rot = row_names_rot,
-                           cell_size = cell_size,
-                           na.value = na.value,
-                           data_range = "both",
-                           range.data = range.data,
-                           legend.position = legend.position,
-                           legend.length = heatmap.legend.length,
-                           legend.width = heatmap.legend.width,
-                           legend.framecolor = heatmap.legend.framecolor,
-                           symmetrical_scale = enforce_symmetry,
-                           use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
-                           viridis_color_map = viridis_color_map,
-                           viridis_direction = viridis_direction,
-                           outlier.data = outlier.data,
-                           outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
-                           outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
-                           disable_white_in_viridis = disable_white_in_viridis)
-      h <- out[["heatmap"]]
-      h_legend <- out[["legend"]]
-      ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
-      suppressWarnings({
-        grDevices::pdf(NULL)
-        if (isTRUE(outlier.data)){
-          suppressWarnings({
-            h <- ComplexHeatmap::draw(h,
-                                      heatmap_legend_list = h_legend,
-                                      heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                      padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-          })
-        } else {
-          h <- ComplexHeatmap::draw(h,
-                                    heatmap_legend_list = h_legend,
-                                    heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                    padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-        }
-        grDevices::dev.off()
-      })
-    } else {
-      split.values <- as.character(sort(unique(sample@meta.data %>% dplyr::pull(!!rlang::sym(split.by)))))
-      list.heatmaps <- list()
-      # Get the maximum range.
-      data <- sample@assays$progeny@scale.data %>%
-        t() %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column(var = "cell") %>%
-        dplyr::left_join(y = {sample@meta.data[, c(group.by, split.by)] %>%
-            tibble::rownames_to_column(var = "cell")},
-            by = "cell") %>%
-        dplyr::select(-dplyr::all_of(c("cell", split.by))) %>%
-        tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
-                            names_to = "source",
-                            values_to = "score") %>%
-        dplyr::group_by(.data[[group.by]], .data$source) %>%
-        dplyr::summarise(mean = mean(.data$score)) %>%
-        tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
-                           names_from = 'source',
-                           values_from = 'mean') %>%
-        tibble::column_to_rownames(group.by) %>%
-        as.matrix()
-
-      range.data <- c(min(data, na.rm = TRUE),
-                      max(data, na.rm = TRUE))
-      out <- check_cutoffs(min.cutoff = min.cutoff,
-                           max.cutoff = max.cutoff,
-                           feature = feature,
-                           limits = range.data)
-
-      range.data <- out$limits
-      outlier.data <- out$outlier.data
-
-      for (split.value in split.values){
-        suppressMessages({
-          data <- sample@assays$progeny@scale.data %>%
-                  t() %>%
-                  as.data.frame() %>%
-                  tibble::rownames_to_column(var = "cell") %>%
-                  dplyr::left_join(y = {sample@meta.data[, c(group.by, split.by)] %>%
-                                        tibble::rownames_to_column(var = "cell")},
-                                        by = "cell") %>%
-                  dplyr::filter(.data[[split.by]] == split.value) %>%  # This is key.
-                  dplyr::select(-dplyr::all_of(c("cell", split.by))) %>%
-                  tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by)),
-                                      names_to = "source",
-                                      values_to = "score") %>%
-                  dplyr::group_by(.data[[group.by]], .data$source) %>%
-                  dplyr::summarise(mean = mean(.data$score)) %>%
-                  tidyr::pivot_wider(id_cols = dplyr::all_of(c(group.by)),
-                                     names_from = 'source',
-                                     values_from = 'mean') %>%
-                  tibble::column_to_rownames(group.by) %>%
-                  as.matrix()
-        })
-
-        row_title <- split.value
-        column_title <- ""
-
-        if (isTRUE(flip)){
-          data <- t(data)
-        }
-
-
-        out <- heatmap_inner(data,
-                             legend.title = "Pathway activity",
-                             column_title = column_title,
-                             row_title = row_title,
-                             cluster_columns = cluster_cols,
-                             cluster_rows = cluster_rows,
-                             range.data = range.data,
-                             column_names_rot = column_names_rot,
-                             row_names_rot = row_names_rot,
-                             cell_size = cell_size,
-                             na.value = na.value,
-                             legend.position = legend.position,
-                             legend.length = heatmap.legend.length,
-                             legend.width = heatmap.legend.width,
-                             legend.framecolor = heatmap.legend.framecolor,
-                             symmetrical_scale = enforce_symmetry,
-                             use_viridis = if (isFALSE(enforce_symmetry)) {TRUE} else {FALSE},
-                             viridis_color_map = viridis_color_map,
-                             viridis_direction = viridis_direction,
-                             outlier.data = outlier.data,
-                             outlier.data.up = if(!is.null(max.cutoff)){TRUE} else {FALSE},
-                             outlier.data.down = if(!is.null(min.cutoff)) {TRUE} else {FALSE},
-                             disable_white_in_viridis = disable_white_in_viridis)
-        h <- out[["heatmap"]]
-        h_legend <- out[["legend"]]
-        list.heatmaps[[split.value]] <- h
-      }
-      ComplexHeatmap::ht_opt("HEATMAP_LEGEND_PADDING" = ggplot2::unit(8, "mm"))
-      suppressWarnings({
-        grDevices::pdf(NULL)
-        ht_list <- NULL
-        for (name in names(list.heatmaps)){
-          ht_list <- ht_list %v% list.heatmaps[[name]]
-        }
-        if (isTRUE(outlier.data)){
-          suppressWarnings({
-            h <- ComplexHeatmap::draw(ht_list,
-                                      heatmap_legend_list = h_legend,
-                                      heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                      padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-          })
-        } else {
-          h <- ComplexHeatmap::draw(ht_list,
-                                    heatmap_legend_list = h_legend,
-                                    heatmap_legend_side = if (legend.position %in% c("top", "bottom")){"bottom"} else {"right"},
-                                    padding = ggplot2::unit(c(5, 5, 5, 5), "mm"))
-        }
-        grDevices::dev.off()
-      })
-    }
-    list.out[["heatmaps"]] <- list("average_scores" = h)
-  }
   return(list.out)
 }

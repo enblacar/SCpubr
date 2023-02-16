@@ -159,12 +159,20 @@ do_BoxPlot <- function(sample,
   }
   if (isTRUE(order)){
     assertthat::assert_that(is.null(split.by),
-                            msg = "Parameter order can not be used alongside split.by.")
+                            msg = paste0(crayon_body("Parameter "),
+                                         crayon_key("split.by"),
+                                         crayon_body(" cannot be used alonside "),
+                                         crayon_key("order"),
+                                         crayon_body(".")))
   }
 
   if (!is.null(split.by)){
     assertthat::assert_that(isFALSE(order),
-                            msg = "Parameter order can not be used alongside split.by.")
+                            msg = paste0(crayon_body("Parameter "),
+                                         crayon_key("split.by"),
+                                         crayon_body(" cannot be used alonside "),
+                                         crayon_key("order"),
+                                         crayon_body(".")))
   }
 
   if (isTRUE(use_silhouette) & is.null(split.by)){

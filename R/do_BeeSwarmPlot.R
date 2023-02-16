@@ -37,8 +37,11 @@ do_BeeSwarmPlot <- function(sample,
                             remove_x_axis = FALSE,
                             remove_y_axis = FALSE,
                             flip = FALSE,
+                            use_viridis = TRUE,
                             viridis_color_map = "G",
                             viridis_direction = 1,
+                            sequential.palette = "YlGnBu",
+                            sequential_direction = -1,
                             verbose = TRUE,
                             raster = FALSE,
                             raster.dpi = 300,
@@ -73,7 +76,8 @@ do_BeeSwarmPlot <- function(sample,
                        "flip" = flip,
                        "verbose" = verbose,
                        "raster" = raster,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -89,7 +93,8 @@ do_BeeSwarmPlot <- function(sample,
                        "viridis_direction" = viridis_direction,
                        "legend.ncol" = legend.ncol,
                        "legend.icon.size" = legend.icon.size,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -107,7 +112,8 @@ do_BeeSwarmPlot <- function(sample,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -122,9 +128,17 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+
+
 
   assertthat::assert_that(length(feature_to_rank) == 1,
-                          msg = "Please provide only one feature to feature_to_rank.")
+                          msg = paste0(crayon_body("Please provide only "),
+                                       crayon_key("one feature"),
+                                       crayon_body(" to "),
+                                       crayon_key("feature_to_rank"),
+                                       crayon_body(".")))
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -230,15 +244,25 @@ do_BeeSwarmPlot <- function(sample,
 
   if (continuous_feature == TRUE){
 
+    if (isTRUE(use_viridis)){
+      p <- p +
+           ggplot2::scale_color_viridis_c(na.value = "grey75",
+                                          option = viridis_color_map,
+                                          direction = viridis_direction,
+                                          breaks = scale.setup$breaks,
+                                          labels = scale.setup$labels,
+                                          limits = scale.setup$limits,
+                                          name = feature_to_rank)
+    } else {
+      p <- p +
+           ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                          na.value = feature_to_rank,
+                                          name = legend.title,
+                                          breaks = scale.setup$breaks,
+                                          labels = scale.setup$labels,
+                                          limits = scale.setup$limits)
+    }
 
-    p <- p +
-         ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                        option = viridis_color_map,
-                                        direction = viridis_direction,
-                                        breaks = scale.setup$breaks,
-                                        labels = scale.setup$labels,
-                                        limits = scale.setup$limits,
-                                        name = feature_to_rank)
     p <- modify_continuous_legend(p = p,
                                   legend.title = legend.title,
                                   legend.aes = "color",

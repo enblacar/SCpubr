@@ -84,7 +84,11 @@ do_BarPlot <- function(sample,
 
   # Get the general table.
   assertthat::assert_that(class(sample@meta.data[, group.by]) %in% c("character", "factor"),
-                          msg = "This function only works with categorical metadta variables supplied to feature.")
+                          msg = paste0(crayon_body("Please provide to "),
+                                       crayon_key("feature"),
+                                       crayon_body(" a "),
+                                       crayon_key(" metadta categorical "),
+                                       crayon_body(" variable.")))
 
   if (is.null(colors.use)){
     colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})

@@ -133,7 +133,13 @@
 #' @param org.db \strong{\code{OrgDB}} | Database object to use for the query.
 #' @param disable_white_in_viridis \strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.
 #' @param number.breaks \strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.
-#'
+#' @param border.density \strong{\code{\link[base]{numeric}}} | Controls the number of cells used when \strong{\code{plot_cell_borders = TRUE}}. Value between 0 and 1. It computes a 2D kernel density and based on this cells that have a density below the specified quantile will be used to generate the cluster contour. The lower this number, the less cells will be selected, thus reducing the overall size of the plot but also potentially preventing all the contours to be properly drawn.
+#' @param strip.spacing \strong{\code{\link[base]{numeric}}} | Controls the size between the different facets.
+#' @param strip.text.color \strong{\code{\link[base]{character}}} | Color of the strip text.
+#' @param rotate_strip_labels \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
+#' @param diverging.palette \strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
+#' @param sequential.palette \strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
+#' @param sequential_direction \strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -236,7 +242,11 @@ doc_function <- function(sample,
                          genes,
                          org.db,
                          disable_white_in_viridis,
-                         number.breaks){}
+                         number.breaks,
+                         strip.spacing,
+                         strip.text.color,
+                         rotate_strip_labels,
+                         diverging.palette){}
 
 #' Named vector.
 #'
@@ -270,6 +280,15 @@ named_list <- function(){}
 `%!in%` <- function(x, y) {return(!(x %in% y))}
 
 
+crayon_body <- function(text){
+  return(crayon::bold(text))
+}
+
+crayon_key <- function(text){
+  return(crayon::bold(crayon::cyan(text)))
+}
+
+
 #' Checks for Suggests.
 #'
 #' @noRd
@@ -295,7 +314,9 @@ check_suggests <- function(function_name, passive = FALSE){
                               "forcats",
                               "scales",
                               "grid",
-                              "assertthat"),
+                              "assertthat",
+                              "RColorBrewer",
+                              "labeling"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
@@ -305,24 +326,25 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_ChordDiagramPlot" = c("circlize"),
                    "do_ColorPalette" = c(),
                    "do_CopyNumberVariantPlot" = c("ggdist"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "ComplexHeatmap", "circlize"),
+                   "do_CorrelationPlot" = c(),
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
                    "do_DotPlot" = c(),
-                   "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
-                   "do_ExpressionHeatmap" = c("ComplexHeatmap", "circlize"),
-                   "do_FeaturePlot" = c("scattermore"),
+                   "do_EnrichmentHeatmap" = c(),
+                   "do_ExpressionHeatmap" = c(),
+                   "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
                    "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_NebulosaPlot" = c("Nebulosa"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap"),
+                   "do_PathwayActivityPlot" = c(),
                    "do_PseudotimePlot" = c("monocle3", "ggdist"),
                    "do_RidgePlot" = c("ggridges"),
                    "do_SankeyPlot" = c("ggsankey"),
+                   "do_SCHeatmap" = c("ggh4x"),
                    "do_TermEnrichmentPlot" = c(),
-                   "do_TFActivityPlot" = c("ComplexHeatmap"),
+                   "do_TFActivityPlot" = c(),
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
                    "save_Plot" = c("ComplexHeatmap", "svglite"),
@@ -388,7 +410,9 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                               "forcats",
                               "scales",
                               "grid",
-                              "assertthat"),
+                              "assertthat",
+                              "RColorBrewer",
+                              "labeling"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
@@ -398,24 +422,25 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_ChordDiagramPlot" = c("circlize"),
                    "do_ColorPalette" = c(),
                    "do_CopyNumberVariantPlot" = c("ggdist"),
-                   "do_CorrelationPlot" = c("ComplexHeatmap", "ComplexHeatmap", "circlize"),
+                   "do_CorrelationPlot" = c(),
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
                    "do_DotPlot" = c(),
-                   "do_EnrichmentHeatmap" = c("ComplexHeatmap", "circlize"),
-                   "do_ExpressionHeatmap" = c("ComplexHeatmap", "circlize"),
-                   "do_FeaturePlot" = c("scattermore"),
+                   "do_EnrichmentHeatmap" = c(),
+                   "do_ExpressionHeatmap" = c(),
+                   "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
                    "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_NebulosaPlot" = c("Nebulosa"),
-                   "do_PathwayActivityPlot" = c("ComplexHeatmap"),
+                   "do_PathwayActivityPlot" = c(),
                    "do_PseudotimePlot" = c("monocle3", "ggdist"),
                    "do_RidgePlot" = c("ggridges"),
                    "do_SankeyPlot" = c("ggsankey"),
+                   "do_SCHeatmap" = c("ggh4x"),
                    "do_TermEnrichmentPlot" = c(),
-                   "do_TFActivityPlot" = c("ComplexHeatmap"),
+                   "do_TFActivityPlot" = c(),
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
                    "save_Plot" = c("ComplexHeatmap", "svglite"))
@@ -442,10 +467,13 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                      "ggridges",
                      "ggsignif",
                      "graphics",
+                     "labeling",
                      "magrittr",
+                     "MASS",
                      "patchwork",
                      "pheatmap",
                      "plyr",
+                     "RColorBrewer",
                      "rlang",
                      "scales",
                      "scattermore",
@@ -519,7 +547,11 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 #' }
 check_Seurat <- function(sample){
   assertthat::assert_that("Seurat" %in% class(sample),
-                          msg = "Object provided is not a Seurat object.")
+                          msg = paste0(crayon_body("The provided "),
+                                       crayon_key("object"),
+                                       crayon_body(" is not a "),
+                                       crayon_key("Seurat"),
+                                       crayon_body(" object.")))
 }
 
 #' Internal check for colors.
@@ -541,7 +573,13 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   assertthat::assert_that(sum(check) == length(colors),
-                          msg = paste0("The value/s for ", parameter_name, " is/are not a valid color representation. Please check whether it is an accepted R name or a HEX code."))
+                          msg = paste0(crayon_body("The colors provided to "),
+                                       crayon_key(parameter_name),
+                                       crayon_body(" are not valid color representations.\nCheck whether they are accepted "),
+                                       crayon_key("R nammes"),
+                                       crayon_body(" or "),
+                                       crayon_key("HEX codes"),
+                                       crayon_body(".")))
 }
 
 #' Internal check for named colors and unique values of the grouping variable.
@@ -570,10 +608,26 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   }
 
   assertthat::assert_that(length(colors) == length(check_values),
-                          msg = "The number of provided colors is lower than the unique values in the selected grouping variable (levels(object), group.by or split.by).")
+                          msg = paste0(crayon_body("The "),
+                                       crayon_key("number"),
+                                       crayon_body(" of the provided "),
+                                       crayon_key("colors"),
+                                       crayon_body(" is lower than the "),
+                                       crayon_key("number of unique values"),
+                                       crayon_body(" in "),
+                                       crayon_key("group.by"),
+                                       crayon_body(".")))
 
   assertthat::assert_that(sum(names(colors) %in% check_values) == length(check_values),
-                          msg = "The names of provided colors does not match the number of unique values in the selected grouping variable (levels(object), group.by or split.by).")
+                          msg = paste0(crayon_body("The "),
+                                       crayon_key("names"),
+                                       crayon_body(" of the provided "),
+                                       crayon_key("colors"),
+                                       crayon_body(" do not match the "),
+                                       crayon_key("number of unique values"),
+                                       crayon_body(" in "),
+                                       crayon_key("group.by"),
+                                       crayon_body(".")))
 
   return(colors)
 }
@@ -671,25 +725,67 @@ check_cutoffs <- function(min.cutoff,
   outlier.data <- FALSE
   if (!is.na(min.cutoff) & !is.na(max.cutoff)){
     assertthat::assert_that(min.cutoff < max.cutoff,
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") for the feature (", feature, ") has to be lower than the value provided to max.cutoff (", max.cutoff, "). Please select another value."))
+                            msg = paste0(crayon_body("The value provided to "),
+                                         crayon_key("min.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(min.cutoff),
+                                         crayon_body(") for the feature ("),
+                                         crayon_key(feature),
+                                         crayon_body(") has to be lower than the value provided to "),
+                                         crayon_key("max.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(max.cutoff),
+                                         crayon_body(").")))
   }
 
   if (!is.na(min.cutoff)){
     assertthat::assert_that(min.cutoff >= limits[1],
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is lower than the minimum value (", limits[1], ") for the feature (", feature, "). Please select another value."))
+                            msg = paste0(crayon_body("The value provided to "),
+                                         crayon_key("min.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(min.cutoff),
+                                         crayon_body(") is lower than the minimum value ("),
+                                         crayon_key(limits[2]),
+                                         crayon_body(") for the feature ("),
+                                         crayon_key(feature),
+                                         crayon_body(").")))
 
     assertthat::assert_that(min.cutoff <= limits[2],
-                            msg = paste0("The value provided for min.cutoff (", min.cutoff, ") is higher than the maximum value (", limits[2], ") for the feature (", feature, "). Please select another value."))
+                            msg = paste0(crayon_body("The value provided to "),
+                                         crayon_key("min.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(min.cutoff),
+                                         crayon_body(") is higher than the maximum value ("),
+                                         crayon_key(limits[2]),
+                                         crayon_body(") for the feature ("),
+                                         crayon_key(feature),
+                                         crayon_body(").")))
     limits <- c(min.cutoff, limits[2])
     outlier.data <- TRUE
   }
 
   if (!is.na(max.cutoff)){
     assertthat::assert_that(max.cutoff <= limits[2],
-                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is higher than the maximum value (", limits[2], ") for the feature (", feature, "). Please select another value."))
+                            msg = paste0(crayon_body("The value provided to "),
+                                         crayon_key("max.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(max.cutoff),
+                                         crayon_body(") is higher than the maximum value ("),
+                                         crayon_key(limits[2]),
+                                         crayon_body(") for the feature ("),
+                                         crayon_key(feature),
+                                         crayon_body(").")))
 
     assertthat::assert_that(max.cutoff >= limits[1],
-                            msg = paste0("The value provided for max.cutoff (", max.cutoff, ") is lower than the minimum value (", limits[1], ") for the feature (", feature, "). Please select another value."))
+                            msg = paste0(crayon_body("The value provided to "),
+                                         crayon_key("max.cutoff"),
+                                         crayon_body(" ("),
+                                         crayon_key(max.cutoff),
+                                         crayon_body(") is lower than the minimum value ("),
+                                         crayon_key(limits[1]),
+                                         crayon_body(") for the feature ("),
+                                         crayon_key(feature),
+                                         crayon_body(").")))
 
     limits <- c(limits[1], max.cutoff)
     outlier.data <- TRUE
@@ -800,7 +896,17 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 
 
   assertthat::assert_that(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value,
-                          msg = paste0("The value provided for ", value_name, " (", value, ") is not in the range of the feature (", feature, "), which is: Min: ", limits[["scale.begin"]], ", Max: ", limits[["scale.end"]], "."))
+                          msg = paste0(crayon_body("The value provided to "),
+                                       crayon_key(value_name),
+                                       crayon_body(" ("),
+                                       crayon_key(value),
+                                       crayon_body(") is not in the range of values of "),
+                                       crayon_key(feature),
+                                       crayon_body(", whis is:\nMin: "),
+                                       crayon_key(limits[["scale.begin"]]),
+                                       crayon_body(".\nMax:"),
+                                       crayon_key(limits[["scale.end"]]),
+                                       crayon_body(".")))
 
 }
 
@@ -863,26 +969,20 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       # Stop if neither of the features are found.
       assertthat::assert_that(length(unlist(not_found_features)) != length(unlist(features)),
                               msg = "Neither of the provided features are found.")
-      warning("The requested features (",
-              not_found_features,
-              ") could not be found:\n",
-              "    - Not matching any gene name (rownames of the provided object).\n",
-              "    - Not matching any metadata column (in sample@meta.data).\n",
-              "    - Not part of the dimension names in any of the following reductions: ",
-              paste(Seurat::Reductions(object = sample), collapse = ", "),
-              ".\n\n", call. = FALSE)
+      warning(paste0(crayon_body("The following "),
+                     crayon_key("features"),
+                     crayon_body(" were not be found:"),
+                     paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
+                     crayon_body(".")), call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
     } else if (isFALSE(permissive)){
       assertthat::assert_that(length(not_found_features) == 0,
-                              msg = paste0("The requested features (",
-                                           not_found_features,
-                                           ") could not be found:\n",
-                                           "    - Not matching any gene name (rownames of the provided object).\n",
-                                           "    - Not matching any metadata column (in sample@meta.data).\n",
-                                           "    - Not part of the dimension names in any of the following reductions: ",
-                                           paste(Seurat::Reductions(object = sample), collapse = ", "),
-                                           ".\n\n"))
+                              msg = paste0(crayon_body("The following "),
+                                           crayon_key("features"),
+                                           crayon_body(" were not be found:"),
+                                           paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
+                                           crayon_body(".")))
     }
   } else {
     features_out <- features
@@ -893,7 +993,13 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                             msg = "The variable enforcer is not in the current list of checked variable types.")
 
     assertthat::assert_that(isTRUE(check_enforcers[[enforce_check]]),
-                            msg = paste0("The provided feature (", enforce_parameter, " = ", feature, ") not found in ", enforce_check, "."))
+                            msg = paste0(crayon_body("Feature "),
+                                         crayon_key(enforce_parameter),
+                                         crayon_key(" = "),
+                                         crayon_key(feature),
+                                         crayon_body(" not found in "),
+                                         crayon_key(enforce_check),
+                                         crayon_body(".")))
   }
 
   # Return options.
@@ -941,7 +1047,9 @@ remove_duplicated_features <- function(features){
   if (is.character(features)){
     check <- sum(duplicated(features))
     if (check > 0){
-      warning("Found duplicated features (", paste(features[duplicated(features)], collapse = ", "), "). Excluding them from the analysis.", call. = FALSE)
+      warning(paste0(crayon_body("Found duplicated features:\n"),
+                       crayon_key(paste(features[duplicated(features)])),
+                       crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
       features <- features[!(duplicated(features))]
     }
   } else if (is.list(features)){
@@ -951,7 +1059,11 @@ remove_duplicated_features <- function(features){
       genes <- features[[list_name]]
       # Remove genes duplicated within the list.
       if (sum(duplicated(genes)) > 0){
-        warning("Found duplicated features (", paste(genes[duplicated(genes)], collapse = ", "), ") in the list '", list_name, "'. Excluding them from the analysis.", call. = FALSE)
+        warning(paste0(crayon_body("Found duplicated features:\n"),
+                       crayon_key( paste(genes[duplicated(genes)], collapse = ", ")),
+                       crayon_body("\nIn the list named: "),
+                       crayon_key(list_name),
+                       crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
       }
       genes <- genes[!(duplicated(genes))]
       # Remove genes duplicated in the vector of all genes.
@@ -959,7 +1071,11 @@ remove_duplicated_features <- function(features){
       all_genes <- c(all_genes, genes[!(genes %in% all_genes)])
       genes <- genes[!(genes %in% duplicated_features)]
       if (length(duplicated_features) > 0){
-        warning("Found duplicated features (", paste(duplicated_features, collapse = ", "), ") in list '", list_name, "' with regard to lists. Excluding them from the analysis.", call. = FALSE)
+        warning(paste0(crayon_body("Found duplicated features:\n"),
+                       crayon_key(paste(duplicated_features, collapse = ", ")),
+                       crayon_body("\nIn the list named: "),
+                       crayon_key(list_name),
+                       crayon_body(" with regards to the other lists. \nExcluding them from the analysis.")), call. = FALSE)
       }
       features_out[[list_name]] <- genes
     }
@@ -982,7 +1098,9 @@ remove_duplicated_features <- function(features){
 check_identity <- function(sample, identities){
   for (identity in identities){
     assertthat::assert_that(identity %in% levels(sample),
-                            msg = paste0("Could not find provided identity (", identity, ") in the current active identities of the object.\n Try running 'levels(your_seurat_object)' and see whether any typos were introduced."))
+                            msg = paste0(crayon_body("Could not find identity "),
+                                         crayon_key(identity),
+                                         crayon_body(" in the current active identities of the object.")))
   }
 }
 
@@ -1000,7 +1118,9 @@ check_identity <- function(sample, identities){
 check_and_set_reduction <- function(sample, reduction = NULL){
   # Check if the object has a reduction computed.
   assertthat::assert_that(length(Seurat::Reductions(sample)) != 0,
-                          msg = "This object has no reductions computed!")
+                          msg = paste0(crayon_body("The Seurat object has no "),
+                                       crayon_key("reductions"),
+                                       crayon_body(" computed.")))
   # If no reduction was provided by the user.
   if (is.null(reduction)){
     # Select umap if computed.
@@ -1014,7 +1134,11 @@ check_and_set_reduction <- function(sample, reduction = NULL){
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
     assertthat::assert_that(reduction %in% Seurat::Reductions(sample),
-                            msg = paste0("The provided reduction could not be found in the object: ", reduction))
+                            msg = paste0(crayon_body("The provided "),
+                                         crayon_key("reduction"),
+                                         crayon_body(" could not be found in the object: "),
+                                         crayon_key(reduction),
+                                         crayon_body(".")))
   }
   return(reduction)
 }
@@ -1040,24 +1164,38 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   # Check that the dimensions is a 2 item vector.
   if (!is.null(dims)){
     assertthat::assert_that(length(dims) == 2,
-                            msg = "Provided dimensions need to be a 2-item vector.")
+                            msg = paste0(crayon_body("You need to provide a vector of "),
+                                         crayon_key("two values"),
+                                         crayon_body(" to "),
+                                         crayon_key("dims"),
+                                         crayon_body(".")))
 
     # Check that at least 2 dimensions are present.
     aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
 
     assertthat::assert_that(aval_dims >= 2,
-                            msg = "Available dimensions need to be at least a 2-item vector.")
+                            msg = paste0(crayon_body("There need to be at least "),
+                                         crayon_key("two available dimensions"),
+                                         crayon_body(" computed.")))
 
     # Check that the dimensions are integers.
     null_check <- is.null(dims[1]) & is.null(dims[2])
     integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
 
     assertthat::assert_that(isFALSE(null_check) &  isTRUE(integer_check),
-                            msg = "Provided dimensions need to be numerics.")
+                            msg = paste0(crayon_body("The dimensions provided to "),
+                                         crayon_key("dims"),
+                                         crayon_body(" need to be of class "),
+                                         crayon_key("numeric"),
+                                         crayon_body(".")))
 
     # Check that the dimensions are in the requested embedding.
     assertthat::assert_that(dims[1] %in% seq_len(aval_dims) & dims[2] %in% seq_len(aval_dims),
-                            msg = paste0("Dimension could not be found in the following reduction: ", reduction))
+                            msg = paste0(crayon_body("The dimensions provided to "),
+                                         crayon_key("dims"),
+                                         crayon_body(" could not be found in the following reduction: "),
+                                         crayon_key(reduction),
+                                         crayon_body(".")))
   } else {
     # If no dimensions were provided, fall back to first and second.
     dims <- c(1, 2)
@@ -1079,18 +1217,28 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 check_and_set_assay <- function(sample, assay = NULL){
   # Check that at least one assay is computed.
   assertthat::assert_that(length(Seurat::Assays(sample)) != 0,
-                          msg = "There must be at least one computed assay in the object.")
+                          msg = paste0(crayon_body("There must be at least "),
+                                       crayon_key("one computed assay"),
+                                       crayon_body(" in the Seurat object.")))
   # If assay is null, set it to the active one.
   if (is.null(assay)){
     assay <- Seurat::DefaultAssay(sample)
   } else {
     # Check if the assay is a character.
     assertthat::assert_that(is.character(assay),
-                            msg = "The value for assay has to be a character.")
+                            msg = paste0(crayon_body("Parameter "),
+                                         crayon_key("assay"),
+                                         crayon_body(" needs to of class "),
+                                         crayon_key("character"),
+                                         crayon_body(".")))
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
     assertthat::assert_that(assay %in% aval_assays,
-                            msg = paste0("The following assay could not be found: ", assay))
+                            msg = paste0(crayon_body("The following "),
+                                         crayon_key("assay"),
+                                         crayon_body(" was not found: "),
+                                         crayon_key(assay),
+                                         crayon_body(".")))
   }
   # Set up the assay the user has defined.
   if (assay != Seurat::DefaultAssay(sample)){
@@ -1127,7 +1275,11 @@ check_type <- function(parameters, required_type, test_function){
           # If not NA, if the testing function fails, report it.
           if (sum(!(is.na(item))) > 0){
             assertthat::assert_that(sum(test_function(item)) > 0,
-                                    msg = paste0("Parameter ", parameter_name, " needs to be a ", required_type, "."))
+                                    msg = paste0(crayon_body("Parameter "),
+                                                 crayon_key(parameter_name),
+                                                 crayon_body(" needs to be of class "),
+                                                 crayon_key(required_type),
+                                                 crayon_body(".")))
           }
         }
       }
@@ -1150,7 +1302,15 @@ check_and_set_slot <- function(slot){
     slot <- "data"
   } else {
     assertthat::assert_that(slot %in% c("counts", "data", "scale.data"),
-                            msg = "Only one of these 3 options can be passed to slot parameter: counts, data, scale.data.")
+                            msg =  paste0(crayon_body("Parameter "),
+                                          crayon_key("slots"),
+                                          crayon_body(" needs to be either "),
+                                          crayon_key("counts"),
+                                          crayon_body(", "),
+                                          crayon_key("data"),
+                                          crayon_body(", or "),
+                                          crayon_key("scale.data"),
+                                          crayon_body(".")))
   }
 
   return(slot)
@@ -1175,7 +1335,13 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   `%>%` <- magrittr::`%>%`
 
   assertthat::assert_that(position %in% c("stack", "fill"),
-                          msg = "Position needs to be either stack or fill.")
+                          msg = paste0(crayon_body("Parameter "),
+                                       crayon_key("position"),
+                                       crayon_body(" needs to be either "),
+                                       crayon_key("stack"),
+                                       crayon_body(" or "),
+                                       crayon_key("fill"),
+                                       crayon_body(".")))
 
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident
@@ -1241,7 +1407,11 @@ check_length <- function(vector_of_parameters,
                          parameters_name,
                          features_name){
   assertthat::assert_that(length(vector_of_parameters) == length(vector_of_features),
-                          msg = paste0("Length of ", parameters_name, " not equal to ", features_name, "."))
+                          msg = paste0(crayon_body("The length of "),
+                                       crayon_key(parameters_name),
+                                       crayon_body(" is not equal to the length of "),
+                                       crayon_key(features_name),
+                                       crayon_body(".")))
 }
 
 
@@ -1458,15 +1628,37 @@ heatmap_inner <- function(data,
   `%>%`<- magrittr::`%>%`
 
   assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
-                          msg = "Please provide a matrix that is not 1x1. This might be caused by a categorical variable with only 1 unique value and only 1 value to plot for it. Consider increasing the number of rows or columns. In other words, either include a categorical variable with more than 1 value or more than 1 list of genes to plot in the heatmap. This should be an edge case for this specific function. If you are seeing this error way too often, please consider taking the time to open an Issue in SCpubr GitHub with as many details as you can. Thanks!")
+                          msg = paste0(crayon_body("The resulting input produced a matrix with "),
+                                       crayon_key("a single row and column"),
+                                       crayon_body(". Please consider increasing the "),
+                                       crayon_key("features"),
+                                       crayon_body(" or "),
+                                       crayon_key("groups"),
+                                       crayon_body(" to plot.")))
 
   if (!(is.null(range.data)) & data_range == "both"){
     assertthat::assert_that(length(range.data) == 2,
-                            msg = "When providing data_range = both and range data, you need to specify the two ends of the scale in range.data. Please provide two numbers to range.data.")
+                            msg = paste0(crayon_body("When providing "),
+                                         crayon_key("data_range = 'both"),
+                                         crayon_body(" and "),
+                                         crayon_key("range.data"),
+                                         crayon_body(", you need to specify "),
+                                         crayon_key("the two ends"),
+                                         crayon_body(" of the scale in "),
+                                         crayon_key("range.data"),
+                                         crayon_body(". Please provide "),
+                                         crayon_key("two numbers"),
+                                         crayon_body(" to "),
+                                         crayon_key("range.data"),
+                                         crayon_body(".")))
   }
 
   assertthat::assert_that(sum(dim(unique(data))) > 2,
-                          msg = "Please provide a matrix with at least 2 different values.")
+                          msg = paste0(crayon_body("The computed matrix has only "),
+                                       crayon_key("one unique value"),
+                                       crayon_body(". Please consider another setting in which at least "),
+                                       crayon_key("two different values"),
+                                       crayon_body(" are present in the plotting matrix.")))
 
   if (legend.position %in% c("top", "bottom")){
     legend_width <- grid::unit(legend.length, "mm")
@@ -1518,10 +1710,14 @@ heatmap_inner <- function(data,
   # Checks.
   if (data_range == "only_neg"){
     assertthat::assert_that(q0 < 0,
-                            msg = "There are no negative values in the matrix.")
+                            msg = paste0(crayon_body("There are no "),
+                                         crayon_key("negative values"),
+                                         crayon_body(" in the matrix.")))
   } else if (data_range == "only_pos"){
     assertthat::assert_that(q100 > 0,
-                            msg = "There are no positive values in the matrix.")
+                            msg = paste0(crayon_body("There are no  "),
+                                         crayon_key("positive values"),
+                                         crayon_body(" in the matrix.")))
   }
 
   if (is.null(colors.use)){
@@ -1790,7 +1986,13 @@ compute_enrichment_scores <- function(sample,
   if (flavor == "UCell"){
     R_version <- paste0(R.version$major, ".", R.version$minor)
     assertthat::assert_that(R_version >= "4.2.0",
-                            msg = "To run UCell scoring, R version 4.2.0 is required. Please select flavor = 'Seurat' if you are running a version inferior to this.")
+                            msg =  paste0(crayon_body("To run "),
+                                          crayon_key("UCell scoring"),
+                                          crayon_body(", R version "),
+                                          crayon_key("4.2.0"),
+                                          crayon_body(" is required. Please select "),
+                                          crayon_key("flavor = 'Seurat'"),
+                                          crayon_body(" if you are running a lower version.")))
     if (!requireNamespace("UCell", quietly = TRUE)) {
       # nocov start
       stop(paste0("Package UCell must be installed to run UCell scoring."), call. = FALSE)
@@ -2121,82 +2323,340 @@ check_parameters <- function(parameter,
   if (parameter_name == "font.type"){
     # Check font.type.
     assertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
-                           msg = "Please select one of the following for font.type: sans, serif, mono.")
+                           msg = paste0(crayon_body("Please provide one of the following to "),
+                                        crayon_key(parameter_name),
+                                        crayon_body(": "),
+                                        crayon_key("sans"),
+                                        crayon_body(", "),
+                                        crayon_key("serif"),
+                                        crayon_body(", "),
+                                        crayon_key("mono"),
+                                        crayon_body(".")))
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
     assertthat::assert_that(parameter %in% c("normal", "colorbar"),
-                            msg = "Please select one of the following for legend.type: normal, colorbar")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("normal"),
+                                         crayon_body(", "),
+                                         crayon_key("colorbar"),
+                                         crayon_body(".")))
   } else if (parameter_name == "legend.position"){
     # Check the legend.position.
     assertthat::assert_that(parameter %in% c("top", "bottom", "left", "right", "none"),
-                            msg = "Please select one of the following for legend.position: top, bottom, left, right, none.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("top"),
+                                         crayon_body(", "),
+                                         crayon_key("bottom"),
+                                         crayon_body(", "),
+                                         crayon_key("left"),
+                                         crayon_body(", "),
+                                         crayon_key("right"),
+                                         crayon_body(", "),
+                                         crayon_key("none"),
+                                         crayon_body(".")))
   } else if (parameter_name == "marginal.type"){
     # Check marginal.type.
     assertthat::assert_that(parameter %in% c("density", "histogram", "boxplot", "violin", "densigram"),
-                            msg = "Please select one of the following for marginal.type: density, histogram, boxplot, violin, densigram.")
+                            msg =  paste0(crayon_body("Please provide one of the following to "),
+                                          crayon_key(parameter_name),
+                                          crayon_body(": "),
+                                          crayon_key("density"),
+                                          crayon_body(", "),
+                                          crayon_key("histogram"),
+                                          crayon_body(", "),
+                                          crayon_key("boxplot"),
+                                          crayon_body(", "),
+                                          crayon_key("violin"),
+                                          crayon_body(", "),
+                                          crayon_key("densigram"),
+                                          crayon_body(".")))
   } else if (parameter_name == "viridis_direction"){
     assertthat::assert_that(parameter %in% c(1, -1),
-                            msg = "Please provide a value for viridis_direction of -1 or 1.")
+                            msg =  paste0(crayon_body("Please provide one of the following to "),
+                                          crayon_key(parameter_name),
+                                          crayon_body(": "),
+                                          crayon_key("1"),
+                                          crayon_body(", "),
+                                          crayon_key("-1"),
+                                          crayon_body(".")))
+  } else if (parameter_name == "sequential_direction"){
+    assertthat::assert_that(parameter %in% c(1, -1),
+                            msg =  paste0(crayon_body("Please provide one of the following to "),
+                                          crayon_key(parameter_name),
+                                          crayon_body(": "),
+                                          crayon_key("1"),
+                                          crayon_body(", "),
+                                          crayon_key("-1"),
+                                          crayon_body(".")))
   } else if (parameter_name == "viridis_color_map"){
     viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
     assertthat::assert_that(parameter %in% viridis_options,
-                            msg = "The option provided to viridis_color_map is not an accepted option.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("A"),
+                                         crayon_body(", "),
+                                         crayon_key("B"),
+                                         crayon_body(", "),
+                                         crayon_key("C"),
+                                         crayon_body(", "),
+                                         crayon_key("D"),
+                                         crayon_body(", "),
+                                         crayon_key("E"),
+                                         crayon_body(", "),
+                                         crayon_key("F"),
+                                         crayon_body(", "),
+                                         crayon_key("G"),
+                                         crayon_body(", "),
+                                         crayon_key("H"),
+                                         crayon_body(", "),
+                                         crayon_key("magma"),
+                                         crayon_body(", "),
+                                         crayon_key("inferno"),
+                                         crayon_body(", "),
+                                         crayon_key("plasma"),
+                                         crayon_body(", "),
+                                         crayon_key("viridis"),
+                                         crayon_body(", "),
+                                         crayon_key("cividis"),
+                                         crayon_body(", "),
+                                         crayon_key("rocket"),
+                                         crayon_body(", "),
+                                         crayon_key("mako"),
+                                         crayon_body(", "),
+                                         crayon_key("turbo"),
+                                         crayon_body(".")))
   } else if (parameter_name == "grid.type"){
     assertthat::assert_that(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-                            msg = "Please select one of the following for grid.type: blank, solid, dashed, dotted, dotdash, longdash, twodash.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("blank"),
+                                         crayon_body(", "),
+                                         crayon_key("solid"),
+                                         crayon_body(", "),
+                                         crayon_key("dashed"),
+                                         crayon_body(", "),
+                                         crayon_key("dotted"),
+                                         crayon_body(", "),
+                                         crayon_key("dotdash"),
+                                         crayon_body(", "),
+                                         crayon_key("longdash"),
+                                         crayon_body(", "),
+                                         crayon_key("twodash"),
+                                         crayon_body(".")))
   } else if (parameter_name == "direction.type"){
     for (item in parameter){
       assertthat::assert_that(item %in% c("diffHeight", "arrows"),
-                              msg = "Please set direction.type as either diffHeight, arrows or both.")
+                              msg = paste0(crayon_body("Please provide one of the following to "),
+                                           crayon_key(parameter_name),
+                                           crayon_body(": "),
+                                           crayon_key("diffHeight"),
+                                           crayon_body(", "),
+                                           crayon_key("arrows"),
+                                           crayon_body(", "),
+                                           crayon_key("both"),
+                                           crayon_body(".")))
     }
   } else if (parameter_name == "self.link"){
     assertthat::assert_that(parameter %in% c(1, 2),
-                            msg = "Please set self.link as either 1 or 2.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("1"),
+                                         crayon_body(", "),
+                                         crayon_key("2"),
+                                         crayon_body(".")))
   } else if (parameter_name == "directional"){
     assertthat::assert_that(parameter %in% c(0, 1, 2, -1),
-                            msg = "Please set directional as either 0, 1, 2 or -1.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("0"),
+                                         crayon_body(", "),
+                                         crayon_key("1"),
+                                         crayon_body(", "),
+                                         crayon_key("2"),
+                                         crayon_body(", "),
+                                         crayon_key("-1"),
+                                         crayon_body(".")))
   } else if (parameter_name == "link.arr.type"){
     assertthat::assert_that(parameter %in% c("big.arrow", "triangle"),
-                            msg = "Please set link.arr.type as either big.arrow or triangle.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("big.arrow"),
+                                         crayon_body(", "),
+                                         crayon_key("triangle"),
+                                         crayon_body(".")))
   } else if (parameter_name == "alignment"){
     assertthat::assert_that(parameter %in% c("default", "vertical", "horizontal"),
-                            msg = "Please set alignment as either default or vertical or horizontal.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("vertical"),
+                                         crayon_body(", "),
+                                         crayon_key("horizontal"),
+                                         crayon_body(".")))
   } else if (parameter_name == "alpha.highlight"){
     assertthat::assert_that(parameter %in% c(seq(1, 99), "FF"),
-                            msg = "Please provide either FF or a number between 1 and 99 to alpha.highlight.")
+                            msg = paste0(crayon_body("Please provide either "),
+                                         crayon_key("FF"),
+                                         crayon_body(" or a number between "),
+                                         crayon_key("1"),
+                                         crayon_body(" and "),
+                                         crayon_key("99"),
+                                         crayon_body(" to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(".")))
   } else if (parameter_name == "scale_type"){
     assertthat::assert_that(parameter %in% c("categorical", "continuous"),
-                            msg = "Please provide one of the following to scale_type: continuous, categorical.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("categorical"),
+                                         crayon_body(", "),
+                                         crayon_key("continuous"),
+                                         crayon_body(".")))
   } else if (parameter_name == "rotate_x_axis_labels"){
     assertthat::assert_that(parameter %in% c(0, 45, 90),
-                            msg = "Please provide one of the following to rotate_x_axis_labels: 0, 45, 90.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("0"),
+                                         crayon_body(", "),
+                                         crayon_key("45"),
+                                         crayon_body(", "),
+                                         crayon_key("90"),
+                                         crayon_body(".")))
   } else if (parameter_name == "contour.lineend"){
     assertthat::assert_that(parameter %in% c("round", "butt", "square"),
-                            msg = "Please provide one of the following to contour.lineend: round, butt, square.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("round"),
+                                         crayon_body(", "),
+                                         crayon_key("butt"),
+                                         crayon_body(", "),
+                                         crayon_key("square"),
+                                         crayon_body(".")))
   } else if (parameter_name == "contour.linejoin"){
     assertthat::assert_that(parameter %in% c("round", "mitre", "bevel"),
-                            msg = "Please provide one of the following to contour.linejoin: round, mitre, bevel.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("round"),
+                                         crayon_body(", "),
+                                         crayon_key("mitre"),
+                                         crayon_body(", "),
+                                         crayon_key("bevel"),
+                                         crayon_body(".")))
   } else if (parameter_name == "contour.position"){
     assertthat::assert_that(parameter %in% c("bottom", "top"),
-                            msg = "Please provide one of the following to contour.position: top, bottom.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("top"),
+                                         crayon_body(", "),
+                                         crayon_key("bottom"),
+                                         crayon_body(".")))
   } else if (parameter_name == "flavor"){
     assertthat::assert_that(parameter %in% c("Seurat", "UCell", "AUCell"),
-                            msg = "Please provide one of the following to flavor: Seurat, UCell, AUCell.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("Seurat"),
+                                         crayon_body(", "),
+                                         crayon_key("UCell"),
+                                         crayon_body(", "),
+                                         crayon_key("AUCell"),
+                                         crayon_body(".")))
   } else if (parameter_name == "arrange_interactions_by"){
     assertthat::assert_that(parameter %in% c("specificity", "magnitude", "both", "aggregate_rank"),
-                            msg = "Please provide one of the following to arrange_interactions_by: aggregate_rank, specificity, magnitude, both.")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("aggregate_rank"),
+                                         crayon_body(", "),
+                                         crayon_key("specificity"),
+                                         crayon_body(", "),
+                                         crayon_key("magnitude"),
+                                         crayon_body(", "),
+                                         crayon_key("both"),
+                                         crayon_body(".")))
   } else if (parameter_name == "database"){
     assertthat::assert_that(parameter %in% c("GO", "KEGG"),
-                            msg = "Please provide one of the following to database: GO, KEGG")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("GO"),
+                                         crayon_body(", "),
+                                         crayon_key("KEGG"),
+                                         crayon_body(".")))
   } else if (parameter_name == "GO_ontology"){
     assertthat::assert_that(parameter %in% c("BP", "MF", "CC"),
-                            msg = "Please provide one of the following to GO_ontology: BP, MF, CC")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("BP"),
+                                         crayon_body(", "),
+                                         crayon_key("MF"),
+                                         crayon_body(", "),
+                                         crayon_key("CC"),
+                                         crayon_body(".")))
   } else if (parameter_name == "pAdjustMethod"){
     assertthat::assert_that(parameter %in% c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"),
-                            msg = "Please provide one of the following to pAdjustMethod: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none")
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("holm"),
+                                         crayon_body(", "),
+                                         crayon_key("hochberg"),
+                                         crayon_body(", "),
+                                         crayon_key("bonferroni"),
+                                         crayon_body(", "),
+                                         crayon_key("BH"),
+                                         crayon_body(", "),
+                                         crayon_key("BY"),
+                                         crayon_body(", "),
+                                         crayon_key("fdr"),
+                                         crayon_body(", "),
+                                         crayon_key("none"),
+                                         crayon_body(".")))
   } else if (parameter_name == "number.breaks"){
     assertthat::assert_that(parameter >= 2,
-                            msg = "Please provide a value higher or equal to 2 to number.breaks.")
+                            msg = paste0(crayon_body("Please provide a value higher or equal to "),
+                                         crayon_key("2"),
+                                         crayon_body(" to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(".")))
+  } else if (parameter_name == "border.density"){
+    assertthat::assert_that(parameter >= 0 & parameter <= 1,
+                            msg = paste0(crayon_body("Please provide a value between "),
+                                         crayon_key("0"),
+                                         crayon_body(" and "),
+                                         crayon_key("1"),
+                                         crayon_body(" to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(".")))
+  } else if (parameter_name == "diverging.palette"){
+    assertthat::assert_that(parameter %in% c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"),
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         paste(sapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key), collapse = crayon_body(", ")),
+                                         crayon_body(".")))
+  } else if (parameter_name == "sequential.palette"){
+    assertthat::assert_that(parameter %in% c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
+                            msg = paste0(crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         paste(sapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key), collapse = crayon_body(", ")),
+                                         crayon_body(".")))
   }
 }
 
@@ -2215,7 +2675,15 @@ prepare_ggplot_alluvial_plot <- function(data,
   items <- length(vars.use)
   `%>%` <- magrittr::`%>%`
   assertthat::assert_that(items <= 10,
-                          msg = "Please provide between first_group, middle_groups, and last_group only up to 10 different elements.")
+                          msg = paste0(crayon_body("Please provide, in between "),
+                                       crayon_key("first_group"),
+                                       crayon_body(", "),
+                                       crayon_key("middle_groups"),
+                                       crayon_body(" and "),
+                                       crayon_key("last_group"),
+                                       crayon_body(" only up to "),
+                                       crayon_key("ten"),
+                                       crayon_body("different unique elements.")))
   if (items == 2){
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
@@ -2346,6 +2814,21 @@ get_axis_parameters <- function(angle,
 }
 
 
+#' Compute grouped GO matrices.
+#'
+#' @param genes Genes to use.
+#' @param org.db Database to use.
+#' @param levels.use Levels to use.
+#' @param ontologies Ontology to use.
+#' @param min.overlap Min overlap of genes for each term.
+#' @param verbose Verbose.
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_GroupedGO_matrices <- function(genes,
                                   org.db,
                                   levels.use = NULL,
@@ -2602,6 +3085,28 @@ do_GroupedGO_analysis_heatmaps <- function(result,
   return(list.h)
 }
 
+#' Do Enriched Term matrices.
+#'
+#' @param genes TBD
+#' @param result TBD
+#' @param flip TBD
+#' @param cluster_cols TBD
+#' @param cluster_rows TBD
+#' @param cell_size TBD
+#' @param heatmap_gap TBD
+#' @param heatmap.legend.length TBD
+#' @param heatmap.legend.width TBD
+#' @param heatmap.legend.framecolor TBD
+#' @param legend_gap TBD
+#' @param font.size TBD
+#' @param legend.position TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_EnrichedTermMatrix <- function(genes,
                                   result,
                                   flip = TRUE,
@@ -2896,6 +3401,38 @@ do_EnrichedTermMatrix <- function(genes,
   return(h)
 }
 
+#' Do Enriched Term Bar plots.
+#'
+#' @param result TBD
+#' @param font.size TBD
+#' @param font.type TBD
+#' @param rotate_x_axis_labels TBD
+#' @param plot.title TBD
+#' @param plot.subtitle TBD
+#' @param plot.caption TBD
+#' @param plot.grid TBD
+#' @param grid.color TBD
+#' @param grid.type TBD
+#' @param flip TBD
+#' @param legend.type TBD
+#' @param legend.position TBD
+#' @param legend.framewidth TBD
+#' @param legend.tickwidth TBD
+#' @param legend.length TBD
+#' @param legend.width TBD
+#' @param legend.framecolor TBD
+#' @param legend.tickcolor TBD
+#' @param viridis_color_map TBD
+#' @param viridis_direction TBD
+#' @param xlab TBD
+#' @param ylab TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_EnrichedTermBarPlot <- function(result,
                                    font.size = 14,
                                    font.type = "sans",
@@ -2996,6 +3533,38 @@ do_EnrichedTermBarPlot <- function(result,
 }
 
 
+#' Do Enriched term dot plots.
+#'
+#' @param result TBD
+#' @param font.size TBD
+#' @param font.type TBD
+#' @param rotate_x_axis_labels TBD
+#' @param plot.title TBD
+#' @param plot.subtitle TBD
+#' @param plot.caption TBD
+#' @param plot.grid TBD
+#' @param grid.color TBD
+#' @param grid.type TBD
+#' @param flip TBD
+#' @param legend.type TBD
+#' @param legend.position TBD
+#' @param legend.framewidth TBD
+#' @param legend.tickwidth TBD
+#' @param legend.length TBD
+#' @param legend.width TBD
+#' @param legend.framecolor TBD
+#' @param legend.tickcolor TBD
+#' @param viridis_color_map TBD
+#' @param viridis_direction TBD
+#' @param xlab TBD
+#' @param ylab TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_EnrichedTermDotPlot <- function(result,
                                    font.size = 14,
                                    font.type = "sans",
@@ -3102,6 +3671,34 @@ do_EnrichedTermDotPlot <- function(result,
   return(p)
 }
 
+#' Do Enriched Term Tree Plot
+#'
+#' @param result TBD
+#' @param legend.type TBD
+#' @param legend.position TBD
+#' @param legend.framewidth TBD
+#' @param legend.tickwidth TBD
+#' @param legend.length TBD
+#' @param legend.width TBD
+#' @param legend.framecolor TBD
+#' @param legend.tickcolor TBD
+#' @param viridis_color_map TBD
+#' @param viridis_direction TBD
+#' @param font.size TBD
+#' @param font.type TBD
+#' @param plot.title TBD
+#' @param plot.subtitle TBD
+#' @param plot.caption TBD
+#' @param showCategory TBD
+#' @param nWords TBD
+#' @param nCluster TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_EnrichedTermTreePlot <- function(result,
                                     legend.type = "colorbar",
                                     legend.position = "bottom",
@@ -3237,3 +3834,394 @@ do_EnrichedTermTreePlot <- function(result,
 
 }
 
+
+
+
+#' Compute UMAP layers.
+#'
+#' @param sample TBD
+#' @param labels TBD
+#' @param pt.size TBD
+#' @param dot.size TBD
+#' @param alpha TBD
+#' @param na.value TBD
+#' @param border.density TBD
+#' @param border.size TBD
+#' @param border.color TBD
+#' @param raster TBD
+#' @param raster.dpi TBD
+#' @param reduction TBD
+#' @param group.by TBD
+#' @param split.by TBD
+#' @param n TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+compute_umap_layer <- function(sample,
+                               labels,
+                               pt.size,
+                               dot.size = 7.5,
+                               alpha = 1,
+                               na.value = "grey75",
+                               border.density = 1,
+                               border.size,
+                               border.color,
+                               raster = FALSE,
+                               raster.dpi = 1024,
+                               reduction = "umap",
+                               group.by = NULL,
+                               split.by = NULL,
+                               n = 100) {
+  `%>%` <- magrittr::`%>%`
+  embeddings <- Seurat::Embeddings(sample,
+                                   reduction = reduction)[, labels] %>%
+                as.data.frame()
+  colnames(embeddings) <- c("x", "y")
+
+  # Code adapted from: https://slowkow.com/notes/ggplot2-color-by-density/
+  # Licensed under: CC BY-SA (compatible with GPL-3).
+  # Author: Kamil Slowikowski - https://slowkow.com/
+
+  # Obtain density.
+  density <- MASS::kde2d(x = embeddings$x,
+                         y = embeddings$y,
+                         n = n)
+  # Find the intervals.
+  x.intervals <- findInterval(embeddings$x, density$x)
+  y.intervals <- findInterval(embeddings$y, density$y)
+  # Generate density vector to add to metadata.
+  interval_matrix <- cbind(x.intervals, y.intervals)
+  density_vector <- density$z[interval_matrix]
+  embeddings$density <- density_vector
+
+  # Add the group.by and split.by layers.
+  if (!is.null(group.by)){
+    embeddings <- embeddings %>%
+                  tibble::rownames_to_column(var = "cell") %>%
+                  dplyr::left_join(y = sample@meta.data %>%
+                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
+                                     tibble::rownames_to_column(var = "cell"),
+                                   by = "cell") %>%
+                  tibble::column_to_rownames(var = "cell")
+    colnames(embeddings) <- c(colnames(embeddings)[1:length(colnames(embeddings)) - 1], "group.by")
+
+
+    density.center.group.by <- embeddings %>%
+                               dplyr::select(dplyr::all_of(c("x", "y", "group.by", "density"))) %>%
+                               dplyr::group_by(.data$group.by) %>%
+                               dplyr::mutate("filt_x_up" = stats::quantile(.data$x, 0.66),
+                                             "filt_x_down" = stats::quantile(.data$x, 0.33),
+                                             "filt_y_up" = stats::quantile(.data$y, 0.66),
+                                             "filt_y_down" = stats::quantile(.data$y, 0.33)) %>%
+                               dplyr::filter(.data$x >= .data$filt_x_down & .data$x <= .data$filt_x_up,
+                                             .data$y >= .data$filt_y_down & .data$y <= .data$filt_y_up) %>%
+                               dplyr::summarize("x" = mean(.data$x),
+                                                "y" = mean(.data$y))
+  }
+
+  if (!is.null(split.by)){
+    embeddings <- embeddings %>%
+                  tibble::rownames_to_column(var = "cell") %>%
+                  dplyr::left_join(y = sample@meta.data %>%
+                                     dplyr::select(dplyr::all_of(c(split.by))) %>%
+                                     tibble::rownames_to_column(var = "cell"),
+                                   by = "cell") %>%
+                  tibble::column_to_rownames(var = "cell")
+    colnames(embeddings) <- c(colnames(embeddings)[1:length(colnames(embeddings)) - 1], "split.by")
+  }
+
+  # Apply filtering criteria:
+  embeddings <- embeddings %>%
+                dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
+
+  # Generate base layer.
+  if (isFALSE(raster)){
+    base_layer <- ggplot2::geom_point(data = embeddings,
+                                      mapping = ggplot2::aes(x = .data$x,
+                                                             y = .data$y),
+                                      colour = border.color,
+                                      size = pt.size * border.size,
+                                      show.legend = FALSE,
+                                      na.rm = TRUE)
+  } else {
+    base_layer <- scattermore::geom_scattermore(data = embeddings,
+                                                mapping = ggplot2::aes(x = .data$x,
+                                                                       y = .data$y),
+                                                color = border.color,
+                                                size = pt.size * border.size,
+                                                stroke = pt.size / 2,
+                                                show.legend = FALSE,
+                                                pointsize = pt.size * border.size,
+                                                pixels = c(raster.dpi, raster.dpi),
+                                                na.rm = TRUE)
+  }
+
+
+
+  # Generate NA layer.
+  if (isFALSE(raster)){
+    na_layer <- ggplot2::geom_point(data = embeddings,
+                                    mapping = ggplot2::aes(x = .data$x,
+                                                           y = .data$y),
+                                    colour = na.value,
+                                    size = pt.size,
+                                    show.legend = FALSE,
+                                    na.rm = TRUE)
+  } else {
+    na_layer <- scattermore::geom_scattermore(data = embeddings,
+                                              mapping = ggplot2::aes(x = .data$x,
+                                                                     y = .data$y),
+                                              color = na.value,
+                                              size = pt.size,
+                                              stroke = pt.size / 2,
+                                              show.legend = FALSE,
+                                              pointsize = pt.size,
+                                              pixels = c(raster.dpi, raster.dpi),
+                                              na.rm = TRUE)
+  }
+  # Generate embeddings limits.
+  x_limits <- c(min(embeddings$x, na.rm = TRUE),
+                max(embeddings$x, na.rm = TRUE))
+  y_limits <- c(min(embeddings$y, na.rm = TRUE),
+                max(embeddings$y, na.rm = TRUE))
+
+  # Generate center points layer.
+  out <- list()
+  if (!is.null(group.by)){
+    # Generate colored based layer.
+    if (isFALSE(raster)){
+      color_layer <- ggplot2::geom_point(data = embeddings,
+                                         mapping = ggplot2::aes(x = .data$x,
+                                                                y = .data$y,
+                                                                fill = .data$group.by),
+                                         color = "white",
+                                         shape = 21,
+                                         alpha = alpha,
+                                         size = (pt.size * border.size) + 4,
+                                         stroke = 0,
+                                         show.legend = TRUE,
+                                         na.rm = TRUE)
+    } else {
+      color_layer <- scattermore::geom_scattermore(data = embeddings,
+                                                   mapping = ggplot2::aes(x = .data$x,
+                                                                          y = .data$y,
+                                                                          fill = .data$group.by),
+                                                   size = (pt.size * border.size) + 4,
+                                                   alpha = alpha,
+                                                   stroke = pt.size / 2,
+                                                   show.legend = TRUE,
+                                                   pointsize = pt.size * border.size,
+                                                   pixels = c(raster.dpi, raster.dpi),
+                                                   na.rm = TRUE)
+    }
+    out[["color_layer"]] <- color_layer
+
+    center_layer_2 <- ggplot2::geom_point(data = density.center.group.by,
+                                          mapping = ggplot2::aes(x = .data$x,
+                                                                 y = .data$y),
+                                          color = "black",
+                                          size = pt.size * dot.size)
+
+    center_layer <- ggplot2::geom_point(data = density.center.group.by,
+                                        mapping = ggplot2::aes(x = .data$x,
+                                                               y = .data$y,
+                                                               fill = .data$group.by),
+                                        color = "white",
+                                        shape = 21,
+                                        size = pt.size * (dot.size - 2),
+                                        stroke = 1.5)
+    center_layers <- list("center_layer_2" = center_layer_2,
+                          "center_layer_1" = center_layer)
+    out[["center_layers"]] <- center_layers
+  }
+
+
+  out[["base_layer"]] <- base_layer
+  out[["na_layer"]] <- na_layer
+  out[["embeddings"]] <- embeddings
+
+  return(out)
+}
+
+#
+#
+
+#' Duplicate secondary categorical axis.
+#' From: https://github.com/tidyverse/ggplot2/issues/3171
+#' @param label_trans Labels to send to the secondary axis.
+#' @param ... Other
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+guide_axis_label_trans <- function(label_trans = identity, ...) {
+  axis_guide <- ggplot2::guide_axis(...)
+  axis_guide$label_trans <- rlang::as_function(label_trans)
+  class(axis_guide) <- c("guide_axis_trans", class(axis_guide))
+  axis_guide
+}
+
+#' Handle axis theme parameters
+#'
+#' @param flip TBD
+#' @param counter TBD
+#' @param group.by TBD
+#' @param group TBD
+#' @param xlab TBD
+#' @param ylab TBD
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+handle_axis <- function(flip,
+                        counter,
+                        group.by,
+                        group,
+                        rotate_x_axis_labels){
+  # Set axis theme parameters.
+  if (isFALSE(flip)){
+    if (counter == 1){
+      axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
+      axis.ticks.x.top <- ggplot2::element_blank()
+      axis.ticks.y.right <- ggplot2::element_line(color = "black")
+      axis.ticks.y.left <- ggplot2::element_blank()
+      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+      axis.text.x.top <- ggplot2::element_blank()
+      axis.text.y.right <- ggplot2::element_text(face = "bold", color = "black")
+      axis.text.y.left <- ggplot2::element_blank()
+      if (length(group.by) > 1){
+        axis.title.x.top <- ggplot2::element_blank()
+        axis.title.x.bottom <- ggplot2::element_blank()
+      } else {
+        axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+                                                  angle = 0,
+                                                  vjust = 0.5,
+                                                  hjust = 0.5)
+        axis.title.x.bottom <- ggplot2::element_blank()
+      }
+
+      axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+                                                 angle = 0,
+                                                 hjust = 1,
+                                                 vjust = 0.5)
+      axis.title.y.right <- ggplot2::element_blank()
+    } else {
+      axis.ticks.x.bottom <- ggplot2::element_blank()
+      axis.ticks.x.top <- ggplot2::element_blank()
+      axis.ticks.y.right <- ggplot2::element_line(color = "black")
+      axis.ticks.y.left <- ggplot2::element_blank()
+      axis.text.x.top <- ggplot2::element_blank()
+      axis.text.x.bottom <- ggplot2::element_blank()
+      axis.text.y.right <- ggplot2::element_text(face = "bold", color = "black")
+      axis.text.y.left <- ggplot2::element_blank()
+      if (length(group.by) > 1){
+        axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+                                                  angle = 0,
+                                                  vjust = 0.5,
+                                                  hjust = 0.5)
+        axis.title.x.bottom <- ggplot2::element_blank()
+      } else {
+        axis.title.x.top <- ggplot2::element_blank()
+        axis.title.x.bottom <- ggplot2::element_blank()
+      }
+      axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+                                                 angle = 0,
+                                                 hjust = 1,
+                                                 vjust = 0.5)
+      axis.title.y.right <- ggplot2::element_blank()
+    }
+  } else {
+    if (counter == 1){
+      axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
+      axis.ticks.x.top <- ggplot2::element_blank()
+      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+      axis.text.x.top <- ggplot2::element_blank()
+      axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+                                                angle = 0,
+                                                hjust = 0.5,
+                                                vjust = 0.5)
+      axis.title.x.bottom <- ggplot2::element_blank()
+      if (length(group.by) == 1){
+        axis.ticks.y.left <- ggplot2::element_blank()
+        axis.ticks.y.right <- ggplot2::element_line(color = "black")
+        axis.text.y.left <- ggplot2::element_blank()
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = "bold")
+        axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+                                                   angle = 0,
+                                                   vjust = 0.5,
+                                                   hjust = 0.5)
+        axis.title.y.right <- ggplot2::element_blank()
+      } else {
+        axis.ticks.y.left <- ggplot2::element_blank()
+        axis.ticks.y.right <- ggplot2::element_blank()
+        axis.text.y.left <- ggplot2::element_blank()
+        axis.text.y.right <- ggplot2::element_blank()
+        axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+                                                   angle = 0,
+                                                   vjust = 0.5,
+                                                   hjust = 0.5)
+        axis.title.y.right <- ggplot2::element_blank()
+      }
+
+    } else {
+      axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
+      axis.ticks.x.top <- ggplot2::element_blank()
+      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+      axis.text.x.top <- ggplot2::element_blank()
+      axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+                                                angle = 0,
+                                                hjust = 0.5,
+                                                vjust = 0.5)
+      axis.title.x.bottom <- ggplot2::element_blank()
+      if (length(group.by) == counter){
+        axis.ticks.y.left <- ggplot2::element_blank()
+        axis.ticks.y.right <- ggplot2::element_line(color = "black")
+        axis.text.y.left <- ggplot2::element_blank()
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = "bold")
+        axis.title.y.right <- ggplot2::element_blank()
+        axis.title.y.left <- ggplot2::element_blank()
+      } else {
+        axis.ticks.y.left <- ggplot2::element_blank()
+        axis.ticks.y.right <- ggplot2::element_blank()
+        axis.text.y.left <- ggplot2::element_blank()
+        axis.text.y.right <- ggplot2::element_blank()
+        axis.title.y.left <- ggplot2::element_blank()
+        axis.title.y.right <- ggplot2::element_blank()
+      }
+    }
+  }
+
+  out_list <- list("axis.ticks.x.top" = axis.ticks.x.top,
+                   "axis.ticks.x.bottom" = axis.ticks.x.bottom,
+                   "axis.ticks.y.left" = axis.ticks.y.left,
+                   "axis.ticks.y.right" = axis.ticks.y.right,
+                   "axis.text.x.bottom" = axis.text.x.bottom,
+                   "axis.text.x.top" = axis.text.x.top,
+                   "axis.text.y.left" = axis.text.y.left,
+                   "axis.text.y.right" = axis.text.y.right,
+                   "axis.title.x.bottom" = axis.title.x.bottom,
+                   "axis.title.x.top" = axis.title.x.top,
+                   "axis.title.y.left" = axis.title.y.left,
+                   "axix.title.y.right" = axis.title.y.right)
+  return(out_list)
+
+}

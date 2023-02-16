@@ -80,9 +80,14 @@ if (isFALSE(dep_check[["do_DimPlot"]]) &
     isTRUE(requireNamespace(pkg, quietly = TRUE)) &
     isFALSE(dep_check[["save_Plot"]])){
   p <- SCpubr::do_DimPlot(sample)
-  p.heatmap <- SCpubr::do_CorrelationPlot(sample)
-  data <- p.heatmap@ht_list$`Pearson coef.`@matrix
-  p.pheatmap <- pheatmap::pheatmap(data)
+  data <- SCpubr::do_EnrichmentHeatmap(sample, input_gene_list = rownames(sample)[1:10], nbin = 1, ctrl = 10, return_matrix = TRUE, return_object = FALSE)
+  data <- data$Matrices$Groups$data
+  data <- as.data.frame(data)
+  data$group.by <- NULL
+  data$gene_list <- NULL
+  data <- as.matrix(data)
+  p.pheatmap <- pheatmap::pheatmap(data, cluster_rows = FALSE, cluster_cols = FALSE)
+  p.heatmap <- ComplexHeatmap::Heatmap(data, cluster_rows = FALSE, cluster_columns = FALSE)
   p.chord <- SCpubr::do_ChordDiagramPlot(sample = sample, from = "seurat_clusters", to = "orig.ident")
   figure_path <- getwd()
 }

@@ -53,7 +53,10 @@ do_ColorPalette <- function(colors.use,
 
   # Check that the colors provided are only one.
   assertthat::assert_that(length(colors.use) == 1,
-                          msg = "Please, provide a single color to colors.use.")
+                          msg = paste0(crayon_body("Please, provide a single "),
+                                       crayon_key("color"),
+                                       crayon_body(" to "),
+                                       crayon_key("colors.use")))
 
   # Check that the color provided is a valid color representation.
   check_colors(colors.use, parameter_name = "colors.use")
@@ -62,16 +65,34 @@ do_ColorPalette <- function(colors.use,
   options_list <- c(opposite, adjacent, triadic, split_complementary, tetradic, square, complete_output)
   if (sum(options_list) > 0){
     assertthat::assert_that(sum(options_list) == 1,
-                            msg = "Please select only one option to form the color scale. If you want more than one output, consider using complete_output = TRUE.")
+                            msg = paste0(crayon_body("Please, select only "),
+                                         crayon_key("one option"),
+                                         crayon_body(" to form the color scale.\nIf you want more than "),
+                                         crayon_key("one output"),
+                                         crayon_body(", consider using the paramter"),
+                                         crayon_key("complete_output"),
+                                         crayon_body(".")))
   }
 
   # Check that n is actually positive.
   assertthat::assert_that(n > 0,
-                          msg = "Please provide a positive integer value for 'n'.")
+                          msg = paste0(crayon_body("Please, provide a "),
+                                       crayon_key("positive value"),
+                                       crayon_body(" to the parameter "),
+                                       crayon_key("n"),
+                                       crayon_body(".")))
 
   # If any option is set to TRUE, pal_length is 12
   if (sum(options_list) >= 1 & n != 12){
-    warning("When an color output option is selected, n parameter becomes by default 12. Please consider not using n for these purposes.", call. = FALSE)
+    warning(paste0(crayon_body("When a "),
+                   crayon_key("color output"),
+                   crayon_body(" option is selected, parameter "),
+                   crayon_key("n"),
+                   crayon_body(" becomes by default "),
+                   crayon_key("12"),
+                   crayon_body("\nPlease consider not using "),
+                   crayon_key("n"),
+                   crayon_body(" in such cases.")), call. = FALSE)
     n <- 12
   }
 
@@ -220,7 +241,13 @@ do_ColorPalette <- function(colors.use,
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
 
   } else if (isTRUE(plot) & isTRUE(complete_output)) {
-    stop("Parameter 'plot' only works when 'complete_output' is FALSE.")
+    stop(paste0(crayon_body("Parameter "),
+                crayon_key("plot"),
+                crayon_body(" only works when "),
+                crayon_key("complete_output"),
+                crayon_body(" is set to "),
+                crayon_key("FALSE"),
+                crayon_body(".")), call. = FALSE)
   }
 
 

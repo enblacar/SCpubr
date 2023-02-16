@@ -49,8 +49,11 @@ do_RidgePlot <- function(sample,
                          compute_distribution_tails = FALSE,
                          prob_tails = 0.025,
                          color_by_probabilities = FALSE,
+                         use_viridis = TRUE,
                          viridis_color_map = "G",
                          viridis_direction = 1,
+                         sequential.palette = "YlGnBu",
+                         sequential_direction = 1,
                          plot.grid = TRUE,
                          grid.color = "grey75",
                          grid.type = "dashed",
@@ -70,7 +73,8 @@ do_RidgePlot <- function(sample,
                        "color_by_probabilities" = color_by_probabilities,
                        "plot.grid" = plot.grid,
                        "flip" = flip,
-                       "legend.nrow" = legend.nrow)
+                       "legend.nrow" = legend.nrow,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("legend.width" = legend.width,
@@ -84,7 +88,8 @@ do_RidgePlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -106,7 +111,8 @@ do_RidgePlot <- function(sample,
                          "ylab" = ylab,
                          "viridis_color_map" = viridis_color_map,
                          "grid.color" = grid.color,
-                         "grid.type" = grid.type)
+                         "grid.type" = grid.type,
+                         "sequential.palette" = sequential.palette)
 
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -139,11 +145,22 @@ do_RidgePlot <- function(sample,
                                                   y = .data$group.by,
                                                   fill = ggplot2::after_stat(x))) +
            ggridges::geom_density_ridges_gradient(color = "black",
-                                                  size = 1.25) +
-           ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                         direction = viridis_direction,
+                                                  size = 1.25)
+
+      if (isTRUE(use_viridis)){
+        p <- p +
+             ggplot2::scale_fill_viridis_c(option = viridis_color_map,
+                                           direction = viridis_direction,
+                                           name = feature,
+                                           breaks = scales::extended_breaks(n = number.breaks))
+      } else {
+        p <- p +
+          ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                         na.value = "grey75",
                                          name = feature,
-                                         breaks = scales::extended_breaks(n = number.breaks))
+                                        breaks = scales::extended_breaks(n = number.breaks))
+      }
+
 
       p <- modify_continuous_legend(p = p,
                                     legend.aes = "fill",
@@ -215,11 +232,22 @@ do_RidgePlot <- function(sample,
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            calc_ecdf = TRUE,
-                                           geom = "density_ridges_gradient") +
-             ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                           name = "Tail probability",
-                                           direction = viridis_direction,
-                                           breaks = scales::extended_breaks(n = number.breaks))
+                                           geom = "density_ridges_gradient")
+
+        if (isTRUE(use_viridis)){
+          p <- p +
+            ggplot2::scale_fill_viridis_c(option = viridis_color_map,
+                                          direction = viridis_direction,
+                                          name = "Tail probability",
+                                          breaks = scales::extended_breaks(n = number.breaks))
+        } else {
+          p <- p +
+            ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                          na.value = "grey75",
+                                          name = "Tail probability",
+                                          breaks = scales::extended_breaks(n = number.breaks))
+        }
+
         p <- modify_continuous_legend(p = p,
                                       legend.title = legend.title,
                                       legend.aes = "fill",

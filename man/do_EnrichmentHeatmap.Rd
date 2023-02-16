@@ -12,24 +12,15 @@ do_EnrichmentHeatmap(
   reduction = NULL,
   group.by = NULL,
   verbose = FALSE,
-  flip = FALSE,
-  cluster_cols = FALSE,
-  cluster_rows = FALSE,
-  row_names_rot = 0,
-  column_names_rot = 45,
-  cell_size = 8,
   na.value = "grey75",
   legend.position = "bottom",
-  use_viridis = TRUE,
+  use_viridis = FALSE,
   viridis_color_map = "G",
   viridis_direction = 1,
-  heatmap.legend.length = 75,
-  heatmap.legend.width = 5,
-  heatmap.legend.framecolor = "black",
-  legend.width = 1,
+  legend.framewidth = 0.5,
+  legend.tickwidth = 0.5,
   legend.length = 20,
-  legend.framewidth = 1.5,
-  legend.tickwidth = 1.5,
+  legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   legend.type = "colorbar",
@@ -37,12 +28,6 @@ do_EnrichmentHeatmap(
   font.type = "sans",
   rotate_x_axis_labels = 45,
   enforce_symmetry = FALSE,
-  heatmap_gap = 0.5,
-  row_names_side = "right",
-  row_title_side = "left",
-  row_title_rot = 90,
-  column_title = NULL,
-  row_title = NULL,
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",
@@ -55,23 +40,16 @@ do_EnrichmentHeatmap(
   storeRanks = TRUE,
   min.cutoff = NA,
   max.cutoff = NA,
-  plot_FeaturePlots = FALSE,
-  plot_GeyserPlots = FALSE,
-  plot_BeeSwarmPlots = FALSE,
-  plot_BoxPlots = FALSE,
-  plot_ViolinPlots = FALSE,
   pt.size = 1,
   plot_cell_borders = TRUE,
   border.size = 2,
-  geyser_order_by_mean = TRUE,
-  geyser_scale_type = "continuous",
-  boxplot_order_by_mean = TRUE,
-  violin_plot_boxplot = TRUE,
-  violin_boxplot_width = 0.2,
   return_object = FALSE,
   return_matrix = FALSE,
-  disable_white_in_viridis = FALSE,
-  number.breaks = 5
+  number.breaks = 5,
+  sequential.palette = "YlGnBu",
+  diverging.palette = "RdBu",
+  sequential_direction = 1,
+  flip = FALSE
 )
 }
 \arguments{
@@ -88,18 +66,6 @@ do_EnrichmentHeatmap(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
-
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
-
-\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
-
-\item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
-
-\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
-
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
@@ -118,13 +84,9 @@ do_EnrichmentHeatmap(
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
-\item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
-
-\item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
-
-\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
@@ -149,18 +111,6 @@ do_EnrichmentHeatmap(
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.}
 
-\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
-
-\item{row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.}
-
-\item{row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.}
-
-\item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
-
-\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
-
-\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
-
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
@@ -175,29 +125,25 @@ do_EnrichmentHeatmap(
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{plot_FeaturePlots, plot_GeyserPlots, plot_BeeSwarmPlots, plot_BoxPlots, plot_ViolinPlots}{\strong{\code{\link[base]{logical}}} | Compute extra visualizations for each of the gene lists.}
-
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
 \item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{geyser_order_by_mean, boxplot_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
-
-\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
-
-\item{violin_plot_boxplot}{\strong{\code{\link[base]{logical}}} | Whether to plot the boxplots inside the violin plots.}
-
-\item{violin_boxplot_width}{\strong{\code{\link[base]{numeric}}} | Width of the boxplots in the violin plots.}
-
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
 
 \item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
 
-\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
-
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }
 \value{
 A ComplexHeatmap object.

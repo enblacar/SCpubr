@@ -2,7 +2,6 @@
 #' You can
 #'
 #' @inheritParams doc_function
-#' @param colors.use \strong{\code{\link[base]{character}}} | Two colors if split.by is not set, which will define a gradient. As many numbers as unique values in split.by, if set, which each own will define its own gradient. Defaults to predefined color scales if not provided.
 #' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
 #' @param cluster.idents \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
 #' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
@@ -20,7 +19,6 @@ do_DotPlot <- function(sample,
                        features,
                        assay = NULL,
                        group.by = NULL,
-                       split.by = NULL,
                        legend.type = "colorbar",
                        legend.position = "bottom",
                        legend.framewidth = 0.5,
@@ -29,8 +27,8 @@ do_DotPlot <- function(sample,
                        legend.width = 1,
                        legend.framecolor = "grey50",
                        legend.tickcolor = "white",
+                       colors.use = NULL,
                        dot.scale = 6,
-                       colors.use = c("#1BFFFF25", "#2E3192"),
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
@@ -45,6 +43,8 @@ do_DotPlot <- function(sample,
                        use_viridis = FALSE,
                        viridis_color_map = "G",
                        viridis_direction = -1,
+                       sequential.palette = "YlGnBu",
+                       sequential_direction = 1,
                        na.value = "grey75",
                        dot_border = TRUE,
                        plot.grid = TRUE,
@@ -74,7 +74,8 @@ do_DotPlot <- function(sample,
                          "legend.width" = legend.width,
                          "viridis_direction" = viridis_direction,
                          "rotate_x_axis_labels" = rotate_x_axis_labels,
-                         "number.breaks" = number.breaks)
+                         "number.breaks" = number.breaks,
+                         "sequential_direction" = sequential_direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -82,9 +83,7 @@ do_DotPlot <- function(sample,
                            "features" = unlist(features),
                            "xlab" = xlab,
                            "ylab" = ylab,
-                           "colors.use" = colors.use,
                            "group.by" = group.by,
-                           "split.by" = split.by,
                            "scale.by" = scale.by,
                            "legend.framecolor" = legend.framecolor,
                            "legend.tickcolor" = legend.tickcolor,
@@ -92,35 +91,42 @@ do_DotPlot <- function(sample,
                            "font.type" = font.type,
                            "viridis_color_map" = viridis_color_map,
                            "grid.color" = grid.color,
-                           "grid.type" = grid.type)
+                           "grid.type" = grid.type,
+                           "sequential.palette" = sequential.palette)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
     features <- check_feature(sample = sample, features = features, permissive = TRUE)
     features <- remove_duplicated_features(features = features)
 
+    if (!is.null(colors.use)){
+      check_colors(colors.use)
+    }
+
     # Check that flip is not set to TRUE and features is not a named list.
     if (isTRUE(flip)){
       assertthat::assert_that(!is.list(features),
-                              msg = "Please provide the genes as a simple character vector or set flip to FALSE.")
+                              msg = paste0(crayon_body("Please, provide the a "),
+                                           crayon_key("character vector"),
+                                           crayon_body(" to "),
+                                           crayon_key("features"),
+                                           crayon_body(" or set "),
+                                           crayon_key("flip = FALSE"),
+                                           crayon_body(".")))
     }
 
     if (is.list(features)){
       assertthat::assert_that(isFALSE(flip),
-                              msg = "Please provide the genes as a simple character vector or set flip to FALSE.")
+                              msg = paste0(crayon_body("Please, provide the a "),
+                                           crayon_key("character vector"),
+                                           crayon_body(" to "),
+                                           crayon_key("features"),
+                                           crayon_body(" or set "),
+                                           crayon_key("flip = FALSE"),
+                                           crayon_body(".")))
     }
 
     # Check that split.by is set and the user has not provided a correct vector of colors.
-    if (!(is.null(split.by))){
-      if (length(colors.use) != length(as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1])))){
-        names.use <- if (is.factor(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))){
-          levels(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))
-        } else {
-          as.character(unique(Seurat::FetchData(sample, vars = split.by)[, 1]))
-        }
-        colors.use <- generate_color_scale(names.use)
-      }
-    }
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.type, parameter_name = "legend.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
@@ -130,8 +136,6 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
     check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
-    # Check colors.
-    check_colors(colors.use)
 
     # Check the colors provided to legend.framecolor and legend.tickcolor.
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -151,9 +155,7 @@ do_DotPlot <- function(sample,
 
     p <- Seurat::DotPlot(sample,
                          features = features,
-                         cols = colors.use,
                          group.by = group.by,
-                         split.by = split.by,
                          dot.scale = dot.scale,
                          cluster.idents = cluster.idents,
                          scale.by = scale.by)
@@ -170,33 +172,39 @@ do_DotPlot <- function(sample,
 
       p[["layers"]][[1]] <- NULL
     }
+
+
     if (isTRUE(use_viridis)){
       if (isFALSE(dot_border)){
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                      option = viridis_color_map,
                                                                      direction = viridis_direction,
-                                                                     breaks = scales::extended_breaks(n = number.breaks)),
+                                                                     breaks = scales::extended_breaks(n = number.breaks),
+                                                                     name = "Avg. Expression"),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
-             ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                           option = viridis_color_map,
-                                           direction = viridis_direction,
-                                           breaks = scales::extended_breaks(n = number.breaks))
+          ggplot2::scale_fill_viridis_c(na.value = na.value,
+                                         option = viridis_color_map,
+                                         direction = viridis_direction,
+                                        breaks = scales::extended_breaks(n = number.breaks),
+                                         name = "Avg. Expression")
       }
     } else if (isFALSE(use_viridis)){
       if (isFALSE(dot_border)){
         p <- add_scale(p = p,
-                       function_use = ggplot2::scale_color_gradientn(na.value = na.value,
-                                                                     colors = colors.use,
+                       function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+                                                                     na.value = na.value,
+                                                                     name = "Avg. Expression",
                                                                      breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
-             ggplot2::scale_fill_gradientn(na.value = na.value,
-                                           colors = colors.use,
-                                           breaks = scales::extended_breaks(n = number.breaks))
+          ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+                                         na.value = na.value,
+                                         name = "Avg. Expression",
+                                        breaks = scales::extended_breaks(n = number.breaks))
       }
     }
     p <- p +

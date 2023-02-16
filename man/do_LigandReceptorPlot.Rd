@@ -22,8 +22,11 @@ do_LigandReceptorPlot(
   legend.tickcolor = "white",
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
+  use_viridis = FALSE,
   viridis_color_map = "G",
   viridis_direction = 1,
+  sequential.palette = "YlGnBu",
+  sequential_direction = 1,
   font.size = 14,
   dot.size = 1,
   font.type = "sans",
@@ -78,9 +81,15 @@ do_LigandReceptorPlot(
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

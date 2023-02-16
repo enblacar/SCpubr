@@ -11,6 +11,13 @@ do_FeaturePlot(
   reduction = NULL,
   slot = NULL,
   order = FALSE,
+  group.by = NULL,
+  group.by.colors.use = NULL,
+  group.by.legend = NULL,
+  group.by.show.dots = TRUE,
+  group.by.dot.size = 8,
+  group.by.cell_borders = FALSE,
+  group.by.cell_borders.alpha = 0.1,
   split.by = NULL,
   split.by.idents = NULL,
   cells.highlight = NULL,
@@ -29,6 +36,9 @@ do_FeaturePlot(
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
+  legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -36,6 +46,7 @@ do_FeaturePlot(
   individual.subtitles = NULL,
   individual.captions = NULL,
   ncol = NULL,
+  use_viridis = TRUE,
   viridis_color_map = "G",
   viridis_direction = 1,
   raster = FALSE,
@@ -43,6 +54,7 @@ do_FeaturePlot(
   plot_cell_borders = TRUE,
   border.size = 2,
   border.color = "black",
+  border.density = 1,
   na.value = "grey75",
   verbose = TRUE,
   plot.axes = FALSE,
@@ -57,7 +69,10 @@ do_FeaturePlot(
   label = FALSE,
   label.color = "black",
   label.size = 4,
-  number.breaks = 5
+  number.breaks = 5,
+  diverging.palette = "RdBu",
+  sequential.palette = "YlGnBu",
+  sequential_direction = -1
 )
 }
 \arguments{
@@ -72,6 +87,20 @@ do_FeaturePlot(
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the cells based on expression.}
+
+\item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable based on which cells are grouped. This will effectively introduce a big dot in the center of each cluster, colored using a categorical color scale or with the values provided by the user in \strong{\code{group.by.colors.use}}. It will also displays a legend.}
+
+\item{group.by.colors.use}{\strong{\code{\link[base]{character}}} | Colors to use for the group dots.}
+
+\item{group.by.legend}{\strong{\code{\link[base]{character}}} | Title for the legend when \strong{\code{group.by}} is used. Use \strong{\code{NA}} to disable it and \strong{\code{NULL}} to use the default column title provided in \strong{\code{group.by}}.}
+
+\item{group.by.show.dots}{\strong{\code{\link[base]{logical}}} | Controls whether to place in the middle of the groups.}
+
+\item{group.by.dot.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots placed in the middle of the groups.}
+
+\item{group.by.cell_borders}{\strong{\code{\link[base]{logical}}} | Plots another border around the cells displaying the same color code of the dots displayed with \strong{\code{group.by}}. Legend is shown always with alpha = 1 regardless of the alpha settings.}
+
+\item{group.by.cell_borders.alpha}{\strong{\code{\link[base]{numeric}}} | Controls the transparency of the new borders drawn by \strong{\code{group.by.cell_borders}}.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
@@ -119,11 +148,19 @@ do_FeaturePlot(
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
+
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
 \item{individual.titles, individual.subtitles, individual.captions}{\strong{\code{\link[base]{character}}} | Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.}
 
 \item{ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
@@ -138,6 +175,8 @@ do_FeaturePlot(
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+
+\item{border.density}{\strong{\code{\link[base]{numeric}}} | Controls the number of cells used when \strong{\code{plot_cell_borders = TRUE}}. Value between 0 and 1. It computes a 2D kernel density and based on this cells that have a density below the specified quantile will be used to generate the cluster contour. The lower this number, the less cells will be selected, thus reducing the overall size of the plot but also potentially preventing all the contours to be properly drawn.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
@@ -166,6 +205,12 @@ do_FeaturePlot(
 \item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 }
 \value{
 A ggplot2 object containing a Feature Plot.

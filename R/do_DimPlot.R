@@ -46,6 +46,7 @@ do_DimPlot <- function(sample,
                        plot_cell_borders = TRUE,
                        border.size = 2,
                        border.color = "black",
+                       border.density = 1,
                        plot_marginal_distributions = FALSE,
                        marginal.type = "density",
                        marginal.size = 5,
@@ -89,7 +90,8 @@ do_DimPlot <- function(sample,
                        "marginal.size" = marginal.size,
                        "border.size" = border.size,
                        "contour_expand_axes" = contour_expand_axes,
-                       "label.size" = label.size)
+                       "label.size" = label.size,
+                       "border.density" = border.density)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -119,12 +121,32 @@ do_DimPlot <- function(sample,
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
 
   assertthat::assert_that(!group_by_and_highlighting_cells,
-                          msg = "Either group.by or cells.highlight has to be NULL.")
+                          msg = paste0(crayon_body("Either "),
+                                       crayon_key("group.by"),
+                                       crayon_body(" or "),
+                                       crayon_key("cells.highlight | idents.hightlight"),
+                                       crayon_body(" have to be set to "),
+                                       crayon_key("NULL"),
+                                       crayon_body(".")))
 
   assertthat::assert_that(!split_by_and_highlighting_cells,
-                          msg = "Either split.by or cells.highlight has to be NULL.")
+                          msg = paste0(crayon_body("Either "),
+                                       crayon_key("split.by"),
+                                       crayon_body(" or "),
+                                       crayon_key("cells.highlight | idents.hightlight"),
+                                       crayon_body(" have to be set to "),
+                                       crayon_key("NULL"),
+                                       crayon_body(".")))
 
-  if (order_and_shuffle_used){warning("Setting up a custom order while 'shuffle = TRUE' might result in unexpected behaviours.\nPlease consider using it alongside 'shuffle = FALSE'.", call. = FALSE)}
+  if (order_and_shuffle_used){
+    warning(paste0(crayon_body("Setting up a custom order with paramter "),
+                   crayon_key("order"),
+                   crayon_body(" when "),
+                   crayon_key("shuffle = TRUE"),
+                   crayon_body(" might result in unexpected behaviors.\nPlease, consider using it alongside "),
+                   crayon_key("shuffle = FALSE"),
+                   crayon_body(".")), call. = FALSE)
+  }
 
   # Check for label.color.
   ## Check for the colors assigned to the labels if label = TRUE.
@@ -138,18 +160,38 @@ do_DimPlot <- function(sample,
 
   ## If the user provides more than one color to na.value, stop the function.
   assertthat::assert_that(length(na.value) == 1,
-                          msg = "Please provide only one color to na.value.")
+                          msg = paste0(crayon_body("Please, provide only "),
+                                       crayon_key("one color"),
+                                       crayon_body(" to parameter "),
+                                       crayon_key("na.value"),
+                                       crayon_body(".")))
 
   ## Check that the contour_expand_axes is between 0 and 1.
   assertthat::assert_that(contour_expand_axes <= 1,
-                          msg = "Please provide a value to contour_expand_axes lower or equal than 1.")
+                          msg = paste0(crayon_body("Please, provide a value "),
+                                       crayon_key("lower or equal to 1"),
+                                       crayon_body(" to parameter "),
+                                       crayon_key("contour_expand_axes"),
+                                       crayon_body(".")))
 
   assertthat::assert_that(contour_expand_axes >= 0,
-                          msg = "Please provide a value to contour_expand_axes higher or equal than 1.")
+                          msg = paste0(crayon_body("Please, provide a value "),
+                                       crayon_key("lower or equal to 1"),
+                                       crayon_body(" to parameter "),
+                                       crayon_key("contour_expand_axes"),
+                                       crayon_body(".")))
 
   # If the user provides raster = TRUE but the pt.size is less than 1, warn it.
   if (isTRUE(raster) & pt.size < 1){
-    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For DimPlots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = FALSE)
+    warning(paste0(crayon_body("Setting "),
+                   crayon_key("raster = TRUE"),
+                   crayon_body(" and "),
+                   crayon_key("pt.size < 1"),
+                   crayon_body("will result in the cells being plotted as a "),
+                   crayon_key("cross"),
+                   crayon_body(" instead of dots.\nThis behaviour can not be modified, but can be avoided by using "),
+                   crayon_key("pt.size >= 1"),
+                   crayon_body(".")), call. = FALSE)
   }
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -158,7 +200,7 @@ do_DimPlot <- function(sample,
   check_parameters(parameter = contour.lineend, parameter_name = "contour.lineend")
   check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
   check_parameters(parameter = contour.position, parameter_name = "contour.position")
-
+  check_parameters(parameter = border.density, parameter_name = "border.density")
   # If the user has not provided colors.
   if (is.null(colors.use)){
     colors.use <- {
@@ -227,7 +269,13 @@ do_DimPlot <- function(sample,
     } else if (isTRUE(highlighting_cells)){
       # Stop the execution if more than one color is provided to highlight the cells.
       assertthat::assert_that(length(colors.use) == 1,
-                              msg = "Provide only one color if cells.highlight or idents.highlight is used.")
+                              msg = paste0(crayon_body("Please, provide only "),
+                                           crayon_key("one color"),
+                                           crayon_body(" to "),
+                                           crayon_key("cells.highlight"),
+                                           crayon_body(" or "),
+                                           crayon_key("idents.highlight"),
+                                           crayon_body(".")))
     }
   }
 
@@ -245,7 +293,11 @@ do_DimPlot <- function(sample,
     if (isTRUE(group_by_and_split_by_are_null)){
       # Check that idents.keep matches the values and if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% levels(sample))),
-                              msg = "All the values in idents.keep must be in levels(sample).")
+                              msg = paste0(crayon_body("All the values in "),
+                                           crayon_key("idents.keep"),
+                                           crayon_body(" must be in "),
+                                           crayon_key("levels(sample"),
+                                           crayon_body(".")))
       # Set the identities that the user wants to exclude as NA.
       Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
 
@@ -254,7 +306,11 @@ do_DimPlot <- function(sample,
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by]))),
-                              msg = "All the values in idents.keep must be in the group.by variable provided.")
+                              msg = paste0(crayon_body("All the values in "),
+                                           crayon_key("idents.keep"),
+                                           crayon_body(" must be in the"),
+                                           crayon_key("group.by"),
+                                           crayon_body(" metadata variable provided.")))
       # Convert to NA values in group.by not included in the user's selected values.
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
@@ -262,7 +318,11 @@ do_DimPlot <- function(sample,
     } else if (split_by_is_used | group_by_and_split_by_used){
       # Check that the values in idents.keep are in the unique values of split.by.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
-                              msg = "All the values in idents.keep must be in the split.by variable provided.")
+                              msg = paste0(crayon_body("All the values in "),
+                                           crayon_key("idents.keep"),
+                                           crayon_body(" must be in the "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" metadata provided.")))
       if (is.null(group.by)){
         colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
       } else {
@@ -275,27 +335,21 @@ do_DimPlot <- function(sample,
 
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
-    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-    df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
-                     y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
-
-    if (isFALSE(raster)){
-      base_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
-                                                                          y = .data$y),
-                                        colour = border.color,
-                                        size = pt.size * border.size,
-                                        show.legend = FALSE)
-    } else if (isTRUE(raster)){
-      base_layer <- scattermore::geom_scattermore(data = df,
-                                                  mapping = ggplot2::aes(x = .data$x,
-                                                                         y = .data$y),
-                                                  color = border.color,
-                                                  size = pt.size * border.size,
-                                                  stroke = pt.size / 2,
-                                                  show.legend = FALSE,
-                                                  pointsize = pt.size * border.size,
-                                                  pixels = c(raster.dpi, raster.dpi))
-    }
+    out <- compute_umap_layer(sample = sample,
+                              labels = colnames(sample@reductions[[reduction]][[]])[dims],
+                              pt.size = pt.size,
+                              border.density = border.density,
+                              border.size = border.size,
+                              border.color = border.color,
+                              raster = raster,
+                              raster.dpi = raster.dpi,
+                              reduction = reduction,
+                              group.by = group.by,
+                              split.by = split.by,
+                              na.value = na.value,
+                              n = 100)
+    base_layer <- out$base_layer
+    na_layer <- out$na_layer
   }
 
   # PLOTTING
@@ -408,29 +462,6 @@ do_DimPlot <- function(sample,
     for (i in seq_len(num_values)){
       value <- unique_values[i]
       # Generate a middle layer for the missing values after split.by.
-      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-      df <- data.frame(x = Seurat::Embeddings(sample, reduction = reduction)[, labels[1]],
-                       y = Seurat::Embeddings(sample, reduction = reduction)[, labels[2]])
-
-
-      if (isFALSE(raster)){
-        na_layer <- ggplot2::geom_point(data = df, mapping = ggplot2::aes(x = .data$x,
-                                                                          y = .data$y),
-                                        colour = na.value,
-                                        size = pt.size,
-                                        show.legend = FALSE)
-      } else if (isTRUE(raster)){
-        na_layer <- scattermore::geom_scattermore(data = df,
-                                                  mapping = ggplot2::aes(x = .data$x,
-                                                                         y = .data$y),
-                                                  color = na.value,
-                                                  size = pt.size,
-                                                  stroke = pt.size / 2,
-                                                  show.legend = FALSE,
-                                                  pointsize = pt.size,
-                                                  pixels = c(raster.dpi, raster.dpi))
-      }
-
       sample.use <- sample[, sample@meta.data[, split.by] == value]
 
       if (utils::packageVersion("Seurat") >= "4.1.0"){
@@ -486,26 +517,20 @@ do_DimPlot <- function(sample,
 
       # Add another layer of black dots to make the colored ones stand up.
       if (isTRUE(plot_cell_borders)){
-        df.subset <- data.frame(x = Seurat::Embeddings(sample.use, reduction = reduction)[, labels[1]],
-                                y = Seurat::Embeddings(sample.use, reduction = reduction)[, labels[2]])
-
-        if (isFALSE(raster)){
-          base_layer.subset <- ggplot2::geom_point(data = df.subset, mapping = ggplot2::aes(x = .data$x,
-                                                                              y = .data$y),
-                                                   colour = border.color,
-                                                   size = pt.size * border.size,
-                                                   show.legend = FALSE)
-        } else if (isTRUE(raster)){
-          base_layer.subset <- scattermore::geom_scattermore(data = df.subset,
-                                                             mapping = ggplot2::aes(x = .data$x,
-                                                                                    y = .data$y),
-                                                             color = border.color,
-                                                             size = pt.size * border.size,
-                                                             stroke = pt.size / 2,
-                                                             show.legend = FALSE,
-                                                             pointsize = pt.size * border.size,
-                                                             pixels = c(raster.dpi, raster.dpi))
-        }
+        out <- compute_umap_layer(sample = sample.use,
+                                  labels = colnames(sample.use@reductions[[reduction]][[]])[dims],
+                                  pt.size = pt.size,
+                                  border.density = border.density,
+                                  border.size = border.size,
+                                  border.color = border.color,
+                                  raster = raster,
+                                  raster.dpi = raster.dpi,
+                                  reduction = reduction,
+                                  group.by = group.by,
+                                  split.by = split.by,
+                                  na.value = na.value,
+                                  n = 100)
+        base_layer.subset <- out$base_layer
         p.loop$layers <- append(base_layer.subset, p.loop$layers)
       }
       # Add NA layer.
@@ -566,32 +591,32 @@ do_DimPlot <- function(sample,
       cells.use <- unique(c(cells.1, cells.2))
     }
 
+    sample$selected_cells <- ifelse(colnames(sample) %in% cells.use, "Selected cells", NA)
+    colors.use.highlight <- c("Selected cells" = colors.use)
     if (utils::packageVersion("Seurat") >= "4.1.0"){
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
-                           cells.highlight = cells.use,
-                           sizes.highlight = sizes.highlight,
+                           group.by = "selected_cells",
                            dims = dims,
-                           pt.size = pt.size,
+                           pt.size = sizes.highlight,
                            raster = raster,
                            raster.dpi = c(raster.dpi, raster.dpi),
-                           ncol = ncol)
+                           ncol = ncol,
+                           cols = colors.use.highlight,
+                           na.value = "#bfbfbf00")
     } else { # nocov start
       p <- Seurat::DimPlot(sample,
                            reduction = reduction,
-                           cells.highlight = cells.use,
-                           sizes.highlight = sizes.highlight,
                            dims = dims,
-                           pt.size = pt.size,
+                           pt.size = sizes.highlight,
                            raster = raster,
-                           ncol = ncol)
+                           ncol = ncol,
+                           cols = colors.use.highlight,
+                           na.value = "#bfbfbf00")
     } # nocov end
 
-    p <- add_scale(p = p,
-                   function_use = ggplot2::scale_color_manual(labels = c("Not selected", "Selected"),
-                                                              values = c(na.value, colors.use),
-                                                              na.value = na.value),
-                   scale = "color") &
+    p <- p &
+      ggplot2::ggtitle("") &
       ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
                                                     ncol = legend.ncol,
                                                     nrow = legend.nrow,
@@ -601,6 +626,22 @@ do_DimPlot <- function(sample,
 
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){
+      # Compute extra layer for the highlighted cells.
+      out <- compute_umap_layer(sample = sample[, cells.use],
+                                labels = colnames(sample[, cells.use]@reductions[[reduction]][[]])[dims],
+                                pt.size = pt.size,
+                                border.density = border.density,
+                                border.size = border.size,
+                                border.color = border.color,
+                                raster = raster,
+                                raster.dpi = raster.dpi,
+                                reduction = reduction,
+                                group.by = group.by,
+                                split.by = split.by,
+                                n = 100)
+      base_layer_subset <- out$base_layer
+      p$layers <- append(base_layer_subset, p$layers)
+      p$layers <- append(na_layer, p$layers)
       p$layers <- append(base_layer, p$layers)
     }
 

@@ -36,7 +36,10 @@ do_NebulosaPlot(
   verbose = TRUE,
   na.value = "grey75",
   plot.axes = FALSE,
-  number.breaks = 5
+  number.breaks = 5,
+  use_viridis = TRUE,
+  sequential.palette = "YlGnBu",
+  sequential_direction = -1
 )
 }
 \arguments{
@@ -119,6 +122,12 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 \item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.

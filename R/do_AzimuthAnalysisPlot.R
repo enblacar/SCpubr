@@ -37,8 +37,11 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    colors.use = NULL,
                                    label = TRUE,
                                    legend.position = "bottom",
+                                   use_viridis = TRUE,
                                    viridis_color_map = "G",
                                    viridis_direction = 1,
+                                   sequential.palette = "YlGnBu",
+                                   sequential_direction = -1,
                                    number.breaks = 5){
 
 
@@ -49,7 +52,8 @@ do_AzimuthAnalysisPlot <- function(sample,
   if (!(is.null(ref.obj))) {check_Seurat(sample = sample)}
 
   # Check logical parameters.
-  logical_list <- list("raster" = raster)
+  logical_list <- list("raster" = raster,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("annotation.cutoff" = annotation.cutoff,
@@ -58,7 +62,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                        "border.size" = border.size,
                        "font.size" = font.size,
                        "viridis_direction" = viridis_direction,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("annotation.labels" = annotation.labels,
@@ -70,7 +75,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                          "border.color" = border.color,
                          "na.value" = na.value,
                          "ref.reduction" = ref.reduction,
-                         "viridis_color_map" = viridis_color_map)
+                         "viridis_color_map" = viridis_color_map,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value, parameter_name = "na.value")
@@ -78,6 +84,8 @@ do_AzimuthAnalysisPlot <- function(sample,
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
 
   output_list <- list()
 
@@ -249,7 +257,10 @@ do_AzimuthAnalysisPlot <- function(sample,
                                  font.type = font.type,
                                  viridis_color_map = viridis_color_map,
                                  viridis_direction = viridis_direction,
-                                 number.breaks = number.breaks)
+                                 number.breaks = number.breaks,
+                                 use_viridis = use_viridis,
+                                 sequential.palette = sequential.palette,
+                                 sequential_direction = sequential_direction)
 
   # FeaturePlot with the mapping scores.
   p.mapping <- do_FeaturePlot(sample = sample,
@@ -265,7 +276,10 @@ do_AzimuthAnalysisPlot <- function(sample,
                               font.type = font.type,
                               viridis_color_map = viridis_color_map,
                               viridis_direction = viridis_direction,
-                              number.breaks = number.breaks)
+                              number.breaks = number.breaks,
+                              use_viridis = use_viridis,
+                              sequential.palette = sequential.palette,
+                              sequential_direction = sequential_direction)
 
 
   # Generate a combined report.

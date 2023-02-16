@@ -68,6 +68,48 @@ do_AlluvialPlot <- function(sample,
   check_suggests(function_name = "do_AlluvialPlot")
   check_Seurat(sample)
 
+  # Check logical parameters.
+  logical_list <- list("use_labels" = use_labels,
+                       "stratum.fill.conditional" = stratum.fill.conditional,
+                       "flip" = flip,
+                       "plot.grid" = plot.grid,
+                       "repel" = repel,
+                       "use_geom_flow" = use_geom_flow,
+                       "use_viridis" = use_viridis)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  # Check numeric parameters.
+  numeric_list <- list("stratum.width" = stratum.width,
+                       "font.size" = font.size,
+                       "viridis_direction" = viridis_direction)
+  check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+  # Check character parameters.
+  character_list <- list("first_group" = first_group,
+                         "last_group" = last_group,
+                         "middle_groups" = middle_groups,
+                         "colors.use" = colors.use,
+                         "plot.title" = plot.title,
+                         "plot.subtitle" = plot.subtitle,
+                         "plot.caption" = plot.caption,
+                         "font.type" = font.type,
+                         "xlab" = xlab,
+                         "ylab" = ylab,
+                         "fill.by" = fill.by,
+                         "stratum.color" = stratum.color,
+                         "stratum.fill" = stratum.fill,
+                         "alluvium.color" = alluvium.color,
+                         "flow.color" = flow.color,
+                         "label.color" = label.color,
+                         "curve_type" = curve_type,
+                         "viridis_color_map" = viridis_color_map,
+                         "grid.color" = grid.color,
+                         "grid.type" = grid.type ,
+                         "na.value" = na.value,
+                         "legend.position" = legend.position,
+                         "legend.title" = legend.title)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
+
+
+
   StatStratum <- ggalluvial::StatStratum
   `%>%` <- magrittr::`%>%`
 
@@ -93,18 +135,46 @@ do_AlluvialPlot <- function(sample,
 
   for (var in vars.use){
     assertthat::assert_that(var %in% colnames(sample@meta.data),
-                            msg = "Please make sure that the variables provided to first_group, middle_groups and last_group are in sample@meta.data.")
+                            msg = paste0(crayon_body("Please make sure that the variables provided to "),
+                                         crayon_key("first_group"),
+                                         crayon_body(", "),
+                                         crayon_key("middle_groups"),
+                                         crayon_body(" and "),
+                                         crayon_key("last_group"),
+                                         crayon_body(" are "),
+                                         crayon_key("metadata variables"),
+                                         crayon_body(".")))
 
     assertthat::assert_that(class(sample@meta.data[, var]) %in% c("character", "factor"),
-                            msg = "Please make sure that the variables provided to first_group, middle_groups and last_group are either characters or factors.")
+                            msg = paste0(crayon_body("Please make sure that the variables provided to "),
+                                         crayon_key("first_group"),
+                                         crayon_body(", "),
+                                         crayon_key("middle_groups"),
+                                         crayon_body(" and "),
+                                         crayon_key("last_group"),
+                                         crayon_body(" are of class "),
+                                         crayon_key("character"),
+                                         crayon_body(" or "),
+                                         crayon_key("factor"),
+                                         crayon_body(".")))
   }
 
   assertthat::assert_that(length(fill.by) == 1,
-                          msg = "Parameter fill.by has to be a single value.")
+                          msg = paste0(crayon_body("Please provide a single value to "),
+                                       crayon_key("fill.by"),
+                                       crayon_body(".")))
 
 
   assertthat::assert_that(isTRUE(fill.by %in% vars.use),
-                          msg = "Parameter fill.by has to be the same as one of the values in first_group, last_group or middle_groups.")
+                          msg = paste0(crayon_body("Paramter "),
+                                       crayon_key("fill.by"),
+                                       crayon_body(" has to be the same as one of the values in "),
+                                       crayon_key("first_group"),
+                                       crayon_body(", "),
+                                       crayon_key("middle_groups"),
+                                       crayon_body(" and "),
+                                       crayon_key("last_group"),
+                                       crayon_body(".")))
   suppressMessages({
     data <- sample@meta.data %>%
             dplyr::select(dplyr::all_of(vars.use)) %>%

@@ -33,8 +33,11 @@ do_AzimuthAnalysisPlot(
   colors.use = NULL,
   label = TRUE,
   legend.position = "bottom",
+  use_viridis = TRUE,
   viridis_color_map = "G",
   viridis_direction = 1,
+  sequential.palette = "YlGnBu",
+  sequential_direction = -1,
   number.breaks = 5
 )
 }
@@ -91,9 +94,15 @@ do_AzimuthAnalysisPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 }

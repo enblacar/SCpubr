@@ -2,19 +2,49 @@
 
 ## General
 - Now using `min.cutoff` or `max.cutoff`, now the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. Be careful, as this interacts with `enforce_symmetry`. 
-- Added "white" color to viridis scales in heatmap-based plots when `viridis_direction` is set to -1 to prevent the heatmap from being all colored. Thus, stronger values have more contrast.
-- Added `disable_white_in_viridis` to heatmap-based plots to remove the previously described behavior.
 - Added `number.breaks` parameter to control the number of breaks in the legend of ggplot2-based plots. It will not always work, as the function will try to fit the breaks accordingly. But still, will give some range of freedom to the user.
 - Removed `colorsteps` from `legend.type` parameters as it was prone to generate unintended bugs in the code. 
 - Changed default values from `min.cutoff` and `max.cutoff` from `NULL` to `NA`. 
+- Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
+- Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
+- Re-implemented all heatmap-based plots in ggplot2. This means that this is a **breaking change**. All heatmap-specific parameters have been replaced with the overarching parameters that are used across functions. This decision was taking after a lot of thought, but ultimately, having all plots rely on ggplot2 makes it way more compatible to work with them together, to debug, and to further implement new ideas.
 
 ## `SCpubr::do_CorrelationPlot`
 - Added `use_viridis` parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.
 - Added `min.cutoff` and `max.cutoff` parameter to add cutoffs to the scales.
 
+## `SCpubr::do_DimPlot`
+- Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.
+
+## `SCpubr::do_DotPlot`
+- Removed `split.by` parameter in favor or the higher consistency and proper functionality accross parameters. Will probably come in the future, implemented outside of the umbrella of Seurat. 
+
+
+## `SCpubr::do_EnrichmentHeatmap`
+- **BREAKING CHANGE** removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately. 
+
+
+## `SCpubr::do_FeaturePlot`
+- Modified underlying code to show a border around selected cells when using `split.by`, `cells.hightlight` and `idents.highlight`.
+- Added parameter `border.density` to reduce the amount of extra cells drawn on the background to generate the borders. This will be a number between 0 and 1 corresponding to the quantile of the distribution of density of the points in the scatterplot drawn in the background. The lower the value, the harder it will be to keep a border around all cells, while it will significantly reduce the overall weight of the plot object.
+- Added parameter `group.by`, that allows to plot a big dot in the center of each group designated by `group.by` and thus allowing to locate easily where each identity is in the FeaturePlot. Also, plots a legend matching the color of the dots. This can be tweaked with additional parameters such as:
+  - `group.by.show.dots` to controlw hether these dots are plotted or not (to allow only plotting colored borders around cells - see below).
+  - `group.by.dot.size` to control the size of the introduced dots.
+  - `group.by.cell_border` to plot another contour-like border which also displays the color coding of the clusters designated by `group.by`, to signal the reach of each cluster. However, this basically signals the cluster the cells in the periphery of the cell blobs belong to. Take that into account.
+  - `group.by.cell_borders.alpha` controls the alpha of the new cell borders.
+  - `group.by.legend` controls the legend title of the new legend.
+
 ## `SCpubr::do_GroupwiseDEPlot`
 - Added `set_min_expression_to_zero` parameter to set the viridis color scale to 0 in the expression heatmap.
 
+## `SCpubr::do_PathwayActivityPlot`
+- Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value.
+- Removed `splity.by` parameter as one now can provide multiple values to `group.by`, achieving a similar result.
+
+
+## `SCpubr::do_TFActivityPlot()`
+- Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value. Now it is set up to the top 100 significant genes per cluster.
+- Removed `splity.by` parameter as one now can provide multiple values to `group.by`, achieving a similar result.
 
 # SCpubr v1.1.2
 More hotfixes in unit tests to comply with CRAN checks.

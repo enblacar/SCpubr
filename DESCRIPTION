@@ -23,6 +23,7 @@ Suggests:
     ggbeeswarm,
     ggdist,
     ggExtra,
+    ggh4x,
     ggplot2 (>= 3.4.0),
     ggplotify,
     ggrastr,
@@ -62,6 +63,10 @@ Suggests:
     ggnewscale,
     AnnotationDbi,
     org.Hs.eg.db,
+    crayon,
+    labeling,
+    MASS,
+    RColorBrewer,
     liana (>= 0.1.6),
     ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr

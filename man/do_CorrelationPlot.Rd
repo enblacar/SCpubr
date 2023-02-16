@@ -9,25 +9,27 @@ do_CorrelationPlot(
   mode = "hvg",
   assay = NULL,
   group.by = NULL,
-  column_title = "",
-  row_title = "",
-  cluster_cols = TRUE,
-  cluster_rows = TRUE,
   legend.title = "Pearson coef.",
-  row_names_rot = 0,
-  column_names_rot = 0,
-  use_viridis = FALSE,
-  symmetrical_scale = TRUE,
-  viridis_color_map = "G",
-  viridis_direction = 1,
-  cell_size = 8,
+  enforce_symmetry = TRUE,
+  font.size = 14,
+  font.type = "sans",
   na.value = "grey75",
+  legend.width = 1,
+  legend.length = 20,
+  legend.framewidth = 0.5,
+  legend.tickwidth = 0.5,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
+  legend.type = "colorbar",
   legend.position = "bottom",
-  legend.length = 75,
-  legend.width = 5,
-  legend.framecolor = "black",
   min.cutoff = NA,
-  max.cutoff = NA
+  max.cutoff = NA,
+  number.breaks = 5,
+  plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
+  diverging.palette = "RdBu",
+  rotate_x_axis_labels = 45
 )
 }
 \arguments{
@@ -39,29 +41,34 @@ do_CorrelationPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
-
-\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
-
-\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
-
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
-\item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
+\item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
-\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
+\item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
-\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
-
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
-
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+
+\item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
+
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
+
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
+
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
+
+\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
+\itemize{
+\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
+\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
+}}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
@@ -72,11 +79,15 @@ do_CorrelationPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
-
-\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
-
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 }
 \value{
 A ComplexHeatmap object.

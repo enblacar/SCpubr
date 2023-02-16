@@ -140,15 +140,15 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     testthat::skip_on_cran()
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        top_interactions = 50,
-                                       keep_source = "0",
-                                       keep_target = "0",
+                                       keep_source = "5",
+                                       keep_target = "9",
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
                                        top_interactions = 50,
-                                       keep_source = "0",
-                                       keep_target = "0",
+                                       keep_source = "5",
+                                       keep_target = "9",
                                        flip = TRUE,
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")

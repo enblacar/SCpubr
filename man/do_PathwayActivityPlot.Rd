@@ -10,24 +10,13 @@ do_PathwayActivityPlot(
   group.by = NULL,
   split.by = NULL,
   plot_FeaturePlots = FALSE,
-  plot_Heatmaps = TRUE,
   plot_GeyserPlots = FALSE,
-  row_title = NULL,
-  column_title = NULL,
-  flip = FALSE,
-  cluster_cols = TRUE,
-  cluster_rows = TRUE,
   row_names_rot = 0,
-  column_names_rot = 45,
-  cell_size = 8,
   pt.size = 1,
   plot_cell_borders = TRUE,
   border.size = 2,
   na.value = "grey75",
   legend.position = "bottom",
-  heatmap.legend.length = 75,
-  heatmap.legend.width = 5,
-  heatmap.legend.framecolor = "black",
   legend.width = 1,
   legend.length = 20,
   legend.framewidth = 0.5,
@@ -45,8 +34,9 @@ do_PathwayActivityPlot(
   viridis_direction = 1,
   min.cutoff = NA,
   max.cutoff = NA,
-  disable_white_in_viridis = FALSE,
-  number.breaks = 5
+  number.breaks = 5,
+  diverging.palette = "RdBu",
+  flip = FALSE
 )
 }
 \arguments{
@@ -60,25 +50,9 @@ do_PathwayActivityPlot(
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 
-\item{plot_Heatmaps}{\strong{\code{\link[base]{logical}}} | Compute output heatmap showcasing the average TF activity per regulon and group.by variable.}
-
 \item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
-\item{row_title}{\strong{\code{\link[base]{character}}} | Title for the rows of the heatmaps. Only works with single heatmaps.}
-
-\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
-
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
-
-\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
-
 \item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
-
-\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
-
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
 
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
@@ -96,10 +70,6 @@ do_PathwayActivityPlot(
 \item \emph{\code{right}}: Right of the figure.
 \item \emph{\code{none}}: No legend is displayed.
 }}
-
-\item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
-
-\item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
@@ -138,9 +108,11 @@ do_PathwayActivityPlot(
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
-
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

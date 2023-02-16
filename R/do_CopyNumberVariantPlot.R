@@ -42,13 +42,18 @@ do_CopyNumberVariantPlot <- function(sample,
                                      verbose = FALSE,
                                      min.cutoff = NA,
                                      max.cutoff = NA,
-                                     number.breaks = 5){
+                                     number.breaks = 5,
+                                     diverging.palette = "RdBu",
+                                     sequential.palette = "YlGnBu",
+                                     sequential_direction = -1,
+                                     use_viridis = TRUE){
 
 
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
                        "enforce_symmetry" = enforce_symmetry,
-                       "plot_cell_borders" = plot_cell_borders)
+                       "plot_cell_borders" = plot_cell_borders,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -62,7 +67,8 @@ do_CopyNumberVariantPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "sequential_direction" = sequential_direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -73,7 +79,9 @@ do_CopyNumberVariantPlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "legend.title" = legend.title,
-                         "viridis_color_map" = viridis_color_map)
+                         "viridis_color_map" = viridis_color_map,
+                         "diverging.palette" = diverging.palette,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -90,6 +98,9 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
+  check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
 
   if (is.null(chromosome_focus)){
     chromosome_list <- c(as.character(seq(1, 22)))
@@ -227,7 +238,11 @@ do_CopyNumberVariantPlot <- function(sample,
                        viridis_direction = viridis_direction,
                        min.cutoff = min.cutoff,
                        max.cutoff = max.cutoff,
-                       number.breaks = number.breaks)
+                       number.breaks = number.breaks,
+                       diverging.palette = diverging.palette,
+                       use_viridis = use_viridis,
+                       sequential.palette = sequential.palette,
+                       sequential_direction = sequential_direction)
 
 
     p.f <- do_FeaturePlot(sample = sample,
@@ -250,7 +265,11 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.title = legend.title.use,
                           min.cutoff = min.cutoff,
                           max.cutoff = max.cutoff,
-                          number.breaks = number.breaks)
+                          number.breaks = number.breaks,
+                          diverging.palette = diverging.palette,
+                          use_viridis = use_viridis,
+                          sequential.palette = sequential.palette,
+                          sequential_direction = sequential_direction)
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),
@@ -258,7 +277,7 @@ do_CopyNumberVariantPlot <- function(sample,
 
       scale_limit <- c((1 - (limits - 1)), limits)
 
-      scale.use <- ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
+      scale.use <- ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                                   limits = c(-limits, limits),
                                                   na.value = na.value)
       suppressMessages({
@@ -268,11 +287,11 @@ do_CopyNumberVariantPlot <- function(sample,
                                  color = "grey50",
                                  linetype = "dashed",
                                  linewidth = 1) +
-             ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
+             ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                             limits = scale_limit,
                                             na.value = na.value)
         p.f <- p.f +
-               ggplot2::scale_color_gradientn(colors = c("#033270", "#4091C9", "grey95", "#c94040", "#65010C"),
+               ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                               limits = scale_limit,
                                               na.value = na.value)
       })
