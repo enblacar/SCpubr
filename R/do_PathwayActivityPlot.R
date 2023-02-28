@@ -125,7 +125,16 @@ do_PathwayActivityPlot <- function(sample,
 
   list.out <- list()
 
-
+  if (!is.null(split.by) & !is.null(group.by)){
+    assertthat::assert_that(length(group.by) == 1,
+                            msg = paste0(crayon_body("When using "),
+                                         crayon_key("split.by"), 
+                                         crayon_body(" make sure you only provide a single value to "),
+                                         crayon_key("group.by"),
+                                         crayon_body(". Otherwise, the prot will not keep the proportions. This is a design choice. Thanks!")))
+  }
+  
+  
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
@@ -156,6 +165,26 @@ do_PathwayActivityPlot <- function(sample,
       df.order[is.na(df.order)] <- 0
       matrix.list[[group]][["df"]] <- df
       matrix.list[[group]][["df.order"]] <- df.order
+      
+      
+      if (!is.null(split.by)){
+        sample$split.by <- sample@meta.data[, split.by]
+        
+        df.split <- t(as.matrix(sample@assays$progeny@scale.data)) %>%
+          as.data.frame() %>%
+          tibble::rownames_to_column(var = "cell") %>%
+          dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
+              tibble::rownames_to_column(var = "cell")},
+              by = "cell") %>%
+          dplyr::select(-"cell") %>%
+          tidyr::pivot_longer(cols = -c("group.by", "split.by"),
+                              names_to = "source",
+                              values_to = "score") %>%
+          dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
+          dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
+        matrix.list[[group]][["df.split"]] <- df.split
+      }
+      
     })
   }
 
@@ -168,6 +197,11 @@ do_PathwayActivityPlot <- function(sample,
     df.order <- matrix.list[[group]][["df.order"]]
 
     data <- df
+    
+    if (!is.null(split.by)){
+      data <- matrix.list[[group]][["df.split"]]
+    }
+    
     # Transform to wide to retrieve the hclust.
     df.order <- df.order %>%
                 tidyr::pivot_wider(id_cols = "group.by",
@@ -259,6 +293,12 @@ do_PathwayActivityPlot <- function(sample,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits) +
          ggplot2::coord_equal()
+    
+    if (!is.null(split.by)){
+      p <- p + 
+        ggplot2::facet_grid(~ .data$split.by,
+                            drop = FALSE)
+    }
 
     p <- modify_continuous_legend(p = p,
                                   legend.title = "Regulon Activity",
@@ -328,6 +368,10 @@ do_PathwayActivityPlot <- function(sample,
                         axis.title.x.top = axis.parameters$axis.title.x.top,
                         axis.title.y.right = axis.parameters$axis.title.y.right,
                         axis.title.y.left = axis.parameters$axis.title.y.left,
+                        strip.background = axis.parameters$strip.background,
+                        strip.clip = axis.parameters$strip.clip,
+                        strip.text = axis.parameters$strip.text,
+                        legend.position = axis.parameters$legend.position,
                         axis.line = ggplot2::element_blank(),
                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                         plot.subtitle = ggplot2::element_text(hjust = 0),
@@ -343,7 +387,6 @@ do_PathwayActivityPlot <- function(sample,
                         plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10),
                         panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
-                        legend.position = legend.position,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))

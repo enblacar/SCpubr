@@ -21,6 +21,7 @@ do_TFActivityPlot <- function(sample,
                               n_tfs = 25,
                               tfs.use = NULL,
                               group.by = NULL,
+                              split.by = NULL,
                               plot_FeaturePlots = FALSE,
                               plot_GeyserPlots = FALSE,
                               row_names_rot = 0,
@@ -79,6 +80,7 @@ do_TFActivityPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
+                         "split.by" = split.by,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
                          "legend.framecolor" = legend.framecolor,
@@ -91,7 +93,6 @@ do_TFActivityPlot <- function(sample,
                          "diverging.palette" = diverging.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-  `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
 
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -125,12 +126,24 @@ do_TFActivityPlot <- function(sample,
                 scale() %>%
                 t()
   sample@assays$dorothea@scale.data <- scale.data
-
+  
+  if (!is.null(split.by) & !is.null(group.by)){
+    assertthat::assert_that(length(group.by) == 1,
+                            msg = paste0(crayon_body("When using "),
+                                         crayon_key("split.by"), 
+                                         crayon_body(" make sure you only provide a single value to "),
+                                         crayon_key("group.by"),
+                                         crayon_body(". Otherwise, the prot will not keep the proportions. This is a design choice. Thanks!")))
+  }
+  
+  
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
     group.by = "Groups"
   }
+  
+  
   # Plotting
   list.out <- list()
 
@@ -154,6 +167,25 @@ do_TFActivityPlot <- function(sample,
               dplyr::group_by(.data$group.by, .data$source) %>%
               dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         df.order <- df
+        
+        if (!is.null(split.by)){
+          sample$split.by <- sample@meta.data[, split.by]
+          
+          df.split <- t(as.matrix(sample@assays$dorothea@scale.data)) %>%
+            as.data.frame() %>%
+            tibble::rownames_to_column(var = "cell") %>%
+            dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
+                tibble::rownames_to_column(var = "cell")},
+                by = "cell") %>%
+            dplyr::select(-"cell") %>%
+            tidyr::pivot_longer(cols = -c("group.by", "split.by"),
+                                names_to = "source",
+                                values_to = "score") %>%
+            dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
+            dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
+          matrix.list[[group]][["df.split"]] <- df.split
+        }
+        
 
       })
 
@@ -189,6 +221,13 @@ do_TFActivityPlot <- function(sample,
       # Subset long data frame to top tfs and transform to wide matrix
       data <- df %>%
               dplyr::filter(.data$source %in% shared_tfs)
+      
+      if (!is.null(split.by)){
+        df.split <- matrix.list[[group]][["df.split"]]
+        data <- df.split %>%
+                dplyr::filter(.data$source %in% shared_tfs)
+      }
+      
       # Transform to wide to retrieve the hclust.
       df.order <- df.order %>%
                   dplyr::filter(.data$source %in% shared_tfs) %>%
@@ -281,9 +320,15 @@ do_TFActivityPlot <- function(sample,
                                          name = "Regulon Score",
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
-                                         limits = scale.setup$limits) +
+                                         limits = scale.setup$limits) + 
            ggplot2::coord_equal()
-
+      
+      if (!is.null(split.by)){
+        p <- p + 
+          ggplot2::facet_grid(~ .data$split.by,
+                              drop = FALSE)
+      }
+        
       p <- modify_continuous_legend(p = p,
                                     legend.title = "Regulon Activity",
                                     legend.aes = "fill",
@@ -352,6 +397,10 @@ do_TFActivityPlot <- function(sample,
                           axis.title.x.top = axis.parameters$axis.title.x.top,
                           axis.title.y.right = axis.parameters$axis.title.y.right,
                           axis.title.y.left = axis.parameters$axis.title.y.left,
+                          strip.background = axis.parameters$strip.background,
+                          strip.clip = axis.parameters$strip.clip,
+                          strip.text = axis.parameters$strip.text,
+                          legend.position = axis.parameters$legend.position,
                           axis.line = ggplot2::element_blank(),
                           plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                           plot.subtitle = ggplot2::element_text(hjust = 0),
@@ -367,14 +416,15 @@ do_TFActivityPlot <- function(sample,
                           plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10),
                           panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
                           panel.grid.major = ggplot2::element_blank(),
-                          legend.position = legend.position,
                           plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                           panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+                          legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                          panel.spacing.y = ggplot2::unit(0, "cm"))
 
       list.heatmaps[[group]] <- p
     }
 
+    
     # Plot the combined plot
     input <- if(isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
     p <- patchwork::wrap_plots(input,

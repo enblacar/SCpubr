@@ -10,6 +10,7 @@ do_TFActivityPlot(
   n_tfs = 25,
   tfs.use = NULL,
   group.by = NULL,
+  split.by = NULL,
   plot_FeaturePlots = FALSE,
   plot_GeyserPlots = FALSE,
   row_names_rot = 0,
@@ -51,6 +52,8 @@ do_TFActivityPlot(
 \item{tfs.use}{\strong{\code{\link[base]{character}}} | Restrict the analysis to given regulons.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
+
+\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 

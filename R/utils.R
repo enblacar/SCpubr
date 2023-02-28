@@ -4090,6 +4090,24 @@ handle_axis <- function(flip,
                         rotate_x_axis_labels){
   # Set axis theme parameters.
   if (isFALSE(flip)){
+    # Strips
+    if (counter == length(group.by)){
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_text(face = "bold", color = "black")
+      legend.position <- "none"
+    } else if (counter == 1) {
+      legend.position <- "bottom"
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_blank()
+    } else {
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_blank()
+      legend.position <- "none"
+    }
+    
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -4137,6 +4155,8 @@ handle_axis <- function(flip,
         axis.title.x.top <- ggplot2::element_blank()
         axis.title.x.bottom <- ggplot2::element_blank()
       }
+      
+      if (counter == length(group.by))
       axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
                                                  angle = 0,
                                                  hjust = 1,
@@ -4144,6 +4164,25 @@ handle_axis <- function(flip,
       axis.title.y.right <- ggplot2::element_blank()
     }
   } else {
+    # Strips and legend.
+    if (counter == 1){
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_text(face = "bold", color = "black")
+      legend.position <- "none"
+    } else if (counter == length(group.by)){
+      legend.position <- "right"
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_blank()
+    } else {
+      strip.background <- ggplot2::element_blank()
+      strip.clip <- "off"
+      strip.text <- ggplot2::element_blank()
+      legend.position <- "none"
+    }
+    
+    
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -4221,7 +4260,11 @@ handle_axis <- function(flip,
                    "axis.title.x.bottom" = axis.title.x.bottom,
                    "axis.title.x.top" = axis.title.x.top,
                    "axis.title.y.left" = axis.title.y.left,
-                   "axix.title.y.right" = axis.title.y.right)
+                   "axix.title.y.right" = axis.title.y.right,
+                   "strip.background" = strip.background,
+                   "strip.clip" = strip.clip,
+                   "strip.text" = strip.text,
+                   "legend.position" = legend.position)
   return(out_list)
 
 }
