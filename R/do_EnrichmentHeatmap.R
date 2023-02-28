@@ -134,7 +134,7 @@ do_EnrichmentHeatmap <- function(sample,
                 crayon_key("flavor = Seurat"),
                 crayon_body(" do not use the "),
                 crayon_key("slot"),
-                crayon_body("parameter.\nThis is determiend by default in"),
+                crayon_body(" parameter.\nThis is determiend by default in"),
                 crayon_key("Seurat"),
                 crayon_body(".")), call. = FALSE)
   }

@@ -1,4 +1,4 @@
-#' Perform a single-cell-based heatmap showing the expression of genes.
+#' Perform a single-cell-based heatmap showing the enrichment in a list of gene sets.
 #'
 #' This function is heavily inspired by \strong{\code{\link[Seurat]{DoHeatmap}}}.
 #'
@@ -10,72 +10,78 @@
 #' @param metadata.location \strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.
 #' @return A ggplot2 object.
 #' @export
-
 #'
 #' @examples
-do_SCHeatmap <- function(sample,
-                         features,
-                         assay = "SCT",
-                         slot = "data",
-                         group.by = NULL,
-                         metadata = NULL,
-                         metadata.colors = NULL,
-                         metadata.location = "top",
-                         xlab = "Cells",
-                         ylab = "Genes",
-                         font.size = 14,
-                         font.type = "sans",
-                         plot.title = NULL,
-                         plot.subtitle = NULL,
-                         plot.caption = NULL,
-                         legend.position = "bottom",
-                         legend.title = "Expression",
-                         legend.type = "colorbar",
-                         legend.framewidth = 0.5,
-                         legend.tickwidth = 0.5,
-                         legend.length = 20,
-                         legend.width = 1,
-                         legend.framecolor = "grey50",
-                         legend.tickcolor = "white",
-                         strip.text.color = "black",
-                         rotate_strip_labels = 0,
-                         strip.spacing = 10,
-                         legend.ncol = NULL,
-                         legend.nrow = NULL,
-                         legend.byrow = FALSE,
-                         min.cutoff = NA,
-                         max.cutoff = NA,
-                         colors.use = NULL,
-                         number.breaks = 5,
-                         main.heatmap.size = 0.95,
-                         enforce_symmetry = FALSE,
-                         use_viridis = FALSE,
-                         viridis_color_map = "G",
-                         viridis_direction = -1,
-                         na.value = "grey75",
-                         diverging.palette = "RdBu",
-                         sequential.palette = "YlGnBu",
-                         sequential_direction = 1,
-                         make_size_proportional = TRUE,
-                         verbose = TRUE){
-
-  check_suggests(function_name = "do_SCHeatmap")
+#' \donttest{
+#' TBD
+#' }
+do_SCEnrichmentHeatmap <- function(sample,
+                                   input_gene_list,
+                                   assay = NULL,
+                                   slot = NULL,
+                                   group.by = NULL,
+                                   metadata = NULL,
+                                   metadata.colors = NULL,
+                                   metadata.location = "top",
+                                   subsample = NA,
+                                   cluster_cells = TRUE,
+                                   flavor = "Seurat",
+                                   return_object = FALSE,
+                                   return_matrix = FALSE,
+                                   ncores = 1,
+                                   storeRanks = TRUE,
+                                   nbin = 24,
+                                   ctrl = 100,
+                                   xlab = "Cells",
+                                   ylab = "Genes",
+                                   font.size = 14,
+                                   font.type = "sans",
+                                   plot.title = NULL,
+                                   plot.subtitle = NULL,
+                                   plot.caption = NULL,
+                                   legend.position = "bottom",
+                                   legend.title = if (flavor != "AUCell") {"Enrichment"} else {"AUC"},
+                                   legend.type = "colorbar",
+                                   legend.framewidth = 0.5,
+                                   legend.tickwidth = 0.5,
+                                   legend.length = 20,
+                                   legend.width = 1,
+                                   legend.framecolor = "grey50",
+                                   legend.tickcolor = "white",
+                                   strip.text.color = "black",
+                                   rotate_strip_labels = 0,
+                                   strip.spacing = 10,
+                                   legend.ncol = NULL,
+                                   legend.nrow = NULL,
+                                   legend.byrow = FALSE,
+                                   min.cutoff = NA,
+                                   max.cutoff = NA,
+                                   number.breaks = 5,
+                                   main.heatmap.size = 0.95,
+                                   enforce_symmetry = FALSE,
+                                   use_viridis = FALSE,
+                                   viridis_color_map = "G",
+                                   viridis_direction = -1,
+                                   na.value = "grey75",
+                                   diverging.palette = "RdBu",
+                                   sequential.palette = "YlGnBu",
+                                   sequential_direction = 1,
+                                   make_size_proportional = TRUE,
+                                   verbose = FALSE){
+  
+  check_suggests(function_name = "do_SCEnrichmentHeatmap")
   check_Seurat(sample)
-
-  # Check the assay.
-  out <- check_and_set_assay(sample = sample, assay = assay)
-  sample <- out[["sample"]]
-  assay <- out[["assay"]]
-
-  # Check slot.
-  slot <- check_and_set_slot(slot = slot)
-
+  
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "make_size_proportional" = make_size_proportional,
                        "verbose" = verbose,
                        "legend.byrow" = legend.byrow,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "cluster_cells" = cluster_cells,
+                       "storeRanks" = storeRanks,
+                       "return_object" = return_object,
+                       "return_matrix" = return_matrix) 
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -92,10 +98,13 @@ do_SCHeatmap <- function(sample,
                        "strip.spacing" = strip.spacing,
                        "rotate_strip_labels" = rotate_strip_labels,
                        "main.heatmap.size" = main.heatmap.size,
-                       "sequential_direction" = sequential_direction)
+                       "sequential_direction" = sequential_direction,
+                       "nbin" = nbin,
+                       "ctrl" = ctrl,
+                       "ncores" = ncores)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
-  character_list <- list("features" = features,
+  character_list <- list("input_gene_list" = input_gene_list,
                          "assay" = assay,
                          "slot" = slot,
                          "group.by" = group.by,
@@ -111,20 +120,20 @@ do_SCHeatmap <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "strip.text.color" = strip.text.color,
-                         "colors.use" = colors.use,
                          "viridis_color_map" = viridis_color_map,
                          "na.value" = na.value,
                          "metadata" = metadata,
                          "metadata.colors" = metadata.colors,
                          "metadata.location" = metadata.location,
                          "diverging.palette" = diverging.palette,
-                         "sequential.palette" = sequential.palette)
-
-
+                         "sequential.palette" = sequential.palette,
+                         "flavor" = flavor) 
+  
+  
   check_colors(na.value, parameter_name = "na.value")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
-
+  
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
@@ -134,111 +143,147 @@ do_SCHeatmap <- function(sample,
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
-
-
+  
+  
   `%>%` <- magrittr::`%>%`
-  genes.avail <- rownames(Seurat::GetAssayData(sample, slot = slot, assay = assay))
-
-  assertthat::assert_that(sum(features %in% genes.avail) > 0,
-                          msg = paste0(crayon_body("None of the features are present in the row names of the assay "),
-                                       crayon_key(assay),
-                                       crayon_body(" using the slot "),
-                                       crayon_key(slot),
-                                       crayon_body(".\nPlease make sure that you only provide "),
-                                       crayon_key("genes"),
-                                       crayon_body(" as input.\nIf you select the slot "),
-                                       crayon_key("scale.data"),
-                                       crayon_body(", sometimes some of the features are missing.")))
-
-
-  missing_features <- features[!(features %in% genes.avail)]
-  if (length(missing_features) > 0){
-    if (isTRUE(verbose)){
-      warning(paste0(crayon_body("Some features are missing in the following assay "),
-                     crayon_key(assay),
-                     crayon_body(" using the slot "),
-                     crayon_key(slot),
-                     crayon_body(":\n"),
-                     paste(sapply(missing_features, crayon_key), collapse = crayon_body(", "))), call. = FALSE)
-    }
+  
+  
+  
+  if (!(is.null(assay)) & flavor == "UCell"){
+    stop(paste0(crayon_body("When using "),
+                crayon_key("flavor = UCell"),
+                crayon_body(" do not use the "),
+                crayon_key("assay"),
+                crayon_body("parameter.\nInstead, make sure that the"),
+                crayon_key("assay"),
+                crayon_body(" you want to compute the scores with is set as the "),
+                crayon_key("default"),
+                crayon_body(" assay.")), call. = FALSE)
   }
-
-  features <- features[features %in% genes.avail]
-
-
-  matrix <- Seurat::GetAssayData(sample,
-                                 assay = assay,
-                                 slot = slot)[features, , drop = FALSE] %>%
-            as.matrix()
-
+  
+  if (!(is.null(slot)) & flavor == "Seurat"){
+    stop(paste0(crayon_body("When using "),
+                crayon_key("flavor = Seurat"),
+                crayon_body(" do not use the "),
+                crayon_key("slot"),
+                crayon_body(" parameter.\nThis is determiend by default in"),
+                crayon_key("Seurat"),
+                crayon_body(".")), call. = FALSE)
+  }
+  
+  if (is.character(input_gene_list)){
+    # If input_gene_list is a character of genes.
+    input_list <- list("Input" = input_gene_list)
+  } else if (is.list(input_gene_list)){
+    input_list <- input_gene_list
+    assertthat::assert_that(!is.null(names(input_list)),
+                            msg = paste0(crayon_body("Please provide a "),
+                                         crayon_key("named list"),
+                                         crayon_body(" to "),
+                                         crayon_key("input_gene_list"),
+                                         crayon_body(".")))
+  }
+  
+  assertthat::assert_that(sum(names(input_gene_list) %in% colnames(sample@meta.data)) == 0,
+                          msg = paste0(crayon_body("Please make sure you do not provide a list of gene sets whose "),
+                                       crayon_key("names"),
+                                       crayon_body(" match any of the "),
+                                       crayon_key("metadata columns"), 
+                                       crayon_body(" of the Seurat object.")))
+  # Compute the enrichment scores.
+  sample <- compute_enrichment_scores(sample = sample,
+                                      input_gene_list = input_list,
+                                      verbose = verbose,
+                                      nbin = nbin,
+                                      ctrl = ctrl,
+                                      flavor = flavor,
+                                      ncores = ncores,
+                                      storeRanks = storeRanks,
+                                      assay = assay,
+                                      slot = slot)
+  
+  
+  assertthat::assert_that(length(group.by) == 1,
+                          msg = paste0(crayon_body("Please provide only a single value to "),
+                                       crayon_key("group.by"),
+                                       crayon_body(".")))
+  
+  
   if (is.null(group.by)){
     sample$Groups <- Seurat::Idents(sample)
     group.by <- "Groups"
   }
-
-  # Colors - check.
-  if (is.null(colors.use)){
-    # Retrieve the unique values in group.by metadata variable.
-    data.use <- sample[[]][, group.by, drop = FALSE]
-    # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
-    names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-    # Generate the color scale based on the unique values of group.by
-    colors.use <- generate_color_scale(names.use)
-  } else {
-    check_colors(colors.use, parameter_name = "colors.use")
-    colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
-  }
-
-
+  
+  
   # Perform hierarchical clustering cluster-wise
   order.use <- if (is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}
-
+  
+  matrix <-  sample@meta.data[, c(names(input_gene_list), group.by)] %>% 
+             tibble::rownames_to_column(var = "cell") %>%
+             dplyr::group_by(.data[[group.by]])
+  
+  if (!is.na(subsample)){
+    matrix <- matrix %>% 
+              dplyr::slice_sample(n = subsample)
+  }
   # Retrieve the order median-wise to cluster heatmap bodies.
   median.matrix <- matrix %>%
-                   t() %>%
-                   as.data.frame() %>%
-                   tibble::rownames_to_column(var = "cell") %>%
-                   dplyr::left_join(y = {sample@meta.data %>%
-                                         tibble::rownames_to_column(var = "cell") %>%
-                                         dplyr::select(dplyr::all_of(c("cell", group.by)))},
-                                    by = "cell") %>%
-                   dplyr::group_by(.data[[group.by]]) %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(features), stats::median)) %>%
+                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_gene_list)), stats::median)) %>%
                    dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
-                   dplyr::select(-.data[[group.by]]) %>%
+                   dplyr::select(-dplyr::all_of(group.by)) %>%
                    as.data.frame() %>%
                    tibble::column_to_rownames(var = "group.by") %>%
                    as.matrix() %>%
                    t()
   group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
   order.use <- order.use[group_order]
-
+  
   # Retrieve the order median-wise for the genes.
-  if (length(features) == 1) {
+  if (length(names(input_gene_list)) == 1) {
     row_order <- c(1)
   } else {
     row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
-    row_order <- features[row_order]
+    row_order <- names(input_gene_list)[row_order]
   }
-
-
+  
+  
   # Compute cell order to group cells withing heatmap bodies.
-  col_order <- list()
-  for (item in order.use){
-    cells.use <- sample@meta.data %>%
-                 tibble::rownames_to_column(var = "cell") %>%
-                 dplyr::filter(.data[[group.by]] == item) %>%
-                 dplyr::pull(.data$cell)
-
-    matrix.subset <- matrix[, cells.use]
-    col_order.use <- stats::hclust(stats::dist(t(matrix.subset), method = "euclidean"), method = "ward.D")$order
-
-    col_order[[item]] <- cells.use[col_order.use]
+  if (isTRUE(cluster_cells)){
+    if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
+      warning(paste0(crayon_body("A given group in "),
+                     crayon_key("group.by"),
+                     crayon_body(" has more than "),
+                     crayon_key("65536"),
+                     crayon_body(" cells. Disabling clustering of the cells.")))
+      cluster_cells <- FALSE
+    }
   }
-
-  col_order <- unlist(unname(col_order))
-
-
+  
+  if (isTRUE(cluster_cells)){
+    col_order <- list()
+    for (item in order.use){
+      cells.use <- matrix %>%
+                   dplyr::filter(.data[[group.by]] == item) %>%
+                   dplyr::pull(.data$cell)
+      
+      matrix.subset <- matrix %>% 
+                       dplyr::ungroup() %>% 
+                       dplyr::select(-dplyr::all_of(c(group.by))) %>% 
+                       tibble::column_to_rownames(var = "cell") %>% 
+                       as.data.frame() %>% 
+                       as.matrix() %>% 
+                       t()
+      matrix.subset <- matrix.subset[, cells.use]
+      col_order.use <- stats::hclust(stats::dist(t(matrix.subset), method = "euclidean"), method = "ward.D")$order
+      
+      col_order[[item]] <- cells.use[col_order.use]
+    }
+    col_order <- unlist(unname(col_order))
+  } else {
+    col_order <- matrix %>% dplyr::pull("cell")
+  }
+  
+  
   # Retrieve metadata matrix.
   metadata_plots <- list()
   if (!is.null(metadata)){
@@ -249,7 +294,7 @@ do_SCHeatmap <- function(sample,
                        as.matrix() %>%
                        t()
     metadata.matrix <- metadata.matrix[, col_order]
-
+    
     counter <- 0
     for (name in metadata){
       counter <- counter + 1
@@ -266,7 +311,13 @@ do_SCHeatmap <- function(sample,
                                  "cell" = factor(.data$cell, levels = col_order)) %>%
                    dplyr::select(-dplyr::all_of(name)) %>%
                    tibble::as_tibble()
-
+      
+      if (name %in% names(metadata.colors)){
+        colors.use <- metadata.colors[[name]]
+      } else {
+        names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
+        colors.use <- SCpubr:::generate_color_scale(names_use = names.use)
+      }
       p <- plot_data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                                   y = .data$y_row,
@@ -275,61 +326,58 @@ do_SCHeatmap <- function(sample,
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
                                space = if(isTRUE(make_size_proportional)) {"fixed"} else {"free"}) +
+           ggplot2::scale_fill_manual(values = colors.use) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
-                                                       title.position = "top",
-                                                       title.hjust = 0.5,
-                                                       ncol = legend.ncol,
-                                                       nrow = legend.nrow,
-                                                       byrow = legend.byrow)) +
+                                                        title.position = "top",
+                                                        title.hjust = 0.5,
+                                                        ncol = legend.ncol,
+                                                        nrow = legend.nrow,
+                                                        byrow = legend.byrow)) +
            ggplot2::xlab(NULL) +
            ggplot2::ylab(NULL)
-
+      
       metadata_plots[[name]] <- p
     }
   }
-
+  
   # Generate the plotting data.
   plot_data <- matrix %>%
+               dplyr::ungroup() %>% 
                as.data.frame() %>%
-               tibble::rownames_to_column(var = "gene") %>%
-               tibble::as_tibble() %>%
-               tidyr::pivot_longer(cols = -"gene",
-                                   names_to = "cell",
+               tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by, "cell")),
+                                   names_to = "gene",
                                    values_to = "expression") %>%
-               dplyr::left_join(y = sample@meta.data[, group.by, drop = FALSE] %>%
-                                  dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>%
-                                  tibble::rownames_to_column(var = "cell"),
-                                by = "cell") %>%
+               dplyr::rename("group.by" = .data[[group.by]]) %>% 
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
                              "gene" = factor(.data$gene, levels = rev(row_order)),
                              "cell" = factor(.data$cell, levels = col_order))
-
-
+  
+  
   # Modify data to fit the cutoffs selected.
   if (!is.na(min.cutoff)){
     plot_data <- plot_data %>%
                  dplyr::mutate("expression" = ifelse(.data$expression < min.cutoff, min.cutoff, .data$expression))
   }
-
+  
   if (!is.na(max.cutoff)){
     plot_data <- plot_data %>%
                  dplyr::mutate("expression" = ifelse(.data$expression > max.cutoff, max.cutoff, .data$expression))
   }
-
+  
   p <- plot_data %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                               y = .data$gene,
                                               fill = .data$expression)) +
-       ggplot2::geom_tile()
-
-
+       ggplot2::geom_raster()
+  
+  
   p <- p + ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
                                space = if(isTRUE(make_size_proportional)) {"fixed"} else {"free"})
-
-  limits.use <- c(min(matrix, na.rm = TRUE),
-                  max(matrix, na.rm = TRUE))
-
+  
+  limits.use <- c(min(plot_data$expression, na.rm = TRUE),
+                  max(plot_data$expression, na.rm = TRUE))
+  
   scale.setup <- compute_scales(sample = sample,
                                 feature = NULL,
                                 assay = assay,
@@ -352,7 +400,7 @@ do_SCHeatmap <- function(sample,
   } else {
     p <- p + ggplot2::xlab(xlab)
   }
-
+  
   if (isFALSE(enforce_symmetry)){
     if (isTRUE(use_viridis)){
       p <- p +
@@ -372,9 +420,9 @@ do_SCHeatmap <- function(sample,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
     }
-
-
-
+    
+    
+    
   } else if (isTRUE(enforce_symmetry)){
     p <- add_scale(p = p,
                    function_use = ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
@@ -385,8 +433,8 @@ do_SCHeatmap <- function(sample,
                                                                 limits = scale.setup$limits),
                    scale = "fill")
   }
-
-
+  
+  
   p <- modify_continuous_legend(p = p,
                                 legend.title = legend.title,
                                 legend.aes = "fill",
@@ -398,16 +446,16 @@ do_SCHeatmap <- function(sample,
                                 legend.tickcolor = legend.tickcolor,
                                 legend.framewidth = legend.framewidth,
                                 legend.tickwidth = legend.tickwidth)
-
-
+  
+  
   # Theme setup.
   metadata_plots[["main"]] <- p
-
-
+  
+  
   # Configure plot margins.
-
+  
   for (name in names(metadata_plots)){
-
+    
     metadata_plots[[name]] <- metadata_plots[[name]] +
                               ggplot2::scale_x_discrete(expand = c(0, 0)) +
                               ggplot2::scale_y_discrete(expand = c(0, 0)) +
@@ -443,7 +491,7 @@ do_SCHeatmap <- function(sample,
                                              plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                                              panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                                              legend.background = ggplot2::element_rect(fill = "white", color = "white"))
-
+    
     if (!is.null(metadata)){
       if (name == name_labels){
         metadata_plots[[name]] <- metadata_plots[[name]] + ggplot2::theme(strip.text.x = ggplot2::element_text(family = font.type,
@@ -460,7 +508,7 @@ do_SCHeatmap <- function(sample,
                                                                                                              angle = rotate_strip_labels))
     }
   }
-
+  
   if (!is.null(metadata)){
     plots_wrap <- {
       if (metadata.location == "bottom") {
@@ -481,28 +529,44 @@ do_SCHeatmap <- function(sample,
                                  ncol = 1,
                                  guides = "collect",
                                  heights = height_unit) +
-      patchwork::plot_annotation(title = plot.title,
-                                 subtitle = plot.subtitle,
-                                 caption = plot.caption,
-                                 theme = ggplot2::theme(legend.position = legend.position,
-                                                        plot.title = ggplot2::element_text(size = font.size,
-                                                                                           family = font.type,
-                                                                                           color = "black",
-                                                                                           face = "bold",
-                                                                                           hjust = 0),
-                                                        plot.subtitle = ggplot2::element_text(size = font.size,
-                                                                                              family = font.type,
-                                                                                              color = "black",
-                                                                                              hjust = 0),
-                                                        plot.caption = ggplot2::element_text(size = font.size,
-                                                                                             family = font.type,
-                                                                                             color = "black",
-                                                                                             hjust = 1),
-                                                        plot.caption.position = "plot"))
+           patchwork::plot_annotation(title = plot.title,
+                                      subtitle = plot.subtitle,
+                                      caption = plot.caption,
+                                      theme = ggplot2::theme(legend.position = legend.position,
+                                                             plot.title = ggplot2::element_text(size = font.size,
+                                                                                                family = font.type,
+                                                                                                color = "black",
+                                                                                                face = "bold",
+                                                                                                hjust = 0),
+                                                             plot.subtitle = ggplot2::element_text(size = font.size,
+                                                                                                   family = font.type,
+                                                                                                   color = "black",
+                                                                                                   hjust = 0),
+                                                             plot.caption = ggplot2::element_text(size = font.size,
+                                                                                                  family = font.type,
+                                                                                                  color = "black",
+                                                                                                  hjust = 1),
+                                                             plot.caption.position = "plot"))
   } else {
     out <- metadata_plots[["main"]]
   }
-
-
-  return(out)
+  out.list <- list()
+  out.list[["Heatmap"]] <- out
+  
+  if (isTRUE(return_matrix)){
+    out.list[["Matrix"]] <- matrix %>% dplyr::ungroup()
+  }
+  
+  if (isTRUE(return_object)){
+    out.list[["Object"]] <- sample
+  }
+  
+  if (isFALSE(return_object) & isFALSE(return_matrix)){
+    return_me <- out.list[["Heatmap"]]
+  } else {
+    return_me <- out.list
+  }
+  
+  
+  return(return_me)
 }
