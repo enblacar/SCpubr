@@ -1,4 +1,5 @@
-# SCpubr v1.1.3
+# SCpubr v2.0.0
+This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will force many of the existing code to break. Hence, the major update.
 
 ## General
 - Now using `min.cutoff` or `max.cutoff`, now the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. Be careful, as this interacts with `enforce_symmetry`. 
@@ -8,6 +9,9 @@
 - Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
 - Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
 - Re-implemented all heatmap-based plots in ggplot2. This means that this is a **breaking change**. All heatmap-specific parameters have been replaced with the overarching parameters that are used across functions. This decision was taking after a lot of thought, but ultimately, having all plots rely on ggplot2 makes it way more compatible to work with them together, to debug, and to further implement new ideas.
+
+## `SCpubr::do_BoxPlot`
+- Change the reordering of boxplots based on the median rather than the mean. 
 
 ## `SCpubr::do_CorrelationPlot`
 - Added `use_viridis` parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.

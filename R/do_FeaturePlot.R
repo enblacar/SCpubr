@@ -179,25 +179,45 @@ do_FeaturePlot <- function(sample,
   # Check individual titles.
   if (length(features) > 1 & !is.null(individual.titles)){
     assertthat::assert_that(length(features) == length(individual.titles),
-                            msg = 'Total number of individual titles does not match the number of features provided.')
+                            msg = paste0(crayon_body("The total number of "),
+                                         crayon_key("individual titles"),
+                                         crayon_body(" does not match the number of "),
+                                         crayon_key("features"),
+                                         crayon_body(" provided.")))
   }
 
   if (length(features) > 1 & !is.null(individual.subtitles)){
     assertthat::assert_that(length(features) == length(individual.subtitles),
-                            msg = 'Total number of individual subtitles does not match the number of features provided.')
+                            msg = paste0(crayon_body("The total number of "),
+                                         crayon_key("individual subtitles"),
+                                         crayon_body(" does not match the number of "),
+                                         crayon_key("features"),
+                                         crayon_body(" provided.")))
   }
 
   if (length(features) > 1 & !is.null(individual.captions)){
     assertthat::assert_that(length(features) == length(individual.captions),
-                            msg = 'Total number of individual captions does not match the number of features provided.')
+                            msg = paste0(crayon_body("The total number of "),
+                                         crayon_key("individual captions"),
+                                         crayon_body(" does not match the number of "),
+                                         crayon_key("features"),
+                                         crayon_body(" provided.")))
   }
 
   ## Check that the contour_expand_axes is between 0 and 1.
   assertthat::assert_that(contour_expand_axes <= 1,
-                          msg = "Please provide a value to contour_expand_axes lower or equal than 1.")
+                          msg = paste0(crayon_body("Please provide a value to "),
+                                       crayon_key("countour_expand_axes"),
+                                       crayon_body(" lower or equal than "),
+                                       crayon_key("1"),
+                                       crayon_body(".")))
 
   assertthat::assert_that(contour_expand_axes >= 0,
-                          msg = "Please provide a value to contour_expand_axes higher or equal than 1.")
+                          msg = paste0(crayon_body("Please provide a value to "),
+                                       crayon_key("countour_expand_axes"),
+                                       crayon_body(" higher or equal than "),
+                                       crayon_key("0"),
+                                       crayon_body(".")))
 
 
   check_colors(border.color, parameter_name = "border.color")
@@ -247,17 +267,6 @@ do_FeaturePlot <- function(sample,
     legend.barheight <- legend.length
   }
 
-  # Check for raster and pt.size.
-  if (isTRUE(raster) & pt.size < 1){
-    warning("Setting raster = TRUE and pt.size < 1 will result in the cells being ploted as a cross. This behaviour can not be modified, but setting pt.size to 1 or higher solves it. For Feature plots, optimized values would be pt.size = 3 and raster.dpi = 2048.", call. = FALSE)
-  }
-
-  # Check for min.cutoff and max.cutoff.
-  assertthat::assert_that(length(min.cutoff) == length(features),
-                          msg = "Please provide the same number of min.cutoffs as number of features. Use NA to skip for a given feature.")
-
-  assertthat::assert_that(length(max.cutoff) == length(features),
-                          msg = "Please provide the same number of max.cutoffs as number of features. Use NA to skip for a given feature.")
 
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){

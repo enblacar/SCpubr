@@ -747,7 +747,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(" ("),
                                          crayon_key(min.cutoff),
                                          crayon_body(") is lower than the minimum value ("),
-                                         crayon_key(limits[2]),
+                                         crayon_key(limits[1]),
                                          crayon_body(") for the feature ("),
                                          crayon_key(feature),
                                          crayon_body(").")))

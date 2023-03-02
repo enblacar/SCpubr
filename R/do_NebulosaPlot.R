@@ -76,7 +76,11 @@ do_NebulosaPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
-    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = FALSE)
+    warning(paste0(crayon_key("Features"),
+                   crayon_body(" provided as a "),
+                   crayon_key("list"),
+                   crayon_body(". Unlisting it. Please use a "),
+                   crayon_key("character vector")), call. = FALSE)
     features <- unique(unlist(features))
   }
   character_list <- list("legend.position" = legend.position,

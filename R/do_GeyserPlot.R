@@ -145,25 +145,55 @@ do_GeyserPlot <- function(sample,
   # Check that split.by is in metadata variables.
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% colnames(sample@meta.data),
-                            msg = "The variable for split.by has to be on the metadata of the object.")
+                            msg = paste0(crayon_body("The variable for "),
+                                         crayon_key("split.by"),
+                                         crayon_body(" has to be on the "),
+                                         crayon_key("metadata"),
+                                         crayon_body(" of the Seurat object.")))
   }
 
 
   # Check that group.by is in metadata variables.
   if (!is.null(group.by)){
     assertthat::assert_that(group.by %in% colnames(sample@meta.data),
-                            msg = "The variable for group.by has to be on the metadata of the object.")
+                            msg = paste0(crayon_body("The variable for "),
+                                         crayon_key("group.by"),
+                                         crayon_body(" has to be on the "),
+                                         crayon_key("metadata"),
+                                         crayon_body(" of the Seurat object.")))
   }
 
   # Check that jitter is in range.
   assertthat::assert_that(jitter > 0 & jitter < 0.5,
-                          msg = "Value for jitter has to be betwen 0 and 0.49.")
+                          msg = paste0(crayon_body("The value for "),
+                                       crayon_key("jitter"),
+                                       crayon_body(" has to be between "),
+                                       crayon_key("0"),
+                                       crayon_body(" and "),
+                                       crayon_key("0.49"),
+                                       crayon+body(".")))
 
   assertthat::assert_that(length(min.cutoff) == length(features),
-                          msg = "Please provide as many values to min.cutoff as features. Use NA if you want to skip a given feature.")
+                          msg = paste0(crayon_body("Please provide "),
+                                       crayon_key("as many values"),
+                                       crayon_body(" to "),
+                                       crayon_key("min.cutoff"),
+                                       crayon_body(" than provided "),
+                                       crayon_key("features"),
+                                       crayon_body(". Use"),
+                                       crayon_key("NA"),
+                                       crayon_body(" if you want to skip a given feature.")))
 
   assertthat::assert_that(length(max.cutoff) == length(features),
-                          msg = "Please provide as many values to max.cutoff as features. Use NA if you want to skip a given feature.")
+                          msg = paste0(crayon_body("Please provide "),
+                                       crayon_key("as many values"),
+                                       crayon_body(" to "),
+                                       crayon_key("max.cutoff"),
+                                       crayon_body(" than provided "),
+                                       crayon_key("features"),
+                                       crayon_body(". Use"),
+                                       crayon_key("NA"),
+                                       crayon_body(" if you want to skip a given feature.")))
 
   # Will contain the output.
   list.out <- list()

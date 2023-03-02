@@ -152,8 +152,8 @@ do_BoxPlot <- function(sample,
                                         levels = {data %>%
                                                   tibble::as_tibble() %>%
                                                   dplyr::group_by(.data[["group.by"]]) %>%
-                                                  dplyr::summarise("mean" = mean(.data[["feature"]])) %>%
-                                                  dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["mean"]])} else {.data[["mean"]]}) %>%
+                                                  dplyr::summarise("median" = stats::median(.data[["feature"]])) %>%
+                                                  dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
                                                   dplyr::pull(.data[["group.by"]]) %>%
                                                   as.character()}))
   }

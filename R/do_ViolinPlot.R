@@ -96,19 +96,43 @@ do_ViolinPlot <- function(sample,
     xlab <- rep("Groups", length(features))
   } else {
     assertthat::assert_that(length(xlab) == length(features),
-                            msg = "Please provide as many values for xlab as features provided. Use NAs to skip.")
+                            msg = paste0(crayon_body("Please provide "),
+                                         crayon_key("as many values"),
+                                         crayon_body(" to "),
+                                         crayon_key("xlab"),
+                                         crayon_body(" than provided "),
+                                         crayon_key("features"),
+                                         crayon_body(". Use"),
+                                         crayon_key("NA"),
+                                         crayon_body(" if you want to skip a given feature.")))
   }
 
   if (sum(is.na(ylab)) == length(features)){
     ylab <- features
   } else {
     assertthat::assert_that(length(ylab) == length(features),
-                            msg = "Please provide as many values for ylab as features provided. Use NAs to skip.")
+                            msg = paste0(crayon_body("Please provide "),
+                                         crayon_key("as many values"),
+                                         crayon_body(" to "),
+                                         crayon_key("ylab"),
+                                         crayon_body(" than provided "),
+                                         crayon_key("features"),
+                                         crayon_body(". Use"),
+                                         crayon_key("NA"),
+                                         crayon_body(" if you want to skip a given feature.")))
   }
 
   if (sum(is.na(y_cut)) != length(features)){
     assertthat::assert_that(length(y_cut) == length(features),
-                            msg = "Please provide as many values for y_cut as features provided. Use NAs to skip.")
+                            msg = paste0(crayon_body("Please provide "),
+                                         crayon_key("as many values"),
+                                         crayon_body(" to "),
+                                         crayon_key("y_cut"),
+                                         crayon_body(" than provided "),
+                                         crayon_key("features"),
+                                         crayon_body(". Use"),
+                                         crayon_key("NA"),
+                                         crayon_body(" if you want to skip a given feature.")))
   }
 
   # Check the feature.
@@ -176,7 +200,13 @@ do_ViolinPlot <- function(sample,
                               linewidth = line_width)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
-                              msg = "Boxplots are not implemented when split.by is set. Set plot_boxplots parameter to FALSE. ")
+                              msg = paste0(crayon_key("Boxplots"),
+                                           crayon_body(" are not implemented when "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" is set. Set "),
+                                           crayon_key("plot_boxplots = FALSE"),
+                                           crayon_body("."),
+                                           crayon_key("NA")))
       p <- p +
            ggplot2::geom_boxplot(fill = "white",
                                  color = "black",

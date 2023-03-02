@@ -240,7 +240,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   # Retrieve the order median-wise for the genes.
   if (length(names(input_gene_list)) == 1) {
-    row_order <- c(1)
+    row_order <- names(input_gene_list)[1]
   } else {
     row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
     row_order <- names(input_gene_list)[row_order]
@@ -272,9 +272,14 @@ do_SCEnrichmentHeatmap <- function(sample,
                        tibble::column_to_rownames(var = "cell") %>% 
                        as.data.frame() %>% 
                        as.matrix() %>% 
-                       t()
+                       t() 
       matrix.subset <- matrix.subset[, cells.use]
-      col_order.use <- stats::hclust(stats::dist(t(matrix.subset), method = "euclidean"), method = "ward.D")$order
+      if (length(names(input_gene_list)) == 1){
+        matrix.use <- as.matrix(matrix.subset)
+      } else {
+        matrix.use <- t(matrix.subset)
+      }
+      col_order.use <- stats::hclust(stats::dist(matrix.use, method = "euclidean"), method = "ward.D")$order
       
       col_order[[item]] <- cells.use[col_order.use]
     }
@@ -347,7 +352,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by, "cell")),
                                    names_to = "gene",
                                    values_to = "expression") %>%
-               dplyr::rename("group.by" = .data[[group.by]]) %>% 
+               dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>% 
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
                              "gene" = factor(.data$gene, levels = rev(row_order)),
                              "cell" = factor(.data$cell, levels = col_order))
