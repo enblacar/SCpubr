@@ -4158,12 +4158,12 @@ handle_axis <- function(flip,
         axis.title.x.bottom <- ggplot2::element_blank()
       }
       
-      if (counter == length(group.by))
       axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
                                                  angle = 0,
                                                  hjust = 1,
                                                  vjust = 0.5)
       axis.title.y.right <- ggplot2::element_blank()
+      
     }
   } else {
     # Strips and legend.

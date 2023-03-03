@@ -9,8 +9,6 @@ do_PathwayActivityPlot(
   activities,
   group.by = NULL,
   split.by = NULL,
-  plot_FeaturePlots = FALSE,
-  plot_GeyserPlots = FALSE,
   row_names_rot = 0,
   pt.size = 1,
   plot_cell_borders = TRUE,
@@ -28,15 +26,14 @@ do_PathwayActivityPlot(
   font.type = "sans",
   rotate_x_axis_labels = 45,
   enforce_symmetry = TRUE,
-  geyser_order_by_mean = TRUE,
-  geyser_scale_type = "continuous",
   viridis_color_map = "G",
   viridis_direction = 1,
   min.cutoff = NA,
   max.cutoff = NA,
   number.breaks = 5,
   diverging.palette = "RdBu",
-  flip = FALSE
+  flip = FALSE,
+  return_object = FALSE
 )
 }
 \arguments{
@@ -47,10 +44,6 @@ do_PathwayActivityPlot(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
-
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
-
-\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
 \item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
 
@@ -98,10 +91,6 @@ do_PathwayActivityPlot(
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
-\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
-
-\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
-
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
@@ -113,6 +102,14 @@ do_PathwayActivityPlot(
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
+
+\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
+
+\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
+
+\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

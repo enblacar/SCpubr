@@ -1,10 +1,10 @@
 # SCpubr v2.0.0
-This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will force many of the existing code to break. Hence, the major update.
+This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. Hence, the major update.
 
 ## General
-- Now using `min.cutoff` or `max.cutoff`, now the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. Be careful, as this interacts with `enforce_symmetry`. 
+- Now when using `min.cutoff` or `max.cutoff`, the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. This potentially interacts with `enforce_symmetry`. 
 - Added `number.breaks` parameter to control the number of breaks in the legend of ggplot2-based plots. It will not always work, as the function will try to fit the breaks accordingly. But still, will give some range of freedom to the user.
-- Removed `colorsteps` from `legend.type` parameters as it was prone to generate unintended bugs in the code. 
+- Removed `colorsteps` from `legend.type` parameters as it was prone to generate unintended bugs. 
 - Changed default values from `min.cutoff` and `max.cutoff` from `NULL` to `NA`. 
 - Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
 - Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
@@ -43,12 +43,14 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 
 ## `SCpubr::do_PathwayActivityPlot`
 - Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value.
-- Removed `splity.by` parameter as one now can provide multiple values to `group.by`, achieving a similar result.
+- Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
+- Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 
 
 ## `SCpubr::do_TFActivityPlot()`
 - Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value. Now it is set up to the top 100 significant genes per cluster.
-- Removed `splity.by` parameter as one now can provide multiple values to `group.by`, achieving a similar result.
+- Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
+- Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 
 # SCpubr v1.1.2
 More hotfixes in unit tests to comply with CRAN checks.

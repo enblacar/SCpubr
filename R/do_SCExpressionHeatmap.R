@@ -204,7 +204,7 @@ do_SCExpressionHeatmap <- function(sample,
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
   median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(features), stats::median)) %>%
+                   dplyr::summarise(dplyr::across(dplyr::all_of(features), stats::median, na.rm = TRUE)) %>%
                    dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
                    dplyr::select(-dplyr::all_of(group.by)) %>%
                    as.data.frame() %>%
@@ -409,14 +409,13 @@ do_SCExpressionHeatmap <- function(sample,
 
 
   } else if (isTRUE(enforce_symmetry)){
-    p <- add_scale(p = p,
-                   function_use = ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                                na.value = na.value,
-                                                                name = "Regulon Score",
-                                                                breaks = scale.setup$breaks,
-                                                                labels = scale.setup$labels,
-                                                                limits = scale.setup$limits),
-                   scale = "fill")
+    p <- p + 
+         ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                       na.value = na.value,
+                                       name = "Regulon Score",
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
   }
 
 

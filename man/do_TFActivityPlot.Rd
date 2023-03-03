@@ -11,8 +11,6 @@ do_TFActivityPlot(
   tfs.use = NULL,
   group.by = NULL,
   split.by = NULL,
-  plot_FeaturePlots = FALSE,
-  plot_GeyserPlots = FALSE,
   row_names_rot = 0,
   column_names_rot = 45,
   pt.size = 1,
@@ -32,14 +30,16 @@ do_TFActivityPlot(
   rotate_x_axis_labels = 45,
   enforce_symmetry = TRUE,
   diverging.palette = "RdBu",
-  geyser_order_by_mean = TRUE,
-  geyser_scale_type = "continuous",
+  sequential.palette = "YlGnBu",
+  sequential_direction = -1,
+  use_viridis = TRUE,
   viridis_color_map = "G",
   viridis_direction = 1,
   min.cutoff = NA,
   max.cutoff = NA,
   number.breaks = 5,
-  flip = FALSE
+  flip = FALSE,
+  return_object = FALSE
 )
 }
 \arguments{
@@ -54,10 +54,6 @@ do_TFActivityPlot(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
-
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
-
-\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
 
 \item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
 
@@ -109,9 +105,11 @@ do_TFActivityPlot(
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
 \item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
@@ -122,6 +120,10 @@ do_TFActivityPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
+
+\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

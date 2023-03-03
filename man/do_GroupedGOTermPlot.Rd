@@ -9,18 +9,19 @@ do_GroupedGOTermPlot(
   org.db,
   levels.use = NULL,
   GO_ontology = "BP",
-  min.overlap = NULL,
+  min.overlap = 3,
   flip = TRUE,
-  legend.position = "right",
-  heatmap_gap = 0.5,
-  cluster_rows = TRUE,
-  cluster_cols = TRUE,
-  cell_size = 8,
+  legend.position = "bottom",
   reverse.levels = TRUE,
-  colors.use = c("grey90", "#29353d"),
+  colors.use = NULL,
   rotate_x_axis_labels = 45,
   font.size = 10,
-  verbose = FALSE
+  font.type = "sans",
+  plot.title = paste0("GO | ", GO_ontology),
+  plot.subtitle = NULL,
+  plot.caption = NULL,
+  verbose = FALSE,
+  return_matrices = FALSE
 )
 }
 \arguments{
@@ -50,14 +51,6 @@ do_GroupedGOTermPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
-
-\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
-
-\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
-
 \item{reverse.levels}{\strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.}
@@ -66,7 +59,18 @@ do_GroupedGOTermPlot(
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
+
+\item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
+
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{return_matrices}{\strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..}
 }
 \value{
 A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.

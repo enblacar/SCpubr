@@ -16,8 +16,6 @@ do_PathwayActivityPlot <- function(sample,
                                    activities,
                                    group.by = NULL,
                                    split.by = NULL,
-                                   plot_FeaturePlots = FALSE,
-                                   plot_GeyserPlots = FALSE,
                                    row_names_rot = 0,
                                    pt.size = 1,
                                    plot_cell_borders = TRUE,
@@ -35,27 +33,24 @@ do_PathwayActivityPlot <- function(sample,
                                    font.type = "sans",
                                    rotate_x_axis_labels = 45,
                                    enforce_symmetry = TRUE,
-                                   geyser_order_by_mean = TRUE,
-                                   geyser_scale_type = "continuous",
                                    viridis_color_map = "G",
                                    viridis_direction = 1,
                                    min.cutoff = NA,
                                    max.cutoff = NA,
                                    number.breaks = 5,
                                    diverging.palette = "RdBu",
-                                   flip = FALSE){
+                                   flip = FALSE,
+                                   return_object = FALSE){
 
   check_suggests(function_name = "do_PathwayActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
   # Check logical parameters.
-  logical_list <- list("plot_FeaturePlots" = plot_FeaturePlots,
-                       "plot_GeyserPlots" = plot_GeyserPlots,
-                       "plot_cell_borders" = plot_cell_borders,
-                       "geyser_order_by_mean" = geyser_order_by_mean,
+  logical_list <- list("plot_cell_borders" = plot_cell_borders,
                        "enforce_symmetry" = enforce_symmetry,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "return_object" = return_object)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -80,7 +75,6 @@ do_PathwayActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "geyser_scale_type" = geyser_scale_type,
                          "viridis_color_map" = viridis_color_map,
                          "diverging.palette" = diverging.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -371,7 +365,7 @@ do_PathwayActivityPlot <- function(sample,
                         strip.background = axis.parameters$strip.background,
                         strip.clip = axis.parameters$strip.clip,
                         strip.text = axis.parameters$strip.text,
-                        legend.position = axis.parameters$legend.position,
+                        legend.position = if (is.null(split.by)) {axis.parameters$legend.position} else {"bottom"},
                         axis.line = ggplot2::element_blank(),
                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                         plot.subtitle = ggplot2::element_text(hjust = 0),
@@ -416,88 +410,14 @@ do_PathwayActivityPlot <- function(sample,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))
-  list.out[["heatmap"]] <- p
-
-
-
-
-
-
-  if (isTRUE(plot_FeaturePlots)){
-    list.features <- list()
-    for (pathway in sort(rownames(sample))){
-      p <- do_FeaturePlot(sample = sample,
-                          features = pathway,
-                          assay = "progeny",
-                          reduction = "umap",
-                          slot = "scale.data",
-                          pt.size = pt.size,
-                          order = FALSE,
-                          border.size = border.size,
-                          enforce_symmetry = enforce_symmetry,
-                          plot_cell_borders = plot_cell_borders,
-                          font.size = font.size,
-                          font.type = font.type,
-                          legend.title = paste0(pathway, " activity"),
-                          legend.position = legend.position,
-                          legend.type = legend.type,
-                          legend.framecolor = legend.framecolor,
-                          legend.tickcolor = legend.tickcolor,
-                          legend.framewidth = legend.framewidth,
-                          legend.tickwidth = legend.tickwidth,
-                          legend.length = legend.length,
-                          legend.width = legend.width,
-                          viridis_color_map = viridis_color_map,
-                          viridis_direction = viridis_direction,
-                          min.cutoff = min.cutoff,
-                          max.cutoff = max.cutoff,
-                          number.breaks = number.breaks,
-                          diverging.palette = diverging.palette)
-
-      list.features[[pathway]] <- p
-    }
-    list.out[["feature_plots"]] <- list.features
+  list.out[["Heatmap"]] <- p
+  
+  if (isTRUE(return_object)){
+    list.out[["Object"]] <- sample
+    return_me <- list.out
+  } else{
+    return_me <- p
   }
-
-  if (isTRUE(plot_GeyserPlots)){
-    list.geysers <- list()
-    for (pathway in sort(rownames(sample))){
-      p <- do_GeyserPlot(sample = sample,
-                         assay = "progeny",
-                         slot = "scale.data",
-                         features = pathway,
-                         group.by = group.by,
-                         pt.size = pt.size,
-                         border.size = border.size,
-                         enforce_symmetry = enforce_symmetry,
-                         scale_type = geyser_scale_type,
-                         order_by_mean = geyser_order_by_mean,
-                         plot_cell_borders = plot_cell_borders,
-                         font.size = font.size,
-                         font.type = font.type,
-                         legend.position = legend.position,
-                         legend.type = legend.type,
-                         legend.framecolor = legend.framecolor,
-                         legend.tickcolor = legend.tickcolor,
-                         legend.framewidth = legend.framewidth,
-                         legend.tickwidth = legend.tickwidth,
-                         legend.length = legend.length,
-                         legend.width = legend.width,
-                         xlab = if (is.null(group.by)) {"Clusters"} else {group.by},
-                         ylab = paste0(pathway, " activity"),
-                         legend.title = paste0(pathway, " activity"),
-                         rotate_x_axis_labels = rotate_x_axis_labels,
-                         viridis_color_map = viridis_color_map,
-                         viridis_direction = viridis_direction,
-                         min.cutoff = min.cutoff,
-                         max.cutoff = max.cutoff,
-                         number.breaks = number.breaks,
-                         diverging.palette = diverging.palette)
-      list.geysers[[pathway]] <- p
-    }
-    list.out[["geyser_plots"]] <- list.geysers
-  }
-
-
-  return(list.out)
+  
+  return(return_me)
 }
