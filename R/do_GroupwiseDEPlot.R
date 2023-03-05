@@ -77,10 +77,20 @@ do_GroupwiseDEPlot <- function(sample,
 
   `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
-
+  
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(na.value, parameter_name = "na.value")
+  
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-
+  check_parameters(parameter = viridis.palette.pvalue, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.palette.logfc, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.palette.expression, parameter_name = "viridis_color_map")
+  check_parameters(parameter = sequential.palette.pvalue, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential.palette.logfc, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential.palette.expression, parameter_name = "sequential.palette")
+  
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
@@ -149,7 +159,7 @@ do_GroupwiseDEPlot <- function(sample,
   data.use <- data.use %>% 
               dplyr::select(-dplyr::all_of(c("combination"))) %>% 
               dplyr::mutate("gene" = factor(.data$gene, levels = genes.use),
-                            "cluster" = factor(.data$cluster, levels = unique(.data$cluster)))
+                            "cluster" = factor(.data$cluster, levels = rev(unique(data.use$cluster))))
   
   
   limits <- c(min(data.use$specificity, na.rm = TRUE),
