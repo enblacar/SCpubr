@@ -8,37 +8,33 @@ do_GroupwiseDEPlot(
   sample,
   de_genes,
   group.by = NULL,
-  viridis_map_pvalues = "B",
-  viridis_map_logfc = "D",
-  viridis_map_expression = "G",
-  heatmap.legend.length = 75,
-  heatmap.legend.width = 5,
-  heatmap.legend.framecolor = "black",
+  number.breaks = 5,
   top_genes = 5,
+  use_viridis = FALSE,
   viridis_direction = -1,
-  row_title_p_values = "",
-  row_title_logfc = "Clusters",
-  row_title_expression = if (is.null(group.by)) {
-     ""
- } else {
-     rep("",
-    length(group.by))
- },
-  column_title = "DE genes",
-  heatmap_gap = 0.5,
-  legend_gap = 1,
+  viridis.palette.pvalue = "C",
+  viridis.palette.logfc = "E",
+  viridis.palette.expression = "G",
+  sequential_direction = 1,
+  sequential.palette.pvalue = "YlGn",
+  sequential.palette.logfc = "YlOrRd",
+  sequential.palette.expression = "YlGnBu",
   assay = NULL,
   slot = "data",
   legend.position = "bottom",
-  row_names_side = "right",
-  row_title_side = "left",
-  row_title_rot = 90,
-  column_names_rot = 45,
-  cell_size = 6,
-  min.cutoff = NULL,
-  max.cutoff = NULL,
-  set_min_expression_to_zero = TRUE,
-  disable_white_in_viridis = FALSE
+  legend.width = 1,
+  legend.length = 20,
+  legend.framewidth = 0.5,
+  legend.tickwidth = 0.5,
+  legend.framecolor = "grey50",
+  legend.tickcolor = "white",
+  legend.type = "colorbar",
+  font.size = 14,
+  font.type = "sans",
+  rotate_x_axis_labels = 45,
+  min.cutoff = NA,
+  max.cutoff = NA,
+  na.value = "grey75"
 )
 }
 \arguments{
@@ -48,27 +44,15 @@ do_GroupwiseDEPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{viridis_map_pvalues, viridis_map_logfc, viridis_map_expression}{\strong{\code{\link[base]{character}}} | Viridis color map for the heatmap of p-values, logFC or expression. One of A, B, C, D, E, F, G, H.}
-
-\item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
-
-\item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{top_genes}{\strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.}
 
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
 \item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
-\item{row_title_p_values}{\strong{\code{\link[base]{character}}} | Row title for the p-value heatmap. Blank by default.}
-
-\item{row_title_logfc}{\strong{\code{\link[base]{character}}} | Row title for the logfc heatmap. Clusters by default.}
-
-\item{row_title_expression}{\strong{\code{\link[base]{character}}} | Vector of titles of equal length as group.by.}
-
-\item{column_title}{\strong{\code{\link[base]{character}}} | Title for the columns of the heatmaps. Only works with single heatmaps.}
-
-\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
-
-\item{legend_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between legends.}
+\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
@@ -83,21 +67,34 @@ do_GroupwiseDEPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{row_names_side}{\strong{\code{\link[base]{character}}} | Side to put the row names. Either left or right.}
+\item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
-\item{row_title_side}{\strong{\code{\link[base]{character}}} | Side to put the row titles Either left or right.}
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
-\item{row_title_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row titles.}
+\item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
-\item{column_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the column labels.}
+\item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
+\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
+\itemize{
+\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
+\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
+}}
+
+\item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
+
+\item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
+\itemize{
+\item \emph{\code{mono}}: Mono spaced font.
+\item \emph{\code{serif}}: Serif font family.
+\item \emph{\code{sans}}: Default font family.
+}}
+
+\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{set_min_expression_to_zero}{\strong{\code{\link[base]{logical}}} | Sets the minimum value of mean expression to 0.}
-
-\item{disable_white_in_viridis}{\strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.}
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 }
 \value{
 A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.

@@ -49,19 +49,22 @@ do_GroupedGOTermPlot <- function(genes,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption)
-  if (is.null(min.overlap)){
-    if (length(genes) < 4){
-      min.overlap <- 1
-    } else {
-      min.overlap <- 3
-    }
-  }
   
   assertthat::assert_that(min.overlap >= 1,
-                          msg = "Please provide a positive value higher or equal to 1 to min.overlap.")
+                          msg = paste0(crayon_body("Please provide a "),
+                                       crayon_key("value"),
+                                       crayon_body(" higher or equal to "),
+                                       crayon_key("1"),
+                                       crayon_body(" to "),
+                                       crayon_key("min.overlap"),
+                                       crayon_body(".")))
   
   assertthat::assert_that("OrgDb" %in% class(org.db),
-                          msg = "Please provide a valid OrgDb object to org.db parameter.")
+                          msg = paste0(crayon_body("Please provide a valid"),
+                                       crayon_key("OrgDb"),
+                                       crayon_body(" object to "),
+                                       crayon_key("org.db"),
+                                       crayon_body(".")))
   
   if (is.null(colors.use)){
     colors.use <- c("Present" = "#1e3d59", 
