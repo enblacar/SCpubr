@@ -18,7 +18,6 @@ do_GroupedGOTermPlot <- function(genes,
                                  flip = TRUE,
                                  legend.position = "bottom",
                                  reverse.levels = TRUE,
-                                 colors.use = NULL,
                                  rotate_x_axis_labels = 45,
                                  font.size = 10,
                                  font.type = "sans",
@@ -66,12 +65,8 @@ do_GroupedGOTermPlot <- function(genes,
                                        crayon_key("org.db"),
                                        crayon_body(".")))
   
-  if (is.null(colors.use)){
-    colors.use <- c("Present" = "#1e3d59", 
-                    "Absent" = "#aed6dc")
-  } else {
-    check_colors(colors.use)
-  }
+  colors.use <- c("Present" = "#1e3d59", 
+                  "Absent" = "#bccbcd")
   
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")

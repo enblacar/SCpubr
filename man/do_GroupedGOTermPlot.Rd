@@ -13,7 +13,6 @@ do_GroupedGOTermPlot(
   flip = TRUE,
   legend.position = "bottom",
   reverse.levels = TRUE,
-  colors.use = NULL,
   rotate_x_axis_labels = 45,
   font.size = 10,
   font.type = "sans",
@@ -53,8 +52,6 @@ do_GroupedGOTermPlot(
 
 \item{reverse.levels}{\strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.}
 
-\item{colors.use}{\strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.}
-
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
@@ -71,6 +68,8 @@ do_GroupedGOTermPlot(
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
 \item{return_matrices}{\strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..}
+
+\item{colors.use}{\strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.}
 }
 \value{
 A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.

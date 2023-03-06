@@ -10,19 +10,11 @@ do_FunctionalAnnotationPlot(
   organism = "hsa",
   database = "GO",
   GO_ontology = "BP",
-  min.overlap = if (length(genes) <= 4) {
-     1
- } else {
-     3
- },
+  min.overlap = NULL,
   p.adjust.cutoff = 0.05,
   pAdjustMethod = "BH",
   minGSSize = 10,
   maxGSSize = 500,
-  cluster_cols = TRUE,
-  cluster_rows = TRUE,
-  cell_size = 8,
-  heatmap_gap = 0.5,
   font.size = 10,
   font.type = "sans",
   rotate_x_axis_labels = 45,
@@ -31,26 +23,16 @@ do_FunctionalAnnotationPlot(
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  plot.grid = TRUE,
-  grid.color = "grey75",
-  grid.type = "dashed",
-  flip = TRUE,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
-  legend.length = 20,
+  legend.length = 10,
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
-  heatmap.legend.length = 75,
-  heatmap.legend.width = 5,
-  heatmap.legend.framecolor = "black",
-  viridis_color_map = "G",
-  viridis_direction = -1,
-  showCategory = 30,
-  nWords = 4,
-  nCluster = 5
+  number.breaks = 5,
+  return_matrix = FALSE
 )
 }
 \arguments{
@@ -93,14 +75,6 @@ do_FunctionalAnnotationPlot(
 
 \item{maxGSSize}{\strong{\code{\link[base]{numeric}}} | Maximal size of genes annotated for testing.}
 
-\item{cluster_cols}{\strong{\code{\link[base]{logical}}} | Cluster the columns or rows of the heatmaps.}
-
-\item{cluster_rows}{\strong{\code{\link[base]{logical}}} | Cluster the rows or rows of the heatmaps.}
-
-\item{cell_size}{\strong{\code{\link[base]{numeric}}} | Size of each cell in the heatmap.}
-
-\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Gap in cm between heatmaps.}
-
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
 \item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
@@ -115,23 +89,6 @@ do_FunctionalAnnotationPlot(
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
-
-\item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
-
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
-
-\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
-\itemize{
-\item \emph{\code{blank}}.
-\item \emph{\code{solid}}.
-\item \emph{\code{dashed}}.
-\item \emph{\code{dotted}}.
-\item \emph{\code{dotdash}}.
-\item \emph{\code{longdash}}.
-\item \emph{\code{twodash}}.
-}}
-
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -156,13 +113,7 @@ do_FunctionalAnnotationPlot(
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
-\item{heatmap.legend.length, heatmap.legend.width}{\strong{\code{\link[base]{numeric}}} | Width and length of the legend in the heatmap.}
-
-\item{heatmap.legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the edges and ticks of the legend in the heatmap.}
-
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{showCategory}{\strong{\code{\link[base]{numeric}}} | Number of enriched terms to display in the output tree plot.}
 

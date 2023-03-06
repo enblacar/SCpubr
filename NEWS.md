@@ -38,6 +38,11 @@ This major update focus on a complete re-implementation of all heatmap-based fun
   - `group.by.cell_borders.alpha` controls the alpha of the new cell borders.
   - `group.by.legend` controls the legend title of the new legend.
 
+## `SCpubr::do_FunctionalAnnotationPlot`
+- Removed the tree plots as they proved to behave inconsistently accross datasets and the quality of visualizations were compromised.
+- Removed the option to plot the bar plots and dot plots in the sake of a more simplified, streamlined plot generation. 
+- The option to return the result matrix using `return_matrix` is added, so that the user can use it to compute further analysis or visualizations.
+
 ## `SCpubr::do_GroupwiseDEPlot`
 - Added `set_min_expression_to_zero` parameter to set the viridis color scale to 0 in the expression heatmap.
 
