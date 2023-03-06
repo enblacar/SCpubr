@@ -266,8 +266,23 @@ do_FeaturePlot <- function(sample,
     legend.barwidth <- legend.width
     legend.barheight <- legend.length
   }
-
-
+  
+  if (length(min.cutoff) != length(features)){
+    warning(paste0(crayon_body("Please provide as many values to "),
+                   crayon_key("min.cutoff"),
+                   crayon_body(" as "),
+                   crayon_key("features"),
+                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")))
+  }
+  
+  if (length(max.cutoff) != length(features)){
+    warning(paste0(crayon_body("Please provide as many values to "),
+                   crayon_key("max.cutoff"),
+                   crayon_body(" as "),
+                   crayon_key("features"),
+                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")))
+  }
+  
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
     out <- compute_umap_layer(sample = sample,
@@ -390,6 +405,7 @@ do_FeaturePlot <- function(sample,
                          scale = "color")
         }
       } else if (num_plots > 1){
+        
         feature.use <- features[counter]
         scale.setup <- compute_scales(sample = sample,
                                       feature = feature.use,

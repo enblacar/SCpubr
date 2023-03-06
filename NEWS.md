@@ -14,8 +14,10 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 - Change the reordering of boxplots based on the median rather than the mean. 
 
 ## `SCpubr::do_CorrelationPlot`
-- Added `use_viridis` parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.
+- Added  parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.
 - Added `min.cutoff` and `max.cutoff` parameter to add cutoffs to the scales.
+- Added `mode = "jaccard"` to compute a correlation matrix of a list of gene sets based on jaccard similarity.
+- Added `use_viridis`, `sequential.palette` and `sequential_direction` and `diverging.palette` to control color palettes. 
 
 ## `SCpubr::do_DimPlot`
 - Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.

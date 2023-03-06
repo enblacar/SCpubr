@@ -66,14 +66,6 @@ do_SCExpressionHeatmap <- function(sample,
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
 
-  # Check the assay.
-  out <- check_and_set_assay(sample = sample, assay = assay)
-  sample <- out[["sample"]]
-  assay <- out[["assay"]]
-
-  # Check slot.
-  slot <- check_and_set_slot(slot = slot)
-
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "make_size_proportional" = make_size_proportional,
@@ -230,7 +222,7 @@ do_SCExpressionHeatmap <- function(sample,
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
                      crayon_key("65536"),
-                     crayon_body(" cells. Disabling clustering of the cells.")))
+                     crayon_body(" cells. Disabling clustering of the cells.")), call. = FALSE)
       cluster_cells <- FALSE
     }
   }
@@ -250,7 +242,14 @@ do_SCExpressionHeatmap <- function(sample,
                        as.matrix() %>% 
                        t()
       matrix.subset <- matrix.subset[, cells.use]
-      matrix.subset <- matrix.subset[, cells.use]
+      if (sum(is.na(matrix.subset)) > 0){
+        warning(paste0(crayon_body("NA founds in the "),
+                       crayon_key("expression matrix"),
+                       crayon_body(". Replacing them with "),
+                       crayon_key("NA"),
+                       crayon_body(".")), call. = FALSE)
+        matrix.subset[is.na(matrix.subset)] <- 0
+      }
       if (length(features) == 1){
         matrix.use <- as.matrix(matrix.subset)
       } else {
