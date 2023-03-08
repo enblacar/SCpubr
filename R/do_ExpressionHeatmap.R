@@ -32,11 +32,11 @@ do_ExpressionHeatmap <- function(sample,
                                  max.cutoff = NA,
                                  diverging.palette = "RdBu",
                                  sequential.palette = "YlGnBu",
-                                 sequential_direction = 1,
+                                 sequential.direction = 1,
                                  number.breaks = 5,
                                  use_viridis = FALSE,
-                                 viridis_color_map = "G",
-                                 viridis_direction = -1,
+                                 viridis.palette = "G",
+                                 viridis.direction = -1,
                                  flip = FALSE){
 
 
@@ -59,8 +59,8 @@ do_ExpressionHeatmap <- function(sample,
                        "legend.tickwidth" = legend.tickwidth,
                        "font.size" = font.size,
                        "number.breaks" = number.breaks,
-                       "viridis_direction" = viridis_direction,
-                       "sequential_direction" = sequential_direction)
+                       "viridis.direction" = viridis.direction,
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
 
   # Check character parameters.
@@ -78,7 +78,7 @@ do_ExpressionHeatmap <- function(sample,
                          "group.by" = group.by,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
-                         "viridis_color_map" = viridis_color_map)
+                         "viridis.palette" = viridis.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value)
@@ -91,9 +91,9 @@ do_ExpressionHeatmap <- function(sample,
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
 
 
   `%>%` <- magrittr::`%>%`
@@ -294,8 +294,8 @@ do_ExpressionHeatmap <- function(sample,
     } else {
       if (isTRUE(use_viridis)){
         p <- p +
-             ggplot2::scale_fill_viridis_c(direction = viridis_direction,
-                                           option = viridis_color_map,
+             ggplot2::scale_fill_viridis_c(direction = viridis.direction,
+                                           option = viridis.palette,
                                            na.value = na.value,
                                            breaks = scale.setup$breaks,
                                            labels = scale.setup$labels,
@@ -303,7 +303,7 @@ do_ExpressionHeatmap <- function(sample,
                                            name = legend.title)
       } else {
         p <- p +
-             ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+             ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                            na.value = na.value,
                                            name = legend.title,
                                            breaks = scale.setup$breaks,

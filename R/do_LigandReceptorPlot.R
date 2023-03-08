@@ -44,10 +44,10 @@ do_LigandReceptorPlot <- function(liana_output,
                                   legend.framewidth = 0.5,
                                   legend.tickwidth = 0.5,
                                   use_viridis = FALSE,
-                                  viridis_color_map = "G",
-                                  viridis_direction = 1,
+                                  viridis.palette = "G",
+                                  viridis.direction = 1,
                                   sequential.palette = "YlGnBu",
-                                  sequential_direction = 1,
+                                  sequential.direction = 1,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
@@ -83,9 +83,9 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("split.by" = split.by,
@@ -95,7 +95,7 @@ do_LigandReceptorPlot <- function(liana_output,
                          "legend.position" = legend.position,
                          "legend.type" = legend.type,
                          "legend.framecolor" = legend.framecolor,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "legend.tickcolor" = legend.tickcolor,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
@@ -107,8 +107,8 @@ do_LigandReceptorPlot <- function(liana_output,
   # Check border color.
   check_colors(border.color, parameter_name = "border.color")
 
-  # Check viridis_color_map.
-  check_viridis_color_map(viridis_color_map = viridis_color_map)
+  # Check viridis.palette.
+  check_viridis.palette(viridis.palette = viridis.palette)
 
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -118,8 +118,8 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
@@ -340,16 +340,16 @@ do_LigandReceptorPlot <- function(liana_output,
     p$layers[[1]]$aes_params$color <- border.color
     if (isTRUE(use_viridis)){
       p <- p +
-           ggplot2::scale_fill_viridis_c(option = viridis_color_map,
+           ggplot2::scale_fill_viridis_c(option = viridis.palette,
                                          name = fill.title,
-                                         direction = viridis_direction,
+                                         direction = viridis.direction,
                                          na.value = NA,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
     } else {
       p <- p +
-           ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                           na.value = NA,
                                           name = fill.title,
                                           breaks = scale.setup$breaks,
@@ -360,16 +360,16 @@ do_LigandReceptorPlot <- function(liana_output,
   } else {
     if (isTRUE(use_viridis)){
       p <- p +
-        ggplot2::scale_color_viridis_c(option = viridis_color_map,
+        ggplot2::scale_color_viridis_c(option = viridis.palette,
                                        name = fill.title,
-                                       direction = viridis_direction,
+                                       direction = viridis.direction,
                                        na.value = NA,
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
     } else {
       p <- p +
-        ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+        ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                       na.value = NA,
                                       name = fill.title,
                                       breaks = scale.setup$breaks,

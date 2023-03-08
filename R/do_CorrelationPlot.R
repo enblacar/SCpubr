@@ -34,12 +34,13 @@ do_CorrelationPlot <- function(sample = NULL,
                                diverging.palette = "RdBu",
                                use_viridis = FALSE,
                                viridis.palette = "G",
-                               viridis_direction = -1,
+                               viridis.direction = -1,
                                sequential.palette = "YlGnBu",
-                               sequential_direction = 1,
+                               sequential.direction = 1,
                                rotate_x_axis_labels = 45){
 
- 
+  `%>%` <- magrittr::`%>%`
+  
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
@@ -53,8 +54,8 @@ do_CorrelationPlot <- function(sample = NULL,
                        "legend.framewidth" = legend.framewidth,
                        "font.size" = font.size,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
-                       "sequential_direction" = sequential_direction,
-                       "viridis_direction" = viridis_direction)
+                       "sequential.direction" = sequential.direction,
+                       "viridis.direction" = viridis.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("mode" = mode,
@@ -84,10 +85,6 @@ do_CorrelationPlot <- function(sample = NULL,
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-
-  `%>%` <- magrittr::`%>%`
-
-  
 
   if (mode == "hvg"){
     # Check if the sample provided is a Seurat object.
@@ -335,14 +332,14 @@ do_CorrelationPlot <- function(sample = NULL,
       p <- p + 
            ggplot2::scale_fill_viridis_c(na.value = na.value,
                                          option = viridis.palette,
-                                         direction = viridis_direction,
+                                         direction = viridis.direction,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits,
                                          name = "Jaccard score")
     } else {
       p <- p + 
-           ggplot2::scale_fill_gradientn(colors = if (sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else if (sequential_direction == -1){rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           ggplot2::scale_fill_gradientn(colors = if (sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else if (sequential.direction == -1){rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = na.value,
                                          name = "Jaccard score",
                                          breaks = scale.setup$breaks,

@@ -45,8 +45,8 @@ do_GeyserPlot <- function(sample,
                           font.size = 14,
                           font.type = "sans",
                           rotate_x_axis_labels = 45,
-                          viridis_color_map = "G",
-                          viridis_direction = 1,
+                          viridis.palette = "G",
+                          viridis.direction = 1,
                           colors.use = NULL,
                           na.value = "grey75",
                           legend.ncol = NULL,
@@ -65,7 +65,7 @@ do_GeyserPlot <- function(sample,
                           number.breaks = 5,
                           diverging.palette = "RdBu",
                           sequential.palette = "YlGnBu",
-                          sequential_direction = -1,
+                          sequential.direction = -1,
                           use_viridis = TRUE){
 
   check_suggests(function_name = "do_GeyserPlot")
@@ -91,10 +91,10 @@ do_GeyserPlot <- function(sample,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
                        "legend.icon.size" = legend.icon.size,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -108,7 +108,7 @@ do_GeyserPlot <- function(sample,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
                          "scale_type" = scale_type,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
@@ -128,8 +128,8 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
@@ -368,14 +368,14 @@ do_GeyserPlot <- function(sample,
       } else if (isFALSE(enforce_symmetry)){
         if (isTRUE(use_viridis)){
           scale.use <- ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                      option = viridis_color_map,
-                                                      direction = viridis_direction,
+                                                      option = viridis.palette,
+                                                      direction = viridis.direction,
                                                       breaks = scale.setup$breaks,
                                                       labels = scale.setup$labels,
                                                       limits = scale.setup$limits,
                                                       name = feature)
         } else {
-          scale.use <- ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+          scale.use <- ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                                       na.value = na.value,
                                                       name = feature,
                                                       breaks = scale.setup$breaks,

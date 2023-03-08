@@ -38,10 +38,10 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    label = TRUE,
                                    legend.position = "bottom",
                                    use_viridis = TRUE,
-                                   viridis_color_map = "G",
-                                   viridis_direction = 1,
+                                   viridis.palette = "G",
+                                   viridis.direction = 1,
                                    sequential.palette = "YlGnBu",
-                                   sequential_direction = -1,
+                                   sequential.direction = -1,
                                    number.breaks = 5){
 
 
@@ -61,9 +61,9 @@ do_AzimuthAnalysisPlot <- function(sample,
                        "raster.dpi" = raster.dpi,
                        "border.size" = border.size,
                        "font.size" = font.size,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("annotation.labels" = annotation.labels,
@@ -75,7 +75,7 @@ do_AzimuthAnalysisPlot <- function(sample,
                          "border.color" = border.color,
                          "na.value" = na.value,
                          "ref.reduction" = ref.reduction,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
@@ -85,7 +85,7 @@ do_AzimuthAnalysisPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
 
   output_list <- list()
 
@@ -255,12 +255,12 @@ do_AzimuthAnalysisPlot <- function(sample,
                                  pt.size = pt.size,
                                  font.size = font.size,
                                  font.type = font.type,
-                                 viridis_color_map = viridis_color_map,
-                                 viridis_direction = viridis_direction,
+                                 viridis.palette = viridis.palette,
+                                 viridis.direction = viridis.direction,
                                  number.breaks = number.breaks,
                                  use_viridis = use_viridis,
                                  sequential.palette = sequential.palette,
-                                 sequential_direction = sequential_direction)
+                                 sequential.direction = sequential.direction)
 
   # FeaturePlot with the mapping scores.
   p.mapping <- do_FeaturePlot(sample = sample,
@@ -274,12 +274,12 @@ do_AzimuthAnalysisPlot <- function(sample,
                               pt.size = pt.size,
                               font.size = font.size,
                               font.type = font.type,
-                              viridis_color_map = viridis_color_map,
-                              viridis_direction = viridis_direction,
+                              viridis.palette = viridis.palette,
+                              viridis.direction = viridis.direction,
                               number.breaks = number.breaks,
                               use_viridis = use_viridis,
                               sequential.palette = sequential.palette,
-                              sequential_direction = sequential_direction)
+                              sequential.direction = sequential.direction)
 
 
   # Generate a combined report.

@@ -43,12 +43,12 @@ do_SCExpressionHeatmap(
   main.heatmap.size = 0.95,
   enforce_symmetry = FALSE,
   use_viridis = FALSE,
-  viridis_color_map = "G",
-  viridis_direction = -1,
+  viridis.palette = "G",
+  viridis.direction = -1,
   na.value = "grey75",
   diverging.palette = "RdBu",
   sequential.palette = "YlGnBu",
-  sequential_direction = 1,
+  sequential.direction = 1,
   make_size_proportional = TRUE,
   verbose = TRUE
 )
@@ -130,9 +130,9 @@ do_SCExpressionHeatmap(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
@@ -140,7 +140,7 @@ do_SCExpressionHeatmap(
 
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{make_size_proportional}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
 

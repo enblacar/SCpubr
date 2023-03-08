@@ -12,6 +12,7 @@ do_BeeSwarmPlot(
   reduction = NULL,
   slot = NULL,
   continuous_feature = FALSE,
+  order = FALSE,
   colors.use = NULL,
   legend.title = NULL,
   legend.type = "colorbar",
@@ -40,10 +41,10 @@ do_BeeSwarmPlot(
   remove_y_axis = FALSE,
   flip = FALSE,
   use_viridis = TRUE,
-  viridis_color_map = "G",
-  viridis_direction = 1,
+  viridis.palette = "G",
+  viridis.direction = 1,
   sequential.palette = "YlGnBu",
-  sequential_direction = -1,
+  sequential.direction = -1,
   verbose = TRUE,
   raster = FALSE,
   raster.dpi = 300,
@@ -70,6 +71,8 @@ do_BeeSwarmPlot(
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{continuous_feature}{\strong{\code{\link[base]{logical}}} | Is the feature to rank and color for continuous? I.e: an enrichment score.}
+
+\item{order}{\strong{\code{\link[base]{logical}}} | Whether to reorder the groups based on the median of the ranking.}
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
 
@@ -121,13 +124,13 @@ do_BeeSwarmPlot(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 

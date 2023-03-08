@@ -23,8 +23,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  na.value = "grey75",
                                  legend.position = "bottom",
                                  use_viridis = FALSE,
-                                 viridis_color_map = "G",
-                                 viridis_direction = 1,
+                                 viridis.palette = "G",
+                                 viridis.direction = 1,
                                  legend.framewidth = 0.5,
                                  legend.tickwidth = 0.5,
                                  legend.length = 20,
@@ -52,7 +52,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  number.breaks = 5,
                                  sequential.palette = "YlGnBu",
                                  diverging.palette = "RdBu",
-                                 sequential_direction = 1,
+                                 sequential.direction = 1,
                                  flip = FALSE){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
@@ -65,7 +65,7 @@ do_EnrichmentHeatmap <- function(sample,
                        "flip" = flip)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
-  numeric_list <- list("viridis_direction" = viridis_direction,
+  numeric_list <- list("viridis.direction" = viridis.direction,
                        "nbin" = nbin,
                        "ctrl" = ctrl,
                        "ncores" = ncores,
@@ -76,12 +76,12 @@ do_EnrichmentHeatmap <- function(sample,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -92,7 +92,7 @@ do_EnrichmentHeatmap <- function(sample,
                          "group.by" = group.by,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "flavor" = flavor,
                          "sequential.palette" = sequential.palette,
                          "diverging.palette" = diverging.palette)
@@ -104,8 +104,8 @@ do_EnrichmentHeatmap <- function(sample,
 
 
 
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -336,8 +336,8 @@ do_EnrichmentHeatmap <- function(sample,
     } else {
       if (isTRUE(use_viridis)){
         p <- p +
-          ggplot2::scale_fill_viridis_c(direction = viridis_direction,
-                                        option = viridis_color_map,
+          ggplot2::scale_fill_viridis_c(direction = viridis.direction,
+                                        option = viridis.palette,
                                         na.value = na.value,
                                         breaks = scale.setup$breaks,
                                         labels = scale.setup$labels,
@@ -345,7 +345,7 @@ do_EnrichmentHeatmap <- function(sample,
                                         name = legend.title)
       } else {
         p <- p +
-          ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                         na.value = na.value,
                                         name = legend.title,
                                         breaks = scale.setup$breaks,

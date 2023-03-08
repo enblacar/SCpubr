@@ -147,7 +147,7 @@ if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                  feature_to_rank = "PC_1",
                                  group.by = "seurat_clusters",
                                  continuous_feature = TRUE,
-                                 viridis_color_map = "F")
+                                 viridis.palette = "F")
     testthat::expect_type(p, "list")
   })
 
@@ -167,7 +167,7 @@ if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                                    feature_to_rank = "not_found",
                                                    group.by = "seurat_clusters",
                                                    continuous_feature = TRUE,
-                                                   viridis_color_map = "F"))
+                                                   viridis.palette = "F"))
   })
 
   testthat::test_that("do_BeeSwarmPlot: PASS - raster", {

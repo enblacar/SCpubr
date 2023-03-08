@@ -64,10 +64,10 @@ do_CellularStatesPlot <- function(sample,
                                   plot_features = FALSE,
                                   features = NULL,
                                   use_viridis = TRUE,
-                                  viridis_color_map = "G",
-                                  viridis_direction = 1,
+                                  viridis.palette = "G",
+                                  viridis.direction = 1,
                                   sequential.palette = "YlGnBu",
-                                  sequential_direction = -1,
+                                  sequential.direction = -1,
                                   nbin = 24,
                                   ctrl = 100,
                                   number.breaks = 5){
@@ -98,11 +98,11 @@ do_CellularStatesPlot <- function(sample,
                          "pt.size" = pt.size,
                          "border.size" = border.size,
                          "raster.dpi" = raster.dpi,
-                         "viridis_direction" = viridis_direction,
+                         "viridis.direction" = viridis.direction,
                          "nbin" = nbin,
                          "ctrl" = ctrl,
                          "number.breaks" = number.breaks,
-                         "sequential_direction" = sequential_direction)
+                         "sequential.direction" = sequential.direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("input_gene_list" = input_gene_list,
@@ -121,7 +121,7 @@ do_CellularStatesPlot <- function(sample,
                            "marginal.type" = marginal.type,
                            "border.color" = border.color,
                            "features" = features,
-                           "viridis_color_map" = viridis_color_map,
+                           "viridis.palette" = viridis.palette,
                            "sequential.palette" = sequential.palette)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
@@ -166,8 +166,8 @@ do_CellularStatesPlot <- function(sample,
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
     check_parameters(parameter = marginal.type, parameter_name = "marginal.type")
-    check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
-    check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+    check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
+    check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
 
 
     # Compute the enrichment scores.
@@ -571,12 +571,12 @@ do_CellularStatesPlot <- function(sample,
                                             raster.dpi = raster.dpi,
                                             font.type = font.type,
                                             font.size = font.size,
-                                            viridis_color_map = viridis_color_map,
-                                            viridis_direction = viridis_direction,
+                                            viridis.palette = viridis.palette,
+                                            viridis.direction = viridis.direction,
                                             number.breaks = number.breaks,
                                             use_viridis = use_viridis,
                                             sequential.palette = sequential.palette,
-                                            sequential_direction = sequential_direction)
+                                            sequential.direction = sequential.direction)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){

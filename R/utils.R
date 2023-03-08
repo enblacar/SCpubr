@@ -42,7 +42,7 @@
 #' @param reduction \strong{\code{\link[base]{character}}} | Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use `Seurat::Reductions(sample)`. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.
 #' @param assay \strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.
 #' @param slot \strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".
-#' @param viridis_color_map \strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param viridis.palette \strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param raster \strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param raster.dpi \strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.
 #' @param plot_cell_borders \strong{\code{\link[base]{logical}}} | Whether to plot border around cells.
@@ -94,7 +94,7 @@
 #' @param features \strong{\code{\link[base]{character}}} | Features to represent.
 #' @param feature \strong{\code{\link[base]{character}}} | Feature to represent.
 #' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.
-#' @param viridis_direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
+#' @param viridis.direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
 #' @param plot.grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
 #' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the panels.
 #' @param grid.type \strong{\code{\link[base]{character}}} | One of the possible linetype options:
@@ -131,7 +131,7 @@
 #' }
 #' @param genes \strong{\code{\link[base]{character}}} | Vector of gene symbols to query for functional annotation.
 #' @param org.db \strong{\code{OrgDB}} | Database object to use for the query.
-#' @param disable_white_in_viridis \strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis_direction}} is set to -1.
+#' @param disable_white_in_viridis \strong{\code{\link[base]{logical}}} | Remove the white in viridis color scale when \strong{\code{viridis.direction}} is set to -1.
 #' @param number.breaks \strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.
 #' @param border.density \strong{\code{\link[base]{numeric}}} | Controls the number of cells used when \strong{\code{plot_cell_borders = TRUE}}. Value between 0 and 1. It computes a 2D kernel density and based on this cells that have a density below the specified quantile will be used to generate the cluster contour. The lower this number, the less cells will be selected, thus reducing the overall size of the plot but also potentially preventing all the contours to be properly drawn.
 #' @param strip.spacing \strong{\code{\link[base]{numeric}}} | Controls the size between the different facets.
@@ -139,7 +139,7 @@
 #' @param rotate_strip_labels \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
 #' @param diverging.palette \strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.palette \strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
-#' @param sequential_direction \strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.
+#' @param sequential.direction \strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -164,7 +164,7 @@ doc_function <- function(sample,
                          assay,
                          slot,
                          reduction,
-                         viridis_color_map,
+                         viridis.palette,
                          raster,
                          raster.dpi,
                          plot_cell_borders,
@@ -217,7 +217,7 @@ doc_function <- function(sample,
                          feature,
                          features,
                          use_viridis,
-                         viridis_direction,
+                         viridis.direction,
                          plot.grid,
                          grid.color,
                          grid.type,
@@ -1375,7 +1375,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 
 #' Check viridis color map.
 #'
-#' @param viridis_color_map Viridis color map provided.
+#' @param viridis.palette Viridis color map provided.
 #' @param verbose Verbosity choice.
 #'
 #' @return None
@@ -1384,8 +1384,8 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
 #' \donttest{
 #' TBD
 #' }
-check_viridis_color_map <- function(viridis_color_map, verbose = FALSE){
-  check_parameters(viridis_color_map, parameter_name = "viridis_color_map")
+check_viridis.palette <- function(viridis.palette, verbose = FALSE){
+  check_parameters(viridis.palette, parameter_name = "viridis.palette")
 }
 
 
@@ -1573,8 +1573,8 @@ compute_barplot_annotation <- function(sample,
 #' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
 #' @param na.value Color for NAs
 #' @param use_viridis Logical. Whether to use viridis color palettes.
-#' @param viridis_color_map Character. Palette to use.
-#' @param viridis_direction Numeric. Direction of the scale.
+#' @param viridis.palette Character. Palette to use.
+#' @param viridis.direction Numeric. Direction of the scale.
 #' @return None
 #' @noRd
 #' @examples
@@ -1622,8 +1622,8 @@ heatmap_inner <- function(data,
                           column_annotation_side = "top",
                           na.value = "grey75",
                           use_viridis = FALSE,
-                          viridis_color_map = "D",
-                          viridis_direction = 1,
+                          viridis.palette = "D",
+                          viridis.direction = 1,
                           symmetrical_scale = FALSE,
                           use_middle_white = TRUE,
                           disable_white_in_viridis = FALSE){
@@ -1811,14 +1811,14 @@ heatmap_inner <- function(data,
   }
 
   if (isTRUE(use_viridis)){
-    if(viridis_direction == -1 & isFALSE(disable_white_in_viridis)){
+    if(viridis.direction == -1 & isFALSE(disable_white_in_viridis)){
       col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
-                                                                                            option = viridis_color_map,
-                                                                                            direction = viridis_direction)))
+                                                                                            option = viridis.palette,
+                                                                                            direction = viridis.direction)))
     } else {
       col_fun <- circlize::colorRamp2(breaks = breaks, colors = viridis::viridis(n = length(breaks),
-                                                                                 option = viridis_color_map,
-                                                                                 direction = viridis_direction))
+                                                                                 option = viridis.palette,
+                                                                                 direction = viridis.direction))
     }
   } else {
     col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
@@ -2376,7 +2376,7 @@ check_parameters <- function(parameter,
                                           crayon_body(", "),
                                           crayon_key("densigram"),
                                           crayon_body(".")))
-  } else if (parameter_name == "viridis_direction"){
+  } else if (parameter_name == "viridis.direction"){
     assertthat::assert_that(parameter %in% c(1, -1),
                             msg =  paste0(crayon_body("Please provide one of the following to "),
                                           crayon_key(parameter_name),
@@ -2385,7 +2385,7 @@ check_parameters <- function(parameter,
                                           crayon_body(", "),
                                           crayon_key("-1"),
                                           crayon_body(".")))
-  } else if (parameter_name == "sequential_direction"){
+  } else if (parameter_name == "sequential.direction"){
     assertthat::assert_that(parameter %in% c(1, -1),
                             msg =  paste0(crayon_body("Please provide one of the following to "),
                                           crayon_key(parameter_name),
@@ -2394,7 +2394,7 @@ check_parameters <- function(parameter,
                                           crayon_body(", "),
                                           crayon_key("-1"),
                                           crayon_body(".")))
-  } else if (parameter_name == "viridis_color_map"){
+  } else if (parameter_name == "viridis.palette"){
     viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
     assertthat::assert_that(parameter %in% viridis_options,
                             msg = paste0(crayon_body("Please provide one of the following to "),
@@ -3424,8 +3424,8 @@ do_EnrichedTermMatrix <- function(genes,
 #' @param legend.width TBD
 #' @param legend.framecolor TBD
 #' @param legend.tickcolor TBD
-#' @param viridis_color_map TBD
-#' @param viridis_direction TBD
+#' @param viridis.palette TBD
+#' @param viridis.direction TBD
 #' @param xlab TBD
 #' @param ylab TBD
 #'
@@ -3454,8 +3454,8 @@ do_EnrichedTermBarPlot <- function(result,
                                    legend.width = 1,
                                    legend.framecolor = "grey50",
                                    legend.tickcolor = "white",
-                                   viridis_color_map = "G",
-                                   viridis_direction = -1,
+                                   viridis.palette = "G",
+                                   viridis.direction = -1,
                                    xlab = "Gene count",
                                    ylab = "Enriched terms"){
   `%>%` <- magrittr::`%>%`
@@ -3482,8 +3482,8 @@ do_EnrichedTermBarPlot <- function(result,
   suppressWarnings({
     p <- p +
       ggplot2::scale_fill_viridis_c(na.value = "grey75",
-                                    option = viridis_color_map,
-                                    direction = viridis_direction)
+                                    option = viridis.palette,
+                                    direction = viridis.direction)
   })
   if (legend.position != "none"){
     p <- modify_continuous_legend(p = p,
@@ -3556,8 +3556,8 @@ do_EnrichedTermBarPlot <- function(result,
 #' @param legend.width TBD
 #' @param legend.framecolor TBD
 #' @param legend.tickcolor TBD
-#' @param viridis_color_map TBD
-#' @param viridis_direction TBD
+#' @param viridis.palette TBD
+#' @param viridis.direction TBD
 #' @param xlab TBD
 #' @param ylab TBD
 #'
@@ -3586,8 +3586,8 @@ do_EnrichedTermDotPlot <- function(result,
                                    legend.width = 1,
                                    legend.framecolor = "grey50",
                                    legend.tickcolor = "white",
-                                   viridis_color_map = "G",
-                                   viridis_direction = -1,
+                                   viridis.palette = "G",
+                                   viridis.direction = -1,
                                    xlab = "Gene count",
                                    ylab = "Enriched terms"){
   `%>%` <- magrittr::`%>%`
@@ -3610,8 +3610,8 @@ do_EnrichedTermDotPlot <- function(result,
   suppressWarnings({
     p <- p +
       ggplot2::scale_fill_viridis_c(na.value = "grey75",
-                                    option = viridis_color_map,
-                                    direction = viridis_direction)
+                                    option = viridis.palette,
+                                    direction = viridis.direction)
   })
 
   if (legend.position != "none"){
@@ -3684,8 +3684,8 @@ do_EnrichedTermDotPlot <- function(result,
 #' @param legend.width TBD
 #' @param legend.framecolor TBD
 #' @param legend.tickcolor TBD
-#' @param viridis_color_map TBD
-#' @param viridis_direction TBD
+#' @param viridis.palette TBD
+#' @param viridis.direction TBD
 #' @param font.size TBD
 #' @param font.type TBD
 #' @param plot.title TBD
@@ -3710,8 +3710,8 @@ do_EnrichedTermTreePlot <- function(result,
                                     legend.width = 1,
                                     legend.framecolor = "grey50",
                                     legend.tickcolor = "white",
-                                    viridis_color_map = "G",
-                                    viridis_direction = -1,
+                                    viridis.palette = "G",
+                                    viridis.direction = -1,
                                     font.size = 4,
                                     font.type = "sans",
                                     plot.title = NULL,
@@ -3780,8 +3780,8 @@ do_EnrichedTermTreePlot <- function(result,
 
   # Add viridis color scale.
   p <- p +
-    ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                  direction = viridis_direction)
+    ggplot2::scale_fill_viridis_c(option = viridis.palette,
+                                  direction = viridis.direction)
 
   if (legend.position != "none"){
     p <- modify_continuous_legend(p = p,

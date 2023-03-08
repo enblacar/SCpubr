@@ -33,8 +33,6 @@ do_PathwayActivityPlot <- function(sample,
                                    font.type = "sans",
                                    rotate_x_axis_labels = 45,
                                    enforce_symmetry = TRUE,
-                                   viridis_color_map = "G",
-                                   viridis_direction = 1,
                                    min.cutoff = NA,
                                    max.cutoff = NA,
                                    number.breaks = 5,
@@ -60,7 +58,6 @@ do_PathwayActivityPlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
-                       "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
@@ -75,7 +72,6 @@ do_PathwayActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "viridis_color_map" = viridis_color_map,
                          "diverging.palette" = diverging.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
@@ -85,9 +81,6 @@ do_PathwayActivityPlot <- function(sample,
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
-  check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")

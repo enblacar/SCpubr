@@ -54,12 +54,12 @@ do_SCExpressionHeatmap <- function(sample,
                                    main.heatmap.size = 0.95,
                                    enforce_symmetry = FALSE,
                                    use_viridis = FALSE,
-                                   viridis_color_map = "G",
-                                   viridis_direction = -1,
+                                   viridis.palette = "G",
+                                   viridis.direction = -1,
                                    na.value = "grey75",
                                    diverging.palette = "RdBu",
                                    sequential.palette = "YlGnBu",
-                                   sequential_direction = 1,
+                                   sequential.direction = 1,
                                    make_size_proportional = TRUE,
                                    verbose = TRUE){
 
@@ -83,13 +83,13 @@ do_SCExpressionHeatmap <- function(sample,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.ncol,
                        "strip.spacing" = strip.spacing,
                        "rotate_strip_labels" = rotate_strip_labels,
                        "main.heatmap.size" = main.heatmap.size,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("features" = features,
@@ -108,7 +108,7 @@ do_SCExpressionHeatmap <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "strip.text.color" = strip.text.color,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "na.value" = na.value,
                          "metadata" = metadata,
                          "metadata.colors" = metadata.colors,
@@ -124,12 +124,12 @@ do_SCExpressionHeatmap <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
 
 
   `%>%` <- magrittr::`%>%`
@@ -389,15 +389,15 @@ do_SCExpressionHeatmap <- function(sample,
     if (isTRUE(use_viridis)){
       p <- p +
            ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                         option = viridis_color_map,
-                                         direction = viridis_direction,
+                                         option = viridis.palette,
+                                         direction = viridis.direction,
                                          name = legend.title,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
     } else {
       p <- p +
-           ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = na.value,
                                          name = legend.title,
                                          breaks = scale.setup$breaks,

@@ -364,7 +364,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
     p <- SCpubr::do_FeaturePlot(sample,
                                 features = c("nCount_RNA"),
-                                viridis_color_map = "F")
+                                viridis.palette = "F")
     testthat::expect_type(p, "list")
   })
 

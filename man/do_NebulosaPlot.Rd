@@ -31,15 +31,15 @@ do_NebulosaPlot(
   plot_cell_borders = TRUE,
   border.size = 2,
   border.color = "black",
-  viridis_color_map = "G",
-  viridis_direction = 1,
+  viridis.palette = "G",
+  viridis.direction = 1,
   verbose = TRUE,
   na.value = "grey75",
   plot.axes = FALSE,
   number.breaks = 5,
   use_viridis = TRUE,
   sequential.palette = "YlGnBu",
-  sequential_direction = -1
+  sequential.direction = -1
 )
 }
 \arguments{
@@ -111,9 +111,9 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
 
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
@@ -127,7 +127,7 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 }
 \value{
 A ggplot2 object containing a Nebulosa plot.

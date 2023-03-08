@@ -152,7 +152,7 @@ do_BoxPlot <- function(sample,
                                         levels = {data %>%
                                                   tibble::as_tibble() %>%
                                                   dplyr::group_by(.data[["group.by"]]) %>%
-                                                  dplyr::summarise("median" = stats::median(.data[["feature"]])) %>%
+                                                  dplyr::summarise("median" = stats::median(.data[["feature"]], na.rm = TRUE)) %>%
                                                   dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
                                                   dplyr::pull(.data[["group.by"]]) %>%
                                                   as.character()}))
@@ -186,7 +186,8 @@ do_BoxPlot <- function(sample,
                                width = boxplot.width,
                                lwd = boxplot.linewidth,
                                fatten = 1,
-                               key_glyph = "rect")
+                               key_glyph = "rect",
+                               na.rm = TRUE)
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
     stop("Parameter use_silhouetter can not be used alongside split.by.", call. = FALSE)
   } else if (isFALSE(use_silhouette)){
@@ -209,7 +210,8 @@ do_BoxPlot <- function(sample,
                                width = boxplot.width,
                                lwd = boxplot.linewidth,
                                fatten = 1,
-                               key_glyph = "rect")
+                               key_glyph = "rect",
+                               na.rm = TRUE)
   }
 
    p <- p +

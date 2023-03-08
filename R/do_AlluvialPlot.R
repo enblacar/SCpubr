@@ -57,8 +57,8 @@ do_AlluvialPlot <- function(sample,
                             label.color = "black",
                             curve_type = "sigmoid",
                             use_viridis = FALSE,
-                            viridis_color_map = "G",
-                            viridis_direction = -1,
+                            viridis.palette = "G",
+                            viridis.direction = -1,
                             plot.grid = FALSE,
                             grid.color = "grey75",
                             grid.type = "dashed",
@@ -80,7 +80,7 @@ do_AlluvialPlot <- function(sample,
   # Check numeric parameters.
   numeric_list <- list("stratum.width" = stratum.width,
                        "font.size" = font.size,
-                       "viridis_direction" = viridis_direction)
+                       "viridis.direction" = viridis.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("first_group" = first_group,
@@ -100,7 +100,7 @@ do_AlluvialPlot <- function(sample,
                          "flow.color" = flow.color,
                          "label.color" = label.color,
                          "curve_type" = curve_type,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "grid.color" = grid.color,
                          "grid.type" = grid.type ,
                          "na.value" = na.value,
@@ -228,8 +228,8 @@ do_AlluvialPlot <- function(sample,
 
   if (isTRUE(use_viridis)){
     p <- p +
-         ggplot2::scale_fill_viridis_d(option = viridis_color_map,
-                                       direction = viridis_direction,
+         ggplot2::scale_fill_viridis_d(option = viridis.palette,
+                                       direction = viridis.direction,
                                        na.value = na.value)
   } else if (isFALSE(use_viridis)){
     p <- p +

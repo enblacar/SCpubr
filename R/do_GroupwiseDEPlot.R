@@ -14,11 +14,11 @@ do_GroupwiseDEPlot <- function(sample,
                                number.breaks = 5,
                                top_genes = 5,
                                use_viridis = FALSE,
-                               viridis_direction = -1,
+                               viridis.direction = -1,
                                viridis.palette.pvalue = "C",
                                viridis.palette.logfc = "E",
                                viridis.palette.expression = "G",
-                               sequential_direction = 1,
+                               sequential.direction = 1,
                                sequential.palette.pvalue = "YlGn",
                                sequential.palette.logfc = "YlOrRd",
                                sequential.palette.expression = "YlGnBu",
@@ -47,7 +47,7 @@ do_GroupwiseDEPlot <- function(sample,
   # Check numeric parameters.
   numeric_list <- list("number.breaks" = number.breaks,
                        "top_genes" = top_genes,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "legend.width" = legend.width,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
@@ -83,7 +83,7 @@ do_GroupwiseDEPlot <- function(sample,
   check_colors(na.value, parameter_name = "na.value")
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette.pvalue, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis.palette.logfc, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis.palette.expression, parameter_name = "viridis_color_map")
@@ -193,7 +193,7 @@ do_GroupwiseDEPlot <- function(sample,
   
   if (isTRUE(use_viridis)){
     p <- p + 
-         ggplot2::scale_fill_viridis_c(direction = viridis_direction,
+         ggplot2::scale_fill_viridis_c(direction = viridis.direction,
                                        option = viridis.palette.pvalue,
                                        na.value = na.value,
                                        breaks = scale.setup$breaks,
@@ -202,7 +202,7 @@ do_GroupwiseDEPlot <- function(sample,
                                        name = expression(bold(paste("-", log["10"], "(p.adjust)"))))
   } else {
     p <- p + 
-         ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9])},
+         ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9])},
                                        na.value = na.value,
                                        name =  expression(bold(paste("-", log["10"], "(p.adjust)"))),
                                        breaks = scale.setup$breaks,
@@ -246,7 +246,7 @@ do_GroupwiseDEPlot <- function(sample,
   
   if (isTRUE(use_viridis)){
     p <- p + 
-      ggplot2::scale_fill_viridis_c(direction = viridis_direction,
+      ggplot2::scale_fill_viridis_c(direction = viridis.direction,
                                     option = viridis.palette.logfc,
                                     na.value = na.value,
                                     breaks = scale.setup$breaks,
@@ -255,7 +255,7 @@ do_GroupwiseDEPlot <- function(sample,
                                     name = expression(bold(paste("Avg. ", log["2"], "(FC)"))))
   } else {
     p <- p + 
-      ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9])},
+      ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9])},
                                     na.value = na.value,
                                     name =  expression(bold(paste("Avg. ", log["2"], "(FC)"))),
                                     breaks = scale.setup$breaks,
@@ -337,7 +337,7 @@ do_GroupwiseDEPlot <- function(sample,
     
     if (isTRUE(use_viridis)){
       p <- p + 
-        ggplot2::scale_fill_viridis_c(direction = viridis_direction,
+        ggplot2::scale_fill_viridis_c(direction = viridis.direction,
                                       option = viridis.palette.expression,
                                       na.value = na.value,
                                       breaks = scale.setup$breaks,
@@ -346,7 +346,7 @@ do_GroupwiseDEPlot <- function(sample,
                                       name = "Avg. Expression")
     } else {
       p <- p + 
-        ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9])},
+        ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9])},
                                       na.value = na.value,
                                       name =  "Avg. Expression",
                                       breaks = scale.setup$breaks,

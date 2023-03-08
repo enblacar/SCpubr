@@ -11,11 +11,11 @@ do_GroupwiseDEPlot(
   number.breaks = 5,
   top_genes = 5,
   use_viridis = FALSE,
-  viridis_direction = -1,
+  viridis.direction = -1,
   viridis.palette.pvalue = "C",
   viridis.palette.logfc = "E",
   viridis.palette.expression = "G",
-  sequential_direction = 1,
+  sequential.direction = 1,
   sequential.palette.pvalue = "YlGn",
   sequential.palette.logfc = "YlOrRd",
   sequential.palette.expression = "YlGnBu",
@@ -50,9 +50,9 @@ do_GroupwiseDEPlot(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 

@@ -37,15 +37,15 @@ do_CopyNumberVariantPlot <- function(sample,
                                      enforce_symmetry = TRUE,
                                      legend.title = NULL,
                                      na.value = "grey75",
-                                     viridis_color_map = "G",
-                                     viridis_direction = 1,
+                                     viridis.palette = "G",
+                                     viridis.direction = 1,
                                      verbose = FALSE,
                                      min.cutoff = NA,
                                      max.cutoff = NA,
                                      number.breaks = 5,
                                      diverging.palette = "RdBu",
                                      sequential.palette = "YlGnBu",
-                                     sequential_direction = -1,
+                                     sequential.direction = -1,
                                      use_viridis = TRUE){
 
 
@@ -63,12 +63,12 @@ do_CopyNumberVariantPlot <- function(sample,
                        "legend.tickwidth" = legend.tickwidth,
                        "pt.size" = pt.size,
                        "border.size" = border.size,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -79,7 +79,7 @@ do_CopyNumberVariantPlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "legend.title" = legend.title,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
@@ -94,13 +94,13 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
 
   if (is.null(chromosome_focus)){
     chromosome_list <- c(as.character(seq(1, 22)))
@@ -234,15 +234,15 @@ do_CopyNumberVariantPlot <- function(sample,
                        ylab = paste0(event, " score"),
                        legend.title = legend.title.use,
                        rotate_x_axis_labels = rotate_x_axis_labels,
-                       viridis_color_map = viridis_color_map,
-                       viridis_direction = viridis_direction,
+                       viridis.palette = viridis.palette,
+                       viridis.direction = viridis.direction,
                        min.cutoff = min.cutoff,
                        max.cutoff = max.cutoff,
                        number.breaks = number.breaks,
                        diverging.palette = diverging.palette,
                        use_viridis = use_viridis,
                        sequential.palette = sequential.palette,
-                       sequential_direction = sequential_direction)
+                       sequential.direction = sequential.direction)
 
 
     p.f <- do_FeaturePlot(sample = sample,
@@ -260,8 +260,8 @@ do_CopyNumberVariantPlot <- function(sample,
                           legend.tickwidth = legend.tickwidth,
                           legend.length = legend.length,
                           legend.width = legend.width,
-                          viridis_color_map = viridis_color_map,
-                          viridis_direction = viridis_direction,
+                          viridis.palette = viridis.palette,
+                          viridis.direction = viridis.direction,
                           legend.title = legend.title.use,
                           min.cutoff = min.cutoff,
                           max.cutoff = max.cutoff,
@@ -269,7 +269,7 @@ do_CopyNumberVariantPlot <- function(sample,
                           diverging.palette = diverging.palette,
                           use_viridis = use_viridis,
                           sequential.palette = sequential.palette,
-                          sequential_direction = sequential_direction)
+                          sequential.direction = sequential.direction)
 
     if (isTRUE(enforce_symmetry)){
       limits <- max(abs(c(min(sample@meta.data[, event]),

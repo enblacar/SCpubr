@@ -36,15 +36,15 @@ do_NebulosaPlot <- function(sample,
                             plot_cell_borders = TRUE,
                             border.size = 2,
                             border.color = "black",
-                            viridis_color_map = "G",
-                            viridis_direction = 1,
+                            viridis.palette = "G",
+                            viridis.direction = 1,
                             verbose = TRUE,
                             na.value = "grey75",
                             plot.axes = FALSE,
                             number.breaks = 5,
                             use_viridis = TRUE,
                             sequential.palette = "YlGnBu",
-                            sequential_direction = -1){
+                            sequential.direction = -1){
   `%>%` <- magrittr::`%>%`
   check_suggests(function_name = "do_NebulosaPlot")
   # Check if the sample provided is a Seurat object.
@@ -70,9 +70,9 @@ do_NebulosaPlot <- function(sample,
                        "legend.width" = legend.width,
                        "dims" = dims,
                        "border.size" = border.size,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
@@ -114,8 +114,8 @@ do_NebulosaPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 
   # Define legend parameters.
@@ -183,8 +183,8 @@ do_NebulosaPlot <- function(sample,
         if (isTRUE(use_viridis)){
           p <- add_scale(p = p,
                          function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                       option = viridis_color_map,
-                                                                       direction = viridis_direction,
+                                                                       option = viridis.palette,
+                                                                       direction = viridis.direction,
                                                                        breaks = scale.setup$breaks,
                                                                        labels = scale.setup$labels,
                                                                        limits = scale.setup$limits,
@@ -192,7 +192,7 @@ do_NebulosaPlot <- function(sample,
                          scale = "color")
         } else {
           p <- add_scale(p = p,
-                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                                                        na.value = na.value,
                                                                        name = name.use,
                                                                        breaks = scale.setup$breaks,
@@ -220,8 +220,8 @@ do_NebulosaPlot <- function(sample,
         if (isTRUE(use_viridis)){
           p[[counter]] <- add_scale(p = p[[counter]],
                          function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                       option = viridis_color_map,
-                                                                       direction = viridis_direction,
+                                                                       option = viridis.palette,
+                                                                       direction = viridis.direction,
                                                                        breaks = scale.setup$breaks,
                                                                        labels = scale.setup$labels,
                                                                        limits = scale.setup$limits,
@@ -229,7 +229,7 @@ do_NebulosaPlot <- function(sample,
                          scale = "color")
         } else {
           p[[counter]] <- add_scale(p = p[[counter]],
-                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                                                        na.value = na.value,
                                                                        name = name.use,
                                                                        breaks = scale.setup$breaks,

@@ -15,8 +15,8 @@ do_EnrichmentHeatmap(
   na.value = "grey75",
   legend.position = "bottom",
   use_viridis = FALSE,
-  viridis_color_map = "G",
-  viridis_direction = 1,
+  viridis.palette = "G",
+  viridis.direction = 1,
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
   legend.length = 20,
@@ -48,7 +48,7 @@ do_EnrichmentHeatmap(
   number.breaks = 5,
   sequential.palette = "YlGnBu",
   diverging.palette = "RdBu",
-  sequential_direction = 1,
+  sequential.direction = 1,
   flip = FALSE
 )
 }
@@ -80,9 +80,9 @@ do_EnrichmentHeatmap(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
@@ -141,7 +141,7 @@ do_EnrichmentHeatmap(
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }

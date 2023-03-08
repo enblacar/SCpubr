@@ -39,11 +39,6 @@ do_TFActivityPlot <- function(sample,
                               rotate_x_axis_labels = 45,
                               enforce_symmetry = TRUE,
                               diverging.palette = "RdBu",
-                              sequential.palette = "YlGnBu",
-                              sequential_direction = -1,
-                              use_viridis = TRUE,
-                              viridis_color_map = "G",
-                              viridis_direction = 1,
                               min.cutoff = NA,
                               max.cutoff = NA,
                               number.breaks = 5,
@@ -57,7 +52,6 @@ do_TFActivityPlot <- function(sample,
   logical_list <- list("plot_cell_borders" = plot_cell_borders,
                        "enforce_symmetry" = enforce_symmetry,
                        "flip" = flip,
-                       "use_viridis" = use_viridis,
                        "return_object" = return_object)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
@@ -69,12 +63,10 @@ do_TFActivityPlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
-                       "viridis_direction" = viridis_direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "number.breaks" = number.breaks)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -85,10 +77,7 @@ do_TFActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "viridis_color_map" = viridis_color_map,
-                         "tfs.use" = tfs.use,
-                         "diverging.palette" = diverging.palette,
-                         "sequential.palette" = sequential.palette)
+                         "tfs.use" = tfs.use)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%>%` <- magrittr::`%>%`
@@ -100,8 +89,6 @@ do_TFActivityPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")

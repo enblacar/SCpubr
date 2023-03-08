@@ -197,7 +197,8 @@ do_ViolinPlot <- function(sample,
     }
     p <- p +
          ggplot2::geom_violin(color = "black",
-                              linewidth = line_width)
+                              linewidth = line_width,
+                              na.rm = TRUE)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
                               msg = paste0(crayon_key("Boxplots"),
@@ -213,7 +214,8 @@ do_ViolinPlot <- function(sample,
                                  linewidth = line_width,
                                  width = boxplot_width,
                                  outlier.shape = NA,
-                                 fatten = 1) +
+                                 fatten = 1,
+                                 na.rm = TRUE) +
            ggplot2::scale_fill_manual(values = colors.use)
     }
     if (is.na(xlab[counter])){

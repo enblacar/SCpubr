@@ -1,6 +1,11 @@
 # SCpubr v2.0.0
 This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. Hence, the major update.
 
+## Parameter renaming
+- Changed `viridis_color_map` to `viridis.palette`.
+- Changed `viridis_direction` to `viridis.direction`.
+- Changed `sequential_direction` to `sequential.direction`. 
+
 ## General
 - Now when using `min.cutoff` or `max.cutoff`, the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. This potentially interacts with `enforce_symmetry`. 
 - Added `number.breaks` parameter to control the number of breaks in the legend of ggplot2-based plots. It will not always work, as the function will try to fit the breaks accordingly. But still, will give some range of freedom to the user.
@@ -10,8 +15,13 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 - Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
 - Re-implemented all heatmap-based plots in ggplot2. This means that this is a **breaking change**. All heatmap-specific parameters have been replaced with the overarching parameters that are used across functions. This decision was taking after a lot of thought, but ultimately, having all plots rely on ggplot2 makes it way more compatible to work with them together, to debug, and to further implement new ideas.
 
+## `SCpubr::do_BeeSwarmPlot`
+- Added `order` parameter to reorder the groups based on the median rank.
+
 ## `SCpubr::do_BoxPlot`
-- Change the reordering of boxplots based on the median rather than the mean. 
+- Change the reordering of boxplots based on the median rather than the mean.
+- Added `na.rm` to `geom_boxplot` to avoid unnecessary warnings when introducing NAs as part of the data.
+- Fixe bug in which `order` would not work if `NAs` are in the data.
 
 ## `SCpubr::do_CorrelationPlot`
 - Added  parameter to fix a bug in which viridis scales did not apply due to the lack of the parameter.

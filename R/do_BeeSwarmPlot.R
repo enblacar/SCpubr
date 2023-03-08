@@ -3,6 +3,7 @@
 #' @inheritParams doc_function
 #' @param feature_to_rank \strong{\code{\link[base]{character}}} | Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.
 #' @param continuous_feature \strong{\code{\link[base]{logical}}} | Is the feature to rank and color for continuous? I.e: an enrichment score.
+#' @param order \strong{\code{\link[base]{logical}}} | Whether to reorder the groups based on the median of the ranking.
 #' @param remove_x_axis,remove_y_axis \strong{\code{\link[base]{logical}}} | Remove X axis labels and ticks from the plot.
 #' @return  A ggplot2 object containing a Bee Swarm plot.
 #' @export
@@ -15,6 +16,7 @@ do_BeeSwarmPlot <- function(sample,
                             reduction = NULL,
                             slot = NULL,
                             continuous_feature = FALSE,
+                            order = FALSE,
                             colors.use = NULL,
                             legend.title = NULL,
                             legend.type = "colorbar",
@@ -38,10 +40,10 @@ do_BeeSwarmPlot <- function(sample,
                             remove_y_axis = FALSE,
                             flip = FALSE,
                             use_viridis = TRUE,
-                            viridis_color_map = "G",
-                            viridis_direction = 1,
+                            viridis.palette = "G",
+                            viridis.direction = 1,
                             sequential.palette = "YlGnBu",
-                            sequential_direction = -1,
+                            sequential.direction = -1,
                             verbose = TRUE,
                             raster = FALSE,
                             raster.dpi = 300,
@@ -77,7 +79,8 @@ do_BeeSwarmPlot <- function(sample,
                        "verbose" = verbose,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "order" = order)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -90,11 +93,11 @@ do_BeeSwarmPlot <- function(sample,
                        "border.size" = border.size,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "legend.ncol" = legend.ncol,
                        "legend.icon.size" = legend.icon.size,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("legend.position" = legend.position,
@@ -107,7 +110,7 @@ do_BeeSwarmPlot <- function(sample,
                          "ylab" = ylab,
                          "xlab" = xlab,
                          "slot" = slot,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
@@ -127,9 +130,9 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential_direction, parameter_name = "sequential_direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
 
 
 
@@ -157,25 +160,37 @@ do_BeeSwarmPlot <- function(sample,
 
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {
-    sample[["rank_me"]] <- sample@meta.data[, feature_to_rank]
-    sample[["rank"]] <- rank(sample[["rank_me"]])
+    sample@meta.data$rank_me <- sample@meta.data[, feature_to_rank]
+    sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% rownames(sample)){
-    sample[["rank_me"]] <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
-    sample[["rank"]] <- rank(sample[["rank_me"]])
+    sample@meta.data$rank_me  <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
+    sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% dim_colnames){
     for(red in Seurat::Reductions(object = sample)){
       if (feature_to_rank %in% colnames(sample@reductions[[red]][[]])){
         reduction <- red
-        sample[["rank_me"]] <- sample@reductions[[reduction]][[]][, feature_to_rank]
-        sample[["rank"]] <- rank(sample[["rank_me"]])
+        sample@meta.data$rank_me  <- sample@reductions[[reduction]][[]][, feature_to_rank]
+        sample@meta.data$rank <- rank(sample@meta.data$rank_me)
       }
     }
   }
   # Compute the ranking
-  sample[["ranked_groups"]] <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
-
+  sample@meta.data$ranked_groups <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
+  
+  if (isTRUE(order)){
+    # Get median rank by group.
+    order <- sample@meta.data %>% 
+             dplyr::select(dplyr::all_of(c("ranked_groups", "rank"))) %>% 
+             dplyr::group_by(.data$ranked_groups) %>% 
+             dplyr::summarise("median" = stats::median(.data$rank, na.rm = TRUE)) %>% 
+             dplyr::arrange(dplyr::desc(.data$median)) %>% 
+             dplyr::pull(.data$ranked_groups) %>% 
+             as.character()
+    sample@meta.data$ranked_groups <- factor(sample@meta.data$ranked_groups, levels = rev(order))
+  }
+  
   color_by <- ifelse(continuous_feature == TRUE, "rank_me", "ranked_groups")
-
+  
 
   # Compute the limits.
   if (isTRUE(continuous_feature)){
@@ -199,7 +214,7 @@ do_BeeSwarmPlot <- function(sample,
     sample$rank_me[sample$rank_me < min.cutoff] <- min.cutoff
     sample$rank_me[sample$rank_me > max.cutoff] <- max.cutoff
   }
-
+  
   p <- ggplot2::ggplot(sample@meta.data,
                        mapping = ggplot2::aes(x = .data[["rank"]],
                                               y = .data[["ranked_groups"]],
@@ -247,15 +262,15 @@ do_BeeSwarmPlot <- function(sample,
     if (isTRUE(use_viridis)){
       p <- p +
            ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                          option = viridis_color_map,
-                                          direction = viridis_direction,
+                                          option = viridis.palette,
+                                          direction = viridis.direction,
                                           breaks = scale.setup$breaks,
                                           labels = scale.setup$labels,
                                           limits = scale.setup$limits,
                                           name = feature_to_rank)
     } else {
       p <- p +
-           ggplot2::scale_color_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                           na.value = feature_to_rank,
                                           name = legend.title,
                                           breaks = scale.setup$breaks,

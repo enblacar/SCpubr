@@ -30,11 +30,6 @@ do_TFActivityPlot(
   rotate_x_axis_labels = 45,
   enforce_symmetry = TRUE,
   diverging.palette = "RdBu",
-  sequential.palette = "YlGnBu",
-  sequential_direction = -1,
-  use_viridis = TRUE,
-  viridis_color_map = "G",
-  viridis_direction = 1,
   min.cutoff = NA,
   max.cutoff = NA,
   number.breaks = 5,
@@ -104,16 +99,6 @@ do_TFActivityPlot(
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
-
-\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
-
-\item{sequential_direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
-
-\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
-
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 

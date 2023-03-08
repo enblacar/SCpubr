@@ -31,8 +31,8 @@ do_AlluvialPlot(
   label.color = "black",
   curve_type = "sigmoid",
   use_viridis = FALSE,
-  viridis_color_map = "G",
-  viridis_direction = -1,
+  viridis.palette = "G",
+  viridis.direction = -1,
   plot.grid = FALSE,
   grid.color = "grey75",
   grid.type = "dashed",
@@ -98,9 +98,9 @@ do_AlluvialPlot(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{viridis_color_map}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
-\item{viridis_direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 

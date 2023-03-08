@@ -180,7 +180,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1"),
-                                 viridis_color_map = "F")
+                                 viridis.palette = "F")
     testthat::expect_type(p, "list")
   })
 
@@ -210,7 +210,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
     testthat::expect_warning(SCpubr::do_NebulosaPlot(sample = sample,
                                                      features = list("EPC1"),
-                                                     viridis_color_map = "F"))
+                                                     viridis.palette = "F"))
   })
 
 
