@@ -1,3 +1,16 @@
+#' Compute affinity of gene sets to cell populations using decoupleR.
+#'
+#' @inheritParams doc_function
+#' @param subsample Number of cells to subset for the analysis. NA will use all. The number provided will subset that number of cells per each unique value in the identities of the Seurat object.
+#' @param statistic DecoupleR statistic to use for the analysis.
+#'
+#' @return A list of plots.
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' TBD
+#' }
 do_AffinityAnalysisPlot <- function(sample,
                                     input_gene_list,
                                     subsample = 100,
