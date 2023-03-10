@@ -7,12 +7,13 @@
 do_AffinityAnalysisPlot(
   sample,
   input_gene_list,
-  subsample = 100,
+  subsample = ncol(sample) * 0.1,
   group.by = NULL,
   assay = "SCT",
   slot = "data",
   statistic = "norm_wmean",
   number.breaks = 5,
+  compute_robustness = FALSE,
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
@@ -31,7 +32,12 @@ do_AffinityAnalysisPlot(
   font.size = 14,
   font.type = "sans",
   rotate_x_axis_labels = 45,
-  flip = FALSE
+  flip = FALSE,
+  colors.use = NULL,
+  min.cutoff = NA,
+  max.cutoff = NA,
+  control.number = 50,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -39,7 +45,7 @@ do_AffinityAnalysisPlot(
 
 \item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
 
-\item{subsample}{Number of cells to subset for the analysis. NA will use all. The number provided will subset that number of cells per each unique value in the identities of the Seurat object.}
+\item{subsample}{Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
@@ -50,6 +56,10 @@ do_AffinityAnalysisPlot(
 \item{statistic}{DecoupleR statistic to use for the analysis.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{compute_robustness}{This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of
+control.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
+values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
@@ -100,12 +110,22 @@ do_AffinityAnalysisPlot(
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }
 \value{
-A list of plots.
+A list containing different plots.
 }
 \description{
-Compute affinity of gene sets to cell populations using decoupleR.
+Major contributions to this function:
+\itemize{
+\item Marc Elosua Bayés (developer of SPOTlight) for the core concept code and idea.
+\item Pau Badia i Mompel (developer of decoupleR) for the network generation.
+}
 }
 \examples{
 \donttest{

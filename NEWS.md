@@ -59,13 +59,11 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 - Added `set_min_expression_to_zero` parameter to set the viridis color scale to 0 in the expression heatmap.
 
 ## `SCpubr::do_PathwayActivityPlot`
-- Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value.
 - Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 - Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 
 
 ## `SCpubr::do_TFActivityPlot()`
-- Fixed a bug in which heatmaps contained the average of all scores, regardless of the p-value. Now it is set up to the top 100 significant genes per cluster.
 - Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 - Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 

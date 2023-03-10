@@ -283,6 +283,7 @@ do_CorrelationPlot <- function(sample = NULL,
     }
     
     jaccard_matrix <- as.matrix(as.data.frame(jaccard_scores))
+    colnames(jaccard_matrix) <- rownames(jaccard_matrix)
     order <- rownames(jaccard_matrix)[stats::hclust(stats::dist(jaccard_matrix, method = "euclidean"), method = "ward.D")$order]
     jaccard_matrix <- jaccard_matrix[order, order]
     jaccard_matrix[jaccard_matrix == 1] <- NA

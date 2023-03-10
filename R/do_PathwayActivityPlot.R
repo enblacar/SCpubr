@@ -91,7 +91,7 @@ do_PathwayActivityPlot <- function(sample,
 
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(.data$statistic == "norm_wmean") %>%
-                         dplyr::mutate("score" = ifelse(.data$p_value <= 0.05, .data$score, NA)) %>%
+                         #dplyr::mutate("score" = ifelse(.data$p_value <= 0.05, .data$score, NA)) %>%
                          tidyr::pivot_wider(id_cols = "source",
                                             names_from = "condition",
                                             values_from = "score") %>%
