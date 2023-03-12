@@ -7,7 +7,7 @@
 do_AffinityAnalysisPlot(
   sample,
   input_gene_list,
-  subsample = ncol(sample) * 0.1,
+  subsample = 2500,
   group.by = NULL,
   assay = "SCT",
   slot = "data",
@@ -37,7 +37,8 @@ do_AffinityAnalysisPlot(
   min.cutoff = NA,
   max.cutoff = NA,
   control.number = 50,
-  verbose = TRUE
+  verbose = TRUE,
+  return_object = FALSE
 )
 }
 \arguments{
@@ -45,7 +46,7 @@ do_AffinityAnalysisPlot(
 
 \item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
 
-\item{subsample}{Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
+\item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
@@ -53,11 +54,11 @@ do_AffinityAnalysisPlot(
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
-\item{statistic}{DecoupleR statistic to use for the analysis.}
+\item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
-\item{compute_robustness}{This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of
+\item{compute_robustness}{\strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of
 control.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
 values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
 
@@ -123,8 +124,8 @@ A list containing different plots.
 \description{
 Major contributions to this function:
 \itemize{
-\item Marc Elosua Bayés (developer of SPOTlight) for the core concept code and idea.
-\item Pau Badia i Mompel (developer of decoupleR) for the network generation.
+\item \href{https://github.com/MarcElosua}{Marc Elosua Bayés} for the core concept code and idea.
+\item \href{https://github.com/paubadiam}{Pau Badia i Mompel} for the network generation.
 }
 }
 \examples{

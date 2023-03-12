@@ -1,13 +1,13 @@
 #' Compute affinity of gene sets to cell populations using decoupleR.
 #'
 #' Major contributions to this function: 
-#' - Marc Elosua Bayés (developer of SPOTlight) for the core concept code and idea.
-#' - Pau Badia i Mompel (developer of decoupleR) for the network generation.
+#' - \href{https://github.com/MarcElosua}{Marc Elosua Bayés} for the core concept code and idea.
+#' - \href{https://github.com/paubadiam}{Pau Badia i Mompel} for the network generation.
 #' 
 #' @inheritParams doc_function
-#' @param subsample Number of cells to subset for the analysis. NA will use all. Cells are selected at random.
-#' @param statistic DecoupleR statistic to use for the analysis.
-#' @param compute_robustness This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of 
+#' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.
+#' @param statistic \strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.
+#' @param compute_robustness \strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of 
 #' control.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
 #' values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression. 
 #'
@@ -50,8 +50,15 @@ do_AffinityAnalysisPlot <- function(sample,
                                     min.cutoff = NA,
                                     max.cutoff = NA,
                                     control.number = 50,
-                                    verbose = TRUE){
+                                    verbose = TRUE,
+                                    return_object = FALSE){
   `%>%` <- magrittr::`%>%`
+  
+  # Assign a group.by if this is null.
+  if (is.null(group.by)){
+    sample$Groups <- Seurat::Idents(sample)
+    group.by <- "Groups"
+  }
   
   # For robustness analysis.
   sample.original <- sample
@@ -66,10 +73,10 @@ do_AffinityAnalysisPlot <- function(sample,
   # Step 1: Check for underscores in the names of the gene sets.
   if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
     warning(paste0(crayon_body("Found "),
-                   crayon_key("underscores"),
+                   crayon_key("underscores (_)"),
                    crayon_body(" in the name of the gene sets provided. Replacing them with "),
-                   crayon_key("dashes"),
-                   crayon_body(" to avoid conflicts when generating the Seurat assay.")))
+                   crayon_key("dashes (-)"),
+                   crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
     names.use <- stringr::str_replace_all(names(input_gene_list), "_", "-")
     names(input_gene_list) <- names.use
   }
@@ -91,12 +98,12 @@ do_AffinityAnalysisPlot <- function(sample,
   
   # Generate the network as a tibble and filter out fake genes.
   network <- gene_list %>% 
-             tibble::as_tibble() %>% 
-             tidyr::pivot_longer(cols = dplyr::everything(),
-                                 names_to = "source",
-                                 values_to = "target") %>% 
-             dplyr::mutate("mor" = 1) %>% 
-             dplyr::filter(.data$target != "deleteme")
+    tibble::as_tibble() %>% 
+    tidyr::pivot_longer(cols = dplyr::everything(),
+                        names_to = "source",
+                        values_to = "target") %>% 
+    dplyr::mutate("mor" = 1) %>% 
+    dplyr::filter(.data$target != "deleteme")
   
   # Get expression data.
   mat <- Seurat::GetAssayData(sample,
@@ -112,13 +119,13 @@ do_AffinityAnalysisPlot <- function(sample,
   
   # Turn them into a matrix compatible to turn into a Seurat assay.
   acts.matrix <- acts %>% 
-                 dplyr::filter(.data$statistic == .env$statistic) %>% 
-                 #dplyr::mutate("score" = ifelse(.data$p_value <= p_value, 
-                 #                               .data$score, NA)) %>% 
-                 tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
-                                    names_from = "condition",
-                                    values_from = "score") %>%
-                 tibble::column_to_rownames('source')
+    dplyr::filter(.data$statistic == .env$statistic) %>% 
+    #dplyr::mutate("score" = ifelse(.data$p_value <= p_value, 
+    #                               .data$score, NA)) %>% 
+    tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
+                       names_from = "condition",
+                       values_from = "score") %>%
+    tibble::column_to_rownames('source')
   
   # Generate a Seurat assay.
   assay.add <- Seurat::CreateAssayObject(acts.matrix)
@@ -133,15 +140,15 @@ do_AffinityAnalysisPlot <- function(sample,
   scale.data <- Seurat::GetAssayData(sample,
                                      assay = "affinity",
                                      slot = "data") %>%
-                as.matrix() %>%
-                t() %>%
-                as.data.frame() %>%
-                scale() %>%
-                t()
+    as.matrix() %>%
+    t() %>%
+    as.data.frame() %>%
+    scale() %>%
+    t()
   
   # Set it to the scale.data slot.
   sample@assays$affinity@scale.data <- scale.data
-
+  
   # Plotting.
   # Get the data frames per group.by value for plotting.
   list.data <- list()
@@ -151,28 +158,28 @@ do_AffinityAnalysisPlot <- function(sample,
     data.use <- Seurat::GetAssayData(sample, 
                                      assay = "affinity", 
                                      slot = "scale.data") %>% 
-                t() %>% 
-                as.data.frame() %>% 
-                tibble::rownames_to_column(var = "cell") %>% 
-                dplyr::left_join(y = {sample@meta.data %>% 
-                                      tibble::rownames_to_column(var = "cell") %>% 
-                                      dplyr::select(dplyr::all_of(c("cell", group)))},
-                                 by = "cell") %>% 
-                tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
-                                    names_to = "source",
-                                    values_to = "score")
+      t() %>% 
+      as.data.frame() %>% 
+      tibble::rownames_to_column(var = "cell") %>% 
+      dplyr::left_join(y = {sample@meta.data %>% 
+          tibble::rownames_to_column(var = "cell") %>% 
+          dplyr::select(dplyr::all_of(c("cell", group)))},
+          by = "cell") %>% 
+      tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
+                          names_to = "source",
+                          values_to = "score")
     
     # Clustering based on the median across all cells.
     data.cluster <- data.use %>% 
-                    tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),
-                                       names_from = "source",
-                                       values_from = "score") %>% 
-                    dplyr::group_by(.data[[group]]) %>% 
-                    dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(names(input_gene_list))),
-                                                   stats::median,
-                                                   na.rm = TRUE)) %>% 
-                    as.data.frame() %>% 
-                    tibble::column_to_rownames(var = group) 
+      tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),
+                         names_from = "source",
+                         values_from = "score") %>% 
+      dplyr::group_by(.data[[group]]) %>% 
+      dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(names(input_gene_list))),
+                                     stats::median,
+                                     na.rm = TRUE)) %>% 
+      as.data.frame() %>% 
+      tibble::column_to_rownames(var = group) 
     
     list.data[[group]][["data"]] <- data.use
     list.data[[group]][["data.cluster"]] <- data.cluster
@@ -203,31 +210,31 @@ do_AffinityAnalysisPlot <- function(sample,
     
     
     data.use <- data.use %>% 
-                dplyr::group_by(.data[[group]], .data$source) %>% 
-                dplyr::summarise("mean" = mean(.data$score, na.rm = TRUE))
+      dplyr::group_by(.data[[group]], .data$source) %>% 
+      dplyr::summarise("mean" = mean(.data$score, na.rm = TRUE))
     
     if (!is.na(min.cutoff)){
       data.use <- data.use %>%
-                  dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
+        dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
     }
     
     if (!is.na(max.cutoff)){
       data.use <- data.use %>%
-                  dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
+        dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
     }
     p <- data.use %>% 
-         dplyr::mutate("source" = factor(.data$source, levels = col_order),
-                       "target" = factor(.data[[group]], levels = row_order)) %>% 
-         ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$source} else {.data$target},
-                                                y = if (isTRUE(flip)){.data$target} else {.data$source},
-                                                fill = .data$mean)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
-         ggplot2::scale_y_discrete(expand = c(0, 0)) +
-         ggplot2::scale_x_discrete(expand = c(0, 0),
-                                   position = "top") +
-         ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$target} else {.data$source}))),
-                         x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$source} else {.data$target})))) + 
-         ggplot2::coord_equal() 
+      dplyr::mutate("source" = factor(.data$source, levels = col_order),
+                    "target" = factor(.data[[group]], levels = row_order)) %>% 
+      ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$source} else {.data$target},
+                                             y = if (isTRUE(flip)){.data$target} else {.data$source},
+                                             fill = .data$mean)) +
+      ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+      ggplot2::scale_y_discrete(expand = c(0, 0)) +
+      ggplot2::scale_x_discrete(expand = c(0, 0),
+                                position = "top") +
+      ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$target} else {.data$source}))),
+                      x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$source} else {.data$target})))) + 
+      ggplot2::coord_equal() 
     list.heatmaps[[group]] <- p
   }
   
@@ -249,17 +256,17 @@ do_AffinityAnalysisPlot <- function(sample,
   
   # Compute overarching scales for all heatmaps.
   scale.setup <- SCpubr:::compute_scales(sample = sample,
-                                feature = " ",
-                                assay = assay,
-                                reduction = NULL,
-                                slot = slot,
-                                number.breaks = number.breaks,
-                                min.cutoff = min.cutoff,
-                                max.cutoff = max.cutoff,
-                                flavor = "Seurat",
-                                enforce_symmetry = enforce_symmetry,
-                                from_data = TRUE,
-                                limits.use = limits)
+                                         feature = " ",
+                                         assay = assay,
+                                         reduction = NULL,
+                                         slot = slot,
+                                         number.breaks = number.breaks,
+                                         min.cutoff = min.cutoff,
+                                         max.cutoff = max.cutoff,
+                                         flavor = "Seurat",
+                                         enforce_symmetry = enforce_symmetry,
+                                         from_data = TRUE,
+                                         limits.use = limits)
   
   for (group in group.by){
     p <- list.heatmaps[[group]]
@@ -267,30 +274,30 @@ do_AffinityAnalysisPlot <- function(sample,
     if (isFALSE(enforce_symmetry)){
       if (isTRUE(use_viridis)){
         p <- p + 
-             ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                           option = viridis.palette,
-                                           na.value = "grey75",
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits,
-                                           name = statistic)
+          ggplot2::scale_fill_viridis_c(direction = viridis.direction,
+                                        option = viridis.palette,
+                                        na.value = "grey75",
+                                        breaks = scale.setup$breaks,
+                                        labels = scale.setup$labels,
+                                        limits = scale.setup$limits,
+                                        name = statistic)
       } else {
         p <- p + 
-             ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                           na.value = "grey75",
-                                           name =  statistic,
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits)
+          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                        na.value = "grey75",
+                                        name =  statistic,
+                                        breaks = scale.setup$breaks,
+                                        labels = scale.setup$labels,
+                                        limits = scale.setup$limits)
       }
     } else {
       p <- p + 
-           ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                         na.value = "grey75",
-                                         name = statistic,
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits)
+        ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                      na.value = "grey75",
+                                      name = statistic,
+                                      breaks = scale.setup$breaks,
+                                      labels = scale.setup$labels,
+                                      limits = scale.setup$limits)
     }
     
     list.heatmaps[[group]] <- p
@@ -301,15 +308,15 @@ do_AffinityAnalysisPlot <- function(sample,
     p <- list.heatmaps[[group]]
     
     p <- SCpubr:::modify_continuous_legend(p = p,
-                                  legend.aes = "fill",
-                                  legend.type = legend.type,
-                                  legend.position = legend.position,
-                                  legend.length = legend.length,
-                                  legend.width = legend.width,
-                                  legend.framecolor = legend.framecolor,
-                                  legend.tickcolor = legend.tickcolor,
-                                  legend.framewidth = legend.framewidth,
-                                  legend.tickwidth = legend.tickwidth)
+                                           legend.aes = "fill",
+                                           legend.type = legend.type,
+                                           legend.position = legend.position,
+                                           legend.length = legend.length,
+                                           legend.width = legend.width,
+                                           legend.framecolor = legend.framecolor,
+                                           legend.tickcolor = legend.tickcolor,
+                                           legend.framewidth = legend.framewidth,
+                                           legend.tickwidth = legend.tickwidth)
     list.heatmaps[[group]] <- p
   }
   
@@ -343,50 +350,50 @@ do_AffinityAnalysisPlot <- function(sample,
     p <- list.heatmaps[[group]]
     
     axis.parameters <- SCpubr:::handle_axis(flip = !flip,
-                                   group.by = rep("A", length(group.by)),
-                                   group = name,
-                                   counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels)
+                                            group.by = rep("A", length(group.by)),
+                                            group = name,
+                                            counter = counter,
+                                            rotate_x_axis_labels = rotate_x_axis_labels)
     
     p <- p +
-         ggplot2::xlab(xlab) +
-         ggplot2::ylab(ylab) +
-         ggplot2::theme_minimal(base_size = font.size) +
-         ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
-                        axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
-                        axis.ticks.y.left = axis.parameters$axis.ticks.y.left,
-                        axis.ticks.y.right = axis.parameters$axis.ticks.y.right,
-                        axis.text.y.left = axis.parameters$axis.text.y.left,
-                        axis.text.y.right = axis.parameters$axis.text.y.right,
-                        axis.text.x.top = axis.parameters$axis.text.x.top,
-                        axis.text.x.bottom = axis.parameters$axis.text.x.bottom,
-                        axis.title.x.bottom = axis.parameters$axis.title.x.bottom,
-                        axis.title.x.top = axis.parameters$axis.title.x.top,
-                        axis.title.y.right = axis.parameters$axis.title.y.right,
-                        axis.title.y.left = axis.parameters$axis.title.y.left,
-                        strip.background = axis.parameters$strip.background,
-                        strip.clip = axis.parameters$strip.clip,
-                        strip.text = axis.parameters$strip.text,
-                        legend.position = legend.position,
-                        axis.line = ggplot2::element_blank(),
-                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                        plot.subtitle = ggplot2::element_text(hjust = 0),
-                        plot.caption = ggplot2::element_text(hjust = 1),
-                        plot.title.position = "plot",
-                        panel.grid = ggplot2::element_blank(),
-                        panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
-                        text = ggplot2::element_text(family = font.type),
-                        plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold"),
-                        legend.title = ggplot2::element_text(face = "bold"),
-                        legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
-                        panel.grid.major = ggplot2::element_blank(),
-                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                        panel.spacing.x = ggplot2::unit(0, "cm"))
+      ggplot2::xlab(xlab) +
+      ggplot2::ylab(ylab) +
+      ggplot2::theme_minimal(base_size = font.size) +
+      ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
+                     axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
+                     axis.ticks.y.left = axis.parameters$axis.ticks.y.left,
+                     axis.ticks.y.right = axis.parameters$axis.ticks.y.right,
+                     axis.text.y.left = axis.parameters$axis.text.y.left,
+                     axis.text.y.right = axis.parameters$axis.text.y.right,
+                     axis.text.x.top = axis.parameters$axis.text.x.top,
+                     axis.text.x.bottom = axis.parameters$axis.text.x.bottom,
+                     axis.title.x.bottom = axis.parameters$axis.title.x.bottom,
+                     axis.title.x.top = axis.parameters$axis.title.x.top,
+                     axis.title.y.right = axis.parameters$axis.title.y.right,
+                     axis.title.y.left = axis.parameters$axis.title.y.left,
+                     strip.background = axis.parameters$strip.background,
+                     strip.clip = axis.parameters$strip.clip,
+                     strip.text = axis.parameters$strip.text,
+                     legend.position = legend.position,
+                     axis.line = ggplot2::element_blank(),
+                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                     plot.subtitle = ggplot2::element_text(hjust = 0),
+                     plot.caption = ggplot2::element_text(hjust = 1),
+                     plot.title.position = "plot",
+                     panel.grid = ggplot2::element_blank(),
+                     panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
+                     text = ggplot2::element_text(family = font.type),
+                     plot.caption.position = "plot",
+                     legend.text = ggplot2::element_text(face = "bold"),
+                     legend.title = ggplot2::element_text(face = "bold"),
+                     legend.justification = "center",
+                     plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
+                     panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                     panel.grid.major = ggplot2::element_blank(),
+                     plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                     panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                     legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                     panel.spacing.x = ggplot2::unit(0, "cm"))
     
     list.heatmaps[[group]] <- p
   }
@@ -399,21 +406,25 @@ do_AffinityAnalysisPlot <- function(sample,
                              nrow = if(isFALSE(flip)){1} else {NULL},
                              guides = "collect")
   p <- p +
-       patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
-                                                         plot.title = ggplot2::element_text(size = font.size,
+    patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
+                                                      plot.title = ggplot2::element_text(size = font.size,
+                                                                                         family = font.type,
+                                                                                         color = "black",
+                                                                                         face = "bold",
+                                                                                         hjust = 0),
+                                                      plot.subtitle = ggplot2::element_text(size = font.size,
                                                                                             family = font.type,
                                                                                             color = "black",
-                                                                                            face = "bold",
                                                                                             hjust = 0),
-                                                         plot.subtitle = ggplot2::element_text(size = font.size,
-                                                                                               family = font.type,
-                                                                                               color = "black",
-                                                                                               hjust = 0),
-                                                         plot.caption = ggplot2::element_text(size = font.size,
-                                                                                              family = font.type,
-                                                                                              color = "black",
-                                                                                              hjust = 1),
-                                                         plot.caption.position = "plot"))
+                                                      plot.caption = ggplot2::element_text(size = font.size,
+                                                                                           family = font.type,
+                                                                                           color = "black",
+                                                                                           hjust = 1),
+                                                      plot.caption.position = "plot"))
+  if (!is.na(min.cutoff) & !is.na(min.cutoff)){
+    p <- p + 
+      patchwork::plot_annotation(caption = paste0("Scale limits: Min: ", round(limits[1], 2), " | Max: ", round(limits[2], 2)))
+  }
   
   list.output <- list()
   
@@ -440,221 +451,279 @@ do_AffinityAnalysisPlot <- function(sample,
       list.output[["Box plots"]][[gene_set]][[group]] <- p
     }
   }
-
-
+  
+  # Compute SCheatmap.
+  for (group in group.by){
+    p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
+                                        group.by = group,
+                                        features = rownames(sample),
+                                        assay = "affinity",
+                                        slot = "scale.data",
+                                        enforce_symmetry = TRUE,
+                                        min.cutoff = min.cutoff,
+                                        max.cutoff = max.cutoff,
+                                        number.breaks = number.breaks,
+                                        legend.position = legend.position,
+                                        font.size = font.size,
+                                        font.type = font.type,
+                                        legend.width = legend.width,
+                                        legend.length = legend.length,
+                                        legend.framewidth = legend.framewidth,
+                                        legend.tickwidth = legend.tickwidth,
+                                        legend.framecolor = legend.framecolor,
+                                        legend.tickcolor = legend.tickcolor,
+                                        legend.type = legend.type,
+                                        use_viridis = use_viridis,
+                                        viridis.palette = viridis.palette,
+                                        viridis.direction = viridis.direction,
+                                        sequential.palette = sequential.palette,
+                                        sequential.direction = sequential.direction,
+                                        legend.title = statistic)
+    list.output[["SC Heatmap"]][[group]] <- p
+  }
+  # Compute similarity of the gene sets in the network.
+  list.output[["Network Similarity"]] <- SCpubr::do_CorrelationPlot(input_gene_list = input_gene_list,
+                                                                    mode = "jaccard")
+  
   # Compute robustness of the scoring.
-  
-  # Compute dataframe of averaged expression of the genes and bin it.
-  data.avg <- Seurat::GetAssayData(sample.original,
-                                   assay = assay,
-                                   slot = slot) %>% 
-              Matrix::rowMeans() %>%
-              as.data.frame() %>% 
-              dplyr::arrange(.data$.)
-  
-  data.avg <- data.avg %>% 
-              dplyr::mutate("rnorm" = stats::rnorm(n = nrow(data.avg))/1e30) %>% 
-              dplyr::mutate("values.use" = .data$. + .data$rnorm)
-  # Produce the expression bins.
-  bins <- ggplot2::cut_number(x = data.avg %>% dplyr::pull(.data$values.use) %>% as.numeric(), 
-                              n = 24, 
-                              labels = FALSE, 
-                              right = FALSE)
-  data.avg$bin <- bins
-  
-  for(gene_set in names(input_gene_list)){
+  if (isTRUE(compute_robustness)){
+    # Compute dataframe of averaged expression of the genes and bin it.
+    data.avg <- Seurat::GetAssayData(sample.original,
+                                     assay = assay,
+                                     slot = slot) %>% 
+      Matrix::rowMeans() %>%
+      as.data.frame() %>% 
+      dplyr::arrange(.data$.)
+    
+    data.avg <- data.avg %>% 
+      dplyr::mutate("rnorm" = stats::rnorm(n = nrow(data.avg))/1e30) %>% 
+      dplyr::mutate("values.use" = .data$. + .data$rnorm)
+    # Produce the expression bins.
+    bins <- ggplot2::cut_number(x = data.avg %>% dplyr::pull(.data$values.use) %>% as.numeric(), 
+                                n = 24, 
+                                labels = FALSE, 
+                                right = FALSE)
+    data.avg$bin <- bins
+    
+    
     if (isTRUE(verbose)){
-      message(paste0(crayon_body("Computing robustness for gene set: "),
-                     crayon_key(gene_set),
+      times <- length(names(input_gene_list)) 
+      
+      message(paste0(crayon_body("Computing "),
+                     crayon_key(" robustness analysis"),
                      crayon_body("...")))
+      
+      progress_bar <- txtProgressBar(min = 0,      
+                                     max = times, 
+                                     style = 3,    
+                                     width = 50,  
+                                     char = "=")   
+      progress_bar_counter <- 0
     }
     
-    geneset_list <- list()
-    geneset_list[[gene_set]] <- input_gene_list[[gene_set]]
     
-    # Get 100 randomized sets in the same range of expression as the query gene set.
-    # Method extracted and adapted from Seurat::AddModuleScore: https://github.com/satijalab/seurat/blob/master/R/utilities.R#L272
-    
-    
-    # Get the bin in which the list of genes is averagely placed.
-    empiric_bin <- data.avg %>% 
-                   tibble::rownames_to_column(var = "gene") %>% 
-                   dplyr::filter(.data$gene %in% input_gene_list[[gene_set]]) %>% 
-                   dplyr::pull(.data$bin)
-    
-    
-    # Generate 50 randomized control gene sets.
-    for (i in seq_len(control.number)){
-      control_genes <- c()
-      for (bin in unique(empiric_bin)){
-        control.use <- data.avg %>% 
-                       tibble::rownames_to_column(var = "gene") %>% 
-                       dplyr::filter(!(.data$gene %in% input_gene_list[[gene_set]])) %>%
-                       dplyr::filter(.data$bin == .env$bin) %>%  
-                       dplyr::pull(.data$gene) %>% 
-                       sample(size = sum(empiric_bin == bin), replace = FALSE)
-        control_genes <- c(control_genes, control.use)
+    for(gene_set in names(input_gene_list)){
+      if (isTRUE(verbose)){
+        progress_bar_counter <- progress_bar_counter + 1
       }
-      geneset_list[[paste0("Control.", i)]] <- control_genes
+      
+      geneset_list <- list()
+      geneset_list[[gene_set]] <- input_gene_list[[gene_set]]
+      
+      # Get 100 randomized sets in the same range of expression as the query gene set.
+      # Method extracted and adapted from Seurat::AddModuleScore: https://github.com/satijalab/seurat/blob/master/R/utilities.R#L272
+      
+      
+      # Get the bin in which the list of genes is averagely placed.
+      empiric_bin <- data.avg %>% 
+        tibble::rownames_to_column(var = "gene") %>% 
+        dplyr::filter(.data$gene %in% input_gene_list[[gene_set]]) %>% 
+        dplyr::pull(.data$bin)
+      
+      
+      # Generate 50 randomized control gene sets.
+      for (i in seq_len(control.number)){
+        control_genes <- c()
+        for (bin in unique(empiric_bin)){
+          control.use <- data.avg %>% 
+            tibble::rownames_to_column(var = "gene") %>% 
+            dplyr::filter(!(.data$gene %in% input_gene_list[[gene_set]])) %>%
+            dplyr::filter(.data$bin == .env$bin) %>%  
+            dplyr::pull(.data$gene) %>% 
+            sample(size = sum(empiric_bin == bin), replace = FALSE)
+          control_genes <- c(control_genes, control.use)
+        }
+        geneset_list[[paste0("Control.", i)]] <- control_genes
+      }
+      
+      max_value <- max(unname(unlist(lapply(geneset_list, length))))
+      
+      # Add fake genes until all lists have the same length so that it can be converted into a tibble.
+      geneset_list <- lapply(geneset_list, function(x){
+        if (length(x) != max_value){
+          remaining <- max_value - length(x)
+          x <- append(x, rep("deleteme", remaining))
+          x
+        } else{
+          x
+        }
+      })
+      
+      # Recompute activity process.
+      network <- geneset_list %>% 
+        tibble::as_tibble() %>% 
+        tidyr::pivot_longer(cols = dplyr::everything(),
+                            names_to = "source",
+                            values_to = "target") %>% 
+        dplyr::mutate("mor" = 1) %>% 
+        dplyr::filter(.data$target != "deleteme")
+      
+      # Get expression data.
+      mat <- Seurat::GetAssayData(sample,
+                                  assay = assay,
+                                  slot = slot)
+      
+      # Compute activities.
+      acts <- decoupleR::run_wmean(mat = mat, 
+                                   network = network)
+      
+      # Turn them into a matrix, scale, center and get the average across cells.
+      acts.matrix <- acts %>% 
+        dplyr::filter(.data$statistic == .env$statistic) %>% 
+        dplyr::mutate("score" = ifelse(.data$p_value <= p_value, 
+                                       .data$score, NA)) %>% 
+        tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
+                           names_from = "condition",
+                           values_from = "score") %>%
+        tibble::column_to_rownames('source') 
+      
+      # Generate a Seurat assay.
+      assay.add <- Seurat::CreateAssayObject(acts.matrix)
+      
+      # Add the assay to the Seurat object.
+      sample@assays$robustness <- assay.add
+      
+      # Set it as default assay.
+      Seurat::DefaultAssay(sample) <- "robustness"
+      
+      # Scale and center the activity data.
+      scale.data <- Seurat::GetAssayData(sample,
+                                         assay = "robustness",
+                                         slot = "data") %>%
+        as.matrix() %>%
+        t() %>%
+        as.data.frame() %>%
+        scale() %>%
+        t()
+      
+      # Set it to the scale.data slot.
+      sample@assays$robustness@scale.data <- scale.data
+      
+      # Pull out scores and add as meta.data.
+      sample$group <- Seurat::Idents(sample)
+      
+      for (ident in unique(sample$group)){
+        comparison <- paste0(gene_set, " | ", ident)
+        
+        data <- sample@meta.data %>% 
+          dplyr::mutate("deleteme" = 0) %>% 
+          tibble::rownames_to_column(var = "cell") %>% 
+          dplyr::select(dplyr::all_of(c("cell", "deleteme", "group"))) %>% 
+          dplyr::filter(.data$group == .env$ident) %>% 
+          dplyr::left_join(y = Seurat::GetAssayData(sample, 
+                                                    assay = "robustness",
+                                                    slot = "scale.data") %>% 
+                             t() %>% 
+                             as.data.frame() %>% 
+                             tibble::rownames_to_column(var = "cell"),
+                           by = "cell") %>% 
+          dplyr::select(-dplyr::all_of(c("deleteme", "cell"))) %>% 
+          tidyr::pivot_longer(cols = -dplyr::all_of(c("group")),
+                              names_to = "Sets",
+                              values_to = "Scores")
+        
+        # Reorder by the median value excluding NAs.
+        data <- data %>% 
+          dplyr::mutate("Sets" = factor(.data$Sets, levels = rev(data %>% 
+                                                                   dplyr::group_by(.data$Sets) %>% 
+                                                                   dplyr::summarise("median" = stats::median(.data$Scores, na.rm = TRUE)) %>% 
+                                                                   dplyr::arrange(dplyr::desc(.data$median)) %>% 
+                                                                   dplyr::pull(.data$Sets))))
+        
+        
+        colors.fill <- rep("#baddde", length(names(geneset_list)))
+        names(colors.fill) <- names(geneset_list)
+        colors.fill[stringr::str_replace(gene_set, "_", "-")] <- "#FFBB5A"
+        
+        p <- data %>% 
+          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Sets,
+                                                 y = .data$Scores,
+                                                 fill = .data$Sets)) + 
+          ggplot2::geom_boxplot(outlier.color = "black",
+                                outlier.alpha = 0.5,
+                                width = NULL,
+                                lwd = 1,
+                                fatten = 1,
+                                key_glyph = "rect",
+                                na.rm = TRUE) + 
+          ggplot2::scale_fill_manual(values = colors.fill) +
+          ggplot2::ylab(statistic) + 
+          ggplot2::xlab("Gene sets") + 
+          ggplot2::ggtitle(paste0("Robustness of: ", comparison))
+        
+        if (isTRUE(!flip)){
+          p <- p + ggplot2::coord_flip()
+        }
+        
+        # Add theme
+        p <- p + 
+          ggplot2::theme_minimal(base_size = font.size) +
+          ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
+                                                            face = "bold"),
+                         axis.line.x = if (isFALSE(!flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(!flip)) {ggplot2::element_blank()},
+                         axis.line.y = if (isTRUE(!flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(!flip)) {ggplot2::element_blank()},
+                         axis.text.x = ggplot2::element_text(color = "black",
+                                                             face = "bold",
+                                                             angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
+                                                             hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
+                                                             vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                         axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
+                         axis.ticks = ggplot2::element_line(color = "black"),
+                         panel.grid.major = ggplot2::element_blank(),
+                         panel.grid.major.y = if (isFALSE(!flip)) {ggplot2::element_line(color = "grey75", linetype = "dashed")} else if (isTRUE(!flip)) {ggplot2::element_blank()},
+                         panel.grid.major.x = if (isTRUE(!flip)) {ggplot2::element_line(color = "grey75", linetype = "dashed")} else if (isFALSE(!flip)) {ggplot2::element_blank()},
+                         plot.title.position = "plot",
+                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                         plot.subtitle = ggplot2::element_text(hjust = 0),
+                         plot.caption = ggplot2::element_text(hjust = 1),
+                         panel.grid = ggplot2::element_blank(),
+                         text = ggplot2::element_text(family = font.type),
+                         plot.caption.position = "plot",
+                         legend.text = ggplot2::element_text(face = "bold"),
+                         legend.position = "none",
+                         legend.title = ggplot2::element_text(face = "bold"),
+                         legend.justification = "center",
+                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                         strip.text =ggplot2::element_text(color = "black", face = "bold"))
+        
+        list.output[["Robustness"]][[comparison]][["Similarity"]] <- SCpubr::do_CorrelationPlot(input_gene_list = geneset_list,
+                                                                                                mode = "jaccard")
+        list.output[["Robustness"]][[comparison]][["Bar Plots"]] <- p
+      }
+      if (isTRUE(verbose)){
+        setTxtProgressBar(progress_bar, progress_bar_counter)
+      }
     }
-    
-    max_value <- max(unname(unlist(lapply(geneset_list, length))))
-    
-    # Add fake genes until all lists have the same length so that it can be converted into a tibble.
-    geneset_list <- lapply(geneset_list, function(x){
-      if (length(x) != max_value){
-        remaining <- max_value - length(x)
-        x <- append(x, rep("deleteme", remaining))
-        x
-      } else{
-        x
-      }
-    })
-    
-    # Recompute activity process.
-    network <- geneset_list %>% 
-               tibble::as_tibble() %>% 
-               tidyr::pivot_longer(cols = dplyr::everything(),
-                                   names_to = "source",
-                                   values_to = "target") %>% 
-               dplyr::mutate("mor" = 1) %>% 
-               dplyr::filter(.data$target != "deleteme")
-    
-    # Get expression data.
-    mat <- Seurat::GetAssayData(sample,
-                                assay = assay,
-                                slot = slot)
-    
-    # Compute activities.
-    acts <- decoupleR::run_wmean(mat = mat, 
-                                 network = network)
-    
-    # Turn them into a matrix, scale, center and get the average across cells.
-    acts.matrix <- acts %>% 
-                   dplyr::filter(.data$statistic == .env$statistic) %>% 
-                   dplyr::mutate("score" = ifelse(.data$p_value <= p_value, 
-                                                  .data$score, NA)) %>% 
-                   tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
-                                      names_from = "condition",
-                                      values_from = "score") %>%
-                   tibble::column_to_rownames('source') 
-    
-    # Generate a Seurat assay.
-    assay.add <- Seurat::CreateAssayObject(acts.matrix)
-    
-    # Add the assay to the Seurat object.
-    sample@assays$robustness <- assay.add
-    
-    # Set it as default assay.
-    Seurat::DefaultAssay(sample) <- "robustness"
-    
-    # Scale and center the activity data.
-    scale.data <- Seurat::GetAssayData(sample,
-                                       assay = "robustness",
-                                       slot = "data") %>%
-                  as.matrix() %>%
-                  t() %>%
-                  as.data.frame() %>%
-                  scale() %>%
-                  t()
-    
-    # Set it to the scale.data slot.
-    sample@assays$robustness@scale.data <- scale.data
-    
-    # Pull out scores and add as meta.data.
-    sample$group <- Seurat::Idents(sample)
-    
-    for (ident in unique(sample$group)){
-      comparison <- paste0(gene_set, " | ", ident)
-      
-      data <- sample@meta.data %>% 
-              dplyr::mutate("deleteme" = 0) %>% 
-              tibble::rownames_to_column(var = "cell") %>% 
-              dplyr::select(dplyr::all_of(c("cell", "deleteme", "group"))) %>% 
-              dplyr::filter(.data$group == .env$ident) %>% 
-              dplyr::left_join(y = Seurat::GetAssayData(sample, 
-                                                        assay = "robustness",
-                                                        slot = "scale.data") %>% 
-                                 t() %>% 
-                                 as.data.frame() %>% 
-                                 tibble::rownames_to_column(var = "cell"),
-                               by = "cell") %>% 
-              dplyr::select(-dplyr::all_of(c("deleteme", "cell"))) %>% 
-              tidyr::pivot_longer(cols = -dplyr::all_of(c("group")),
-                                  names_to = "Sets",
-                                  values_to = "Scores")
-      
-      # Reorder by the median value excluding NAs.
-      data <- data %>% 
-              dplyr::mutate("Sets" = factor(.data$Sets, levels = rev(data %>% 
-                                                                       dplyr::group_by(.data$Sets) %>% 
-                                                                       dplyr::summarise("median" = stats::median(.data$Scores, na.rm = TRUE)) %>% 
-                                                                       dplyr::arrange(dplyr::desc(.data$median)) %>% 
-                                                                       dplyr::pull(.data$Sets))))
-      
-      
-      colors.fill <- rep("#baddde", length(names(geneset_list)))
-      names(colors.fill) <- names(geneset_list)
-      colors.fill[stringr::str_replace(gene_set, "_", "-")] <- "#FFBB5A"
-      
-      p <- data %>% 
-           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Sets,
-                                                  y = .data$Scores,
-                                                  fill = .data$Sets)) + 
-           ggplot2::geom_boxplot(outlier.color = "black",
-                                 outlier.alpha = 0.5,
-                                 width = NULL,
-                                 lwd = 1,
-                                 fatten = 1,
-                                 key_glyph = "rect",
-                                 na.rm = TRUE) + 
-           ggplot2::scale_fill_manual(values = colors.fill) +
-           ggplot2::ylab(statistic) + 
-           ggplot2::xlab("Gene sets") + 
-           ggplot2::ggtitle(paste0("Robustness of: ", comparison))
-      
-      if (isTRUE(!flip)){
-        p <- p + ggplot2::coord_flip()
-      }
-      
-      # Add theme
-      p <- p + 
-           ggplot2::theme_minimal(base_size = font.size) +
-           ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
-                                                             face = "bold"),
-                          axis.line.x = if (isFALSE(!flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(!flip)) {ggplot2::element_blank()},
-                          axis.line.y = if (isTRUE(!flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(!flip)) {ggplot2::element_blank()},
-                          axis.text.x = ggplot2::element_text(color = "black",
-                                                              face = "bold",
-                                                              angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                              hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                              vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
-                          axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
-                          axis.ticks = ggplot2::element_line(color = "black"),
-                          panel.grid.major = ggplot2::element_blank(),
-                          panel.grid.major.y = if (isFALSE(!flip)) {ggplot2::element_line(color = "grey75", linetype = "dashed")} else if (isTRUE(!flip)) {ggplot2::element_blank()},
-                          panel.grid.major.x = if (isTRUE(!flip)) {ggplot2::element_line(color = "grey75", linetype = "dashed")} else if (isFALSE(!flip)) {ggplot2::element_blank()},
-                          plot.title.position = "plot",
-                          plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                          plot.subtitle = ggplot2::element_text(hjust = 0),
-                          plot.caption = ggplot2::element_text(hjust = 1),
-                          panel.grid = ggplot2::element_blank(),
-                          text = ggplot2::element_text(family = font.type),
-                          plot.caption.position = "plot",
-                          legend.text = ggplot2::element_text(face = "bold"),
-                          legend.position = "none",
-                          legend.title = ggplot2::element_text(face = "bold"),
-                          legend.justification = "center",
-                          plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                          plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                          strip.text =ggplot2::element_text(color = "black", face = "bold"))
-      
-      list.output[["Robusness"]][[comparison]][["Similarity"]] <- SCpubr::do_CorrelationPlot(input_gene_list = geneset_list,
-                                                                                             mode = "jaccard")
-      list.output[["Robusness"]][[comparison]][["Barplots"]] <- p
-    }
+  }
+  if (isTRUE(verbose) & isTRUE(compute_robustness)){
+    close(progress_bar)
+  }
+  
+  if (isTRUE(return_object)){
+    list.output[["Object"]] <- sample
   }
   return(list.output)
 }
