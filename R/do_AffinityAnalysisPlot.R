@@ -407,23 +407,45 @@ do_AffinityAnalysisPlot <- function(sample,
                              guides = "collect")
   p <- p +
     patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
-                                                      plot.title = ggplot2::element_text(size = font.size,
-                                                                                         family = font.type,
+                                                      plot.title = ggplot2::element_text(family = font.type,
                                                                                          color = "black",
                                                                                          face = "bold",
                                                                                          hjust = 0),
-                                                      plot.subtitle = ggplot2::element_text(size = font.size,
-                                                                                            family = font.type,
+                                                      plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
                                                                                             hjust = 0),
-                                                      plot.caption = ggplot2::element_text(size = font.size,
-                                                                                           family = font.type,
+                                                      plot.caption = ggplot2::element_text(family = font.type,
                                                                                            color = "black",
                                                                                            hjust = 1),
                                                       plot.caption.position = "plot"))
-  if (!is.na(min.cutoff) & !is.na(min.cutoff)){
+  if (!is.na(min.cutoff) | !is.na(min.cutoff)){
+    # Get the values shown and real values.
+    limits.empirical <- limits
+    limits.shown <- scale.setup$limits
+    
+    for (i in seq_len(2)){
+      limits.shown[i] <- round(limits.shown[i], 2)
+      limits.empirical[i] <- round(limits.empirical[i], 2)
+    }
+    
+    # Add padding to each element.
+    length.vector <- c()
+    for (value in c(limits.shown, limits.empirical)){
+      length.vector <- c(length.vector, nchar(as.character(value)))
+    }
+    
+    max.char <- max(length.vector)
+    
+    for (i in seq_len(2)){
+      limits.shown[i] <- stringr::str_pad(limits.shown[i], side = "left", width = max.char)
+      limits.empirical[i] <- stringr::str_pad(limits.empirical[i], side = "left", width = max.char)
+    }
+    
+    scale.message <- paste0("Scale:\n", "Shown | Min: ", limits.shown[1], " | Max: ", limits.shown[2], "\n",
+                            "Empirical | Min: ", limits.empirical[1], " | Max: ", limits.empirical[2])
+    # Specify it in the plot.
     p <- p + 
-      patchwork::plot_annotation(caption = paste0("Scale limits: Min: ", round(limits[1], 2), " | Max: ", round(limits[2], 2)))
+      patchwork::plot_annotation(caption = scale.message)
   }
   
   list.output <- list()
