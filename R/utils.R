@@ -4270,3 +4270,43 @@ handle_axis <- function(flip,
   return(out_list)
 
 }
+
+#' Generate a plot.caption message when the continuous scale is subset to given values.
+#' @param limits.empirical Min and max values of the distribution.
+#' @param limits.shown Min and max values displayed for the color scale.
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+compute_scale_message <- function(limits.empirical,
+                                  limits.shown){
+  
+  # Get the values shown and real values.
+  for (i in seq_len(2)){
+    limits.shown[i] <- round(limits.shown[i], 2)
+    limits.empirical[i] <- round(limits.empirical[i], 2)
+  }
+  
+  # Add padding to each element.
+  length.vector <- c()
+  for (value in c(limits.shown, limits.empirical)){
+    length.vector <- c(length.vector, nchar(as.character(value)))
+  }
+  
+  max.char <- max(length.vector)
+  
+  for (i in seq_len(2)){
+    limits.shown[i] <- stringr::str_pad(limits.shown[i], side = "left", width = max.char)
+    limits.empirical[i] <- stringr::str_pad(limits.empirical[i], side = "left", width = max.char)
+  }
+  
+  scale.message <- paste0("Displayed scale range | Min: ", limits.shown[1], " | Max: ", limits.shown[2], "\n",
+                          "Empirical scale range | Min: ", limits.empirical[1], " | Max: ", limits.empirical[2])
+  
+  return(scale.message)
+}
+
+

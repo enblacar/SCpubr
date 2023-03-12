@@ -338,6 +338,7 @@ do_SCExpressionHeatmap <- function(sample,
 
 
   # Modify data to fit the cutoffs selected.
+  plot_data_limits <- plot_data
   if (!is.na(min.cutoff)){
     plot_data <- plot_data %>%
                  dplyr::mutate("expression" = ifelse(.data$expression < min.cutoff, min.cutoff, .data$expression))
@@ -359,8 +360,8 @@ do_SCExpressionHeatmap <- function(sample,
                                scales = "free_x",
                                space = if(isTRUE(make_size_proportional)) {"fixed"} else {"free"})
 
-  limits.use <- c(min(plot_data$expression, na.rm = TRUE),
-                  max(plot_data$expression, na.rm = TRUE))
+  limits.use <- c(min(plot_data_limits$expression, na.rm = TRUE),
+                  max(plot_data_limits$expression, na.rm = TRUE))
 
   scale.setup <- compute_scales(sample = sample,
                                 feature = NULL,
@@ -430,7 +431,8 @@ do_SCExpressionHeatmap <- function(sample,
                                 legend.framewidth = legend.framewidth,
                                 legend.tickwidth = legend.tickwidth)
 
-
+  
+  
   # Theme setup.
   metadata_plots[["main"]] <- p
 
@@ -442,9 +444,6 @@ do_SCExpressionHeatmap <- function(sample,
     metadata_plots[[name]] <- metadata_plots[[name]] +
                               ggplot2::scale_x_discrete(expand = c(0, 0)) +
                               ggplot2::scale_y_discrete(expand = c(0, 0)) +
-                              ggplot2::labs(title = plot.title,
-                                            subtitle = plot.subtitle,
-                                            caption = plot.caption) +
                               ggplot2::theme_minimal(base_size = font.size) +
                               ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                                              axis.text.y = ggplot2::element_text(face = "bold",
@@ -455,7 +454,8 @@ do_SCExpressionHeatmap <- function(sample,
                                              axis.title = ggplot2::element_text(face = "bold", color = "black"),
                                              plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                                              plot.subtitle = ggplot2::element_text(hjust = 0),
-                                             plot.caption = ggplot2::element_text(hjust = 1),
+                                             plot.caption = ggplot2::element_text(hjust = 1,
+                                                                                  family = "mono"),
                                              plot.title.position = "plot",
                                              panel.grid = ggplot2::element_blank(),
                                              panel.grid.minor.y = ggplot2::element_line(color = "white"),
@@ -516,22 +516,31 @@ do_SCExpressionHeatmap <- function(sample,
                                  subtitle = plot.subtitle,
                                  caption = plot.caption,
                                  theme = ggplot2::theme(legend.position = legend.position,
-                                                        plot.title = ggplot2::element_text(size = font.size,
-                                                                                           family = font.type,
+                                                        plot.title = ggplot2::element_text(family = font.type,
                                                                                            color = "black",
                                                                                            face = "bold",
                                                                                            hjust = 0),
-                                                        plot.subtitle = ggplot2::element_text(size = font.size,
-                                                                                              family = font.type,
+                                                        plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                               color = "black",
                                                                                               hjust = 0),
-                                                        plot.caption = ggplot2::element_text(size = font.size,
-                                                                                             family = font.type,
+                                                        plot.caption = ggplot2::element_text(family = "mono",
                                                                                              color = "black",
                                                                                              hjust = 1),
                                                         plot.caption.position = "plot"))
+    if (!is.na(min.cutoff) | !is.na(min.cutoff)){
+      # Specify it in the plot.
+      scale.message <- compute_scale_message(limits.empirical = limits.use,
+                                             limits.shown = scale.setup$limits)
+      out <- out + 
+        patchwork::plot_annotation(caption = scale.message)
+    }
   } else {
     out <- metadata_plots[["main"]]
+    
+    scale.message <- compute_scale_message(limits.empirical = limits.use,
+                                           limits.shown = scale.setup$limits)
+    out <- out + 
+      patchwork::plot_annotation(caption = scale.message)
   }
 
 

@@ -213,6 +213,8 @@ do_AffinityAnalysisPlot <- function(sample,
       dplyr::group_by(.data[[group]], .data$source) %>% 
       dplyr::summarise("mean" = mean(.data$score, na.rm = TRUE))
     
+    list.data[[group]][["data.mean"]] <- data.use
+    
     if (!is.na(min.cutoff)){
       data.use <- data.use %>%
         dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
@@ -244,10 +246,10 @@ do_AffinityAnalysisPlot <- function(sample,
   max.vector <- c()
   
   for (group in group.by){
-    data.limits <- list.data[[group]][["data"]]
+    data.limits <-  list.data[[group]][["data.mean"]]
     
-    min.vector <- append(min.vector, min(data.limits$score, na.rm = TRUE))
-    max.vector <- append(max.vector, max(data.limits$score, na.rm = TRUE))
+    min.vector <- append(min.vector, min(data.limits$mean, na.rm = TRUE))
+    max.vector <- append(max.vector, max(data.limits$mean, na.rm = TRUE))
   }
   
   # Get the absolute limits of the datasets.
@@ -414,36 +416,14 @@ do_AffinityAnalysisPlot <- function(sample,
                                                       plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
                                                                                             hjust = 0),
-                                                      plot.caption = ggplot2::element_text(family = font.type,
+                                                      plot.caption = ggplot2::element_text(family = "mono",
                                                                                            color = "black",
                                                                                            hjust = 1),
                                                       plot.caption.position = "plot"))
   if (!is.na(min.cutoff) | !is.na(min.cutoff)){
-    # Get the values shown and real values.
-    limits.empirical <- limits
-    limits.shown <- scale.setup$limits
-    
-    for (i in seq_len(2)){
-      limits.shown[i] <- round(limits.shown[i], 2)
-      limits.empirical[i] <- round(limits.empirical[i], 2)
-    }
-    
-    # Add padding to each element.
-    length.vector <- c()
-    for (value in c(limits.shown, limits.empirical)){
-      length.vector <- c(length.vector, nchar(as.character(value)))
-    }
-    
-    max.char <- max(length.vector)
-    
-    for (i in seq_len(2)){
-      limits.shown[i] <- stringr::str_pad(limits.shown[i], side = "left", width = max.char)
-      limits.empirical[i] <- stringr::str_pad(limits.empirical[i], side = "left", width = max.char)
-    }
-    
-    scale.message <- paste0("Scale:\n", "Shown | Min: ", limits.shown[1], " | Max: ", limits.shown[2], "\n",
-                            "Empirical | Min: ", limits.empirical[1], " | Max: ", limits.empirical[2])
     # Specify it in the plot.
+    scale.message <- compute_scale_message(limits.empirical = limits,
+                                           limits.shown = scale.setup$limits)
     p <- p + 
       patchwork::plot_annotation(caption = scale.message)
   }

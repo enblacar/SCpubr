@@ -9,9 +9,8 @@ do_PathwayActivityPlot(
   activities,
   group.by = NULL,
   split.by = NULL,
-  row_names_rot = 0,
+  statistic = "norm_wmean",
   pt.size = 1,
-  plot_cell_borders = TRUE,
   border.size = 2,
   na.value = "grey75",
   legend.position = "bottom",
@@ -30,6 +29,11 @@ do_PathwayActivityPlot(
   max.cutoff = NA,
   number.breaks = 5,
   diverging.palette = "RdBu",
+  use_viridis = FALSE,
+  viridis.palette = "G",
+  viridis.direction = -1,
+  sequential.palette = "YlGnBu",
+  sequential.direction = 1,
   flip = FALSE,
   return_object = FALSE
 )
@@ -43,11 +47,7 @@ do_PathwayActivityPlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
-\item{row_names_rot}{\strong{\code{\link[base]{numeric}}} | Degree in which to rotate the row labels.}
-
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
-
-\item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
@@ -94,6 +94,16 @@ do_PathwayActivityPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 

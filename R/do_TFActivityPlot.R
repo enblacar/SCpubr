@@ -6,8 +6,6 @@
 #' @param n_tfs \strong{\code{\link[base]{numeric}}} | Number of top regulons to consider for downstream analysis.
 #' @param tfs.use \strong{\code{\link[base]{character}}} | Restrict the analysis to given regulons.
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
-#' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
-#' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
 #'
 #' @return A list containing several output plots according to the user's specifications.
 #' @export
@@ -17,14 +15,10 @@
 do_TFActivityPlot <- function(sample,
                               activities,
                               n_tfs = 25,
+                              statistic = "norm_wmean",
                               tfs.use = NULL,
                               group.by = NULL,
                               split.by = NULL,
-                              row_names_rot = 0,
-                              column_names_rot = 45,
-                              pt.size = 1,
-                              plot_cell_borders = TRUE,
-                              border.size = 2,
                               na.value = "grey75",
                               legend.position = "bottom",
                               legend.width = 1,
@@ -39,6 +33,11 @@ do_TFActivityPlot <- function(sample,
                               rotate_x_axis_labels = 45,
                               enforce_symmetry = TRUE,
                               diverging.palette = "RdBu",
+                              use_viridis = FALSE,
+                              viridis.palette = "G",
+                              viridis.direction = -1,
+                              sequential.palette = "YlGnBu",
+                              sequential.direction = 1,
                               min.cutoff = NA,
                               max.cutoff = NA,
                               number.breaks = 5,
@@ -49,15 +48,13 @@ do_TFActivityPlot <- function(sample,
   check_Seurat(sample = sample)
 
   # Check logical parameters.
-  logical_list <- list("plot_cell_borders" = plot_cell_borders,
-                       "enforce_symmetry" = enforce_symmetry,
+  logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "flip" = flip,
-                       "return_object" = return_object)
+                       "return_object" = return_object,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("n_tfs" = n_tfs,
-                       "pt.size" = pt.size,
-                       "border.size" = border.size,
                        "font.size" = font.size,
                        "legend.width" = legend.width,
                        "legend.length" = legend.length,
@@ -66,7 +63,9 @@ do_TFActivityPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
-                       "number.breaks" = number.breaks)
+                       "number.breaks" = number.breaks,
+                       "viridis.direction" = viridis.direction,
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -77,7 +76,10 @@ do_TFActivityPlot <- function(sample,
                          "font.type" = font.type,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "tfs.use" = tfs.use)
+                         "tfs.use" = tfs.use,
+                         "viridis.palette" = viridis.palette,
+                         "sequential.palette" = sequential.palette,
+                         "statistic" = statistic)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   `%>%` <- magrittr::`%>%`
@@ -94,7 +96,7 @@ do_TFActivityPlot <- function(sample,
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
 
   sample[['dorothea']] <- activities %>%
-                          dplyr::filter(.data$statistic == 'norm_wmean') %>%
+                          dplyr::filter(.data$statistic == .env$statistic) %>%
                           #dplyr::mutate("score" = ifelse(.data$p_value <= 0.05, .data$score, NA)) %>%
                           tidyr::pivot_wider(id_cols = 'source',
                                              names_from = 'condition',
@@ -239,7 +241,9 @@ do_TFActivityPlot <- function(sample,
       data <- data %>%
               dplyr::mutate("source" = factor(.data$source, levels = rev(col_order)),
                             "group.by" = factor(.data$group.by, levels = row_order))
-
+      
+      matrix.list[[group]][["data.mean"]] <- data
+      
       if (!is.na(min.cutoff)){
         data <- data %>%
                 dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
@@ -258,7 +262,7 @@ do_TFActivityPlot <- function(sample,
     max.vector <- c()
 
     for (group in group.by){
-      data <- matrix.list[[group]][["data"]]
+      data <- matrix.list[[group]][["data.mean"]]
 
       min.vector <- append(min.vector, min(data$mean, na.rm = TRUE))
       max.vector <- append(max.vector, max(data$mean, na.rm = TRUE))
@@ -316,7 +320,7 @@ do_TFActivityPlot <- function(sample,
       }
         
       p <- modify_continuous_legend(p = p,
-                                    legend.title = "Regulon Activity",
+                                    legend.title = paste0("Dorothea | ", statistic),
                                     legend.aes = "fill",
                                     legend.type = legend.type,
                                     legend.position = legend.position,
@@ -386,7 +390,7 @@ do_TFActivityPlot <- function(sample,
                           strip.background = axis.parameters$strip.background,
                           strip.clip = axis.parameters$strip.clip,
                           strip.text = axis.parameters$strip.text,
-                          legend.position = if (is.null(split.by)) {axis.parameters$legend.position} else {"bottom"},
+                          legend.position = if (is.null(split.by)) {legend.position} else {"bottom"},
                           axis.line = ggplot2::element_blank(),
                           plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                           plot.subtitle = ggplot2::element_text(hjust = 0),
@@ -419,29 +423,62 @@ do_TFActivityPlot <- function(sample,
                                guides = "collect")
     p <- p +
          patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
-                                                           plot.title = ggplot2::element_text(size = font.size,
-                                                                                              family = font.type,
+                                                           plot.title = ggplot2::element_text(family = font.type,
                                                                                               color = "black",
                                                                                               face = "bold",
                                                                                               hjust = 0),
-                                                           plot.subtitle = ggplot2::element_text(size = font.size,
-                                                                                                 family = font.type,
+                                                           plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                                  color = "black",
                                                                                                  hjust = 0),
                                                            plot.caption = ggplot2::element_text(size = font.size,
-                                                                                                family = font.type,
+                                                                                              family = font.type,
                                                                                                 color = "black",
                                                                                                 hjust = 1),
                                                            plot.caption.position = "plot"))
+    
+    if (!is.na(min.cutoff) | !is.na(min.cutoff)){
+      # Specify it in the plot.
+      scale.message <- compute_scale_message(limits.empirical = limits,
+                                             limits.shown = scale.setup$limits)
+      p <- p + 
+        patchwork::plot_annotation(caption = scale.message)
+    }
+
     list.out[["Heatmap"]] <- p
     
+    # Compute SCheatmap.
+    for (group in group.by){
+      p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
+                                          group.by = group,
+                                          features = rownames(sample),
+                                          assay = "dorothea",
+                                          slot = "scale.data",
+                                          enforce_symmetry = TRUE,
+                                          min.cutoff = min.cutoff,
+                                          max.cutoff = max.cutoff,
+                                          number.breaks = number.breaks,
+                                          legend.position = legend.position,
+                                          font.size = font.size,
+                                          font.type = font.type,
+                                          legend.width = legend.width,
+                                          legend.length = legend.length,
+                                          legend.framewidth = legend.framewidth,
+                                          legend.tickwidth = legend.tickwidth,
+                                          legend.framecolor = legend.framecolor,
+                                          legend.tickcolor = legend.tickcolor,
+                                          legend.type = legend.type,
+                                          use_viridis = use_viridis,
+                                          viridis.palette = viridis.palette,
+                                          viridis.direction = viridis.direction,
+                                          sequential.palette = sequential.palette,
+                                          sequential.direction = sequential.direction,
+                                          legend.title = paste0("Dorothea | ", statistic))
+      list.out[["SC Heatmap"]][[group]] <- p
+    }
     
     if (isTRUE(return_object)){
       list.out[["Object"]] <- sample
-      return_me <- list.out
-    } else{
-      return_me <- p
     }
 
-  return(return_me)
+  return(list.out)
 }

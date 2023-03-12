@@ -37,7 +37,7 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 
 
 ## `SCpubr::do_EnrichmentHeatmap`
-- **BREAKING CHANGE** removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately. 
+- Removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately. 
 
 
 ## `SCpubr::do_FeaturePlot`
@@ -61,11 +61,12 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 ## `SCpubr::do_PathwayActivityPlot`
 - Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 - Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
-
+- Removed options to plot FeaturePlots, GeyserPlots - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the scores separately. 
 
 ## `SCpubr::do_TFActivityPlot()`
 - Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 - Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
+- Removed options to plot FeaturePlots, GeyserPlots - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the scores separately. 
 
 # SCpubr v1.1.2
 More hotfixes in unit tests to comply with CRAN checks.
