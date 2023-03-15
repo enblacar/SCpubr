@@ -100,7 +100,6 @@ do_PathwayActivityPlot <- function(sample,
 
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(.data$statistic == .env$statistic) %>%
-                         #dplyr::mutate("score" = ifelse(.data$p_value <= 0.05, .data$score, NA)) %>%
                          tidyr::pivot_wider(id_cols = "source",
                                             names_from = "condition",
                                             values_from = "score") %>%
@@ -108,16 +107,10 @@ do_PathwayActivityPlot <- function(sample,
                          Seurat::CreateAssayObject()
 
   Seurat::DefaultAssay(sample) <- "progeny"
-
-  # Workaround to avoid the problems NA cause in the scale.data computation by seurat
-  # Scale data.
-  scale.data <- sample@assays$progeny@data %>%
-                as.matrix() %>%
-                t() %>%
-                as.data.frame() %>%
-                scale() %>%
-                t()
-  sample@assays$progeny@scale.data <- scale.data
+  sample@assays$progeny@key <- "progeny_"
+  
+  # Scale the data.
+  sample <- Seurat::ScaleData(sample, verbose = FALSE)
 
   list.out <- list()
 
@@ -418,40 +411,12 @@ do_PathwayActivityPlot <- function(sample,
   }
   list.out[["Heatmap"]] <- p
   
-  
-  # Compute SCheatmap.
-  for (group in group.by){
-    p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
-                                        group.by = group,
-                                        features = rownames(sample),
-                                        assay = "progeny",
-                                        slot = "scale.data",
-                                        enforce_symmetry = TRUE,
-                                        min.cutoff = min.cutoff,
-                                        max.cutoff = max.cutoff,
-                                        number.breaks = number.breaks,
-                                        legend.position = legend.position,
-                                        font.size = font.size,
-                                        font.type = font.type,
-                                        legend.width = legend.width,
-                                        legend.length = legend.length,
-                                        legend.framewidth = legend.framewidth,
-                                        legend.tickwidth = legend.tickwidth,
-                                        legend.framecolor = legend.framecolor,
-                                        legend.tickcolor = legend.tickcolor,
-                                        legend.type = legend.type,
-                                        use_viridis = use_viridis,
-                                        viridis.palette = viridis.palette,
-                                        viridis.direction = viridis.direction,
-                                        sequential.palette = sequential.palette,
-                                        sequential.direction = sequential.direction,
-                                        legend.title = paste0("Progeny | ", statistic))
-    list.out[["SC Heatmap"]][[group]] <- p
-  }
-  
   if (isTRUE(return_object)){
     list.out[["Object"]] <- sample
+    return_me <- list.out
+  } else{
+    return_me <- list.out[["Heatmap"]]
   }
   
-  return(list.out)
+  return(return_me)
 }

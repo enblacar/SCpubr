@@ -135,19 +135,8 @@ do_AffinityAnalysisPlot <- function(sample,
   sample@assays$affinity@key <- "affinity_"
   # Set it as default assay.
   Seurat::DefaultAssay(sample) <- "affinity"
-  
   # Scale and center the activity data.
-  scale.data <- Seurat::GetAssayData(sample,
-                                     assay = "affinity",
-                                     slot = "data") %>%
-    as.matrix() %>%
-    t() %>%
-    as.data.frame() %>%
-    scale() %>%
-    t()
-  
-  # Set it to the scale.data slot.
-  sample@assays$affinity@scale.data <- scale.data
+  sample <- Seurat::ScaleData(sample, verbose = FALSE)
   
   # Plotting.
   # Get the data frames per group.by value for plotting.
