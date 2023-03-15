@@ -67,6 +67,7 @@ Suggests:
     labeling,
     MASS,
     RColorBrewer,
+    cluster,
     liana (>= 0.1.6),
     ggsankey (>= 0.0.99999)
 VignetteBuilder: knitr

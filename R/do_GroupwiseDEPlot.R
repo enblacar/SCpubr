@@ -75,7 +75,6 @@ do_GroupwiseDEPlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
-  `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
   
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")

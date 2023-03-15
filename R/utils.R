@@ -336,6 +336,7 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
+                   "do_MetadataPlot" = c("cluster"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_NebulosaPlot" = c("Nebulosa"),
                    "do_PathwayActivityPlot" = c(),
@@ -434,6 +435,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
                    "do_LigandReceptorPlot" = c("liana"),
+                   "do_MetadataPlot" = c("cluster"),
                    "do_NebulosaPlot" = c("Nebulosa"),
                    "do_PathwayActivityPlot" = c(),
                    "do_PseudotimePlot" = c("monocle3", "ggdist"),
@@ -456,6 +458,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   }
   cran_packages <- c("assertthat",
                      "circlize",
+                     "cluster",
                      "colorspace",
                      "dplyr",
                      "ggbeeswarm",
@@ -691,8 +694,11 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (feature %in% rownames(sample)){
-    scale.begin <- min(sample@assays[[assay]]@data[feature, ], na.rm = TRUE)
-    scale.end <- max(sample@assays[[assay]]@data[feature, ], na.rm = TRUE)
+    data.check <- Seurat::GetAssayData(sample,
+                                       assay = assay,
+                                       slot = slot)[feature, ]
+    scale.begin <- min(data.check, na.rm = TRUE)
+    scale.end <- max(data.check, na.rm = TRUE)
   } else if (feature %in% colnames(sample@meta.data)){
     if (is.factor(sample@meta.data[, feature])){
       sample@meta.data[, feature] <- as.character(sample@meta.data[, feature])
@@ -4310,3 +4316,35 @@ compute_scale_message <- function(limits.empirical,
 }
 
 
+#' Generate a list of colors that will be used for metadata plots.
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+get_SCpubr_colors <- function(){
+  
+  colors <- c("#457b9d",
+              "#b5838d",
+              "#d4a276",
+              "#31572c",
+              "#354f52",
+              "#006d77",
+              "#bcb8b1",
+              "#d88c9a",
+              "#d8315b",
+              "#ee6c4d",
+              "#0c5460",
+              "#065a60",
+              "#d6ce93",
+              "#A88D21",
+              "#9a8c98",
+              "#6c757d",
+              "#00afb9",
+              "#38a3a5",
+              "#adc178",
+              "#bfd7b5")
+  return(colors)
+}

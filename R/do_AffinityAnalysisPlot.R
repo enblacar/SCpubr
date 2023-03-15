@@ -75,9 +75,9 @@ do_AffinityAnalysisPlot <- function(sample,
     warning(paste0(crayon_body("Found "),
                    crayon_key("underscores (_)"),
                    crayon_body(" in the name of the gene sets provided. Replacing them with "),
-                   crayon_key("dashes (-)"),
+                   crayon_key("dots (.)"),
                    crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
-    names.use <- stringr::str_replace_all(names(input_gene_list), "_", "-")
+    names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
     names(input_gene_list) <- names.use
   }
   
@@ -132,7 +132,7 @@ do_AffinityAnalysisPlot <- function(sample,
   
   # Add the assay to the Seurat object.
   sample@assays$affinity <- assay.add
-  
+  sample@assays$affinity@key <- "affinity_"
   # Set it as default assay.
   Seurat::DefaultAssay(sample) <- "affinity"
   
@@ -420,7 +420,7 @@ do_AffinityAnalysisPlot <- function(sample,
                                                                                            color = "black",
                                                                                            hjust = 1),
                                                       plot.caption.position = "plot"))
-  if (!is.na(min.cutoff) | !is.na(min.cutoff)){
+  if (!is.na(max.cutoff) | !is.na(min.cutoff)){
     # Specify it in the plot.
     scale.message <- compute_scale_message(limits.empirical = limits,
                                            limits.shown = scale.setup$limits)
@@ -462,8 +462,8 @@ do_AffinityAnalysisPlot <- function(sample,
                                         assay = "affinity",
                                         slot = "scale.data",
                                         enforce_symmetry = TRUE,
-                                        min.cutoff = min.cutoff,
-                                        max.cutoff = max.cutoff,
+                                        min.cutoff = scale.setup$limits[1],
+                                        max.cutoff = scale.setup$limits[2],
                                         number.breaks = number.breaks,
                                         legend.position = legend.position,
                                         font.size = font.size,

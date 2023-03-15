@@ -564,7 +564,7 @@ do_SCEnrichmentHeatmap <- function(sample,
       scale.message <- compute_scale_message(limits.empirical = limits.use,
                                              limits.shown = scale.setup$limits)
       out <- out + 
-        patchwork::plot_annotation(caption = scale.message)
+        ggplot2::labs(caption = scale.message)
     }
     
   }
