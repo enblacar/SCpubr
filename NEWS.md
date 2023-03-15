@@ -6,6 +6,12 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 - Changed `viridis_direction` to `viridis.direction`.
 - Changed `sequential_direction` to `sequential.direction`. 
 
+## New functions
+- `SCpubr::do_MetadataPlot()` to generate metadata heatmaps with ease both from Seurat object or from a data frame.
+- `SCpubr::do_SCExpressionHeatmap()` to generate heatmaps of expression of genes across all cells in the dataset.
+- `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset. 
+- `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weigted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/). 
+
 ## General
 - Now when using `min.cutoff` or `max.cutoff`, the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. This potentially interacts with `enforce_symmetry`. 
 - Added `number.breaks` parameter to control the number of breaks in the legend of ggplot2-based plots. It will not always work, as the function will try to fit the breaks accordingly. But still, will give some range of freedom to the user.
