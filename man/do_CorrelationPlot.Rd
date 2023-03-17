@@ -35,7 +35,8 @@ do_CorrelationPlot(
   viridis.direction = -1,
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
-  rotate_x_axis_labels = 45
+  rotate_x_axis_labels = 45,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -106,6 +107,8 @@ do_CorrelationPlot(
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A ComplexHeatmap object.

@@ -37,7 +37,8 @@ do_ExpressionHeatmap <- function(sample,
                                  use_viridis = FALSE,
                                  viridis.palette = "G",
                                  viridis.direction = -1,
-                                 flip = FALSE){
+                                 flip = FALSE,
+                                 grid.color = "white"){
 
 
   check_suggests(function_name = "do_EnrichmentHeatmap")
@@ -78,12 +79,14 @@ do_ExpressionHeatmap <- function(sample,
                          "group.by" = group.by,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
-                         "viridis.palette" = viridis.palette)
+                         "viridis.palette" = viridis.palette,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value)
   check_colors(legend.framecolor)
   check_colors(legend.tickcolor)
+  check_color(grid.color)
 
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -274,7 +277,7 @@ do_ExpressionHeatmap <- function(sample,
                          mapping = ggplot2::aes(x = if (isFALSE(flip)){.data$gene} else {.data$group.by},
                                                 y = if (isFALSE(flip)){.data$group.by} else {.data$gene},
                                                 fill = .data$mean)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

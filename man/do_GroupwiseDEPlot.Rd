@@ -34,7 +34,8 @@ do_GroupwiseDEPlot(
   rotate_x_axis_labels = 45,
   min.cutoff = NA,
   max.cutoff = NA,
-  na.value = "grey75"
+  na.value = "grey75",
+  grid.color = "white"
 )
 }
 \arguments{
@@ -95,6 +96,8 @@ do_GroupwiseDEPlot(
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.

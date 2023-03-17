@@ -45,6 +45,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      sequential.direction = -1,
                                      use_viridis = TRUE,
                                      return_object = FALSE,
+                                     grid.color = "white",
                                      flip = FALSE){
   
   
@@ -77,7 +78,8 @@ do_CopyNumberVariantPlot <- function(sample,
                          "legend.title" = legend.title,
                          "viridis.palette" = viridis.palette,
                          "diverging.palette" = diverging.palette,
-                         "sequential.palette" = sequential.palette)
+                         "sequential.palette" = sequential.palette,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   
@@ -87,6 +89,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
+  check_colors(grid.color, parameter_name = "grid.color")
   
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -276,7 +279,7 @@ do_CopyNumberVariantPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$Event} else {.data[[group]]},
                                                 y = if(isFALSE(flip)){.data[[group]]} else {.data$Event},
                                                 fill = .data$mean)) + 
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
@@ -396,18 +399,18 @@ do_CopyNumberVariantPlot <- function(sample,
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +
-    patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
-                                                      plot.title = ggplot2::element_text(family = font.type,
-                                                                                         color = "black",
-                                                                                         face = "bold",
-                                                                                         hjust = 0),
-                                                      plot.subtitle = ggplot2::element_text(family = font.type,
+       patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
+                                                         plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
+                                                                                            face = "bold",
                                                                                             hjust = 0),
-                                                      plot.caption = ggplot2::element_text(family = "mono",
-                                                                                           color = "black",
-                                                                                           hjust = 1),
-                                                      plot.caption.position = "plot"))
+                                                         plot.subtitle = ggplot2::element_text(family = font.type,
+                                                                                               color = "black",
+                                                                                               hjust = 0),
+                                                         plot.caption = ggplot2::element_text(family = "mono",
+                                                                                              color = "black",
+                                                                                              hjust = 1),
+                                                         plot.caption.position = "plot"))
   
   if (isTRUE(return_object)){
     return_list <- list("Plot" = p,

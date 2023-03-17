@@ -20,7 +20,8 @@ do_GroupedGOTermPlot(
   plot.subtitle = NULL,
   plot.caption = NULL,
   verbose = FALSE,
-  return_matrices = FALSE
+  return_matrices = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -68,6 +69,8 @@ do_GroupedGOTermPlot(
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
 \item{return_matrices}{\strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.}
 }

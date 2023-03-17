@@ -53,7 +53,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  sequential.palette = "YlGnBu",
                                  diverging.palette = "RdBu",
                                  sequential.direction = 1,
-                                 flip = FALSE){
+                                 flip = FALSE,
+                                 grid.color = "white"){
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -95,13 +96,14 @@ do_EnrichmentHeatmap <- function(sample,
                          "viridis.palette" = viridis.palette,
                          "flavor" = flavor,
                          "sequential.palette" = sequential.palette,
-                         "diverging.palette" = diverging.palette)
+                         "diverging.palette" = diverging.palette,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value, parameter_name = "na.value")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
-
+  check_colors(grid.color, parameter_name = "grid.color")
 
 
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
@@ -316,7 +318,7 @@ do_EnrichmentHeatmap <- function(sample,
                          mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$gene_list} else {.data$group.by},
                                                 y = if(isFALSE(flip)){.data$group.by} else {.data$gene_list},
                                                 fill = .data$mean)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

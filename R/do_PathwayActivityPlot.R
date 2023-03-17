@@ -42,7 +42,8 @@ do_PathwayActivityPlot <- function(sample,
                                    sequential.palette = "YlGnBu",
                                    sequential.direction = 1,
                                    flip = FALSE,
-                                   return_object = FALSE){
+                                   return_object = FALSE,
+                                   grid.color = "white"){
 
   check_suggests(function_name = "do_PathwayActivityPlot")
   # Check if the sample provided is a Seurat object.
@@ -81,12 +82,14 @@ do_PathwayActivityPlot <- function(sample,
                          "diverging.palette" = diverging.palette,
                          "viridis.palette" = viridis.palette,
                          "sequential.palette" = sequential.palette,
-                         "statistic" = statistic)
+                         "statistic" = statistic,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
+  check_colors(grid.color, paramter_name = "grid.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -150,8 +153,10 @@ do_PathwayActivityPlot <- function(sample,
                                 values_to = "score") %>%
             dplyr::group_by(.data$group.by, .data$source) %>%
             dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
+      
       df.order <- df
       df.order[is.na(df.order)] <- 0
+      
       matrix.list[[group]][["df"]] <- df
       matrix.list[[group]][["df.order"]] <- df.order
       
@@ -160,20 +165,19 @@ do_PathwayActivityPlot <- function(sample,
         sample$split.by <- sample@meta.data[, split.by]
         
         df.split <- t(as.matrix(sample@assays$progeny@scale.data)) %>%
-          as.data.frame() %>%
-          tibble::rownames_to_column(var = "cell") %>%
-          dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
-              tibble::rownames_to_column(var = "cell")},
-              by = "cell") %>%
-          dplyr::select(-"cell") %>%
-          tidyr::pivot_longer(cols = -c("group.by", "split.by"),
-                              names_to = "source",
-                              values_to = "score") %>%
-          dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
-          dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
+                    as.data.frame() %>%
+                    tibble::rownames_to_column(var = "cell") %>%
+                    dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
+                                          tibble::rownames_to_column(var = "cell")},
+                                          by = "cell") %>%
+                    dplyr::select(-"cell") %>%
+                    tidyr::pivot_longer(cols = -c("group.by", "split.by"),
+                                        names_to = "source",
+                                        values_to = "score") %>%
+                    dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
+                    dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         matrix.list[[group]][["df.split"]] <- df.split
       }
-      
     })
   }
 
@@ -269,7 +273,7 @@ do_PathwayActivityPlot <- function(sample,
                          mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$source} else {.data$group.by},
                                                 y = if(isFALSE(flip)){.data$group.by} else {.data$source},
                                                 fill = .data$mean)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
@@ -400,15 +404,9 @@ do_PathwayActivityPlot <- function(sample,
                                                                                                hjust = 0),
                                                          plot.caption = ggplot2::element_text(color = "black",
                                                                                               hjust = 1,
-                                                                                              family = "mono"),
+                                                                                              family = font.type),
                                                          plot.caption.position = "plot"))
-  if (!is.na(min.cutoff) | !is.na(min.cutoff)){
-    # Specify it in the plot.
-    scale.message <- compute_scale_message(limits.empirical = limits,
-                                           limits.shown = scale.setup$limits)
-    p <- p + 
-      patchwork::plot_annotation(caption = scale.message)
-  }
+  
   list.out[["Heatmap"]] <- p
   
   if (isTRUE(return_object)){

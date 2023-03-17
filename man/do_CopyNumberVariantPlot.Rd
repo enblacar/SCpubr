@@ -38,6 +38,7 @@ do_CopyNumberVariantPlot(
   sequential.direction = -1,
   use_viridis = TRUE,
   return_object = FALSE,
+  grid.color = "white",
   flip = FALSE
 )
 }
@@ -115,6 +116,8 @@ do_CopyNumberVariantPlot(
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }

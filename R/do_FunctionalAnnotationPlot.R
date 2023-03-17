@@ -57,7 +57,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         legend.framecolor = "grey50",
                                         legend.tickcolor = "white",
                                         number.breaks = 5,
-                                        return_matrix = FALSE){
+                                        return_matrix = FALSE,
+                                        grid.color = "white"){
   `%>%` <- magrittr::`%>%`
 
   check_suggests(function_name = "do_FunctionalAnnotationPlot")
@@ -93,9 +94,10 @@ do_FunctionalAnnotationPlot <- function(genes,
                          "database" = database,
                          "GO_ontology" = GO_ontology,
                          "pAdjustMethod" = pAdjustMethod,
-                         "genes" = genes)
+                         "genes" = genes,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-
+  check_colors(grid.color)
 
   if (!is.null(min.overlap)){
     assertthat::assert_that(min.overlap >= 1,
@@ -239,7 +241,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Gene,
                                                       y = .data$Description,
                                                       fill = .data$Status)) +
-               ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+               ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
                ggplot2::scale_y_discrete(expand = c(0, 0)) +
                ggplot2::scale_x_discrete(expand = c(0, 0),
                                          position = "top") + 
@@ -280,7 +282,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                 ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Counts_categorical,
                                                        y = .data$Description,
                                                        fill = .data$Count)) +
-                ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+                ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
                 ggplot2::scale_y_discrete(expand = c(0, 0)) +
                 ggplot2::scale_x_discrete(expand = c(0, 0),
                                           position = "top") + 
@@ -314,7 +316,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                 ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Pval_categorical,
                                                        y = .data$Description,
                                                        fill = .data$`-log10(p.adjust)`)) +
-                ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+                ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
                 ggplot2::scale_y_discrete(expand = c(0, 0)) +
                 ggplot2::scale_x_discrete(expand = c(0, 0),
                                           position = "top") + 

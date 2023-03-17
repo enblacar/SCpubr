@@ -35,7 +35,8 @@ do_TFActivityPlot(
   max.cutoff = NA,
   number.breaks = 5,
   flip = FALSE,
-  return_object = FALSE
+  return_object = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -106,6 +107,8 @@ do_TFActivityPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

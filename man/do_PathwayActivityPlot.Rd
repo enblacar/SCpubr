@@ -35,7 +35,8 @@ do_PathwayActivityPlot(
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   flip = FALSE,
-  return_object = FALSE
+  return_object = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -106,6 +107,8 @@ do_PathwayActivityPlot(
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 

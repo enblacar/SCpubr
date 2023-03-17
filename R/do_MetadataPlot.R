@@ -32,7 +32,8 @@ do_MetadataPlot <- function(sample = NULL,
                             legend.ncol = NULL,
                             legend.nrow = NULL,
                             legend.byrow = FALSE,
-                            font.type = "sans"){
+                            font.type = "sans",
+                            grid.color = "white"){
   check_suggests(function_name = "do_MetadataPlot")
   
   # Check logical parameters.
@@ -53,10 +54,11 @@ do_MetadataPlot <- function(sample = NULL,
   character_list <- list("group.by" = group.by,
                          "metadata" = metadata,
                          "legend.position" = legend.position,
-                         "font.type" = font.type)
+                         "font.type" = font.type,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
-  
+  check_colors(grid.color, parameter_name = "grid.color")
   
   `%>%` <- magrittr::`%>%`
   
@@ -145,7 +147,7 @@ do_MetadataPlot <- function(sample = NULL,
                 ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data[[group.by]]} else {.data[[name]]},
                                                        y = if(isFALSE(flip)){.data[[name]]} else {.data[[group.by]]},
                                                        fill = .data[[paste0(name, "_fill")]])) + 
-                ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+                ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
                 ggplot2::scale_y_discrete(expand = c(0, 0)) +
                 ggplot2::scale_x_discrete(expand = c(0, 0),
                                           position = "top") +

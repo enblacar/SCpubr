@@ -37,7 +37,8 @@ do_GroupwiseDEPlot <- function(sample,
                                rotate_x_axis_labels = 45,
                                min.cutoff = NA,
                                max.cutoff = NA,
-                               na.value = "grey75"){
+                               na.value = "grey75",
+                               grid.color = "white"){
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -71,7 +72,8 @@ do_GroupwiseDEPlot <- function(sample,
                          "sequential.palette.pvalue" = sequential.palette.pvalue,
                          "sequential.palette.logfc" = sequential.palette.logfc,
                          "sequential.palette.expression" = sequential.palette.expression,
-                         "na.value" = na.value)
+                         "na.value" = na.value,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
 
@@ -80,6 +82,7 @@ do_GroupwiseDEPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
+  check_colors(grid.color, parameter_name = "grid.color")
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
@@ -182,7 +185,7 @@ do_GroupwiseDEPlot <- function(sample,
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                               y = .data$cluster,
                                               fill = .data$specificity)) + 
-       ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+       ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
        ggplot2::scale_y_discrete(expand = c(0, 0)) +
        ggplot2::scale_x_discrete(expand = c(0, 0),
                                  position = "top") +
@@ -234,7 +237,7 @@ do_GroupwiseDEPlot <- function(sample,
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                               y = .data$cluster,
                                               fill = .data$magnitude)) + 
-       ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+       ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
        ggplot2::scale_y_discrete(expand = c(0, 0)) +
        ggplot2::scale_x_discrete(expand = c(0, 0),
                                  position = "top") +
@@ -326,7 +329,7 @@ do_GroupwiseDEPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                                 y = .data$Group,
                                                 fill = .data$Avg.Exp)) + 
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

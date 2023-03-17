@@ -3,7 +3,7 @@
 #' This function is heavily inspired by \strong{\code{\link[Seurat]{DoHeatmap}}}.
 #'
 #' @inheritParams doc_function
-#' @param make_size_proportional \strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.
+#' @param proportional.size \strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | Controls the size of the main heatmap (proportion-wise, defaults to 0.95).
 #' @param metadata \strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.
 #' @param metadata.colors \strong{\code{\link[base]{list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
@@ -60,7 +60,7 @@ do_SCExpressionHeatmap <- function(sample,
                                    diverging.palette = "RdBu",
                                    sequential.palette = "YlGnBu",
                                    sequential.direction = 1,
-                                   make_size_proportional = TRUE,
+                                   proportional.size = TRUE,
                                    verbose = TRUE){
 
   check_suggests(function_name = "do_SCExpressionHeatmap")
@@ -68,7 +68,7 @@ do_SCExpressionHeatmap <- function(sample,
 
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
-                       "make_size_proportional" = make_size_proportional,
+                       "proportional.size" = proportional.size,
                        "verbose" = verbose,
                        "legend.byrow" = legend.byrow,
                        "use_viridis" = use_viridis,
@@ -309,7 +309,7 @@ do_SCExpressionHeatmap <- function(sample,
            ggplot2::geom_tile() +
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
-                               space = if(isTRUE(make_size_proportional)) {"fixed"} else {"free"}) +
+                               space = if(isTRUE(proportional.size)) {"fixed"} else {"free"}) +
            ggplot2::scale_fill_manual(values = colors.use) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                        title.position = "top",
@@ -358,7 +358,7 @@ do_SCExpressionHeatmap <- function(sample,
 
   p <- p + ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
-                               space = if(isTRUE(make_size_proportional)) {"fixed"} else {"free"})
+                               space = if(isTRUE(proportional.size)) {"fixed"} else {"free"})
 
   limits.use <- c(min(plot_data_limits$expression, na.rm = TRUE),
                   max(plot_data_limits$expression, na.rm = TRUE))
@@ -454,8 +454,7 @@ do_SCExpressionHeatmap <- function(sample,
                                              axis.title = ggplot2::element_text(face = "bold", color = "black"),
                                              plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                                              plot.subtitle = ggplot2::element_text(hjust = 0),
-                                             plot.caption = ggplot2::element_text(hjust = 1,
-                                                                                  family = "mono"),
+                                             plot.caption = ggplot2::element_text(hjust = 1),
                                              plot.title.position = "plot",
                                              panel.grid = ggplot2::element_blank(),
                                              panel.grid.minor.y = ggplot2::element_line(color = "white"),
@@ -523,24 +522,13 @@ do_SCExpressionHeatmap <- function(sample,
                                                         plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                               color = "black",
                                                                                               hjust = 0),
-                                                        plot.caption = ggplot2::element_text(family = "mono",
+                                                        plot.caption = ggplot2::element_text(family = font.type,
                                                                                              color = "black",
                                                                                              hjust = 1),
                                                         plot.caption.position = "plot"))
-    if (!is.na(min.cutoff) | !is.na(min.cutoff)){
-      # Specify it in the plot.
-      scale.message <- compute_scale_message(limits.empirical = limits.use,
-                                             limits.shown = scale.setup$limits)
-      out <- out + 
-        patchwork::plot_annotation(caption = scale.message)
-    }
+    
   } else {
     out <- metadata_plots[["main"]]
-    
-    scale.message <- compute_scale_message(limits.empirical = limits.use,
-                                           limits.shown = scale.setup$limits)
-    out <- out + 
-           ggplot2::labs(caption = scale.message)
   }
 
 

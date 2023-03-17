@@ -49,7 +49,7 @@ do_SCExpressionHeatmap(
   diverging.palette = "RdBu",
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
-  make_size_proportional = TRUE,
+  proportional.size = TRUE,
   verbose = TRUE
 )
 }
@@ -142,7 +142,7 @@ do_SCExpressionHeatmap(
 
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
-\item{make_size_proportional}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
+\item{proportional.size}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }

@@ -32,7 +32,8 @@ do_FunctionalAnnotationPlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   number.breaks = 5,
-  return_matrix = FALSE
+  return_matrix = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -114,6 +115,8 @@ do_FunctionalAnnotationPlot(
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 
 \item{showCategory}{\strong{\code{\link[base]{numeric}}} | Number of enriched terms to display in the output tree plot.}
 

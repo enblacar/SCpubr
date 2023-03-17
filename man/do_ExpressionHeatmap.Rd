@@ -33,7 +33,8 @@ do_ExpressionHeatmap(
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
-  flip = FALSE
+  flip = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -104,6 +105,8 @@ do_ExpressionHeatmap(
 \item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A ComplexHeatmap object.

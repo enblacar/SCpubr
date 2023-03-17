@@ -37,7 +37,8 @@ do_CorrelationPlot <- function(sample = NULL,
                                viridis.direction = -1,
                                sequential.palette = "YlGnBu",
                                sequential.direction = 1,
-                               rotate_x_axis_labels = 45){
+                               rotate_x_axis_labels = 45,
+                               grid.color = "white"){
 
   `%>%` <- magrittr::`%>%`
   
@@ -72,12 +73,14 @@ do_CorrelationPlot <- function(sample = NULL,
                          "font.type" = font.type,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
-                         "viridis.palette" = viridis.palette)
+                         "viridis.palette" = viridis.palette,
+                         "grid.color" = grid.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value)
   check_colors(legend.framecolor)
   check_colors(legend.tickcolor)
+  check_colors(grid.color)
 
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -185,7 +188,7 @@ do_CorrelationPlot <- function(sample = NULL,
                          mapping = ggplot2::aes(x = .data$x,
                                                 y = .data$y,
                                                 fill = .data$score)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
@@ -300,7 +303,7 @@ do_CorrelationPlot <- function(sample = NULL,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x,
                                                 y = .data$y,
                                                 fill = .data$score)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") + 

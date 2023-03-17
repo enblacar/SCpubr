@@ -19,7 +19,8 @@ do_MetadataPlot(
   legend.ncol = NULL,
   legend.nrow = NULL,
   legend.byrow = FALSE,
-  font.type = "sans"
+  font.type = "sans",
+  grid.color = "white"
 )
 }
 \arguments{
@@ -60,6 +61,8 @@ do_MetadataPlot(
 \item \emph{\code{serif}}: Serif font family.
 \item \emph{\code{sans}}: Default font family.
 }}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A ggplot2 object.

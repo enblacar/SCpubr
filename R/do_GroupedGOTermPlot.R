@@ -25,7 +25,8 @@ do_GroupedGOTermPlot <- function(genes,
                                  plot.subtitle = NULL,
                                  plot.caption = NULL,
                                  verbose = FALSE,
-                                 return_matrices = FALSE){
+                                 return_matrices = FALSE,
+                                 grid.color = "white"){
   `%>%` <- magrittr::`%>%`
   
   check_suggests(function_name = "do_GroupedGOTermPlot")
@@ -47,7 +48,8 @@ do_GroupedGOTermPlot <- function(genes,
                          "genes" = genes,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
-                         "plot.caption" = plot.caption)
+                         "plot.caption" = plot.caption,
+                         "grid.color" = grid.color)
   
   assertthat::assert_that(min.overlap >= 1,
                           msg = paste0(crayon_body("Please provide a "),
@@ -68,6 +70,7 @@ do_GroupedGOTermPlot <- function(genes,
   colors.use <- c("Present" = "#1e3d59", 
                   "Absent" = "#bccbcd")
   
+  check_colors(grid.color)
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
@@ -133,7 +136,7 @@ do_GroupedGOTermPlot <- function(genes,
          ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$Description} else {.data$Gene},
                                                 y = if (isTRUE(flip)){.data$Gene} else {.data$Description},
                                                 fill = .data$Status)) +
-         ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") + 

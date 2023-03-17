@@ -60,8 +60,9 @@ do_SCEnrichmentHeatmap(
   diverging.palette = "RdBu",
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
-  make_size_proportional = TRUE,
-  verbose = FALSE
+  proportional.size = TRUE,
+  verbose = FALSE,
+  grid.color = "white"
 )
 }
 \arguments{
@@ -157,9 +158,11 @@ do_SCEnrichmentHeatmap(
 
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
-\item{make_size_proportional}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
+\item{proportional.size}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
 }
 \value{
 A ggplot2 object.

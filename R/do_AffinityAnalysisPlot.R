@@ -405,17 +405,10 @@ do_AffinityAnalysisPlot <- function(sample,
                                                       plot.subtitle = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
                                                                                             hjust = 0),
-                                                      plot.caption = ggplot2::element_text(family = "mono",
+                                                      plot.caption = ggplot2::element_text(family = font.type,
                                                                                            color = "black",
                                                                                            hjust = 1),
                                                       plot.caption.position = "plot"))
-  if (!is.na(max.cutoff) | !is.na(min.cutoff)){
-    # Specify it in the plot.
-    scale.message <- compute_scale_message(limits.empirical = limits,
-                                           limits.shown = scale.setup$limits)
-    p <- p + 
-      patchwork::plot_annotation(caption = scale.message)
-  }
   
   list.output <- list()
   
