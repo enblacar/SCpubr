@@ -23,10 +23,7 @@ do_CopyNumberVariantPlot(
   font.size = 14,
   pt.size = 1,
   font.type = "sans",
-  border.size = 2,
-  border.color = "black",
   rotate_x_axis_labels = 45,
-  plot_cell_borders = TRUE,
   enforce_symmetry = TRUE,
   legend.title = NULL,
   na.value = "grey75",
@@ -39,7 +36,9 @@ do_CopyNumberVariantPlot(
   diverging.palette = "RdBu",
   sequential.palette = "YlGnBu",
   sequential.direction = -1,
-  use_viridis = TRUE
+  use_viridis = TRUE,
+  return_object = FALSE,
+  flip = FALSE
 )
 }
 \arguments{
@@ -91,13 +90,7 @@ do_CopyNumberVariantPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
-
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
-
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
-
-\item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
@@ -122,6 +115,8 @@ do_CopyNumberVariantPlot(
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }
 \value{
 A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..

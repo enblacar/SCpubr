@@ -834,7 +834,9 @@ compute_scales <- function(sample,
                            max.cutoff,
                            enforce_symmetry,
                            from_data = FALSE,
-                           limits.use = NULL){
+                           limits.use = NULL,
+                           center_on_value = FALSE,
+                           value_center = NULL){
   if (isFALSE(from_data)){
     limits <- compute_scale_limits(sample = sample,
                                    feature = feature,
@@ -854,8 +856,16 @@ compute_scales <- function(sample,
   limits <- out$limits
 
   if (isTRUE(enforce_symmetry)){
-    end_value <- max(abs(limits))
-    limits <- c(-end_value, end_value)
+    if (isFALSE(center_on_value)){
+      end_value <- max(abs(limits))
+      limits <- c(-end_value, end_value)
+    } else {
+      low_end <- value_center - limits[1]
+      high_end <- limits[2] - value_center
+      value.use <- max(c(low_end, high_end))
+      limits <- c(1 - value.use, 1 + value.use)
+    }
+    
   }
 
   breaks <- labeling::extended(dmin = limits[1],

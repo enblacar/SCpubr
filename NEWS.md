@@ -46,6 +46,11 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 -   Added `mode = "jaccard"` to compute a correlation matrix of a list of gene sets based on jaccard similarity.
 -   Added `use_viridis`, `sequential.palette` and `sequential_direction` and `diverging.palette` to control color palettes.
 
+## `SCpubr::do_CopyNumberVariantPlot()`
+-  Removed the option to compute Feature and Geyser plots.
+-  Instead, a new paramerter `return_object` has been added to return the Seurat object with a new assay containing the CNV scores per cell on the `data` slot of the `CNV_scores` assay. 
+-  The main output visualization is now a heatmap with the averaged scores by chromosome and groups and also by chromosome arms.
+
 ## `SCpubr::do_DimPlot`
 
 -   Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.
