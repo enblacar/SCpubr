@@ -88,8 +88,8 @@ do_ExpressionHeatmap <- function(sample,
   check_colors(na.value)
   check_colors(legend.framecolor)
   check_colors(legend.tickcolor)
-  check_color(grid.color)
-  check_color(border.color)
+  check_colors(grid.color)
+  check_colors(border.color)
 
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")

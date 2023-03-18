@@ -80,6 +80,7 @@ do_GroupwiseDEPlot <- function(sample,
 
 
   `%>%` <- magrittr::`%>%`
+  `:=` <- rlang::`:=`
   
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")

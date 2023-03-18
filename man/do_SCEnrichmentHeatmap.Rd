@@ -86,7 +86,15 @@ do_SCEnrichmentHeatmap(
 
 \item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
 
+\item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
+
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
+
+\item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
+
+\item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
+
+\item{storeRanks}{\strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 

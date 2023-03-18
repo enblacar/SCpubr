@@ -211,7 +211,7 @@ do_SCExpressionHeatmap <- function(sample,
 
   # Retrieve the order median-wise for the genes.
   if (length(features) == 1) {
-    row_order <- names(input_gene_list)[1]
+    row_order <- names(features)[1]
   } else {
     row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
     row_order <- features[row_order]

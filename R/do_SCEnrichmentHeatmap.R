@@ -8,6 +8,10 @@
 #' @param metadata \strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.
 #' @param metadata.colors \strong{\code{\link[base]{list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
 #' @param metadata.location \strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.
+#' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
+#' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
+#' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
+#' @param return_matrix \strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.
 #' @return A ggplot2 object.
 #' @export
 #'

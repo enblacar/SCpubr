@@ -54,6 +54,8 @@ do_GroupwiseDEPlot(
 
 \item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
 
+\item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{sequential.palette.pvalue, sequential.palette.expression, sequential.palette.logfc}{\strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}

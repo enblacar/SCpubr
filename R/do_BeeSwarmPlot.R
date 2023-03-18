@@ -55,7 +55,7 @@ do_BeeSwarmPlot <- function(sample,
                             max.cutoff = NA,
                             number.breaks = 5){
   check_suggests(function_name = "do_BeeSwarmPlot")
-
+  `%>%` <- magrittr::`%>%`
   # Check ggbeeswarm version:
   # nocov start
   if(utils::packageVersion("ggbeeswarm") < "0.7.1"){

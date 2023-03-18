@@ -171,7 +171,7 @@ do_GeyserPlot <- function(sample,
                                        crayon_key("0"),
                                        crayon_body(" and "),
                                        crayon_key("0.49"),
-                                       crayon+body(".")))
+                                       crayon_body(".")))
 
   assertthat::assert_that(length(min.cutoff) == length(features),
                           msg = paste0(crayon_body("Please provide "),

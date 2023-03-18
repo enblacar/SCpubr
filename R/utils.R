@@ -43,7 +43,7 @@
 #' @param assay \strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.
 #' @param slot \strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param viridis.palette \strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
-#' @param viridis.palette.pvalue,viridis.palette.logfc.viridis.palette.expression \strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param viridis.palette.pvalue,viridis.palette.logfc,viridis.palette.expression \strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param raster \strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param raster.dpi \strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.
 #' @param plot_cell_borders \strong{\code{\link[base]{logical}}} | Whether to plot border around cells.
@@ -289,7 +289,8 @@ named_list <- function(){}
 
 # Not in operator.
 `%!in%` <- function(x, y) {return(!(x %in% y))}
-
+`:=` <- rlang::`:=`
+`%>%` <- magrittr::`%>%`
 
 crayon_body <- function(text){
   return(crayon::bold(text))
@@ -328,6 +329,7 @@ check_suggests <- function(function_name, passive = FALSE){
                               "assertthat",
                               "RColorBrewer",
                               "labeling"),
+                   "do_AffinityAnalysisPlot" = c("decoupleR"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
@@ -426,6 +428,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                               "assertthat",
                               "RColorBrewer",
                               "labeling"),
+                   "do_AffinityAnalysisPlot" = c("decoupleR"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
@@ -506,6 +509,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   bioconductor_packages <- c("AUCell",
                              "ComplexHeatmap",
                              "clusterProfiler",
+                             "decoupleR",
                              "enrichplot",
                              "infercnv",
                              "Nebulosa",
