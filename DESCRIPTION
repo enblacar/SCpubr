@@ -49,6 +49,7 @@ Suggests:
     purrr,
     qpdf,
     rgdal,
+    rlang,
     rjags,
     rmarkdown,
     stringr,
