@@ -36,7 +36,7 @@ do_AffinityAnalysisPlot(
   colors.use = NULL,
   min.cutoff = NA,
   max.cutoff = NA,
-  control.number = 50,
+  control.sets.number = 50,
   verbose = TRUE,
   return_object = FALSE,
   grid.color = "white",
@@ -60,9 +60,7 @@ do_AffinityAnalysisPlot(
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
-\item{compute_robustness}{\strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of
-control.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
-values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
+\item{compute_robustness}{\strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
@@ -118,7 +116,12 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
+\item{control.sets.number}{datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
+values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
+
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 

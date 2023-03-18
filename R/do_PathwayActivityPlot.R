@@ -2,10 +2,6 @@
 #'
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with progeny regulon prior knowledge.
-#' @param plot_FeaturePlots \strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.
-#' @param plot_GeyserPlots \strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.
-#' @param geyser_order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.
-#' @param geyser_scale_type \strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.
 #'
 #' @return A list containing several output plots according to the user's specifications.
 #' @export

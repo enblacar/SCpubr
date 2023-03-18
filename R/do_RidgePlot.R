@@ -50,10 +50,10 @@ do_RidgePlot <- function(sample,
                          prob_tails = 0.025,
                          color_by_probabilities = FALSE,
                          use_viridis = TRUE,
-                         viridis_color_map = "G",
-                         viridis_direction = 1,
+                         viridis.palette = "G",
+                         viridis.direction = 1,
                          sequential.palette = "YlGnBu",
-                         sequential_direction = 1,
+                         sequential.direction = 1,
                          plot.grid = TRUE,
                          grid.color = "grey75",
                          grid.type = "dashed",
@@ -84,12 +84,12 @@ do_RidgePlot <- function(sample,
                        "font.size" = font.size,
                        "quantiles" = quantiles,
                        "prob_tails" = prob_tails,
-                       "viridis_direction" = viridis_direction,
+                       "viridis.direction" = viridis.direction,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow,
                        "number.breaks" = number.breaks,
-                       "sequential_direction" = sequential_direction)
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -109,7 +109,7 @@ do_RidgePlot <- function(sample,
                          "plot.caption" = plot.caption,
                          "xlab" = xlab,
                          "ylab" = ylab,
-                         "viridis_color_map" = viridis_color_map,
+                         "viridis.palette" = viridis.palette,
                          "grid.color" = grid.color,
                          "grid.type" = grid.type,
                          "sequential.palette" = sequential.palette)
@@ -120,8 +120,8 @@ do_RidgePlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   if (!is.null(legend.position)){check_parameters(parameter = legend.position, parameter_name = "legend.position")}
-  check_parameters(parameter = viridis_direction, parameter_name = "viridis_direction")
-  check_parameters(parameter = viridis_color_map, parameter_name = "viridis_color_map")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
@@ -149,13 +149,13 @@ do_RidgePlot <- function(sample,
 
       if (isTRUE(use_viridis)){
         p <- p +
-             ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                           direction = viridis_direction,
+             ggplot2::scale_fill_viridis_c(option = viridis.palette,
+                                           direction = viridis.direction,
                                            name = feature,
                                            breaks = scales::extended_breaks(n = number.breaks))
       } else {
         p <- p +
-          ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = "grey75",
                                          name = feature,
                                         breaks = scales::extended_breaks(n = number.breaks))
@@ -195,7 +195,7 @@ do_RidgePlot <- function(sample,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
                                            quantiles = quantiles) +
-             ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis_color_map, direction = viridis_direction),
+             ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis.palette, direction = viridis.direction),
                                         name = ifelse(is.null(legend.title), "Probability", legend.title),
                                         labels = unique(labels)) +
              ggplot2::guides(fill = ggplot2::guide_legend(title = ifelse(is.null(legend.title), "Probability", legend.title),
@@ -236,13 +236,13 @@ do_RidgePlot <- function(sample,
 
         if (isTRUE(use_viridis)){
           p <- p +
-            ggplot2::scale_fill_viridis_c(option = viridis_color_map,
-                                          direction = viridis_direction,
+            ggplot2::scale_fill_viridis_c(option = viridis.palette,
+                                          direction = viridis.direction,
                                           name = "Tail probability",
                                           breaks = scales::extended_breaks(n = number.breaks))
         } else {
           p <- p +
-            ggplot2::scale_fill_gradientn(colors = if(sequential_direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+            ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                           na.value = "grey75",
                                           name = "Tail probability",
                                           breaks = scales::extended_breaks(n = number.breaks))

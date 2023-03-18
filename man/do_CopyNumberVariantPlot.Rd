@@ -118,6 +118,8 @@ do_CopyNumberVariantPlot(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
+
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}

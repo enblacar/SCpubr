@@ -8,7 +8,7 @@
 #' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.
 #' @param statistic \strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.
 #' @param compute_robustness \strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of 
-#' control.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
+#' @param control.sets.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
 #' values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression. 
 #'
 #' @return A list containing different plots.
@@ -49,11 +49,52 @@ do_AffinityAnalysisPlot <- function(sample,
                                     colors.use = NULL,
                                     min.cutoff = NA,
                                     max.cutoff = NA,
-                                    control.number = 50,
+                                    control.sets.number = 50,
                                     verbose = TRUE,
                                     return_object = FALSE,
                                     grid.color = "white",
                                     border.color = "black"){
+  
+  
+  # Check logical parameters.
+  logical_list <- list("verbose" = verbose,
+                       "flip" = flip,
+                       "enforce_symmetry" = enforce_symmetry,
+                       "use_viridis" = use_viridis,
+                       "compute_robustness" = compute_robustness)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  # Check numeric parameters.
+  numeric_list <- list("font.size" = font.size,
+                       "legend.length" = legend.length,
+                       "legend.width" = legend.width,
+                       "legend.framewidth" = legend.framewidth,
+                       "legend.tickwidth" = legend.tickwidth,
+                       "subsample" = subsample,
+                       "viridis.direction" = viridis.direction,
+                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "min.cutoff" = min.cutoff,
+                       "max.cutoff" = max.cutoff,
+                       "number.breaks" = number.breaks,
+                       "sequential.direction" = sequential.direction,
+                       "control.sets.number" = control.sets.number)
+  check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+  # Check character parameters.
+  character_list <- list("group.by" = group.by,
+                         "assay" = assay,
+                         "slot" = slot,
+                         "statistic" = statistic,
+                         "legend.type" = legend.type,
+                         "legend.position" = legend.position,
+                         "legend.framecolor" = legend.framecolor,
+                         "legend.tickcolor" = legend.tickcolor,
+                         "font.type" = font.type,
+                         "legend.title" = legend.title,
+                         "viridis.palette" = viridis.palette,
+                         "diverging.palette" = diverging.palette,
+                         "sequential.palette" = sequential.palette,
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
+  
   `%>%` <- magrittr::`%>%`
   
   check_colors(grid.color, parameter_name = "grid.color")
@@ -533,7 +574,7 @@ do_AffinityAnalysisPlot <- function(sample,
       
       
       # Generate 50 randomized control gene sets.
-      for (i in seq_len(control.number)){
+      for (i in seq_len(control.sets.number)){
         control_genes <- c()
         for (bin in unique(empiric_bin)){
           control.use <- data.avg %>% 

@@ -10,7 +10,9 @@
                                crayon_body(" in the GitHub repo: https://github.com/enblacar/SCpubr/stargazers \n")))
   packageStartupMessage(paste0(crayon_body("Keep track of the package "),
                                crayon_key("updates"),
-                               crayon_body(" on Twitter (@Enblacar) or in https://github.com/enblacar/SCpubr/blob/main/NEWS.md \n")))
+                               crayon_body(" on Twitter ("),
+                               crayon_key("@Enblacar"),
+                               crayon_body(") or in https://github.com/enblacar/SCpubr/blob/main/NEWS.md \n")))
   packageStartupMessage(crayon_body("To suppress this startup message, use: \nsuppressPackageStartupMessages(library('SCpubr'))"))
   packageStartupMessage(crayon_body(paste(rep("-", 153), collapse = "")))
 }

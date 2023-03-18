@@ -47,6 +47,13 @@ do_TFActivityPlot(
 
 \item{n_tfs}{\strong{\code{\link[base]{numeric}}} | Number of top regulons to consider for downstream analysis.}
 
+\item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use. One of:
+\itemize{
+\item \emph{\code{wmean}}: For weighted mean.
+\item \emph{\code{norm_wmean}}: For normalized weighted mean.
+\item \emph{\code{corr_wmean}}: For corrected weighted mean.
+}}
+
 \item{tfs.use}{\strong{\code{\link[base]{character}}} | Restrict the analysis to given regulons.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
@@ -108,6 +115,8 @@ do_TFActivityPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 

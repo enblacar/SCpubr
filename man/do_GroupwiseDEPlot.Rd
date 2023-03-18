@@ -56,6 +56,8 @@ do_GroupwiseDEPlot(
 
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
+\item{sequential.palette.pvalue, sequential.palette.expression, sequential.palette.logfc}{\strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}

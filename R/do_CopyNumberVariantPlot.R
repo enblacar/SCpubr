@@ -48,7 +48,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      grid.color = "white",
                                      border.color = "black",
                                      flip = FALSE){
-  
+  check_suggests("do_CopyNumberVariantPlot")
   
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,

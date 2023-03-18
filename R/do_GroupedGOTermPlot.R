@@ -3,7 +3,6 @@
 #' @inheritParams doc_function
 #' @param levels.use \strong{\code{\link[base]{numeric}}} | Vector of numerics corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.
 #' @param reverse.levels \strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.
-#' @param colors.use \strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.
 #' @param return_matrices \strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..
 #' 
 #' @return A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.

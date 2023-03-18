@@ -117,15 +117,11 @@ do_FunctionalAnnotationPlot(
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
+\item{return_matrix}{\strong{\code{\link[base]{logical}}} | Returns the matrices with the enriched Terms for further use.}
+
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
-
-\item{showCategory}{\strong{\code{\link[base]{numeric}}} | Number of enriched terms to display in the output tree plot.}
-
-\item{nWords}{\strong{\code{\link[base]{numeric}}} | The number of words in the cluster tags in the tree plot.}
-
-\item{nCluster}{\strong{\code{\link[base]{numeric}}} | The number of clusters to group the resulting terms in the tree plot. Suggested value is above 2, as two can lead to some errors.}
 }
 \value{
 A list containing a heatmap of the presence/absence of the genes in the enriched term, as well as a bar plot, dot plot and tree plot of the enriched terms.

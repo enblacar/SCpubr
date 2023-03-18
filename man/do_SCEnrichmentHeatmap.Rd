@@ -82,6 +82,12 @@ do_SCEnrichmentHeatmap(
 
 \item{metadata.location}{\strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.}
 
+\item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.}
+
+\item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
+
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
+
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}

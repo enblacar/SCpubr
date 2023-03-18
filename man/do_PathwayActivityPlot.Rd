@@ -49,6 +49,13 @@ do_PathwayActivityPlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
+\item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use. One of:
+\itemize{
+\item \emph{\code{wmean}}: For weighted mean.
+\item \emph{\code{norm_wmean}}: For normalized weighted mean.
+\item \emph{\code{corr_wmean}}: For corrected weighted mean.
+}}
+
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
@@ -109,17 +116,11 @@ do_PathwayActivityPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
+\item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
+
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
-
-\item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
-
-\item{plot_GeyserPlots}{\strong{\code{\link[base]{logical}}} | Compute output GeyserPlots for each of the top regulons and group.by variable.}
-
-\item{geyser_order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the X axis by the mean of the values.}
-
-\item{geyser_scale_type}{\strong{\code{\link[base]{character}}} | Type of scale to use. Either "continuous" or "categorical.}
 }
 \value{
 A list containing several output plots according to the user's specifications.

@@ -43,6 +43,7 @@
 #' @param assay \strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.
 #' @param slot \strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".
 #' @param viridis.palette \strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
+#' @param viridis.palette.pvalue,viridis.palette.logfc.viridis.palette.expression \strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.
 #' @param raster \strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.
 #' @param raster.dpi \strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.
 #' @param plot_cell_borders \strong{\code{\link[base]{logical}}} | Whether to plot border around cells.
@@ -139,7 +140,17 @@
 #' @param rotate_strip_labels \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
 #' @param diverging.palette \strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.palette \strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
+#' @param sequential.palette.pvalue,sequential.palette.expression,sequential.palette.logfc \strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.direction \strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.
+#' @param return_object \strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.
+#' @param statistic \strong{\code{\link[base]{character}}} | DecoupleR statistic to use. One of:
+#' \itemize{
+#'   \item \emph{\code{wmean}}: For weighted mean.
+#'   \item \emph{\code{norm_wmean}}: For normalized weighted mean.
+#'   \item \emph{\code{corr_wmean}}: For corrected weighted mean.
+#' }
+#' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.
+#' @param cluster_cells \strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal

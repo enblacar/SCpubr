@@ -71,6 +71,10 @@ do_SCExpressionHeatmap(
 
 \item{metadata.location}{\strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.}
 
+\item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.}
+
+\item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
+
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}

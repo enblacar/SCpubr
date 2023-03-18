@@ -74,8 +74,6 @@ do_GroupedGOTermPlot(
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
-
-\item{colors.use}{\strong{\code{\link[base]{character}}} | Vector of 2 colors to use in the heatmap. The first will correspond to the empty values and the second one to the genes present in the terms.}
 }
 \value{
 A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.
