@@ -85,7 +85,7 @@ do_GeyserPlot(
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{

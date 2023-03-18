@@ -56,7 +56,7 @@
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
@@ -157,7 +157,7 @@
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
 \itemize{

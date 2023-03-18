@@ -35,7 +35,8 @@ do_GroupwiseDEPlot(
   min.cutoff = NA,
   max.cutoff = NA,
   na.value = "grey75",
-  grid.color = "white"
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -97,7 +98,9 @@ do_GroupwiseDEPlot(
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.

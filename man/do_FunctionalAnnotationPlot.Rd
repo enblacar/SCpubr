@@ -33,7 +33,8 @@ do_FunctionalAnnotationPlot(
   legend.tickcolor = "white",
   number.breaks = 5,
   return_matrix = FALSE,
-  grid.color = "white"
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -116,7 +117,9 @@ do_FunctionalAnnotationPlot(
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{showCategory}{\strong{\code{\link[base]{numeric}}} | Number of enriched terms to display in the output tree plot.}
 

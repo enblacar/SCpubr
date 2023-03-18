@@ -51,8 +51,15 @@ do_AffinityAnalysisPlot <- function(sample,
                                     max.cutoff = NA,
                                     control.number = 50,
                                     verbose = TRUE,
-                                    return_object = FALSE){
+                                    return_object = FALSE,
+                                    grid.color = "white",
+                                    border.color = "black"){
   `%>%` <- magrittr::`%>%`
+  
+  check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   
   # Assign a group.by if this is null.
   if (is.null(group.by)){
@@ -147,28 +154,28 @@ do_AffinityAnalysisPlot <- function(sample,
     data.use <- Seurat::GetAssayData(sample, 
                                      assay = "affinity", 
                                      slot = "scale.data") %>% 
-      t() %>% 
-      as.data.frame() %>% 
-      tibble::rownames_to_column(var = "cell") %>% 
-      dplyr::left_join(y = {sample@meta.data %>% 
-          tibble::rownames_to_column(var = "cell") %>% 
-          dplyr::select(dplyr::all_of(c("cell", group)))},
-          by = "cell") %>% 
-      tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
-                          names_to = "source",
-                          values_to = "score")
+                t() %>% 
+                as.data.frame() %>% 
+                tibble::rownames_to_column(var = "cell") %>% 
+                dplyr::left_join(y = {sample@meta.data %>% 
+                                      tibble::rownames_to_column(var = "cell") %>% 
+                                      dplyr::select(dplyr::all_of(c("cell", group)))},
+                                      by = "cell") %>% 
+                tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
+                                    names_to = "source",
+                                    values_to = "score")
     
     # Clustering based on the median across all cells.
     data.cluster <- data.use %>% 
-      tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),
-                         names_from = "source",
-                         values_from = "score") %>% 
-      dplyr::group_by(.data[[group]]) %>% 
-      dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(names(input_gene_list))),
-                                     stats::median,
-                                     na.rm = TRUE)) %>% 
-      as.data.frame() %>% 
-      tibble::column_to_rownames(var = group) 
+                    tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),
+                                       names_from = "source",
+                                       values_from = "score") %>% 
+                    dplyr::group_by(.data[[group]]) %>% 
+                    dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(names(input_gene_list))),
+                                                   stats::median,
+                                                   na.rm = TRUE)) %>% 
+                    as.data.frame() %>% 
+                    tibble::column_to_rownames(var = group) 
     
     list.data[[group]][["data"]] <- data.use
     list.data[[group]][["data.cluster"]] <- data.cluster
@@ -199,33 +206,33 @@ do_AffinityAnalysisPlot <- function(sample,
     
     
     data.use <- data.use %>% 
-      dplyr::group_by(.data[[group]], .data$source) %>% 
-      dplyr::summarise("mean" = mean(.data$score, na.rm = TRUE))
+                dplyr::group_by(.data[[group]], .data$source) %>% 
+                dplyr::summarise("mean" = mean(.data$score, na.rm = TRUE))
     
     list.data[[group]][["data.mean"]] <- data.use
     
     if (!is.na(min.cutoff)){
       data.use <- data.use %>%
-        dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
+                  dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
     }
     
     if (!is.na(max.cutoff)){
       data.use <- data.use %>%
-        dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
+                  dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
     }
     p <- data.use %>% 
-      dplyr::mutate("source" = factor(.data$source, levels = col_order),
-                    "target" = factor(.data[[group]], levels = row_order)) %>% 
-      ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$source} else {.data$target},
-                                             y = if (isTRUE(flip)){.data$target} else {.data$source},
-                                             fill = .data$mean)) +
-      ggplot2::geom_tile(color = "white", linewidth = 0.5, na.rm = TRUE) +
-      ggplot2::scale_y_discrete(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(expand = c(0, 0),
-                                position = "top") +
-      ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$target} else {.data$source}))),
-                      x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$source} else {.data$target})))) + 
-      ggplot2::coord_equal() 
+         dplyr::mutate("source" = factor(.data$source, levels = col_order),
+                       "target" = factor(.data[[group]], levels = row_order)) %>% 
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$source} else {.data$target},
+                                                y = if (isTRUE(flip)){.data$target} else {.data$source},
+                                                fill = .data$mean)) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::scale_y_discrete(expand = c(0, 0)) +
+         ggplot2::scale_x_discrete(expand = c(0, 0),
+                                   position = "top") +
+         ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$target} else {.data$source}))),
+                         x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$source} else {.data$target})))) + 
+         ggplot2::coord_equal() 
     list.heatmaps[[group]] <- p
   }
   
@@ -265,30 +272,30 @@ do_AffinityAnalysisPlot <- function(sample,
     if (isFALSE(enforce_symmetry)){
       if (isTRUE(use_viridis)){
         p <- p + 
-          ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                        option = viridis.palette,
-                                        na.value = "grey75",
-                                        breaks = scale.setup$breaks,
-                                        labels = scale.setup$labels,
-                                        limits = scale.setup$limits,
-                                        name = statistic)
+             ggplot2::scale_fill_viridis_c(direction = viridis.direction,
+                                           option = viridis.palette,
+                                           na.value = "grey75",
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits,
+                                           name = statistic)
       } else {
         p <- p + 
-          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                        na.value = "grey75",
-                                        name =  statistic,
-                                        breaks = scale.setup$breaks,
-                                        labels = scale.setup$labels,
-                                        limits = scale.setup$limits)
+             ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                           na.value = "grey75",
+                                           name =  statistic,
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits)
       }
     } else {
       p <- p + 
-        ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                      na.value = "grey75",
-                                      name = statistic,
-                                      breaks = scale.setup$breaks,
-                                      labels = scale.setup$labels,
-                                      limits = scale.setup$limits)
+           ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                         na.value = "grey75",
+                                         name = statistic,
+                                         breaks = scale.setup$breaks,
+                                         labels = scale.setup$labels,
+                                         limits = scale.setup$limits)
     }
     
     list.heatmaps[[group]] <- p
@@ -347,44 +354,44 @@ do_AffinityAnalysisPlot <- function(sample,
                                             rotate_x_axis_labels = rotate_x_axis_labels)
     
     p <- p +
-      ggplot2::xlab(xlab) +
-      ggplot2::ylab(ylab) +
-      ggplot2::theme_minimal(base_size = font.size) +
-      ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
-                     axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
-                     axis.ticks.y.left = axis.parameters$axis.ticks.y.left,
-                     axis.ticks.y.right = axis.parameters$axis.ticks.y.right,
-                     axis.text.y.left = axis.parameters$axis.text.y.left,
-                     axis.text.y.right = axis.parameters$axis.text.y.right,
-                     axis.text.x.top = axis.parameters$axis.text.x.top,
-                     axis.text.x.bottom = axis.parameters$axis.text.x.bottom,
-                     axis.title.x.bottom = axis.parameters$axis.title.x.bottom,
-                     axis.title.x.top = axis.parameters$axis.title.x.top,
-                     axis.title.y.right = axis.parameters$axis.title.y.right,
-                     axis.title.y.left = axis.parameters$axis.title.y.left,
-                     strip.background = axis.parameters$strip.background,
-                     strip.clip = axis.parameters$strip.clip,
-                     strip.text = axis.parameters$strip.text,
-                     legend.position = legend.position,
-                     axis.line = ggplot2::element_blank(),
-                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                     plot.subtitle = ggplot2::element_text(hjust = 0),
-                     plot.caption = ggplot2::element_text(hjust = 1),
-                     plot.title.position = "plot",
-                     panel.grid = ggplot2::element_blank(),
-                     panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
-                     text = ggplot2::element_text(family = font.type),
-                     plot.caption.position = "plot",
-                     legend.text = ggplot2::element_text(face = "bold"),
-                     legend.title = ggplot2::element_text(face = "bold"),
-                     legend.justification = "center",
-                     plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
-                     panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
-                     panel.grid.major = ggplot2::element_blank(),
-                     plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                     panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                     legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                     panel.spacing.x = ggplot2::unit(0, "cm"))
+         ggplot2::xlab(xlab) +
+         ggplot2::ylab(ylab) +
+         ggplot2::theme_minimal(base_size = font.size) +
+         ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
+                        axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
+                        axis.ticks.y.left = axis.parameters$axis.ticks.y.left,
+                        axis.ticks.y.right = axis.parameters$axis.ticks.y.right,
+                        axis.text.y.left = axis.parameters$axis.text.y.left,
+                        axis.text.y.right = axis.parameters$axis.text.y.right,
+                        axis.text.x.top = axis.parameters$axis.text.x.top,
+                        axis.text.x.bottom = axis.parameters$axis.text.x.bottom,
+                        axis.title.x.bottom = axis.parameters$axis.title.x.bottom,
+                        axis.title.x.top = axis.parameters$axis.title.x.top,
+                        axis.title.y.right = axis.parameters$axis.title.y.right,
+                        axis.title.y.left = axis.parameters$axis.title.y.left,
+                        strip.background = axis.parameters$strip.background,
+                        strip.clip = axis.parameters$strip.clip,
+                        strip.text = axis.parameters$strip.text,
+                        legend.position = legend.position,
+                        axis.line = ggplot2::element_blank(),
+                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
+                        plot.subtitle = ggplot2::element_text(hjust = 0),
+                        plot.caption = ggplot2::element_text(hjust = 1),
+                        plot.title.position = "plot",
+                        panel.grid = ggplot2::element_blank(),
+                        panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
+                        text = ggplot2::element_text(family = font.type),
+                        plot.caption.position = "plot",
+                        legend.text = ggplot2::element_text(face = "bold"),
+                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.justification = "center",
+                        plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
+                        panel.grid.major = ggplot2::element_blank(),
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.spacing.x = ggplot2::unit(0, "cm"))
     
     list.heatmaps[[group]] <- p
   }

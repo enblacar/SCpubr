@@ -26,7 +26,8 @@ do_GroupedGOTermPlot <- function(genes,
                                  plot.caption = NULL,
                                  verbose = FALSE,
                                  return_matrices = FALSE,
-                                 grid.color = "white"){
+                                 grid.color = "white",
+                                 border.color = "black"){
   `%>%` <- magrittr::`%>%`
   
   check_suggests(function_name = "do_GroupedGOTermPlot")
@@ -49,7 +50,9 @@ do_GroupedGOTermPlot <- function(genes,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   assertthat::assert_that(min.overlap >= 1,
                           msg = paste0(crayon_body("Please provide a "),
@@ -70,7 +73,8 @@ do_GroupedGOTermPlot <- function(genes,
   colors.use <- c("Present" = "#1e3d59", 
                   "Absent" = "#bccbcd")
   
-  check_colors(grid.color)
+  check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
@@ -222,7 +226,7 @@ do_GroupedGOTermPlot <- function(genes,
                                                       r = 0, 
                                                       b = 0, 
                                                       l = 5),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),

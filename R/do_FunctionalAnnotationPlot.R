@@ -58,7 +58,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         legend.tickcolor = "white",
                                         number.breaks = 5,
                                         return_matrix = FALSE,
-                                        grid.color = "white"){
+                                        grid.color = "white",
+                                        border.color = "black"){
   `%>%` <- magrittr::`%>%`
 
   check_suggests(function_name = "do_FunctionalAnnotationPlot")
@@ -95,9 +96,12 @@ do_FunctionalAnnotationPlot <- function(genes,
                          "GO_ontology" = GO_ontology,
                          "pAdjustMethod" = pAdjustMethod,
                          "genes" = genes,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-  check_colors(grid.color)
+  
+  check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
 
   if (!is.null(min.overlap)){
     assertthat::assert_that(min.overlap >= 1,
@@ -407,7 +411,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                                             r = 0, 
                                                             b = 0, 
                                                             l = 5),
-                              panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                              panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                               panel.grid.major = ggplot2::element_blank(),
                               plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                               panel.background = ggplot2::element_rect(fill = "white", color = "white"),

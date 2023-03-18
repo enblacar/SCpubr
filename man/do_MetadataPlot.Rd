@@ -20,7 +20,8 @@ do_MetadataPlot(
   legend.nrow = NULL,
   legend.byrow = FALSE,
   font.type = "sans",
-  grid.color = "white"
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -62,7 +63,9 @@ do_MetadataPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A ggplot2 object.

@@ -142,7 +142,7 @@ do_BeeSwarmPlot(
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 

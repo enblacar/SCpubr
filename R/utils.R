@@ -47,7 +47,7 @@
 #' @param raster.dpi \strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.
 #' @param plot_cell_borders \strong{\code{\link[base]{logical}}} | Whether to plot border around cells.
 #' @param border.size \strong{\code{\link[base]{numeric}}} | Width of the border of the cells.
-#' @param border.color \strong{\code{\link[base]{character}}} | Color to use for the border of the cells.
+#' @param border.color \strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.
 #' @param na.value \strong{\code{\link[base]{character}}} | Color value for NA.
 #' @param rotate_x_axis_labels \strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.
 #' @param xlab,ylab \strong{\code{\link[base]{character}}} | Titles for the X and Y axis.
@@ -96,7 +96,7 @@
 #' @param use_viridis \strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.
 #' @param viridis.direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.
 #' @param plot.grid \strong{\code{\link[base]{logical}}} | Whether to plot grid lines.
-#' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the panels.
+#' @param grid.color \strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.
 #' @param grid.type \strong{\code{\link[base]{character}}} | One of the possible linetype options:
 #' \itemize{
 #'   \item \emph{\code{blank}}.

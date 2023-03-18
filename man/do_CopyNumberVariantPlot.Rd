@@ -39,6 +39,7 @@ do_CopyNumberVariantPlot(
   use_viridis = TRUE,
   return_object = FALSE,
   grid.color = "white",
+  border.color = "black",
   flip = FALSE
 )
 }
@@ -117,7 +118,9 @@ do_CopyNumberVariantPlot(
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 }

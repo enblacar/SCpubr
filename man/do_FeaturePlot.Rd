@@ -174,7 +174,7 @@ do_FeaturePlot(
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{border.density}{\strong{\code{\link[base]{numeric}}} | Controls the number of cells used when \strong{\code{plot_cell_borders = TRUE}}. Value between 0 and 1. It computes a 2D kernel density and based on this cells that have a density below the specified quantile will be used to generate the cluster contour. The lower this number, the less cells will be selected, thus reducing the overall size of the plot but also potentially preventing all the contours to be properly drawn.}
 

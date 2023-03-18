@@ -38,7 +38,9 @@ do_AffinityAnalysisPlot(
   max.cutoff = NA,
   control.number = 50,
   verbose = TRUE,
-  return_object = FALSE
+  return_object = FALSE,
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -117,6 +119,10 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A list containing different plots.

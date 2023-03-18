@@ -109,7 +109,7 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
-\item{border.color}{\strong{\code{\link[base]{character}}} | Color to use for the border of the cells.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 

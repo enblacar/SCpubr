@@ -61,7 +61,8 @@ do_SCExpressionHeatmap <- function(sample,
                                    sequential.palette = "YlGnBu",
                                    sequential.direction = 1,
                                    proportional.size = TRUE,
-                                   verbose = TRUE){
+                                   verbose = TRUE,
+                                   border.color = "black"){
 
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
@@ -114,12 +115,14 @@ do_SCExpressionHeatmap <- function(sample,
                          "metadata.colors" = metadata.colors,
                          "metadata.location" = metadata.location,
                          "diverging.palette" = diverging.palette,
-                         "sequential.palette" = sequential.palette)
+                         "sequential.palette" = sequential.palette,
+                         "border.color" = border.color)
 
 
   check_colors(na.value, parameter_name = "na.value")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(border.color, parameter_name = "border.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -468,7 +471,7 @@ do_SCExpressionHeatmap <- function(sample,
                                              legend.title = ggplot2::element_text(face = "bold"),
                                              legend.justification = "center",
                                              plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10),
-                                             panel.border = ggplot2::element_rect(color = "black", fill = NA),
+                                             panel.border = ggplot2::element_rect(color = border.color, fill = NA),
                                              panel.grid.major = ggplot2::element_blank(),
                                              plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                                              panel.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -511,21 +514,21 @@ do_SCExpressionHeatmap <- function(sample,
                                  ncol = 1,
                                  guides = "collect",
                                  heights = height_unit) +
-      patchwork::plot_annotation(title = plot.title,
-                                 subtitle = plot.subtitle,
-                                 caption = plot.caption,
-                                 theme = ggplot2::theme(legend.position = legend.position,
-                                                        plot.title = ggplot2::element_text(family = font.type,
-                                                                                           color = "black",
-                                                                                           face = "bold",
-                                                                                           hjust = 0),
-                                                        plot.subtitle = ggplot2::element_text(family = font.type,
-                                                                                              color = "black",
-                                                                                              hjust = 0),
-                                                        plot.caption = ggplot2::element_text(family = font.type,
-                                                                                             color = "black",
-                                                                                             hjust = 1),
-                                                        plot.caption.position = "plot"))
+           patchwork::plot_annotation(title = plot.title,
+                                      subtitle = plot.subtitle,
+                                      caption = plot.caption,
+                                      theme = ggplot2::theme(legend.position = legend.position,
+                                                             plot.title = ggplot2::element_text(family = font.type,
+                                                                                                color = "black",
+                                                                                                face = "bold",
+                                                                                                hjust = 0),
+                                                             plot.subtitle = ggplot2::element_text(family = font.type,
+                                                                                                   color = "black",
+                                                                                                   hjust = 0),
+                                                             plot.caption = ggplot2::element_text(family = font.type,
+                                                                                                  color = "black",
+                                                                                                  hjust = 1),
+                                                             plot.caption.position = "plot"))
     
   } else {
     out <- metadata_plots[["main"]]

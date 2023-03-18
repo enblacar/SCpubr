@@ -50,7 +50,8 @@ do_SCExpressionHeatmap(
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   proportional.size = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  border.color = "black"
 )
 }
 \arguments{
@@ -145,6 +146,8 @@ do_SCExpressionHeatmap(
 \item{proportional.size}{\strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A ggplot2 object.

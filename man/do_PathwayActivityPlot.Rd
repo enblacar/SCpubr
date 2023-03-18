@@ -36,7 +36,8 @@ do_PathwayActivityPlot(
   sequential.direction = 1,
   flip = FALSE,
   return_object = FALSE,
-  grid.color = "white"
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -108,7 +109,9 @@ do_PathwayActivityPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{plot_FeaturePlots}{\strong{\code{\link[base]{logical}}} | Compute output FeaturePlots for each of the top regulons.}
 

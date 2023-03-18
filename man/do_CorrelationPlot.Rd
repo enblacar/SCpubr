@@ -36,7 +36,8 @@ do_CorrelationPlot(
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   rotate_x_axis_labels = 45,
-  grid.color = "white"
+  grid.color = "white",
+  border.color = "black"
 )
 }
 \arguments{
@@ -108,7 +109,9 @@ do_CorrelationPlot(
 
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A ComplexHeatmap object.

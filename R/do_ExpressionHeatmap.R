@@ -38,7 +38,8 @@ do_ExpressionHeatmap <- function(sample,
                                  viridis.palette = "G",
                                  viridis.direction = -1,
                                  flip = FALSE,
-                                 grid.color = "white"){
+                                 grid.color = "white",
+                                 border.color = "black"){
 
 
   check_suggests(function_name = "do_EnrichmentHeatmap")
@@ -80,13 +81,15 @@ do_ExpressionHeatmap <- function(sample,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "viridis.palette" = viridis.palette,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value)
   check_colors(legend.framecolor)
   check_colors(legend.tickcolor)
   check_color(grid.color)
+  check_color(border.color)
 
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -396,7 +399,7 @@ do_ExpressionHeatmap <- function(sample,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         legend.position = legend.position,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),

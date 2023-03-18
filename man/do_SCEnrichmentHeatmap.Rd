@@ -62,7 +62,7 @@ do_SCEnrichmentHeatmap(
   sequential.direction = 1,
   proportional.size = TRUE,
   verbose = FALSE,
-  grid.color = "white"
+  border.color = "black"
 )
 }
 \arguments{
@@ -162,7 +162,7 @@ do_SCEnrichmentHeatmap(
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 }
 \value{
 A ggplot2 object.

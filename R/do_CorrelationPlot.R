@@ -38,7 +38,8 @@ do_CorrelationPlot <- function(sample = NULL,
                                sequential.palette = "YlGnBu",
                                sequential.direction = 1,
                                rotate_x_axis_labels = 45,
-                               grid.color = "white"){
+                               grid.color = "white",
+                               border.color = "black"){
 
   `%>%` <- magrittr::`%>%`
   
@@ -74,13 +75,15 @@ do_CorrelationPlot <- function(sample = NULL,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "viridis.palette" = viridis.palette,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-  check_colors(na.value)
-  check_colors(legend.framecolor)
-  check_colors(legend.tickcolor)
-  check_colors(grid.color)
+  check_colors(na.value, parameter_name = "na.value")
+  check_colors(legend.framecolor, parameter_name = "legend.framecolor")
+  check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
+  check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
 
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -253,7 +256,7 @@ do_CorrelationPlot <- function(sample = NULL,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         legend.position = legend.position,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -399,7 +402,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                                       r = 0, 
                                                       b = 0, 
                                                       l = 0),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),

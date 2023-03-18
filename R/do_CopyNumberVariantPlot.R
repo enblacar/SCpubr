@@ -46,6 +46,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      use_viridis = TRUE,
                                      return_object = FALSE,
                                      grid.color = "white",
+                                     border.color = "black",
                                      flip = FALSE){
   
   
@@ -79,7 +80,8 @@ do_CopyNumberVariantPlot <- function(sample,
                          "viridis.palette" = viridis.palette,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   
@@ -90,6 +92,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
   check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
   
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -383,7 +386,7 @@ do_CopyNumberVariantPlot <- function(sample,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),

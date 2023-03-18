@@ -33,7 +33,8 @@ do_MetadataPlot <- function(sample = NULL,
                             legend.nrow = NULL,
                             legend.byrow = FALSE,
                             font.type = "sans",
-                            grid.color = "white"){
+                            grid.color = "white",
+                            border.color = "black"){
   check_suggests(function_name = "do_MetadataPlot")
   
   # Check logical parameters.
@@ -55,10 +56,12 @@ do_MetadataPlot <- function(sample = NULL,
                          "metadata" = metadata,
                          "legend.position" = legend.position,
                          "font.type" = font.type,
-                         "grid.color" = grid.color)
+                         "grid.color" = grid.color,
+                         "border.color" = border.color)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(border.color, parameter_name = "border.color")
   
   `%>%` <- magrittr::`%>%`
   
@@ -239,7 +242,7 @@ do_MetadataPlot <- function(sample = NULL,
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = heatmap_gap, r = 0, b = 0, l = heatmap_gap, unit = "mm"),
-                        panel.border = ggplot2::element_rect(fill = NA, color = "black", linewidth = 1),
+                        panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),

@@ -89,7 +89,7 @@ do_ViolinPlot(
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the panels.}
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
 \itemize{
