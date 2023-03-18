@@ -65,6 +65,7 @@ do_MetadataPlot <- function(sample = NULL,
   check_colors(border.color, parameter_name = "border.color")
   
   `%>%` <- magrittr::`%>%`
+  `:=` <- rlang::`:=`
   
   if (isFALSE(from_df)){
     check_Seurat(sample = sample)

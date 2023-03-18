@@ -289,8 +289,6 @@ named_list <- function(){}
 
 # Not in operator.
 `%!in%` <- function(x, y) {return(!(x %in% y))}
-`:=` <- rlang::`:=`
-`%>%` <- magrittr::`%>%`
 
 crayon_body <- function(text){
   return(crayon::bold(text))
