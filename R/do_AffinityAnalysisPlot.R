@@ -388,7 +388,7 @@ do_AffinityAnalysisPlot <- function(sample,
     
     axis.parameters <- handle_axis(flip = !flip,
                                    group.by = rep("A", length(group.by)),
-                                   group = name,
+                                   group = group,
                                    counter = counter,
                                    rotate_x_axis_labels = rotate_x_axis_labels)
     
@@ -543,11 +543,11 @@ do_AffinityAnalysisPlot <- function(sample,
                      crayon_key(" robustness analysis"),
                      crayon_body("...")))
       
-      progress_bar <- utilstxtProgressBar(min = 0,      
-                                          max = times, 
-                                          style = 3,    
-                                          width = 50,  
-                                          char = "=")   
+      progress_bar <- utils::txtProgressBar(min = 0,      
+                                            max = times, 
+                                            style = 3,    
+                                            width = 50,  
+                                            char = "=")   
       progress_bar_counter <- 0
     }
     

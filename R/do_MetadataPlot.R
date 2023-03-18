@@ -138,7 +138,7 @@ do_MetadataPlot <- function(sample = NULL,
       counter <- counter + 1
       values <- unique(data.plot %>% dplyr::pull(name))
       
-      colors.use.name <- stats::setNames(SCpubr::do_ColorPalette(n = length(values), colors.use = colors.pool[counter]),
+      colors.use.name <- stats::setNames(do_ColorPalette(n = length(values), colors.use = colors.pool[counter]),
                                           values)
     }
     

@@ -303,7 +303,7 @@ do_SCExpressionHeatmap <- function(sample,
         colors.use <- metadata.colors[[name]]
       } else {
         names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
-        colors.use <- SCpubr:::generate_color_scale(names_use = names.use)
+        colors.use <- generate_color_scale(names_use = names.use)
       }
       p <- plot_data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
