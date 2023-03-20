@@ -18,6 +18,7 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 -   `SCpubr::do_SCExpressionHeatmap()` to generate heatmaps of expression of genes across all cells in the dataset.
 -   `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset.
 -   `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weighted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/).
+-   `SCpubr::do_LoadingsPlot()` to generate a summary heatmap of the PCA loadings (top and bottom scored genes for each PC) together with a expression heatmap of the same genes.
 
 ## General
 
