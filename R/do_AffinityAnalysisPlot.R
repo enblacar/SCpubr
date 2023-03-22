@@ -53,7 +53,11 @@ do_AffinityAnalysisPlot <- function(sample,
                                     verbose = TRUE,
                                     return_object = FALSE,
                                     grid.color = "white",
-                                    border.color = "black"){
+                                    border.color = "black",
+                                    add.enrichment = FALSE,
+                                    flavor = "Seurat",
+                                    nbin = 24,
+                                    ctrl = 100){
   
   check_suggests("do_AffinityAnalysisPlot")
   # Check logical parameters.
@@ -61,7 +65,8 @@ do_AffinityAnalysisPlot <- function(sample,
                        "flip" = flip,
                        "enforce_symmetry" = enforce_symmetry,
                        "use_viridis" = use_viridis,
-                       "compute_robustness" = compute_robustness)
+                       "compute_robustness" = compute_robustness,
+                       "add.enrichment" = add.enrichment)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -76,7 +81,9 @@ do_AffinityAnalysisPlot <- function(sample,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
                        "sequential.direction" = sequential.direction,
-                       "control.sets.number" = control.sets.number)
+                       "control.sets.number" = control.sets.number,
+                       "nbin" = nbin,
+                       "ctrl" = ctrl)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -92,7 +99,8 @@ do_AffinityAnalysisPlot <- function(sample,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "grid.color" = grid.color,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "flavor" = flavor)
   
   `%>%` <- magrittr::`%>%`
   
@@ -127,7 +135,6 @@ do_AffinityAnalysisPlot <- function(sample,
     names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
     names(input_gene_list) <- names.use
   }
-  
   
   # Step 2: make the lists of equal length.
   max_value <- max(unname(unlist(lapply(input_gene_list, length))))
@@ -224,6 +231,7 @@ do_AffinityAnalysisPlot <- function(sample,
   
   list.heatmaps <- list()
   counter <- 0
+  row.order.list <- list()
   for (group in group.by){
     counter <- counter + 1
     
@@ -242,7 +250,7 @@ do_AffinityAnalysisPlot <- function(sample,
     } else {
       row_order <- rownames(data.cluster)[stats::hclust(stats::dist(data.cluster, method = "euclidean"), method = "ward.D")$order]
     }
-    
+    row.order.list[[group]] <- row_order
     
     data.use <- data.use %>% 
                 dplyr::group_by(.data[[group]], .data$source) %>% 
@@ -435,6 +443,26 @@ do_AffinityAnalysisPlot <- function(sample,
     list.heatmaps[[group]] <- p
   }
   
+  if (isTRUE(add.enrichment)){
+    if (flavor == "UCell"){
+      Seurat::DefaultAssay(sample) <- assay
+    }
+    p.enrichment <- SCpubr::do_EnrichmentHeatmap(sample,
+                                                 input_gene_list = input_gene_list,
+                                                 geneset.order = col_order,
+                                                 group.order = row.order.list,
+                                                 group.by = group.by,
+                                                 assay = if(flavor == "UCell"){NULL} else {assay},
+                                                 slot = if(flavor == "Seurat"){NULL} else {slot},
+                                                 flavor = flavor,
+                                                 nbin = nbin,
+                                                 ctrl = ctrl,
+                                                 flip = !flip)
+    if (flavor == "UCell"){
+      Seurat::DefaultAssay(sample) <- "affinity"
+    }
+  }
+  
   if (isTRUE(flip)){
     list.heatmaps <- list.heatmaps[rev(group.by)]
   }
@@ -442,6 +470,44 @@ do_AffinityAnalysisPlot <- function(sample,
                              ncol = if (isFALSE(flip)){NULL} else {1},
                              nrow = if(isFALSE(flip)){1} else {NULL},
                              guides = "collect")
+  if (isTRUE(add.enrichment)){
+    list.plots <- list()
+    for (i in seq_len(length(group.by))){
+      letter <- base::LETTERS[i]
+      p.add <- p.enrichment[[i]]
+      if (isFALSE(flip)){
+        p.add <- p.add + ggplot2::theme(axis.text.x.bottom = ggplot2::element_blank(), axis.ticks.x.bottom = ggplot2::element_blank())
+      } else {
+        p.add <- p.add + ggplot2::theme(axis.text.y.right = ggplot2::element_blank(), axis.ticks.y.right = ggplot2::element_blank())
+      }
+      list.plots[[letter]] <- p.add
+      letter <- base::LETTERS[i + length(group.by)]
+      p.add <- p[[i]]
+      if (isFALSE(flip)){
+        p.add <- p.add + ggplot2::xlab(NULL)
+      } else {
+        p.add <- p.add + ggplot2::ylab(NULL)
+      }
+      list.plots[[letter]] <- p.add
+    }
+    
+    if (isFALSE(flip)){
+      layout <- paste(c(base::LETTERS[1:length(group.by)], "\n", base::LETTERS[(length(group.by) + 1):(2 * length(group.by))]), collapse = "")
+      
+      p <- patchwork::wrap_plots(list.plots,
+                                 design = layout,
+                                 guides = "collect")
+    } else {
+      numbers.odd <- seq(1, 2 * length(group.by))[seq(1, 2 * length(group.by)) %% 2 == 1]
+      numbers.even <- seq(1, 2 * length(group.by))[seq(1, 2 * length(group.by)) %% 2 == 0]
+      
+      layout <- paste(c(base::LETTERS[numbers.odd], "\n", base::LETTERS[numbers.even]), collapse = "")
+    
+      p <- patchwork::wrap_plots(list.plots,
+                                 design = layout,
+                                 guides = "collect")
+    }
+  }
   p <- p +
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
                                                          plot.title = ggplot2::element_text(family = font.type,
@@ -459,61 +525,6 @@ do_AffinityAnalysisPlot <- function(sample,
   list.output <- list()
   
   list.output[["Heatmap"]] <- p
-  
-  if (isTRUE(verbose)){paste0(crayon_body("Computing "),
-                              crayon_key("box plots"),
-                              crayon_body("..."))}
-  for (gene_set in names(input_gene_list)){
-    for (group in group.by){
-      if (!is.null(colors.use)){
-        colors.use.here <- colors.use[[group]]
-      } else {
-        colors.use.here <- NULL
-      }
-      p <- do_BoxPlot(sample, 
-                      feature = gene_set,
-                      assay = "affinity",
-                      slot = "scale.data",
-                      group.by = group,
-                      order = TRUE, 
-                      flip = !flip,
-                      colors.use = colors.use.here)
-      list.output[["Box plots"]][[gene_set]][[group]] <- p
-    }
-  }
-  
-  # Compute SCheatmap.
-  for (group in group.by){
-    p <- do_SCExpressionHeatmap(sample = sample,
-                                group.by = group,
-                                features = rownames(sample),
-                                assay = "affinity",
-                                slot = "scale.data",
-                                enforce_symmetry = TRUE,
-                                min.cutoff = scale.setup$limits[1],
-                                max.cutoff = scale.setup$limits[2],
-                                number.breaks = number.breaks,
-                                legend.position = legend.position,
-                                font.size = font.size,
-                                font.type = font.type,
-                                legend.width = legend.width,
-                                legend.length = legend.length,
-                                legend.framewidth = legend.framewidth,
-                                legend.tickwidth = legend.tickwidth,
-                                legend.framecolor = legend.framecolor,
-                                legend.tickcolor = legend.tickcolor,
-                                legend.type = legend.type,
-                                use_viridis = use_viridis,
-                                viridis.palette = viridis.palette,
-                                viridis.direction = viridis.direction,
-                                sequential.palette = sequential.palette,
-                                sequential.direction = sequential.direction,
-                                legend.title = statistic)
-    list.output[["SC Heatmap"]][[group]] <- p
-  }
-  # Compute similarity of the gene sets in the network.
-  list.output[["Network Similarity"]] <- do_CorrelationPlot(input_gene_list = input_gene_list,
-                                                            mode = "jaccard")
   
   # Compute robustness of the scoring.
   if (isTRUE(compute_robustness)){
@@ -753,5 +764,12 @@ do_AffinityAnalysisPlot <- function(sample,
   if (isTRUE(return_object)){
     list.output[["Object"]] <- sample
   }
-  return(list.output)
+  
+  if (isTRUE(return_object) | isTRUE(compute_robustness)){
+    return_me <- list.output
+  } else {
+    return_me <- list.output$Heatmap
+  }
+  
+  return(return_me)
 }

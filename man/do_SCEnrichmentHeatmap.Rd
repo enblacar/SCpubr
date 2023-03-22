@@ -17,7 +17,6 @@ do_SCEnrichmentHeatmap(
   cluster_cells = TRUE,
   flavor = "Seurat",
   return_object = FALSE,
-  return_matrix = FALSE,
   ncores = 1,
   storeRanks = TRUE,
   nbin = 24,
@@ -89,8 +88,6 @@ do_SCEnrichmentHeatmap(
 \item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
 
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
-
-\item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
 
 \item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
 

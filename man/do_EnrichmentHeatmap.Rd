@@ -7,6 +7,8 @@
 do_EnrichmentHeatmap(
   sample,
   input_gene_list,
+  geneset.order = NULL,
+  group.order = NULL,
   assay = NULL,
   slot = NULL,
   reduction = NULL,
@@ -31,11 +33,7 @@ do_EnrichmentHeatmap(
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",
-  legend.title = if (flavor != "AUCell") {
-     "Enrichment"
- } else {
-     "AUC"
- },
+  legend.title = NULL,
   ncores = 1,
   storeRanks = TRUE,
   min.cutoff = NA,
@@ -44,7 +42,6 @@ do_EnrichmentHeatmap(
   plot_cell_borders = TRUE,
   border.size = 2,
   return_object = FALSE,
-  return_matrix = FALSE,
   number.breaks = 5,
   sequential.palette = "YlGnBu",
   diverging.palette = "RdBu",
@@ -134,8 +131,6 @@ do_EnrichmentHeatmap(
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
 
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.}
-
-\item{return_matrix}{\strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 

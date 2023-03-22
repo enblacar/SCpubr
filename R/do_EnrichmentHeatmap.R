@@ -8,13 +8,14 @@
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
 #' @param return_object \strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.
-#' @param return_matrix \strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.
 #' @return A ComplexHeatmap object.
 #' @export
 #'
 #' @example /man/examples/examples_do_EnrichmentHeatmap.R
 do_EnrichmentHeatmap <- function(sample,
                                  input_gene_list,
+                                 geneset.order = NULL,
+                                 group.order = NULL,
                                  assay = NULL,
                                  slot = NULL,
                                  reduction = NULL,
@@ -39,7 +40,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  nbin = 24,
                                  ctrl = 100,
                                  flavor = "Seurat",
-                                 legend.title = if (flavor != "AUCell") {"Enrichment"} else {"AUC"},
+                                 legend.title = NULL,
                                  ncores = 1,
                                  storeRanks = TRUE,
                                  min.cutoff = NA,
@@ -48,7 +49,6 @@ do_EnrichmentHeatmap <- function(sample,
                                  plot_cell_borders = TRUE,
                                  border.size = 2,
                                  return_object = FALSE,
-                                 return_matrix = FALSE,
                                  number.breaks = 5,
                                  sequential.palette = "YlGnBu",
                                  diverging.palette = "RdBu",
@@ -127,7 +127,7 @@ do_EnrichmentHeatmap <- function(sample,
                 crayon_key("flavor = UCell"),
                 crayon_body(" do not use the "),
                 crayon_key("assay"),
-                crayon_body("parameter.\nInstead, make sure that the"),
+                crayon_body(" parameter.\nInstead, make sure that the "),
                 crayon_key("assay"),
                 crayon_body(" you want to compute the scores with is set as the "),
                 crayon_key("default"),
@@ -139,11 +139,30 @@ do_EnrichmentHeatmap <- function(sample,
                 crayon_key("flavor = Seurat"),
                 crayon_body(" do not use the "),
                 crayon_key("slot"),
-                crayon_body(" parameter.\nThis is determiend by default in"),
+                crayon_body(" parameter.\nThis is determiend by default in "),
                 crayon_key("Seurat"),
                 crayon_body(".")), call. = FALSE)
   }
-
+  
+  if (!is.null(geneset.order)){
+    assertthat::assert_that(sum(geneset.order %in% names(input_gene_list)) == length(names(input_gene_list)),
+                            msg = paste0(crayon_body("The names provided to "),
+                                         crayon_key("geneset.order"),
+                                         crayon_body(" do not match the names of the gene sets in "),
+                                         crayon_key("input_gene_list"),
+                                         crayon_body(".")))
+  }
+  
+  if (is.null(legend.title)){
+    if (flavor == "AUCell") {
+      legend.title <- "AUC"
+    } else if (flavor == "UCell"){
+      legend.title <- "UCell score"
+    } else if (flavor == "Seurat"){
+      legend.title <- "Enrichment"
+    }
+  }
+  
   if (is.character(input_gene_list)){
     # If input_gene_list is a character of genes.
     input_list <- list("Input" = input_gene_list)
@@ -155,6 +174,20 @@ do_EnrichmentHeatmap <- function(sample,
                                          crayon_body(" to "),
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
+    
+    if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
+      warning(paste0(crayon_body("Found "),
+                     crayon_key("underscores (_)"),
+                     crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                     crayon_key("dots (.)"),
+                     crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+      names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
+      names(input_gene_list) <- names.use
+      
+      if (!is.null(geneset.order)){
+        geneset.order <- stringr::str_replace_all(names(geneset.order), "_", ".")
+      }
+    }
   }
 
   # Compute the enrichment scores.
@@ -173,9 +206,7 @@ do_EnrichmentHeatmap <- function(sample,
   if (is.null(group.by)){
     assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
                             msg = paste0(crayon_body("Please, make sure you provide a value for "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" and that this is not called "),
-                                         crayon_key("Groups")))
+                                         crayon_key("group.by")))
 
     aggr_entities <- levels(sample)
     sample@meta.data[, "Groups"] <- sample@active.ident
@@ -259,10 +290,14 @@ do_EnrichmentHeatmap <- function(sample,
         col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
       }
     }
-
+    if (!is.null(group.order) & (group %in% names(group.order))){
+      group.order.use <- group.order[[group]]
+    } else {
+      group.order.use <- row_order
+    }
     data <- df %>%
-            dplyr::mutate("gene_list" = factor(.data$gene_list, levels = rev(col_order)),
-                          "group.by" = factor(.data$group.by, levels = row_order))
+            dplyr::mutate("gene_list" = factor(.data$gene_list, levels = if (is.null(geneset.order)){rev(col_order)} else {geneset.order}),
+                          "group.by" = factor(.data$group.by, levels = group.order.use))
 
     if (!is.na(min.cutoff)){
       data <- data %>%
@@ -372,26 +407,37 @@ do_EnrichmentHeatmap <- function(sample,
                                   legend.framewidth = legend.framewidth,
                                   legend.tickwidth = legend.tickwidth)
     # Set axis titles.
-    if (counter == 1){
-      if (length(group.by) > 1){
-        xlab <- NULL
+    if(isFALSE(flip)){
+      if (counter == 1){
+        if (length(group.by) > 1){
+          xlab <- NULL
+        } else {
+          xlab <- "Gene set"
+        }
+        
+        ylab <- group
       } else {
-        xlab <- "Gene list"
-      }
-
-      ylab <- group
-    } else {
-      if (length(group.by) > 1){
-        if (counter == length(group.by)){
-          xlab <- "Gene list"
+        if (length(group.by) > 1){
+          if (counter == length(group.by)){
+            xlab <- "Gene set"
+          } else {
+            xlab <- NULL
+          }
         } else {
           xlab <- NULL
         }
-      } else {
-        xlab <- NULL
+        ylab <- group
       }
-      ylab <- group
+    } else {
+      if (counter == 1){
+        ylab <- "Gene set"
+        xlab <- group
+      } else {
+        xlab <- group
+        ylab <- NULL
+      }
     }
+    
 
 
     axis.parameters <- handle_axis(flip = flip,
@@ -470,15 +516,24 @@ do_EnrichmentHeatmap <- function(sample,
 
   out.list[["Heatmap"]] <- p
 
-  if (isTRUE(return_matrix)){
-    out.list[["Matrices"]] <- matrix.list
-  }
-
   if (isTRUE(return_object)){
+    # Generate a Seurat assay.
+    sample[["Enrichment"]] <- sample@meta.data %>% 
+                              dplyr::select(dplyr::all_of(names(input_gene_list))) %>% 
+                              t() %>% 
+                              as.data.frame() %>% 
+                              Seurat::CreateAssayObject(.)
+    
+    sample@meta.data <- sample@meta.data %>% 
+                        dplyr::select(-dplyr::all_of(names(input_gene_list)))
+    
+    sample@assays$Enrichment@key <- "Enrichment_"
+    Seurat::DefaultAssay(sample) <- "Enrichment"
+    
     out.list[["Object"]] <- sample
   }
 
-  if (isFALSE(return_object) & isFALSE(return_matrix)){
+  if (isFALSE(return_object)){
     return_me <- out.list[["Heatmap"]]
   } else {
     return_me <- out.list

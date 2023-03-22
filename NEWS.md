@@ -4,7 +4,11 @@
 
 **The update will still take some time (date of writing: 15.03.2023)**
 
-This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. Hence, the major update.
+This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. The trade-off between the difficulty of debug, expand and maintain the existing heatmap-based functions with regards to the capabilities ComplexHeatmap offers with regards to ggplot2 was not worthy.
+
+All heatmap-specific parameters have been replaced with the overarching parameters that are used across functions. This decision was taking after a lot of thought, but ultimately, having all plots rely on ggplot2 makes it way more compatible to work with them together, to debug, and to further implement new ideas.
+
+Many (except a few selected cases) of the functions that returned list of different plots have been modified to return a single (and most important/relevant) plot and the option to return the Seurat object with the data generated added to it has been implemented so that the user can still generate plots with it. This goes in line with the fact that having so many interconnected functions made it very difficult to expand on them, if needed, as the downstream effects will cascade to other functions as well.
 
 ## Parameter renaming
 
@@ -28,7 +32,6 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 -   Changed default values from `min.cutoff` and `max.cutoff` from `NULL` to `NA`.
 -   Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
 -   Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
--   Re-implemented all heatmap-based plots in ggplot2. This means that this is a **breaking change**. All heatmap-specific parameters have been replaced with the overarching parameters that are used across functions. This decision was taking after a lot of thought, but ultimately, having all plots rely on ggplot2 makes it way more compatible to work with them together, to debug, and to further implement new ideas.
 
 ## `SCpubr::do_BeeSwarmPlot`
 
@@ -62,7 +65,8 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 
 ## `SCpubr::do_EnrichmentHeatmap`
 
--   Removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately.
+-   Removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately, that are stored as a new Assay.
+-   Removed `return_matrix` parameter as the scores can now be retrieved from the Seurat object as an assay.
 
 ## `SCpubr::do_FeaturePlot`
 
@@ -77,13 +81,10 @@ This major update focus on a complete re-implementation of all heatmap-based fun
 
 ## `SCpubr::do_FunctionalAnnotationPlot`
 
--   Removed the tree plots as they proved to behave inconsistently accross datasets and the quality of visualizations were compromised.
+-   Removed the tree plots as they proved to behave inconsistently across datasets and the quality of visualizations were compromised.
 -   Removed the option to plot the bar plots and dot plots in the sake of a more simplified, streamlined plot generation.
 -   The option to return the result matrix using `return_matrix` is added, so that the user can use it to compute further analysis or visualizations.
 
-## `SCpubr::do_GroupwiseDEPlot`
-
--   Added `set_min_expression_to_zero` parameter to set the viridis color scale to 0 in the expression heatmap.
 
 ## `SCpubr::do_PathwayActivityPlot`
 

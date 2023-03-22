@@ -313,8 +313,14 @@ do_CorrelationPlot <- function(sample = NULL,
          ggplot2::coord_equal() + 
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$y))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$x)))) 
+    
     limits <- c(min(data$score, na.rm = TRUE),
                 max(data$score, na.rm = TRUE))
+    
+    assertthat::assert_that(limits[0] != limits[1],
+                            msg = paste0(crayon_body("The "),
+                                         crayon_key(" jaccard similarity matrix "),
+                                         crayon_body(" has no different values. Try another gene set.")))
     
     scale.setup <- compute_scales(sample = NULL,
                                   feature = NULL,

@@ -11,7 +11,6 @@
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
-#' @param return_matrix \strong{\code{\link[base]{logical}}} | Return the enrichment matrix used for the heatmaps for each value in group.by.
 #' @return A ggplot2 object.
 #' @export
 #'
@@ -31,7 +30,6 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    cluster_cells = TRUE,
                                    flavor = "Seurat",
                                    return_object = FALSE,
-                                   return_matrix = FALSE,
                                    ncores = 1,
                                    storeRanks = TRUE,
                                    nbin = 24,
@@ -85,8 +83,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                        "use_viridis" = use_viridis,
                        "cluster_cells" = cluster_cells,
                        "storeRanks" = storeRanks,
-                       "return_object" = return_object,
-                       "return_matrix" = return_matrix) 
+                       "return_object" = return_object) 
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -189,6 +186,15 @@ do_SCEnrichmentHeatmap <- function(sample,
                                          crayon_body(" to "),
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
+    if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
+      warning(paste0(crayon_body("Found "),
+                     crayon_key("underscores (_)"),
+                     crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                     crayon_key("dots (.)"),
+                     crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+      names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
+      names(input_gene_list) <- names.use
+    }
   }
   
   assertthat::assert_that(sum(names(input_gene_list) %in% colnames(sample@meta.data)) == 0,
@@ -563,15 +569,22 @@ do_SCEnrichmentHeatmap <- function(sample,
   out.list <- list()
   out.list[["Heatmap"]] <- out
   
-  if (isTRUE(return_matrix)){
-    out.list[["Matrix"]] <- matrix %>% dplyr::ungroup()
-  }
-  
   if (isTRUE(return_object)){
+    sample[["Enrichment"]] <- sample@meta.data %>% 
+                              dplyr::select(dplyr::all_of(names(input_gene_list))) %>% 
+                              t() %>% 
+                              as.data.frame() %>% 
+                              Seurat::CreateAssayObject(.)
+    
+    sample@meta.data <- sample@meta.data %>% 
+                        dplyr::select(-dplyr::all_of(names(input_gene_list)))
+    
+    sample@assays$Enrichment@key <- "Enrichment_"
+    
     out.list[["Object"]] <- sample
   }
   
-  if (isFALSE(return_object) & isFALSE(return_matrix)){
+  if (isFALSE(return_object)){
     return_me <- out.list[["Heatmap"]]
   } else {
     return_me <- out.list
