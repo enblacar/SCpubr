@@ -291,11 +291,11 @@ named_list <- function(){}
 `%!in%` <- function(x, y) {return(!(x %in% y))}
 
 crayon_body <- function(text){
-  return(crayon::bold(text))
+  return(cli::style_bold(text))
 }
 
 crayon_key <- function(text){
-  return(crayon::bold(crayon::cyan(text)))
+  return(cli::style_bold(cli::col_cyan(text)))
 }
 
 
@@ -426,7 +426,8 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                               "grid",
                               "assertthat",
                               "RColorBrewer",
-                              "labeling"),
+                              "labeling",
+                              "cli"),
                    "do_AffinityAnalysisPlot" = c("decoupleR"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
@@ -472,6 +473,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   }
   cran_packages <- c("assertthat",
                      "circlize",
+                     "cli",
                      "cluster",
                      "colorspace",
                      "dplyr",

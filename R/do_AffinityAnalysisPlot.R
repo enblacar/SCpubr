@@ -432,7 +432,7 @@ do_AffinityAnalysisPlot <- function(sample,
                         legend.text = ggplot2::element_text(face = "bold"),
                         legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
+                        plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
                         panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -444,6 +444,10 @@ do_AffinityAnalysisPlot <- function(sample,
   }
   
   if (isTRUE(add.enrichment)){
+    if(isTRUE(verbose)){message(paste0(crayon_body("Computing "),
+                                       crayon_key("enrichment"),
+                                       crayon_body("...")))}
+    
     if (flavor == "UCell"){
       Seurat::DefaultAssay(sample) <- assay
     }
@@ -476,9 +480,11 @@ do_AffinityAnalysisPlot <- function(sample,
       letter <- base::LETTERS[i]
       p.add <- p.enrichment[[i]]
       if (isFALSE(flip)){
-        p.add <- p.add + ggplot2::theme(axis.text.x.bottom = ggplot2::element_blank(), axis.ticks.x.bottom = ggplot2::element_blank())
+        p.add <- p.add + ggplot2::theme(axis.text.x.bottom = ggplot2::element_blank(), 
+                                        axis.ticks.x.bottom = ggplot2::element_blank())
       } else {
-        p.add <- p.add + ggplot2::theme(axis.text.y.right = ggplot2::element_blank(), axis.ticks.y.right = ggplot2::element_blank())
+        p.add <- p.add + ggplot2::theme(axis.text.y.right = ggplot2::element_blank(), 
+                                        axis.ticks.y.right = ggplot2::element_blank())
       }
       list.plots[[letter]] <- p.add
       letter <- base::LETTERS[i + length(group.by)]
@@ -492,7 +498,10 @@ do_AffinityAnalysisPlot <- function(sample,
     }
     
     if (isFALSE(flip)){
-      layout <- paste(c(base::LETTERS[1:length(group.by)], "\n", base::LETTERS[(length(group.by) + 1):(2 * length(group.by))]), collapse = "")
+      layout <- paste(c(base::LETTERS[1:length(group.by)], 
+                        "\n", 
+                        base::LETTERS[(length(group.by) + 1):(2 * length(group.by))]), 
+                      collapse = "")
       
       p <- patchwork::wrap_plots(list.plots,
                                  design = layout,
@@ -550,15 +559,8 @@ do_AffinityAnalysisPlot <- function(sample,
     if (isTRUE(verbose)){
       times <- length(names(input_gene_list)) 
       
-      message(paste0(crayon_body("Computing "),
-                     crayon_key(" robustness analysis"),
-                     crayon_body("...")))
-      
-      progress_bar <- utils::txtProgressBar(min = 0,      
-                                            max = times, 
-                                            style = 3,    
-                                            width = 50,  
-                                            char = "=")   
+      cli::cli_progress_bar("Computing robustness", total = times)
+        
       progress_bar_counter <- 0
     }
     
@@ -649,11 +651,11 @@ do_AffinityAnalysisPlot <- function(sample,
       scale.data <- Seurat::GetAssayData(sample,
                                          assay = "robustness",
                                          slot = "data") %>%
-        as.matrix() %>%
-        t() %>%
-        as.data.frame() %>%
-        scale() %>%
-        t()
+                    as.matrix() %>%
+                    t() %>%
+                    as.data.frame() %>%
+                    scale() %>%
+                    t()
       
       # Set it to the scale.data slot.
       sample@assays$robustness@scale.data <- scale.data
@@ -753,13 +755,11 @@ do_AffinityAnalysisPlot <- function(sample,
         list.output[["Robustness"]][[comparison]][["Bar Plots"]] <- p
       }
       if (isTRUE(verbose)){
-        utils::setTxtProgressBar(progress_bar, progress_bar_counter)
+        clit::cli_progress_update(set = progress_bar_counter)
       }
     }
   }
-  if (isTRUE(verbose) & isTRUE(compute_robustness)){
-    close(progress_bar)
-  }
+
   
   if (isTRUE(return_object)){
     list.output[["Object"]] <- sample

@@ -63,7 +63,7 @@ Suggests:
     ggnewscale,
     AnnotationDbi,
     org.Hs.eg.db,
-    crayon,
+    cli,
     labeling,
     MASS,
     RColorBrewer,

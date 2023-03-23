@@ -317,7 +317,7 @@ do_CorrelationPlot <- function(sample = NULL,
     limits <- c(min(data$score, na.rm = TRUE),
                 max(data$score, na.rm = TRUE))
     
-    assertthat::assert_that(limits[0] != limits[1],
+    assertthat::assert_that(limits[[1]] != limits[[2]],
                             msg = paste0(crayon_body("The "),
                                          crayon_key(" jaccard similarity matrix "),
                                          crayon_body(" has no different values. Try another gene set.")))
