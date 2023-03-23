@@ -295,7 +295,7 @@ crayon_body <- function(text){
 }
 
 crayon_key <- function(text){
-  return(cli::style_bold(cli::col_cyan(text)))
+  return(cli::style_bold(cli::col_blue(text)))
 }
 
 
@@ -308,25 +308,25 @@ crayon_key <- function(text){
 #' TBD
 #' }
 check_suggests <- function(function_name, passive = FALSE){
-  pkg_list <- list("core" = c("Seurat",
-                              "rlang",
-                              "dplyr",
-                              "magrittr",
-                              "dplyr",
-                              "tidyr",
-                              "tibble",
-                              "stringr",
-                              "patchwork",
-                              "plyr",
-                              "grDevices",
-                              "stats",
-                              "viridis",
-                              "forcats",
-                              "scales",
-                              "grid",
-                              "assertthat",
-                              "RColorBrewer",
-                              "labeling"),
+  pkg_list <- list("Essentials" = c("Seurat",
+                                    "rlang",
+                                    "dplyr",
+                                    "magrittr",
+                                    "dplyr",
+                                    "tidyr",
+                                    "tibble",
+                                    "stringr",
+                                    "patchwork",
+                                    "plyr",
+                                    "grDevices",
+                                    "stats",
+                                    "viridis",
+                                    "forcats",
+                                    "scales",
+                                    "grid",
+                                    "assertthat",
+                                    "RColorBrewer",
+                                    "labeling"),
                    "do_AffinityAnalysisPlot" = c("decoupleR"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
@@ -368,7 +368,7 @@ check_suggests <- function(function_name, passive = FALSE){
   if (function_name %!in% names(pkg_list)){
     stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
   }
-  pkgs <- c(pkg_list[[function_name]], pkg_list[["core"]])
+  pkgs <- c(pkg_list[[function_name]], pkg_list[["Essentials"]])
 
   non_seurat_functions <- c("save_Plot",
                             "do_VolcanoPlot",
@@ -408,26 +408,26 @@ check_suggests <- function(function_name, passive = FALSE){
 #' # See the dependencies for a single package.
 #' SCpubr::state_dependencies(function_name = "do_DimPlot")
 state_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
-  pkg_list <- list("core" = c("Seurat",
-                              "rlang",
-                              "dplyr",
-                              "magrittr",
-                              "dplyr",
-                              "tidyr",
-                              "tibble",
-                              "stringr",
-                              "patchwork",
-                              "plyr",
-                              "grDevices",
-                              "stats",
-                              "viridis",
-                              "forcats",
-                              "scales",
-                              "grid",
-                              "assertthat",
-                              "RColorBrewer",
-                              "labeling",
-                              "cli"),
+  pkg_list <- list("Essentials" = c("Seurat",
+                                    "rlang",
+                                    "dplyr",
+                                    "magrittr",
+                                    "dplyr",
+                                    "tidyr",
+                                    "tibble",
+                                    "stringr",
+                                    "patchwork",
+                                    "plyr",
+                                    "grDevices",
+                                    "stats",
+                                    "viridis",
+                                    "forcats",
+                                    "scales",
+                                    "grid",
+                                    "assertthat",
+                                    "RColorBrewer",
+                                    "labeling",
+                                    "cli"),
                    "do_AffinityAnalysisPlot" = c("decoupleR"),
                    "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
@@ -531,7 +531,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   if (isFALSE(return_dependencies)){
     message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
     for (func in func_list){
-      packages <- c(pkg_list[[func]], pkg_list[["core"]])
+      packages <- c(pkg_list[[func]], pkg_list[["Essentials"]])
       cran_packages_individual <- sort(packages[packages %in% cran_packages])
       bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
       github_packages_individual <- sort(packages[packages %in% github_packages])
@@ -544,7 +544,7 @@ state_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   } else {
     list_output <- list()
     for (func in func_list){
-      packages <- c(pkg_list[[func]], pkg_list[["core"]])
+      packages <- c(pkg_list[[func]], pkg_list[["Essentials"]])
       list_output[[func]] <- packages
     }
     return(list_output)
