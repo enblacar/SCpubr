@@ -291,11 +291,20 @@ named_list <- function(){}
 `%!in%` <- function(x, y) {return(!(x %in% y))}
 
 crayon_body <- function(text){
-  return(cli::style_bold(text))
+  if (isTRUE(getOption("SCpubr.darkmode"))){
+    return(cli::col_white(text))
+  } else {
+    return(cli::col_black(text))
+  }
+  
 }
 
 crayon_key <- function(text){
-  return(cli::style_bold(cli::col_blue(text)))
+  if (isTRUE(getOption("SCpubr.darkmode"))){
+    return(cli::col_cyan(text))
+  } else {
+    return(cli::col_blue(text))
+  }
 }
 
 

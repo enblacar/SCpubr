@@ -39,7 +39,7 @@
                                                         url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
                         crayon_body("."))
       
-      plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", cli::style_bold("Happy plotting!"))
+      plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", crayon_body("Happy plotting!"))
       
       updates_check <- cli::rule(left = "Checking package updates", width = nchar("Checking package updates") + 6)
       
@@ -52,12 +52,12 @@
       
       if (rev(strsplit(as.character(system_version), split = "\\.")[[1]])[1] >= 9000){
         parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
-        parts[[length(parts)]] <- cli::col_cyan(parts[[length(parts)]])
+        parts[[length(parts)]] <- cli::col_yellow(parts[[length(parts)]])
         system_version <- paste(parts, collapse = ".")
       } 
       
-      system_version_message <- paste0(cli::style_bold(cli::col_magenta("System: ")), cli::ansi_align(cli::col_blue(system_version), max_length, align = "right"))
-      cran_version_message <- paste0(cli::style_bold(cli::col_magenta("CRAN:   ")), cli::ansi_align(cli::col_blue(cran_version), max_length, align = "right"))
+      system_version_message <- paste0(cli::col_magenta("System: "), cli::ansi_align(crayon_key(system_version), max_length, align = "right"))
+      cran_version_message <- paste0(cli::col_magenta("CRAN:   "), cli::ansi_align(crayon_key(cran_version), max_length, align = "right"))
 
      
 
@@ -90,7 +90,7 @@
       format_installed <- function(name, value, max_length){
         func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
         name_use <- ifelse(isTRUE(value),
-                           cli::ansi_align(cli::col_blue(name), max_length, align = "left"),
+                           cli::ansi_align(crayon_key(name), max_length, align = "left"),
                            cli::ansi_align(cli::col_red(name), max_length, align = "left"))
         paste0(func_use, " ", name_use)
       }
@@ -148,15 +148,19 @@
       packages_check <- cli::rule(left = "Checking required packages", width = nchar("Checking required packages") + 6)
       functions_check <- cli::rule(left = "Checking available functions", width = nchar("Checking available functions") + 6)
       
+      tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                            crayon_body(" To adjust package messages to dark mode themes, use: "), 
+                            cli::style_italic(crayon_key('options("SCpubr.darkmode" = TRUE)')))
+      
       disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
                                 crayon_body(" To suppress this startup message, use: "), 
-                                cli::style_italic(cli::col_blue('suppressPackageStartupMessages(library(SCpubr))\n\n')),
+                                cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n\n')),
                                 cli::style_bold(cli::col_red(cli::symbol$cross)), 
                                 crayon_body(" Alternatively, you can also set the following option: "),
-                                cli::style_italic(cli::col_blue('options("SCpubr.verbose" = FALSE)\n')),
+                                cli::style_italic(crayon_key('options("SCpubr.verbose" = FALSE)\n')),
                                 cli::style_bold(cli::col_red(cli::symbol$cross)), 
                                 crayon_body(" And then load the package normally (and faster) as: "),
-                                cli::style_italic(cli::col_blue('library(SCpubr)')))
+                                cli::style_italic(crayon_key('library(SCpubr)')))
       
       end_rule <- cli::rule(col = "cyan")
       
@@ -175,6 +179,7 @@
                          paste(print.list, collapse = "\n"), "\n", "\n", "\n",
                          functions_check, "\n", "\n",
                          paste(print.list.functions, collapse = "\n"), "\n", "\n", "\n",
+                         tip_message, "\n", "\n", "\n",
                          disable_message, "\n", "\n",
                          end_rule)
       
