@@ -1,82 +1,82 @@
 # Add Start-Up message.
 .onAttach <- function(...) {
-      cli::cli_h1("SCpubr v{utils::packageVersion('SCpubr')}")
+      header <- cli::rule(left = paste0("SCpubr v", utils::packageVersion('SCpubr')), line_col = "cyan")
       
-      cli::cli_text(" ")
-  
-      cli::cli_alert_info(paste0(crayon_body("Have a look at extensive tutorials in "),
-                                    crayon_key(cli::style_hyperlink(text = "SCpubr's book",
-                                                                    url = "https://enblacar.github.io/SCpubr-book/")),
-                                    crayon_body(".")))
+      tutorials <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                          crayon_body(" Have a look at extensive tutorials in "),
+                          crayon_key(cli::style_hyperlink(text = "SCpubr's book",
+                                                          url = "https://enblacar.github.io/SCpubr-book/")),
+                          crayon_body("."))
 
-      cli::cli_text(" ")
-
-      cli::cli_alert_success(paste0(crayon_body("If you use "),
-                                    crayon_key("SCpubr"),
-                                    crayon_body(" in your research, please "),
-                                    crayon_key(cli::style_hyperlink(text = "cite it accordingly",
-                                                                    url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
-                                    crayon_body(".")))
-      cli::cli_text("  ")
-
-      cli::cli_text(paste0(cli::style_bold(cli::col_yellow(cli::symbol$star)),
-                    crayon_body(" If the package is useful to you, consider leaving a "),
-                                 crayon_key("Star"),
-                                 crayon_body(" in the "),
-                                 crayon_key(cli::style_hyperlink(text = "GitHub repository",
-                                                                 url = "https://github.com/enblacar/SCpubr")),
-                                 crayon_body(".")))
-
-      cli::cli_text(" ")
-
-      cli::cli_text(paste0(cli::style_bold(cli::col_blue(cli::symbol$arrow_up)),
-                           crayon_body(" Keep track of the package "),
-                                 crayon_key("updates"),
-                                 crayon_body(" on Twitter ("),
-                                 crayon_key("@Enblacar"),
-                                 crayon_body(") or in the "),
-                                 crayon_key(cli::style_hyperlink(text = "Official NEWS website",
-                                                                 url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
-                                 crayon_body(".")))
-
-      cli::cli_text(" ")
-
-      cli::cli_text(paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", cli::style_bold("Happy plotting!")))
-
-      cli::cli_text(" ")
-
-      cli::cli_h2("Checking package updates")
+      cite <- paste0(cli::style_bold(cli::col_green(cli::symbol$tick)),
+                     crayon_body(" If you use "),
+                     crayon_key("SCpubr"),
+                     crayon_body(" in your research, please "),
+                     crayon_key(cli::style_hyperlink(text = "cite it accordingly",
+                                                     url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
+                     crayon_body("."))
+      
+      stars <- paste0(cli::style_bold(cli::col_yellow(cli::symbol$star)),
+                      crayon_body(" If the package is useful to you, consider leaving a "),
+                      crayon_key("Star"),
+                      crayon_body(" in the "),
+                      crayon_key(cli::style_hyperlink(text = "GitHub repository",
+                                                      url = "https://github.com/enblacar/SCpubr")),
+                      crayon_body("."))
+      
+      updates <- paste0(cli::style_bold(cli::col_blue(cli::symbol$arrow_up)),
+                        crayon_body(" Keep track of the package "),
+                        crayon_key("updates"),
+                        crayon_body(" on Twitter ("),
+                        crayon_key("@Enblacar"),
+                        crayon_body(") or in the "),
+                        crayon_key(cli::style_hyperlink(text = "Official NEWS website",
+                                                        url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
+                        crayon_body("."))
+      
+      plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", cli::style_bold("Happy plotting!"))
+      
+      updates_check <- cli::rule(left = "Checking package updates", width = nchar("Checking package updates") + 6)
+      
       cran_version <- utils::available.packages(repos = "http://cran.us.r-project.org")["SCpubr", "Version"]
       system_version <- as.character(utils::packageVersion("SCpubr"))
 
       l1 <- nchar(system_version)
       l2 <- nchar(cran_version)
       max_length <- max(c(l1, l2))
+      
+      if (rev(strsplit(as.character(system_version), split = "\\.")[[1]])[1] >= 9000){
+        parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
+        parts[[length(parts)]] <- cli::col_cyan(parts[[length(parts)]])
+        system_version <- paste(parts, collapse = ".")
+      } 
+      
+      system_version_message <- paste0(cli::style_bold(cli::col_magenta("System: ")), cli::ansi_align(cli::col_blue(system_version), max_length, align = "right"))
+      cran_version_message <- paste0(cli::style_bold(cli::col_magenta("CRAN:   ")), cli::ansi_align(cli::col_blue(cran_version), max_length, align = "right"))
 
-      message(paste0(cli::style_bold(cli::col_magenta("System: ")), cli::ansi_align(cli::col_blue(system_version), max_length, align = "right")))
-      message(paste0(cli::style_bold(cli::col_magenta("CRAN:   ")), cli::ansi_align(cli::col_blue(cran_version), max_length, align = "right")))
-
-      cli::cli_text((" "))
+     
 
       if (system_version < cran_version){
-         cli::cli_alert_warning(paste0(crayon_body("There is a "),
-                                       crayon_key("new version"),
-                                       crayon_body(" available on"),
-                                       crayon_key("CRAN"),
-                                       crayon_body("!")))
+         veredict_message <- paste0(cli::style_bold(cli::col_yellow(cli::symbol$warning),
+                                                    crayon_body(" There is a "),
+                                                    crayon_key("new version"),
+                                                    crayon_body(" available on"),
+                                                    crayon_key("CRAN"),
+                                                    crayon_body("!")))
       } else {
-        cli::cli_alert_success(paste0(crayon_body("Installation is "),
-                                      crayon_key("up to date"),
-                                      crayon_body(" with latest "),
-                                      crayon_key("CRAN"),
-                                      crayon_body(" version!")))
+        veredict_message <- paste0(cli::style_bold(cli::col_green(cli::symbol$tick),
+                                                   crayon_body(" Installation is "),
+                                                   crayon_key("up to date"),
+                                                   crayon_body(" with latest "),
+                                                   crayon_key("CRAN"),
+                                                   crayon_body(" version!")))
       }
       
-      cli::cli_text(" ")
+      
 
-      packages <- sort(unique(unlist(SCpubr::state_dependencies(return_dependencies = TRUE))))
-      functions <- sort(unique(names(SCpubr::state_dependencies(return_dependencies = TRUE))))
-      functions <- sapply(functions, SCpubr:::check_suggests, passive = TRUE)
+      packages <- sort(unique(unlist(state_dependencies(return_dependencies = TRUE))))
+      functions <- sort(unique(names(state_dependencies(return_dependencies = TRUE))))
+      functions <- sapply(functions, check_suggests, passive = TRUE)
       functions <- functions[names(functions) != "Essentials"]
 
       check_installed <- sapply(packages, requireNamespace, quietly = TRUE)
@@ -139,24 +139,33 @@
 
 
       }
-
-      cli::cli_h2("Checking required packages")
-      for (item in print.list){
-        message(unname(item))
-      }
-
-      cli::cli_text("  ")
-
-      cli::cli_h2("Checking available functions")
-      for (item in print.list.functions){
-        message(unname(item))
-      }
-
-      cli::cli_text("  ")
-      cli::cli_text(" ")
-
-      cli::cli_alert_danger(paste0(crayon_body("To suppress this startup message, use: "), cli::style_italic(cli::col_blue('suppressMessages(library("SCpubr"))'))))
-
-      cli::cli_text("  ")
-      message(cli::rule(col = "cyan"))
+      
+      packages_check <- cli::rule(left = "Checking required packages", width = nchar("Checking required packages") + 6)
+      functions_check <- cli::rule(left = "Checking available functions", width = nchar("Checking available functions") + 6)
+      
+      disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), crayon_body(" To suppress this startup message, use: "), 
+                                cli::style_italic(cli::col_blue('suppressPackageStartupMessages(library(SCpubr))')))
+      
+      end_rule <- cli::rule(col = "cyan")
+      
+      # Mount all individual messages into a big one that will be then be printed as a packageStartupMessage.
+      msg_wrap <- paste0(header, "\n", "\n",
+                         tutorials, "\n", "\n",
+                         cite, "\n", "\n",
+                         stars, "\n", "\n",
+                         updates, "\n", "\n",
+                         plotting, "\n", "\n", "\n",
+                         updates_check, "\n", "\n",
+                         cran_version_message, "\n",
+                         system_version_message, "\n", "\n",
+                         veredict_message, "\n", "\n", "\n",
+                         packages_check, "\n", "\n",
+                         paste(print.list, collapse = "\n"), "\n", "\n", "\n",
+                         functions_check, "\n", "\n",
+                         paste(print.list.functions, collapse = "\n"), "\n", "\n", "\n",
+                         disable_message, "\n", "\n",
+                         end_rule)
+      
+      # This allows for the package to be silenced on demand.
+      rlang::inform(msg_wrap, class = "packageStartupMessage")
 }

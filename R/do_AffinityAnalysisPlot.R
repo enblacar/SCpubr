@@ -451,17 +451,17 @@ do_AffinityAnalysisPlot <- function(sample,
     if (flavor == "UCell"){
       Seurat::DefaultAssay(sample) <- assay
     }
-    p.enrichment <- SCpubr::do_EnrichmentHeatmap(sample,
-                                                 input_gene_list = input_gene_list,
-                                                 geneset.order = col_order,
-                                                 group.order = row.order.list,
-                                                 group.by = group.by,
-                                                 assay = if(flavor == "UCell"){NULL} else {assay},
-                                                 slot = if(flavor == "Seurat"){NULL} else {slot},
-                                                 flavor = flavor,
-                                                 nbin = nbin,
-                                                 ctrl = ctrl,
-                                                 flip = !flip)
+    p.enrichment <- do_EnrichmentHeatmap(sample,
+                                         input_gene_list = input_gene_list,
+                                         geneset.order = col_order,
+                                         group.order = row.order.list,
+                                         group.by = group.by,
+                                         assay = if(flavor == "UCell"){NULL} else {assay},
+                                         slot = if(flavor == "Seurat"){NULL} else {slot},
+                                         flavor = flavor,
+                                         nbin = nbin,
+                                         ctrl = ctrl,
+                                         flip = !flip)
     if (flavor == "UCell"){
       Seurat::DefaultAssay(sample) <- "affinity"
     }

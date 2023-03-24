@@ -48,12 +48,12 @@ do_LoadingsPlot <- function(sample,
                             max.cutoff.loadings = NA,
                             min.cutoff.expression = NA,
                             max.cutoff.expression = NA){
-  SCpubr:::check_suggests("do_LoadingsPlot")
+  check_suggests("do_LoadingsPlot")
   
   # Check logical parameters.
   logical_list <- list("use_viridis" = use_viridis,
                        "flip" = flip)
-  SCpubr:::check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
+  check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("rotate_x_axis_labels" = rotate_x_axis_labels,
                        "legend.width" = legend.width,
@@ -68,7 +68,7 @@ do_LoadingsPlot <- function(sample,
                        "max.cutoff.loadings" = max.cutoff.loadings,
                        "min.cutoff.expression" = min.cutoff.expression,
                        "max.cutoff.expression" = max.cutoff.expression)
-  SCpubr:::check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
+  check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   
   # Check character parameters.
   character_list <- list("legend.type" = legend.type,
@@ -86,23 +86,23 @@ do_LoadingsPlot <- function(sample,
                          "viridis.palette" = viridis.palette,
                          "grid.color" = grid.color,
                          "border.color" = border.color)
-  SCpubr:::check_type(parameters = character_list, required_type = "character", test_function = is.character)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
-  SCpubr:::check_colors(na.value)
-  SCpubr:::check_colors(legend.framecolor)
-  SCpubr:::check_colors(legend.tickcolor)
-  SCpubr:::check_colors(grid.color)
-  SCpubr:::check_colors(border.color)
+  check_colors(na.value)
+  check_colors(legend.framecolor)
+  check_colors(legend.tickcolor)
+  check_colors(grid.color)
+  check_colors(border.color)
   
-  SCpubr:::check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  SCpubr:::check_parameters(parameter = font.type, parameter_name = "font.type")
-  SCpubr:::check_parameters(parameter = legend.type, parameter_name = "legend.type")
-  SCpubr:::check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
-  SCpubr:::check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
-  SCpubr:::check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  SCpubr:::check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
-  SCpubr:::check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
-  SCpubr:::check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.type, parameter_name = "legend.type")
+  check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
+  check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   
   
   `%>%` <- magrittr::`%>%`
@@ -255,7 +255,7 @@ do_LoadingsPlot <- function(sample,
               max(data.loading$mean_Loading_Score, na.rm = TRUE))
   
   
-  scale.setup <- SCpubr:::compute_scales(sample = sample,
+  scale.setup <- compute_scales(sample = sample,
                                 feature = " ",
                                 assay = "SCT",
                                 reduction = NULL,
@@ -276,8 +276,8 @@ do_LoadingsPlot <- function(sample,
                ggplot2::scale_y_discrete(expand = c(0, 0)) +
                ggplot2::scale_x_discrete(expand = c(0, 0),
                                          position = "top") +
-               ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$PC))),
-                               x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
+               ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$PC))),
+                               x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
                ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                              na.value = na.value,
                                              name = "Avg. Loading score",
@@ -290,7 +290,7 @@ do_LoadingsPlot <- function(sample,
   
   limits <- c(min(data.expression$mean_Expression, na.rm = TRUE),
               max(data.expression$mean_Expression, na.rm = TRUE))
-  scale.setup <- SCpubr:::compute_scales(sample = sample,
+  scale.setup <- compute_scales(sample = sample,
                                          feature = " ",
                                          assay = "SCT",
                                          reduction = NULL,
@@ -311,8 +311,8 @@ do_LoadingsPlot <- function(sample,
                   ggplot2::scale_y_discrete(expand = c(0, 0)) +
                   ggplot2::scale_x_discrete(expand = c(0, 0),
                                             position = "top") +
-                  ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data[[group.by]]))),
-                                  x.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
+                  ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data[[group.by]]))),
+                                  x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
                   ggplot2::coord_equal() +
                   ggplot2::xlab(NULL) +
                   ggplot2::ylab(group.by)
@@ -341,7 +341,7 @@ do_LoadingsPlot <- function(sample,
                   
                   
   
-  p.loading <- SCpubr:::modify_continuous_legend(p = p.loading,
+  p.loading <- modify_continuous_legend(p = p.loading,
                                                     legend.title = "Avg. Loading score",
                                                     legend.aes = "fill",
                                                     legend.type = legend.type,
@@ -353,7 +353,7 @@ do_LoadingsPlot <- function(sample,
                                                     legend.framewidth = legend.framewidth,
                                                     legend.tickwidth = legend.tickwidth)
   
-  p.expression <- SCpubr:::modify_continuous_legend(p = p.expression,
+  p.expression <- modify_continuous_legend(p = p.expression,
                                 legend.title = "Avg. Expression",
                                 legend.aes = "fill",
                                 legend.type = legend.type,
@@ -371,7 +371,7 @@ do_LoadingsPlot <- function(sample,
   for (name in rev(names(list.plots))){
     counter <- counter + 1
     
-    axis.parameters <- SCpubr:::handle_axis(flip = FALSE,
+    axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = "A",
                                    group = "A",
                                    counter = counter,
