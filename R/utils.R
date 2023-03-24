@@ -292,18 +292,35 @@ named_list <- function(){}
 
 crayon_body <- function(text){
   if (isTRUE(getOption("SCpubr.darkmode"))){
-    return(cli::col_white(text))
+    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+      return(cli::col_white(text))
+    } else {
+      return(text)
+    }
+    
   } else {
-    return(cli::col_black(text))
+    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+      return(cli::col_black(text))
+    } else {
+      return(text)
+    }
   }
   
 }
 
 crayon_key <- function(text){
   if (isTRUE(getOption("SCpubr.darkmode"))){
-    return(cli::col_cyan(text))
+    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+      return(cli::col_cyan(text))
+    } else {
+      return(text)
+    }
   } else {
-    return(cli::col_blue(text))
+    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+      return(cli::col_blue(text))
+    } else {
+      return(text)
+    }
   }
 }
 
