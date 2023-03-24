@@ -1,5 +1,9 @@
 # Add Start-Up message.
 .onAttach <- function(...) {
+      if (isFALSE(getOption("SCpubr.verbose"))){
+        return()
+      }
+      
       header <- cli::rule(left = paste0("SCpubr v", utils::packageVersion('SCpubr')), line_col = "cyan")
       
       tutorials <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
@@ -28,7 +32,8 @@
                         crayon_body(" Keep track of the package "),
                         crayon_key("updates"),
                         crayon_body(" on Twitter ("),
-                        crayon_key("@Enblacar"),
+                        crayon_key(cli::style_hyperlink(text = "@Enblacar",
+                                                        url = "https://twitter.com/Enblacar")),
                         crayon_body(") or in the "),
                         crayon_key(cli::style_hyperlink(text = "Official NEWS website",
                                                         url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
@@ -143,8 +148,15 @@
       packages_check <- cli::rule(left = "Checking required packages", width = nchar("Checking required packages") + 6)
       functions_check <- cli::rule(left = "Checking available functions", width = nchar("Checking available functions") + 6)
       
-      disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), crayon_body(" To suppress this startup message, use: "), 
-                                cli::style_italic(cli::col_blue('suppressPackageStartupMessages(library(SCpubr))')))
+      disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
+                                crayon_body(" To suppress this startup message, use: "), 
+                                cli::style_italic(cli::col_blue('suppressPackageStartupMessages(library(SCpubr))\n\n')),
+                                cli::style_bold(cli::col_red(cli::symbol$cross)), 
+                                crayon_body(" Alternatively, you can also set the following option: "),
+                                cli::style_italic(cli::col_blue('options("SCpubr.verbose" = FALSE)\n')),
+                                cli::style_bold(cli::col_red(cli::symbol$cross)), 
+                                crayon_body(" And then load the package normally (and faster) as: "),
+                                cli::style_italic(cli::col_blue('library(SCpubr)')))
       
       end_rule <- cli::rule(col = "cyan")
       
