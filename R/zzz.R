@@ -4,7 +4,8 @@
         return()
       }
       
-      header <- cli::rule(left = paste0("SCpubr v", utils::packageVersion('SCpubr')), line_col = "cyan")
+      
+      tip_rule <- cli::rule(left = "General", width = nchar("General") + 6)
       
       tutorials <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" Have a look at extensive tutorials in "),
@@ -54,7 +55,10 @@
         parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
         parts[[length(parts)]] <- cli::col_yellow(parts[[length(parts)]])
         system_version <- paste(parts, collapse = ".")
-      } 
+      }
+      
+      header <- cli::rule(left = paste0(crayon_body("SCpubr "),
+                                        crayon_key(system_version)), line_col = "cadetblue")
       
       system_version_message <- paste0(cli::col_magenta("System: "), cli::ansi_align(crayon_key(system_version), max_length, align = "right"))
       cran_version_message <- paste0(cli::col_magenta("CRAN:   "), cli::ansi_align(crayon_key(cran_version), max_length, align = "right"))
@@ -62,19 +66,19 @@
      
 
       if (system_version < cran_version){
-         veredict_message <- paste0(cli::style_bold(cli::col_yellow(cli::symbol$warning),
-                                                    crayon_body(" There is a "),
-                                                    crayon_key("new version"),
-                                                    crayon_body(" available on"),
-                                                    crayon_key("CRAN"),
-                                                    crayon_body("!")))
+         veredict_message <- paste0(cli::col_yellow(cli::symbol$warning,
+                                    crayon_body(" There is a "),
+                                    crayon_key("new version"),
+                                    crayon_body(" available on"),
+                                    crayon_key("CRAN"),
+                                    crayon_body("!")))
       } else {
-        veredict_message <- paste0(cli::style_bold(cli::col_green(cli::symbol$tick),
-                                                   crayon_body(" Installation is "),
-                                                   crayon_key("up to date"),
-                                                   crayon_body(" with latest "),
-                                                   crayon_key("CRAN"),
-                                                   crayon_body(" version!")))
+        veredict_message <- paste0(cli::col_green(cli::symbol$tick,
+                                   crayon_body(" Installation is "),
+                                   crayon_key("up to date"),
+                                   crayon_body(" with latest "),
+                                   crayon_key("CRAN"),
+                                   crayon_body(" version!")))
       }
       
       
@@ -145,8 +149,14 @@
 
       }
       
-      packages_check <- cli::rule(left = "Checking required packages", width = nchar("Checking required packages") + 6)
-      functions_check <- cli::rule(left = "Checking available functions", width = nchar("Checking available functions") + 6)
+      packages_check <- cli::rule(left = "Required packages", width = nchar("Required packages") + 6)
+      functions_check <- cli::rule(left = "Available functions", width = nchar("Available functions") + 6)
+      
+      functions_tip <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                              crayon_body(" Check the package requirements function-wise with: "), 
+                              cli::style_italic(crayon_key('SCpubr::state_dependencies()')))
+      
+      tip_rule <- cli::rule(left = "Tips!", width = nchar("Tips!") + 6)
       
       tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
                             crayon_body(" To adjust package messages to dark mode themes, use: "), 
@@ -154,15 +164,14 @@
       
       disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
                                 crayon_body(" To suppress this startup message, use: "), 
-                                cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n\n')),
+                                cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n')),
                                 cli::style_bold(cli::col_red(cli::symbol$cross)), 
                                 crayon_body(" Alternatively, you can also set the following option: "),
                                 cli::style_italic(crayon_key('options("SCpubr.verbose" = FALSE)\n')),
-                                cli::style_bold(cli::col_red(cli::symbol$cross)), 
-                                crayon_body(" And then load the package normally (and faster) as: "),
+                                crayon_body("  And then load the package normally (and faster) as: "),
                                 cli::style_italic(crayon_key('library(SCpubr)')))
       
-      end_rule <- cli::rule(col = "cyan")
+      end_rule <- cli::rule(col = "cadetblue")
       
       # Mount all individual messages into a big one that will be then be printed as a packageStartupMessage.
       msg_wrap <- paste0(header, "\n", "\n",
@@ -178,8 +187,10 @@
                          packages_check, "\n", "\n",
                          paste(print.list, collapse = "\n"), "\n", "\n", "\n",
                          functions_check, "\n", "\n",
-                         paste(print.list.functions, collapse = "\n"), "\n", "\n", "\n",
-                         tip_message, "\n", "\n", "\n",
+                         paste(print.list.functions, collapse = "\n"), "\n","\n",
+                         functions_tip, "\n", "\n", "\n",
+                         tip_rule, "\n", "\n",
+                         tip_message, "\n", "\n",
                          disable_message, "\n", "\n",
                          end_rule)
       
