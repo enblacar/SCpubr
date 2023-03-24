@@ -755,7 +755,7 @@ do_AffinityAnalysisPlot <- function(sample,
         list.output[["Robustness"]][[comparison]][["Bar Plots"]] <- p
       }
       if (isTRUE(verbose)){
-        clit::cli_progress_update(set = progress_bar_counter)
+        cli::cli_progress_update(set = progress_bar_counter)
       }
     }
   }
