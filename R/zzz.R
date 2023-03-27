@@ -196,7 +196,8 @@
   end_rule <- cli::rule(col = "cadetblue")
   
   # Mount all individual messages into a big one that will be then be printed as a packageStartupMessage.
-  msg_wrap <- paste0(header, "\n", "\n",
+  msg_wrap <- paste0("\n", "\n", 
+                     header, "\n", "\n",
                      tutorials, "\n", "\n",
                      cite, "\n", "\n",
                      stars, "\n", "\n",
