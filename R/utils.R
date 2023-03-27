@@ -324,8 +324,7 @@ crayon_key <- function(text){
   }
 }
 
-
-#' Checks for Suggests.
+#' Return a list of SCpubr dependencies.
 #'
 #' @noRd
 #' @return None
@@ -333,7 +332,7 @@ crayon_key <- function(text){
 #' \donttest{
 #' TBD
 #' }
-check_suggests <- function(function_name, passive = FALSE){
+return_dependencies <- function(){
   pkg_list <- list("Essentials" = c("Seurat",
                                     "rlang",
                                     "dplyr",
@@ -372,7 +371,7 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
                    "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
+                   "do_GroupwiseDEPlot" = c(),
                    "do_MetadataPlot" = c("cluster"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_LoadingsPlot" = c(),
@@ -387,9 +386,22 @@ check_suggests <- function(function_name, passive = FALSE){
                    "do_TFActivityPlot" = c(),
                    "do_ViolinPlot" = c(),
                    "do_VolcanoPlot" = c("ggrepel"),
-                   "save_Plot" = c("ComplexHeatmap", "svglite"),
-                   "testing" = c("Does_not_exist"))
+                   "save_Plot" = c("svglite"))
+  return(pkg_list)
+}
 
+
+#' Checks for Suggests.
+#'
+#' @noRd
+#' @return None
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+check_suggests <- function(function_name, passive = FALSE){
+  
+  pkg_list <- return_dependencies()
   # The function is not in the current list of possibilities.
   if (function_name %!in% names(pkg_list)){
     stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
@@ -406,17 +418,24 @@ check_suggests <- function(function_name, passive = FALSE){
   }
 
   value <- TRUE
-  for (pkg in pkgs){
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      if (isFALSE(passive)){
-        stop(paste0("Package ", pkg, " must be installed to use ", function_name, "."), call. = FALSE)
-      } else{
-        # nocov start
-        value <- FALSE
-        # nocov end
+  
+  pkgs <- sapply(pkgs, requireNamespace, quietly = TRUE)
+  if(sum(isFALSE(pkgs)) > 0){
+    missing_pkgs <- names(pkgs[isFALSE(pkgs)])
+    if (isFALSE(passive)){
+      if (isFALSE(requireNamespace("cli", quietly = TRUE))){
+        stop(paste0(crayon_body("Packages "), 
+                    paste(sapply(missing_pkgs, crayon_key), collapse = crayon_body(", ")), 
+                    crayon_body(" must be installed to use "), 
+                    crayon_key(function_name), 
+                    crayon_body(".")), call. = FALSE)
+      } else {
+        check_dependencies(function_name = function_name)
       }
     }
   }
+  
+  value <-  if(sum(isFALSE(pkgs)) > 0){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
 }
 #' State SCpubr current function dependencies.
@@ -429,153 +448,117 @@ check_suggests <- function(function_name, passive = FALSE){
 #' @examples
 #'
 #' # See all dependencies.
-#' SCpubr::state_dependencies()
+#' SCpubr::check_dependencies()
 #'
 #' # See the dependencies for a single package.
-#' SCpubr::state_dependencies(function_name = "do_DimPlot")
-state_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
-  pkg_list <- list("Essentials" = c("Seurat",
-                                    "rlang",
-                                    "dplyr",
-                                    "magrittr",
-                                    "dplyr",
-                                    "tidyr",
-                                    "tibble",
-                                    "stringr",
-                                    "patchwork",
-                                    "plyr",
-                                    "grDevices",
-                                    "stats",
-                                    "viridis",
-                                    "forcats",
-                                    "scales",
-                                    "grid",
-                                    "assertthat",
-                                    "RColorBrewer",
-                                    "labeling",
-                                    "cli"),
-                   "do_AffinityAnalysisPlot" = c("decoupleR"),
-                   "do_AlluvialPlot" = c("ggalluvial"),
-                   "do_AzimuthAnalysisPlot" = c(),
-                   "do_BarPlot" = c("colorspace", "ggrepel"),
-                   "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_BoxPlot" = c("ggsignif"),
-                   "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
-                   "do_ChordDiagramPlot" = c("circlize"),
-                   "do_ColorPalette" = c(),
-                   "do_CopyNumberVariantPlot" = c("ggdist"),
-                   "do_CorrelationPlot" = c(),
-                   "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c(),
-                   "do_EnrichmentHeatmap" = c(),
-                   "do_ExpressionHeatmap" = c(),
-                   "do_FeaturePlot" = c("scattermore", "MASS"),
-                   "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
-                   "do_GeyserPlot" = c("ggdist"),
-                   "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
-                   "do_GroupwiseDEPlot" = c("ComplexHeatmap"),
-                   "do_LigandReceptorPlot" = c("liana"),
-                   "do_LoadingsPlot" = c(),
-                   "do_MetadataPlot" = c("cluster"),
-                   "do_NebulosaPlot" = c("Nebulosa"),
-                   "do_PathwayActivityPlot" = c(),
-                   "do_PseudotimePlot" = c("monocle3", "ggdist"),
-                   "do_RidgePlot" = c("ggridges"),
-                   "do_SankeyPlot" = c("ggsankey"),
-                   "do_SCExpressionHeatmap" = c(),
-                   "do_SCEnrichmentHeatmap" = c(),
-                   "do_TermEnrichmentPlot" = c(),
-                   "do_TFActivityPlot" = c(),
-                   "do_ViolinPlot" = c(),
-                   "do_VolcanoPlot" = c("ggrepel"),
-                   "save_Plot" = c("ComplexHeatmap", "svglite"))
+#' SCpubr::check_dependencies(function_name = "do_DimPlot")
+check_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
+  pkg_list <- return_dependencies()
   # The function is not in the current list of possibilities.
   if (!(is.null(function_name))){
     for (func in function_name){
-      if (func %!in% names(pkg_list)){
-        stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+      if (!(func %in% names(pkg_list))){
+        stop(paste0(crayon_key(function_name), crayon_body(" is not an accepted function name.")), call. = FALSE)
       }
     }
   }
-  cran_packages <- c("assertthat",
-                     "circlize",
-                     "cli",
-                     "cluster",
-                     "colorspace",
-                     "dplyr",
-                     "ggbeeswarm",
-                     "ggdist",
-                     "ggExtra",
-                     "ggnewscale",
-                     "ggplot2",
-                     "ggplotify",
-                     "ggrastr",
-                     "ggrepel",
-                     "ggridges",
-                     "ggsignif",
-                     "graphics",
-                     "labeling",
-                     "magrittr",
-                     "MASS",
-                     "patchwork",
-                     "pheatmap",
-                     "plyr",
-                     "RColorBrewer",
-                     "rlang",
-                     "scales",
-                     "scattermore",
-                     "Seurat",
-                     "tibble",
-                     "tidyr",
-                     "forcats",
-                     "Matrix",
-                     "purrr",
-                     "stringr",
-                     "svglite",
-                     "viridis")
-
-  bioconductor_packages <- c("AUCell",
-                             "ComplexHeatmap",
-                             "clusterProfiler",
-                             "decoupleR",
-                             "enrichplot",
-                             "infercnv",
-                             "Nebulosa",
-                             "UCell")
-
-  github_packages <- c("ggsankey",
-                       "liana",
-                       "monocle3")
-
-  func_list <- sort(names(pkg_list))
-  if (!(is.null(function_name))){
-    func_list <- function_name
-  } else {
-    func_list <- names(pkg_list)
-  }
-
+  
+  non_seurat_functions <- c("save_Plot",
+                            "do_VolcanoPlot",
+                            "do_LigandReceptorPlot",
+                            "do_ColorPalette")
+  
   if (isFALSE(return_dependencies)){
-    message("\n---LIST OF PACKAGE DEPENDENCIES---\n")
-    for (func in func_list){
-      packages <- c(pkg_list[[func]], pkg_list[["Essentials"]])
-      cran_packages_individual <- sort(packages[packages %in% cran_packages])
-      bioconductor_packages_individual <- sort(packages[packages %in% bioconductor_packages])
-      github_packages_individual <- sort(packages[packages %in% github_packages])
-      message("Dependencies for ", func, ":")
-      if (length(cran_packages_individual >= 1)){message("  CRAN packages: ", paste(cran_packages_individual, collapse = ", "))}
-      if (length(bioconductor_packages_individual >= 1)){message("  Bioconductor packages: ", paste(bioconductor_packages_individual, collapse = ", "))}
-      if (length(github_packages_individual >= 1)){message("  Github packages: ", paste(github_packages_individual, collapse = ", "))}
-      message("")
+    func_list <- sort(names(pkg_list[!(names(pkg_list) %in% "Essentials")]))
+    if (!(is.null(function_name))){
+      func_list <- sort(function_name)
+    } 
+    
+    if (isFALSE(requireNamespace("cli", quietly = TRUE))){
+      for (func in func_list){
+        packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
+        if (func %in% non_seurat_functions){
+          packages <- packages[packages != "Seurat"]
+        }
+      }
+      crayon_key(func)
+      paste(sapply(packages, crayon_body), collapse = ", ")
+    } else {
+      format_installed <- function(name, value, max_length){
+        func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
+        name_use <- ifelse(isTRUE(value),
+                           cli::ansi_align(crayon_key(name), max_length, align = "left"),
+                           cli::ansi_align(cli::col_red(name), max_length, align = "left"))
+        paste0(func_use, " ", name_use)
+      }
+      
+      system_version <- as.character(utils::packageVersion("SCpubr"))
+      
+      if (rev(strsplit(as.character(system_version), split = "\\.")[[1]])[1] >= 9000){
+        parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
+        parts[[length(parts)]] <- cli::col_yellow(parts[[length(parts)]])
+        system_version <- paste(parts, collapse = ".")
+      }
+      
+      header <- cli::rule(left = paste0(crayon_body("SCpubr "),
+                                        crayon_key(system_version)), line_col = "cadetblue")
+      
+      rlang::inform(paste0(header, "\n", "\n"))
+      
+      for (func in func_list){
+        if (rev(strsplit(as.character(as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
+          if (func %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){
+            func.name <- paste0(func, cli::col_yellow(" | DEV"))
+            nchar.use <- nchar(func) + nchar(" | DEV")
+          } else {
+            func.name <- func
+            nchar.use <- nchar(func)
+          }
+        } else {
+          if (func %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){
+            next
+          }
+        }
+        
+        packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
+        if (func %in% non_seurat_functions){
+          packages <- packages[packages != "Seurat"]
+        }
+        
+        check_installed <- sapply(packages, requireNamespace, quietly = TRUE)
+        
+        max_length <- max(sapply(packages, nchar))
+        
+        packages.print <- c()
+        for(item in sort(names(check_installed))){
+          packages.print <- c(packages.print, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
+        }
+        
+        counter <- 0
+        print.list <- list()
+        print.vector <- c()
+        for(item in packages.print){
+          counter <- counter + 1
+          
+          if (counter %% 5 != 0){
+            print.vector <- c(print.vector, item)
+            if (counter == length(packages.print)){
+              print.list[[item]] <- paste(print.vector, collapse = "     ")
+              print.vector <- c()
+            }
+          } else {
+            print.vector <- c(print.vector, item)
+            print.list[[item]] <- paste(print.vector, collapse = "     ")
+            print.vector <- c()
+          }
+        }
+        
+        rlang::inform(paste0(cli::rule(left = func.name, width = nchar.use + 6), "\n", "\n", paste(print.list, collapse = "\n"), "\n", "\n"))
+      }
     }
   } else {
-    list_output <- list()
-    for (func in func_list){
-      packages <- c(pkg_list[[func]], pkg_list[["Essentials"]])
-      list_output[[func]] <- packages
-    }
-    return(list_output)
+    return(pkg_list)
   }
-
 }
 
 
