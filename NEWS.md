@@ -23,6 +23,8 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset.
 -   `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weighted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/).
 -   `SCpubr::do_LoadingsPlot()` to generate a summary heatmap of the PCA loadings (top and bottom scored genes for each PC) together with a expression heatmap of the same genes.
+-   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map. 
+-   `SCpubr::check_dependencies()` to generate a per-function summary of the needed packages to run the function. The report has been enhanced with `cli` package and now clearly illustrates what is missing to run the function.
 
 ## General
 
@@ -32,6 +34,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Changed default values from `min.cutoff` and `max.cutoff` from `NULL` to `NA`.
 -   Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
 -   Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
+-   Renamed `SCpubr::state_dependencies()` to `SCpubr::check_dependencies()`.
 
 ## `SCpubr::do_BeeSwarmPlot`
 

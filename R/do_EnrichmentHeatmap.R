@@ -116,7 +116,6 @@ do_EnrichmentHeatmap <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = flavor, parameter_name = "flavor")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
 

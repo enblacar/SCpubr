@@ -229,6 +229,8 @@
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
+\item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
+
 \item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
@@ -253,8 +255,6 @@
 \item \emph{\code{norm_wmean}}: For normalized weighted mean.
 \item \emph{\code{corr_wmean}}: For corrected weighted mean.
 }}
-
-\item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.}
 
 \item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
 }

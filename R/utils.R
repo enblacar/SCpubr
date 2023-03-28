@@ -151,6 +151,7 @@
 #' }
 #' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.
 #' @param cluster_cells \strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.
+#' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -257,7 +258,8 @@ doc_function <- function(sample,
                          strip.spacing,
                          strip.text.color,
                          rotate_strip_labels,
-                         diverging.palette){}
+                         diverging.palette,
+                         subsample){}
 
 #' Named vector.
 #'
@@ -375,6 +377,7 @@ return_dependencies <- function(){
                    "do_MetadataPlot" = c("cluster"),
                    "do_LigandReceptorPlot" = c("liana"),
                    "do_LoadingsPlot" = c(),
+                   "do_DiffusionMapPlot" = c("Matrix"),
                    "do_NebulosaPlot" = c("Nebulosa"),
                    "do_PathwayActivityPlot" = c(),
                    "do_PseudotimePlot" = c("monocle3", "ggdist"),
