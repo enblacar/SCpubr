@@ -12,13 +12,16 @@ do_MetadataPlot(
   df = NULL,
   colors.use = NULL,
   flip = TRUE,
-  heatmap_gap = 5,
+  heatmap.gap = 1,
   rotate_x_axis_labels = 45,
   legend.position = "bottom",
   font.size = 14,
+  legend.font.size = NULL,
+  legend.symbol.size = NULL,
   legend.ncol = NULL,
   legend.nrow = NULL,
   legend.byrow = FALSE,
+  na.value = "grey75",
   font.type = "sans",
   grid.color = "white",
   border.color = "black"
@@ -39,7 +42,7 @@ do_MetadataPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
-\item{heatmap_gap}{\strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.}
+\item{heatmap.gap}{\strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.}
 
 \item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
@@ -54,11 +57,17 @@ do_MetadataPlot(
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
+\item{legend.font.size}{\strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the strong{\code{font.size}} parameter.}
+
+\item{legend.symbol.size}{\strong{\code{\link[base]{numeric}}} | Size of symbols in the legend in mm. NULL uses the default size.}
+
 \item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
 
 \item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{font.type}{\strong{\code{\link[base]{character}}} | Base font family for the plot. One of:
 \itemize{

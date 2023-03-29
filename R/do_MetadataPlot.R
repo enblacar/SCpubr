@@ -9,9 +9,11 @@
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata column to use as basis for the plot.
 #' @param metadata \strong{\code{\link[base]{character}}} | Metadata columns that will be used to plot the heatmap on the basis of the variable provided to group.by.
 #' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
-#' @param heatmap_gap \strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.
+#' @param heatmap.gap \strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.
 #' @param from_df \strong{\code{\link[base]{logical}}} | Whether to provide a data frame with the metadata instead.
 #' @param df \strong{\code{\link[base]{data.frame}}} | Data frame containing the metadata to plot. Rows contain the unique values common to all columns (metadata variables). The columns must be named.
+#' @param legend.font.size \strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the strong{\code{font.size}} parameter.
+#' @param legend.symbol.size \strong{\code{\link[base]{numeric}}} | Size of symbols in the legend in mm. NULL uses the default size.
 #' @return A ggplot2 object.
 #' @export
 #'
@@ -26,13 +28,16 @@ do_MetadataPlot <- function(sample = NULL,
                             df = NULL,
                             colors.use = NULL,
                             flip = TRUE,
-                            heatmap_gap = 5,
+                            heatmap.gap = 1,
                             rotate_x_axis_labels = 45,
                             legend.position = "bottom",
                             font.size = 14,
+                            legend.font.size = NULL,
+                            legend.symbol.size = NULL,
                             legend.ncol = NULL,
                             legend.nrow = NULL,
                             legend.byrow = FALSE,
+                            na.value = "grey75",
                             font.type = "sans",
                             grid.color = "white",
                             border.color = "black"){
@@ -45,7 +50,7 @@ do_MetadataPlot <- function(sample = NULL,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
-  numeric_list <- list("heatmap_gap" = heatmap_gap,
+  numeric_list <- list("heatmap.gap" = heatmap.gap,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "font.size" = font.size,
                        "legend.ncol" = legend.ncol,
@@ -159,7 +164,7 @@ do_MetadataPlot <- function(sample = NULL,
                 ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data[[name]]))),
                                 x.sec = guide_axis_label_trans(~paste0(levels(.data[[group.by]])))) + 
                 ggplot2::coord_equal() + 
-                ggplot2::scale_fill_manual(values = colors.use.name, name = name)
+                ggplot2::scale_fill_manual(values = colors.use.name, name = name, na.value = na.value)
     list.heatmaps[[name]] <- data.use
   }
   
@@ -169,7 +174,7 @@ do_MetadataPlot <- function(sample = NULL,
     p <- p + 
          ggplot2::guides(fill = ggplot2::guide_legend(legend.position = legend.position,
                                                       title.position = "top",
-                                                      title.hjust = 0.5,
+                                                      title.hjust = ifelse(legend.position %in% c("top", "bottom"), 0.5, 0),
                                                       ncol = legend.ncol,
                                                       nrow = legend.nrow,
                                                       byrow = legend.byrow))
@@ -240,16 +245,20 @@ do_MetadataPlot <- function(sample = NULL,
                         panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold"),
-                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.text = ggplot2::element_text(face = "bold", size = legend.font.size),
+                        legend.title = ggplot2::element_text(face = "bold", size = legend.font.size),
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = heatmap_gap, r = 0, b = 0, l = heatmap_gap, unit = "mm"),
+                        plot.margin = ggplot2::margin(t = heatmap.gap, r = 0, b = 0, l = heatmap.gap, unit = "mm"),
                         panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.spacing.x = ggplot2::unit(0, "cm"))
+    
+    if (!is.null(legend.symbol.size)){
+      p <- p + ggplot2::theme(legend.key.size = ggplot2::unit(legend.symbol.size, "mm"))
+    }
     
     list.heatmaps[[name]] <- p
   }

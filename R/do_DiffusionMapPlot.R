@@ -14,6 +14,7 @@ do_DiffusionMapPlot <- function(sample,
                                 input_gene_list,
                                 assay = "SCT",
                                 slot = "data",
+                                scale.enrichment = TRUE,
                                 dims = 1:5,
                                 subsample = 2500,
                                 reduction = "diffusion",
@@ -23,7 +24,12 @@ do_DiffusionMapPlot <- function(sample,
                                 ctrl = 100,
                                 flavor = "Seurat",
                                 main.heatmap.size = 0.95,
-                                enforce_symmetry = TRUE,
+                                enforce_symmetry = ifelse(isTRUE(scale.enrichment), TRUE, FALSE),
+                                use_viridis = FALSE,
+                                viridis.palette = "G",
+                                viridis.direction = -1,
+                                sequential.palette = "YlGnBu",
+                                sequential.direction = 1,
                                 font.size = 14,
                                 font.type = "sans",
                                 na.value = "grey75",
@@ -49,7 +55,9 @@ do_DiffusionMapPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "legend.byrow" = legend.byrow,
-                       "return_object" = return_object)
+                       "return_object" = return_object,
+                       "scale.enrichment" = scale.enrichment,
+                       "use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -66,7 +74,9 @@ do_DiffusionMapPlot <- function(sample,
                        "rotate_x_axis_labels" = rotate_x_axis_labels,
                        "legend.nrow" = legend.nrow,
                        "legend.ncol" = legend.ncol,
-                       "main.heatmap.size" = main.heatmap.size)
+                       "main.heatmap.size" = main.heatmap.size,
+                       "viridis.direction" = viridis.direction,
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   
   # Check character parameters.
@@ -80,7 +90,9 @@ do_DiffusionMapPlot <- function(sample,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
                          "legend.type" = legend.type,
-                         "legend.position" = legend.position)
+                         "legend.position" = legend.position,
+                         "viridis.palette" = viridis.palette,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   check_colors(na.value, parameter_name = "na.value")
@@ -93,6 +105,10 @@ do_DiffusionMapPlot <- function(sample,
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
+  check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
+  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = flavor, parameter_name = "flavor")
   
   
@@ -141,10 +157,13 @@ do_DiffusionMapPlot <- function(sample,
                                     dplyr::select(dplyr::all_of(c("Cell", group.by, names(input_gene_list))))},
                                     by = "Cell")
   
-  # Scale the enrichment scores as we are just interested in where they are enriched the most and not to compare across them.
-  for (name in names(input_gene_list)){
-    data.use[, name] <- scale(data.use[, name])[, 1]
+  if (isTRUE(scale.enrichment)){
+    # Scale the enrichment scores as we are just interested in where they are enriched the most and not to compare across them.
+    for (name in names(input_gene_list)){
+      data.use[, name] <- scale(data.use[, name])[, 1]
+    }
   }
+  
   
   # Prepare the data to plot.
   data.use <- data.use %>% 
@@ -179,7 +198,7 @@ do_DiffusionMapPlot <- function(sample,
                                            min.cutoff = NA,
                                            max.cutoff = NA,
                                            flavor = "Seurat",
-                                           enforce_symmetry = TRUE,
+                                           enforce_symmetry = enforce_symmetry,
                                            from_data = TRUE,
                                            limits.use = limits)
     
@@ -188,11 +207,36 @@ do_DiffusionMapPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                 y = .data$Gene_Set,
                                                 fill = .data$Enrichment)) + 
-         ggplot2::geom_raster() + 
-         ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 11, name = diverging.palette)),
-                                       breaks = scale.setup$breaks,
-                                       labels = scale.setup$labels,
-                                       limits = scale.setup$limits) + 
+         ggplot2::geom_raster()
+    
+    if (isTRUE(enforce_symmetry)){
+      p <- p + 
+           ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 11, name = diverging.palette)),
+                                         breaks = scale.setup$breaks,
+                                         labels = scale.setup$labels,
+                                         limits = scale.setup$limits,
+                                         name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+    } else {
+      if (isTRUE(use_viridis)){
+        p <- p + 
+             ggplot2::scale_fill_viridis_c(option = viridis.palette,
+                                           direction = viridis.direction,
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits,
+                                           name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+      } else {
+        colors <- RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]
+        if (sequential.direction == -1){colors <- rev(colors)}
+        p <- p + 
+             ggplot2::scale_fill_gradientn(colors = colors,
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits,
+                                           name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+      }
+    }
+    p <- p + 
          ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
          ggplot2::ylab("Gene sets") +
          ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 
@@ -222,7 +266,7 @@ do_DiffusionMapPlot <- function(sample,
       
       # Select color palette for metadata.
       if (name %in% names(colors.use)){
-        colors.use.iteration <- metadata.colors[[name]]
+        colors.use.iteration <- colors.use[[name]]
       } else {
         names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
         colors.use.iteration <- SCpubr:::generate_color_scale(names_use = names.use)

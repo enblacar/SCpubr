@@ -9,6 +9,7 @@ do_DiffusionMapPlot(
   input_gene_list,
   assay = "SCT",
   slot = "data",
+  scale.enrichment = TRUE,
   dims = 1:5,
   subsample = 2500,
   reduction = "diffusion",
@@ -17,7 +18,13 @@ do_DiffusionMapPlot(
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",
-  enforce_symmetry = TRUE,
+  main.heatmap.size = 0.95,
+  enforce_symmetry = ifelse(isTRUE(scale.enrichment), TRUE, FALSE),
+  use_viridis = FALSE,
+  viridis.palette = "G",
+  viridis.direction = -1,
+  sequential.palette = "YlGnBu",
+  sequential.direction = 1,
   font.size = 14,
   font.type = "sans",
   na.value = "grey75",
@@ -63,6 +70,16 @@ do_DiffusionMapPlot(
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

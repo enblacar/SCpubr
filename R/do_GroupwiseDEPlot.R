@@ -329,6 +329,17 @@ do_GroupwiseDEPlot <- function(sample,
   
   for (group in group.by){
     data <- list.exp[[group]]
+    
+    if (!is.na(min.cutoff)){
+      data <- data %>% 
+              dplyr::mutate("Avg.Exp" = ifelse(.data$Avg.Exp < min.cutoff, min.cutoff, .data$Avg.Exp))
+    }
+    
+    if (!is.na(max.cutoff)){
+      data <- data %>% 
+              dplyr::mutate("Avg.Exp" = ifelse(.data$Avg.Exp > max.cutoff, max.cutoff, .data$Avg.Exp))
+    }
+    
     p <- data %>% 
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                                 y = .data$Group,
@@ -383,14 +394,14 @@ do_GroupwiseDEPlot <- function(sample,
   counter <- 0
   for (name in rev(names(list.plots))){
     if (name == "pval"){
-      xlab <- "Gene"
-      ylab <- "Groups"
+      xlab <- "Genes"
+      ylab <- expression(bold(paste("-", log["10"], "(p.adjust)")))
     } else if (name == "FC"){
       xlab <- NULL
-      ylab <- "Groups"
+      ylab <- expression(bold(paste("Avg. ", log["2"], "(FC)")))
     } else {
       xlab <- NULL
-      ylab <- name
+      ylab <- paste0("Avg. Exp | ", name)
     }
     
     counter <- counter + 1
