@@ -209,13 +209,15 @@ do_DiffusionMapPlot <- function(sample,
                                                 fill = .data$Enrichment)) + 
          ggplot2::geom_raster()
     
+    legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"}
+    legend.name <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name, legend.name))
     if (isTRUE(enforce_symmetry)){
       p <- p + 
            ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 11, name = diverging.palette)),
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits,
-                                         name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+                                         name = legend.name)
     } else {
       if (isTRUE(use_viridis)){
         p <- p + 
@@ -224,7 +226,7 @@ do_DiffusionMapPlot <- function(sample,
                                            breaks = scale.setup$breaks,
                                            labels = scale.setup$labels,
                                            limits = scale.setup$limits,
-                                           name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+                                           name = legend.name)
       } else {
         colors <- RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]
         if (sequential.direction == -1){colors <- rev(colors)}
@@ -233,7 +235,7 @@ do_DiffusionMapPlot <- function(sample,
                                            breaks = scale.setup$breaks,
                                            labels = scale.setup$labels,
                                            limits = scale.setup$limits,
-                                           name = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"})
+                                           name = legend.name)
       }
     }
     p <- p + 
