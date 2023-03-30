@@ -307,8 +307,48 @@ crayon_body <- function(text){
       return(text)
     }
   }
-  
 }
+
+add_star <- function(){
+  if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+    return(paste0(cli::col_yellow(cli::style_bold(cli::symbol$star)), " "))
+  } else {
+    return("* ")
+  }
+}
+
+add_info <- function(){
+  if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+    return(paste0(cli::col_cyan(cli::style_bold(cli::symbol$info)), " "))
+  } else {
+    return("i ")
+  }
+}
+
+add_cross <- function(){
+  if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+    return(paste0(cli::col_red(cli::style_bold(cli::symbol$cross)), " "))
+  } else {
+    return("x ")
+  }
+}
+
+add_warning <- function(){
+  if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+    return(paste0(cli::col_yellow(cli::style_bold("!")), " "))
+  } else {
+    return("! ")
+  }
+}
+
+add_tick <- function(){
+  if (isTRUE(requireNamespace("cli", quietly = TRUE))){
+    return(paste0(cli::col_green(cli::style_bold(cli::symbol$tick)), " "))
+  } else {
+    return("")
+  }
+}
+
 
 crayon_key <- function(text){
   if (isTRUE(getOption("SCpubr.darkmode"))){
@@ -581,7 +621,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 #' }
 check_Seurat <- function(sample){
   assertthat::assert_that("Seurat" %in% class(sample),
-                          msg = paste0(crayon_body("The provided "),
+                          msg = paste0(add_cross(), add_cross(), crayon_body("The provided "),
                                        crayon_key("object"),
                                        crayon_body(" is not a "),
                                        crayon_key("Seurat"),
@@ -607,7 +647,7 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   assertthat::assert_that(sum(check) == length(colors),
-                          msg = paste0(crayon_body("The colors provided to "),
+                          msg = paste0(add_cross(), add_cross(), crayon_body("The colors provided to "),
                                        crayon_key(parameter_name),
                                        crayon_body(" are not valid color representations.\nCheck whether they are accepted "),
                                        crayon_key("R nammes"),
@@ -642,7 +682,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   }
 
   assertthat::assert_that(length(colors) == length(check_values),
-                          msg = paste0(crayon_body("The "),
+                          msg = paste0(add_cross(), add_cross(), crayon_body("The "),
                                        crayon_key("number"),
                                        crayon_body(" of the provided "),
                                        crayon_key("colors"),
@@ -653,7 +693,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
                                        crayon_body(".")))
 
   assertthat::assert_that(sum(names(colors) %in% check_values) == length(check_values),
-                          msg = paste0(crayon_body("The "),
+                          msg = paste0(add_cross(), crayon_body("The "),
                                        crayon_key("names"),
                                        crayon_body(" of the provided "),
                                        crayon_key("colors"),
@@ -762,7 +802,7 @@ check_cutoffs <- function(min.cutoff,
   outlier.data <- FALSE
   if (!is.na(min.cutoff) & !is.na(max.cutoff)){
     assertthat::assert_that(min.cutoff < max.cutoff,
-                            msg = paste0(crayon_body("The value provided to "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("min.cutoff"),
                                          crayon_body(" ("),
                                          crayon_key(min.cutoff),
@@ -777,7 +817,7 @@ check_cutoffs <- function(min.cutoff,
 
   if (!is.na(min.cutoff)){
     assertthat::assert_that(min.cutoff >= limits[1],
-                            msg = paste0(crayon_body("The value provided to "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("min.cutoff"),
                                          crayon_body(" ("),
                                          crayon_key(min.cutoff),
@@ -788,7 +828,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(").")))
 
     assertthat::assert_that(min.cutoff <= limits[2],
-                            msg = paste0(crayon_body("The value provided to "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("min.cutoff"),
                                          crayon_body(" ("),
                                          crayon_key(min.cutoff),
@@ -803,7 +843,7 @@ check_cutoffs <- function(min.cutoff,
 
   if (!is.na(max.cutoff)){
     assertthat::assert_that(max.cutoff <= limits[2],
-                            msg = paste0(crayon_body("The value provided to "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("max.cutoff"),
                                          crayon_body(" ("),
                                          crayon_key(max.cutoff),
@@ -814,7 +854,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(").")))
 
     assertthat::assert_that(max.cutoff >= limits[1],
-                            msg = paste0(crayon_body("The value provided to "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("max.cutoff"),
                                          crayon_body(" ("),
                                          crayon_key(max.cutoff),
@@ -943,7 +983,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
 
 
   assertthat::assert_that(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value,
-                          msg = paste0(crayon_body("The value provided to "),
+                          msg = paste0(add_cross(), crayon_body("The value provided to "),
                                        crayon_key(value_name),
                                        crayon_body(" ("),
                                        crayon_key(value),
@@ -1016,7 +1056,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       # Stop if neither of the features are found.
       assertthat::assert_that(length(unlist(not_found_features)) != length(unlist(features)),
                               msg = "Neither of the provided features are found.")
-      warning(paste0(crayon_body("The following "),
+      warning(paste0(add_warning(),add_warning(),crayon_body("The following "),
                      crayon_key("features"),
                      crayon_body(" were not be found:"),
                      paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
@@ -1025,7 +1065,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
 
     } else if (isFALSE(permissive)){
       assertthat::assert_that(length(not_found_features) == 0,
-                              msg = paste0(crayon_body("The following "),
+                              msg = paste0(add_cross(), crayon_body("The following "),
                                            crayon_key("features"),
                                            crayon_body(" were not be found:"),
                                            paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
@@ -1040,7 +1080,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                             msg = "The variable enforcer is not in the current list of checked variable types.")
 
     assertthat::assert_that(isTRUE(check_enforcers[[enforce_check]]),
-                            msg = paste0(crayon_body("Feature "),
+                            msg = paste0(add_cross(), crayon_body("Feature "),
                                          crayon_key(enforce_parameter),
                                          crayon_key(" = "),
                                          crayon_key(feature),
@@ -1094,7 +1134,7 @@ remove_duplicated_features <- function(features){
   if (is.character(features)){
     check <- sum(duplicated(features))
     if (check > 0){
-      warning(paste0(crayon_body("Found duplicated features:\n"),
+      warning(paste0(add_warning(),add_warning(),crayon_body("Found duplicated features:\n"),
                        crayon_key(paste(features[duplicated(features)])),
                        crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
       features <- features[!(duplicated(features))]
@@ -1106,7 +1146,7 @@ remove_duplicated_features <- function(features){
       genes <- features[[list_name]]
       # Remove genes duplicated within the list.
       if (sum(duplicated(genes)) > 0){
-        warning(paste0(crayon_body("Found duplicated features:\n"),
+        warning(paste0(add_warning(),crayon_body("Found duplicated features:\n"),
                        crayon_key( paste(genes[duplicated(genes)], collapse = ", ")),
                        crayon_body("\nIn the list named: "),
                        crayon_key(list_name),
@@ -1118,7 +1158,7 @@ remove_duplicated_features <- function(features){
       all_genes <- c(all_genes, genes[!(genes %in% all_genes)])
       genes <- genes[!(genes %in% duplicated_features)]
       if (length(duplicated_features) > 0){
-        warning(paste0(crayon_body("Found duplicated features:\n"),
+        warning(paste0(add_warning(),crayon_body("Found duplicated features:\n"),
                        crayon_key(paste(duplicated_features, collapse = ", ")),
                        crayon_body("\nIn the list named: "),
                        crayon_key(list_name),
@@ -1145,7 +1185,7 @@ remove_duplicated_features <- function(features){
 check_identity <- function(sample, identities){
   for (identity in identities){
     assertthat::assert_that(identity %in% levels(sample),
-                            msg = paste0(crayon_body("Could not find identity "),
+                            msg = paste0(add_cross(), crayon_body("Could not find identity "),
                                          crayon_key(identity),
                                          crayon_body(" in the current active identities of the object.")))
   }
@@ -1165,7 +1205,7 @@ check_identity <- function(sample, identities){
 check_and_set_reduction <- function(sample, reduction = NULL){
   # Check if the object has a reduction computed.
   assertthat::assert_that(length(Seurat::Reductions(sample)) != 0,
-                          msg = paste0(crayon_body("The Seurat object has no "),
+                          msg = paste0(add_cross(), crayon_body("The Seurat object has no "),
                                        crayon_key("reductions"),
                                        crayon_body(" computed.")))
   # If no reduction was provided by the user.
@@ -1181,7 +1221,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
     assertthat::assert_that(reduction %in% Seurat::Reductions(sample),
-                            msg = paste0(crayon_body("The provided "),
+                            msg = paste0(add_cross(), crayon_body("The provided "),
                                          crayon_key("reduction"),
                                          crayon_body(" could not be found in the object: "),
                                          crayon_key(reduction),
@@ -1211,7 +1251,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   # Check that the dimensions is a 2 item vector.
   if (!is.null(dims)){
     assertthat::assert_that(length(dims) == 2,
-                            msg = paste0(crayon_body("You need to provide a vector of "),
+                            msg = paste0(add_cross(), crayon_body("You need to provide a vector of "),
                                          crayon_key("two values"),
                                          crayon_body(" to "),
                                          crayon_key("dims"),
@@ -1221,7 +1261,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
     aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
 
     assertthat::assert_that(aval_dims >= 2,
-                            msg = paste0(crayon_body("There need to be at least "),
+                            msg = paste0(add_cross(), crayon_body("There need to be at least "),
                                          crayon_key("two available dimensions"),
                                          crayon_body(" computed.")))
 
@@ -1230,7 +1270,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
     integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
 
     assertthat::assert_that(isFALSE(null_check) &  isTRUE(integer_check),
-                            msg = paste0(crayon_body("The dimensions provided to "),
+                            msg = paste0(add_cross(), crayon_body("The dimensions provided to "),
                                          crayon_key("dims"),
                                          crayon_body(" need to be of class "),
                                          crayon_key("numeric"),
@@ -1238,7 +1278,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 
     # Check that the dimensions are in the requested embedding.
     assertthat::assert_that(dims[1] %in% seq_len(aval_dims) & dims[2] %in% seq_len(aval_dims),
-                            msg = paste0(crayon_body("The dimensions provided to "),
+                            msg = paste0(add_cross(), crayon_body("The dimensions provided to "),
                                          crayon_key("dims"),
                                          crayon_body(" could not be found in the following reduction: "),
                                          crayon_key(reduction),
@@ -1264,7 +1304,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
 check_and_set_assay <- function(sample, assay = NULL){
   # Check that at least one assay is computed.
   assertthat::assert_that(length(Seurat::Assays(sample)) != 0,
-                          msg = paste0(crayon_body("There must be at least "),
+                          msg = paste0(add_cross(), crayon_body("There must be at least "),
                                        crayon_key("one computed assay"),
                                        crayon_body(" in the Seurat object.")))
   # If assay is null, set it to the active one.
@@ -1273,7 +1313,7 @@ check_and_set_assay <- function(sample, assay = NULL){
   } else {
     # Check if the assay is a character.
     assertthat::assert_that(is.character(assay),
-                            msg = paste0(crayon_body("Parameter "),
+                            msg = paste0(add_cross(), crayon_body("Parameter "),
                                          crayon_key("assay"),
                                          crayon_body(" needs to of class "),
                                          crayon_key("character"),
@@ -1281,7 +1321,7 @@ check_and_set_assay <- function(sample, assay = NULL){
     # Check that the assay is in the available assays.
     aval_assays <- Seurat::Assays(sample)
     assertthat::assert_that(assay %in% aval_assays,
-                            msg = paste0(crayon_body("The following "),
+                            msg = paste0(add_cross(), crayon_body("The following "),
                                          crayon_key("assay"),
                                          crayon_body(" was not found: "),
                                          crayon_key(assay),
@@ -1322,7 +1362,7 @@ check_type <- function(parameters, required_type, test_function){
           # If not NA, if the testing function fails, report it.
           if (sum(!(is.na(item))) > 0){
             assertthat::assert_that(sum(test_function(item)) > 0,
-                                    msg = paste0(crayon_body("Parameter "),
+                                    msg = paste0(add_cross(), crayon_body("Parameter "),
                                                  crayon_key(parameter_name),
                                                  crayon_body(" needs to be of class "),
                                                  crayon_key(required_type),
@@ -1382,7 +1422,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   `%>%` <- magrittr::`%>%`
 
   assertthat::assert_that(position %in% c("stack", "fill"),
-                          msg = paste0(crayon_body("Parameter "),
+                          msg = paste0(add_cross(), crayon_body("Parameter "),
                                        crayon_key("position"),
                                        crayon_body(" needs to be either "),
                                        crayon_key("stack"),
@@ -1454,7 +1494,7 @@ check_length <- function(vector_of_parameters,
                          parameters_name,
                          features_name){
   assertthat::assert_that(length(vector_of_parameters) == length(vector_of_features),
-                          msg = paste0(crayon_body("The length of "),
+                          msg = paste0(add_cross(), crayon_body("The length of "),
                                        crayon_key(parameters_name),
                                        crayon_body(" is not equal to the length of "),
                                        crayon_key(features_name),
@@ -1675,7 +1715,7 @@ heatmap_inner <- function(data,
   `%>%`<- magrittr::`%>%`
 
   assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
-                          msg = paste0(crayon_body("The resulting input produced a matrix with "),
+                          msg = paste0(add_cross(), crayon_body("The resulting input produced a matrix with "),
                                        crayon_key("a single row and column"),
                                        crayon_body(". Please consider increasing the "),
                                        crayon_key("features"),
@@ -1685,7 +1725,7 @@ heatmap_inner <- function(data,
 
   if (!(is.null(range.data)) & data_range == "both"){
     assertthat::assert_that(length(range.data) == 2,
-                            msg = paste0(crayon_body("When providing "),
+                            msg = paste0(add_cross(), crayon_body("When providing "),
                                          crayon_key("data_range = 'both"),
                                          crayon_body(" and "),
                                          crayon_key("range.data"),
@@ -1701,7 +1741,7 @@ heatmap_inner <- function(data,
   }
 
   assertthat::assert_that(sum(dim(unique(data))) > 2,
-                          msg = paste0(crayon_body("The computed matrix has only "),
+                          msg = paste0(add_cross(), crayon_body("The computed matrix has only "),
                                        crayon_key("one unique value"),
                                        crayon_body(". Please consider another setting in which at least "),
                                        crayon_key("two different values"),
@@ -1757,12 +1797,12 @@ heatmap_inner <- function(data,
   # Checks.
   if (data_range == "only_neg"){
     assertthat::assert_that(q0 < 0,
-                            msg = paste0(crayon_body("There are no "),
+                            msg = paste0(add_cross(), crayon_body("There are no "),
                                          crayon_key("negative values"),
                                          crayon_body(" in the matrix.")))
   } else if (data_range == "only_pos"){
     assertthat::assert_that(q100 > 0,
-                            msg = paste0(crayon_body("There are no  "),
+                            msg = paste0(add_cross(), crayon_body("There are no  "),
                                          crayon_key("positive values"),
                                          crayon_body(" in the matrix.")))
   }
@@ -2370,7 +2410,7 @@ check_parameters <- function(parameter,
   if (parameter_name == "font.type"){
     # Check font.type.
     assertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
-                           msg = paste0(crayon_body("Please provide one of the following to "),
+                           msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                         crayon_key(parameter_name),
                                         crayon_body(": "),
                                         crayon_key("sans"),
@@ -2382,7 +2422,7 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
     assertthat::assert_that(parameter %in% c("normal", "colorbar"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("normal"),
@@ -2392,7 +2432,7 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "legend.position"){
     # Check the legend.position.
     assertthat::assert_that(parameter %in% c("top", "bottom", "left", "right", "none"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("top"),
@@ -2442,7 +2482,7 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "viridis.palette"){
     viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
     assertthat::assert_that(parameter %in% viridis_options,
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("A"),
@@ -2479,7 +2519,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "grid.type"){
     assertthat::assert_that(parameter %in% c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("blank"),
@@ -2499,7 +2539,7 @@ check_parameters <- function(parameter,
   } else if (parameter_name == "direction.type"){
     for (item in parameter){
       assertthat::assert_that(item %in% c("diffHeight", "arrows"),
-                              msg = paste0(crayon_body("Please provide one of the following to "),
+                              msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                            crayon_key(parameter_name),
                                            crayon_body(": "),
                                            crayon_key("diffHeight"),
@@ -2511,7 +2551,7 @@ check_parameters <- function(parameter,
     }
   } else if (parameter_name == "self.link"){
     assertthat::assert_that(parameter %in% c(1, 2),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("1"),
@@ -2520,7 +2560,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "directional"){
     assertthat::assert_that(parameter %in% c(0, 1, 2, -1),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("0"),
@@ -2533,7 +2573,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "link.arr.type"){
     assertthat::assert_that(parameter %in% c("big.arrow", "triangle"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("big.arrow"),
@@ -2542,7 +2582,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "alignment"){
     assertthat::assert_that(parameter %in% c("default", "vertical", "horizontal"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("vertical"),
@@ -2551,7 +2591,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "alpha.highlight"){
     assertthat::assert_that(parameter %in% c(seq(1, 99), "FF"),
-                            msg = paste0(crayon_body("Please provide either "),
+                            msg = paste0(add_cross(), crayon_body("Please provide either "),
                                          crayon_key("FF"),
                                          crayon_body(" or a number between "),
                                          crayon_key("1"),
@@ -2562,7 +2602,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "scale_type"){
     assertthat::assert_that(parameter %in% c("categorical", "continuous"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("categorical"),
@@ -2571,7 +2611,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "rotate_x_axis_labels"){
     assertthat::assert_that(parameter %in% c(0, 45, 90),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("0"),
@@ -2582,7 +2622,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "contour.lineend"){
     assertthat::assert_that(parameter %in% c("round", "butt", "square"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("round"),
@@ -2593,7 +2633,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "contour.linejoin"){
     assertthat::assert_that(parameter %in% c("round", "mitre", "bevel"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("round"),
@@ -2604,7 +2644,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "contour.position"){
     assertthat::assert_that(parameter %in% c("bottom", "top"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("top"),
@@ -2613,7 +2653,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "flavor"){
     assertthat::assert_that(parameter %in% c("Seurat", "UCell", "AUCell"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("Seurat"),
@@ -2624,7 +2664,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "arrange_interactions_by"){
     assertthat::assert_that(parameter %in% c("specificity", "magnitude", "both", "aggregate_rank"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("aggregate_rank"),
@@ -2637,7 +2677,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "database"){
     assertthat::assert_that(parameter %in% c("GO", "KEGG"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("GO"),
@@ -2646,7 +2686,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "GO_ontology"){
     assertthat::assert_that(parameter %in% c("BP", "MF", "CC"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("BP"),
@@ -2657,7 +2697,7 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "pAdjustMethod"){
     assertthat::assert_that(parameter %in% c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("holm"),
@@ -2676,14 +2716,14 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "number.breaks"){
     assertthat::assert_that(parameter >= 2,
-                            msg = paste0(crayon_body("Please provide a value higher or equal to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value higher or equal to "),
                                          crayon_key("2"),
                                          crayon_body(" to "),
                                          crayon_key(parameter_name),
                                          crayon_body(".")))
   } else if (parameter_name == "border.density"){
     assertthat::assert_that(parameter >= 0 & parameter <= 1,
-                            msg = paste0(crayon_body("Please provide a value between "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value between "),
                                          crayon_key("0"),
                                          crayon_body(" and "),
                                          crayon_key("1"),
@@ -2692,14 +2732,14 @@ check_parameters <- function(parameter,
                                          crayon_body(".")))
   } else if (parameter_name == "diverging.palette"){
     assertthat::assert_that(parameter %in% c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          paste(sapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   } else if (parameter_name == "sequential.palette"){
     assertthat::assert_that(parameter %in% c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
-                            msg = paste0(crayon_body("Please provide one of the following to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          paste(sapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key), collapse = crayon_body(", ")),
@@ -2722,7 +2762,7 @@ prepare_ggplot_alluvial_plot <- function(data,
   items <- length(vars.use)
   `%>%` <- magrittr::`%>%`
   assertthat::assert_that(items <= 10,
-                          msg = paste0(crayon_body("Please provide, in between "),
+                          msg = paste0(add_cross(), crayon_body("Please provide, in between "),
                                        crayon_key("first_group"),
                                        crayon_body(", "),
                                        crayon_key("middle_groups"),
@@ -2895,7 +2935,7 @@ do_GroupedGO_matrices <- function(genes,
   result_ontologies <- list()
   for (ont in ontologies){
     if(isTRUE(verbose)){
-      message(paste0("Computing grouped GO terms for the ontology: ", ont))
+      message(paste0(add_info(), crayon_body("Computing grouped GO terms for the ontology: "), crayon_key(ont)))
     }
     result_list <- list()
 
@@ -2907,13 +2947,13 @@ do_GroupedGO_matrices <- function(genes,
 
     if (is.null(levels.use)){
       if (isTRUE(verbose)){
-        message("Computing for all possible ontology levels...")
+        message(paste0(add_info(), crayon_body("Computing for all possible ontology levels...")))
       }
       while(isFALSE(breakpoint)){
         # Set the ontology level.
         counter <- counter + 1
         if (isTRUE(verbose)){
-          message(paste0("Computing level ", counter, "..."))
+          message(paste0(add_info(), crayon_body("Computing level "), crayon_key(counter), crayon_body("...")))
         }
 
         grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
@@ -2935,7 +2975,7 @@ do_GroupedGO_matrices <- function(genes,
         } else {
           # nocov start
           if (isTRUE(verbose)){
-            message("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes.")
+            message(crayon_body("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes."))
           }
           breakpoint <- TRUE
           # nocov end
@@ -2943,11 +2983,11 @@ do_GroupedGO_matrices <- function(genes,
       }
     } else {
       if (isTRUE(verbose)){
-        message("Computing for the requested levels...")
+        message(add_info(), "Computing for the requested levels...")
       }
       for (level in levels.use){
         if (isTRUE(verbose)){
-          message(paste0("Computing level ", level, "..."))
+          message(paste0(add_info(), crayon_body("Computing level "), crayon_key(level), crayon_body("...")))
         }
 
         grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
@@ -2968,7 +3008,7 @@ do_GroupedGO_matrices <- function(genes,
         } else {
           # nocov start
           if (isTRUE(verbose)){
-            message("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes.")
+            message(crayon_body("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes."))
           }
           breakpoint <- TRUE
           # nocov end
@@ -2979,7 +3019,7 @@ do_GroupedGO_matrices <- function(genes,
   }
 
   if (isTRUE(verbose)){
-    message("Finished computing!")
+    message(paste0(add_tick(), crayon_body("Finished computing!")))
   }
   return(result_ontologies)
 }

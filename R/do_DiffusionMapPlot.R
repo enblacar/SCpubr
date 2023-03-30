@@ -48,7 +48,8 @@ do_DiffusionMapPlot <- function(sample,
                                 diverging.palette = "RdBu",
                                 rotate_x_axis_labels = 45,
                                 border.color = "black",
-                                return_object = FALSE){
+                                return_object = FALSE,
+                                verbose = TRUE){
   check_suggests("do_DiffusionMapPlot")
   check_Seurat(sample = sample)
   
@@ -57,7 +58,8 @@ do_DiffusionMapPlot <- function(sample,
                        "legend.byrow" = legend.byrow,
                        "return_object" = return_object,
                        "scale.enrichment" = scale.enrichment,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "verbose" = verbose)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -127,6 +129,8 @@ do_DiffusionMapPlot <- function(sample,
   genes.use <- unlist(input_gene_list) %>% unname() %>% unique()
   genes.use <- genes.use[genes.use %in% rownames(sample)]
   
+  if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
+  
   sample <- SCpubr:::compute_enrichment_scores(sample, 
                                                input_gene_list = input_gene_list,
                                                nbin = nbin,
@@ -135,6 +139,8 @@ do_DiffusionMapPlot <- function(sample,
                                                assay = if (flavor == "UCell"){NULL} else {assay},
                                                slot = if (flavor == "Seurat"){NULL} else {slot})
   
+  
+  if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
   
   # Obtain the DC embeddings, together with the enrichment scores.
   data.use <- sample@reductions[[reduction]]@cell.embeddings %>% 
@@ -210,14 +216,14 @@ do_DiffusionMapPlot <- function(sample,
          ggplot2::geom_raster()
     
     legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"}
-    legend.name <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name, legend.name))
+    legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name), legend.name)
     if (isTRUE(enforce_symmetry)){
       p <- p + 
            ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 11, name = diverging.palette)),
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits,
-                                         name = legend.name)
+                                         name = legend.name.use)
     } else {
       if (isTRUE(use_viridis)){
         p <- p + 
@@ -226,7 +232,7 @@ do_DiffusionMapPlot <- function(sample,
                                            breaks = scale.setup$breaks,
                                            labels = scale.setup$labels,
                                            limits = scale.setup$limits,
-                                           name = legend.name)
+                                           name = legend.name.use)
       } else {
         colors <- RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]
         if (sequential.direction == -1){colors <- rev(colors)}
@@ -235,7 +241,7 @@ do_DiffusionMapPlot <- function(sample,
                                            breaks = scale.setup$breaks,
                                            labels = scale.setup$labels,
                                            limits = scale.setup$limits,
-                                           name = legend.name)
+                                           name = legend.name.use)
       }
     }
     p <- p + 
@@ -245,7 +251,7 @@ do_DiffusionMapPlot <- function(sample,
     
     # Modify the appearance of the plot.
     p <- SCpubr:::modify_continuous_legend(p = p,
-                                           legend.title = if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell"){"AUC"},
+                                           legend.title = legend.name.use,
                                            legend.aes = "fill",
                                            legend.type = legend.type,
                                            legend.position = legend.position,

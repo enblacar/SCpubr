@@ -20,29 +20,29 @@
   }
   tip_rule <- cli::rule(left = "General", width = nchar("General") + 6)
   
-  tutorials <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
-                      crayon_body(" Have a look at extensive tutorials in "),
+  tutorials <- paste0(add_info(),
+                      crayon_body("Have a look at extensive tutorials in "),
                       crayon_key(cli::style_hyperlink(text = "SCpubr's book",
                                                       url = "https://enblacar.github.io/SCpubr-book/")),
                       crayon_body("."))
   
-  cite <- paste0(cli::style_bold(cli::col_green(cli::symbol$tick)),
-                 crayon_body(" If you use "),
+  cite <- paste0(add_tick(),
+                 crayon_body("If you use "),
                  crayon_key("SCpubr"),
                  crayon_body(" in your research, please "),
                  crayon_key(cli::style_hyperlink(text = "cite it accordingly",
                                                  url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
                  crayon_body("."))
   
-  stars <- paste0(cli::style_bold(cli::col_yellow(cli::symbol$star)),
-                  crayon_body(" If the package is useful to you, consider leaving a "),
+  stars <- paste0(add_star(),
+                  crayon_body("If the package is useful to you, consider leaving a "),
                   crayon_key("Star"),
                   crayon_body(" in the "),
                   crayon_key(cli::style_hyperlink(text = "GitHub repository",
                                                   url = "https://github.com/enblacar/SCpubr")),
                   crayon_body("."))
   
-  updates <- paste0(cli::style_bold(cli::col_blue(cli::symbol$arrow_up)),
+  updates <- paste0(cli::style_bold(cli::col_blue("!")),
                     crayon_body(" Keep track of the package "),
                     crayon_key("updates"),
                     crayon_body(" on Twitter ("),
