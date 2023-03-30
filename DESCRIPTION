@@ -69,12 +69,10 @@ Suggests:
     cluster,
     decoupleR,
     cli,
-    liana (>= 0.1.6),
-    ggsankey (>= 0.0.99999)
+    liana (>= 0.1.6)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 biocViews: 
     Software, SingleCell, Visualization
 Remotes: 
-    saezlab/liana,
-    davidsjoberg/ggsankey 
+    saezlab/liana

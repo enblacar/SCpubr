@@ -126,7 +126,7 @@ do_AffinityAnalysisPlot <- function(sample,
   # Generate a network with the names of the list of genes as source and the gene sets as targets with 1 of mode of regulation.
   # Step 1: Check for underscores in the names of the gene sets.
   if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
-    warning(paste0(crayon_body("Found "),
+    warning(paste0(add_warning(), crayon_body("Found "),
                    crayon_key("underscores (_)"),
                    crayon_body(" in the name of the gene sets provided. Replacing them with "),
                    crayon_key("dots (.)"),
@@ -164,7 +164,7 @@ do_AffinityAnalysisPlot <- function(sample,
                               slot = slot)
   
   # Compute activities.
-  if(isTRUE(verbose)){message(paste0(crayon_body("Computing "),
+  if(isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "),
                                      crayon_key("activities"),
                                      crayon_body("...")))}
   
@@ -443,7 +443,7 @@ do_AffinityAnalysisPlot <- function(sample,
   }
   
   if (isTRUE(add.enrichment)){
-    if(isTRUE(verbose)){message(paste0(crayon_body("Computing "),
+    if(isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "),
                                        crayon_key("enrichment"),
                                        crayon_body("...")))}
     

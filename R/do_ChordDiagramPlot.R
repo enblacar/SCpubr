@@ -117,7 +117,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
     data <- extra_params[["df"]]
 
     assertthat::assert_that("data.frame" %in% class(data),
-                            msg = paste0(crayon_body("Please provide a "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a "),
                                          crayon_key("data.frame"),
                                          crayon_body(" or a "),
                                          crayon_key("tibble"),
@@ -126,7 +126,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(".")))
 
     assertthat::assert_that(ncol(data) == 3,
-                            msg = paste0(crayon_body("If you make use of "),
+                            msg = paste0(add_cross(), crayon_body("If you make use of "),
                                          crayon_key("from_df"),
                                          crayon_body(" parameter, make sure that the dataframe provided to "),
                                          crayon_key("df"),
@@ -135,7 +135,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(" columns.")))
 
     assertthat::assert_that(sum(colnames(data) %in% c("from", "to", "value")) == 3,
-                            msg = paste0(crayon_body("If you make use of "),
+                            msg = paste0(add_cross(), crayon_body("If you make use of "),
                                          crayon_key("from_df"),
                                          crayon_body(" parameter, make sure that the dataframe provided to "),
                                          crayon_key("df"),
@@ -150,7 +150,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(".")))
 
     assertthat::assert_that(class(data[["from"]]) %in% c("factor", "character"),
-                            msg = paste0(crayon_body("Make sure that the column named "),
+                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
                                          crayon_key("from"),
                                          crayon_body(" in the dataframe provided to "),
                                          crayon_key("df"),
@@ -161,7 +161,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(" column.")))
 
     assertthat::assert_that(class(data[["to"]]) %in% c("factor", "character"),
-                            msg = paste0(crayon_body("Make sure that the column named "),
+                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
                                          crayon_key("to"),
                                          crayon_body(" in the dataframe provided to "),
                                          crayon_key("df"),
@@ -172,7 +172,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(" column.")))
 
     assertthat::assert_that(class(data[["value"]]) %in% c("integer"),
-                            msg = paste0(crayon_body("Make sure that the column named "),
+                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
                                          crayon_key("from"),
                                          crayon_body(" in the dataframe provided to "),
                                          crayon_key("df"),
@@ -182,7 +182,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
 
   }  else {
     assertthat::assert_that(!is.null(sample),
-                            msg = paste0(crayon_body("Please provide a "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a "),
                                          crayon_key("Seurat object"),
                                          crayon_body(" to the parameter "),
                                          crayon_key("sample"),
@@ -192,14 +192,14 @@ do_ChordDiagramPlot <- function(sample = NULL,
     check_Seurat(sample = sample)
 
     assertthat::assert_that(!is.null(from) | !is.null(to),
-                            msg = paste0(crayon_body("Please provide a value to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value to "),
                                          crayon_key("from"),
                                          crayon_body(" or "),
                                          crayon_key("to"),
                                          crayon_body(" parameters.")))
 
     assertthat::assert_that(from %in% colnames(sample@meta.data) | to %in% colnames(sample@meta.data),
-                            msg = paste0(crayon_body("Parameters "),
+                            msg = paste0(add_cross(), crayon_body("Parameters "),
                                          crayon_key("from"),
                                          crayon_body(" and "),
                                          crayon_key("to"),
@@ -208,7 +208,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_body(".")))
 
     assertthat::assert_that(class(sample@meta.data[, from]) %in% c("factor", "character") | class(sample@meta.data[, to]) %in% c("factor", "character"),
-                            msg = paste0(crayon_body("Parameters "),
+                            msg = paste0(add_cross(), crayon_body("Parameters "),
                                          crayon_key("from"),
                                          crayon_body(" and "),
                                          crayon_key("to"),

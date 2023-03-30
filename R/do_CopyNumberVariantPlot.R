@@ -193,7 +193,7 @@ do_CopyNumberVariantPlot <- function(sample,
         }
       } else {
         #nocov start
-        if(isTRUE(verbose)){message(paste0("Your sample has only one gene in ", chromosome, chr_arm, ". Skipping this chromosome arm."))}
+        if(isTRUE(verbose)){message(paste0(add_info(), "Your sample has only one gene in ", chromosome, chr_arm, ". Skipping this chromosome arm."))}
         #nocov end
       }
     }

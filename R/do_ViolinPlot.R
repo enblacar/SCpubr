@@ -96,7 +96,7 @@ do_ViolinPlot <- function(sample,
     xlab <- rep("Groups", length(features))
   } else {
     assertthat::assert_that(length(xlab) == length(features),
-                            msg = paste0(crayon_body("Please provide "),
+                            msg = paste0(add_cross(), crayon_body("Please provide "),
                                          crayon_key("as many values"),
                                          crayon_body(" to "),
                                          crayon_key("xlab"),
@@ -111,7 +111,7 @@ do_ViolinPlot <- function(sample,
     ylab <- features
   } else {
     assertthat::assert_that(length(ylab) == length(features),
-                            msg = paste0(crayon_body("Please provide "),
+                            msg = paste0(add_cross(), crayon_body("Please provide "),
                                          crayon_key("as many values"),
                                          crayon_body(" to "),
                                          crayon_key("ylab"),
@@ -124,7 +124,7 @@ do_ViolinPlot <- function(sample,
 
   if (sum(is.na(y_cut)) != length(features)){
     assertthat::assert_that(length(y_cut) == length(features),
-                            msg = paste0(crayon_body("Please provide "),
+                            msg = paste0(add_cross(), crayon_body("Please provide "),
                                          crayon_key("as many values"),
                                          crayon_body(" to "),
                                          crayon_key("y_cut"),
@@ -201,7 +201,7 @@ do_ViolinPlot <- function(sample,
                               na.rm = TRUE)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
-                              msg = paste0(crayon_key("Boxplots"),
+                              msg = paste0(add_cross(), crayon_key("Boxplots"),
                                            crayon_body(" are not implemented when "),
                                            crayon_key("split.by"),
                                            crayon_body(" is set. Set "),

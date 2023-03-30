@@ -118,7 +118,7 @@ do_PathwayActivityPlot <- function(sample,
   
   if (!is.null(split.by) & !is.null(group.by)){
     assertthat::assert_that(length(group.by) == 1,
-                            msg = paste0(crayon_body("When using "),
+                            msg = paste0(add_cross(), crayon_body("When using "),
                                          crayon_key("split.by"), 
                                          crayon_body(" make sure you only provide a single value to "),
                                          crayon_key("group.by"),

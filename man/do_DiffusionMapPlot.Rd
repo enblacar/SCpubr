@@ -43,7 +43,8 @@ do_DiffusionMapPlot(
   diverging.palette = "RdBu",
   rotate_x_axis_labels = 45,
   border.color = "black",
-  return_object = FALSE
+  return_object = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -130,6 +131,8 @@ do_DiffusionMapPlot(
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
+
+\item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }
 \value{
 A list of ggplot2 objects and a Seurat object if desired.

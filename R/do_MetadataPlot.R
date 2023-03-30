@@ -77,7 +77,7 @@ do_MetadataPlot <- function(sample = NULL,
     
     for (meta in metadata){
       assertthat::assert_that(meta %in% colnames(sample@meta.data),
-                              msg = paste0(crayon_body("Metadata column "),
+                              msg = paste0(add_cross(), crayon_body("Metadata column "),
                                            crayon_key(meta), 
                                            crayon_body(" is not in the sample "),
                                            crayon_key("metadata"),
@@ -85,7 +85,7 @@ do_MetadataPlot <- function(sample = NULL,
     }
     
     assertthat::assert_that(!is.null(sample) & !is.null(metadata) & !is.null(group.by),
-                            msg = paste0(crayon_body("If "),
+                            msg = paste0(add_cross(), crayon_body("If "),
                                          crayon_key("from_df = FALSE"),
                                          crayon_body(" you need to use the "),
                                          crayon_key("sample"),
@@ -102,7 +102,7 @@ do_MetadataPlot <- function(sample = NULL,
                  dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(metadata)), unique))
     
     assertthat::assert_that(length(unique(data.plot %>% dplyr::pull(.data[[group.by]]))) == nrow(data.plot),
-                            msg = paste0(crayon_body("Please provide only metadata column that have a "),
+                            msg = paste0(add_cross(), crayon_body("Please provide only metadata column that have a "),
                                          crayon_key(" one to one assignment "),
                                          crayon_body(" to the unique values in "),
                                          crayon_key("group.by"),
@@ -113,7 +113,7 @@ do_MetadataPlot <- function(sample = NULL,
                    dplyr::mutate(dplyr::across(dplyr::everything(), as.factor))
   } else {
     assertthat::assert_that(!is.null(df),
-                            msg = paste0(crayon_body("If "),
+                            msg = paste0(add_cross(), crayon_body("If "),
                                          crayon_key("from_df = TRUE"),
                                          crayon_body(" you need to use the "),
                                          crayon_key("df"),

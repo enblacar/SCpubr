@@ -106,7 +106,7 @@ do_DotPlot <- function(sample,
     # Check that flip is not set to TRUE and features is not a named list.
     if (isTRUE(flip)){
       assertthat::assert_that(!is.list(features),
-                              msg = paste0(crayon_body("Please, provide the a "),
+                              msg = paste0(add_cross(), crayon_body("Please, provide the a "),
                                            crayon_key("character vector"),
                                            crayon_body(" to "),
                                            crayon_key("features"),
@@ -117,7 +117,7 @@ do_DotPlot <- function(sample,
 
     if (is.list(features)){
       assertthat::assert_that(isFALSE(flip),
-                              msg = paste0(crayon_body("Please, provide the a "),
+                              msg = paste0(add_cross(), crayon_body("Please, provide the a "),
                                            crayon_key("character vector"),
                                            crayon_body(" to "),
                                            crayon_key("features"),

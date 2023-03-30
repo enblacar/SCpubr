@@ -153,7 +153,7 @@ do_CellularStatesPlot <- function(sample,
     # Check group.by
     if (is.null(group.by)){
       assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                              msg = paste0(crayon_body("Please provide a value for "),
+                              msg = paste0(add_cross(), crayon_body("Please provide a value for "),
                                            crayon_key("group.by"),
                                            crayon_body(" and that this value is not called "),
                                            crayon_key("Groups"),
@@ -177,21 +177,21 @@ do_CellularStatesPlot <- function(sample,
     if (is.null(y2) & is.null(x2)){
       # Check that the names provided are not repeated.
       assertthat::assert_that(sum(duplicated(c(x1, y1))) == 0,
-                              msg = paste0(crayon_body("The "),
+                              msg = paste0(add_cross(), crayon_body("The "),
                                            crayon_key("names"),
                                            crayon_body(" of the lists can not be "),
                                            crayon_key("duplicated"),
                                            crayon_body(".")))
       # Check that the names provided match the marker genes.
       assertthat::assert_that(x1 %in% names(input_gene_list),
-                              msg = paste0(crayon_body("The name "),
+                              msg = paste0(add_cross(), crayon_body("The name "),
                                            crayon_key(x1),
                                            crayon_body(" is not a name of the lists of genes provided to "),
                                            crayon_key("input_gene_list"),
                                            crayon_body(".")))
 
       assertthat::assert_that(y1 %in% names(input_gene_list),
-                              msg = paste0(crayon_body("The name "),
+                              msg = paste0(add_cross(), crayon_body("The name "),
                                            crayon_key(y1),
                                            crayon_body(" is not a name of the lists of genes provided to "),
                                            crayon_key("input_gene_list"),
@@ -260,28 +260,28 @@ do_CellularStatesPlot <- function(sample,
     } else if (is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
         assertthat::assert_that(sum(duplicated(c(x1, y1, x2))) == 0,
-                                msg = paste0(crayon_body("The "),
+                                msg = paste0(add_cross(), crayon_body("The "),
                                              crayon_key("names"),
                                              crayon_body(" of the lists can not be "),
                                              crayon_key("duplicated"),
                                              crayon_body(".")))
         # Check that the names provided match the marker genes.
         assertthat::assert_that(x1 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(x1),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
                                              crayon_body(".")))
 
         assertthat::assert_that(x2 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(x1),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
                                              crayon_body(".")))
 
         assertthat::assert_that(y1 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(y1),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
@@ -362,35 +362,35 @@ do_CellularStatesPlot <- function(sample,
     } else if (!is.null(y2) & !(is.null(x2))){
         # Check that the names provided are not repeated.
         assertthat::assert_that(sum(duplicated(c(x1, y1, x2, y2))) == 0,
-                                msg = paste0(crayon_body("The "),
+                                msg = paste0(add_cross(), crayon_body("The "),
                                              crayon_key("names"),
                                              crayon_body(" of the lists can not be "),
                                              crayon_key("duplicated"),
                                              crayon_body(".")))
         # Check that the names provided match the marker genes.
         assertthat::assert_that(x1 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(x1),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
                                              crayon_body(".")))
 
         assertthat::assert_that(x2 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(x2),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
                                              crayon_body(".")))
 
         assertthat::assert_that(y1 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(y1),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
                                              crayon_body(".")))
 
         assertthat::assert_that(y2 %in% names(input_gene_list),
-                                msg = paste0(crayon_body("The name "),
+                                msg = paste0(add_cross(), crayon_body("The name "),
                                              crayon_key(y2),
                                              crayon_body(" is not a name of the lists of genes provided to "),
                                              crayon_key("input_gene_list"),
@@ -540,7 +540,7 @@ do_CellularStatesPlot <- function(sample,
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
       if (isTRUE(plot_features)){
         assertthat::assert_that(!is.null(features),
-                                msg = paste0(crayon_body("Please provide a value to "),
+                                msg = paste0(add_cross(), crayon_body("Please provide a value to "),
                                              crayon_key("features"),
                                              crayon_body(" .")))
       }

@@ -159,7 +159,7 @@ do_BoxPlot <- function(sample,
   }
   if (isTRUE(order)){
     assertthat::assert_that(is.null(split.by),
-                            msg = paste0(crayon_body("Parameter "),
+                            msg = paste0(add_cross(), crayon_body("Parameter "),
                                          crayon_key("split.by"),
                                          crayon_body(" cannot be used alonside "),
                                          crayon_key("order"),
@@ -168,7 +168,7 @@ do_BoxPlot <- function(sample,
 
   if (!is.null(split.by)){
     assertthat::assert_that(isFALSE(order),
-                            msg = paste0(crayon_body("Parameter "),
+                            msg = paste0(add_cross(), crayon_body("Parameter "),
                                          crayon_key("split.by"),
                                          crayon_body(" cannot be used alonside "),
                                          crayon_key("order"),
@@ -189,7 +189,7 @@ do_BoxPlot <- function(sample,
                                key_glyph = "rect",
                                na.rm = TRUE)
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
-    stop("Parameter use_silhouetter can not be used alongside split.by.", call. = FALSE)
+    stop(paste0(add_cross(), crayon_body("Parameter "), crayon_key("use_silhouette"),  crayon_body("can not be used alongside "), crayon_key("split.by"), crayon_body(".")), call. = FALSE)
   } else if (isFALSE(use_silhouette)){
     if (is.null(split.by)){
       p <- data %>%
@@ -271,10 +271,10 @@ do_BoxPlot <- function(sample,
                                  family = font.type,
                                  fontface = "bold")
     } else {
-      stop("Please provide the pair of groups to test.", call. = FALSE)
+      stop(paste0(add_cross(), crayon_body("Please provide the pair of groups to test.")), call. = FALSE)
     }
   } else if (isTRUE(use_test) & !is.null(split.by)){
-    stop("Tests can not be made if split.by is set.", call. = FALSE)
+    stop(paste0(add_cross(), crayon_body("Tests can not be made if "), crayon_key("split.by"),  crayon_body(" is set.")), call. = FALSE)
   }
   return(p)
 }

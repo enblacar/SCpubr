@@ -256,7 +256,7 @@ do_LigandReceptorPlot <- function(liana_output,
   }
 
   assertthat::assert_that(nrow(liana_output) > 0,
-                          msg = paste0(crayon_body("Whith the current presets of "),
+                          msg = paste0(add_cross(), crayon_body("Whith the current presets of "),
                                        crayon_key("keep_source"),
                                        crayon_body(" and "),
                                        crayon_key("keep_target"),

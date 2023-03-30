@@ -54,7 +54,7 @@ do_GroupedGOTermPlot <- function(genes,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   assertthat::assert_that(min.overlap >= 1,
-                          msg = paste0(crayon_body("Please provide a "),
+                          msg = paste0(add_cross(), crayon_body("Please provide a "),
                                        crayon_key("value"),
                                        crayon_body(" higher or equal to "),
                                        crayon_key("1"),
@@ -63,7 +63,7 @@ do_GroupedGOTermPlot <- function(genes,
                                        crayon_body(".")))
   
   assertthat::assert_that("OrgDb" %in% class(org.db),
-                          msg = paste0(crayon_body("Please provide a valid"),
+                          msg = paste0(add_cross(), crayon_body("Please provide a valid"),
                                        crayon_key("OrgDb"),
                                        crayon_body(" object to "),
                                        crayon_key("org.db"),

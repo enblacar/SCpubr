@@ -102,7 +102,7 @@ do_FunctionalAnnotationPlot <- function(genes,
 
   if (!is.null(min.overlap)){
     assertthat::assert_that(min.overlap >= 1,
-                            msg = paste0(crayon_body("Please provide a value higher or equal to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value higher or equal to "),
                                          crayon_key("1"),
                                          crayon_body(" to "),
                                          crayon_key("min.overlap"),
@@ -110,7 +110,7 @@ do_FunctionalAnnotationPlot <- function(genes,
   }
 
   assertthat::assert_that("OrgDb" %in% class(org.db),
-                          msg = paste0(crayon_body("Please provide a valid "),
+                          msg = paste0(add_cross(), crayon_body("Please provide a valid "),
                                        crayon_key("OrgDb object"),
                                        crayon_body(" to "),
                                        crayon_key("org.db"),

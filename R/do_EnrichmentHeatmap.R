@@ -122,7 +122,7 @@ do_EnrichmentHeatmap <- function(sample,
   `%>%` <- magrittr::`%>%`
 
   if (!(is.null(assay)) & flavor == "UCell"){
-    stop(paste0(crayon_body("When using "),
+    stop(paste0(add_cross(), crayon_body("When using "),
                 crayon_key("flavor = UCell"),
                 crayon_body(" do not use the "),
                 crayon_key("assay"),
@@ -134,7 +134,7 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   if (!(is.null(slot)) & flavor == "Seurat"){
-    stop(paste0(crayon_body("When using "),
+    stop(paste0(add_cross(), crayon_body("When using "),
                 crayon_key("flavor = Seurat"),
                 crayon_body(" do not use the "),
                 crayon_key("slot"),
@@ -145,7 +145,7 @@ do_EnrichmentHeatmap <- function(sample,
   
   if (!is.null(geneset.order)){
     assertthat::assert_that(sum(geneset.order %in% names(input_gene_list)) == length(names(input_gene_list)),
-                            msg = paste0(crayon_body("The names provided to "),
+                            msg = paste0(add_cross(), crayon_body("The names provided to "),
                                          crayon_key("geneset.order"),
                                          crayon_body(" do not match the names of the gene sets in "),
                                          crayon_key("input_gene_list"),
@@ -168,14 +168,14 @@ do_EnrichmentHeatmap <- function(sample,
   } else if (is.list(input_gene_list)){
     input_list <- input_gene_list
     assertthat::assert_that(!is.null(names(input_list)),
-                            msg = paste0(crayon_body("Please provide a "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a "),
                                          crayon_key("named list"),
                                          crayon_body(" to "),
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
     
     if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
-      warning(paste0(crayon_body("Found "),
+      warning(paste0(add_warning(), crayon_body("Found "),
                      crayon_key("underscores (_)"),
                      crayon_body(" in the name of the gene sets provided. Replacing them with "),
                      crayon_key("dots (.)"),
@@ -204,7 +204,7 @@ do_EnrichmentHeatmap <- function(sample,
   out.list <- list()
   if (is.null(group.by)){
     assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                            msg = paste0(crayon_body("Please, make sure you provide a value for "),
+                            msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
                                          crayon_key("group.by")))
 
     aggr_entities <- levels(sample)
@@ -214,7 +214,7 @@ do_EnrichmentHeatmap <- function(sample,
 
   for (g in group.by){
     assertthat::assert_that(g %in% colnames(sample@meta.data),
-                            msg = paste0(crayon_body("The value "),
+                            msg = paste0(add_cross(), crayon_body("The value "),
                                          crayon_key(g),
                                          crayon_body(" in "),
                                          crayon_key("group.by"),
@@ -222,7 +222,7 @@ do_EnrichmentHeatmap <- function(sample,
                                          crayon_key(" metadata.")))
 
     assertthat::assert_that(class(sample@meta.data[, g]) %in% c("character", "factor"),
-                            msg = paste0(crayon_body("The value "),
+                            msg = paste0(add_cross(), crayon_body("The value "),
                                          crayon_key(g),
                                          crayon_body(" in "),
                                          crayon_key("group.by"),

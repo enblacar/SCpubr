@@ -420,9 +420,7 @@ return_dependencies <- function(){
                    "do_DiffusionMapPlot" = c("Matrix"),
                    "do_NebulosaPlot" = c("Nebulosa"),
                    "do_PathwayActivityPlot" = c(),
-                   "do_PseudotimePlot" = c("monocle3", "ggdist"),
                    "do_RidgePlot" = c("ggridges"),
-                   "do_SankeyPlot" = c("ggsankey"),
                    "do_SCExpressionHeatmap" = c(),
                    "do_SCEnrichmentHeatmap" = c(),
                    "do_TermEnrichmentPlot" = c(),
@@ -447,7 +445,7 @@ check_suggests <- function(function_name, passive = FALSE){
   pkg_list <- return_dependencies()
   # The function is not in the current list of possibilities.
   if (function_name %!in% names(pkg_list)){
-    stop(paste0(function_name, " is not an accepted function name."), call. = FALSE)
+    stop(paste0(add_cross(), crayon_key(function_name), crayon_body(" is not an accepted function name.")), call. = FALSE)
   }
   pkgs <- c(pkg_list[[function_name]], pkg_list[["Essentials"]])
 
@@ -467,7 +465,7 @@ check_suggests <- function(function_name, passive = FALSE){
     missing_pkgs <- names(pkgs[isFALSE(pkgs)])
     if (isFALSE(passive)){
       if (isFALSE(requireNamespace("cli", quietly = TRUE))){
-        stop(paste0(crayon_body("Packages "), 
+        stop(paste0(add_cross(), crayon_body("Packages "), 
                     paste(sapply(missing_pkgs, crayon_key), collapse = crayon_body(", ")), 
                     crayon_body(" must be installed to use "), 
                     crayon_key(function_name), 
@@ -501,7 +499,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
   if (!(is.null(function_name))){
     for (func in function_name){
       if (!(func %in% names(pkg_list))){
-        stop(paste0(crayon_key(function_name), crayon_body(" is not an accepted function name.")), call. = FALSE)
+        stop(paste0(add_cross(), crayon_key(function_name), crayon_body(" is not an accepted function name.")), call. = FALSE)
       }
     }
   }
@@ -558,7 +556,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
             nchar.use <- nchar(func)
           }
         } else {
-          if (func %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){
+          if (func %in% c("do_LigandReceptorPlot", "save_Plot")){
             next
           }
         }
@@ -2082,7 +2080,7 @@ compute_enrichment_scores <- function(sample,
                                           crayon_body(" if you are running a lower version.")))
     if (!requireNamespace("UCell", quietly = TRUE)) {
       # nocov start
-      stop(paste0("Package UCell must be installed to run UCell scoring."), call. = FALSE)
+      stop(paste0(add_cross(), crayon_body("Package "), crayon_key("UCell"), crayon_body("must be installed to run UCell scoring.")), call. = FALSE)
       # nocov end
     }
   }

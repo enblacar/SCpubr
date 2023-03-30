@@ -84,7 +84,7 @@ do_BarPlot <- function(sample,
 
   # Get the general table.
   assertthat::assert_that(class(sample@meta.data[, group.by]) %in% c("character", "factor"),
-                          msg = paste0(crayon_body("Please provide to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide to "),
                                        crayon_key("feature"),
                                        crayon_body(" a "),
                                        crayon_key(" metadta categorical "),

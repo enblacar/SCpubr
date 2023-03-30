@@ -26,6 +26,11 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map. 
 -   `SCpubr::check_dependencies()` to generate a per-function summary of the needed packages to run the function. The report has been enhanced with `cli` package and now clearly illustrates what is missing to run the function.
 
+## Removed functions
+
+-   `SCpubr::do_SankeyPlot()` has been removed and replaced by `SCpubr::do_AlluvialPlot()`, which is present in the official CRAN versions.
+-   `SCpubr::do_PseudotimePlot()` has been removed indefinitely until a better, revamped, state-of-the-art version is generated. 
+
 ## General
 
 -   Now when using `min.cutoff` or `max.cutoff`, the legend will show that the min/max value is higher/lower than the one provided, if such value appeared originally in the legend breaks. This potentially interacts with `enforce_symmetry`.
@@ -35,6 +40,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Implemented `diverging.palette` parameter in all plots that have a symmetrical color scale to help selecting other possible color scales for the plot.
 -   Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
 -   Renamed `SCpubr::state_dependencies()` to `SCpubr::check_dependencies()`.
+-   Renewed printed messages at startup and while running functions using `cli` package.
 
 ## `SCpubr::do_BeeSwarmPlot`
 

@@ -135,7 +135,7 @@ do_FeaturePlot <- function(sample,
   # Check character parameters.
   # Workaround for features.
   if (is.list(features)){
-    warning("Features provided as a list. Unlisting the list. Please use a character vector next time.", call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("Features provided as a list. Unlisting the list. Please use a character vector next time."), call. = FALSE))
     features <- unique(unlist(features))
   }
   character_list <- list("legend.position" = legend.position,
@@ -179,7 +179,7 @@ do_FeaturePlot <- function(sample,
   # Check individual titles.
   if (length(features) > 1 & !is.null(individual.titles)){
     assertthat::assert_that(length(features) == length(individual.titles),
-                            msg = paste0(crayon_body("The total number of "),
+                            msg = paste0(add_cross(), crayon_body("The total number of "),
                                          crayon_key("individual titles"),
                                          crayon_body(" does not match the number of "),
                                          crayon_key("features"),
@@ -188,7 +188,7 @@ do_FeaturePlot <- function(sample,
 
   if (length(features) > 1 & !is.null(individual.subtitles)){
     assertthat::assert_that(length(features) == length(individual.subtitles),
-                            msg = paste0(crayon_body("The total number of "),
+                            msg = paste0(add_cross(), crayon_body("The total number of "),
                                          crayon_key("individual subtitles"),
                                          crayon_body(" does not match the number of "),
                                          crayon_key("features"),
@@ -197,7 +197,7 @@ do_FeaturePlot <- function(sample,
 
   if (length(features) > 1 & !is.null(individual.captions)){
     assertthat::assert_that(length(features) == length(individual.captions),
-                            msg = paste0(crayon_body("The total number of "),
+                            msg = paste0(add_cross(), crayon_body("The total number of "),
                                          crayon_key("individual captions"),
                                          crayon_body(" does not match the number of "),
                                          crayon_key("features"),
@@ -206,14 +206,14 @@ do_FeaturePlot <- function(sample,
 
   ## Check that the contour_expand_axes is between 0 and 1.
   assertthat::assert_that(contour_expand_axes <= 1,
-                          msg = paste0(crayon_body("Please provide a value to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide a value to "),
                                        crayon_key("countour_expand_axes"),
                                        crayon_body(" lower or equal than "),
                                        crayon_key("1"),
                                        crayon_body(".")))
 
   assertthat::assert_that(contour_expand_axes >= 0,
-                          msg = paste0(crayon_body("Please provide a value to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide a value to "),
                                        crayon_key("countour_expand_axes"),
                                        crayon_body(" higher or equal than "),
                                        crayon_key("0"),
@@ -268,7 +268,7 @@ do_FeaturePlot <- function(sample,
   }
   
   if (length(min.cutoff) != length(features)){
-    warning(paste0(crayon_body("Please provide as many values to "),
+    warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
                    crayon_key("min.cutoff"),
                    crayon_body(" as "),
                    crayon_key("features"),
@@ -276,7 +276,7 @@ do_FeaturePlot <- function(sample,
   }
   
   if (length(max.cutoff) != length(features)){
-    warning(paste0(crayon_body("Please provide as many values to "),
+    warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
                    crayon_key("max.cutoff"),
                    crayon_body(" as "),
                    crayon_key("features"),
@@ -565,7 +565,7 @@ do_FeaturePlot <- function(sample,
       } else {
         # Check if the identitites are duplicated. If so, remove them.
         if (sum(duplicated(split.by.idents)) != 0){
-          message("Found and removed duplicated values in split.by.idents.")
+          message(paste0(add_info(), crayon_body("Found and removed duplicated values in split.by.idents.")))
           split.by.idents <- split.by.idents[!duplicated(split.by.idents)]
         }
         # Get the names of the cells to plot.

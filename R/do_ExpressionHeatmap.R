@@ -114,7 +114,7 @@ do_ExpressionHeatmap <- function(sample,
   }
 
   if (is.list(features)){
-    message(paste0(crayon_body("You have provided a "),
+    warning(paste0(add_warning(), crayon_body("You have provided a "),
                    crayon_key("list"),
                    crayon_body(" to the parameter "),
                    crayon_key("features"),
@@ -126,7 +126,7 @@ do_ExpressionHeatmap <- function(sample,
 
   # Generate the heatmap data.
   if (sum(!features %in% rownames(sample)) >= 1){
-    warning(paste0(crayon_body("The following features are not found in the "),
+    warning(paste0(add_warning(), crayon_body("The following features are not found in the "),
                    crayon_key("row names"),
                    crayon_body(" of the specified "),
                    crayon_key("assay"),
@@ -137,14 +137,14 @@ do_ExpressionHeatmap <- function(sample,
   # Check the different values of group.by.
   for (variant in group.by){
     assertthat::assert_that(variant %in% colnames(sample@meta.data),
-                            msg = paste0(crayon_body("The value provided to parameter "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to parameter "),
                                          crayon_key("group.by"),
                                          crayon_body(" is not in the sample "),
                                          crayon_key("metadata"),
                                          crayon_body(".")))
 
     assertthat::assert_that(class(sample@meta.data[, variant]) %in% c("character", "factor"),
-                            msg = paste0(crayon_body("The value provided to parameter "),
+                            msg = paste0(add_cross(), crayon_body("The value provided to parameter "),
                                          crayon_key("group.by"),
                                          crayon_body(" is not a "),
                                          crayon_key("character"),
@@ -156,7 +156,7 @@ do_ExpressionHeatmap <- function(sample,
   features <- features[features %in% rownames(sample)]
 
   assertthat::assert_that(length(features) >= 1,
-                          msg = paste0(crayon_body("None of the provided "),
+                          msg = paste0(add_cross(), crayon_body("None of the provided "),
                                        crayon_key("features"),
                                        crayon_body(" are present in the "),
                                        crayon_key("sample"),

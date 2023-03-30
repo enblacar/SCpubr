@@ -76,7 +76,7 @@ do_NebulosaPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   if (is.list(features)){
-    warning(paste0(crayon_key("Features"),
+    warning(paste0(add_warning(), crayon_key("Features"),
                    crayon_body(" provided as a "),
                    crayon_key("list"),
                    crayon_body(". Unlisting it. Please use a "),

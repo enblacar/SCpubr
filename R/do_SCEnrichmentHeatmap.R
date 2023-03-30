@@ -154,7 +154,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   
   if (!(is.null(assay)) & flavor == "UCell"){
-    stop(paste0(crayon_body("When using "),
+    stop(paste0(add_cross(), crayon_body("When using "),
                 crayon_key("flavor = UCell"),
                 crayon_body(" do not use the "),
                 crayon_key("assay"),
@@ -166,7 +166,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   
   if (!(is.null(slot)) & flavor == "Seurat"){
-    stop(paste0(crayon_body("When using "),
+    stop(paste0(add_cross(), crayon_body("When using "),
                 crayon_key("flavor = Seurat"),
                 crayon_body(" do not use the "),
                 crayon_key("slot"),
@@ -181,13 +181,13 @@ do_SCEnrichmentHeatmap <- function(sample,
   } else if (is.list(input_gene_list)){
     input_list <- input_gene_list
     assertthat::assert_that(!is.null(names(input_list)),
-                            msg = paste0(crayon_body("Please provide a "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a "),
                                          crayon_key("named list"),
                                          crayon_body(" to "),
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
     if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
-      warning(paste0(crayon_body("Found "),
+      warning(paste0(add_warning(), crayon_body("Found "),
                      crayon_key("underscores (_)"),
                      crayon_body(" in the name of the gene sets provided. Replacing them with "),
                      crayon_key("dots (.)"),
@@ -198,7 +198,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   
   assertthat::assert_that(sum(names(input_gene_list) %in% colnames(sample@meta.data)) == 0,
-                          msg = paste0(crayon_body("Please make sure you do not provide a list of gene sets whose "),
+                          msg = paste0(add_cross(), crayon_body("Please make sure you do not provide a list of gene sets whose "),
                                        crayon_key("names"),
                                        crayon_body(" match any of the "),
                                        crayon_key("metadata columns"), 
@@ -217,7 +217,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   
   assertthat::assert_that(length(group.by) == 1,
-                          msg = paste0(crayon_body("Please provide only a single value to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),
                                        crayon_key("group.by"),
                                        crayon_body(".")))
   
@@ -263,7 +263,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   # Compute cell order to group cells withing heatmap bodies.
   if (isTRUE(cluster_cells)){
     if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
-      warning(paste0(crayon_body("A given group in "),
+      warning(paste0(add_warning(), crayon_body("A given group in "),
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
                      crayon_key("65536"),

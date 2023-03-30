@@ -135,7 +135,7 @@ do_AlluvialPlot <- function(sample,
 
   for (var in vars.use){
     assertthat::assert_that(var %in% colnames(sample@meta.data),
-                            msg = paste0(crayon_body("Please make sure that the variables provided to "),
+                            msg = paste0(add_cross(), crayon_body("Please make sure that the variables provided to "),
                                          crayon_key("first_group"),
                                          crayon_body(", "),
                                          crayon_key("middle_groups"),
@@ -146,7 +146,7 @@ do_AlluvialPlot <- function(sample,
                                          crayon_body(".")))
 
     assertthat::assert_that(class(sample@meta.data[, var]) %in% c("character", "factor"),
-                            msg = paste0(crayon_body("Please make sure that the variables provided to "),
+                            msg = paste0(add_cross(), crayon_body("Please make sure that the variables provided to "),
                                          crayon_key("first_group"),
                                          crayon_body(", "),
                                          crayon_key("middle_groups"),
@@ -160,13 +160,13 @@ do_AlluvialPlot <- function(sample,
   }
 
   assertthat::assert_that(length(fill.by) == 1,
-                          msg = paste0(crayon_body("Please provide a single value to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide a single value to "),
                                        crayon_key("fill.by"),
                                        crayon_body(".")))
 
 
   assertthat::assert_that(isTRUE(fill.by %in% vars.use),
-                          msg = paste0(crayon_body("Paramter "),
+                          msg = paste0(add_cross(), crayon_body("Paramter "),
                                        crayon_key("fill.by"),
                                        crayon_body(" has to be the same as one of the values in "),
                                        crayon_key("first_group"),

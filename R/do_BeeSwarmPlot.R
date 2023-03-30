@@ -59,7 +59,7 @@ do_BeeSwarmPlot <- function(sample,
   # Check ggbeeswarm version:
   # nocov start
   if(utils::packageVersion("ggbeeswarm") < "0.7.1"){
-    warning("Due to recent updates in ggbeeswarm package, some internal interaction with ggplot2 have changed. Please update ggbeeswarm and ggplot2 to ensure correct plotting.", call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("Due to recent updates in ggbeeswarm package, some internal interaction with ggplot2 have changed. Please update ggbeeswarm and ggplot2 to ensure correct plotting."), call. = FALSE))
   }
   # nocov end
 

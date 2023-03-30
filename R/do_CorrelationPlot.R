@@ -101,7 +101,7 @@ do_CorrelationPlot <- function(sample = NULL,
     
     if (is.null(group.by)){
       assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                              msg = paste0(crayon_body("Please, make sure you provide a value for "),
+                              msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
                                            crayon_key("group.by"),
                                            crayon_body(" and that this is not called "),
                                            crayon_key("Groups")))
@@ -146,7 +146,7 @@ do_CorrelationPlot <- function(sample = NULL,
            stats::cor() %>%
            round(digits = 2)
     assertthat::assert_that(sum(dim(out)) > 2,
-                            msg = paste0(crayon_body("Please provide a variable to "),
+                            msg = paste0(add_cross(), crayon_body("Please provide a variable to "),
                                          crayon_key("group.by"),
                                          crayon_body(" that does not generate a 1x1 matrix.")))
     # Compute hclust.
@@ -318,7 +318,7 @@ do_CorrelationPlot <- function(sample = NULL,
                 max(data$score, na.rm = TRUE))
     
     assertthat::assert_that(limits[[1]] != limits[[2]],
-                            msg = paste0(crayon_body("The "),
+                            msg = paste0(add_cross(), crayon_body("The "),
                                          crayon_key(" jaccard similarity matrix "),
                                          crayon_body(" has no different values. Try another gene set.")))
     

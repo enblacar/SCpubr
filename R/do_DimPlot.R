@@ -121,7 +121,7 @@ do_DimPlot <- function(sample,
   order_and_shuffle_used <- !(is.null(order)) & isTRUE(shuffle)
 
   assertthat::assert_that(!group_by_and_highlighting_cells,
-                          msg = paste0(crayon_body("Either "),
+                          msg = paste0(add_cross(), crayon_body("Either "),
                                        crayon_key("group.by"),
                                        crayon_body(" or "),
                                        crayon_key("cells.highlight | idents.hightlight"),
@@ -130,7 +130,7 @@ do_DimPlot <- function(sample,
                                        crayon_body(".")))
 
   assertthat::assert_that(!split_by_and_highlighting_cells,
-                          msg = paste0(crayon_body("Either "),
+                          msg = paste0(add_cross(), crayon_body("Either "),
                                        crayon_key("split.by"),
                                        crayon_body(" or "),
                                        crayon_key("cells.highlight | idents.hightlight"),
@@ -139,7 +139,7 @@ do_DimPlot <- function(sample,
                                        crayon_body(".")))
 
   if (order_and_shuffle_used){
-    warning(paste0(crayon_body("Setting up a custom order with paramter "),
+    warning(paste0(add_warning(), crayon_body("Setting up a custom order with paramter "),
                    crayon_key("order"),
                    crayon_body(" when "),
                    crayon_key("shuffle = TRUE"),
@@ -160,7 +160,7 @@ do_DimPlot <- function(sample,
 
   ## If the user provides more than one color to na.value, stop the function.
   assertthat::assert_that(length(na.value) == 1,
-                          msg = paste0(crayon_body("Please, provide only "),
+                          msg = paste0(add_cross(), crayon_body("Please, provide only "),
                                        crayon_key("one color"),
                                        crayon_body(" to parameter "),
                                        crayon_key("na.value"),
@@ -168,14 +168,14 @@ do_DimPlot <- function(sample,
 
   ## Check that the contour_expand_axes is between 0 and 1.
   assertthat::assert_that(contour_expand_axes <= 1,
-                          msg = paste0(crayon_body("Please, provide a value "),
+                          msg = paste0(add_cross(), crayon_body("Please, provide a value "),
                                        crayon_key("lower or equal to 1"),
                                        crayon_body(" to parameter "),
                                        crayon_key("contour_expand_axes"),
                                        crayon_body(".")))
 
   assertthat::assert_that(contour_expand_axes >= 0,
-                          msg = paste0(crayon_body("Please, provide a value "),
+                          msg = paste0(add_cross(), crayon_body("Please, provide a value "),
                                        crayon_key("lower or equal to 1"),
                                        crayon_body(" to parameter "),
                                        crayon_key("contour_expand_axes"),
@@ -183,7 +183,7 @@ do_DimPlot <- function(sample,
 
   # If the user provides raster = TRUE but the pt.size is less than 1, warn it.
   if (isTRUE(raster) & pt.size < 1){
-    warning(paste0(crayon_body("Setting "),
+    warning(paste0(add_warning(), crayon_body("Setting "),
                    crayon_key("raster = TRUE"),
                    crayon_body(" and "),
                    crayon_key("pt.size < 1"),
@@ -269,7 +269,7 @@ do_DimPlot <- function(sample,
     } else if (isTRUE(highlighting_cells)){
       # Stop the execution if more than one color is provided to highlight the cells.
       assertthat::assert_that(length(colors.use) == 1,
-                              msg = paste0(crayon_body("Please, provide only "),
+                              msg = paste0(add_cross(), crayon_body("Please, provide only "),
                                            crayon_key("one color"),
                                            crayon_body(" to "),
                                            crayon_key("cells.highlight"),
@@ -293,7 +293,7 @@ do_DimPlot <- function(sample,
     if (isTRUE(group_by_and_split_by_are_null)){
       # Check that idents.keep matches the values and if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% levels(sample))),
-                              msg = paste0(crayon_body("All the values in "),
+                              msg = paste0(add_cross(), crayon_body("All the values in "),
                                            crayon_key("idents.keep"),
                                            crayon_body(" must be in "),
                                            crayon_key("levels(sample"),
@@ -306,7 +306,7 @@ do_DimPlot <- function(sample,
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by]))),
-                              msg = paste0(crayon_body("All the values in "),
+                              msg = paste0(add_cross(), crayon_body("All the values in "),
                                            crayon_key("idents.keep"),
                                            crayon_body(" must be in the"),
                                            crayon_key("group.by"),
@@ -318,7 +318,7 @@ do_DimPlot <- function(sample,
     } else if (split_by_is_used | group_by_and_split_by_used){
       # Check that the values in idents.keep are in the unique values of split.by.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
-                              msg = paste0(crayon_body("All the values in "),
+                              msg = paste0(add_cross(), crayon_body("All the values in "),
                                            crayon_key("idents.keep"),
                                            crayon_body(" must be in the "),
                                            crayon_key("split.by"),
@@ -787,7 +787,14 @@ do_DimPlot <- function(sample,
     p$theme$legend.background <- ggplot2::element_rect(fill = "white", color = "white")
     p$theme$panel.background <- ggplot2::element_rect(fill = "white", color = "white")
   } else if (isTRUE(plot_marginal_distributions)) {
-    stop("Marginal distributions can not be used alongside when splitting by categories or highlighting cells or plotting cell borders .", call. = FALSE)
+    stop(paste0(add_cross(), 
+                crayon_body("Marginal distributions can not be used alongside when splitting by categories ("), 
+                crayon_key("split.by"), 
+                crayon_body("), highlighting cells ("), 
+                crayon_key("cells.highlight/idents.highlight"), 
+                crayon_body("or plotting cell borders ("), 
+                crayon_key("plot_cell_borders"), 
+                crayon_body(").")), call. = FALSE)
   }
 
 

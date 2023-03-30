@@ -139,7 +139,7 @@ do_SCExpressionHeatmap <- function(sample,
   genes.avail <- rownames(Seurat::GetAssayData(sample, slot = slot, assay = assay))
 
   assertthat::assert_that(sum(features %in% genes.avail) > 0,
-                          msg = paste0(crayon_body("None of the features are present in the row names of the assay "),
+                          msg = paste0(add_cross(), crayon_body("None of the features are present in the row names of the assay "),
                                        crayon_key(assay),
                                        crayon_body(" using the slot "),
                                        crayon_key(slot),
@@ -153,7 +153,7 @@ do_SCExpressionHeatmap <- function(sample,
   missing_features <- features[!(features %in% genes.avail)]
   if (length(missing_features) > 0){
     if (isTRUE(verbose)){
-      warning(paste0(crayon_body("Some features are missing in the following assay "),
+      warning(paste0(add_warning(), crayon_body("Some features are missing in the following assay "),
                      crayon_key(assay),
                      crayon_body(" using the slot "),
                      crayon_key(slot),
@@ -170,7 +170,7 @@ do_SCExpressionHeatmap <- function(sample,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix()
   assertthat::assert_that(length(group.by) == 1,
-                          msg = paste0(crayon_body("Please provide only a single value to "),
+                          msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),
                                        crayon_key("group.by"),
                                        crayon_body(".")))
   
@@ -221,7 +221,7 @@ do_SCExpressionHeatmap <- function(sample,
   # Compute cell order to group cells withing heatmap bodies.
   if (isTRUE(cluster_cells)){
     if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
-      warning(paste0(crayon_body("A given group in "),
+      warning(paste0(add_warning(), crayon_body("A given group in "),
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
                      crayon_key("65536"),
@@ -246,7 +246,7 @@ do_SCExpressionHeatmap <- function(sample,
                        t()
       matrix.subset <- matrix.subset[, cells.use]
       if (sum(is.na(matrix.subset)) > 0){
-        warning(paste0(crayon_body("NA founds in the "),
+        warning(paste0(add_warning(), crayon_body("NA founds in the "),
                        crayon_key("expression matrix"),
                        crayon_body(". Replacing them with "),
                        crayon_key("NA"),
