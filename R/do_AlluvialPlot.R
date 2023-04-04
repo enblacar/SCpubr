@@ -65,8 +65,19 @@ do_AlluvialPlot <- function(sample,
                             na.value = "white",
                             legend.position = "right",
                             legend.title = NULL){
-  check_suggests(function_name = "do_AlluvialPlot")
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_Seurat(sample)
+  
+  
+  check_suggests(function_name = "do_AlluvialPlot")
 
   # Check logical parameters.
   logical_list <- list("use_labels" = use_labels,

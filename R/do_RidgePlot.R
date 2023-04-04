@@ -59,6 +59,15 @@ do_RidgePlot <- function(sample,
                          grid.type = "dashed",
                          flip = FALSE,
                          number.breaks = 5){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_RidgePlot")
   `%>%` <- magrittr::`%>%`
 

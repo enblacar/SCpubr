@@ -40,7 +40,15 @@ do_CorrelationPlot <- function(sample = NULL,
                                rotate_x_axis_labels = 45,
                                grid.color = "white",
                                border.color = "black"){
-
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   `%>%` <- magrittr::`%>%`
   
   # Check logical parameters.

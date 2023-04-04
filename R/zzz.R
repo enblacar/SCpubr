@@ -184,6 +184,10 @@
                         crayon_body(" To adjust package messages to dark mode themes, use: "), 
                         cli::style_italic(crayon_key('options("SCpubr.darkmode" = TRUE)')))
   
+  error_length_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                                 crayon_body(" To get full length error and warning messages, use: "), 
+                                 cli::style_italic(crayon_key('options("warning.length" = 8000)')))
+  
   disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
                             crayon_body(" To suppress this startup message, use: "), 
                             cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n')),
@@ -214,6 +218,7 @@
                      functions_tip, "\n", "\n", "\n",
                      tip_rule, "\n", "\n",
                      tip_message, "\n", "\n",
+                     error_length_message, "\n", "\n",
                      disable_message, "\n", "\n",
                      end_rule)
   

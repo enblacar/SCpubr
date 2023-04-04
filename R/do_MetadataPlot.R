@@ -41,6 +41,15 @@ do_MetadataPlot <- function(sample = NULL,
                             font.type = "sans",
                             grid.color = "white",
                             border.color = "black"){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_MetadataPlot")
   
   # Check logical parameters.

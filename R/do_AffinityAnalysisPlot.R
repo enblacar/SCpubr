@@ -57,8 +57,30 @@ do_AffinityAnalysisPlot <- function(sample,
                                     flavor = "Seurat",
                                     nbin = 24,
                                     ctrl = 100){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
+  check_Seurat(sample)
+  
   
   check_suggests("do_AffinityAnalysisPlot")
+  
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
+  
   # Check logical parameters.
   logical_list <- list("verbose" = verbose,
                        "flip" = flip,

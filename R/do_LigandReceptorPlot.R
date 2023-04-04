@@ -60,7 +60,15 @@ do_LigandReceptorPlot <- function(liana_output,
                                   arrange_interactions_by = "both",
                                   sort_interactions_alphabetically = FALSE,
                                   number.breaks = 5){
-
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
   `%>%` <- magrittr::`%>%`

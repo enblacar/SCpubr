@@ -63,7 +63,15 @@ do_SCExpressionHeatmap <- function(sample,
                                    proportional.size = TRUE,
                                    verbose = TRUE,
                                    border.color = "black"){
-
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
 

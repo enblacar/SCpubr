@@ -38,6 +38,15 @@ do_BarPlot <- function(sample,
                        plot.grid = TRUE,
                        grid.color = "grey75",
                        grid.type = "dashed") {
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_BarPlot")
   check_Seurat(sample)
 

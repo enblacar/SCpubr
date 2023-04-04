@@ -50,6 +50,15 @@ do_DiffusionMapPlot <- function(sample,
                                 border.color = "black",
                                 return_object = FALSE,
                                 verbose = TRUE){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests("do_DiffusionMapPlot")
   check_Seurat(sample = sample)
   

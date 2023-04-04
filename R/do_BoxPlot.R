@@ -52,6 +52,14 @@ do_BoxPlot <- function(sample,
                        comparisons = NULL,
                        test = "wilcox.test",
                        map_signif_level = TRUE){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
 
   check_suggests(function_name = "do_BoxPlot")
   # Check if the sample provided is a Seurat object.

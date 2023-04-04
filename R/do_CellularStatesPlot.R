@@ -71,6 +71,15 @@ do_CellularStatesPlot <- function(sample,
                                   nbin = 24,
                                   ctrl = 100,
                                   number.breaks = 5){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)

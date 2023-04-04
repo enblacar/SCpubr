@@ -30,6 +30,15 @@ do_ColorPalette <- function(colors.use,
                             plot = FALSE,
                             font.size = 14,
                             font.type = "sans"){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_ColorPalette")
   # Check logical parameters.
   logical_list <- list("opposite" = opposite,

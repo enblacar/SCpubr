@@ -58,6 +58,15 @@ do_DimPlot <- function(sample,
                        contour.lineend = "butt",
                        contour.linejoin = "round",
                        contour_expand_axes = 0.25){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests(function_name = "do_DimPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)

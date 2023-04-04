@@ -35,7 +35,15 @@ do_TermEnrichmentPlot <- function(enriched_terms,
                                   legend.tickwidth = 0.5,
                                   legend.framecolor = "grey50",
                                   legend.tickcolor = "white"){
-
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
     check_suggests(function_name = "do_TermEnrichmentPlot")
     # Define pipe operator internally.
     `%>%` <- magrittr::`%>%`

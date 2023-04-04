@@ -619,7 +619,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 #' }
 check_Seurat <- function(sample){
   assertthat::assert_that("Seurat" %in% class(sample),
-                          msg = paste0(add_cross(), add_cross(), crayon_body("The provided "),
+                          msg = paste0(add_cross(), crayon_body("The provided "),
                                        crayon_key("object"),
                                        crayon_body(" is not a "),
                                        crayon_key("Seurat"),
@@ -645,7 +645,7 @@ check_colors <- function(colors, parameter_name = "") {
   })
   # Check for cols.highlight.
   assertthat::assert_that(sum(check) == length(colors),
-                          msg = paste0(add_cross(), add_cross(), crayon_body("The colors provided to "),
+                          msg = paste0(add_cross(), crayon_body("The colors provided to "),
                                        crayon_key(parameter_name),
                                        crayon_body(" are not valid color representations.\nCheck whether they are accepted "),
                                        crayon_key("R nammes"),
@@ -669,7 +669,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
-    check_values <- unique(sample@meta.data[, grouping_variable])
+    check_values <- as.character(unique(sample@meta.data[, grouping_variable]))
   }
   # Remove NAs.
   check_values <- check_values[!(is.na(check_values))]
@@ -678,29 +678,97 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   if (sum(names(colors) %in% check_values) == length(check_values) & length(names(colors)) > length(check_values)){
     colors <- colors[names(colors) %in% check_values]
   }
+  
+  if (isFALSE(length(colors) == length(check_values)) | isFALSE(sum(names(colors) %in% check_values) == length(check_values))){
+    
+    format_colors <- function(name, value, colors,  max_length){
+      
+      if (name %in% names(colors)){
+        name <- paste(c(name, crayon_body(" | "), cli::col_yellow(paste0(colors[[name]]))), collapse = "")
+      }
+      
+      func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
+      name_use <- ifelse(isTRUE(value),
+                         cli::ansi_align(crayon_key(name), max_length, align = "left"),
+                         cli::ansi_align(cli::col_red(name), max_length, align = "left"))
+      paste0(func_use, " ", name_use)
+    }
+      
+      color_check <- sapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)})
+      
+      max_length <- max(sapply(check_values, nchar))
+      max_length_colors <- max(sapply(unname(colors), nchar))
+      length.use <- max_length + 3 + max_length_colors
+      
+      
+      colors.print <- c()
+      for(item in sort(names(color_check))){
+        colors.print <- c(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
+      }
+      
+      counter <- 0
+      print.list <- list()
+      print.vector <- c()
+      for(item in colors.print){
+        counter <- counter + 1
+        
+        if (counter %% 5 != 0){
+          print.vector <- c(print.vector, item)
+          if (counter == length(colors.print)){
+            print.list[[item]] <- paste(print.vector, collapse = "     ")
+            print.vector <- c()
+          }
+        } else {
+          print.vector <- c(print.vector, item)
+          print.list[[item]] <- paste(print.vector, collapse = "     ")
+          print.vector <- c()
+        }
+      }
+      
 
-  assertthat::assert_that(length(colors) == length(check_values),
-                          msg = paste0(add_cross(), add_cross(), crayon_body("The "),
-                                       crayon_key("number"),
-                                       crayon_body(" of the provided "),
-                                       crayon_key("colors"),
-                                       crayon_body(" is lower than the "),
-                                       crayon_key("number of unique values"),
-                                       crayon_body(" in "),
-                                       crayon_key("group.by"),
-                                       crayon_body(".")))
-
-  assertthat::assert_that(sum(names(colors) %in% check_values) == length(check_values),
-                          msg = paste0(add_cross(), crayon_body("The "),
-                                       crayon_key("names"),
-                                       crayon_body(" of the provided "),
-                                       crayon_key("colors"),
-                                       crayon_body(" do not match the "),
-                                       crayon_key("number of unique values"),
-                                       crayon_body(" in "),
-                                       crayon_key("group.by"),
-                                       crayon_body(".")))
-
+    
+    
+    msg <- paste0("\n", "\n",
+                  add_cross(), 
+                  crayon_body("The "),
+                  crayon_key("number"),
+                  crayon_body(" or "), 
+                  crayon_key("names"),
+                  crayon_body(" of the provided "),
+                  crayon_key("colors"),
+                  crayon_body(" is lower than the "),
+                  crayon_key("number of unique values"),
+                  crayon_body(" in "),
+                  crayon_key("group.by"),
+                  crayon_body(" (which defaults to "), 
+                  cli::style_italic(crayon_key("Seurat::Idents(sample)")),
+                  crayon_body(" if "), 
+                  crayon_key("NULL"),
+                  crayon_body(")."),
+                  "\n",
+                  add_cross(),
+                  crayon_body("Please check that the "),
+                  crayon_key("colors provided"),
+                  crayon_body(" are a "),
+                  crayon_key("named vector"),
+                  crayon_body(" where the names are the "),
+                  crayon_key("unique values"),
+                  crayon_body(" to which you then assign the "), 
+                  crayon_key("colors"),
+                  crayon_body(" to."), 
+                  "\n", "\n",
+                  add_warning(),
+                  crayon_body("Example: "),
+                  cli::style_italic(crayon_key('colors.use = c("A" = "red", "B" = "blue")')),
+                  "\n")
+    
+    on.exit(rlang::inform(paste0("\n", "\n",
+                                 crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_yellow("assigned color")), width = nchar("Values with an assigned color") + 6)), 
+                                 "\n", "\n", 
+                                 paste(print.list, collapse = "\n"), "\n", "\n")))
+           
+    stop(msg, call. = FALSE)
+  }
   return(colors)
 }
 

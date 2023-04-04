@@ -48,6 +48,15 @@ do_CopyNumberVariantPlot <- function(sample,
                                      grid.color = "white",
                                      border.color = "black",
                                      flip = FALSE){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   check_suggests("do_CopyNumberVariantPlot")
   
   # Check logical parameters.

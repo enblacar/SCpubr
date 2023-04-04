@@ -83,6 +83,15 @@ do_FeaturePlot <- function(sample,
                            diverging.palette = "RdBu",
                            sequential.palette = "YlGnBu",
                            sequential.direction = -1){
+  # Get defaults user warning length.
+  length.use <- getOption("warning.length")
+  
+  # Restore the warning length on exit.
+  on.exit(options(warning.length = length.use))
+  
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   `%>%` <- magrittr::`%>%`
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
