@@ -31,7 +31,7 @@ do_AffinityAnalysisPlot(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   flip = FALSE,
   colors.use = NULL,
   min.cutoff = NA,
@@ -119,7 +119,7 @@ do_AffinityAnalysisPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 

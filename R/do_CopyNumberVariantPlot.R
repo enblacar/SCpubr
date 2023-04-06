@@ -30,7 +30,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      font.size = 14,
                                      pt.size = 1,
                                      font.type = "sans",
-                                     rotate_x_axis_labels = 45,
+                                     axis.text.x.angle = 45,
                                      enforce_symmetry = TRUE,
                                      legend.title = NULL,
                                      na.value = "grey75",
@@ -79,7 +79,7 @@ do_CopyNumberVariantPlot <- function(sample,
                        "legend.tickwidth" = legend.tickwidth,
                        "pt.size" = pt.size,
                        "viridis.direction" = viridis.direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
@@ -122,7 +122,7 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
@@ -381,7 +381,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                    group.by = rep("A", length(names(list.plots))),
                                    group = name,
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   axis.text.x.angle = axis.text.x.angle,
                                    plot.title.face = plot.title.face,
                                    plot.subtitle.face = plot.subtitle.face,
                                    plot.caption.face = plot.caption.face,

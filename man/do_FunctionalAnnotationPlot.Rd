@@ -17,7 +17,7 @@ do_FunctionalAnnotationPlot(
   maxGSSize = 500,
   font.size = 10,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   xlab = NULL,
   ylab = NULL,
   plot.title = NULL,
@@ -93,7 +93,7 @@ do_FunctionalAnnotationPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 

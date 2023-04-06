@@ -31,7 +31,7 @@ do_GroupwiseDEPlot(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   min.cutoff = NA,
   max.cutoff = NA,
   na.value = "grey75",
@@ -103,7 +103,7 @@ do_GroupwiseDEPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 

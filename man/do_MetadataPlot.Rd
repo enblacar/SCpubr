@@ -13,7 +13,7 @@ do_MetadataPlot(
   colors.use = NULL,
   flip = TRUE,
   heatmap.gap = 1,
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   legend.position = "bottom",
   font.size = 14,
   legend.font.size = NULL,
@@ -51,7 +51,7 @@ do_MetadataPlot(
 
 \item{heatmap.gap}{\strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{

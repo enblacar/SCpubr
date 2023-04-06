@@ -26,7 +26,7 @@ do_BoxPlot <- function(sample,
                        slot = "data",
                        font.size = 14,
                        font.type = "sans",
-                       rotate_x_axis_labels = 45,
+                       axis.text.x.angle = 45,
                        colors.use = NULL,
                        na.value = "grey75",
                        plot.title = NULL,
@@ -90,7 +90,7 @@ do_BoxPlot <- function(sample,
                        "outlier.alpha" = outlier.alpha,
                        "boxplot.linewidth" = boxplot.linewidth,
                        "boxplot.width" = boxplot.width,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels)
+                       "axis.text.x.angle" = axis.text.x.angle)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -137,7 +137,7 @@ do_BoxPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -259,9 +259,9 @@ do_BoxPlot <- function(sample,
                        axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                        axis.text.x = ggplot2::element_text(color = "black",
                                                            face = axis.text.face,
-                                                           angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                           hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                           vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                           angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                           hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                           vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                        axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
                        axis.ticks = ggplot2::element_line(color = "black"),
                        panel.grid.major = ggplot2::element_blank(),

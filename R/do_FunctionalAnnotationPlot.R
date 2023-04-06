@@ -39,7 +39,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         maxGSSize = 500,
                                         font.size = 10,
                                         font.type = "sans",
-                                        rotate_x_axis_labels = 45,
+                                        axis.text.x.angle = 45,
                                         xlab = NULL,
                                         ylab = NULL,
                                         plot.title = NULL,
@@ -86,7 +86,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                        "legend.tickwidth" = legend.tickwidth,
                        "legend.length" = legend.length,
                        "legend.width" = legend.width,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "min.overlap" = min.overlap,
                        "minGSSize" = minGSSize,
                        "maxGSSize" = maxGSSize,
@@ -142,7 +142,7 @@ do_FunctionalAnnotationPlot <- function(genes,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = database, parameter_name = "database")
   check_parameters(parameter = GO_ontology, parameter_name = "GO_ontology")
   check_parameters(parameter = pAdjustMethod, parameter_name = "pAdjustMethod")
@@ -385,7 +385,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                      group.by = rep("A", length(names(list.plots))),
                                      group = name,
                                      counter = counter,
-                                     rotate_x_axis_labels = rotate_x_axis_labels,
+                                     axis.text.x.angle = axis.text.x.angle,
                                      plot.title.face = plot.title.face,
                                      plot.subtitle.face = plot.subtitle.face,
                                      plot.caption.face = plot.caption.face,

@@ -25,7 +25,7 @@ do_ViolinPlot(
   ylab = rep(NA, length(features)),
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   plot.grid = TRUE,
   grid.color = "grey75",
   grid.type = "dashed",
@@ -92,7 +92,7 @@ do_ViolinPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 

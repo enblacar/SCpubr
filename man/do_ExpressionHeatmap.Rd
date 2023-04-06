@@ -22,7 +22,7 @@ do_ExpressionHeatmap(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   enforce_symmetry = FALSE,
   min.cutoff = NA,
   max.cutoff = NA,
@@ -92,7 +92,7 @@ do_ExpressionHeatmap(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 

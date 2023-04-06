@@ -50,7 +50,7 @@
 #' @param border.size \strong{\code{\link[base]{numeric}}} | Width of the border of the cells.
 #' @param border.color \strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.
 #' @param na.value \strong{\code{\link[base]{character}}} | Color value for NA.
-#' @param rotate_x_axis_labels \strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.
+#' @param axis.text.x.angle \strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.
 #' @param xlab,ylab \strong{\code{\link[base]{character}}} | Titles for the X and Y axis.
 #' @param pt.size \strong{\code{\link[base]{numeric}}} | Size of the dots.
 #' @param flip \strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.
@@ -137,7 +137,7 @@
 #' @param border.density \strong{\code{\link[base]{numeric}}} | Controls the number of cells used when \strong{\code{plot_cell_borders = TRUE}}. Value between 0 and 1. It computes a 2D kernel density and based on this cells that have a density below the specified quantile will be used to generate the cluster contour. The lower this number, the less cells will be selected, thus reducing the overall size of the plot but also potentially preventing all the contours to be properly drawn.
 #' @param strip.spacing \strong{\code{\link[base]{numeric}}} | Controls the size between the different facets.
 #' @param strip.text.color \strong{\code{\link[base]{character}}} | Color of the strip text.
-#' @param rotate_strip_labels \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
+#' @param strip.text.angle \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
 #' @param diverging.palette \strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.palette \strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.palette.pvalue,sequential.palette.expression,sequential.palette.logfc \strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
@@ -190,7 +190,7 @@ doc_function <- function(sample,
                          border.size,
                          border.color,
                          na.value,
-                         rotate_x_axis_labels,
+                         axis.text.x.angle,
                          xlab,
                          ylab,
                          pt.size,
@@ -264,7 +264,7 @@ doc_function <- function(sample,
                          number.breaks,
                          strip.spacing,
                          strip.text.color,
-                         rotate_strip_labels,
+                         strip.text.angle,
                          diverging.palette,
                          subsample,
                          plot.title.face,
@@ -2689,7 +2689,7 @@ check_parameters <- function(parameter,
                                          crayon_body(", "),
                                          crayon_key("continuous"),
                                          crayon_body(".")))
-  } else if (parameter_name == "rotate_x_axis_labels"){
+  } else if (parameter_name == "axis.text.x.angle"){
     assertthat::assert_that(parameter %in% c(0, 45, 90),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
@@ -2943,7 +2943,7 @@ prepare_ggplot_alluvial_plot <- function(data,
   return(p)
 }
 
-#' Helper for rotate_x_axis_labels.
+#' Helper for axis.text.x.angle.
 #'
 #' @param angle Angle of rotation.
 #' @param flip Whether the plot if flipped or not.
@@ -3123,7 +3123,7 @@ do_GroupedGO_analysis_heatmaps <- function(result,
                                            cell_size = 5,
                                            reverse.levels = TRUE,
                                            colors.use = c("grey90", "#29353d"),
-                                           rotate_x_axis_labels = 45,
+                                           axis.text.x.angle = 45,
                                            font.size = 10,
                                            verbose = TRUE){
   if (isTRUE(verbose)){
@@ -3580,7 +3580,7 @@ do_EnrichedTermMatrix <- function(genes,
 #' @param result TBD
 #' @param font.size TBD
 #' @param font.type TBD
-#' @param rotate_x_axis_labels TBD
+#' @param axis.text.x.angle TBD
 #' @param plot.title TBD
 #' @param plot.subtitle TBD
 #' @param plot.caption TBD
@@ -3610,7 +3610,7 @@ do_EnrichedTermMatrix <- function(genes,
 do_EnrichedTermBarPlot <- function(result,
                                    font.size = 14,
                                    font.type = "sans",
-                                   rotate_x_axis_labels = 45,
+                                   axis.text.x.angle = 45,
                                    plot.title = NULL,
                                    plot.subtitle = NULL,
                                    plot.caption = NULL,
@@ -3681,9 +3681,9 @@ do_EnrichedTermBarPlot <- function(result,
                    axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                    axis.text.x = ggplot2::element_text(color = "black",
                                                        face = "bold",
-                                                       angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                       hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                       vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                       angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                       hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                       vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                    axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                    axis.ticks = ggplot2::element_line(color = "black"),
                    plot.title.position = "plot",
@@ -3712,7 +3712,7 @@ do_EnrichedTermBarPlot <- function(result,
 #' @param result TBD
 #' @param font.size TBD
 #' @param font.type TBD
-#' @param rotate_x_axis_labels TBD
+#' @param axis.text.x.angle TBD
 #' @param plot.title TBD
 #' @param plot.subtitle TBD
 #' @param plot.caption TBD
@@ -3742,7 +3742,7 @@ do_EnrichedTermBarPlot <- function(result,
 do_EnrichedTermDotPlot <- function(result,
                                    font.size = 14,
                                    font.type = "sans",
-                                   rotate_x_axis_labels = 45,
+                                   axis.text.x.angle = 45,
                                    plot.title = NULL,
                                    plot.subtitle = NULL,
                                    plot.caption = NULL,
@@ -3820,9 +3820,9 @@ do_EnrichedTermDotPlot <- function(result,
                    axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                    axis.text.x = ggplot2::element_text(color = "black",
                                                        face = "bold",
-                                                       angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                       hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                       vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                       angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                       hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                       vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                    axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
                    axis.ticks = ggplot2::element_line(color = "black"),
                    plot.title.position = "plot",
@@ -4261,7 +4261,7 @@ handle_axis <- function(flip,
                         counter,
                         group.by,
                         group,
-                        rotate_x_axis_labels,
+                        axis.text.x.angle,
                         plot.title.face,
                         plot.subtitle.face,
                         plot.caption.face,
@@ -4295,9 +4295,9 @@ handle_axis <- function(flip,
       axis.ticks.y.right <- ggplot2::element_line(color = "black")
       axis.ticks.y.left <- ggplot2::element_blank()
       axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
-                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
-                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
-                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+                                                  angle = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
       axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black")
       axis.text.y.left <- ggplot2::element_blank()
@@ -4368,9 +4368,9 @@ handle_axis <- function(flip,
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
       axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
-                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
-                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
-                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+                                                  angle = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
       axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                 angle = 0,
@@ -4403,9 +4403,9 @@ handle_axis <- function(flip,
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
       axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
-                                                  angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
-                                                  hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
-                                                  vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
+                                                  angle = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["angle"]],
+                                                  hjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["hjust"]],
+                                                  vjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
       axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                 angle = 0,

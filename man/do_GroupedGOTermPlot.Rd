@@ -13,7 +13,7 @@ do_GroupedGOTermPlot(
   flip = TRUE,
   legend.position = "bottom",
   reverse.levels = TRUE,
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   font.size = 10,
   font.type = "sans",
   plot.title = paste0("GO | ", GO_ontology),
@@ -61,7 +61,7 @@ do_GroupedGOTermPlot(
 
 \item{reverse.levels}{\strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

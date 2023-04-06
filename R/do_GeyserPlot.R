@@ -44,7 +44,7 @@ do_GeyserPlot <- function(sample,
                           legend.type = "colorbar",
                           font.size = 14,
                           font.type = "sans",
-                          rotate_x_axis_labels = 45,
+                          axis.text.x.angle = 45,
                           viridis.palette = "G",
                           viridis.direction = 1,
                           colors.use = NULL,
@@ -107,7 +107,7 @@ do_GeyserPlot <- function(sample,
                        "legend.nrow" = legend.nrow,
                        "legend.icon.size" = legend.icon.size,
                        "viridis.direction" = viridis.direction,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "number.breaks" = number.breaks,
                        "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -153,7 +153,7 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
@@ -469,9 +469,9 @@ do_GeyserPlot <- function(sample,
                         axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                         axis.text.x = ggplot2::element_text(color = "black",
                                                             face = axis.text.face,
-                                                            angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                            hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                            vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                            angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                            hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                            vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                         axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         panel.grid.major = ggplot2::element_blank(),

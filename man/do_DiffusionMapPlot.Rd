@@ -41,7 +41,7 @@ do_DiffusionMapPlot(
   legend.byrow = FALSE,
   number.breaks = 5,
   diverging.palette = "RdBu",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   border.color = "black",
   return_object = FALSE,
   verbose = TRUE,
@@ -133,7 +133,7 @@ do_DiffusionMapPlot(
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 

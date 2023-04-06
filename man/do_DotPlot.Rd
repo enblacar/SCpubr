@@ -29,7 +29,7 @@ do_DotPlot(
   font.type = "sans",
   cluster.idents = FALSE,
   flip = FALSE,
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   scale.by = "size",
   use_viridis = FALSE,
   viridis.palette = "G",
@@ -104,7 +104,7 @@ do_DotPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{scale.by}{\strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
 \itemize{

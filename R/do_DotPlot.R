@@ -38,7 +38,7 @@ do_DotPlot <- function(sample,
                        font.type = "sans",
                        cluster.idents = FALSE,
                        flip = FALSE,
-                       rotate_x_axis_labels = 45,
+                       axis.text.x.angle = 45,
                        scale.by = "size",
                        use_viridis = FALSE,
                        viridis.palette = "G",
@@ -89,7 +89,7 @@ do_DotPlot <- function(sample,
                          "legend.length" = legend.length,
                          "legend.width" = legend.width,
                          "viridis.direction" = viridis.direction,
-                         "rotate_x_axis_labels" = rotate_x_axis_labels,
+                         "axis.text.x.angle" = axis.text.x.angle,
                          "number.breaks" = number.breaks,
                          "sequential.direction" = sequential.direction)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -156,7 +156,7 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
     check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
     check_parameters(parameter = grid.type, parameter_name = "grid.type")
-    check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+    check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
     check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
     check_parameters(plot.title.face, parameter_name = "plot.title.face")
     check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
@@ -245,9 +245,9 @@ do_DotPlot <- function(sample,
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
                                                             face = axis.text.face,
-                                                            angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                            hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                            vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                            angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                            hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                            vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                         axis.text.y = ggplot2::element_text(face = axis.text.face, color = "black"),
                         axis.ticks = ggplot2::element_line(color = "black"),
                         axis.line = ggplot2::element_line(color = "black"),

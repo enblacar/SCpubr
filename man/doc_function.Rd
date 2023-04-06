@@ -60,7 +60,7 @@
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 
@@ -225,7 +225,7 @@
 
 \item{strip.text.color}{\strong{\code{\link[base]{character}}} | Color of the strip text.}
 
-\item{rotate_strip_labels}{\strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).}
+\item{strip.text.angle}{\strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 

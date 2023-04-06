@@ -27,7 +27,7 @@ do_BarPlot <- function(sample,
                        legend.ncol = NULL,
                        legend.nrow = NULL,
                        legend.byrow = FALSE,
-                       rotate_x_axis_labels = 45,
+                       axis.text.x.angle = 45,
                        xlab = NULL,
                        ylab = NULL,
                        colors.use = NULL,
@@ -68,7 +68,7 @@ do_BarPlot <- function(sample,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.nrow)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -103,7 +103,7 @@ do_BarPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -197,9 +197,9 @@ do_BarPlot <- function(sample,
                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = axis.text.face,
-                                                          angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                          hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                          vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                          angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                          hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                          vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                       axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       plot.title.position = "plot",

@@ -17,7 +17,7 @@ do_GroupedGOTermPlot <- function(genes,
                                  flip = TRUE,
                                  legend.position = "bottom",
                                  reverse.levels = TRUE,
-                                 rotate_x_axis_labels = 45,
+                                 axis.text.x.angle = 45,
                                  font.size = 10,
                                  font.type = "sans",
                                  plot.title = paste0("GO | ", GO_ontology),
@@ -53,7 +53,7 @@ do_GroupedGOTermPlot <- function(genes,
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "min.overlap" = min.overlap,
                        "levels.use" = levels.use)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
@@ -99,7 +99,7 @@ do_GroupedGOTermPlot <- function(genes,
   check_colors(border.color, parameter_name = "border.color")
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = GO_ontology, parameter_name = "GO_ontology")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
@@ -208,7 +208,7 @@ do_GroupedGOTermPlot <- function(genes,
                                    group.by = unique(matrix.out$Level),
                                    group = level,
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   axis.text.x.angle = axis.text.x.angle,
                                    plot.title.face = plot.title.face,
                                    plot.subtitle.face = plot.subtitle.face,
                                    plot.caption.face = plot.caption.face,

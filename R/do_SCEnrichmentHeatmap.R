@@ -51,7 +51,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    legend.framecolor = "grey50",
                                    legend.tickcolor = "white",
                                    strip.text.color = "black",
-                                   rotate_strip_labels = 0,
+                                   strip.text.angle = 0,
                                    strip.spacing = 10,
                                    legend.ncol = NULL,
                                    legend.nrow = NULL,
@@ -113,7 +113,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                        "legend.ncol" = legend.ncol,
                        "legend.nrow" = legend.ncol,
                        "strip.spacing" = strip.spacing,
-                       "rotate_strip_labels" = rotate_strip_labels,
+                       "strip.text.angle" = strip.text.angle,
                        "main.heatmap.size" = main.heatmap.size,
                        "sequential.direction" = sequential.direction,
                        "nbin" = nbin,
@@ -543,7 +543,7 @@ do_SCEnrichmentHeatmap <- function(sample,
         metadata_plots[[name]] <- metadata_plots[[name]] + ggplot2::theme(strip.text.x = ggplot2::element_text(family = font.type,
                                                                                                                face = "bold",
                                                                                                                color = strip.text.color,
-                                                                                                               angle = rotate_strip_labels))
+                                                                                                               angle = strip.text.angle))
       } else {
         metadata_plots[[name]] <- metadata_plots[[name]] + ggplot2::theme(strip.text.x = ggplot2::element_blank())
       }
@@ -551,7 +551,7 @@ do_SCEnrichmentHeatmap <- function(sample,
       metadata_plots[[name]] <- metadata_plots[[name]] + ggplot2::theme(strip.text.x = ggplot2::element_text(family = font.type,
                                                                                                              face = "bold",
                                                                                                              color = strip.text.color,
-                                                                                                             angle = rotate_strip_labels))
+                                                                                                             angle = strip.text.angle))
     }
   }
   

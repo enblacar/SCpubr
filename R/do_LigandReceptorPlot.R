@@ -33,7 +33,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                   top_interactions = 25,
                                   dot_border = TRUE,
                                   border.color = "black",
-                                  rotate_x_axis_labels = 45,
+                                  axis.text.x.angle = 45,
                                   rotate_strip_text = FALSE,
                                   legend.position = "bottom",
                                   legend.type = "colorbar",
@@ -97,7 +97,7 @@ do_LigandReceptorPlot <- function(liana_output,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
                        "dot.size" = dot.size,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "viridis.direction" = viridis.direction,
                        "number.breaks" = number.breaks,
                        "sequential.direction" = sequential.direction)
@@ -143,7 +143,7 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
@@ -488,9 +488,9 @@ do_LigandReceptorPlot <- function(liana_output,
                       axis.ticks = ggplot2::element_line(color = "black"),
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = axis.text.face,
-                                                          angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
-                                                          hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
-                                                          vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),
+                                                          angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
+                                                          hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
+                                                          vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
                       strip.text.x = if (isFALSE(flip)) {ggplot2::element_text(face = "bold",
                                                                                angle = strip_text_angle)}
                                      else {ggplot2::element_blank()},

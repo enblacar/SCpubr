@@ -15,6 +15,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Changed `viridis_color_map` to `viridis.palette`.
 -   Changed `viridis_direction` to `viridis.direction`.
 -   Changed `sequential_direction` to `sequential.direction`.
+-   Changed `rotate_x_axis_labels` to `axis.text.x.angle`.
 
 ## New functions
 
@@ -49,6 +50,7 @@ Many (except a few selected cases) of the functions that returned list of differ
     -   `axis.text.face`: To control the style of the **axis text**.
     -   `legend.title.face`: To control the style of the **legend title**.
     -   `legend.text.face`: To control the style of the **legend text**.
+-   Changed default font style for legend text from `bold` to `plain`. 
 
 ## `SCpubr::do_BeeSwarmPlot`
 

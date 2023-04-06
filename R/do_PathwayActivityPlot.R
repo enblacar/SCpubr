@@ -26,7 +26,7 @@ do_PathwayActivityPlot <- function(sample,
                                    legend.type = "colorbar",
                                    font.size = 14,
                                    font.type = "sans",
-                                   rotate_x_axis_labels = 45,
+                                   axis.text.x.angle = 45,
                                    enforce_symmetry = TRUE,
                                    min.cutoff = NA,
                                    max.cutoff = NA,
@@ -76,7 +76,7 @@ do_PathwayActivityPlot <- function(sample,
                        "legend.length" = legend.length,
                        "legend.framewidth" = legend.framewidth,
                        "legend.tickwidth" = legend.tickwidth,
-                       "rotate_x_axis_labels" = rotate_x_axis_labels,
+                       "axis.text.x.angle" = axis.text.x.angle,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
@@ -115,7 +115,7 @@ do_PathwayActivityPlot <- function(sample,
   
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
-  check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
+  check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
@@ -371,7 +371,7 @@ do_PathwayActivityPlot <- function(sample,
                                    group.by = group.by,
                                    group = group,
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   axis.text.x.angle = axis.text.x.angle,
                                    plot.title.face = plot.title.face,
                                    plot.subtitle.face = plot.subtitle.face,
                                    plot.caption.face = plot.caption.face,

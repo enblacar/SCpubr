@@ -12,7 +12,7 @@ do_LigandReceptorPlot(
   top_interactions = 25,
   dot_border = TRUE,
   border.color = "black",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   rotate_strip_text = FALSE,
   legend.position = "bottom",
   legend.type = "colorbar",
@@ -61,7 +61,7 @@ do_LigandReceptorPlot(
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{rotate_strip_text}{\strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.}
 

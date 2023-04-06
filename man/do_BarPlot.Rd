@@ -17,7 +17,7 @@ do_BarPlot(
   legend.ncol = NULL,
   legend.nrow = NULL,
   legend.byrow = FALSE,
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   xlab = NULL,
   ylab = NULL,
   colors.use = NULL,
@@ -78,7 +78,7 @@ do_BarPlot(
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 

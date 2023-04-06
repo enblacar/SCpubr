@@ -32,7 +32,7 @@ do_SCExpressionHeatmap(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   strip.text.color = "black",
-  rotate_strip_labels = 0,
+  strip.text.angle = 0,
   strip.spacing = 10,
   legend.ncol = NULL,
   legend.nrow = NULL,
@@ -122,7 +122,7 @@ do_SCExpressionHeatmap(
 
 \item{strip.text.color}{\strong{\code{\link[base]{character}}} | Color of the strip text.}
 
-\item{rotate_strip_labels}{\strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).}
+\item{strip.text.angle}{\strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).}
 
 \item{strip.spacing}{\strong{\code{\link[base]{numeric}}} | Controls the size between the different facets.}
 

@@ -23,7 +23,7 @@ do_TFActivityPlot(
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
-  rotate_x_axis_labels = 45,
+  axis.text.x.angle = 45,
   enforce_symmetry = TRUE,
   diverging.palette = "RdBu",
   use_viridis = FALSE,
@@ -101,7 +101,7 @@ do_TFActivityPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{rotate_x_axis_labels}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.}
 
