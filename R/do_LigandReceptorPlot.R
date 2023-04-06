@@ -59,7 +59,14 @@ do_LigandReceptorPlot <- function(liana_output,
                                   add_missing_LR_combinations = TRUE,
                                   arrange_interactions_by = "both",
                                   sort_interactions_alphabetically = FALSE,
-                                  number.breaks = 5){
+                                  number.breaks = 5,
+                                  plot.title.face = "bold",
+                                  plot.subtitle.face = "plain",
+                                  plot.caption.face = "italic",
+                                  axis.title.face = "bold",
+                                  axis.text.face = "bold",
+                                  legend.title.face = "bold",
+                                  legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -109,7 +116,14 @@ do_LigandReceptorPlot <- function(liana_output,
                          "grid.color" = grid.color,
                          "grid.type" = grid.type,
                          "arrange_interactions_by" = arrange_interactions_by,
-                         "sequential.palette" = sequential.palette)
+                         "sequential.palette" = sequential.palette,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check border color.
@@ -132,6 +146,13 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = rotate_x_axis_labels, parameter_name = "rotate_x_axis_labels")
   check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
@@ -448,26 +469,25 @@ do_LigandReceptorPlot <- function(liana_output,
                                                     title.hjust = 0.5,
                                                     override.aes = ggplot2::aes(fill = "black"))) +
        ggplot2::theme_minimal(base_size = font.size) +
-       ggplot2::theme(plot.title = ggplot2::element_text(face = "bold",
+       ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face,
                                                          hjust = if (isFALSE(flip)){0.5} else {1},
                                                          vjust = 0,
                                                          size = font.size),
-                      plot.subtitle = ggplot2::element_text(hjust = 0),
-                      plot.caption = ggplot2::element_text(hjust = 1),
+                      plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                      plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                      legend.text = ggplot2::element_text(face = legend.text.face),
+                      legend.title = ggplot2::element_text(face = legend.title.face),
                       plot.title.position = if (isFALSE(flip)){"panel"} else {"plot"},
                       plot.caption.position = "plot",
                       text = ggplot2::element_text(family = font.type),
                       legend.justification = "center",
-                      legend.text = ggplot2::element_text(face = "bold"),
-                      legend.title = ggplot2::element_text(face = "bold"),
                       legend.position = legend.position,
-                      axis.title.x = ggplot2::element_text(face = "bold", hjust = 0.5),
-                      axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
-                      axis.text.y = ggplot2::element_text(face = "bold"),
-                      axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                      axis.title.x = ggplot2::element_text(face = axis.title.face, hjust = 0.5),
+                      axis.title.y = ggplot2::element_text(face = axis.title.face, angle = 90),
+                      axis.text.y = ggplot2::element_text(face = axis.text.face),
                       axis.ticks = ggplot2::element_line(color = "black"),
                       axis.text.x = ggplot2::element_text(color = "black",
-                                                          face = "bold",
+                                                          face = axis.text.face,
                                                           angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["angle"]],
                                                           hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["hjust"]],
                                                           vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = flip)[["vjust"]]),

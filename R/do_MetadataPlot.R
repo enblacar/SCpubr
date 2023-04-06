@@ -40,7 +40,14 @@ do_MetadataPlot <- function(sample = NULL,
                             na.value = "grey75",
                             font.type = "sans",
                             grid.color = "white",
-                            border.color = "black"){
+                            border.color = "black",
+                            plot.title.face = "bold",
+                            plot.subtitle.face = "plain",
+                            plot.caption.face = "italic",
+                            axis.title.face = "bold",
+                            axis.text.face = "bold",
+                            legend.title.face = "bold",
+                            legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -72,11 +79,25 @@ do_MetadataPlot <- function(sample = NULL,
                          "legend.position" = legend.position,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   check_colors(grid.color, parameter_name = "grid.color")
   check_colors(border.color, parameter_name = "border.color")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
@@ -223,7 +244,14 @@ do_MetadataPlot <- function(sample = NULL,
                                    group.by = rep("A", length(names(list.heatmaps))),
                                    group = name,
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels)
+                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   plot.title.face = plot.title.face,
+                                   plot.subtitle.face = plot.subtitle.face,
+                                   plot.caption.face = plot.caption.face,
+                                   axis.title.face = axis.title.face,
+                                   axis.text.face = axis.text.face,
+                                   legend.title.face = legend.title.face,
+                                   legend.text.face = legend.text.face)
     
     p <- p +
          ggplot2::xlab(xlab) +
@@ -246,16 +274,16 @@ do_MetadataPlot <- function(sample = NULL,
                         strip.text = axis.parameters$strip.text,
                         legend.position = legend.position,
                         axis.line = ggplot2::element_blank(),
-                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                        plot.subtitle = ggplot2::element_text(hjust = 0),
-                        plot.caption = ggplot2::element_text(hjust = 1),
+                        plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                        plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
                         panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold", size = legend.font.size),
-                        legend.title = ggplot2::element_text(face = "bold", size = legend.font.size),
+                        legend.text = ggplot2::element_text(face = legend.text.face, size = legend.font.size),
+                        legend.title = ggplot2::element_text(face = legend.title.face, size = legend.font.size),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = heatmap.gap, r = 0, b = 0, l = heatmap.gap, unit = "mm"),
                         panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
@@ -285,12 +313,13 @@ do_MetadataPlot <- function(sample = NULL,
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
                                                          plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
-                                                                                            face = "bold",
+                                                                                            face = plot.title.face,
                                                                                             hjust = 0),
                                                          plot.subtitle = ggplot2::element_text(family = font.type,
+                                                                                               face = plot.subtitle.face,
                                                                                                color = "black",
                                                                                                hjust = 0),
-                                                         plot.caption = ggplot2::element_text(size = font.size,
+                                                         plot.caption = ggplot2::element_text(face = plot.caption.face,
                                                                                               family = font.type,
                                                                                               color = "black",
                                                                                               hjust = 1),

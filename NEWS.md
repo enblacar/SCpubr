@@ -23,13 +23,13 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset.
 -   `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weighted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/).
 -   `SCpubr::do_LoadingsPlot()` to generate a summary heatmap of the PCA loadings (top and bottom scored genes for each PC) together with a expression heatmap of the same genes.
--   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map. 
+-   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map.
 -   `SCpubr::check_dependencies()` to generate a per-function summary of the needed packages to run the function. The report has been enhanced with `cli` package and now clearly illustrates what is missing to run the function.
 
 ## Removed functions
 
 -   `SCpubr::do_SankeyPlot()` has been removed and replaced by `SCpubr::do_AlluvialPlot()`, which is present in the official CRAN versions.
--   `SCpubr::do_PseudotimePlot()` has been removed indefinitely until a better, revamped, state-of-the-art version is generated. 
+-   `SCpubr::do_PseudotimePlot()` has been removed indefinitely until a better, revamped, state-of-the-art version is generated.
 
 ## General
 
@@ -41,6 +41,14 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Implemented `sequential.palette` parameter in all plots that have a continuous, non-symmetrical color scale to help selecting other possible color scales for the plot, in the case the user does not want to use viridis color scales.
 -   Renamed `SCpubr::state_dependencies()` to `SCpubr::check_dependencies()`.
 -   Renewed printed messages at startup and while running functions using `cli` package.
+-   Added the complete control of the font style of plot titles, subtitles, captions, axis titles, axis text, legend titles and legend text. For this, the following parameters have been added to all ggplot2-based functions:
+    -   `plot.title.face`: To control the style of the **title**.
+    -   `plot.subtitle.face`: To control the style of the **subtitle**.
+    -   `plot.caption.face`: To control the style of the **caption**.
+    -   `axis.title.face`: To control the style of the **axis title**.
+    -   `axis.text.face`: To control the style of the **axis text**.
+    -   `legend.title.face`: To control the style of the **legend title**.
+    -   `legend.text.face`: To control the style of the **legend text**.
 
 ## `SCpubr::do_BeeSwarmPlot`
 
@@ -60,9 +68,10 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Added `use_viridis`, `sequential.palette` and `sequential_direction` and `diverging.palette` to control color palettes.
 
 ## `SCpubr::do_CopyNumberVariantPlot()`
--  Removed the option to compute Feature and Geyser plots.
--  Instead, a new paramerter `return_object` has been added to return the Seurat object with a new assay containing the CNV scores per cell on the `data` slot of the `CNV_scores` assay. 
--  The main output visualization is now a heatmap with the averaged scores by chromosome and groups and also by chromosome arms.
+
+-   Removed the option to compute Feature and Geyser plots.
+-   Instead, a new paramerter `return_object` has been added to return the Seurat object with a new assay containing the CNV scores per cell on the `data` slot of the `CNV_scores` assay.
+-   The main output visualization is now a heatmap with the averaged scores by chromosome and groups and also by chromosome arms.
 
 ## `SCpubr::do_DimPlot`
 
@@ -93,7 +102,6 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed the tree plots as they proved to behave inconsistently across datasets and the quality of visualizations were compromised.
 -   Removed the option to plot the bar plots and dot plots in the sake of a more simplified, streamlined plot generation.
 -   The option to return the result matrix using `return_matrix` is added, so that the user can use it to compute further analysis or visualizations.
-
 
 ## `SCpubr::do_PathwayActivityPlot`
 

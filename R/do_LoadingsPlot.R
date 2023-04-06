@@ -47,7 +47,14 @@ do_LoadingsPlot <- function(sample,
                             min.cutoff.loadings = NA,
                             max.cutoff.loadings = NA,
                             min.cutoff.expression = NA,
-                            max.cutoff.expression = NA){
+                            max.cutoff.expression = NA,
+                            plot.title.face = "bold",
+                            plot.subtitle.face = "plain",
+                            plot.caption.face = "italic",
+                            axis.title.face = "bold",
+                            axis.text.face = "bold",
+                            legend.title.face = "bold",
+                            legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -94,7 +101,14 @@ do_LoadingsPlot <- function(sample,
                          "sequential.palette" = sequential.palette,
                          "viridis.palette" = viridis.palette,
                          "grid.color" = grid.color,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   check_colors(na.value)
@@ -112,6 +126,13 @@ do_LoadingsPlot <- function(sample,
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
   
   `%>%` <- magrittr::`%>%`
@@ -351,28 +372,28 @@ do_LoadingsPlot <- function(sample,
                   
   
   p.loading <- modify_continuous_legend(p = p.loading,
-                                                    legend.title = "Avg. Loading score",
-                                                    legend.aes = "fill",
-                                                    legend.type = legend.type,
-                                                    legend.position = legend.position,
-                                                    legend.length = legend.length,
-                                                    legend.width = legend.width,
-                                                    legend.framecolor = legend.framecolor,
-                                                    legend.tickcolor = legend.tickcolor,
-                                                    legend.framewidth = legend.framewidth,
-                                                    legend.tickwidth = legend.tickwidth)
+                                        legend.title = "Avg. Loading score",
+                                        legend.aes = "fill",
+                                        legend.type = legend.type,
+                                        legend.position = legend.position,
+                                        legend.length = legend.length,
+                                        legend.width = legend.width,
+                                        legend.framecolor = legend.framecolor,
+                                        legend.tickcolor = legend.tickcolor,
+                                        legend.framewidth = legend.framewidth,
+                                        legend.tickwidth = legend.tickwidth)
   
   p.expression <- modify_continuous_legend(p = p.expression,
-                                legend.title = "Avg. Expression",
-                                legend.aes = "fill",
-                                legend.type = legend.type,
-                                legend.position = legend.position,
-                                legend.length = legend.length,
-                                legend.width = legend.width,
-                                legend.framecolor = legend.framecolor,
-                                legend.tickcolor = legend.tickcolor,
-                                legend.framewidth = legend.framewidth,
-                                legend.tickwidth = legend.tickwidth)
+                                           legend.title = "Avg. Expression",
+                                           legend.aes = "fill",
+                                           legend.type = legend.type,
+                                           legend.position = legend.position,
+                                           legend.length = legend.length,
+                                           legend.width = legend.width,
+                                           legend.framecolor = legend.framecolor,
+                                           legend.tickcolor = legend.tickcolor,
+                                           legend.framewidth = legend.framewidth,
+                                           legend.tickwidth = legend.tickwidth)
   
   list.plots <- list("Loadings" = p.loading,
                      "Expression" = p.expression)
@@ -384,7 +405,14 @@ do_LoadingsPlot <- function(sample,
                                    group.by = "A",
                                    group = "A",
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels)
+                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   plot.title.face = plot.title.face,
+                                   plot.subtitle.face = plot.subtitle.face,
+                                   plot.caption.face = plot.caption.face,
+                                   axis.title.face = axis.title.face,
+                                   axis.text.face = axis.text.face,
+                                   legend.title.face = legend.title.face,
+                                   legend.text.face = legend.text.face)
     
     list.plots[[name]] <- list.plots[[name]] +
                           ggplot2::theme_minimal(base_size = font.size) +
@@ -401,16 +429,16 @@ do_LoadingsPlot <- function(sample,
                                          axis.title.y.right = axis.parameters$axis.title.y.right,
                                          axis.title.y.left = axis.parameters$axis.title.y.left,
                                          axis.line = ggplot2::element_blank(),
-                                         plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                                         plot.subtitle = ggplot2::element_text(hjust = 0),
-                                         plot.caption = ggplot2::element_text(hjust = 1),
+                                         plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                                         plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                                         plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                                         legend.text = ggplot2::element_text(face = legend.text.face),
+                                         legend.title = ggplot2::element_text(face = legend.title.face),
                                          plot.title.position = "plot",
                                          panel.grid = ggplot2::element_blank(),
                                          panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
                                          text = ggplot2::element_text(family = font.type),
                                          plot.caption.position = "plot",
-                                         legend.text = ggplot2::element_text(face = "bold"),
-                                         legend.title = ggplot2::element_text(face = "bold"),
                                          legend.justification = "center",
                                          plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
                                          panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
@@ -432,12 +460,14 @@ do_LoadingsPlot <- function(sample,
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
                                                          plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
-                                                                                            face = "bold",
+                                                                                            face = plot.title.face,
                                                                                             hjust = 0),
                                                          plot.subtitle = ggplot2::element_text(family = font.type,
+                                                                                               face = plot.subtitle.face,
                                                                                                color = "black",
                                                                                                hjust = 0),
                                                          plot.caption = ggplot2::element_text(family = font.type,
+                                                                                              caption = plot.caption.face,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))

@@ -35,7 +35,14 @@ do_ExpressionHeatmap(
   viridis.direction = -1,
   flip = FALSE,
   grid.color = "white",
-  border.color = "black"
+  border.color = "black",
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -110,6 +117,14 @@ do_ExpressionHeatmap(
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ComplexHeatmap object.

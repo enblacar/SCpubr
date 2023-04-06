@@ -57,7 +57,14 @@ do_DimPlot <- function(sample,
                        contour.color = "grey90",
                        contour.lineend = "butt",
                        contour.linejoin = "round",
-                       contour_expand_axes = 0.25){
+                       contour_expand_axes = 0.25,
+                       plot.title.face = "bold",
+                       plot.subtitle.face = "plain",
+                       plot.caption.face = "italic",
+                       axis.title.face = "bold",
+                       axis.text.face = "bold",
+                       legend.title.face = "bold",
+                       legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -120,7 +127,14 @@ do_DimPlot <- function(sample,
                          "contour.position" = contour.position,
                          "contour.color" = contour.color,
                          "contour.lineend" = contour.lineend,
-                         "contour.linejoin" = contour.linejoin)
+                         "contour.linejoin" = contour.linejoin,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Checks to ensure proper function.
@@ -210,6 +224,14 @@ do_DimPlot <- function(sample,
   check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
   check_parameters(parameter = contour.position, parameter_name = "contour.position")
   check_parameters(parameter = border.density, parameter_name = "border.density")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  
   # If the user has not provided colors.
   if (is.null(colors.use)){
     colors.use <- {
@@ -685,15 +707,15 @@ do_DimPlot <- function(sample,
   # Add theme settings to all plots.
   p <- p &
     ggplot2::theme_minimal(base_size = font.size) &
-    ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = hjust_use),
-                   plot.subtitle = ggplot2::element_text(hjust = 0),
-                   plot.caption = ggplot2::element_text(hjust = 1),
+    ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = hjust_use),
+                   plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                   plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                    plot.title.position = "plot",
                    plot.caption.position = "plot",
                    text = ggplot2::element_text(family = font.type),
                    legend.justification = "center",
-                   legend.text = ggplot2::element_text(face = "bold"),
-                   legend.title = if (legend.position != "none") {ggplot2::element_text(face = "bold")} else {ggplot2::element_blank()},
+                   legend.text = ggplot2::element_text(face = legend.text.face),
+                   legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
                    legend.position = legend.position,
                    panel.grid = ggplot2::element_blank(),
                    plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
@@ -741,8 +763,8 @@ do_DimPlot <- function(sample,
     if (sum(dims == c(1, 2)) == 2){
       # Remove axes completely.
       p <- p &
-        ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
-                       axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+        ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
+                       axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                        axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                        axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       # If dims do not follow the usual order.
@@ -751,10 +773,10 @@ do_DimPlot <- function(sample,
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       # Remove everything in the axes but the axis titles.
       p <- p &
-        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                        axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                        axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
+                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -764,10 +786,10 @@ do_DimPlot <- function(sample,
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     # Remove everything in the axes but not the axis titles.
     p <- p &
-      ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+      ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                      axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                      axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
+                     axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }

@@ -44,7 +44,14 @@ do_AffinityAnalysisPlot(
   add.enrichment = FALSE,
   flavor = "Seurat",
   nbin = 24,
-  ctrl = 100
+  ctrl = 100,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -134,6 +141,14 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A list containing different plots.

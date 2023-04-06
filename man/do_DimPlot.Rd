@@ -53,7 +53,14 @@ do_DimPlot(
   contour.color = "grey90",
   contour.lineend = "butt",
   contour.linejoin = "round",
-  contour_expand_axes = 0.25
+  contour_expand_axes = 0.25,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -173,6 +180,14 @@ do_DimPlot(
 \item{contour.linejoin}{\strong{\code{\link[base]{character}}} | Line join style (round, mitre, bevel).}
 
 \item{contour_expand_axes}{\strong{\code{\link[base]{numeric}}} | To make the contours fit the plot, the limits of the X and Y axis are expanding a given percentage from the min and max values for each axis. This controls such percentage.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 object containing a DimPlot.

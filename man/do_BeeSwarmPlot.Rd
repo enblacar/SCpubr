@@ -54,7 +54,14 @@ do_BeeSwarmPlot(
   pt.size = 2,
   min.cutoff = NA,
   max.cutoff = NA,
-  number.breaks = 5
+  number.breaks = 5,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -149,6 +156,14 @@ do_BeeSwarmPlot(
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 object containing a Bee Swarm plot.

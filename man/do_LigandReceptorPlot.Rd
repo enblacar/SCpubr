@@ -38,7 +38,14 @@ do_LigandReceptorPlot(
   add_missing_LR_combinations = TRUE,
   arrange_interactions_by = "both",
   sort_interactions_alphabetically = FALSE,
-  number.breaks = 5
+  number.breaks = 5,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -134,6 +141,14 @@ do_LigandReceptorPlot(
 \item{sort_interactions_alphabetically}{\strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

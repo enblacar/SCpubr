@@ -152,6 +152,13 @@
 #' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to randomly select from the Seurat object to enhance performance. Selecting NA will disable this but might lead to function breaks if the sample size is too large.
 #' @param cluster_cells \strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.
 #' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.
+#' @param plot.title.face,plot.subtitle.face,plot.caption.face,axis.title.face,axis.text.face,legend.title.face,legend.text.face \strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+#' \itemize{
+#'   \item \emph{\code{plain}}: For normal text.
+#'   \item \emph{\code{italic}}: For text in itallic.
+#'   \item \emph{\code{bold}}: For text in bold.
+#'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
+#' }
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -259,7 +266,14 @@ doc_function <- function(sample,
                          strip.text.color,
                          rotate_strip_labels,
                          diverging.palette,
-                         subsample){}
+                         subsample,
+                         plot.title.face,
+                         plot.subtitle.face,
+                         plot.caption.face,
+                         axis.title.face,
+                         axis.text.face,
+                         legend.title.face,
+                         legend.text.face){}
 
 #' Named vector.
 #'
@@ -2810,6 +2824,13 @@ check_parameters <- function(parameter,
                                          crayon_body(": "),
                                          paste(sapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key), collapse = crayon_body(", ")),
                                          crayon_body(".")))
+  }  else if (parameter_name %in% c("plot.title.face", "plot.subtitle.face", "plot.caption.face", "axis.title.face", "axis.text.face", "legend.title.face", "legend.text.face")){
+    assertthat::assert_that(parameter %in% c("plain", "italic", "bold", "bold.italic"),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         paste(sapply(c("plain", "italic", "bold", "bold.italic"), crayon_key), collapse = crayon_body(", ")),
+                                         crayon_body(".")))
   }
 }
 
@@ -4240,7 +4261,14 @@ handle_axis <- function(flip,
                         counter,
                         group.by,
                         group,
-                        rotate_x_axis_labels){
+                        rotate_x_axis_labels,
+                        plot.title.face,
+                        plot.subtitle.face,
+                        plot.caption.face,
+                        axis.title.face,
+                        axis.text.face,
+                        legend.title.face,
+                        legend.text.face){
   # Set axis theme parameters.
   if (isFALSE(flip)){
     # Strips
@@ -4266,25 +4294,25 @@ handle_axis <- function(flip,
       axis.ticks.x.top <- ggplot2::element_blank()
       axis.ticks.y.right <- ggplot2::element_line(color = "black")
       axis.ticks.y.left <- ggplot2::element_blank()
-      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+      axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
                                                   angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
                                                   hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
                                                   vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
-      axis.text.y.right <- ggplot2::element_text(face = "bold", color = "black")
+      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black")
       axis.text.y.left <- ggplot2::element_blank()
       if (length(group.by) > 1){
         axis.title.x.top <- ggplot2::element_blank()
         axis.title.x.bottom <- ggplot2::element_blank()
       } else {
-        axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+        axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                   angle = 0,
                                                   vjust = 0.5,
                                                   hjust = 0.5)
         axis.title.x.bottom <- ggplot2::element_blank()
       }
 
-      axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+      axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 0,
                                                  hjust = 1,
                                                  vjust = 0.5)
@@ -4296,10 +4324,10 @@ handle_axis <- function(flip,
       axis.ticks.y.left <- ggplot2::element_blank()
       axis.text.x.top <- ggplot2::element_blank()
       axis.text.x.bottom <- ggplot2::element_blank()
-      axis.text.y.right <- ggplot2::element_text(face = "bold", color = "black")
+      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black")
       axis.text.y.left <- ggplot2::element_blank()
       if (length(group.by) > 1){
-        axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+        axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                   angle = 0,
                                                   vjust = 0.5,
                                                   hjust = 0.5)
@@ -4309,7 +4337,7 @@ handle_axis <- function(flip,
         axis.title.x.bottom <- ggplot2::element_blank()
       }
       
-      axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+      axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 0,
                                                  hjust = 1,
                                                  vjust = 0.5)
@@ -4339,12 +4367,12 @@ handle_axis <- function(flip,
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
-      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+      axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
                                                   angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
                                                   hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
                                                   vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
-      axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+      axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                 angle = 0,
                                                 hjust = 0.5,
                                                 vjust = 0.5)
@@ -4353,8 +4381,8 @@ handle_axis <- function(flip,
         axis.ticks.y.left <- ggplot2::element_blank()
         axis.ticks.y.right <- ggplot2::element_line(color = "black")
         axis.text.y.left <- ggplot2::element_blank()
-        axis.text.y.right <- ggplot2::element_text(color = "black", face = "bold")
-        axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face)
+        axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                    angle = 0,
                                                    vjust = 0.5,
                                                    hjust = 0.5)
@@ -4364,7 +4392,7 @@ handle_axis <- function(flip,
         axis.ticks.y.right <- ggplot2::element_blank()
         axis.text.y.left <- ggplot2::element_blank()
         axis.text.y.right <- ggplot2::element_blank()
-        axis.title.y.left <- ggplot2::element_text(face = "bold", color = "black",
+        axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                    angle = 0,
                                                    vjust = 0.5,
                                                    hjust = 0.5)
@@ -4374,12 +4402,12 @@ handle_axis <- function(flip,
     } else {
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
-      axis.text.x.bottom <- ggplot2::element_text(face = "bold", color = "black",
+      axis.text.x.bottom <- ggplot2::element_text(face = axis.text.face, color = "black",
                                                   angle = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["angle"]],
                                                   hjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["hjust"]],
                                                   vjust = get_axis_parameters(angle = rotate_x_axis_labels, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
-      axis.title.x.top <- ggplot2::element_text(face = "bold", color = "black",
+      axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                 angle = 0,
                                                 hjust = 0.5,
                                                 vjust = 0.5)
@@ -4388,7 +4416,7 @@ handle_axis <- function(flip,
         axis.ticks.y.left <- ggplot2::element_blank()
         axis.ticks.y.right <- ggplot2::element_line(color = "black")
         axis.text.y.left <- ggplot2::element_blank()
-        axis.text.y.right <- ggplot2::element_text(color = "black", face = "bold")
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face)
         axis.title.y.right <- ggplot2::element_blank()
         axis.title.y.left <- ggplot2::element_blank()
       } else {
@@ -4493,3 +4521,4 @@ get_SCpubr_colors <- function(){
               "#bfd7b5")
   return(colors)
 }
+

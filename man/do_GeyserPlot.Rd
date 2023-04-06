@@ -51,7 +51,14 @@ do_GeyserPlot(
   diverging.palette = "RdBu",
   sequential.palette = "YlGnBu",
   sequential.direction = -1,
-  use_viridis = TRUE
+  use_viridis = TRUE,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -156,6 +163,14 @@ do_GeyserPlot(
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 Either a plot of a list of plots, depending on the number of features provided.

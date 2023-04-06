@@ -24,7 +24,14 @@ do_VolcanoPlot(
   order_tags_by = "both",
   n_genes = 5,
   use_labels = FALSE,
-  colors.use = "steelblue"
+  colors.use = "steelblue",
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -68,6 +75,14 @@ do_VolcanoPlot(
 \item{use_labels}{\strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A volcano plot as a ggplot2 object.

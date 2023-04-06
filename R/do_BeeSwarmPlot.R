@@ -53,7 +53,14 @@ do_BeeSwarmPlot <- function(sample,
                             pt.size = 2,
                             min.cutoff = NA,
                             max.cutoff = NA,
-                            number.breaks = 5){
+                            number.breaks = 5,
+                            plot.title.face = "bold",
+                            plot.subtitle.face = "plain",
+                            plot.caption.face = "italic",
+                            axis.title.face = "bold",
+                            axis.text.face = "bold",
+                            legend.title.face = "bold",
+                            legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -125,7 +132,14 @@ do_BeeSwarmPlot <- function(sample,
                          "legend.type" = legend.type,
                          "font.type" = font.type,
                          "border.color" = border.color,
-                         "sequential.palette" = sequential.palette)
+                         "sequential.palette" = sequential.palette,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -142,7 +156,13 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
-
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
 
   assertthat::assert_that(length(feature_to_rank) == 1,
@@ -245,22 +265,22 @@ do_BeeSwarmPlot <- function(sample,
                      caption = plot.caption) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                      plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                      plot.subtitle = ggplot2::element_text(hjust = 0),
-                      plot.caption = ggplot2::element_text(hjust = 1),
+                      plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                      plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                      plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                       panel.grid = ggplot2::element_blank(),
                       plot.title.position = "plot",
                       plot.caption.position = "plot",
                       text = ggplot2::element_text(family = font.type),
-                      legend.text = ggplot2::element_text(face = "bold"),
+                      legend.text = ggplot2::element_text(face = legend.text.face),
                       legend.position = legend.position,
-                      legend.title = ggplot2::element_text(face = "bold"),
+                      legend.title = ggplot2::element_text(face = legend.title.face),
                       legend.justification = "center",
-                      axis.title.x = ggplot2::element_text(face = "bold"),
-                      axis.title.y = ggplot2::element_text(face = "bold", angle = 90),
+                      axis.title.x = ggplot2::element_text(face = axis.title.face),
+                      axis.title.y = ggplot2::element_text(face = axis.title.face, angle = 90),
                       axis.ticks.y = if(isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
                       axis.ticks.x = if(isTRUE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
-                      axis.text = ggplot2::element_text(face = "bold", color = "black"),
+                      axis.text = ggplot2::element_text(face = axis.text.face, color = "black"),
                       axis.line = ggplot2::element_line(color = "black"),
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -366,6 +386,7 @@ do_BeeSwarmPlot <- function(sample,
     p[["layers"]] <- append(base_layer, p[["layers"]])
 
   }
+  
 
   return(p)
 

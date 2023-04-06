@@ -52,7 +52,14 @@ do_BoxPlot(
   use_test = FALSE,
   comparisons = NULL,
   test = "wilcox.test",
-  map_signif_level = TRUE
+  map_signif_level = TRUE,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -154,6 +161,14 @@ named numeric vector to create custom mappings from p-values to annotation:
 For example: \code{c("***"=0.001, "**"=0.01, "*"=0.05)}.
 Alternatively, one can provide a function that takes a numeric argument
 (the p-value) and returns a string.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 object.

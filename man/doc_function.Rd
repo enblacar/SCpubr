@@ -231,6 +231,14 @@
 
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
+
 \item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}

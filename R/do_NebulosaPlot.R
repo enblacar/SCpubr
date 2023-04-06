@@ -44,7 +44,14 @@ do_NebulosaPlot <- function(sample,
                             number.breaks = 5,
                             use_viridis = TRUE,
                             sequential.palette = "YlGnBu",
-                            sequential.direction = -1){
+                            sequential.direction = -1,
+                            plot.title.face = "bold",
+                            plot.subtitle.face = "plain",
+                            plot.caption.face = "italic",
+                            axis.title.face = "bold",
+                            axis.text.face = "bold",
+                            legend.title.face = "bold",
+                            legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -105,7 +112,14 @@ do_NebulosaPlot <- function(sample,
                          "font.type" = font.type,
                          "border.color" = border.color,
                          "na.value" = na.value,
-                         "sequential.palette" = sequential.palette)
+                         "sequential.palette" = sequential.palette,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -126,6 +140,13 @@ do_NebulosaPlot <- function(sample,
   check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
   # Define legend parameters.
   if (legend.position %in% c("top", "bottom")){
@@ -143,16 +164,16 @@ do_NebulosaPlot <- function(sample,
                                 reduction = reduction,
                                 dims = dims) &
          ggplot2::theme_minimal(base_size = font.size) &
-         ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                        plot.subtitle = ggplot2::element_text(hjust = 0),
-                        plot.caption = ggplot2::element_text(hjust = 1),
+         ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                        plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                        legend.text = ggplot2::element_text(face = legend.text.face),
+                        legend.title = ggplot2::element_text(face = legend.title.face),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold"),
                         legend.position = legend.position,
-                        legend.title = ggplot2::element_text(face = "bold"),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
                         panel.grid.major = ggplot2::element_blank(),
@@ -285,17 +306,17 @@ do_NebulosaPlot <- function(sample,
       # if dims is first and then second.
       if (sum(dims == c(1, 2)) == 2){
         p <- p &
-          ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = "bold", hjust = 0.5)},
-                         axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+          ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
+                         axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                          axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       } else {
         labels <- colnames(sample@reductions[[reduction]][[]])[dims]
         p <- p &
-          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                          axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
+                         axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
           ggplot2::xlab(labels[1]) &
           ggplot2::ylab(labels[2])
       }
@@ -303,10 +324,10 @@ do_NebulosaPlot <- function(sample,
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                        axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                        axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black")) &
+                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
     }
@@ -322,10 +343,10 @@ do_NebulosaPlot <- function(sample,
           ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, labels[2]]),
                           max(sample@reductions$diffusion[[]][, labels[2]]))) &
           # Remove axis elements so that the axis title is the only thing left.
-          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black")},
+          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                          axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                          axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.title = ggplot2::element_text(face = "bold", hjust = 0.5, color = "black"))
+                         axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black"))
       })
 
     }

@@ -64,7 +64,14 @@ do_AlluvialPlot <- function(sample,
                             grid.type = "dashed",
                             na.value = "white",
                             legend.position = "right",
-                            legend.title = NULL){
+                            legend.title = NULL,
+                            plot.title.face = "bold",
+                            plot.subtitle.face = "plain",
+                            plot.caption.face = "italic",
+                            axis.title.face = "bold",
+                            axis.text.face = "bold",
+                            legend.title.face = "bold",
+                            legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -116,10 +123,26 @@ do_AlluvialPlot <- function(sample,
                          "grid.type" = grid.type ,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
-                         "legend.title" = legend.title)
+                         "legend.title" = legend.title,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
-
+  check_parameters(parameter = font.type, parameter_name = "font.type")
+  check_parameters(parameter = legend.position, parameter_name = "legend.position")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  
 
   StatStratum <- ggalluvial::StatStratum
   `%>%` <- magrittr::`%>%`
@@ -248,40 +271,41 @@ do_AlluvialPlot <- function(sample,
                                     na.value = na.value)
   }
   p <- p +
-    ggplot2::xlab(xlab) +
-    ggplot2::ylab(ylab) +
-    ggplot2::labs(title = plot.title,
-                  subtitle = plot.subtitle,
-                  caption = plot.caption) +
-    ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title)) +
-    ggplot2::theme_minimal(base_size = font.size) +
-    ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
-                                                      face = "bold"),
-                   axis.line.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                   axis.line.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
-                   axis.ticks.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
-                   axis.ticks.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                   axis.text.y = ggplot2::element_text(color = "black", face = "bold"),
-                   axis.text.x = ggplot2::element_text(color = "black", face = "bold"),
-                   panel.grid.major = ggplot2::element_blank(),
-                   plot.title.position = "plot",
-                   plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                   plot.subtitle = ggplot2::element_text(hjust = 0),
-                   plot.caption = ggplot2::element_text(hjust = 1),
-                   panel.grid = ggplot2::element_blank(),
-                   panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                   panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
-                   text = ggplot2::element_text(family = font.type),
-                   plot.caption.position = "plot",
-                   legend.text = ggplot2::element_text(face = "bold"),
-                   legend.position = legend.position,
-                   legend.title = ggplot2::element_text(face = "bold"),
-                   legend.justification = "center",
-                   plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   strip.text =ggplot2::element_text(color = "black", face = "bold"))
+       ggplot2::xlab(xlab) +
+       ggplot2::ylab(ylab) +
+       ggplot2::labs(title = plot.title,
+                     subtitle = plot.subtitle,
+                     caption = plot.caption) +
+       ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title)) +
+       ggplot2::theme_minimal(base_size = font.size) +
+       ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
+                                                         face = axis.title.face),
+                      axis.line.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                      axis.line.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
+                      axis.ticks.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
+                      axis.ticks.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                      axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
+                      axis.text.x = ggplot2::element_text(color = "black", face = axis.text.face),
+                      panel.grid.major = ggplot2::element_blank(),
+                      plot.title.position = "plot",
+                      plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                      plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                      plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                      panel.grid = ggplot2::element_blank(),
+                      panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                      text = ggplot2::element_text(family = font.type),
+                      plot.caption.position = "plot",
+                      legend.text = ggplot2::element_text(face = legend.text.face),
+                      legend.position = legend.position,
+                      legend.title = ggplot2::element_text(face = legend.title.face),
+                      legend.justification = "center",
+                      plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      strip.text =ggplot2::element_text(color = "black", face = "bold"))
+  
 
   if (isTRUE(flip)){
     p <- p + ggplot2::coord_flip()

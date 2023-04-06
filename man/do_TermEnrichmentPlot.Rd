@@ -22,7 +22,14 @@ do_TermEnrichmentPlot(
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
   legend.framecolor = "grey50",
-  legend.tickcolor = "white"
+  legend.tickcolor = "white",
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -76,6 +83,14 @@ do_TermEnrichmentPlot(
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 object with enriched terms.

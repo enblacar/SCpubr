@@ -27,7 +27,14 @@ do_BarPlot(
   plot.caption = NULL,
   plot.grid = TRUE,
   grid.color = "grey75",
-  grid.type = "dashed"
+  grid.type = "dashed",
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -94,6 +101,14 @@ do_BarPlot(
 \item \emph{\code{dotdash}}.
 \item \emph{\code{longdash}}.
 \item \emph{\code{twodash}}.
+}}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
 }
 \value{

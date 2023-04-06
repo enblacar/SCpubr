@@ -47,7 +47,14 @@ do_CopyNumberVariantPlot <- function(sample,
                                      return_object = FALSE,
                                      grid.color = "white",
                                      border.color = "black",
-                                     flip = FALSE){
+                                     flip = FALSE,
+                                     plot.title.face = "bold",
+                                     plot.subtitle.face = "plain",
+                                     plot.caption.face = "italic",
+                                     axis.title.face = "bold",
+                                     axis.text.face = "bold",
+                                     legend.title.face = "bold",
+                                     legend.text.face = "plain"){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -90,7 +97,14 @@ do_CopyNumberVariantPlot <- function(sample,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "grid.color" = grid.color,
-                         "border.color" = border.color)
+                         "border.color" = border.color,
+                         "plot.title.face" = plot.title.face,
+                         "plot.subtitle.face" = plot.subtitle.face,
+                         "plot.caption.face" = plot.caption.face,
+                         "axis.title.face" = axis.title.face,
+                         "axis.text.face" = axis.text.face,
+                         "legend.title.face" = legend.title.face,
+                         "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   
@@ -113,6 +127,13 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(plot.title.face, parameter_name = "plot.title.face")
+  check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
+  check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
+  check_parameters(axis.title.face, parameter_name = "axis.title.face")
+  check_parameters(axis.text.face, parameter_name = "axis.text.face")
+  check_parameters(legend.title.face, parameter_name = "legend.title.face")
+  check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
   chromosome_list <- c(as.character(seq(1, 22)))
   
@@ -360,7 +381,14 @@ do_CopyNumberVariantPlot <- function(sample,
                                    group.by = rep("A", length(names(list.plots))),
                                    group = name,
                                    counter = counter,
-                                   rotate_x_axis_labels = rotate_x_axis_labels)
+                                   rotate_x_axis_labels = rotate_x_axis_labels,
+                                   plot.title.face = plot.title.face,
+                                   plot.subtitle.face = plot.subtitle.face,
+                                   plot.caption.face = plot.caption.face,
+                                   axis.title.face = axis.title.face,
+                                   axis.text.face = axis.text.face,
+                                   legend.title.face = legend.title.face,
+                                   legend.text.face = legend.text.face)
     
     p <- p +
          ggplot2::xlab(xlab) +
@@ -383,16 +411,16 @@ do_CopyNumberVariantPlot <- function(sample,
                         strip.text = axis.parameters$strip.text,
                         legend.position = legend.position,
                         axis.line = ggplot2::element_blank(),
-                        plot.title = ggplot2::element_text(face = "bold", hjust = 0),
-                        plot.subtitle = ggplot2::element_text(hjust = 0),
-                        plot.caption = ggplot2::element_text(hjust = 1),
+                        plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                        plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                         plot.title.position = "plot",
                         panel.grid = ggplot2::element_blank(),
                         panel.grid.minor.y = ggplot2::element_line(color = "white", linewidth = 1),
                         text = ggplot2::element_text(family = font.type),
                         plot.caption.position = "plot",
-                        legend.text = ggplot2::element_text(face = "bold"),
-                        legend.title = ggplot2::element_text(face = "bold"),
+                        legend.text = ggplot2::element_text(face = legend.text.face),
+                        legend.title = ggplot2::element_text(face = legend.title.face),
                         legend.justification = "center",
                         plot.margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 5),
                         panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
@@ -401,7 +429,8 @@ do_CopyNumberVariantPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.spacing.x = ggplot2::unit(0, "cm"))
-       
+    
+
     list.plots[[name]] <- p
   }
   
@@ -414,12 +443,14 @@ do_CopyNumberVariantPlot <- function(sample,
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
                                                          plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
-                                                                                            face = "bold",
+                                                                                            face = plot.title.face,
                                                                                             hjust = 0),
                                                          plot.subtitle = ggplot2::element_text(family = font.type,
+                                                                                               face = plot.subtitle.face,
                                                                                                color = "black",
                                                                                                hjust = 0),
-                                                         plot.caption = ggplot2::element_text(family = "mono",
+                                                         plot.caption = ggplot2::element_text(family = font.type,
+                                                                                              face = plot.caption.face,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))

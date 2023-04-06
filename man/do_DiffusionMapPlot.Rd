@@ -44,7 +44,14 @@ do_DiffusionMapPlot(
   rotate_x_axis_labels = 45,
   border.color = "black",
   return_object = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -133,6 +140,14 @@ do_DiffusionMapPlot(
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A list of ggplot2 objects and a Seurat object if desired.

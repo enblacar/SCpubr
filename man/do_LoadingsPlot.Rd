@@ -38,7 +38,14 @@ do_LoadingsPlot(
   min.cutoff.loadings = NA,
   max.cutoff.loadings = NA,
   min.cutoff.expression = NA,
-  max.cutoff.expression = NA
+  max.cutoff.expression = NA,
+  plot.title.face = "bold",
+  plot.subtitle.face = "plain",
+  plot.caption.face = "italic",
+  axis.title.face = "bold",
+  axis.text.face = "bold",
+  legend.title.face = "bold",
+  legend.text.face = "plain"
 )
 }
 \arguments{
@@ -117,6 +124,14 @@ do_LoadingsPlot(
 \item{min.cutoff.loadings, max.cutoff.loadings}{\strong{\code{\link[base]{numeric}}} | Cutoff to subset the scale of the Loading score heatmap. NA will use quantiles 0.05 and 0.95.}
 
 \item{min.cutoff.expression, max.cutoff.expression}{\strong{\code{\link[base]{numeric}}} | Cutoff to subset the scale of the expression heatmap. NA will use 0 (no quantile) and quantile 0.95.}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 A ggplot2 object.
