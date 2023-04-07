@@ -12,10 +12,7 @@
 #' @export
 
 #'
-#' @examples
-#' \donttest{
-#' TBD
-#' }
+#' @examples NULL
 do_SCExpressionHeatmap <- function(sample,
                                    features,
                                    assay = "SCT",

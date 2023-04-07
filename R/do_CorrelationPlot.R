@@ -3,7 +3,7 @@
 #' @inheritParams doc_function
 #' @param mode \strong{\code{\link[base]{character}}} | Different types of correlation matrices can be computed. Right now, the only possible value is "hvg", standing for Highly Variable Genes. The sample is subset for the HVG and the data is re-scaled. Scale data is used for the correlation.
 #'
-#' @return A ComplexHeatmap object.
+#' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_CorrelationPlot.R

@@ -138,7 +138,7 @@ do_PathwayActivityPlot(
 }}
 }
 \value{
-A list containing several output plots according to the user's specifications.
+A ggplot2 object.
 }
 \description{
 Plot Pathway Activities from decoupleR using Progeny prior knowledge.

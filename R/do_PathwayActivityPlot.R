@@ -3,7 +3,7 @@
 #' @inheritParams doc_function
 #' @param activities \strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with progeny regulon prior knowledge.
 #'
-#' @return A list containing several output plots according to the user's specifications.
+#' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_PathwayActivityPlot.R

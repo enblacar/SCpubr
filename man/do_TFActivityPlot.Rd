@@ -138,7 +138,7 @@ do_TFActivityPlot(
 }}
 }
 \value{
-A list containing several output plots according to the user's specifications.
+A ggplot2 object.
 }
 \description{
 Plot TF Activities from decoupleR using Dorothea prior knowledge.

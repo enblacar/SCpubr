@@ -8,7 +8,7 @@
 #' @inheritParams doc_function
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata column to use as basis for the plot.
 #' @param metadata \strong{\code{\link[base]{character}}} | Metadata columns that will be used to plot the heatmap on the basis of the variable provided to group.by.
-#' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
+#' @param colors.use \strong{\code{\link[SCpubr]{named_list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
 #' @param heatmap.gap \strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.
 #' @param from_df \strong{\code{\link[base]{logical}}} | Whether to provide a data frame with the metadata instead.
 #' @param df \strong{\code{\link[base]{data.frame}}} | Data frame containing the metadata to plot. Rows contain the unique values common to all columns (metadata variables). The columns must be named.
@@ -17,10 +17,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' TBD
-#' }
+#' @examples NULL
 do_MetadataPlot <- function(sample = NULL,
                             group.by = NULL,
                             metadata = NULL,

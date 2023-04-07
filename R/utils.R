@@ -159,6 +159,7 @@
 #'   \item \emph{\code{bold}}: For text in bold.
 #'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 #' }
+#' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -273,7 +274,8 @@ doc_function <- function(sample,
                          axis.title.face,
                          axis.text.face,
                          legend.title.face,
-                         legend.text.face){}
+                         legend.text.face,
+                         flavor){}
 
 #' Named vector.
 #'

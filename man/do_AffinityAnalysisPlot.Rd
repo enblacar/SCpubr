@@ -138,6 +138,10 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
+\item{add.enrichment}{\strong{\code{\link[base]{logical}}} | Whether the include a heatmap with the enrichment scores for the gene sets together with the activities.}
+
+\item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
+
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
@@ -161,7 +165,5 @@ Major contributions to this function:
 }
 }
 \examples{
-\donttest{
-TBD
-}
+NULL
 }

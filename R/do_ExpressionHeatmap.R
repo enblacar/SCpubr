@@ -5,7 +5,7 @@
 #' @inheritParams doc_function
 #'
 #'
-#' @return A ComplexHeatmap object.
+#' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_ExpressionHeatmap.R

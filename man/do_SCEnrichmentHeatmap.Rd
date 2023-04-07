@@ -197,7 +197,5 @@ A ggplot2 object.
 This function is heavily inspired by \strong{\code{\link[Seurat]{DoHeatmap}}}.
 }
 \examples{
-\donttest{
-TBD
-}
+NULL
 }

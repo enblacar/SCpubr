@@ -63,6 +63,8 @@ do_DiffusionMapPlot(
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
+\item{scale.enrichment}{\strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.}
+
 \item{dims}{\strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
@@ -76,6 +78,10 @@ do_DiffusionMapPlot(
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 
 \item{ctrl}{\strong{\code{\link[base]{numeric}}} | Number of genes in the control set to use in \link[Seurat]{AddModuleScore}.}
+
+\item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
+
+\item{main.heatmap.size}{\strong{\code{\link[base]{numeric}}} | A number from 0 to 1 corresponding to how big the main heatmap plot should be with regards to the rest (corresponds to the proportion in size).}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
@@ -156,7 +162,5 @@ A list of ggplot2 objects and a Seurat object if desired.
 Compute a heatmap of enrichment of gene sets on the context of a diffusion component.
 }
 \examples{
-\donttest{
-TBD
-}
+NULL
 }

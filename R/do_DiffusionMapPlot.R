@@ -2,14 +2,12 @@
 #'
 #' @inheritParams doc_function
 #' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
-#'
+#' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | A number from 0 to 1 corresponding to how big the main heatmap plot should be with regards to the rest (corresponds to the proportion in size).  
+#' @param scale.enrichment \strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.
 #' @return A list of ggplot2 objects and a Seurat object if desired.
 #' @export
 #'
-#' @examples
-#' \donttest{
-#' TBD
-#' }
+#' @examples NULL
 do_DiffusionMapPlot <- function(sample,
                                 input_gene_list,
                                 assay = "SCT",
@@ -160,13 +158,13 @@ do_DiffusionMapPlot <- function(sample,
   
   if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
   
-  sample <- SCpubr:::compute_enrichment_scores(sample, 
-                                               input_gene_list = input_gene_list,
-                                               nbin = nbin,
-                                               ctrl = ctrl,
-                                               flavor = flavor,
-                                               assay = if (flavor == "UCell"){NULL} else {assay},
-                                               slot = if (flavor == "Seurat"){NULL} else {slot})
+  sample <- compute_enrichment_scores(sample, 
+                                      input_gene_list = input_gene_list,
+                                      nbin = nbin,
+                                      ctrl = ctrl,
+                                      flavor = flavor,
+                                      assay = if (flavor == "UCell"){NULL} else {assay},
+                                      slot = if (flavor == "Seurat"){NULL} else {slot})
   
   
   if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
@@ -224,18 +222,18 @@ do_DiffusionMapPlot <- function(sample,
                  dplyr::mutate("Enrichment" = ifelse(.data$Enrichment >= limits[2], limits[2], .data$Enrichment))
     
     # Compute scale limits, breaks etc.
-    scale.setup <- SCpubr:::compute_scales(sample = NULL,
-                                           feature = NULL,
-                                           assay = NULL,
-                                           reduction = NULL,
-                                           slot = NULL,
-                                           number.breaks = 5,
-                                           min.cutoff = NA,
-                                           max.cutoff = NA,
-                                           flavor = "Seurat",
-                                           enforce_symmetry = enforce_symmetry,
-                                           from_data = TRUE,
-                                           limits.use = limits)
+    scale.setup <- compute_scales(sample = NULL,
+                                  feature = NULL,
+                                  assay = NULL,
+                                  reduction = NULL,
+                                  slot = NULL,
+                                  number.breaks = 5,
+                                  min.cutoff = NA,
+                                  max.cutoff = NA,
+                                  flavor = "Seurat",
+                                  enforce_symmetry = enforce_symmetry,
+                                  from_data = TRUE,
+                                  limits.use = limits)
     
     # Generate the plot.
     p <- data.plot %>% 
@@ -276,20 +274,20 @@ do_DiffusionMapPlot <- function(sample,
     p <- p + 
          ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
          ggplot2::ylab("Gene sets") +
-         ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 
+         ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 
     
     # Modify the appearance of the plot.
-    p <- SCpubr:::modify_continuous_legend(p = p,
-                                           legend.title = legend.name.use,
-                                           legend.aes = "fill",
-                                           legend.type = legend.type,
-                                           legend.position = legend.position,
-                                           legend.length = legend.length,
-                                           legend.width = legend.width,
-                                           legend.framecolor = legend.framecolor,
-                                           legend.tickcolor = legend.tickcolor,
-                                           legend.framewidth = legend.framewidth,
-                                           legend.tickwidth = legend.tickwidth)
+    p <- modify_continuous_legend(p = p,
+                                  legend.title = legend.name.use,
+                                  legend.aes = "fill",
+                                  legend.type = legend.type,
+                                  legend.position = legend.position,
+                                  legend.length = legend.length,
+                                  legend.width = legend.width,
+                                  legend.framecolor = legend.framecolor,
+                                  legend.tickcolor = legend.tickcolor,
+                                  legend.framewidth = legend.framewidth,
+                                  legend.tickwidth = legend.tickwidth)
     
     # Generate metadata plots to use on top of the main heatmap.
     counter <- 0
@@ -306,7 +304,7 @@ do_DiffusionMapPlot <- function(sample,
         colors.use.iteration <- colors.use[[name]]
       } else {
         names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
-        colors.use.iteration <- SCpubr:::generate_color_scale(names_use = names.use)
+        colors.use.iteration <- generate_color_scale(names_use = names.use)
       }
       
       # Generate the metadata heatmap.
@@ -326,7 +324,7 @@ do_DiffusionMapPlot <- function(sample,
                                                         byrow = legend.byrow)) +
            ggplot2::xlab(NULL) +
            ggplot2::ylab(NULL) +
-           ggplot2::guides(y.sec = SCpubr:::guide_axis_label_trans(~paste0(levels(.data$grouped.var)))) 
+           ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$grouped.var)))) 
          
       list.plots[[name]] <- p
     }

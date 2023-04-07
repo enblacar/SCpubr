@@ -5,6 +5,7 @@
 #' - \href{https://github.com/paubadiam}{Pau Badia i Mompel} for the network generation.
 #' 
 #' @inheritParams doc_function
+#' @param add.enrichment \strong{\code{\link[base]{logical}}} | Whether the include a heatmap with the enrichment scores for the gene sets together with the activities.
 #' @param statistic \strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.
 #' @param compute_robustness \strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of 
 #' @param control.sets.number datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
@@ -13,10 +14,8 @@
 #' @return A list containing different plots.
 #' @export
 #'
-#' @examples
-#' \donttest{
-#' TBD
-#' }
+#' @examples NULL
+
 do_AffinityAnalysisPlot <- function(sample,
                                     input_gene_list,
                                     subsample = 2500,

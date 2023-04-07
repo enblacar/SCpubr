@@ -127,7 +127,7 @@ do_ExpressionHeatmap(
 }}
 }
 \value{
-A ComplexHeatmap object.
+A ggplot2 object.
 }
 \description{
 This function generates a heatmap with averaged expression values by the unique groups of the metadata variables provided by the user.

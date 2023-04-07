@@ -10,10 +10,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples
-#' \donttest{
-#' TBD
-#' }
+#' @examples NULL
 do_LoadingsPlot <- function(sample,
                             group.by = NULL,
                             subsample = NA,

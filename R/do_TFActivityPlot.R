@@ -7,7 +7,7 @@
 #' @param tfs.use \strong{\code{\link[base]{character}}} | Restrict the analysis to given regulons.
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
 #'
-#' @return A list containing several output plots according to the user's specifications.
+#' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_TFActivityPlot.R

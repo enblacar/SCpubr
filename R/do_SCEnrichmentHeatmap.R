@@ -14,10 +14,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples
-#' \donttest{
-#' TBD
-#' }
+#' @examples NULL
 do_SCEnrichmentHeatmap <- function(sample,
                                    input_gene_list,
                                    assay = NULL,

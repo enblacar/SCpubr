@@ -140,7 +140,5 @@ A ggplot2 object.
 Compute a heatmap summary of the top and bottom genes in the PCA loadings for the desired PCs in a Seurat object.
 }
 \examples{
-\donttest{
-TBD
-}
+NULL
 }

@@ -129,7 +129,7 @@ do_CorrelationPlot(
 }}
 }
 \value{
-A ComplexHeatmap object.
+A ggplot2 object.
 }
 \description{
 Create correlation matrix heatmaps.
