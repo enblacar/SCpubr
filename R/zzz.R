@@ -1,8 +1,10 @@
 # Add Start-Up message.
 .onAttach <- function(...) {
+  # nocov start
   if (isFALSE(getOption("SCpubr.verbose"))){
     return()
   }
+  # nocov end
   
   # Print startup message.
   package_report(startup = TRUE)
