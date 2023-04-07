@@ -690,7 +690,7 @@ package_report <- function(startup = FALSE){
     
     plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", crayon_body("Happy plotting!"))
     
-    updates_check <- cli::rule(left = "Checking package updates", width = nchar("Checking package updates") + 6)
+    updates_check <- cli::rule(left = "Package version", width = nchar("Package version") + 6)
     
     cran_version <- utils::available.packages(repos = "http://cran.us.r-project.org")["SCpubr", "Version"]
     system_version <- as.character(utils::packageVersion("SCpubr"))
@@ -708,7 +708,7 @@ package_report <- function(startup = FALSE){
     header <- cli::rule(left = paste0(crayon_body("SCpubr "),
                                       crayon_key(system_version)), line_col = "cadetblue")
     
-    system_version_message <- paste0(cli::col_magenta("System: "), cli::ansi_align(crayon_key(system_version), max_length, align = "right"))
+    system_version_message <- paste0(cli::col_magenta("Installed: "), cli::ansi_align(crayon_key(system_version), max_length, align = "right"))
     cran_version_message <- paste0(cli::col_magenta("CRAN:   "), cli::ansi_align(crayon_key(cran_version), max_length, align = "right"))
     
     
@@ -722,7 +722,7 @@ package_report <- function(startup = FALSE){
                                                  crayon_body("!")))
     } else {
       veredict_message <- paste0(cli::col_green(cli::symbol$tick,
-                                                crayon_body(" Installation is "),
+                                                crayon_body(" Package is "),
                                                 crayon_key("up to date"),
                                                 crayon_body(" with latest "),
                                                 crayon_key("CRAN"),
@@ -932,6 +932,10 @@ check_colors <- function(colors, parameter_name = "") {
 #' TBD
 #' }
 check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL){
+
+  # Set warning length to maximum.
+  options(warning.length = 8170)
+  
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
@@ -972,28 +976,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
         colors.print <- c(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
       }
       
-      counter <- 0
-      print.list <- list()
-      print.vector <- c()
-      for(item in colors.print){
-        counter <- counter + 1
-        
-        if (counter %% 5 != 0){
-          print.vector <- c(print.vector, item)
-          if (counter == length(colors.print)){
-            print.list[[item]] <- paste(print.vector, collapse = "     ")
-            print.vector <- c()
-          }
-        } else {
-          print.vector <- c(print.vector, item)
-          print.list[[item]] <- paste(print.vector, collapse = "     ")
-          print.vector <- c()
-        }
-      }
       
-
-    
-    
     msg <- paste0("\n", "\n",
                   add_cross(), 
                   crayon_body("The "),
@@ -1026,13 +1009,11 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
                   add_warning(),
                   crayon_body("Example: "),
                   cli::style_italic(crayon_key('colors.use = c("A" = "red", "B" = "blue")')),
-                  "\n")
-    
-    on.exit(rlang::inform(paste0("\n", "\n",
-                                 crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_yellow("assigned color")), width = nchar("Values with an assigned color") + 6)), 
-                                 "\n", "\n", 
-                                 paste(print.list, collapse = "\n"), "\n", "\n")))
-           
+                  "\n",
+                  "\n", "\n",
+                  crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_yellow("assigned color")), width = nchar("Values with an assigned color") + 6)), 
+                  "\n", "\n", 
+                  paste(colors.print, collapse = "\n"), "\n", "\n")
     stop(msg, call. = FALSE)
   }
   return(colors)
@@ -1790,22 +1771,6 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   return(factor_levels)
 }
 
-#' Check viridis color map.
-#'
-#' @param viridis.palette Viridis color map provided.
-#' @param verbose Verbosity choice.
-#'
-#' @return None
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-check_viridis.palette <- function(viridis.palette, verbose = FALSE){
-  check_parameters(viridis.palette, parameter_name = "viridis.palette")
-}
-
-
 
 
 #' Check length of parameters compared to features.
@@ -1924,434 +1889,6 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
   # Add the scale and now it will now show up a warning since we removed the previous scale.
   p <- p & function_use
   return(p)
-}
-
-
-
-
-#' Compute the data frame of the annotation for barplot annotation in heatmaps.
-#'
-#' @param sample Seurat object.
-#' @param group.by Variable to group by.
-#' @param annotation Annotation variable to use.
-#'
-#' @return None
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-compute_barplot_annotation <- function(sample,
-                                       group.by,
-                                       annotation){
-  `%>%`<- magrittr::`%>%`
-  # Compute column/row annotation. Obtain the percentage of a group per variable.
-  annotation <- sample@meta.data %>%
-                dplyr::select(dplyr::all_of(c(group.by, annotation))) %>%
-                dplyr::mutate(cluster = !!rlang::sym(group.by)) %>%
-                dplyr::mutate(subgroup = !!rlang::sym(annotation)) %>%
-                dplyr::select(dplyr::all_of(c("cluster", "subgroup"))) %>%
-                dplyr::group_by(.data$cluster, .data$subgroup) %>%
-                dplyr::summarise(n = dplyr::n()) %>%
-                dplyr::mutate(freq = .data$n / sum(.data$n)) %>%
-                dplyr::select(dplyr::all_of(c("cluster", "subgroup", "freq"))) %>%
-                tidyr::pivot_wider(values_from = "freq", names_from = "subgroup")
-  return(annotation)
-}
-
-
-
-
-#' Inner helper for heatmaps
-#'
-#' @param data Matrix ready to be plotted. Use it alongside from_matrix.
-#' @param legend.title Name of the general legend.
-#' @param data_range One of:
-#' - "both": Will compute a color scale equally balanced to both sides. Use when the values to plot are positive and negative.
-#' - "only_pos": Will compute a color scale based only on the positive values. Will take the positive end of colors.use as well. Use when the values to plot are only positive.
-#' - "only_neg": Will compute a color scale based only on the negative values. Will take the negative end of colors.use as well. Use when the values to plot are only negative
-#' @param colors.use Vector of 2 colors defining a gradient. White color will be inserted in the middle.
-#' @param grid_color Color for the grid.
-#' @param range.data Numeric. Min or max value (data_range = "only_pos" or "only_neg") or vector of min and max (data_range = "both") that will determine the span of the color scale.
-#' @param outlier.data Logical. Whether there is outlier data to take into account.
-#' @param fontsize General fontsize of the plot.
-#' @param cell_size Size of each of the cells in the heatmap.
-#' @param row_names_side,column_names_side Where to place the column or row names. "top", "bottom", "left", "right".
-#' @param cluster_columns,cluster_rows Logical. Whether to cluster the rows or the columns of the heatmap.
-#' @param border Logical. Whether to draw the border of the heatmap.
-#' @param row_dendogram,column_dendogram Logical. Whether to plot row and column dendograms.
-#' @param row_annotation,column_annotation Annotation objects.
-#' @param row_annotation_side,column_annotation_side Where to place the annotation. "top", "bottom", "left", "right".
-#' @param row_title,column_title Titles for the axes.
-#' @param column_title_side,row_title_side Side for the titles.
-#' @param column_title_rotation,row_title_rotation Angle of rotation of the titles.
-#' @param row_names_rot,column_names_rot Angle of rotation of the text.
-#' @param legend.framecolor Color of the lines of the box in the legend.
-#' @param legend.length,legend.width Length and width of the legend. Will adjust automatically depending on legend side.
-#' @param na.value Color for NAs
-#' @param use_viridis Logical. Whether to use viridis color palettes.
-#' @param viridis.palette Character. Palette to use.
-#' @param viridis.direction Numeric. Direction of the scale.
-#' @return None
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-heatmap_inner <- function(data,
-                          legend.title = "Values",
-                          data_range = "both",
-                          colors.use = NULL,
-                          grid_color = "grey50",
-                          fontsize = 12,
-                          cell_size = 5,
-                          range.data = NULL,
-                          outlier.data = FALSE,
-                          outlier.data.up = FALSE,
-                          outlier.data.down = FALSE,
-                          outlier.up.color = "#4b010b",
-                          outlier.down.color = "#02294b",
-                          outlier.up.label = NULL,
-                          outlier.down.label = NULL,
-                          round_value_outlier = 2,
-                          column_title = NULL,
-                          row_title = NULL,
-                          row_names_side = "left",
-                          column_names_side = "bottom",
-                          cluster_columns = TRUE,
-                          cluster_rows = TRUE,
-                          border = TRUE,
-                          legend.position = "bottom",
-                          legend.length = 20,
-                          legend.width = 1,
-                          legend.framecolor = "grey50",
-                          row_dendogram = FALSE,
-                          column_dendogram = FALSE,
-                          column_title_side = "top",
-                          row_title_rotation = 90,
-                          column_title_rotation = 0,
-                          row_names_rot = 0,
-                          column_names_rot = 90,
-                          row_title_side = "left",
-                          row_annotation = NULL,
-                          row_annotation_side = "right",
-                          column_annotation = NULL,
-                          column_annotation_side = "top",
-                          na.value = "grey75",
-                          use_viridis = FALSE,
-                          viridis.palette = "D",
-                          viridis.direction = 1,
-                          symmetrical_scale = FALSE,
-                          use_middle_white = TRUE,
-                          disable_white_in_viridis = FALSE){
-  `%>%`<- magrittr::`%>%`
-
-  assertthat::assert_that((nrow(data) >= 1 & ncol(data) > 1) | (nrow(data) > 1 & ncol(data) >= 1),
-                          msg = paste0(add_cross(), crayon_body("The resulting input produced a matrix with "),
-                                       crayon_key("a single row and column"),
-                                       crayon_body(". Please consider increasing the "),
-                                       crayon_key("features"),
-                                       crayon_body(" or "),
-                                       crayon_key("groups"),
-                                       crayon_body(" to plot.")))
-
-  if (!(is.null(range.data)) & data_range == "both"){
-    assertthat::assert_that(length(range.data) == 2,
-                            msg = paste0(add_cross(), crayon_body("When providing "),
-                                         crayon_key("data_range = 'both"),
-                                         crayon_body(" and "),
-                                         crayon_key("range.data"),
-                                         crayon_body(", you need to specify "),
-                                         crayon_key("the two ends"),
-                                         crayon_body(" of the scale in "),
-                                         crayon_key("range.data"),
-                                         crayon_body(". Please provide "),
-                                         crayon_key("two numbers"),
-                                         crayon_body(" to "),
-                                         crayon_key("range.data"),
-                                         crayon_body(".")))
-  }
-
-  assertthat::assert_that(sum(dim(unique(data))) > 2,
-                          msg = paste0(add_cross(), crayon_body("The computed matrix has only "),
-                                       crayon_key("one unique value"),
-                                       crayon_body(". Please consider another setting in which at least "),
-                                       crayon_key("two different values"),
-                                       crayon_body(" are present in the plotting matrix.")))
-
-  if (legend.position %in% c("top", "bottom")){
-    legend_width <- grid::unit(legend.length, "mm")
-    legend_height <- NULL
-    grid_height <- grid::unit(legend.width, "mm")
-    grid_width <- grid::unit(4, "mm")
-    direction <- "horizontal"
-    title_position <- "topcenter"
-  } else if (legend.position %in% c("left", "right")){
-    grid_width <- grid::unit(legend.width, "mm")
-    legend_height <- grid::unit(legend.length, "mm")
-    legend_width <- NULL
-    grid_height <- grid::unit(4, "mm")
-    direction <- "vertical"
-    title_position <- "topleft"
-  }
-
-  if (!is.null(range.data)){
-
-    if (data_range == "both"){
-      if (isTRUE(symmetrical_scale)){
-        abs_value <- max(abs(range.data), na.rm = TRUE)
-        q100 <- abs(abs_value)
-        q0 <- -abs(abs_value)
-      } else {
-        q0 <- range.data[1]
-        q100 <- range.data[2]
-        abs_value <- q100
-      }
-    } else if (data_range == "only_pos"){
-      abs_value <- abs(range.data)
-      q0 <- 0
-      q100 <- abs_value
-    } else if (data_range == "only_neg"){
-      abs_value <- abs(range.data)
-      q100 <- 0
-      q0 <- range.data
-    }
-  } else {
-    q0 <- min(data, na.rm = TRUE)
-    q100 <- max(data, na.rm = TRUE)
-    abs_value <- max(c(abs(q0), abs(q100)), na.rm = TRUE)
-  }
-
-  q50 <- mean(c(q0, q100))
-  q25 <- mean(c(q0, q50))
-  q75 <- mean(c(q50, q100))
-
-  # Checks.
-  if (data_range == "only_neg"){
-    assertthat::assert_that(q0 < 0,
-                            msg = paste0(add_cross(), crayon_body("There are no "),
-                                         crayon_key("negative values"),
-                                         crayon_body(" in the matrix.")))
-  } else if (data_range == "only_pos"){
-    assertthat::assert_that(q100 > 0,
-                            msg = paste0(add_cross(), crayon_body("There are no  "),
-                                         crayon_key("positive values"),
-                                         crayon_body(" in the matrix.")))
-  }
-
-  if (is.null(colors.use)){
-    if (isTRUE(use_middle_white)){
-      colors.use <- c("#023f73", "white", "#7a0213")
-    } else {
-      colors.use <- c("#023f73", "#7a0213")
-    }
-
-  } else {
-    if (isTRUE(use_middle_white)){
-      colors.use <- c(colors.use[1], "white", colors.use[2])
-    } else {
-      colors.use <- c(colors.use[1], colors.use[2])
-    }
-
-  }
-  if (data_range == "both"){
-    if (isTRUE(symmetrical_scale)){
-      breaks <-  round(c(-abs_value, (-abs_value / 2), 0, (abs_value / 2), abs_value), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(-abs_value, (-abs_value / 2), 0, (abs_value / 2), abs_value), 1 + counter)
-      }
-
-    } else if (isFALSE(symmetrical_scale)){
-      breaks <-  round(c(q0, q25, q50, q75, q100), 1)
-      counter <- 0
-      while (sum(duplicated(breaks)) > 0){
-        counter <- counter + 1
-        breaks <-  round(c(q0, q25, q50, q75, q100), 1 + counter)
-      }
-    }
-    labels <- as.character(breaks)
-    if (isTRUE(outlier.data)){
-      if (isTRUE(outlier.data.up)){
-        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
-      }
-
-      if (isTRUE(outlier.data.down)){
-        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
-      }
-    }
-    colors.use <- grDevices::colorRampPalette(colors.use)(length(breaks))
-
-    names(colors.use) <- labels
-  } else if (data_range == "only_neg"){
-    breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1)
-    counter <- 0
-    while (sum(duplicated(breaks)) > 0){
-      counter <- counter + 1
-      breaks <-  round(c(-abs_value, (-abs_value * 0.75), (-abs_value * 0.5), (-abs_value * 0.25), 0), 1 + counter)
-    }
-    labels <- as.character(breaks)
-    colors.use <- grDevices::colorRampPalette(c(colors.use[c(1, 2)]))(length(breaks))
-
-    if (isTRUE(outlier.data)){
-      if (isTRUE(outlier.data.up)){
-        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
-      }
-
-      if (isTRUE(outlier.data.down)){
-        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
-      }
-    }
-    names(colors.use) <- labels
-  } else if (data_range == "only_pos"){
-    breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1)
-    counter <- 0
-    while (sum(duplicated(breaks)) > 0){
-      counter <- counter + 1
-      breaks <-  round(c(0, (abs_value * 0.25), (abs_value * 0.5), (abs_value * 0.75), abs_value), 1 + counter)
-    }
-    labels <- as.character(breaks)
-
-    if (isTRUE(outlier.data)){
-      if (isTRUE(outlier.data.up)){
-        labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", labels[length(labels)])
-      }
-
-      if (isTRUE(outlier.data.down)){
-        labels[1] <- paste0(as.character(expression("\u2264")), " ", labels[1])
-      }
-    }
-
-    colors.use <- grDevices::colorRampPalette(c(colors.use[c(2, 3)]))(length(breaks))
-    names(colors.use) <- labels
-  }
-
-  if (isTRUE(use_viridis)){
-    if(viridis.direction == -1 & isFALSE(disable_white_in_viridis)){
-      col_fun <- circlize::colorRamp2(breaks = breaks, colors = c("white", viridis::viridis(n = length(breaks) - 1,
-                                                                                            option = viridis.palette,
-                                                                                            direction = viridis.direction)))
-    } else {
-      col_fun <- circlize::colorRamp2(breaks = breaks, colors = viridis::viridis(n = length(breaks),
-                                                                                 option = viridis.palette,
-                                                                                 direction = viridis.direction))
-    }
-  } else {
-    col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors.use)
-  }
-
-
-
-  if (isTRUE(outlier.data)){
-    suppressWarnings({lgd <- ComplexHeatmap::Legend(at = breaks,
-                                                    labels = labels,
-                                                    col_fun = col_fun,
-                                                    title = legend.title,
-                                                    direction = direction,
-                                                    legend_height = legend_height,
-                                                    legend_width = legend_width,
-                                                    grid_width = grid_width,
-                                                    grid_height = grid_height,
-                                                    border = legend.framecolor,
-                                                    title_position = title_position,
-                                                    break_dist = rep(1, length(breaks) - 1),
-                                                    labels_gp = grid::gpar(fontsize = fontsize,
-                                                                           fontface = "bold"),
-                                                    title_gp = grid::gpar(fontsize = fontsize,
-                                                                          fontface = "bold"))})
-  } else{
-    lgd <- ComplexHeatmap::Legend(at = breaks,
-                                  labels = labels,
-                                  col_fun = col_fun,
-                                  title = legend.title,
-                                  direction = direction,
-                                  legend_height = legend_height,
-                                  legend_width = legend_width,
-                                  grid_width = grid_width,
-                                  grid_height = grid_height,
-                                  border = legend.framecolor,
-                                  title_position = title_position,
-                                  break_dist = rep(1, length(breaks) - 1),
-                                  labels_gp = grid::gpar(fontsize = fontsize,
-                                                         fontface = "bold"),
-                                  title_gp = grid::gpar(fontsize = fontsize,
-                                                        fontface = "bold"))
-  }
-
-
-  if (!(is.null(row_annotation))){
-    if (row_annotation_side == "right"){
-      right_annotation <- row_annotation
-      left_annotation <- NULL
-    } else {
-      right_annotation <- NULL
-      left_annotation <- row_annotation
-    }
-  } else {
-    right_annotation <- NULL
-    left_annotation <- NULL
-  }
-
-  if (!(is.null(column_annotation))){
-    if (column_annotation_side == "top"){
-      top_annotation <- column_annotation
-      bottom_annotation <- NULL
-    } else {
-      top_annotation <- NULL
-      bottom_annotation <- column_annotation
-    }
-  } else {
-    top_annotation <- NULL
-    bottom_annotation <- NULL
-  }
-
-
-  h <- ComplexHeatmap::Heatmap(matrix = data,
-                               name = legend.title,
-                               col = col_fun,
-                               na_col = na.value,
-                               show_heatmap_legend = FALSE,
-                               cluster_rows = cluster_rows,
-                               cluster_columns = cluster_columns,
-                               show_row_dend = row_dendogram,
-                               show_column_dend = column_dendogram,
-                               top_annotation = top_annotation,
-                               bottom_annotation = bottom_annotation,
-                               right_annotation = right_annotation,
-                               left_annotation = left_annotation,
-                               width = ncol(data)*grid::unit(cell_size, "mm"),
-                               height = nrow(data)*grid::unit(cell_size, "mm"),
-                               column_names_gp = grid::gpar(fontsize = fontsize,
-                                                            fontface = "bold"),
-                               row_names_gp = grid::gpar(fontsize = fontsize,
-                                                         fontface = "bold"),
-                               row_names_side = row_names_side,
-                               column_names_side = column_names_side,
-                               column_title = column_title,
-                               column_title_side = column_title_side,
-                               row_title_side = row_title_side,
-                               row_title = row_title,
-                               column_title_rot = column_title_rotation,
-                               row_title_rot = row_title_rotation,
-                               column_names_rot = column_names_rot,
-                               row_names_rot = row_names_rot,
-                               column_title_gp = grid::gpar(fontsize = fontsize,
-                                                            fontface = "bold"),
-                               row_title_gp = grid::gpar(fontsize = fontsize,
-                                                         fontface = "bold"),
-                               border = border,
-                               rect_gp = grid::gpar(col= grid_color),
-                               cell_fun = function(j, i, x, y, w, h, fill) {
-                                 grid::grid.rect(x, y, w, h, gp = grid::gpar(alpha = 0))
-                               },
-                               column_names_centered = FALSE,
-                               row_names_centered = FALSE)
-
-  return_list <- list("heatmap" = h,
-                      "legend" = lgd)
-
-  return(return_list)
 }
 
 
@@ -2557,7 +2094,7 @@ modify_continuous_legend <- function(p,
                                      legend.framewidth,
                                      legend.title = NULL){
   # Define legend parameters. Width and height values will change depending on the legend orientation.
-  if (legend.position %in% c("top", "bottom")){
+  if (legend.position %in% c("top", "bottom", "none")){
     legend.barwidth <- legend.length
     legend.barheight <- legend.width
   } else if (legend.position %in% c("left", "right")){

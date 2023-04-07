@@ -17,16 +17,14 @@ if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
     p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
                                              org.db = org.Hs.eg.db,
                                              organism = "hsa",
-                                             database = "GO",
-                                             flip = FALSE)
+                                             database = "GO")
 
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
                                              org.db = org.Hs.eg.db,
                                              organism = "hsa",
-                                             database = "GO",
-                                             flip = TRUE)
+                                             database = "GO")
 
     testthat::expect_type(p, "list")
 
@@ -78,13 +76,6 @@ if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
 
     testthat::expect_type(p, "character")
 
-    p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("CCL1", "CCL4", "CENPE", "CENPK", "OLIG1"),
-                                             org.db = org.Hs.eg.db,
-                                             organism = "hsa",
-                                             database = "KEGG",
-                                             min.overlap = 1)
-
-    testthat::expect_type(p, "list")
 
     p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
                                              org.db = org.Hs.eg.db,

@@ -9,7 +9,7 @@ if(isFALSE(dep_check[["do_RidgePlot"]])){
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               continuous_scale = TRUE,
-                              viridis_direction = 1)
+                              viridis.direction = 1)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_RidgePlot(sample = sample,
@@ -102,13 +102,13 @@ if(isFALSE(dep_check[["do_RidgePlot"]])){
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               continuous_scale = TRUE,
-                              viridis_direction = 1)
+                              viridis.direction = 1)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               continuous_scale = TRUE,
-                              viridis_direction = -1)
+                              viridis.direction = -1)
     testthat::expect_type(p, "list")
   })
 

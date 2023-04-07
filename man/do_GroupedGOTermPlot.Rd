@@ -11,6 +11,7 @@ do_GroupedGOTermPlot(
   GO_ontology = "BP",
   min.overlap = 3,
   flip = TRUE,
+  colors.use = c(Present = "#1e3d59", Absent = "#bccbcd"),
   legend.position = "bottom",
   reverse.levels = TRUE,
   axis.text.x.angle = 45,
@@ -50,6 +51,8 @@ do_GroupedGOTermPlot(
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
+\item{colors.use}{\strong{\code{\link[base]{character}}} | Named vector with two colors assigned to the names \strong{\code{Present}} and \strong{\code{Absent}}.}
+
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
 \item \emph{\code{top}}: Top of the figure.
@@ -76,7 +79,7 @@ do_GroupedGOTermPlot(
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
-\item{return_matrices}{\strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..}
+\item{return_matrices}{\strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms.}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 

@@ -48,7 +48,7 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
 
     p <- SCpubr::do_CorrelationPlot(sample = sample,
                                     group.by = "seurat_clusters",
-                                    rotate_x_axis_labels = 0)
+                                    axis.text.x.angle = 0)
     testthat::expect_true("ggplot" %in% class(p))
   })
 }

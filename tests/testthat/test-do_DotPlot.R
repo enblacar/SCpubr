@@ -181,7 +181,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                               features = genes,
                                               flip = TRUE,
-                                              rotate_x_axis_labels = 45)})
+                                              axis.text.x.angle = 45)})
     testthat::expect_type(p, "list")
   })
 

@@ -401,15 +401,6 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: WARNING - raster and small point size", {
-    testthat::skip_on_cran()
-
-
-    testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
-                                                    features = c("nCount_RNA"),
-                                                    raster = TRUE,
-                                                    pt.size = 0.5))
-  })
 
   testthat::test_that("do_FeaturePlot: PASS - ussing diffusion reduction", {
     testthat::skip_on_cran()

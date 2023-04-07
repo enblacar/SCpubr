@@ -5,7 +5,6 @@
 #' @param infercnv_object \strong{\code{\link[infercnv]{infercnv}}} | Output inferCNV object run on the same Seurat object.
 #' @param using_metacells \strong{\code{\link[base]{logical}}} | Whether inferCNV was run using metacells or not.
 #' @param metacell_mapping \strong{\code{\link[SCpubr]{named_vector}}} | Vector or cell - metacell mapping.
-#' @param chromosome_focus \strong{\code{\link[base]{character}}} | Region stating which chromosome to plot. Eg: 1p, 19q. NULL will plot all regions.
 #' @param chromosome_locations \strong{\code{\link[tibble]{tibble}}} | Tibble containing the chromosome regions to use. Can be obtained using \code{utils::data("human_chr_locations", package = "SCpubr")}.
 #'
 #' @return A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..
@@ -18,7 +17,6 @@ do_CopyNumberVariantPlot <- function(sample,
                                      group.by = NULL,
                                      using_metacells = FALSE,
                                      metacell_mapping = NULL,
-                                     chromosome_focus = NULL,
                                      legend.type = "colorbar",
                                      legend.position = "bottom",
                                      legend.length = 20,

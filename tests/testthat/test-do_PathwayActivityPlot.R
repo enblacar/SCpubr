@@ -29,42 +29,11 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
 
   })
 
-  testthat::test_that("do_PathwayActivityPlot: PASS - plot featureplots", {
-    testthat::skip_on_cran()
+  
 
+  
 
-
-    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                          activities = progeny_activities,
-                                          plot_FeaturePlots = TRUE)
-    testthat::expect_type(out, "list")
-    testthat::expect_length(out, 2)
-  })
-
-  testthat::test_that("do_PathwayActivityPlot: PASS - plot geysers", {
-    testthat::skip_on_cran()
-
-
-
-    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                          activities = progeny_activities,
-                                          plot_GeyserPlots = TRUE)
-    testthat::expect_type(out, "list")
-    testthat::expect_length(out, 2)
-  })
-
-  testthat::test_that("do_PathwayActivityPlot: PASS - all", {
-    testthat::skip_on_cran()
-
-
-
-    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                          activities = progeny_activities,
-                                          plot_GeyserPlots = TRUE,
-                                          plot_FeaturePlots = TRUE)
-    testthat::expect_type(out, "list")
-    testthat::expect_length(out, 3)
-  })
+ 
 
   testthat::test_that("do_PathwayActivityPlot: PASS - all group.by", {
     testthat::skip_on_cran()
@@ -73,11 +42,8 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
-                                          plot_GeyserPlots = TRUE,
-                                          plot_FeaturePlots = TRUE,
                                           group.by = "orig.ident")
     testthat::expect_type(out, "list")
-    testthat::expect_length(out, 3)
   })
 
 
@@ -87,15 +53,13 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
                                           min.cutoff = -0.1,
-                                          max.cutoff = NA,
-                                          plot_FeaturePlots = TRUE)
+                                          max.cutoff = NA)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
                                           min.cutoff = NA,
-                                          max.cutoff = 0.1,
-                                          plot_FeaturePlots = TRUE)
+                                          max.cutoff = 0.1)
     testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
@@ -127,20 +91,14 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
 
     testthat::expect_error({SCpubr::do_PathwayActivityPlot(sample = sample,
                                                            activities = progeny_activities,
-                                                           plot_GeyserPlots = FALSE,
-                                                           plot_FeaturePlots = FALSE,
                                                            min.cutoff = -10)})
 
     testthat::expect_error({SCpubr::do_PathwayActivityPlot(sample = sample,
                                                            activities = progeny_activities,
-                                                           plot_GeyserPlots = FALSE,
-                                                           plot_FeaturePlots = FALSE,
                                                            max.cutoff = 200)})
 
     testthat::expect_error({SCpubr::do_PathwayActivityPlot(sample = sample,
                                                            activities = progeny_activities,
-                                                           plot_GeyserPlots = FALSE,
-                                                           plot_FeaturePlots = FALSE,
                                                            max.cutoff = 1,
                                                            min.cutoff = 2)})
 

@@ -23,7 +23,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                  assay = "SCT",
                                  nbin = 1,
                                  ctrl = 10,
-                                 viridis_direction = 1)
+                                 viridis.direction = 1)
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -32,7 +32,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       assay = "SCT",
                                       nbin = 1,
                                       ctrl = 10,
-                                      viridis_direction = -1)
+                                      viridis.direction = -1)
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -41,7 +41,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                  slot = "data",
                                  nbin = 1,
                                  ctrl = 10,
-                                 viridis_direction = 1)
+                                 viridis.direction = 1)
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -50,7 +50,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       slot = "data",
                                       nbin = 1,
                                       ctrl = 10,
-                                      viridis_direction = -1)
+                                      viridis.direction = -1)
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -59,7 +59,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       assay = "SCT",
                                       nbin = 1,
                                       ctrl = 10,
-                                      viridis_direction = 1)
+                                      viridis.direction = 1)
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -68,7 +68,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       assay = "SCT",
                                       nbin = 1,
                                       ctrl = 10,
-                                      viridis_direction = -1)
+                                      viridis.direction = -1)
     testthat::expect_true("ggplot" %in% class(p))
   })
 
@@ -182,16 +182,14 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       group.by = c("seurat_clusters", "orig.ident"),
                                       nbin = 1,
                                       ctrl = 10,
-                                      return_object = TRUE,
-                                      return_matrix = TRUE)
+                                      return_object = TRUE)
     testthat::expect_true("list" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
                                       nbin = 1,
                                       ctrl = 10,
-                                      return_object = TRUE,
-                                      return_matrix = TRUE)
+                                      return_object = TRUE)
     testthat::expect_true("list" %in% class(p))
   })
 

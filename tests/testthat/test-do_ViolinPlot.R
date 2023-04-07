@@ -125,7 +125,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                features = "EPC1",
-                               rotate_x_axis_labels = 45)
+                               axis.text.x.angle = 45)
     testthat::expect_type(p, "list")
   })
 
@@ -148,7 +148,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                features = c("EPC1"),
-                               rotate_x_axis_labels = 45,
+                               axis.text.x.angle = 45,
                                y_cut = 2)
     testthat::expect_type(p, "list")
   })
@@ -160,7 +160,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                features = c("EPC1"),
-                               rotate_x_axis_labels = 45,
+                               axis.text.x.angle = 45,
                                y_cut = 2,
                                line_width = 3)
     testthat::expect_type(p, "list")
@@ -172,7 +172,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                features = c("EPC1"),
-                               rotate_x_axis_labels = 45,
+                               axis.text.x.angle = 45,
                                y_cut = 2,
                                boxplot_width = 0.1)
     testthat::expect_type(p, "list")
@@ -184,7 +184,7 @@ if(isFALSE(dep_check[["do_ViolinPlot"]])){
 
     p <- SCpubr::do_ViolinPlot(sample = sample,
                                features = c("EPC1"),
-                               rotate_x_axis_labels = 45,
+                               axis.text.x.angle = 45,
                                y_cut = 2,
                                boxplot_width = 0.1,
                                colors.use = c("0" = "#001219",

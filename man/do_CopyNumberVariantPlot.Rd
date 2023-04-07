@@ -11,7 +11,6 @@ do_CopyNumberVariantPlot(
   group.by = NULL,
   using_metacells = FALSE,
   metacell_mapping = NULL,
-  chromosome_focus = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.length = 20,
@@ -62,8 +61,6 @@ do_CopyNumberVariantPlot(
 \item{using_metacells}{\strong{\code{\link[base]{logical}}} | Whether inferCNV was run using metacells or not.}
 
 \item{metacell_mapping}{\strong{\code{\link[SCpubr]{named_vector}}} | Vector or cell - metacell mapping.}
-
-\item{chromosome_focus}{\strong{\code{\link[base]{character}}} | Region stating which chromosome to plot. Eg: 1p, 19q. NULL will plot all regions.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{

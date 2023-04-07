@@ -112,17 +112,17 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
   testthat::test_that("do_LigandReceptorPlot: PASS - from output, angle ", {
     testthat::skip_on_cran()
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       rotate_x_axis_labels = 0,
+                                       axis.text.x.angle = 0,
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       rotate_x_axis_labels = 45,
+                                       axis.text.x.angle = 45,
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,
-                                       rotate_x_axis_labels = 90,
+                                       axis.text.x.angle = 90,
                                        add_missing_LR_combinations = FALSE)
     testthat::expect_type(p, "list")
   })

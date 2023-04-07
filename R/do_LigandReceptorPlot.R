@@ -129,9 +129,6 @@ do_LigandReceptorPlot <- function(liana_output,
   # Check border color.
   check_colors(border.color, parameter_name = "border.color")
 
-  # Check viridis.palette.
-  check_viridis.palette(viridis.palette = viridis.palette)
-
   # Check the colors provided to legend.framecolor and legend.tickcolor.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")

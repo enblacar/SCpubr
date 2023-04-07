@@ -3,7 +3,8 @@
 #' @inheritParams doc_function
 #' @param levels.use \strong{\code{\link[base]{numeric}}} | Vector of numerics corresponding to the GO ontology levels to plot. If NULL will compute all recursively until there are no results.
 #' @param reverse.levels \strong{\code{\link[base]{logical}}} | Whether to place the higher levels first when computing the joint heatmap.
-#' @param return_matrices \strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms..
+#' @param return_matrices \strong{\code{\link[base]{logical}}} | Returns the matrices of grouped GO terms.
+#' @param colors.use \strong{\code{\link[base]{character}}} | Named vector with two colors assigned to the names \strong{\code{Present}} and \strong{\code{Absent}}.
 #' 
 #' @return A list containing all the matrices for the respective GO levels and all the individual and combined heatmaps.
 #' @export
@@ -15,6 +16,8 @@ do_GroupedGOTermPlot <- function(genes,
                                  GO_ontology = "BP",
                                  min.overlap = 3,
                                  flip = TRUE,
+                                 colors.use = c("Present" = "#1e3d59", 
+                                                 "Absent" = "#bccbcd"),
                                  legend.position = "bottom",
                                  reverse.levels = TRUE,
                                  axis.text.x.angle = 45,
@@ -91,9 +94,7 @@ do_GroupedGOTermPlot <- function(genes,
                                        crayon_body(" object to "),
                                        crayon_key("org.db"),
                                        crayon_body(".")))
-  
-  colors.use <- c("Present" = "#1e3d59", 
-                  "Absent" = "#bccbcd")
+
   
   check_colors(grid.color, parameter_name = "grid.color")
   check_colors(border.color, parameter_name = "border.color")
