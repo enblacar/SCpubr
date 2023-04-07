@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{check_dependencies}
 \alias{check_dependencies}
-\title{State SCpubr current function dependencies.}
+\title{Check SCpubr current function dependencies.}
 \usage{
 check_dependencies(function_name = NULL, return_dependencies = FALSE)
 }
@@ -15,7 +15,7 @@ check_dependencies(function_name = NULL, return_dependencies = FALSE)
 None
 }
 \description{
-State SCpubr current function dependencies.
+Check SCpubr current function dependencies.
 }
 \examples{
 
