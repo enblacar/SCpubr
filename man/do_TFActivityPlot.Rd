@@ -161,19 +161,10 @@ Plot TF Activities from decoupleR using Dorothea prior knowledge.
 
     # General heatmap.
     out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                     activities = dorothea_activities,
-                                     plot_FeaturePlots = TRUE,
-                                     plot_GeyserPlots = TRUE)
+                                     activities = dorothea_activities)
     p <- out$heatmaps$average_scores
     p
 
-    # Retrieve feature plots.
-    p <- out$feature_plots$ARID2
-    p
-
-    # Retrieve Geyser plots.
-    p <- out$geyser_plots$ARID2
-    p
   } else if (isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

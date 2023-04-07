@@ -48,7 +48,7 @@ dependencies[["utils"]] <- c("Seurat",
 # Check them.
 dep_check <- list()
 for (func in names(dependencies)){
-  packages <- dependencies[[func]]
+  packages <- c(dependencies[[func]], dependencies[["Essentials"]])
   value = FALSE
   for (pkg in packages){
     if (!requireNamespace(pkg, quietly = TRUE)) {

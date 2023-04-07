@@ -149,7 +149,7 @@ This function generates a heatmap with averaged expression values by the unique 
     # Default parameters.
     p <- SCpubr::do_ExpressionHeatmap(sample = sample,
                                       features = genes,
-                                      viridis_direction = -1)
+                                      viridis.direction = -1)
   } else if (isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

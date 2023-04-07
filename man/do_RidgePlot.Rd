@@ -196,7 +196,7 @@ This function computes ridge plots based on the \pkg{ggridges} package.
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nFeature_RNA",
                               continuous_scale = TRUE,
-                              viridis_direction = 1)
+                              viridis.direction = 1)
     p
 
     # Draw quantiles of the distribution.

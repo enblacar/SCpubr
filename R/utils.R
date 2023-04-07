@@ -392,6 +392,7 @@ crayon_key <- function(text){
 #' }
 return_dependencies <- function(){
   pkg_list <- list("Essentials" = c("Seurat",
+                                    "SeuratObject",
                                     "rlang",
                                     "dplyr",
                                     "magrittr",
@@ -411,14 +412,14 @@ return_dependencies <- function(){
                                     "RColorBrewer",
                                     "labeling"),
                    "do_AffinityAnalysisPlot" = c("decoupleR"),
-                   "do_AlluvialPlot" = c("ggalluvial"),
+                   "do_AlluvialPlot" = c("ggalluvial", "SeuratObject"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = c("ggsignif"),
                    "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
                    "do_ChordDiagramPlot" = c("circlize"),
-                   "do_ColorPalette" = c(),
+                   "do_ColorPalette" = c("assertthat"),
                    "do_CopyNumberVariantPlot" = c("ggdist"),
                    "do_CorrelationPlot" = c(),
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
@@ -542,7 +543,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
         for (func in func_list){
           packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
           if (func %in% non_seurat_functions){
-            packages <- packages[packages != "Seurat"]
+            packages <- packages[!(packages %in% c("Seurat", "SeuratObject"))]
           }
         }
         crayon_key(func)

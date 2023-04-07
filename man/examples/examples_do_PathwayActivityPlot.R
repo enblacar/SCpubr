@@ -15,18 +15,8 @@
 
     # General heatmap.
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
-                                          activities = progeny_activities,
-                                          plot_FeaturePlots = TRUE,
-                                          plot_GeyserPlots = TRUE)
+                                          activities = progeny_activities)
     p <- out$heatmaps$average_scores
-    p
-
-    # Retrieve feature plots.
-    p <- out$feature_plots$EGFR
-    p
-
-    # Retrieve Geyser plots.
-    p <- out$geyser_plots$EGFR
     p
 
   } else if (isFALSE(value)){
