@@ -412,14 +412,14 @@ return_dependencies <- function(){
                                     "RColorBrewer",
                                     "labeling"),
                    "do_AffinityAnalysisPlot" = c("decoupleR"),
-                   "do_AlluvialPlot" = c("ggalluvial", "SeuratObject"),
+                   "do_AlluvialPlot" = c("ggalluvial"),
                    "do_AzimuthAnalysisPlot" = c(),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = c("ggsignif"),
                    "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
                    "do_ChordDiagramPlot" = c("circlize"),
-                   "do_ColorPalette" = c("assertthat"),
+                   "do_ColorPalette" = c(),
                    "do_CopyNumberVariantPlot" = c("ggdist"),
                    "do_CorrelationPlot" = c(),
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
@@ -472,11 +472,9 @@ check_suggests <- function(function_name, passive = FALSE){
                             "do_ColorPalette")
 
   if (function_name %in% non_seurat_functions){
-    pkgs <- pkgs[pkgs != "Seurat"]
+    pkgs <- pkgs[!(pkgs %in% c("Seurat", "SeuratObject"))]
   }
 
-  value <- TRUE
-  
   pkgs <- sapply(pkgs, requireNamespace, quietly = TRUE)
   if(sum(isFALSE(pkgs)) > 0){
     missing_pkgs <- names(pkgs[isFALSE(pkgs)])
@@ -493,7 +491,7 @@ check_suggests <- function(function_name, passive = FALSE){
     }
   }
   
-  value <-  if(sum(isFALSE(pkgs)) > 0){FALSE} else {TRUE}
+  value <-  if(sum(pkgs) > 0){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
 }
 
