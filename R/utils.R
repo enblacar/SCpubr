@@ -491,7 +491,7 @@ check_suggests <- function(function_name, passive = FALSE){
     }
   }
   
-  value <-  if(sum(pkgs) > 0){FALSE} else {TRUE}
+  value <-  if(sum(pkgs) != length(pkgs)){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
 }
 
