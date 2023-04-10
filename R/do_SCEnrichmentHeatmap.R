@@ -14,7 +14,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_SCEnrichmentHeatmap.R
 do_SCEnrichmentHeatmap <- function(sample,
                                    input_gene_list,
                                    assay = NULL,
@@ -183,7 +183,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                 crayon_key("flavor = UCell"),
                 crayon_body(" do not use the "),
                 crayon_key("assay"),
-                crayon_body("parameter.\nInstead, make sure that the"),
+                crayon_body("parameter.\nInstead, make sure that the "),
                 crayon_key("assay"),
                 crayon_body(" you want to compute the scores with is set as the "),
                 crayon_key("default"),
@@ -195,7 +195,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                 crayon_key("flavor = Seurat"),
                 crayon_body(" do not use the "),
                 crayon_key("slot"),
-                crayon_body(" parameter.\nThis is determiend by default in"),
+                crayon_body(" parameter.\nThis is determiend by default in "),
                 crayon_key("Seurat"),
                 crayon_body(".")), call. = FALSE)
   }
@@ -240,6 +240,11 @@ do_SCEnrichmentHeatmap <- function(sample,
                                       assay = assay,
                                       slot = slot)
   
+  if (is.null(group.by)){
+    sample$Groups <- Seurat::Idents(sample)
+    group.by <- "Groups"
+  }
+  
   
   assertthat::assert_that(length(group.by) == 1,
                           msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),
@@ -247,10 +252,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                        crayon_body(".")))
   
   
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
+ 
   
   
   # Perform hierarchical clustering cluster-wise

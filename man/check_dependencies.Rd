@@ -18,10 +18,11 @@ None
 Check SCpubr current function dependencies.
 }
 \examples{
-
+\donttest{
 # See all dependencies.
 SCpubr::check_dependencies()
 
 # See the dependencies for a single package.
 SCpubr::check_dependencies(function_name = "do_DimPlot")
+}
 }

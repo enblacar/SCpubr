@@ -17,6 +17,8 @@ This function generates a summary report of the installation status of SCpubr, w
 }
 \examples{
 
+\donttest{
 # Print a package report.
 SCpubr::package_report()
+}
 }

@@ -10,7 +10,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_LoadingsPlot.R
 do_LoadingsPlot <- function(sample,
                             group.by = NULL,
                             subsample = NA,
@@ -464,7 +464,7 @@ do_LoadingsPlot <- function(sample,
                                                                                                color = "black",
                                                                                                hjust = 0),
                                                          plot.caption = ggplot2::element_text(family = font.type,
-                                                                                              caption = plot.caption.face,
+                                                                                              face = plot.caption.face,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))

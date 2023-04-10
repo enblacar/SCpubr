@@ -325,41 +325,41 @@ crayon_body <- function(text){
   }
 }
 
-add_star <- function(){
+add_star <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(cli::col_yellow(cli::style_bold(cli::symbol$star)), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_yellow(cli::style_bold(cli::symbol$star)), " "))
   } else {
     return("* ")
   }
 }
 
-add_info <- function(){
+add_info <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(cli::col_cyan(cli::style_bold(cli::symbol$info)), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_cyan(cli::style_bold(cli::symbol$info)), " "))
   } else {
     return("i ")
   }
 }
 
-add_cross <- function(){
+add_cross <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(cli::col_red(cli::style_bold(cli::symbol$cross)), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_red(cli::style_bold(cli::symbol$cross)), " "))
   } else {
     return("x ")
   }
 }
 
-add_warning <- function(){
+add_warning <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(cli::col_yellow(cli::style_bold("!")), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_yellow(cli::style_bold("!")), " "))
   } else {
     return("! ")
   }
 }
 
-add_tick <- function(){
+add_tick <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(cli::col_green(cli::style_bold(cli::symbol$tick)), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_green(cli::style_bold(cli::symbol$tick)), " "))
   } else {
     return("")
   }
@@ -503,12 +503,13 @@ check_suggests <- function(function_name, passive = FALSE){
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' # See all dependencies.
 #' SCpubr::check_dependencies()
 #'
 #' # See the dependencies for a single package.
 #' SCpubr::check_dependencies(function_name = "do_DimPlot")
+#' }
 check_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
   if (isFALSE(requireNamespace("cli", quietly = TRUE))){
     message(paste(rep("-", 63), collapse = ""))
@@ -634,8 +635,11 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 #'
 #' @examples
 #'
+#' \donttest{
 #' # Print a package report.
 #' SCpubr::package_report()
+#' }
+
 package_report <- function(startup = FALSE){
   if (isFALSE(requireNamespace("cli", quietly = TRUE))){
     if (isFALSE(startup)){
@@ -656,13 +660,13 @@ package_report <- function(startup = FALSE){
   } else {
     tip_rule <- cli::rule(left = "General", width = nchar("General") + 6)
     
-    tutorials <- paste0(add_info(),
+    tutorials <- paste0(add_info(initial_newline = FALSE),
                         crayon_body("Have a look at extensive tutorials in "),
                         crayon_key(cli::style_hyperlink(text = "SCpubr's book",
                                                         url = "https://enblacar.github.io/SCpubr-book/")),
                         crayon_body("."))
     
-    cite <- paste0(add_tick(),
+    cite <- paste0(add_tick(initial_newline = FALSE),
                    crayon_body("If you use "),
                    crayon_key("SCpubr"),
                    crayon_body(" in your research, please "),
@@ -670,7 +674,7 @@ package_report <- function(startup = FALSE){
                                                    url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
                    crayon_body("."))
     
-    stars <- paste0(add_star(),
+    stars <- paste0(add_star(initial_newline = FALSE),
                     crayon_body("If the package is useful to you, consider leaving a "),
                     crayon_key("Star"),
                     crayon_body(" in the "),

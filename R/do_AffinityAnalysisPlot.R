@@ -14,7 +14,7 @@
 #' @return A list containing different plots.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_AffinityAnalysisPlot.R
 
 do_AffinityAnalysisPlot <- function(sample,
                                     input_gene_list,

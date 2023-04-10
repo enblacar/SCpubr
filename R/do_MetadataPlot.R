@@ -17,7 +17,7 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_MetadataPlot.R
 do_MetadataPlot <- function(sample = NULL,
                             group.by = NULL,
                             metadata = NULL,

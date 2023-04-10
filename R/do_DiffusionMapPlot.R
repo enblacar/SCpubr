@@ -7,7 +7,7 @@
 #' @return A list of ggplot2 objects and a Seurat object if desired.
 #' @export
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_DiffusionMapPlot.R
 do_DiffusionMapPlot <- function(sample,
                                 input_gene_list,
                                 assay = "SCT",
@@ -142,7 +142,18 @@ do_DiffusionMapPlot <- function(sample,
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
   `%>%` <- magrittr::`%>%`
+  `:=` <- rlang::`:=`
   
+  if (is.null(sample@reductions[[reduction]]@key) | is.na(sample@reductions[[reduction]]@key)){
+    stop(paste0(add_cross(),
+                crayon_body("Assay "),
+                crayon_key("key"), 
+                crayon_body(" not found for the provided"),
+                crayon_key(" assay"),
+                crayon_body(". Please set a key. \n\nYou can do it as: "),
+                cli::style_italic(paste0(crayon_key('sample@reductions[['), cli::col_yellow("reduction"), crayon_key(']]@key <- "DC_"')))), call. = FALSE)
+  }
+  key <- sample@reductions[[reduction]]@key
   
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample, subsample))]
@@ -156,7 +167,7 @@ do_DiffusionMapPlot <- function(sample,
   genes.use <- unlist(input_gene_list) %>% unname() %>% unique()
   genes.use <- genes.use[genes.use %in% rownames(sample)]
   
-  if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
+  if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
   
   sample <- compute_enrichment_scores(sample, 
                                       input_gene_list = input_gene_list,
@@ -167,8 +178,8 @@ do_DiffusionMapPlot <- function(sample,
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
   
   
-  if (isTRUE(verbose)){message(paste0(add_info(), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
-  
+  if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
+  key_col <- stringr::str_remove_all(key, "_")
   # Obtain the DC embeddings, together with the enrichment scores.
   data.use <- sample@reductions[[reduction]]@cell.embeddings %>% 
               as.data.frame() %>% 
@@ -176,14 +187,14 @@ do_DiffusionMapPlot <- function(sample,
               as.data.frame() %>% 
               tibble::as_tibble() %>% 
               tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell")),
-                                  names_to = "DC",
+                                  names_to = key_col,
                                   values_to = "Score") %>% 
-              dplyr::filter(.data$DC %in% sapply(dims, function(x){paste0("DC_", x)})) %>% 
-              dplyr::group_by(.data$DC) %>% 
+              dplyr::filter(.data[[key_col]] %in% sapply(dims, function(x){paste0(key, x)})) %>% 
+              dplyr::group_by(.data[[key_col]]) %>% 
               dplyr::summarise("rank" = rank(.data$Score),
                                "Cell" = .data$Cell,
                                "Score" = .data$Score) %>% 
-              dplyr::mutate("DC" = factor(.data$DC, levels = rev(sapply(dims, function(x){paste0("DC_", x)})))) %>% 
+              dplyr::mutate("{key_col}" := factor(.data[[key_col]], levels = rev(sapply(dims, function(x){paste0(key, x)})))) %>% 
               dplyr::left_join(y = {sample@meta.data %>% 
                                     tibble::rownames_to_column(var = "Cell") %>% 
                                     tibble::as_tibble() %>% 
@@ -207,10 +218,11 @@ do_DiffusionMapPlot <- function(sample,
   
   # Generate DC-based heatmaps.
   list.out <- list()
-  for (dc.use in sapply(dims, function(x){paste0("DC_", x)})){
+  
+  for (dc.use in sapply(dims, function(x){paste0(key, x)})){
     # Filter for the DC.
     data.plot <- data.use %>% 
-                  dplyr::filter(.data$DC == dc.use)
+                  dplyr::filter(.data[[key_col]] == dc.use)
     
     # Limit the scale to quantiles 0.1 and 0.9 to avoid extreme outliers.
     limits <- c(stats::quantile(data.plot$Enrichment, 0.1),
@@ -309,7 +321,7 @@ do_DiffusionMapPlot <- function(sample,
       
       # Generate the metadata heatmap.
       p <- data.use %>% 
-           dplyr::filter(.data$DC == dc.use) %>% 
+           dplyr::filter(.data[[key_col]] == dc.use) %>% 
            dplyr::mutate("grouped.var" = .env$group.by) %>% 
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                   y = .data$grouped.var,

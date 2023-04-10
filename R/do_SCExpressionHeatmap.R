@@ -10,9 +10,8 @@
 #' @param metadata.location \strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.
 #' @return A ggplot2 object.
 #' @export
-
 #'
-#' @examples NULL
+#' @example /man/examples/examples_do_SCExpressionHeatmap.R
 do_SCExpressionHeatmap <- function(sample,
                                    features,
                                    assay = "SCT",
@@ -194,16 +193,19 @@ do_SCExpressionHeatmap <- function(sample,
                                  assay = assay,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix()
+  
+  if (is.null(group.by)){
+    sample$Groups <- Seurat::Idents(sample)
+    group.by <- "Groups"
+  }
+  
   assertthat::assert_that(length(group.by) == 1,
                           msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),
                                        crayon_key("group.by"),
                                        crayon_body(".")))
   
   
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
+  
 
 
   # Perform hierarchical clustering cluster-wise
@@ -245,7 +247,7 @@ do_SCExpressionHeatmap <- function(sample,
 
   # Compute cell order to group cells withing heatmap bodies.
   if (isTRUE(cluster_cells)){
-    if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
+    if (sum(matrix %>% dplyr::pull(dplyr::all_of(c(group.by))) %>% table() > 65536)){
       warning(paste0(add_warning(), crayon_body("A given group in "),
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
@@ -260,7 +262,7 @@ do_SCExpressionHeatmap <- function(sample,
     for (item in order.use){
       cells.use <- matrix %>%
         dplyr::filter(.data[[group.by]] == item) %>%
-        dplyr::pull(.data$cell)
+        dplyr::pull(dplyr::all_of(c("cell")))
       
       matrix.subset <- matrix %>% 
                        dplyr::ungroup() %>% 
@@ -359,7 +361,7 @@ do_SCExpressionHeatmap <- function(sample,
                tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by, "cell")),
                                    names_to = "gene",
                                    values_to = "expression") %>%
-               dplyr::rename("group.by" = .data[[group.by]]) %>% 
+               dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>% 
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
                              "gene" = factor(.data$gene, levels = rev(row_order)),
                              "cell" = factor(.data$cell, levels = col_order))

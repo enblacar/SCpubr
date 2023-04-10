@@ -183,15 +183,9 @@ This function computes the enrichment scores for the cells using \link[Seurat]{A
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
     # Genes have to be unique.
-    genes <- list("Naive CD4+ T" = rownames(sample)[1:2],
-                  "EPC1+ Mono" = rownames(sample)[3:4],
-                  "Memory CD4+" = rownames(sample)[5],
-                  "B" = rownames(sample)[6],
-                  "CD8+ T" = rownames(sample)[7],
-                  "FCGR3A+ Mono" = rownames(sample)[8:9],
-                  "NK" = rownames(sample)[10:11],
-                  "DC" = rownames(sample)[12:13],
-                  "Platelet" = rownames(sample)[14])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     # Default parameters.
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
