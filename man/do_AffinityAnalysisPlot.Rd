@@ -186,7 +186,8 @@ Major contributions to this function:
                                          nbin = 1,
                                          ctrl = 5,
                                          flavor = "Seurat",
-                                         subsample = NA)
+                                         subsample = NA,
+                                         verbose = FALSE)
     p
     
   } else if (isFALSE(value)){

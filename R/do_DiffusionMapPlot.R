@@ -191,9 +191,9 @@ do_DiffusionMapPlot <- function(sample,
                                   values_to = "Score") %>% 
               dplyr::filter(.data[[key_col]] %in% sapply(dims, function(x){paste0(key, x)})) %>% 
               dplyr::group_by(.data[[key_col]]) %>% 
-              dplyr::summarise("rank" = rank(.data$Score),
-                               "Cell" = .data$Cell,
-                               "Score" = .data$Score) %>% 
+              dplyr::reframe("rank" = rank(.data$Score),
+                             "Cell" = .data$Cell,
+                             "Score" = .data$Score) %>% 
               dplyr::mutate("{key_col}" := factor(.data[[key_col]], levels = rev(sapply(dims, function(x){paste0(key, x)})))) %>% 
               dplyr::left_join(y = {sample@meta.data %>% 
                                     tibble::rownames_to_column(var = "Cell") %>% 

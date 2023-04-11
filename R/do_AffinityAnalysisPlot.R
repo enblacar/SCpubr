@@ -263,8 +263,7 @@ do_AffinityAnalysisPlot <- function(sample,
                                        values_from = "score") %>% 
                     dplyr::group_by(.data[[group]]) %>% 
                     dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(names(input_gene_list))),
-                                                   stats::median,
-                                                   na.rm = TRUE)) %>% 
+                                                   function(x){stats::median(x, na.rm = TRUE)})) %>% 
                     as.data.frame() %>% 
                     tibble::column_to_rownames(var = group) 
     

@@ -1273,6 +1273,13 @@ compute_scales <- function(sample,
       labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", max.cutoff)
     }
   }
+  
+  # Fix for the one value limit.
+  
+  if(limits[[1]] == limits[[2]]){
+    breaks <- limits[[1]]
+    labels <- as.character(limits[[1]])
+  }
 
   return.obj <- list("limits" = limits,
                      "breaks" = breaks,

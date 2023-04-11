@@ -226,7 +226,7 @@ do_SCExpressionHeatmap <- function(sample,
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
   median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(features), stats::median, na.rm = TRUE)) %>%
+                   dplyr::summarise(dplyr::across(dplyr::all_of(features), function(x){stats::median(x, na.rm = TRUE)})) %>%
                    dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
                    dplyr::select(-dplyr::all_of(group.by)) %>%
                    as.data.frame() %>%

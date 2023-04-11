@@ -19,7 +19,7 @@ Suggests:
     colorspace,
     covr,
     ComplexHeatmap,
-    dplyr,
+    dplyr (>= 1.1.0),
     ggbeeswarm,
     ggdist,
     ggExtra,

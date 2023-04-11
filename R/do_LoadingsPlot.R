@@ -192,7 +192,8 @@ do_LoadingsPlot <- function(sample,
               dplyr::left_join(y = embeddings,
                                by = "Cell") %>% 
               dplyr::left_join(y = loadings,
-                               by = "PC")
+                               by = c("PC"),
+                               relationship = "many-to-many")
   
   data.use <- data.use %>% 
               dplyr::left_join(y = {Seurat::GetAssayData(sample,
@@ -210,11 +211,11 @@ do_LoadingsPlot <- function(sample,
   
   data.loading <- data.use %>% 
                   dplyr::group_by(.data$Gene, .data$PC) %>% 
-                  dplyr::summarise("mean_Loading_Score" = mean(.data$Loading_Score, na.rm = TRUE))
+                  dplyr::reframe("mean_Loading_Score" = mean(.data$Loading_Score, na.rm = TRUE))
   
   data.expression <- data.use %>% 
                      dplyr::group_by(.data[[group.by]], .data$Gene) %>% 
-                     dplyr::summarise("mean_Expression" = mean(.data$Expression, na.rm = TRUE))
+                     dplyr::reframe("mean_Expression" = mean(.data$Expression, na.rm = TRUE))
   
   data.expression.wide <- data.expression %>% 
                           tidyr::pivot_wider(names_from = "Gene",

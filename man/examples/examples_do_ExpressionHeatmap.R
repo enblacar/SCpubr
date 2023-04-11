@@ -15,6 +15,8 @@
     p <- SCpubr::do_ExpressionHeatmap(sample = sample,
                                       features = genes,
                                       viridis.direction = -1)
+    
+    p
   } else if (isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

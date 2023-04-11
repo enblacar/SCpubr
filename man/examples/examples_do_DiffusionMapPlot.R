@@ -28,6 +28,8 @@
                                      dims = 1:2,
                                      verbose = FALSE)
     
+    p
+    
   } else if (isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

@@ -268,7 +268,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
   median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_gene_list)), stats::median, na.rm = TRUE)) %>%
+                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_gene_list)), function(x){stats::median(x, na.rm = TRUE)})) %>%
                    dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
                    dplyr::select(-dplyr::all_of(group.by)) %>%
                    as.data.frame() %>%
