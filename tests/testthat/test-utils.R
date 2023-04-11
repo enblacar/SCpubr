@@ -437,6 +437,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
     sample@reductions$ref.umap <- NULL
+    sample@reductions$umap <- NULL
     output <- SCpubr:::check_and_set_reduction(sample = sample)
     last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
     testthat::expect_identical(output, last_reduction)
@@ -457,6 +458,7 @@ if (isFALSE(dep_check[["utils"]])){
 
     sample@reductions$umap <- NULL
     sample@reductions$ref.umap <- NULL
+    sample@reductions$diffusion <- NULL
     output <- SCpubr:::check_and_set_reduction(sample = sample)
     reduction_check <- "pca"
     testthat::expect_identical(output, reduction_check)
