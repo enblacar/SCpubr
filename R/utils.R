@@ -2543,20 +2543,7 @@ check_parameters <- function(parameter,
                                          crayon_body(", "),
                                          crayon_key("AUCell"),
                                          crayon_body(".")))
-  } else if (parameter_name == "arrange_interactions_by"){
-    assertthat::assert_that(parameter %in% c("specificity", "magnitude", "both", "aggregate_rank"),
-                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
-                                         crayon_key(parameter_name),
-                                         crayon_body(": "),
-                                         crayon_key("aggregate_rank"),
-                                         crayon_body(", "),
-                                         crayon_key("specificity"),
-                                         crayon_body(", "),
-                                         crayon_key("magnitude"),
-                                         crayon_body(", "),
-                                         crayon_key("both"),
-                                         crayon_body(".")))
-  } else if (parameter_name == "database"){
+ } else if (parameter_name == "database"){
     assertthat::assert_that(parameter %in% c("GO", "KEGG"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
@@ -2625,7 +2612,7 @@ check_parameters <- function(parameter,
                                          crayon_body(": "),
                                          paste(sapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key), collapse = crayon_body(", ")),
                                          crayon_body(".")))
-  }  else if (parameter_name %in% c("plot.title.face", "plot.subtitle.face", "plot.caption.face", "axis.title.face", "axis.text.face", "legend.title.face", "legend.text.face")){
+  }  else if (parameter_name %in% c("plot.title.face", "plot.subtitle.face", "plot.caption.face", "axis.title.face", "axis.text.face", "legend.title.face", "legend.text.face", "strip.text.face")){
     assertthat::assert_that(parameter %in% c("plain", "italic", "bold", "bold.italic"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),

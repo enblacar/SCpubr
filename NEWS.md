@@ -16,6 +16,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Changed `viridis_direction` to `viridis.direction`.
 -   Changed `sequential_direction` to `sequential.direction`.
 -   Changed `rotate_x_axis_labels` to `axis.text.x.angle`.
+-   Changed `rotate_strip_text` to `strip.text.angle`.
 
 ## New functions
 
@@ -105,7 +106,13 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed the option to plot the bar plots and dot plots in the sake of a more simplified, streamlined plot generation.
 -   The option to return the result matrix using `return_matrix` is added, so that the user can use it to compute further analysis or visualizations.
 
-## `SCpubr::do_PathwayActivityPlot`
+## `SCpubr::do_LigandReceptorPlot()`
+-   Modified the accepted input so that only the result of `liana::liana_aggregate()` is taken into account.
+-   Removed `arrange_interactions_by` as now the function only accepts the output of `liana::liana_aggregate()`.
+-   Removed `flip` parameter as the output was prone to errors.
+-   Removed parameter `compute_ChordDiagrams` and added `return_interactions`. This parameter returns two tibbles that can be used alongside `SCpubr::do_ChordDiagramPlot` to plot the diagrams. 
+
+## `SCpubr::do_PathwayActivityPlot()`
 
 -   Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 -   Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).

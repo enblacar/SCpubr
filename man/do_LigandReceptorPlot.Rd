@@ -13,7 +13,6 @@ do_LigandReceptorPlot(
   dot_border = TRUE,
   border.color = "black",
   axis.text.x.angle = 45,
-  rotate_strip_text = FALSE,
   legend.position = "bottom",
   legend.type = "colorbar",
   legend.length = 20,
@@ -30,13 +29,11 @@ do_LigandReceptorPlot(
   font.size = 14,
   dot.size = 1,
   font.type = "sans",
-  flip = FALSE,
   plot.grid = TRUE,
   grid.color = "grey90",
   grid.type = "dotted",
   compute_ChordDiagrams = FALSE,
   add_missing_LR_combinations = TRUE,
-  arrange_interactions_by = "both",
   sort_interactions_alphabetically = FALSE,
   number.breaks = 5,
   plot.title.face = "bold",
@@ -45,11 +42,12 @@ do_LigandReceptorPlot(
   axis.title.face = "bold",
   axis.text.face = "bold",
   legend.title.face = "bold",
-  legend.text.face = "plain"
+  legend.text.face = "plain",
+  return_interactions = FALSE
 )
 }
 \arguments{
-\item{liana_output}{\strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap}.}
+\item{liana_output}{\strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap} and \link[liana]{liana_aggregate}.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.}
 
@@ -62,8 +60,6 @@ do_LigandReceptorPlot(
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
 \item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
-
-\item{rotate_strip_text}{\strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
@@ -109,8 +105,6 @@ do_LigandReceptorPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
-
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
@@ -130,14 +124,6 @@ do_LigandReceptorPlot(
 
 \item{add_missing_LR_combinations}{\strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.}
 
-\item{arrange_interactions_by}{\strong{\code{\link[base]{character}}} | Select the method in which the output matrix of interactions is arranged for plotting. One of:
-\itemize{
-\item \emph{\code{aggregate_rank}}: Uses the output matrix of \strong{\code{\link[liana]{liana_aggregate}}}. Interactions are ordered based on \strong{\code{aggregate_rank}}.
-\item \emph{\code{specificity}}: Uses the \strong{\code{natmi.edge_specificity}} column to arrange the interactions by their specificity.
-\item \emph{\code{magnitude}}: Uses the \strong{\code{sca.LRscore}} column to arrange the interactions by their specificity.
-\item \emph{\code{both}}: Uses both \strong{\code{sca.LRscore}} and \strong{\code{natmi.edge_specificity}} columns to arrange the interactions by their specificity and magnitude altogether.
-}}
-
 \item{sort_interactions_alphabetically}{\strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
@@ -149,6 +135,8 @@ do_LigandReceptorPlot(
 \item \emph{\code{bold}}: For text in bold.
 \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
+
+\item{return_interactions}{\strong{\code{\link[base]{logical}}} | Whether to return the data.frames with the interactions so that they can be plotted as chord plots using other package functions.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

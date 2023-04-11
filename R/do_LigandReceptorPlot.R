@@ -3,24 +3,17 @@
 #' This function makes use of [liana](https://github.com/saezlab/liana) package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 #'
 #' @inheritParams doc_function
-#' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap}.
+#' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap} and \link[liana]{liana_aggregate}.
 #' @param split.by \strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.
 #' @param keep_source,keep_target \strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.
 #' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
 #' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.
-#' @param rotate_strip_text \strong{\code{\link[base]{logical}}} | Whether the text in the strips should be flipped 90 degrees.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
 #' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.
-#' @param arrange_interactions_by \strong{\code{\link[base]{character}}} | Select the method in which the output matrix of interactions is arranged for plotting. One of:
-#' \itemize{
-#'   \item \emph{\code{aggregate_rank}}: Uses the output matrix of \strong{\code{\link[liana]{liana_aggregate}}}. Interactions are ordered based on \strong{\code{aggregate_rank}}.
-#'   \item \emph{\code{specificity}}: Uses the \strong{\code{natmi.edge_specificity}} column to arrange the interactions by their specificity.
-#'   \item \emph{\code{magnitude}}: Uses the \strong{\code{sca.LRscore}} column to arrange the interactions by their specificity.
-#'   \item \emph{\code{both}}: Uses both \strong{\code{sca.LRscore}} and \strong{\code{natmi.edge_specificity}} columns to arrange the interactions by their specificity and magnitude altogether.
-#' }
 #' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).
-
+#' @param return_interactions \strong{\code{\link[base]{logical}}} | Whether to return the data.frames with the interactions so that they can be plotted as chord plots using other package functions.
+#' 
 #' @return A ggplot2 plot with the results of the Ligand-Receptor analysis.
 #' @export
 #'
@@ -34,7 +27,6 @@ do_LigandReceptorPlot <- function(liana_output,
                                   dot_border = TRUE,
                                   border.color = "black",
                                   axis.text.x.angle = 45,
-                                  rotate_strip_text = FALSE,
                                   legend.position = "bottom",
                                   legend.type = "colorbar",
                                   legend.length = 20,
@@ -51,13 +43,11 @@ do_LigandReceptorPlot <- function(liana_output,
                                   font.size = 14,
                                   dot.size = 1,
                                   font.type = "sans",
-                                  flip = FALSE,
                                   plot.grid = TRUE,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
                                   compute_ChordDiagrams = FALSE,
                                   add_missing_LR_combinations = TRUE,
-                                  arrange_interactions_by = "both",
                                   sort_interactions_alphabetically = FALSE,
                                   number.breaks = 5,
                                   plot.title.face = "bold",
@@ -66,7 +56,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                   axis.title.face = "bold",
                                   axis.text.face = "bold",
                                   legend.title.face = "bold",
-                                  legend.text.face = "plain"){
+                                  legend.text.face = "plain",
+                                  return_interactions = FALSE){
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
   
@@ -82,12 +73,10 @@ do_LigandReceptorPlot <- function(liana_output,
 
   # Check logical parameters.
   logical_list <- list("dot_border" = dot_border,
-                       "flip" = flip,
-                       "rotate_strip_text" = rotate_strip_text,
                        "plot.grid" = plot.grid,
-                       "add_missing_LR_combinations" = add_missing_LR_combinations,
                        "sort_interactions_alphabetically" = sort_interactions_alphabetically,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "return_interactions" = return_interactions)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -115,7 +104,6 @@ do_LigandReceptorPlot <- function(liana_output,
                          "font.type" = font.type,
                          "grid.color" = grid.color,
                          "grid.type" = grid.type,
-                         "arrange_interactions_by" = arrange_interactions_by,
                          "sequential.palette" = sequential.palette,
                          "plot.title.face" = plot.title.face,
                          "plot.subtitle.face" = plot.subtitle.face,
@@ -141,7 +129,6 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
-  check_parameters(parameter = arrange_interactions_by, parameter_name = "arrange_interactions_by")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
@@ -153,7 +140,14 @@ do_LigandReceptorPlot <- function(liana_output,
 
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
-                            msg = "Please select one of the following for split.by: ligand.complex, receptor.complex.")
+                            msg = paste0(add_cross,
+                                         crayon_body("Please select one of the following for "),
+                                         crayon_key("split.by"),
+                                         crayon_body(": "),
+                                         crayon_key("ligand.complex"),
+                                         crayon_body(", "),
+                                         crayon_key("receptor.complex"),
+                                         crayon_body(".")))
   }
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
@@ -170,43 +164,10 @@ do_LigandReceptorPlot <- function(liana_output,
   }
 
   liana_output <- liana_output %>%
-                  liana::liana_aggregate(verbose = FALSE)
-
-  # This is to later on add missing interacting pairs.
-  possible_interacting_clusters <- c()
-
-  # If we are subsetting the final plot.
-  if (isTRUE(add_missing_LR_combinations)){
-    possible_sources <- if(is.null(keep_source)){sort(unique(liana_output$source))} else {sort(unique(liana_output$source))[sort(unique(liana_output$source)) %in% keep_source]}
-    possible_targets <- if(is.null(keep_target)){sort(unique(liana_output$target))} else {sort(unique(liana_output$target))[sort(unique(liana_output$target)) %in% keep_target]}
-
-    for (source in possible_sources){
-      for (target in possible_targets){
-        name <- paste0(source, "_", target)
-        possible_interacting_clusters <- c(possible_interacting_clusters, name)
-      }
-    }
-  }
-
-  liana_output <- liana_output %>%
-                  dplyr::mutate(magnitude = .data$sca.LRscore) %>%
-                  dplyr::mutate(specificity = .data$natmi.edge_specificity)
+                  dplyr::mutate("magnitude" = .data$sca.LRscore) %>%
+                  dplyr::mutate("specificity" = .data$natmi.edge_specificity)
 
   # Differential arrangement of the interactions.
-  if (arrange_interactions_by == "aggregate_rank"){
-    liana_output <- liana_output %>%
-                    dplyr::arrange(.data$aggregate_rank)
-  } else if (arrange_interactions_by == "specificity"){
-    liana_output <- liana_output %>%
-                    dplyr::arrange(dplyr::desc(.data$specificity))
-  } else if (arrange_interactions_by == "magnitude"){
-    liana_output <- liana_output %>%
-                    dplyr::arrange(dplyr::desc(.data$magnitude))
-  } else if (arrange_interactions_by == "both"){
-    liana_output <- liana_output %>%
-                    dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
-  }
-
   liana_output <- liana_output %>%
                   # Merge ligand.complex and receptor.complex columns into one, that will be used for the Y axis.
                   tidyr::unite(c("ligand.complex", "receptor.complex"),
@@ -227,44 +188,6 @@ do_LigandReceptorPlot <- function(liana_output,
                                          dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
                                          dplyr::slice_head(n = top_interactions)},
                                     by = c("ligand.complex", "receptor.complex"))
-  if (isTRUE(add_missing_LR_combinations)){
-    # Fix to add missing "NA" interactions.
-    liana_output <- liana_output %>%
-      dplyr::select(dplyr::all_of(c("interacting_clusters",
-                                    "source",
-                                    "target",
-                                    "interaction",
-                                    "ligand.complex",
-                                    "receptor.complex",
-                                    "magnitude",
-                                    "specificity")))
-
-    # Iterate over each possible interaction and each interacting pair.
-    not_found_interaction_pairs <- possible_interacting_clusters[possible_interacting_clusters %!in% unique(liana_output$interacting_clusters)]
-    interactions <- unique(liana_output$interaction)
-
-    # Iterate over each interaction.
-    for(interaction in interactions){
-      ligand.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][1]
-      receptor.complex <- stringr::str_split(interaction, pattern = " \\| ")[[1]][2]
-      # For each missing interaction pair.
-      for (interacting_cluster in not_found_interaction_pairs){
-        source <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][1]
-        target <- stringr::str_split(interacting_cluster, pattern = "_")[[1]][2]
-
-        # If the interacting pair - interaction is missing, add a mock row with it.
-        column <- tibble::tibble("interacting_clusters" = interacting_cluster,
-                                 "source" = source,
-                                 "target" = target,
-                                 "interaction" = interaction,
-                                 "ligand.complex" = ligand.complex,
-                                 "receptor.complex" = receptor.complex,
-                                 "magnitude" = NA,
-                                 "specificity" = NA)
-        liana_output <- liana_output %>% dplyr::bind_rows(column)
-      }
-    }
-  }
 
   # If the user wants to trim the matrix and subset interacting entities.
   if (!(is.null(keep_source))){
@@ -301,53 +224,35 @@ do_LigandReceptorPlot <- function(liana_output,
 
 
   # Plot.
-  if (isTRUE(flip)){
-    if (isTRUE(dot_border)){
-      p <-  liana_output %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$interaction,
-                                                   y = .data$target,
-                                                   fill = .data$magnitude,
-                                                   size = .data$specificity,
-                                                   group = .data$interacting_clusters)) +
-            ggplot2::geom_point(shape = 21,
-                                na.rm = TRUE)
-    } else if (isFALSE(dot_border)) {
-      p <-  liana_output %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$interaction,
-                                                   y = .data$target,
-                                                   size = .data$specificity,
-                                                   group = .data$interacting_clusters)) +
-            ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
-                                shape = 19,
-                                na.rm = TRUE)
-    }
-  } else if (isFALSE(flip)){
-    if (isTRUE(dot_border)){
-      p <-  liana_output %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
-                                                   y = .data$interaction,
-                                                   fill = .data$magnitude,
-                                                   size = .data$specificity,
-                                                   group = .data$interacting_clusters)) +
-            ggplot2::geom_point(shape = 21,
-                                na.rm = TRUE)
-    } else if (isFALSE(dot_border)){
-      p <-  liana_output %>%
-            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
-                                                   y = .data$interaction,
-                                                   size = .data$specificity,
-                                                   group = .data$interacting_clusters)) +
-            ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
-                                shape = 19,
-                                na.rm = TRUE)
-    }
+  if (isTRUE(dot_border)){
+    p <-  liana_output %>%
+          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
+                                                 y = .data$interaction,
+                                                 fill = .data$magnitude,
+                                                 size = .data$specificity,
+                                                 group = .data$interacting_clusters)) +
+          ggplot2::geom_point(shape = 21,
+                              na.rm = TRUE)
+  } else if (isFALSE(dot_border)){
+    p <-  liana_output %>%
+          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
+                                                 y = .data$interaction,
+                                                 size = .data$specificity,
+                                                 group = .data$interacting_clusters)) +
+          ggplot2::geom_point(mapping = ggplot2::aes(color = .data$magnitude),
+                              shape = 19,
+                              na.rm = TRUE)
   }
-  p <-  p +
-        ggplot2::scale_size_continuous(name = size_title,
-                                       range = c(1 * dot.size, 5 * dot.size))
+  
+  p <- p +
+       ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$interaction)))) +
+       ggplot2::scale_size_continuous(name = size_title,
+                                      range = c(1 * dot.size, 5 * dot.size)) 
+  
   # Settings for bordered dots.
   limits <- c(min(liana_output$magnitude, na.rm = TRUE),
               max(liana_output$magnitude, na.rm = TRUE))
+  
   scale.setup <- compute_scales(sample = NULL,
                                 feature = NULL,
                                 assay = NULL,
@@ -404,96 +309,67 @@ do_LigandReceptorPlot <- function(liana_output,
     }
   }
   # Continue plotting.
-  if (isFALSE(flip)){
-    if (isTRUE(rotate_strip_text)){
-      strip_text_angle <- 90
-    } else {
-      strip_text_angle <- 0
-    }
-    if (is.null(split.by)){
-      p <- p +
-        ggplot2::facet_grid(. ~ .data$source,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    } else if (split.by == "ligand.complex"){
-      p <- p +
-        ggplot2::facet_grid(.data$ligand.complex ~ .data$source,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    } else if (split.by == "receptor.complex"){
-      p <- p +
-        ggplot2::facet_grid(.data$receptor.complex ~ .data$source,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    }
-  } else if (isTRUE(flip)) {
-    if (isTRUE(rotate_strip_text)){
-      strip_text_angle <- 0
-    } else {
-      strip_text_angle <- 270
-    }
-    if (is.null(split.by)){
-      p <- p +
-        ggplot2::facet_grid(.data$source ~ .,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    } else if (split.by == "ligand.complex"){
-      p <- p +
-        ggplot2::facet_grid(.data$source ~ .data$ligand.complex,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    } else if (split.by == "receptor.complex"){
-      p <- p +
-        ggplot2::facet_grid(.data$source ~ .data$receptor.complex,
-                            space = "free",
-                            scales = "free",
-                            drop = FALSE)
-    }
+  if (is.null(split.by)){
+    p <- p +
+         ggplot2::facet_grid(. ~ .data$source,
+                             space = "free",
+                             scales = "free",
+                             drop = FALSE)
+  } else if (split.by == "ligand.complex"){
+    p <- p +
+         ggplot2::facet_grid(.data$ligand.complex ~ .data$source,
+                             space = "free",
+                             scales = "free",
+                             drop = FALSE)
+  } else if (split.by == "receptor.complex"){
+    p <- p +
+         ggplot2::facet_grid(.data$receptor.complex ~ .data$source,
+                             space = "free",
+                             scales = "free",
+                             drop = FALSE)
   }
+
 
 
 
   p <- p +
        ggplot2::labs(title = "Source") +
-       ggplot2::xlab(if (isTRUE(flip)){paste("Ligand", "|", "Receptor", sep = " ")} else if (isFALSE(flip)){"Target"}) +
-       ggplot2::ylab(if (isFALSE(flip)){paste("Ligand", "|", "Receptor", sep = " ")} else if (isTRUE(flip)){"Target"}) +
+       ggplot2::xlab("Target") +
+       ggplot2::ylab(paste("Ligand", "|", "Receptor", sep = " ")) +
        ggplot2::guides(size = ggplot2::guide_legend(title.position = "top",
                                                     title.hjust = 0.5,
                                                     override.aes = ggplot2::aes(fill = "black"))) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face,
-                                                         hjust = if (isFALSE(flip)){0.5} else {1},
+                                                         hjust = 0.5,
                                                          vjust = 0,
                                                          size = font.size),
                       plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
                       plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                       legend.text = ggplot2::element_text(face = legend.text.face),
                       legend.title = ggplot2::element_text(face = legend.title.face),
-                      plot.title.position = if (isFALSE(flip)){"panel"} else {"plot"},
+                      plot.title.position = "panel",
                       plot.caption.position = "plot",
                       text = ggplot2::element_text(family = font.type),
                       legend.justification = "center",
                       legend.position = legend.position,
-                      axis.title.x = ggplot2::element_text(face = axis.title.face, hjust = 0.5),
-                      axis.title.y = ggplot2::element_text(face = axis.title.face, angle = 90),
-                      axis.text.y = ggplot2::element_text(face = axis.text.face),
-                      axis.ticks = ggplot2::element_line(color = "black"),
+                      axis.title.x = ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5),
+                      axis.title.y.left = ggplot2::element_text(color = "black", face = axis.title.face, angle = 90),
+                      axis.title.y.right = ggplot2::element_blank(),
+                      axis.text.y.right = ggplot2::element_text(color = "black",
+                                                                face = axis.text.face),
+                      axis.text.y.left = ggplot2::element_blank(),
+                      axis.ticks.x = ggplot2::element_line(color = "black"),
+                      axis.ticks.y.left = ggplot2::element_blank(),
+                      axis.ticks.y.right = ggplot2::element_line(color = "black"),
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = axis.text.face,
-                                                          angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
-                                                          hjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["hjust"]],
-                                                          vjust = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["vjust"]]),
-                      strip.text.x = if (isFALSE(flip)) {ggplot2::element_text(face = "bold",
-                                                                               angle = strip_text_angle)}
-                                     else {ggplot2::element_blank()},
-                      strip.text.y = if (isFALSE(flip)) {ggplot2::element_blank()}
-                                     else {ggplot2::element_text(face = "bold",
-                                                                 angle = strip_text_angle)},
+                                                          angle = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["angle"]],
+                                                          hjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["hjust"]],
+                                                          vjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["vjust"]]),
+                      strip.text.x = ggplot2::element_text(face = "bold",
+                                                           color = "black"),
+                      strip.text.y = ggplot2::element_blank(),
                       panel.border = ggplot2::element_rect(color = "black", fill = NA),
                       panel.grid = if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)} else {ggplot2::element_blank()},
                       plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
@@ -513,32 +389,31 @@ do_LigandReceptorPlot <- function(liana_output,
                                 legend.framewidth = legend.framewidth,
                                 legend.tickwidth = legend.tickwidth)
 
-  if (isTRUE(compute_ChordDiagrams)){
-    data <- output_copy %>%
-            dplyr::select(dplyr::all_of(c("source", "target"))) %>%
-            dplyr::group_by(.data$target, .data$source) %>%
-            dplyr::summarise(value = dplyr::n()) %>%
-            dplyr::rename("from" = "source",
-                          "to" = "target") %>%
-            dplyr::select(dplyr::all_of(c("from", "to", "value")))
-    p.source_target <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
+  if (isTRUE(return_interactions)){
+    data_interactions <- output_copy %>%
+                         dplyr::select(dplyr::all_of(c("source", "target"))) %>%
+                         dplyr::group_by(.data$target, .data$source) %>%
+                         dplyr::summarise(value = dplyr::n()) %>%
+                         dplyr::rename("from" = "source",
+                                       "to" = "target") %>%
+                         dplyr::select(dplyr::all_of(c("from", "to", "value")))
+                 
 
-    data <- liana_output %>%
-            dplyr::filter(!(is.na(.data$magnitude))) %>%
-            dplyr::select(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
-            dplyr::group_by(.data$ligand.complex, .data$receptor.complex) %>%
-            dplyr::summarise(value = dplyr::n()) %>%
-            dplyr::rename("from" = "ligand.complex",
-                          "to" = "receptor.complex") %>%
-            dplyr::select(dplyr::all_of(c("from", "to", "value")))
-    p.ligand_receptor <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, df = data, link.border.color = "black", z_index = TRUE)
-    return(list("dotplot" = p,
-                "chord_total_interactions" = p.source_target,
-                "chord_ligand_receptor" = p.ligand_receptor))
+    data_LF <- liana_output %>%
+               dplyr::filter(!(is.na(.data$magnitude))) %>%
+               dplyr::select(dplyr::all_of(c("ligand.complex", "receptor.complex"))) %>%
+               dplyr::group_by(.data$ligand.complex, .data$receptor.complex) %>%
+               dplyr::summarise(value = dplyr::n()) %>%
+               dplyr::rename("from" = "ligand.complex",
+                             "to" = "receptor.complex") %>%
+               dplyr::select(dplyr::all_of(c("from", "to", "value")))
+    
+    return(list("Plot" = p,
+                "Number Interactions" = data_interactions,
+                "Number LR Interactions" = data_LF))
   } else {
     return(p)
   }
-
 }
 
 
