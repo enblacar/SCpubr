@@ -144,6 +144,7 @@ do_DiffusionMapPlot <- function(sample,
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
   
+  # nocov start
   if (is.null(sample@reductions[[reduction]]@key) | is.na(sample@reductions[[reduction]]@key)){
     stop(paste0(add_cross(),
                 crayon_body("Assay "),
@@ -153,6 +154,7 @@ do_DiffusionMapPlot <- function(sample,
                 crayon_body(". Please set a key. \n\nYou can do it as: "),
                 cli::style_italic(paste0(crayon_key('sample@reductions[['), cli::col_yellow("reduction"), crayon_key(']]@key <- "DC_"')))), call. = FALSE)
   }
+  # nocov end
   key <- sample@reductions[[reduction]]@key
   
   if (!is.na(subsample)){
@@ -322,10 +324,10 @@ do_DiffusionMapPlot <- function(sample,
       # Generate the metadata heatmap.
       p <- data.use %>% 
            dplyr::filter(.data[[key_col]] == dc.use) %>% 
-           dplyr::mutate("grouped.var" = .env$group.by) %>% 
+           dplyr::mutate("grouped.var" = .env$name) %>% 
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                   y = .data$grouped.var,
-                                                  fill = .data[[group.by]])) + 
+                                                  fill = .data[[name]])) + 
            ggplot2::geom_raster() + 
            ggplot2::scale_fill_manual(values = colors.use.iteration) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
@@ -370,7 +372,7 @@ do_DiffusionMapPlot <- function(sample,
                                            legend.position = legend.position,
                                            legend.title = ggplot2::element_text(face = legend.title.face),
                                            legend.justification = "center",
-                                           plot.margin = ggplot2::margin(t = 10, r = 10, b = 0, l = 10),
+                                           plot.margin = ggplot2::margin(t = ifelse(name == "main", 15, 10), r = 10, b = 0, l = 10),
                                            panel.border = ggplot2::element_rect(color = border.color, fill = NA),
                                            panel.grid.major = ggplot2::element_blank(),
                                            plot.background = ggplot2::element_rect(fill = "white", color = "white"),

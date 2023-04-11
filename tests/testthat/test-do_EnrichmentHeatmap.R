@@ -277,18 +277,19 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                          nbin = 1,
                                                          ctrl = 10)})
 
-    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = c("EPC1"),
-                                                         group.by = c("seurat_clusters", "annotation"),
-                                                         column_title = c("A"),
-                                                         nbin = 1,
-                                                         ctrl = 10,
-                                                         flip = TRUE)})
+
 
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = c("EPC1"),
+                                                         input_gene_list = list("A" = c("EPC1")),
                                                          group.by = c("seurat_clusters", "annotation"),
-                                                         row_title = c("A"),
+                                                         nbin = 1,
+                                                         ctrl = 10,
+                                                         flip = FALSE,
+                                                         geneset.order = "wrong")})
+    
+    testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = list("A_A" = c("EPC1")),
+                                                         group.by = c("seurat_clusters", "annotation"),
                                                          nbin = 1,
                                                          ctrl = 10,
                                                          flip = FALSE)})

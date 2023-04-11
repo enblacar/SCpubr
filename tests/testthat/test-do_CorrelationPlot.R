@@ -16,14 +16,26 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
     testthat::skip_on_cran()
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
-
-    p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "top")
+    p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "top", group.by = "orig.ident")
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right")
+    testthat::expect_true("ggplot" %in% class(p))
+  })
+  
+  testthat::test_that("do_CorrelationPlot: PASS - jaccard", {
+    
+    testthat::skip_on_cran()
+    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
+    
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[3:8],
+                  "C" = rownames(sample)[5:13])
+    
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top")
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "right")
     testthat::expect_true("ggplot" %in% class(p))
   })
 

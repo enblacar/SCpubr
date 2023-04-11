@@ -130,7 +130,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_key("data.frame"),
                                          crayon_body(" or a "),
                                          crayon_key("tibble"),
-                                         crayon_body("to the parameter "),
+                                         crayon_body(" to the parameter "),
                                          crayon_key("df"),
                                          crayon_body(".")))
 

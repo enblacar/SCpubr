@@ -409,8 +409,8 @@ do_LigandReceptorPlot <- function(liana_output,
                dplyr::select(dplyr::all_of(c("from", "to", "value")))
     
     return(list("Plot" = p,
-                "Number Interactions" = data_interactions,
-                "Number LR Interactions" = data_LF))
+                "Group Interactions" = data_interactions,
+                "LR Interactions" = data_LF))
   } else {
     return(p)
   }

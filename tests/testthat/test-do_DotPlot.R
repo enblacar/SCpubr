@@ -22,7 +22,54 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
-                            dot_border = FALSE)
+                            dot_border = FALSE,
+                            legend.position = "right")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = FALSE,
+                            legend.position = "top")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = FALSE,
+                            legend.position = "none")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = TRUE,
+                            legend.position = "none")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = TRUE,
+                            legend.position = "none",
+                            use_viridis = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = TRUE,
+                            legend.position = "none",
+                            use_viridis = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = FALSE,
+                            legend.position = "none",
+                            use_viridis = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            dot_border = FALSE,
+                            legend.position = "none",
+                            use_viridis = FALSE)
     testthat::expect_type(p, "list")
   })
 

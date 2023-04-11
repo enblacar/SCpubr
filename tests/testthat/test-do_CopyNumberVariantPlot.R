@@ -15,7 +15,16 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
-                                            chromosome_locations = human_chr_locations)
+                                            chromosome_locations = human_chr_locations,
+                                            flip = TRUE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            chromosome_locations = human_chr_locations,
+                                            flip = FALSE,
+                                            return_object = TRUE)
     testthat::expect_type(out, "list")
   })
 

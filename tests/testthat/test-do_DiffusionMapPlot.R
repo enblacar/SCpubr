@@ -32,8 +32,53 @@ if (isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                      reduction = "umap",
                                      dims = 1:2,
                                      return_object = TRUE,
-                                     verbose = FALSE)
+                                     verbose = FALSE,
+                                     flavor = "Seurat",
+                                     use_viridis = TRUE,
+                                     enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+                                     input_gene_list =  genes,
+                                     subsample = 100,
+                                     nbin = 1,
+                                     ctrl = 5,
+                                     reduction = "umap",
+                                     dims = 1:2,
+                                     return_object = TRUE,
+                                     verbose = FALSE,
+                                     flavor = "UCell",
+                                     use_viridis = FALSE,
+                                     enforce_symmetry = FALSE)
+    testthat::expect_type(p, "list")
+    
+    testthat::expect_message({p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+                                                               input_gene_list =  genes,
+                                                               subsample = 100,
+                                                               nbin = 1,
+                                                               ctrl = 5,
+                                                               reduction = "umap",
+                                                               dims = 1:2,
+                                                               return_object = TRUE,
+                                                               verbose = TRUE)})
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+                                     input_gene_list =  genes,
+                                     subsample = 100,
+                                     group.by = c("orig.ident", "seurat_clusters"),
+                                     colors.use = list("orig.ident" = c("Cell" = "red")),
+                                     nbin = 1,
+                                     ctrl = 5,
+                                     reduction = "umap",
+                                     dims = 1:2,
+                                     return_object = TRUE,
+                                     verbose = FALSE,
+                                     flavor = "UCell",
+                                     use_viridis = FALSE,
+                                     enforce_symmetry = FALSE)
+    testthat::expect_type(p, "list")
+    
   })
 }
 
