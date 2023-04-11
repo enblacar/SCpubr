@@ -69,6 +69,8 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Added `min.cutoff` and `max.cutoff` parameter to add cutoffs to the scales.
 -   Added `mode = "jaccard"` to compute a correlation matrix of a list of gene sets based on jaccard similarity.
 -   Added `use_viridis`, `sequential.palette` and `sequential_direction` and `diverging.palette` to control color palettes.
+-   Added `cluster` parameter to toggle on/off the clustering of the rows and columns in the heatmap.
+-   Added `remove.diagonal` parameter to toggle on/off the conversion of the diagonal in the correlation matrix to `NA`.
 
 ## `SCpubr::do_CopyNumberVariantPlot()`
 

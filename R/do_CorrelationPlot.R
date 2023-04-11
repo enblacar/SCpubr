@@ -2,13 +2,16 @@
 #'
 #' @inheritParams doc_function
 #' @param mode \strong{\code{\link[base]{character}}} | Different types of correlation matrices can be computed. Right now, the only possible value is "hvg", standing for Highly Variable Genes. The sample is subset for the HVG and the data is re-scaled. Scale data is used for the correlation.
-#'
+#' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the elements in the heatmap or not.
+#' @param remove.diagonal \strong{\code{\link[base]{logical}}} | Whether to convert diagnoal to NA. Normally this value would be 1, heavily shifting the color scale.
 #' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_CorrelationPlot.R
 do_CorrelationPlot <- function(sample = NULL,
                                input_gene_list = NULL,
+                               cluster = TRUE,
+                               remove.diagonal = TRUE,
                                mode = "hvg",
                                assay = NULL,
                                group.by = NULL,
@@ -59,7 +62,9 @@ do_CorrelationPlot <- function(sample = NULL,
   `%>%` <- magrittr::`%>%`
   
   # Check logical parameters.
-  logical_list <- list("enforce_symmetry" = enforce_symmetry)
+  logical_list <- list("enforce_symmetry" = enforce_symmetry,
+                       "cluster" = cluster,
+                       "remove.diagonal" = remove.diagonal)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("min.cutoff" = min.cutoff,
@@ -180,11 +185,16 @@ do_CorrelationPlot <- function(sample = NULL,
                                          crayon_key("group.by"),
                                          crayon_body(" that does not generate a 1x1 matrix.")))
     # Compute hclust.
-    if(length(rownames(out)) == 1){
-      order <- rownames(out)[1]
+    if (isTRUE(cluster)){
+      if(length(rownames(out)) == 1){
+        order <- rownames(out)[1]
+      } else {
+        order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
+      }
     } else {
-      order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
+      order = rownames(out)
     }
+    
 
 
     out.long <- out %>%
@@ -196,7 +206,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                     values_to = "score") %>%
                 dplyr::mutate("x" = factor(.data$x, levels = order),
                               "y" = factor(.data$y, levels = rev(order))) %>%
-                dplyr::mutate("score" = ifelse(as.character(.data$x) == as.character(.data$y), NA, .data$score))
+                dplyr::mutate("score" = ifelse(as.character(.data$x) == as.character(.data$y), ifelse(isTRUE(remove.diagonal), NA, .data$score), .data$score))
 
     limits <- c(min(out.long$score, na.rm = TRUE),
                 max(out.long$score, na.rm = TRUE))
@@ -320,9 +330,17 @@ do_CorrelationPlot <- function(sample = NULL,
     
     jaccard_matrix <- as.matrix(as.data.frame(jaccard_scores))
     colnames(jaccard_matrix) <- rownames(jaccard_matrix)
-    order <- rownames(jaccard_matrix)[stats::hclust(stats::dist(jaccard_matrix, method = "euclidean"), method = "ward.D")$order]
+    if (isTRUE(order)){
+      order <- rownames(jaccard_matrix)[stats::hclust(stats::dist(jaccard_matrix, method = "euclidean"), method = "ward.D")$order]
+    } else {
+      order <- rownames(jaccard_matrix)
+    }
+    
     jaccard_matrix <- jaccard_matrix[order, order]
-    jaccard_matrix[jaccard_matrix == 1] <- NA
+    if (isTRUE(remove.diagonal)){
+      jaccard_matrix[jaccard_matrix == 1] <- NA
+    }
+    
     
     data <- jaccard_matrix %>% 
             as.data.frame() %>% 
