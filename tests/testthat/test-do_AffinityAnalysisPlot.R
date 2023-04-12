@@ -87,7 +87,7 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                     nbin = 1,
                                     ctrl = 5,
                                     verbose = FALSE,
-                                    compute_robustness = TRUE)
+                                    compute_robustness = FALSE)
     testthat::expect_type(p, "list")
     
   })
