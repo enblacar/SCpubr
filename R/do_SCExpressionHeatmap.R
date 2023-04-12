@@ -6,20 +6,18 @@
 #' @param proportional.size \strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | Controls the size of the main heatmap (proportion-wise, defaults to 0.95).
 #' @param metadata \strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.
-#' @param metadata.colors \strong{\code{\link[base]{list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
-#' @param metadata.location \strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.
+#' @param metadata.colors \strong{\code{\link[SCpubr]{named_list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
 #' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_SCExpressionHeatmap.R
 do_SCExpressionHeatmap <- function(sample,
                                    features,
-                                   assay = "SCT",
-                                   slot = "data",
+                                   assay = NULL,
+                                   slot = NULL,
                                    group.by = NULL,
                                    metadata = NULL,
                                    metadata.colors = NULL,
-                                   metadata.location = "top",
                                    subsample = NA,
                                    cluster_cells = TRUE,
                                    xlab = "Cells",
@@ -77,7 +75,10 @@ do_SCExpressionHeatmap <- function(sample,
   
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
-
+  
+  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "proportional.size" = proportional.size,
@@ -124,7 +125,6 @@ do_SCExpressionHeatmap <- function(sample,
                          "na.value" = na.value,
                          "metadata" = metadata,
                          "metadata.colors" = metadata.colors,
-                         "metadata.location" = metadata.location,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "border.color" = border.color,
@@ -238,7 +238,7 @@ do_SCExpressionHeatmap <- function(sample,
 
   # Retrieve the order median-wise for the genes.
   if (length(features) == 1) {
-    row_order <- names(features)[1]
+    row_order <- features[1]
   } else {
     row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
     row_order <- features[row_order]
@@ -246,6 +246,7 @@ do_SCExpressionHeatmap <- function(sample,
 
 
   # Compute cell order to group cells withing heatmap bodies.
+  # nocov start
   if (isTRUE(cluster_cells)){
     if (sum(matrix %>% dplyr::pull(dplyr::all_of(c(group.by))) %>% table() > 65536)){
       warning(paste0(add_warning(), crayon_body("A given group in "),
@@ -256,6 +257,7 @@ do_SCExpressionHeatmap <- function(sample,
       cluster_cells <- FALSE
     }
   }
+  # nocov end
   
   if (isTRUE(cluster_cells)){
     col_order <- list()
@@ -272,14 +274,16 @@ do_SCExpressionHeatmap <- function(sample,
                        as.matrix() %>% 
                        t()
       matrix.subset <- matrix.subset[, cells.use]
+      # nocov start
       if (sum(is.na(matrix.subset)) > 0){
-        warning(paste0(add_warning(), crayon_body("NA founds in the "),
+        warning(paste0(add_warning(), crayon_key("NA"), crayon_body("found in the "),
                        crayon_key("expression matrix"),
                        crayon_body(". Replacing them with "),
-                       crayon_key("NA"),
+                       crayon_key("0"),
                        crayon_body(".")), call. = FALSE)
         matrix.subset[is.na(matrix.subset)] <- 0
       }
+      # nocov end
       if (length(features) == 1){
         matrix.use <- as.matrix(matrix.subset)
       } else {
@@ -405,16 +409,10 @@ do_SCExpressionHeatmap <- function(sample,
                                 enforce_symmetry = enforce_symmetry,
                                 from_data = TRUE,
                                 limits.use = limits.use)
-  p <- p + ggplot2::ylab(ylab)
-  if (!is.null(metadata)){
-    if (metadata.location == "top"){
-      p <- p + ggplot2::xlab(xlab)
-    } else {
-      p <- p + ggplot2::xlab(NULL)
-    }
-  } else {
-    p <- p + ggplot2::xlab(xlab)
-  }
+  
+  p <- p + ggplot2::ylab(ylab) + 
+           ggplot2::xlab(xlab)
+  
 
   if (isFALSE(enforce_symmetry)){
     if (isTRUE(use_viridis)){
@@ -522,21 +520,10 @@ do_SCExpressionHeatmap <- function(sample,
   }
 
   if (!is.null(metadata)){
-    plots_wrap <- {
-      if (metadata.location == "bottom") {
-        c(metadata_plots[c("main", metadata)])
-      } else {
-        c(metadata_plots[c(metadata, "main")])
-      }
-    }
+    plots_wrap <- c(metadata_plots[c(metadata, "main")])
     main_body_size <- main.heatmap.size
-    height_unit <- {
-      if(metadata.location == "bottom"){
-        c(main_body_size, rep((1 - main_body_size) / length(metadata), length(metadata)))
-      } else {
-        c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
-      }
-    }
+    height_unit <- c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
+    
     out <- patchwork::wrap_plots(plots_wrap,
                                  ncol = 1,
                                  guides = "collect",

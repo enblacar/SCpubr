@@ -152,28 +152,37 @@ do_EnrichmentHeatmap <- function(sample,
   
   
   `%>%` <- magrittr::`%>%`
-
+  
+  
+  
   if (!(is.null(assay)) & flavor == "UCell"){
-    stop(paste0(add_cross(), crayon_body("When using "),
-                crayon_key("flavor = UCell"),
-                crayon_body(" do not use the "),
-                crayon_key("assay"),
-                crayon_body(" parameter.\nInstead, make sure that the "),
-                crayon_key("assay"),
-                crayon_body(" you want to compute the scores with is set as the "),
-                crayon_key("default"),
-                crayon_body(" assay.")), call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = UCell"),
+                   crayon_body(" do not use the "),
+                   crayon_key("assay"),
+                   crayon_body(" parameter.\nInstead, make sure that the "),
+                   crayon_key("assay"),
+                   crayon_body(" you want to compute the scores with is set as the "),
+                   crayon_key("default"),
+                   crayon_body(" assay. Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
   }
-
+  
   if (!(is.null(slot)) & flavor == "Seurat"){
-    stop(paste0(add_cross(), crayon_body("When using "),
-                crayon_key("flavor = Seurat"),
-                crayon_body(" do not use the "),
-                crayon_key("slot"),
-                crayon_body(" parameter.\nThis is determiend by default in "),
-                crayon_key("Seurat"),
-                crayon_body(".")), call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = Seurat"),
+                   crayon_body(" do not use the "),
+                   crayon_key("slot"),
+                   crayon_body(" parameter.\nThis is determiend by default in "),
+                   crayon_key("Seurat"),
+                   crayon_body(". Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
   }
+  
+  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
   
   if (!is.null(geneset.order)){
     assertthat::assert_that(sum(geneset.order %in% names(input_gene_list)) == length(names(input_gene_list)),
@@ -230,8 +239,8 @@ do_EnrichmentHeatmap <- function(sample,
                                       flavor = flavor,
                                       ncores = ncores,
                                       storeRanks = storeRanks,
-                                      assay = assay,
-                                      slot = slot)
+                                      assay = if (flavor == "UCell"){NULL} else {assay},
+                                      slot = if (flavor == "Seurat"){NULL} else {slot})
 
   out.list <- list()
   if (is.null(group.by)){

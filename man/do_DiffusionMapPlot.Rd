@@ -7,8 +7,8 @@
 do_DiffusionMapPlot(
   sample,
   input_gene_list,
-  assay = "SCT",
-  slot = "data",
+  assay = NULL,
+  slot = NULL,
   scale.enrichment = TRUE,
   dims = 1:5,
   subsample = 2500,

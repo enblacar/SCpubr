@@ -20,7 +20,26 @@ if (isFALSE(dep_check[["do_MetadataPlot"]])){
                      "B" = rev(as.character(seq(1, 5))))
     
     p <- SCpubr::do_MetadataPlot(from_df = TRUE,
-                                 df = df)
+                                 df = df,
+                                 flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_MetadataPlot(from_df = TRUE,
+                                 df = df,
+                                 flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    sample$labelling <- sample(c("A", "B"), ncol(sample), replace = TRUE)
+    p <- SCpubr::do_MetadataPlot(sample = sample,
+                                 group.by = "labelling",
+                                 metadata = "orig.ident",
+                                 flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_MetadataPlot(sample = sample,
+                                 group.by = "labelling",
+                                 metadata = "orig.ident",
+                                 flip = TRUE)
     testthat::expect_type(p, "list")
   })
 }

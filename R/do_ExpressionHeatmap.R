@@ -199,7 +199,7 @@ do_ExpressionHeatmap <- function(sample,
 
       df <- Seurat::GetAssayData(sample,
                                  assay = assay,
-                                 slot = slot)[features, ] %>%
+                                 slot = slot)[features, , drop = FALSE] %>%
             as.matrix() %>%
             t() %>%
             as.data.frame() %>%

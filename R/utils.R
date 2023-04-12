@@ -351,7 +351,7 @@ add_cross <- function(initial_newline = TRUE){
 
 add_warning <- function(initial_newline = TRUE){
   if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-    return(paste0(ifelse(isTRUE(initial_newline), "\n\n", ""), cli::col_yellow(cli::style_bold("!")), " "))
+    return(paste0(ifelse(isTRUE(initial_newline), "\n", ""), cli::col_yellow(cli::style_bold("!")), " "))
   } else {
     return("! ")
   }

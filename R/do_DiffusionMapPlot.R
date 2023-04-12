@@ -10,8 +10,8 @@
 #' @example /man/examples/examples_do_DiffusionMapPlot.R
 do_DiffusionMapPlot <- function(sample,
                                 input_gene_list,
-                                assay = "SCT",
-                                slot = "data",
+                                assay = NULL,
+                                slot = NULL,
                                 scale.enrichment = TRUE,
                                 dims = 1:5,
                                 subsample = 2500,
@@ -170,6 +170,35 @@ do_DiffusionMapPlot <- function(sample,
   genes.use <- genes.use[genes.use %in% rownames(sample)]
   
   if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
+  
+  if (!(is.null(assay)) & flavor == "UCell"){
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = UCell"),
+                   crayon_body(" do not use the "),
+                   crayon_key("assay"),
+                   crayon_body(" parameter.\nInstead, make sure that the "),
+                   crayon_key("assay"),
+                   crayon_body(" you want to compute the scores with is set as the "),
+                   crayon_key("default"),
+                   crayon_body(" assay. Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
+  }
+  
+  if (!(is.null(slot)) & flavor == "Seurat"){
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = Seurat"),
+                   crayon_body(" do not use the "),
+                   crayon_key("slot"),
+                   crayon_body(" parameter.\nThis is determiend by default in "),
+                   crayon_key("Seurat"),
+                   crayon_body(". Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
+  }
+  
+  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
   
   sample <- compute_enrichment_scores(sample, 
                                       input_gene_list = input_gene_list,

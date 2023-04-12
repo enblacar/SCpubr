@@ -6,8 +6,7 @@
 #' @param proportional.size \strong{\code{\link[base]{logical}}} | Whether the groups should take the same space in the plot or not.
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | Controls the size of the main heatmap (proportion-wise, defaults to 0.95).
 #' @param metadata \strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.
-#' @param metadata.colors \strong{\code{\link[base]{list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
-#' @param metadata.location \strong{\code{\link[base]{character}}} | Location of the metadata rows. Either top or bottom.
+#' @param metadata.colors \strong{\code{\link[SCpubr]{named_list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
@@ -22,7 +21,6 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    group.by = NULL,
                                    metadata = NULL,
                                    metadata.colors = NULL,
-                                   metadata.location = "top",
                                    subsample = NA,
                                    cluster_cells = TRUE,
                                    flavor = "Seurat",
@@ -138,7 +136,6 @@ do_SCEnrichmentHeatmap <- function(sample,
                          "na.value" = na.value,
                          "metadata" = metadata,
                          "metadata.colors" = metadata.colors,
-                         "metadata.location" = metadata.location,
                          "diverging.palette" = diverging.palette,
                          "sequential.palette" = sequential.palette,
                          "flavor" = flavor,
@@ -179,26 +176,33 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   
   if (!(is.null(assay)) & flavor == "UCell"){
-    stop(paste0(add_cross(), crayon_body("When using "),
-                crayon_key("flavor = UCell"),
-                crayon_body(" do not use the "),
-                crayon_key("assay"),
-                crayon_body("parameter.\nInstead, make sure that the "),
-                crayon_key("assay"),
-                crayon_body(" you want to compute the scores with is set as the "),
-                crayon_key("default"),
-                crayon_body(" assay.")), call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = UCell"),
+                   crayon_body(" do not use the "),
+                   crayon_key("assay"),
+                   crayon_body(" parameter.\nInstead, make sure that the "),
+                   crayon_key("assay"),
+                   crayon_body(" you want to compute the scores with is set as the "),
+                   crayon_key("default"),
+                   crayon_body(" assay. Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
   }
   
   if (!(is.null(slot)) & flavor == "Seurat"){
-    stop(paste0(add_cross(), crayon_body("When using "),
-                crayon_key("flavor = Seurat"),
-                crayon_body(" do not use the "),
-                crayon_key("slot"),
-                crayon_body(" parameter.\nThis is determiend by default in "),
-                crayon_key("Seurat"),
-                crayon_body(".")), call. = FALSE)
+    warning(paste0(add_warning(), crayon_body("When using "),
+                   crayon_key("flavor = Seurat"),
+                   crayon_body(" do not use the "),
+                   crayon_key("slot"),
+                   crayon_body(" parameter.\nThis is determiend by default in "),
+                   crayon_key("Seurat"),
+                   crayon_body(". Setting it to "),
+                   crayon_key("NULL"),
+                   crayon_body(".")), call. = FALSE)
   }
+  
+  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
   
   if (is.character(input_gene_list)){
     # If input_gene_list is a character of genes.
@@ -237,8 +241,8 @@ do_SCEnrichmentHeatmap <- function(sample,
                                       flavor = flavor,
                                       ncores = ncores,
                                       storeRanks = storeRanks,
-                                      assay = assay,
-                                      slot = slot)
+                                      assay = if (flavor == "UCell"){NULL} else {assay},
+                                      slot = if (flavor == "Seurat"){NULL} else {slot})
   
   if (is.null(group.by)){
     sample$Groups <- Seurat::Idents(sample)
@@ -288,6 +292,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   
   # Compute cell order to group cells withing heatmap bodies.
+  # nocov start
   if (isTRUE(cluster_cells)){
     if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
       warning(paste0(add_warning(), crayon_body("A given group in "),
@@ -298,6 +303,7 @@ do_SCEnrichmentHeatmap <- function(sample,
       cluster_cells <- FALSE
     }
   }
+  # nocov end
   
   if (isTRUE(cluster_cells)){
     col_order <- list()
@@ -436,16 +442,9 @@ do_SCEnrichmentHeatmap <- function(sample,
                                 enforce_symmetry = enforce_symmetry,
                                 from_data = TRUE,
                                 limits.use = limits.use)
-  p <- p + ggplot2::ylab(ylab)
-  if (!is.null(metadata)){
-    if (metadata.location == "top"){
-      p <- p + ggplot2::xlab(xlab)
-    } else {
-      p <- p + ggplot2::xlab(NULL)
-    }
-  } else {
-    p <- p + ggplot2::xlab(xlab)
-  }
+  
+  p <- p + ggplot2::ylab(ylab) + 
+           ggplot2::xlab(xlab)
   
   if (isFALSE(enforce_symmetry)){
     if (isTRUE(use_viridis)){
@@ -555,21 +554,10 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   
   if (!is.null(metadata)){
-    plots_wrap <- {
-      if (metadata.location == "bottom") {
-        c(metadata_plots[c("main", metadata)])
-      } else {
-        c(metadata_plots[c(metadata, "main")])
-      }
-    }
+    plots_wrap <- c(metadata_plots[c("main", metadata)])
     main_body_size <- main.heatmap.size
-    height_unit <- {
-      if(metadata.location == "bottom"){
-        c(main_body_size, rep((1 - main_body_size) / length(metadata), length(metadata)))
-      } else {
-        c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
-      }
-    }
+    height_unit <- c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
+    
     out <- patchwork::wrap_plots(plots_wrap,
                                  ncol = 1,
                                  guides = "collect",
