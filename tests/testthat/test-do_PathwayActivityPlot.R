@@ -12,19 +12,46 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
     testthat::skip_on_cran()
 
 
-
+    sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities)
     testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                     activities = progeny_activities,
+                                     group.by = "orig.ident")
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                     activities = progeny_activities,
+                                     group.by = c("orig.ident", "seurat_clusters"))
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          split.by = "annotation")
+    testthat::expect_type(out, "list")
+    
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
                                           flip = TRUE)
     testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          flip = FALSE)
+    testthat::expect_type(out, "list")
 
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                           activities = progeny_activities,
                                           legend.position = "right")
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityPlot(sample = sample,
+                                          activities = progeny_activities,
+                                          legend.position = "right",
+                                          return_object = TRUE)
     testthat::expect_type(out, "list")
 
   })
@@ -101,6 +128,12 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
                                                            activities = progeny_activities,
                                                            max.cutoff = 1,
                                                            min.cutoff = 2)})
+    
+    sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
+    testthat::expect_error({SCpubr::do_PathwayActivityPlot(sample = sample,
+                                                      activities = progeny_activities,
+                                                      group.by = c("seurat_clusters", "orig.ident"),
+                                                      split.by = "annotation")})
 
   })
 }

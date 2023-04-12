@@ -18,6 +18,7 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: check_suggests - PASS - Correct function", {
     testthat::skip_on_cran()
     testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot", passive = TRUE))
+    testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot", passive = FALSE))
   })
 
 
@@ -31,6 +32,7 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: check_dependencies - PASS - Correct function, one name", {
     testthat::skip_on_cran()
     suppressMessages({testthat::expect_message(SCpubr::check_dependencies("do_DimPlot"))})
+    suppressMessages({testthat::expect_message(SCpubr::check_dependencies("do_LigandReceptorPlot"))})
   })
 
   testthat::test_that("utils: check_dependencies - PASS - Correct function, several names", {
@@ -42,7 +44,15 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     suppressMessages({testthat::expect_message(SCpubr::check_dependencies())})
   })
-
+  
+  # PACKAGE REPORT
+  testthat::test_that("utils: package_report - PASS - general", {
+    testthat::skip_on_cran()
+    suppressMessages({testthat::expect_message(SCpubr::package_report(startup = FALSE))})
+    suppressMessages({testthat::expect_message(SCpubr::package_report(startup = TRUE))})
+  })
+  
+  
   # CHECK SEURAT
 
   # CHECK SUGGESTS
@@ -792,8 +802,12 @@ if (isFALSE(dep_check[["utils"]])){
 
 
 
-    p <- do_FeaturePlot(sample, features = "EPC1")
+    p <- SCpubr::do_FeaturePlot(sample, features = "EPC1")
     output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
+    testthat::expect_true("ggplot" %in% class(output))
+    
+    p <- SCpubr::do_FeaturePlot(sample, features = rownames(sample)[1:5])
+    output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b(), num_plots = 5)
     testthat::expect_true("ggplot" %in% class(output))
   })
 
