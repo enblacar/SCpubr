@@ -27,7 +27,17 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          subsample = 100,
                                          nbin = 1,
                                          ctrl = 5,
-                                         verbose = FALSE)
+                                         verbose = FALSE,
+                                         flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                         input_gene_list =  genes,
+                                         subsample = 100,
+                                         nbin = 1,
+                                         ctrl = 5,
+                                         verbose = FALSE,
+                                         flip = FALSE)
     testthat::expect_type(p, "list")
   })
   
@@ -43,8 +53,43 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE,
+                                         flip = FALSE,
                                          compute_robustness = TRUE)
     testthat::expect_type(p, "list")
+    
+    suppressMessages({testthat::expect_message({p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                                                   input_gene_list =  genes,
+                                                                   subsample = 100,
+                                                                   nbin = 1,
+                                                                   ctrl = 5,
+                                                                   verbose = TRUE,
+                                                                   flip = TRUE,
+                                                                   compute_robustness = TRUE)})})
+    testthat::expect_type(p, "list")
+    
+    genes <- list("A" = rownames(sample)[1:3],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[9:15])
+    testthat::expect_error({SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                                            input_gene_list =  genes,
+                                                            subsample = 100,
+                                                            nbin = 1,
+                                                            ctrl = 5,
+                                                            verbose = FALSE,
+                                                            compute_robustness = TRUE)})
+    genes <- list("A" = rownames(sample)[1:15],
+                  "B" = rownames(sample)[16:40],
+                  "C" = rownames(sample)[41:80])
+    
+    SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = FALSE,
+                                    compute_robustness = TRUE)
+    testthat::expect_type(p, "list")
+    
   })
   
   testthat::test_that("do_AffinityAnalysisPlot: PASS - symmetry", {
@@ -59,7 +104,7 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE,
-                                         enforce_symmetry = TRUE,
+                                         enforce_symmetry = FALSE,
                                          use_viridis = TRUE)
     testthat::expect_type(p, "list")
     
@@ -69,7 +114,7 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE,
-                                         enforce_symmetry = TRUE,
+                                         enforce_symmetry = FALSE,
                                          use_viridis = FALSE)
     testthat::expect_type(p, "list")
     
@@ -79,7 +124,7 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE,
-                                         enforce_symmetry = FALSE)
+                                         enforce_symmetry = TRUE)
     testthat::expect_type(p, "list")
   })
   
@@ -96,7 +141,29 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          add.enrichment = TRUE,
-                                         use_viridis = TRUE)
+                                         use_viridis = TRUE,
+                                         flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                         input_gene_list =  genes,
+                                         subsample = 100,
+                                         nbin = 1,
+                                         ctrl = 5,
+                                         verbose = FALSE,
+                                         add.enrichment = TRUE,
+                                         use_viridis = TRUE,
+                                         flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    suppressMessages({testthat::expect_message({ p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
+                                                                    input_gene_list =  genes,
+                                                                    subsample = 100,
+                                                                    nbin = 1,
+                                                                    ctrl = 5,
+                                                                    verbose = TRUE,
+                                                                    add.enrichment = TRUE,
+                                                                    use_viridis = TRUE)})})
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,

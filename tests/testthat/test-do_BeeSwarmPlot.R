@@ -53,6 +53,28 @@ if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                  group.by = "seurat_clusters",
                                  continuous_feature = FALSE)
     testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 order = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = TRUE,
+                                 use_viridis = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = TRUE,
+                                 order = TRUE,
+                                 use_viridis = FALSE)
+    testthat::expect_type(p, "list")
   })
 
   testthat::test_that("do_BeeSwarmPlot: PASS - legend position = right", {

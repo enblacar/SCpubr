@@ -20,8 +20,8 @@ do_AffinityAnalysisPlot <- function(sample,
                                     input_gene_list,
                                     subsample = 2500,
                                     group.by = NULL,
-                                    assay = "SCT",
-                                    slot = "data",
+                                    assay = NULL,
+                                    slot = NULL,
                                     statistic = "norm_wmean",
                                     number.breaks = 5,
                                     compute_robustness = FALSE,
@@ -72,10 +72,12 @@ do_AffinityAnalysisPlot <- function(sample,
   # Set warning length to maximum.
   options(warning.length = 8170)
   
+  check_suggests("do_AffinityAnalysisPlot")
+  
   check_Seurat(sample)
   
-  
-  check_suggests("do_AffinityAnalysisPlot")
+  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
   
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
@@ -183,6 +185,15 @@ do_AffinityAnalysisPlot <- function(sample,
   
   # Step 2: make the lists of equal length.
   max_value <- max(unname(unlist(lapply(input_gene_list, length))))
+  min_value <- min(unname(unlist(lapply(input_gene_list, length))))
+  
+  assertthat::assert_that(min_value >= 5,
+                          msg = paste0(add_cross, 
+                                       crayon_body("Please make sure that the gene list you provide to "),
+                                       crayon_key("input_gene_list"),
+                                       crayon_body(" have at least "),
+                                       crayon_key("five genes"),
+                                       crayon_body(" each.")))
   
   # Add fake genes until all lists have the same length so that it can be converted into a tibble.
   gene_list <- lapply(input_gene_list, function(x){

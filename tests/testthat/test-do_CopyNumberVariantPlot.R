@@ -26,6 +26,24 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             flip = FALSE,
                                             return_object = TRUE)
     testthat::expect_type(out, "list")
+    
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            group.by = c("seurat_clusters", "orig.ident"),
+                                            chromosome_locations = human_chr_locations,
+                                            flip = TRUE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            group.by = c("seurat_clusters", "orig.ident"),
+                                            chromosome_locations = human_chr_locations,
+                                            flip = FALSE,
+                                            return_object = TRUE)
+    testthat::expect_type(out, "list")
   })
 
   testthat::test_that("do_BarPlot: PASS - normal cells one chromosome", {

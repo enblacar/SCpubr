@@ -180,17 +180,10 @@ do_CorrelationPlot <- function(sample = NULL,
            as.matrix() %>%
            stats::cor() %>%
            round(digits = 2)
-    assertthat::assert_that(sum(dim(out)) > 2,
-                            msg = paste0(add_cross(), crayon_body("Please provide a variable to "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" that does not generate a 1x1 matrix.")))
+    
     # Compute hclust.
     if (isTRUE(cluster)){
-      if(length(rownames(out)) == 1){
-        order <- rownames(out)[1]
-      } else {
-        order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
-      }
+      order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
     } else {
       order = rownames(out)
     }

@@ -302,7 +302,7 @@ do_FeaturePlot <- function(sample,
                    crayon_key("min.cutoff"),
                    crayon_body(" as "),
                    crayon_key("features"),
-                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")))
+                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")), call. = FALSE)
   }
   
   if (length(max.cutoff) != length(features)){
@@ -310,7 +310,7 @@ do_FeaturePlot <- function(sample,
                    crayon_key("max.cutoff"),
                    crayon_body(" as "),
                    crayon_key("features"),
-                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")))
+                   crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")), call. = FALSE)
   }
   
   # Generate base layer.

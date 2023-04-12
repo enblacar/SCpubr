@@ -21,6 +21,7 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
 
     p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right")
     testthat::expect_true("ggplot" %in% class(p))
+    
   })
   
   testthat::test_that("do_CorrelationPlot: PASS - jaccard", {
@@ -32,7 +33,16 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
                   "B" = rownames(sample)[3:8],
                   "C" = rownames(sample)[5:13])
     
-    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top")
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", order = FALSE, use_viridis = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", order = TRUE, use_viridis = FALSE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", remove.diagonal = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", remove.diagonal = FALSE)
     testthat::expect_true("ggplot" %in% class(p))
     
     p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "right")
