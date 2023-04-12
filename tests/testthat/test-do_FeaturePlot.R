@@ -357,12 +357,12 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_warning({p <- SCpubr::do_FeaturePlot(sample = sample,
                                                           features = c("TOX2", "EPC1"),
                                                           min.cutoff = 1)})
-    testthat::expect_type(p, "list")})
+    testthat::expect_type(p, "list")
   
   testthat::expect_warning({p <- SCpubr::do_FeaturePlot(sample = sample,
                                                         features = c("TOX2", "EPC1"),
                                                         max.cutoff = 1)})
-  testthat::expect_type(p, "list")})
+  testthat::expect_type(p, "list")
 
     p <- SCpubr::do_FeaturePlot(sample = sample,
                                 features = "nCount_RNA",
