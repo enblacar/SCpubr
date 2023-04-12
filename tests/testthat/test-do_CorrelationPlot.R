@@ -33,10 +33,10 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
                   "B" = rownames(sample)[3:8],
                   "C" = rownames(sample)[5:13])
     
-    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", order = FALSE, use_viridis = TRUE)
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", cluster = FALSE, use_viridis = TRUE)
     testthat::expect_true("ggplot" %in% class(p))
     
-    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", order = TRUE, use_viridis = FALSE)
+    p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", cluster = TRUE, use_viridis = FALSE)
     testthat::expect_true("ggplot" %in% class(p))
     
     p <- SCpubr::do_CorrelationPlot(input_gene_list = genes, mode = "jaccard", legend.position = "top", remove.diagonal = TRUE)
