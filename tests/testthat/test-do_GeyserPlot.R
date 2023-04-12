@@ -16,8 +16,19 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
 
   testthat::test_that("do_GeyserPlot: PASS - default parameters", {
     testthat::skip_on_cran()
-
-
+    
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "nCount_RNA",
+                               scale_type = "categorical",
+                               enforce_symmetry = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_GeyserPlot(sample = sample,
+                               features = "nCount_RNA",
+                               scale_type = "categorical",
+                               enforce_symmetry = FALSE)
+    testthat::expect_type(p, "list")
+    
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
@@ -182,13 +193,13 @@ if(isFALSE(dep_check[["do_GeyserPlot"]])){
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
-                               order_by_mean = TRUE)
+                               order = TRUE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_GeyserPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
-                               order_by_mean = FALSE)
+                               order = FALSE)
     testthat::expect_type(p, "list")
   })
 

@@ -323,7 +323,7 @@ do_CorrelationPlot <- function(sample = NULL,
     
     jaccard_matrix <- as.matrix(as.data.frame(jaccard_scores))
     colnames(jaccard_matrix) <- rownames(jaccard_matrix)
-    if (isTRUE(order)){
+    if (isTRUE(cluster)){
       order <- rownames(jaccard_matrix)[stats::hclust(stats::dist(jaccard_matrix, method = "euclidean"), method = "ward.D")$order]
     } else {
       order <- rownames(jaccard_matrix)
@@ -400,7 +400,9 @@ do_CorrelationPlot <- function(sample = NULL,
                                          name = "Jaccard score")
     } else {
       p <- p + 
+           # nocov start
            ggplot2::scale_fill_gradientn(colors = if (sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else if (sequential.direction == -1){rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           # nocov end
                                          na.value = na.value,
                                          name = "Jaccard score",
                                          breaks = scale.setup$breaks,

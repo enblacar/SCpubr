@@ -13,11 +13,12 @@ if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
 
   testthat::test_that("do_FunctionalAnnotationPlot: PASS - normal", {
     testthat::skip_on_cran()
-
+  
     p <- SCpubr::do_FunctionalAnnotationPlot(genes = c("MBP"),
                                              org.db = org.Hs.eg.db,
                                              organism = "hsa",
-                                             database = "GO")
+                                             database = "GO",
+                                             return_matrix = TRUE)
 
     testthat::expect_type(p, "list")
 

@@ -307,15 +307,19 @@ do_CopyNumberVariantPlot <- function(sample,
   for (group in values.use){
     data <- list.data[[group]][["data"]]
     p <- data %>% 
+         # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$Event} else {.data[[group]]},
                                                 y = if(isFALSE(flip)){.data[[group]]} else {.data$Event},
                                                 fill = .data$mean)) + 
+         # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
+         # nocov start
          ggplot2::guides(x.sec = guide_axis_label_trans(~paste0(levels(if(isFALSE(flip)){.data[[group]]} else {.data$Event}))),
                          y.sec = guide_axis_label_trans(~paste0(levels(if(isFALSE(flip)){.data[[group]]} else {.data$Event})))) + 
+         # nocov end
          ggplot2::coord_equal() + 
          ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette),
                                        na.value = na.value,

@@ -23,6 +23,29 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
+                                            flip = TRUE,
+                                            group.by = c("seurat_clusters", "orig.ident"))
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            chromosome_locations = human_chr_locations,
+                                            flip = FALSE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            chromosome_locations = human_chr_locations,
+                                            flip = FALSE,
+                                            group.by = c("seurat_clusters", "orig.ident"))
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+                                            infercnv_object = infercnv_object,
+                                            using_metacells = FALSE,
+                                            chromosome_locations = human_chr_locations,
                                             flip = FALSE,
                                             return_object = TRUE)
     testthat::expect_type(out, "list")

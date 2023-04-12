@@ -22,6 +22,11 @@ if (isFALSE(dep_check[["do_CorrelationPlot"]])){
     p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right")
     testthat::expect_true("ggplot" %in% class(p))
     
+    p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right", cluster = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationPlot(sample = sample, legend.position = "right", cluster = FALSE)
+    testthat::expect_true("ggplot" %in% class(p))
   })
   
   testthat::test_that("do_CorrelationPlot: PASS - jaccard", {

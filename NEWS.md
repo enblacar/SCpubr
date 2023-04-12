@@ -108,6 +108,10 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed the option to plot the bar plots and dot plots in the sake of a more simplified, streamlined plot generation.
 -   The option to return the result matrix using `return_matrix` is added, so that the user can use it to compute further analysis or visualizations.
 
+## `SCpubr::do_FunctionalAnnotationPlot`
+-   Renamed `order_by_mean` to `order`.
+-   Ordering using `order = TRUE` now is done based on the median instead of the mean.
+
 ## `SCpubr::do_LigandReceptorPlot()`
 -   Modified the accepted input so that only the result of `liana::liana_aggregate()` is taken into account.
 -   Removed `arrange_interactions_by` as now the function only accepts the output of `liana::liana_aggregate()`.

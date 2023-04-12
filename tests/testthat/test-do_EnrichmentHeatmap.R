@@ -3,9 +3,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
   testthat::test_that("do_EnrichmentHeatmap: CRAN essential", {
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -17,6 +17,86 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
   testthat::test_that("do_EnrichmentHeatmap: PASS -flavors", {
     testthat::skip_on_cran()
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      enforce_symmetry = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      enforce_symmetry = FALSE,
+                                      use_viridis = TRUE,
+                                      viridis.direction = 1)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      enforce_symmetry = FALSE,
+                                      use_viridis = TRUE,
+                                      viridis.direction = -1)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      enforce_symmetry = FALSE,
+                                      use_viridis = FALSE,
+                                      sequential.direction = 1)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      group.by = c("seurat_clusters", "orig.ident"),
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      enforce_symmetry = FALSE,
+                                      use_viridis = FALSE,
+                                      sequential.direction = -1)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    genes <- list("A" = rownames(sample)[1:5])
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      flip = FALSE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      flip = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      geneset.order = c("A", "B", "C"))
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                  input_gene_list = c("EPC1"),
                                  flavor = "Seurat",
@@ -77,9 +157,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -108,9 +188,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
@@ -125,9 +205,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
@@ -159,9 +239,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
@@ -198,9 +278,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     testthat::expect_error(SCpubr::do_EnrichmentHeatmap(sample = sample,
                                                         input_gene_list = list("EPC1"),
@@ -221,9 +301,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
@@ -240,9 +320,9 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
 
     testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = c("EPC1"),

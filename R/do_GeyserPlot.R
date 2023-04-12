@@ -12,7 +12,7 @@
 #'   \item \emph{\code{categorical}}: Use a categorical color scale based on the values of "group.by".
 #'   \item \emph{\code{continuous}}: Use a continuous color scale based on the values of "feature".
 #' }
-#' @param order_by_mean \strong{\code{\link[base]{logical}}} | Whether to order the groups by the mean of the data (highest to lowest).
+#' @param order \strong{\code{\link[base]{logical}}} | Whether to order the groups by the median of the data (highest to lowest).
 #' @param jitter \strong{\code{\link[base]{numeric}}} | Amount of jitter in the plot along the X axis. The lower the value, the more compacted the dots are.
 #' @param colors.use \strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by when scale_type is set to categorical.
 #'
@@ -28,7 +28,7 @@ do_GeyserPlot <- function(sample,
                           split.by = NULL,
                           enforce_symmetry = FALSE,
                           scale_type = "continuous",
-                          order_by_mean = TRUE,
+                          order = TRUE,
                           plot_cell_borders = TRUE,
                           jitter = 0.45,
                           pt.size = 1,
@@ -89,7 +89,7 @@ do_GeyserPlot <- function(sample,
 
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
-                       "order_by_mean" = order_by_mean,
+                       "order" = order,
                        "plot_cell_borders" = plot_cell_borders,
                        "flip" = flip,
                        "use_viridis" = use_viridis)
@@ -232,6 +232,17 @@ do_GeyserPlot <- function(sample,
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }
+  
+  if (is.null(colors.use)){
+    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {
+      levels(sample@meta.data[, group.by])
+    } else {
+      sort(unique(sample@meta.data[, group.by]))
+    })
+  } else {
+    check_colors(colors.use)
+    check_consistency_colors_and_names(sample, colors = colors.use, grouping_variable = group.by)
+  }
 
   # Iterate for each feature.
   counter <- 0
@@ -301,16 +312,16 @@ do_GeyserPlot <- function(sample,
     }
 
     # Proceed with the regular plot.
-    if (isTRUE(order_by_mean)){
+    if (isTRUE(order)){
       data <- data %>%
               dplyr::mutate("group.by" = factor(.data[[group.by]], levels = {data %>%
                                                                              dplyr::group_by(.data[[group.by]]) %>%
-                                                                             dplyr::summarise("mean" = mean(.data[[feature]])) %>%
+                                                                             dplyr::summarise("mean" = stats::median(.data[[feature]]), na.rm = TRUE) %>%
                                                                              dplyr::arrange(dplyr::desc(.data$mean)) %>%
                                                                              dplyr::pull(.data[[group.by]]) %>%
                                                                              as.character()}),
                             "values" = .data[[feature]])
-    } else if (isFALSE(order_by_mean)){
+    } else if (isFALSE(order)){
       data <- data %>%
               dplyr::mutate("group.by" = .data[[group.by]],
                             "values" = .data[[feature]])
@@ -413,19 +424,6 @@ do_GeyserPlot <- function(sample,
         }
       }
     } else if (isTRUE(scale_type == "categorical")){
-      if (is.null(colors.use)){
-        values <- data %>% dplyr::pull(.data[["group.by"]])
-        if (is.factor(values)){
-          names.use <- levels(values)
-        } else {
-          # nocov start
-          sort(unique(values))
-          # nocov end
-        }
-        colors.use <- generate_color_scale(names_use = names.use)
-      } else {
-        check_colors(colors.use)
-      }
       scale.use <- ggplot2::scale_color_manual(values = colors.use,
                                                na.value = na.value)
     }

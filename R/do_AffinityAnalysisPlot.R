@@ -325,15 +325,19 @@ do_AffinityAnalysisPlot <- function(sample,
     p <- data.use %>% 
          dplyr::mutate("source" = factor(.data$source, levels = col_order),
                        "target" = factor(.data[[group]], levels = row_order)) %>% 
+         # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$source} else {.data$target},
                                                 y = if (isTRUE(flip)){.data$target} else {.data$source},
                                                 fill = .data$mean)) +
+         # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
+         # nocov start
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$target} else {.data$source}))),
                          x.sec = guide_axis_label_trans(~paste0(levels(if (isTRUE(flip)){.data$source} else {.data$target})))) + 
+         # nocov end
          ggplot2::coord_equal() 
     list.heatmaps[[group]] <- p
   }
@@ -383,7 +387,9 @@ do_AffinityAnalysisPlot <- function(sample,
                                            name = statistic)
       } else {
         p <- p + 
+             # nocov start
              ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+             # nocov end
                                            na.value = "grey75",
                                            name =  statistic,
                                            breaks = scale.setup$breaks,

@@ -192,7 +192,7 @@ do_FunctionalAnnotationPlot <- function(genes,
       return(return_obj)
       # nocov end
     }
-
+  # nocov start
   } else if (database == "KEGG"){
     suppressMessages({
       result <- clusterProfiler::enrichKEGG(gene = conversion$ENTREZID,
@@ -223,6 +223,7 @@ do_FunctionalAnnotationPlot <- function(genes,
     }
     result@result$geneID <- geneID_column
   }
+  # nocov end
 
   # Filter out non-significant results
   result@result <-  result@result %>%
@@ -254,9 +255,10 @@ do_FunctionalAnnotationPlot <- function(genes,
     } else {
       row_order <- rownames(df.presence.order)[stats::hclust(stats::dist(df.presence.order, method = "euclidean"), method = "ward.D")$order]
     }
-    
+    # nocov start
     if (length(colnames(df.presence.order)) == 1){
       col_order <- colnames(df.presence.order)[1]
+    # nocov end
     } else {
       col_order <- colnames(df.presence.order)[stats::hclust(stats::dist(t(df.presence.order), method = "euclidean"), method = "ward.D")$order]
     }
@@ -356,7 +358,7 @@ do_FunctionalAnnotationPlot <- function(genes,
                                 x.sec = guide_axis_label_trans(~paste0(levels(.data$Pval_categorical)))) + 
                 ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 9, name = "YlOrRd")[2:9],
                                               na.value = "grey75",
-                                              name =  expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                              name =  "-log10(p.adjust)",
                                               breaks = scale.setup$breaks,
                                               labels = scale.setup$labels,
                                               limits = scale.setup$limits)

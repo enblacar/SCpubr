@@ -90,6 +90,26 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     
     p <- SCpubr::do_FeaturePlot(sample = sample,
                                 features = "nCount_RNA",
+                                enforce_symmetry = FALSE,
+                                use_viridis = FALSE,
+                                sequential.direction = -1,
+                                group.by = "seurat_clusters",
+                                group.by.show.dots = TRUE,
+                                group.by.cell_borders = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                enforce_symmetry = FALSE,
+                                use_viridis = FALSE,
+                                sequential.direction = -1,
+                                group.by = "seurat_clusters",
+                                group.by.show.dots = TRUE,
+                                group.by.cell_borders = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
                                 idents.highlight = "0",
                                 enforce_symmetry = FALSE,
                                 use_viridis = FALSE,
@@ -151,6 +171,32 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
                                 group.by.show.dots = TRUE,
                                 group.by.legend = NULL,
                                 group.by.colors.use = c("Cell" = "blue"))
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                idents.highlight = "0",
+                                enforce_symmetry = FALSE,
+                                use_viridis = FALSE,
+                                sequential.direction = -1,
+                                group.by = "orig.ident",
+                                group.by.show.dots = TRUE,
+                                group.by.legend = NULL,
+                                group.by.colors.use = c("Cell" = "blue"),
+                                group.by.cell_borders = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                idents.highlight = "0",
+                                enforce_symmetry = FALSE,
+                                use_viridis = FALSE,
+                                sequential.direction = -1,
+                                group.by = "orig.ident",
+                                group.by.show.dots = TRUE,
+                                group.by.legend = NULL,
+                                group.by.colors.use = c("Cell" = "blue"),
+                                group.by.cell_borders = FALSE)
     testthat::expect_type(p, "list")
     
     
@@ -341,6 +387,41 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
                                 group.by.show.dots = TRUE,
                                 group.by.legend = "Test",
                                 group.by.colors.use = c("Cell" = "blue"))
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                split.by = "orig.ident",
+                                use_viridis = FALSE,
+                                enforce_symmetry = FALSE,
+                                group.by = "orig.ident",
+                                group.by.show.dots = TRUE,
+                                group.by.legend = "Test",
+                                group.by.colors.use = c("Cell" = "blue"),
+                                group.by.cell_borders = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                split.by = "orig.ident",
+                                use_viridis = FALSE,
+                                enforce_symmetry = FALSE,
+                                group.by = "orig.ident",
+                                group.by.show.dots = TRUE,
+                                group.by.legend = "Test",
+                                group.by.colors.use = c("Cell" = "blue"),
+                                group.by.cell_borders = FALSE)
+    testthat::expect_type(p, "list")
+    
+    sample$orig.ident <- as.factor(sample$orig.ident)
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                split.by = "orig.ident",
+                                use_viridis = FALSE,
+                                enforce_symmetry = FALSE,
+                                group.by = "orig.ident",
+                                group.by.show.dots = TRUE,
+                                group.by.legend = "Test")
     testthat::expect_type(p, "list")
   })
 

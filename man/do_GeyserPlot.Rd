@@ -13,7 +13,7 @@ do_GeyserPlot(
   split.by = NULL,
   enforce_symmetry = FALSE,
   scale_type = "continuous",
-  order_by_mean = TRUE,
+  order = TRUE,
   plot_cell_borders = TRUE,
   jitter = 0.45,
   pt.size = 1,
@@ -82,7 +82,7 @@ do_GeyserPlot(
 \item \emph{\code{continuous}}: Use a continuous color scale based on the values of "feature".
 }}
 
-\item{order_by_mean}{\strong{\code{\link[base]{logical}}} | Whether to order the groups by the mean of the data (highest to lowest).}
+\item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the groups by the median of the data (highest to lowest).}
 
 \item{plot_cell_borders}{\strong{\code{\link[base]{logical}}} | Whether to plot border around cells.}
 

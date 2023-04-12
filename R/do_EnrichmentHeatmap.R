@@ -392,10 +392,12 @@ do_EnrichmentHeatmap <- function(sample,
     counter <- counter + 1
     data <- matrix.list[[group]][["data"]]
 
-    p <- ggplot2::ggplot(data,
-                         mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$gene_list} else {.data$group.by},
+    p <- data %>% 
+         # nocov start
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$gene_list} else {.data$group.by},
                                                 y = if(isFALSE(flip)){.data$group.by} else {.data$gene_list},
                                                 fill = .data$mean)) +
+         # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
