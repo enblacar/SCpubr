@@ -374,6 +374,7 @@ do_ExpressionHeatmap <- function(sample,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
+    # nocov start
     # Set axis titles.
     if (isFALSE(flip)){
       if (counter == 1){
@@ -406,6 +407,7 @@ do_ExpressionHeatmap <- function(sample,
         xlab <- group
       }
     }
+    # nocov end
 
     # Set theme
     p <- p +

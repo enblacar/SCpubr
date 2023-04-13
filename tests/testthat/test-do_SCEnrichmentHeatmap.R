@@ -35,6 +35,13 @@ if (isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
+    testthat::expect_error({p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
+                                                                  input_gene_list = c("EPC1"),
+                                                                  flavor = "Seurat",
+                                                                  assay = "SCT",
+                                                                  nbin = 1,
+                                                                  ctrl = 5)})
+    
     sample$test <- as.factor(sample$seurat_clusters)
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,

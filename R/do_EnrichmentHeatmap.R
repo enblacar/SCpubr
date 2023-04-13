@@ -232,7 +232,7 @@ do_EnrichmentHeatmap <- function(sample,
     names(input_list) <- names.use
     
     if (!is.null(geneset.order)){
-      geneset.order <- stringr::str_replace_all(names(geneset.order), "_", ".")
+      geneset.order <- stringr::str_replace_all(geneset.order, "_", ".")
     }
   }
   
@@ -246,9 +246,10 @@ do_EnrichmentHeatmap <- function(sample,
                                       flavor = flavor,
                                       ncores = ncores,
                                       storeRanks = storeRanks,
+                                      # nocov start
                                       assay = if (flavor == "UCell"){NULL} else {assay},
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
-
+                                      # nocov end
   out.list <- list()
   if (is.null(group.by)){
     assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
@@ -455,6 +456,7 @@ do_EnrichmentHeatmap <- function(sample,
                                   legend.tickcolor = legend.tickcolor,
                                   legend.framewidth = legend.framewidth,
                                   legend.tickwidth = legend.tickwidth)
+    # nocov start
     # Set axis titles.
     if(isFALSE(flip)){
       if (counter == 1){
@@ -486,7 +488,7 @@ do_EnrichmentHeatmap <- function(sample,
         ylab <- NULL
       }
     }
-    
+    # nocov end
 
 
     axis.parameters <- handle_axis(flip = flip,

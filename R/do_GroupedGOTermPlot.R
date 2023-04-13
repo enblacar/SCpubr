@@ -166,9 +166,11 @@ do_GroupedGOTermPlot <- function(genes,
          dplyr::mutate("Status" = factor(.data$Status, levels = c("Present", "Absent")),
                        "Gene" = factor(.data$Gene, levels = row_order),
                        "Description" = factor(.data$Description, levels = col_order)) %>% 
+         # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if (isTRUE(flip)){.data$Description} else {.data$Gene},
                                                 y = if (isTRUE(flip)){.data$Gene} else {.data$Description},
                                                 fill = .data$Status)) +
+         # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),

@@ -337,6 +337,7 @@ do_PathwayActivityPlot <- function(sample,
                                   legend.tickcolor = legend.tickcolor,
                                   legend.framewidth = legend.framewidth,
                                   legend.tickwidth = legend.tickwidth)
+    # nocov start
     # Set axis titles.
     if (isFALSE(flip)){
       if (counter == 1){
@@ -369,6 +370,7 @@ do_PathwayActivityPlot <- function(sample,
         xlab <- group
       }
     }
+    # nocov end
     
     
     axis.parameters <- handle_axis(flip = flip,

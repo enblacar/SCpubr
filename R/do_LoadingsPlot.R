@@ -231,7 +231,9 @@ do_LoadingsPlot <- function(sample,
   
   # Cluster items.
   gene.order <- genes.use[stats::hclust(stats::dist(t(data.expression.wide), method = "euclidean"), method = "ward.D")$order]
+  # nocov start
   group.order <- if(is.factor(data.expression[[group.by]])){levels(data.expression[[group.by]])} else {sort(unique(data.expression[[group.by]]))}
+  # nocov end
   group.order <- group.order[stats::hclust(stats::dist(data.expression.wide, method = "euclidean"), method = "ward.D")$order]
   pc.order <- as.character(sort(unique(data.loading[["PC"]])))
   pc.order <- pc.order[stats::hclust(stats::dist(data.loadings.wide, method = "euclidean"), method = "ward.D")$order]

@@ -373,6 +373,11 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                          nbin = 1,
                                                          ctrl = 10,
                                                          flip = FALSE)})
+    
+    testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                         input_gene_list = c("EPC1"),
+                                                         nbin = 1,
+                                                         ctrl = 10)})
   })
 }
 
