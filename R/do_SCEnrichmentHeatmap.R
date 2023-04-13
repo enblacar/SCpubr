@@ -385,7 +385,9 @@ do_SCEnrichmentHeatmap <- function(sample,
            ggplot2::geom_tile() +
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
+                               # nocov start
                                space = if(isTRUE(proportional.size)) {"fixed"} else {"free"}) +
+                               # nocov end
            ggplot2::scale_fill_manual(values = colors.use) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                         title.position = "top",

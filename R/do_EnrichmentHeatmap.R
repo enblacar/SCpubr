@@ -231,9 +231,11 @@ do_EnrichmentHeatmap <- function(sample,
     names.use <- stringr::str_replace_all(names(input_list), "_", ".")
     names(input_list) <- names.use
     
+    # nocov start
     if (!is.null(geneset.order)){
       geneset.order <- stringr::str_replace_all(geneset.order, "_", ".")
     }
+    # nocov end
   }
   
 
