@@ -90,6 +90,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 -   Removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately, that are stored as a new Assay.
 -   Removed `return_matrix` parameter as the scores can now be retrieved from the Seurat object as an assay.
+-   Enforcing the use of `named lists` as input for the function.
 
 ## `SCpubr::do_FeaturePlot`
 

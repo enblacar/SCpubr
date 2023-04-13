@@ -588,24 +588,24 @@ do_CellularStatesPlot <- function(sample,
       }
 
       for (feature in features){
-        p.feature <- SCpubr::do_FeaturePlot(sample = sample,
-                                            features = feature,
-                                            reduction = "test",
-                                            plot_cell_borders = plot_cell_borders,
-                                            pt.size = pt.size,
-                                            legend.position = legend.position,
-                                            border.size = border.size,
-                                            border.color = border.color,
-                                            raster = raster,
-                                            raster.dpi = raster.dpi,
-                                            font.type = font.type,
-                                            font.size = font.size,
-                                            viridis.palette = viridis.palette,
-                                            viridis.direction = viridis.direction,
-                                            number.breaks = number.breaks,
-                                            use_viridis = use_viridis,
-                                            sequential.palette = sequential.palette,
-                                            sequential.direction = sequential.direction)
+        p.feature <- do_FeaturePlot(sample = sample,
+                                    features = feature,
+                                    reduction = "test",
+                                    plot_cell_borders = plot_cell_borders,
+                                    pt.size = pt.size,
+                                    legend.position = legend.position,
+                                    border.size = border.size,
+                                    border.color = border.color,
+                                    raster = raster,
+                                    raster.dpi = raster.dpi,
+                                    font.type = font.type,
+                                    font.size = font.size,
+                                    viridis.palette = viridis.palette,
+                                    viridis.direction = viridis.direction,
+                                    number.breaks = number.breaks,
+                                    use_viridis = use_viridis,
+                                    sequential.palette = sequential.palette,
+                                    sequential.direction = sequential.direction)
 
         # Add back the missing aesthetics.
         if (is.null(y2) & is.null(x2)){

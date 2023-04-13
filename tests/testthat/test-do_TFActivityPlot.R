@@ -23,7 +23,7 @@ if(isFALSE(dep_check[["do_TFActivityPlot"]])){
     
     out <- SCpubr::do_TFActivityPlot(sample = sample,
                                      activities = dorothea_activities,
-                                     group.by = c("orig.ident", "seurat_clusters"))
+                                     group.by = c("orig.ident", "seurat_clusters", "annotation"))
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_TFActivityPlot(sample = sample,

@@ -20,7 +20,81 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"))
+                                 features = c("EPC1"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = 1,
+                                 joint = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = TRUE,
+                                 viridis.direction = -1,
+                                 joint = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = 1,
+                                 joint = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_NebulosaPlot(sample = sample,
+                                 features = c("EPC1", "TOX2"),
+                                 use_viridis = FALSE,
+                                 sequential.direction = -1,
+                                 joint = TRUE)
     testthat::expect_type(p, "list")
   })
 

@@ -141,7 +141,7 @@ do_LoadingsPlot <- function(sample,
   }
   
   if (!is.na(subsample)){
-    sample <- sample[, sample(colnames(sample), 2500, replace = FALSE)]
+    sample <- sample[, sample(colnames(sample), subsample, replace = FALSE)]
   }
   
   loadings <- Seurat::Loadings(sample)[, dims] %>% 
@@ -233,7 +233,7 @@ do_LoadingsPlot <- function(sample,
   gene.order <- genes.use[stats::hclust(stats::dist(t(data.expression.wide), method = "euclidean"), method = "ward.D")$order]
   group.order <- if(is.factor(data.expression[[group.by]])){levels(data.expression[[group.by]])} else {sort(unique(data.expression[[group.by]]))}
   group.order <- group.order[stats::hclust(stats::dist(data.expression.wide, method = "euclidean"), method = "ward.D")$order]
-  pc.order <- if(is.factor(data.loading[["PC"]])){levels(data.loading[["PC"]])} else {sort(unique(data.loading[["PC"]]))}
+  pc.order <- as.character(sort(unique(data.loading[["PC"]])))
   pc.order <- pc.order[stats::hclust(stats::dist(data.loadings.wide, method = "euclidean"), method = "ward.D")$order]
   
   # Reorder items.
@@ -253,7 +253,7 @@ do_LoadingsPlot <- function(sample,
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < min.cutoff.loadings, min.cutoff.loadings, .data$mean_Loading_Score))
   } else {
     data.loading <- data.loading %>% 
-                    dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < round(stats::quantile(.data$mean_Loading_Score, 0.05), 1), round(stats::quantile(.data$mean_Loading_Score, 0.05), 1), .data$mean_Loading_Score))
+                    dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < stats::quantile(.data$mean_Loading_Score, 0.05), stats::quantile(.data$mean_Loading_Score, 0.05), .data$mean_Loading_Score))
   }
   
   if (!is.na(max.cutoff.loadings)){
@@ -261,21 +261,21 @@ do_LoadingsPlot <- function(sample,
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > max.cutoff.loadings, max.cutoff.loadings, .data$mean_Loading_Score))
   } else {
     data.loading <- data.loading %>% 
-                    dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > round(stats::quantile(.data$mean_Loading_Score, 0.95), 1), round(stats::quantile(.data$mean_Loading_Score, 0.95), 1), .data$mean_Loading_Score))
+                    dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > stats::quantile(.data$mean_Loading_Score, 0.95), stats::quantile(.data$mean_Loading_Score, 0.95), .data$mean_Loading_Score))
   }
   
   
   if (!is.na(min.cutoff.expression)){
     data.expression <- data.expression %>% 
-                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression < min.cutoff.loadings, min.cutoff.loadings, .data$mean_Expression))
+                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression < min.cutoff.expression, min.cutoff.expression, .data$mean_Expression))
   }
   
   if (!is.na(max.cutoff.expression)){
     data.expression <- data.expression %>% 
-                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > max.cutoff.loadings, max.cutoff.loadings, .data$mean_Expression))
+                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > max.cutoff.expression, max.cutoff.expression, .data$mean_Expression))
   } else {
     data.expression <- data.expression %>% 
-                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > round(stats::quantile(.data$mean_Expression, 0.95), 1), round(stats::quantile(.data$mean_Expression, 0.95), 1), .data$mean_Expression))
+                       dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > stats::quantile(.data$mean_Expression, 0.95), stats::quantile(.data$mean_Expression, 0.95), .data$mean_Expression))
   }
   
   # Compute scales.

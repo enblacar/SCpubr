@@ -9,6 +9,7 @@ if(isFALSE(dep_check[["do_RidgePlot"]])){
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               continuous_scale = TRUE,
+                              use_viridis = TRUE,
                               viridis.direction = 1)
     testthat::expect_type(p, "list")
 
@@ -39,7 +40,70 @@ if(isFALSE(dep_check[["do_RidgePlot"]])){
   testthat::test_that("do_RidgePlot: PASS - default", {
     testthat::skip_on_cran()
 
-
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = TRUE,
+                              use_viridis = TRUE,
+                              viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = TRUE,
+                              use_viridis = TRUE,
+                              viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = TRUE,
+                              use_viridis = FALSE,
+                              sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = TRUE,
+                              use_viridis = FALSE,
+                              sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              continuous_scale = TRUE,
+                              compute_quantiles = TRUE,
+                              color_by_probabilities = TRUE,
+                              use_viridis = TRUE,
+                              viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              continuous_scale = TRUE,
+                              compute_quantiles = TRUE,
+                              color_by_probabilities = TRUE,
+                              use_viridis = TRUE,
+                              viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              continuous_scale = TRUE,
+                              compute_quantiles = TRUE,
+                              color_by_probabilities = TRUE,
+                              use_viridis = FALSE,
+                              sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nFeature_RNA",
+                              continuous_scale = TRUE,
+                              compute_quantiles = TRUE,
+                              color_by_probabilities = TRUE,
+                              use_viridis = FALSE,
+                              sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA")
     testthat::expect_type(p, "list")

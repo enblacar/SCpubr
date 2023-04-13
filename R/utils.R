@@ -495,9 +495,10 @@ check_suggests <- function(function_name, passive = FALSE){
     }
   }
   
-  # nocov end
+  
   value <-  if(sum(pkgs) != length(pkgs)){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
+  # nocov end
 }
 
 #' Check SCpubr current function dependencies.
@@ -587,11 +588,13 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
               func.name <- func
               nchar.use <- nchar(func)
             }
+          # nocov start
           } else {
             if (func %in% c("do_LigandReceptorPlot", "save_Plot")){
               next
             }
           }
+          # nocov end
           
           packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
           if (func %in% non_seurat_functions){

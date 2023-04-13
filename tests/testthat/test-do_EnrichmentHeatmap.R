@@ -98,7 +98,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     
     
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                 input_gene_list = c("EPC1"),
+                                 input_gene_list = genes,
                                  flavor = "Seurat",
                                  assay = "SCT",
                                  nbin = 1,
@@ -107,7 +107,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       flavor = "Seurat",
                                       assay = "SCT",
                                       nbin = 1,
@@ -116,7 +116,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                 input_gene_list = c("EPC1"),
+                                 input_gene_list = genes,
                                  flavor = "UCell",
                                  slot = "data",
                                  nbin = 1,
@@ -125,7 +125,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       flavor = "UCell",
                                       slot = "data",
                                       nbin = 1,
@@ -134,7 +134,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       flavor = "AUCell",
                                       assay = "SCT",
                                       nbin = 1,
@@ -143,7 +143,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       flavor = "AUCell",
                                       assay = "SCT",
                                       nbin = 1,
@@ -307,7 +307,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     sample$seurat_clusters.factor <- factor(sample$seurat_clusters)
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       group.by = "seurat_clusters.factor",
                                       nbin = 1,
                                       ctrl = 10)
@@ -325,33 +325,33 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                   "C" = rownames(sample)[11:15])
 
     testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = c("EPC1"),
+                                      input_gene_list = genes,
                                       flavor = "Seurat",
                                       slot = "data",
                                       nbin = 1,
                                       ctrl = 10)})
 
     testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                        input_gene_list = c("EPC1"),
+                                                        input_gene_list = genes,
                                                         flavor = "UCell",
                                                         assay = "SCT",
                                                         nbin = 1,
                                                         ctrl = 10)})
 
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = c("EPC1"),
+                                                         input_gene_list = genes,
                                                          min.cutoff = -10,
                                                          nbin = 1,
                                                          ctrl = 10)})
 
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                        input_gene_list = c("EPC1"),
+                                                        input_gene_list = genes,
                                                         max.cutoff = 200,
                                                         nbin = 1,
                                                         ctrl = 10)})
 
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = c("EPC1"),
+                                                         input_gene_list = genes,
                                                          max.cutoff = 1,
                                                          min.cutoff = 2,
                                                          nbin = 1,

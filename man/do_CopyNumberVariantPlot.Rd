@@ -54,7 +54,7 @@ do_CopyNumberVariantPlot(
 
 \item{infercnv_object}{\strong{\code{\link[infercnv]{infercnv}}} | Output inferCNV object run on the same Seurat object.}
 
-\item{chromosome_locations}{\strong{\code{\link[tibble]{tibble}}} | Tibble containing the chromosome regions to use. Can be obtained using \code{utils::data("human_chr_locations", package = "SCpubr")}.}
+\item{chromosome_locations}{\strong{\code{\link[tibble]{tibble}}} | Tibble containing the chromosome regions to use. Can be obtained using \strong{\code{utils::data("human_chr_locations", package = "SCpubr")}}.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 

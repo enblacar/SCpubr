@@ -76,8 +76,8 @@ do_SCExpressionHeatmap <- function(sample,
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
   
-  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- check_and_set_slot(slot)}
   
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
@@ -207,9 +207,10 @@ do_SCExpressionHeatmap <- function(sample,
   
   
 
-
+  # nocov start
   # Perform hierarchical clustering cluster-wise
   order.use <- if (is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}
+  # nocov end
   
   matrix <-  matrix %>%
              t() %>%
@@ -426,12 +427,14 @@ do_SCExpressionHeatmap <- function(sample,
                                          limits = scale.setup$limits)
     } else {
       p <- p +
+           # nocov start
            ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = na.value,
                                          name = legend.title,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
+           # nocov end
     }
 
 

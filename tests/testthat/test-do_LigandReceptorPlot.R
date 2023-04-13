@@ -7,7 +7,37 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
   testthat::test_that("do_LigandReceptorPlot: PASS - from output", {
     testthat::skip_on_cran()
     
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = TRUE, use_viridis = TRUE, viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = TRUE, use_viridis = TRUE, viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = TRUE, use_viridis = FALSE, sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = TRUE, use_viridis = FALSE, sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = FALSE, use_viridis = TRUE, viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = FALSE, use_viridis = TRUE, viridis.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = FALSE, use_viridis = FALSE, sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, dot_border = FALSE, use_viridis = FALSE, sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, plot.grid = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, plot.grid = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, plot.grid = TRUE, dot_border = FALSE)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output)

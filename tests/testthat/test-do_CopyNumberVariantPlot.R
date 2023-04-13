@@ -24,7 +24,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
                                             flip = TRUE,
-                                            group.by = c("seurat_clusters", "orig.ident"))
+                                            group.by = c("seurat_clusters", "orig.ident", "annotation"))
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
@@ -39,7 +39,7 @@ if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
                                             flip = FALSE,
-                                            group.by = c("seurat_clusters", "orig.ident"))
+                                            group.by = c("seurat_clusters", "orig.ident", "annotation"))
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,

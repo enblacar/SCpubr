@@ -25,7 +25,33 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
                                     assay = "SCT",
-                                    slot = "data")
+                                    slot = "data",
+                                    use_viridis = FALSE,
+                                    sequential.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    use_viridis = FALSE,
+                                    sequential.direction = -1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    use_viridis = TRUE,
+                                    viridis.direction = 1)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+                                    de_genes = de_genes,
+                                    assay = "SCT",
+                                    slot = "data",
+                                    use_viridis = TRUE,
+                                    viridis.direction = -1)
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,

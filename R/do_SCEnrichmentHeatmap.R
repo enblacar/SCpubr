@@ -201,32 +201,38 @@ do_SCEnrichmentHeatmap <- function(sample,
                    crayon_body(".")), call. = FALSE)
   }
   
-  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- check_and_set_slot(slot)}
   
   if (is.character(input_gene_list)){
-    # If input_gene_list is a character of genes.
-    input_list <- list("Input" = input_gene_list)
-  } else if (is.list(input_gene_list)){
-    input_list <- input_gene_list
-    assertthat::assert_that(!is.null(names(input_list)),
-                            msg = paste0(add_cross(), crayon_body("Please provide a "),
-                                         crayon_key("named list"),
-                                         crayon_body(" to "),
-                                         crayon_key("input_gene_list"),
-                                         crayon_body(".")))
-    if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
-      warning(paste0(add_warning(), crayon_body("Found "),
-                     crayon_key("underscores (_)"),
-                     crayon_body(" in the name of the gene sets provided. Replacing them with "),
-                     crayon_key("dots (.)"),
-                     crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
-      names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
-      names(input_gene_list) <- names.use
-    }
+    stop(paste0(add_cross(),
+                crayon_body("You have provided a string of genes to "),
+                crayon_key("input_gene_list"),
+                crayon_body(". Please provide a "),
+                crayon_key("named list"),
+                crayon_body(" instead.")), call. = FALSE)
+    
   }
   
-  assertthat::assert_that(sum(names(input_gene_list) %in% colnames(sample@meta.data)) == 0,
+  input_list <- input_gene_list
+  assertthat::assert_that(!is.null(names(input_list)),
+                          msg = paste0(add_cross(), crayon_body("Please provide a "),
+                                       crayon_key("named list"),
+                                       crayon_body(" to "),
+                                       crayon_key("input_gene_list"),
+                                       crayon_body(".")))
+  if (length(unlist(stringr::str_match_all(names(input_list), "_"))) > 0){
+    warning(paste0(add_warning(), crayon_body("Found "),
+                   crayon_key("underscores (_)"),
+                   crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                   crayon_key("dots (.)"),
+                   crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+    names.use <- stringr::str_replace_all(names(input_list), "_", ".")
+    names(input_list) <- names.use
+  }
+  
+  
+  assertthat::assert_that(sum(names(input_list) %in% colnames(sample@meta.data)) == 0,
                           msg = paste0(add_cross(), crayon_body("Please make sure you do not provide a list of gene sets whose "),
                                        crayon_key("names"),
                                        crayon_body(" match any of the "),
@@ -241,8 +247,10 @@ do_SCEnrichmentHeatmap <- function(sample,
                                       flavor = flavor,
                                       ncores = ncores,
                                       storeRanks = storeRanks,
+                                      # nocov start
                                       assay = if (flavor == "UCell"){NULL} else {assay},
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
+                                      # nocov end
   
   if (is.null(group.by)){
     sample$Groups <- Seurat::Idents(sample)
@@ -258,11 +266,12 @@ do_SCEnrichmentHeatmap <- function(sample,
   
  
   
-  
+  # nocov start
   # Perform hierarchical clustering cluster-wise
   order.use <- if (is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}
+  # nocov end
   
-  matrix <-  sample@meta.data[, c(names(input_gene_list), group.by)] %>% 
+  matrix <-  sample@meta.data[, c(names(input_list), group.by)] %>% 
              tibble::rownames_to_column(var = "cell") %>%
              dplyr::group_by(.data[[group.by]])
   
@@ -272,7 +281,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
   median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_gene_list)), function(x){stats::median(x, na.rm = TRUE)})) %>%
+                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_list)), function(x){stats::median(x, na.rm = TRUE)})) %>%
                    dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
                    dplyr::select(-dplyr::all_of(group.by)) %>%
                    as.data.frame() %>%
@@ -283,11 +292,11 @@ do_SCEnrichmentHeatmap <- function(sample,
   order.use <- order.use[group_order]
   
   # Retrieve the order median-wise for the genes.
-  if (length(names(input_gene_list)) == 1) {
-    row_order <- names(input_gene_list)[1]
+  if (length(names(input_list)) == 1) {
+    row_order <- names(input_list)[1]
   } else {
     row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
-    row_order <- names(input_gene_list)[row_order]
+    row_order <- names(input_list)[row_order]
   }
   
   
@@ -320,7 +329,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                        as.matrix() %>% 
                        t() 
       matrix.subset <- matrix.subset[, cells.use]
-      if (length(names(input_gene_list)) == 1){
+      if (length(names(input_list)) == 1){
         matrix.use <- as.matrix(matrix.subset)
       } else {
         matrix.use <- t(matrix.subset)
@@ -458,12 +467,14 @@ do_SCEnrichmentHeatmap <- function(sample,
                                          limits = scale.setup$limits)
     } else {
       p <- p +
+           # nocov start
            ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = na.value,
                                          name = legend.title,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
+           # nocov end
     }
     
     
@@ -554,7 +565,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   
   if (!is.null(metadata)){
-    plots_wrap <- c(metadata_plots[c("main", metadata)])
+    plots_wrap <- c(metadata_plots[c(metadata, "main")])
     main_body_size <- main.heatmap.size
     height_unit <- c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
     
@@ -588,25 +599,20 @@ do_SCEnrichmentHeatmap <- function(sample,
   
   if (isTRUE(return_object)){
     sample[["Enrichment"]] <- sample@meta.data %>% 
-                              dplyr::select(dplyr::all_of(names(input_gene_list))) %>% 
+                              dplyr::select(dplyr::all_of(names(input_list))) %>% 
                               t() %>% 
                               as.data.frame() %>% 
                               Seurat::CreateAssayObject(.)
     
     sample@meta.data <- sample@meta.data %>% 
-                        dplyr::select(-dplyr::all_of(names(input_gene_list)))
+                        dplyr::select(-dplyr::all_of(names(input_list)))
     
     sample@assays$Enrichment@key <- "Enrichment_"
     
     out.list[["Object"]] <- sample
-  }
-  
-  if (isFALSE(return_object)){
-    return_me <- out.list[["Heatmap"]]
+    
+    return(out.list)
   } else {
-    return_me <- out.list
+    return(out.list[["Heatmap"]])
   }
-  
-  
-  return(return_me)
 }

@@ -24,7 +24,7 @@ if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
     
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,
                                      activities = progeny_activities,
-                                     group.by = c("orig.ident", "seurat_clusters"))
+                                     group.by = c("orig.ident", "seurat_clusters", "annotation"))
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_PathwayActivityPlot(sample = sample,

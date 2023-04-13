@@ -181,8 +181,19 @@ do_EnrichmentHeatmap <- function(sample,
                    crayon_body(".")), call. = FALSE)
   }
   
-  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- check_and_set_slot(slot)}
+  
+  if (is.character(input_gene_list)){
+    stop(paste0(add_cross(),
+                crayon_body("You have provided a string of genes to "),
+                crayon_key("input_gene_list"),
+                crayon_body(". Please provide a "),
+                crayon_key("named list"),
+                crayon_body(" instead.")), call. = FALSE)
+    
+  }
+  
   
   if (!is.null(geneset.order)){
     assertthat::assert_that(sum(geneset.order %in% names(input_gene_list)) == length(names(input_gene_list)),
@@ -203,32 +214,28 @@ do_EnrichmentHeatmap <- function(sample,
     }
   }
   
-  if (is.character(input_gene_list)){
-    # If input_gene_list is a character of genes.
-    input_list <- list("Input" = input_gene_list)
-  } else if (is.list(input_gene_list)){
-    input_list <- input_gene_list
-    assertthat::assert_that(!is.null(names(input_list)),
-                            msg = paste0(add_cross(), crayon_body("Please provide a "),
-                                         crayon_key("named list"),
-                                         crayon_body(" to "),
-                                         crayon_key("input_gene_list"),
-                                         crayon_body(".")))
+  input_list <- input_gene_list
+  assertthat::assert_that(!is.null(names(input_list)),
+                          msg = paste0(add_cross(), crayon_body("Please provide a "),
+                                       crayon_key("named list"),
+                                       crayon_body(" to "),
+                                       crayon_key("input_gene_list"),
+                                       crayon_body(".")))
+  
+  if (length(unlist(stringr::str_match_all(names(input_list), "_"))) > 0){
+    warning(paste0(add_warning(), crayon_body("Found "),
+                   crayon_key("underscores (_)"),
+                   crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                   crayon_key("dots (.)"),
+                   crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+    names.use <- stringr::str_replace_all(names(input_list), "_", ".")
+    names(input_list) <- names.use
     
-    if (length(unlist(stringr::str_match_all(names(input_gene_list), "_"))) > 0){
-      warning(paste0(add_warning(), crayon_body("Found "),
-                     crayon_key("underscores (_)"),
-                     crayon_body(" in the name of the gene sets provided. Replacing them with "),
-                     crayon_key("dots (.)"),
-                     crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
-      names.use <- stringr::str_replace_all(names(input_gene_list), "_", ".")
-      names(input_gene_list) <- names.use
-      
-      if (!is.null(geneset.order)){
-        geneset.order <- stringr::str_replace_all(names(geneset.order), "_", ".")
-      }
+    if (!is.null(geneset.order)){
+      geneset.order <- stringr::str_replace_all(names(geneset.order), "_", ".")
     }
   }
+  
 
   # Compute the enrichment scores.
   sample <- compute_enrichment_scores(sample = sample,
@@ -570,13 +577,13 @@ do_EnrichmentHeatmap <- function(sample,
   if (isTRUE(return_object)){
     # Generate a Seurat assay.
     sample[["Enrichment"]] <- sample@meta.data %>% 
-                              dplyr::select(dplyr::all_of(names(input_gene_list))) %>% 
+                              dplyr::select(dplyr::all_of(names(input_list))) %>% 
                               t() %>% 
                               as.data.frame() %>% 
                               Seurat::CreateAssayObject(.)
     
     sample@meta.data <- sample@meta.data %>% 
-                        dplyr::select(-dplyr::all_of(names(input_gene_list)))
+                        dplyr::select(-dplyr::all_of(names(input_list)))
     
     sample@assays$Enrichment@key <- "Enrichment_"
     Seurat::DefaultAssay(sample) <- "Enrichment"

@@ -223,17 +223,21 @@ do_DotPlot <- function(sample,
     } else if (isFALSE(use_viridis)){
       if (isFALSE(dot_border)){
         p <- add_scale(p = p,
+                       # nocov start
                        function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+                       # nocov end                                               
                                                                      na.value = na.value,
                                                                      name = "Avg. Expression",
                                                                      breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
-          ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
-                                         na.value = na.value,
-                                         name = "Avg. Expression",
-                                        breaks = scales::extended_breaks(n = number.breaks))
+             # nocov start
+             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+             # nocov end
+                                           na.value = na.value,
+                                           name = "Avg. Expression",
+                                           breaks = scales::extended_breaks(n = number.breaks))
       }
     }
     p <- p +

@@ -76,8 +76,8 @@ do_AffinityAnalysisPlot <- function(sample,
   
   check_Seurat(sample)
   
-  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- check_and_set_slot(slot)}
   
   # Get defaults user warning length.
   length.use <- getOption("warning.length")
@@ -669,16 +669,6 @@ do_AffinityAnalysisPlot <- function(sample,
       
       max_value <- max(unname(unlist(lapply(geneset_list, length))))
       
-      # Add fake genes until all lists have the same length so that it can be converted into a tibble.
-      geneset_list <- lapply(geneset_list, function(x){
-        if (length(x) != max_value){
-          remaining <- max_value - length(x)
-          x <- append(x, rep("deleteme", remaining))
-          x
-        } else{
-          x
-        }
-      })
       
       # Recompute activity process.
       network <- geneset_list %>% 

@@ -197,9 +197,10 @@ do_DiffusionMapPlot <- function(sample,
                    crayon_body(".")), call. = FALSE)
   }
   
-  if (is.null(assay)){assay <- SCpubr:::check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- SCpubr:::check_and_set_slot(slot)}
+  if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
+  if (is.null(slot)){slot <- check_and_set_slot(slot)}
   
+  # nocov start
   sample <- compute_enrichment_scores(sample, 
                                       input_gene_list = input_gene_list,
                                       nbin = nbin,
@@ -207,7 +208,7 @@ do_DiffusionMapPlot <- function(sample,
                                       flavor = flavor,
                                       assay = if (flavor == "UCell"){NULL} else {assay},
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
-  
+  # nocov end
   
   if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
   key_col <- stringr::str_remove_all(key, "_")

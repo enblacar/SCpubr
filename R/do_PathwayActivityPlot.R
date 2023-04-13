@@ -237,8 +237,10 @@ do_PathwayActivityPlot <- function(sample,
       row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
     }
     if (counter == 1){
+      # nocov start
       if (length(colnames(df.order)) == 1){
         col_order <- colnames(df.order)[1]
+      # nocov end
       } else {
         col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
       }
@@ -298,10 +300,12 @@ do_PathwayActivityPlot <- function(sample,
     counter <- counter + 1
     data <- matrix.list[[group]][["data"]]
     
-    p <- ggplot2::ggplot(data,
-                         mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$source} else {.data$group.by},
+    p <- data %>% 
+         # nocov start
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$source} else {.data$group.by},
                                                 y = if(isFALSE(flip)){.data$group.by} else {.data$source},
                                                 fill = .data$mean)) +
+         # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
