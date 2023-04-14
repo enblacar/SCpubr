@@ -197,7 +197,7 @@ do_ExpressionHeatmap <- function(sample,
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
 
-      df <- Seurat::GetAssayData(sample,
+      df <- .GetAssayData(sample,
                                  assay = assay,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix() %>%

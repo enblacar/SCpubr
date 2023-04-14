@@ -276,7 +276,7 @@ do_GeyserPlot <- function(sample,
               tibble::rownames_to_column(var = "cell") %>%
               tibble::as_tibble()
     } else if (isTRUE(feature %in% rownames(sample))){
-      data <- Seurat::GetAssayData(object = sample,
+      data <- .GetAssayData(sample = sample,
                                    assay = assay,
                                    slot = slot)[feature, , drop = FALSE] %>%
               as.matrix() %>%

@@ -196,7 +196,7 @@ do_LoadingsPlot <- function(sample,
                                relationship = "many-to-many")
   
   data.use <- data.use %>% 
-              dplyr::left_join(y = {Seurat::GetAssayData(sample,
+              dplyr::left_join(y = {.GetAssayData(sample,
                                                          assay = assay,
                                                          slot = slot)[unique(data.use$Gene), ] %>%
                                     as.matrix() %>% 

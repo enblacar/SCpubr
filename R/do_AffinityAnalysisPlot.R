@@ -216,9 +216,9 @@ do_AffinityAnalysisPlot <- function(sample,
              dplyr::filter(.data$target != "deleteme")
   
   # Get expression data.
-  mat <- Seurat::GetAssayData(sample,
-                              assay = assay,
-                              slot = slot)
+  mat <- .GetAssayData(sample,
+                      assay = assay,
+                      slot = slot)
   
   # Compute activities.
   if(isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "),
@@ -245,7 +245,7 @@ do_AffinityAnalysisPlot <- function(sample,
   # Set it as default assay.
   Seurat::DefaultAssay(sample) <- "affinity"
   # Scale and center the activity data.
-  sample <- Seurat::ScaleData(sample, verbose = FALSE)
+  sample <- Seurat::ScaleData(sample, verbose = FALSE, assay = "affinity")
   
   # Plotting.
   # Get the data frames per group.by value for plotting.
@@ -253,9 +253,9 @@ do_AffinityAnalysisPlot <- function(sample,
   counter <- 0
   for (group in group.by){
     counter <- counter + 1
-    data.use <- Seurat::GetAssayData(sample, 
-                                     assay = "affinity", 
-                                     slot = "scale.data") %>% 
+    data.use <- .GetAssayData(sample, 
+                             assay = "affinity", 
+                             slot = "scale.data") %>% 
                 t() %>% 
                 as.data.frame() %>% 
                 tibble::rownames_to_column(var = "cell") %>% 
@@ -606,9 +606,9 @@ do_AffinityAnalysisPlot <- function(sample,
   # Compute robustness of the scoring.
   if (isTRUE(compute_robustness)){
     # Compute dataframe of averaged expression of the genes and bin it.
-    data.avg <- Seurat::GetAssayData(sample.original,
-                                     assay = assay,
-                                     slot = slot) %>% 
+    data.avg <- .GetAssayData(sample.original,
+                             assay = assay,
+                             slot = slot) %>% 
                 Matrix::rowMeans() %>%
                 as.data.frame() %>% 
                 dplyr::arrange(.data$.)
@@ -680,9 +680,9 @@ do_AffinityAnalysisPlot <- function(sample,
                  dplyr::filter(.data$target != "deleteme")
       
       # Get expression data.
-      mat <- Seurat::GetAssayData(sample,
-                                  assay = assay,
-                                  slot = slot)
+      mat <- .GetAssayData(sample,
+                          assay = assay,
+                          slot = slot)
       
       # Compute activities.
       acts <- decoupleR::run_wmean(mat = mat, 
@@ -706,9 +706,9 @@ do_AffinityAnalysisPlot <- function(sample,
       Seurat::DefaultAssay(sample) <- "robustness"
       
       # Scale and center the activity data.
-      scale.data <- Seurat::GetAssayData(sample,
-                                         assay = "robustness",
-                                         slot = "data") %>%
+      scale.data <- .GetAssayData(sample,
+                                 assay = "robustness",
+                                 slot = "data") %>%
                     as.matrix() %>%
                     t() %>%
                     as.data.frame() %>%
@@ -729,9 +729,9 @@ do_AffinityAnalysisPlot <- function(sample,
                 tibble::rownames_to_column(var = "cell") %>% 
                 dplyr::select(dplyr::all_of(c("cell", "deleteme", "group"))) %>% 
                 dplyr::filter(.data$group == .env$ident) %>% 
-                dplyr::left_join(y = Seurat::GetAssayData(sample, 
-                                                          assay = "robustness",
-                                                          slot = "scale.data") %>% 
+                dplyr::left_join(y = .GetAssayData(sample, 
+                                                  assay = "robustness",
+                                                  slot = "scale.data") %>% 
                                    t() %>% 
                                    as.data.frame() %>% 
                                    tibble::rownames_to_column(var = "cell"),

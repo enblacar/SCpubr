@@ -192,7 +192,7 @@ do_BeeSwarmPlot <- function(sample,
     sample@meta.data$rank_me <- sample@meta.data[, feature_to_rank]
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% rownames(sample)){
-    sample@meta.data$rank_me  <- Seurat::GetAssayData(object = sample, slot = slot)[feature_to_rank, ]
+    sample@meta.data$rank_me  <- .GetAssayData(sample = sample, slot = slot)[feature_to_rank, ]
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% dim_colnames){
     for(red in Seurat::Reductions(object = sample)){

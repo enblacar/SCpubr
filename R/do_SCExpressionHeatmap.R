@@ -160,7 +160,7 @@ do_SCExpressionHeatmap <- function(sample,
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
   `%>%` <- magrittr::`%>%`
-  genes.avail <- rownames(Seurat::GetAssayData(sample, slot = slot, assay = assay))
+  genes.avail <- rownames(.GetAssayData(sample, slot = slot, assay = assay))
 
   assertthat::assert_that(sum(features %in% genes.avail) > 0,
                           msg = paste0(add_cross(), crayon_body("None of the features are present in the row names of the assay "),
@@ -189,7 +189,7 @@ do_SCExpressionHeatmap <- function(sample,
   features <- features[features %in% genes.avail]
 
 
-  matrix <- Seurat::GetAssayData(sample,
+  matrix <- .GetAssayData(sample,
                                  assay = assay,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix()

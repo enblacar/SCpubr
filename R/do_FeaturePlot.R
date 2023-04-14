@@ -619,7 +619,7 @@ do_FeaturePlot <- function(sample,
         sample$dummy <- sample@meta.data[, feature]
         ## Or is a gene in the object.
       } else if (feature %in% rownames(sample)){
-        sample$dummy <- Seurat::GetAssayData(object = sample, slot = slot)[feature, ]
+        sample$dummy <- .GetAssayData(sample = sample, slot = slot)[feature, ]
         ## Or is a dimensional reduction component.
       } else if (feature %in% dim_colnames){
         # Iterate over each dimensional reduction in the object.

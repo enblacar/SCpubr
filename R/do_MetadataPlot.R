@@ -126,11 +126,11 @@ do_MetadataPlot <- function(sample = NULL,
                  tibble::rownames_to_column(var = "cell") %>% 
                  dplyr::select(dplyr::all_of(c(group.by, metadata))) %>% 
                  dplyr::group_by(.data[[group.by]]) %>% 
-                 dplyr::summarise(dplyr::across(.cols = dplyr::all_of(c(metadata)), unique))
+                 dplyr::reframe(dplyr::across(.cols = dplyr::all_of(c(metadata)), unique))
     
     assertthat::assert_that(length(unique(data.plot %>% dplyr::pull(.data[[group.by]]))) == nrow(data.plot),
                             msg = paste0(add_cross(), crayon_body("Please provide only metadata column that have a "),
-                                         crayon_key(" one to one assignment "),
+                                         crayon_key("one to one assignment"),
                                          crayon_body(" to the unique values in "),
                                          crayon_key("group.by"),
                                          crayon_body(".")))

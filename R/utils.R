@@ -1098,7 +1098,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (feature %in% rownames(sample)){
-    data.check <- Seurat::GetAssayData(sample,
+    data.check <- .GetAssayData(sample,
                                        assay = assay,
                                        slot = slot)[feature, ]
     scale.begin <- min(data.check, na.rm = TRUE)
@@ -2067,7 +2067,7 @@ compute_enrichment_scores <- function(sample,
     if (is.null(slot)){
       slot <- "data"
     }
-    scores <- AUCell::AUCell_run(exprMat = Seurat::GetAssayData(sample, assay = assay, slot = slot),
+    scores <- AUCell::AUCell_run(exprMat = .GetAssayData(sample, assay = assay, slot = slot),
                                  geneSets = input_gene_list)
     scores <- scores@assays@data$AUC %>%
               as.matrix() %>%
@@ -2207,7 +2207,7 @@ get_data_column <- function(sample,
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
-    feature_column <- Seurat::GetAssayData(object = sample,
+    feature_column <- .GetAssayData(object = sample,
                                            assay = assay,
                                            slot = slot)[feature, , drop = FALSE] %>%
       as.matrix() %>%
@@ -3367,3 +3367,32 @@ get_SCpubr_colors <- function(){
   return(colors)
 }
 
+#' Retrieve assay data depending on the version of SeuratObject
+#'
+#' @param sample Seurat object.
+#' @param assay Assay name.
+#' @param slot slot name.
+#'
+#' @return The assay data.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+.GetAssayData <- function(sample,
+                         assay,
+                         slot){
+  # Check version of SeuratObject.
+  version <- utils::packageVersion("SeuratObject")
+  
+  if (version > "4.1.3"){
+    data <- SeuratObject::LayerData(object = sample,
+                                    assay = assay,
+                                    layer = slot)
+  } else {
+    data <- SeuratObject::GetAssayData(object = sample,
+                                       assay = assay,
+                                       slot = slot)
+  }
+  return(data)
+}

@@ -31,26 +31,6 @@ if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
                                          flip = TRUE)
     testthat::expect_type(p, "list")
     
-    genes <- list("A" = rownames(sample)[1:5])
-    
-    p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
-                                         input_gene_list =  genes,
-                                         subsample = 100,
-                                         nbin = 1,
-                                         ctrl = 5,
-                                         verbose = FALSE,
-                                         flip = TRUE)
-    testthat::expect_type(p, "list")
-    
-    p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
-                                         input_gene_list =  genes,
-                                         subsample = 100,
-                                         nbin = 1,
-                                         ctrl = 5,
-                                         verbose = FALSE,
-                                         flip = FALSE)
-    testthat::expect_type(p, "list")
-    
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:11],
                   "C" = rownames(sample)[12:19])

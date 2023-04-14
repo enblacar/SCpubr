@@ -159,7 +159,7 @@ do_CorrelationPlot <- function(sample = NULL,
     out <- sample@meta.data %>%
            dplyr::select(dplyr::all_of(c(group.by))) %>%
            tibble::rownames_to_column(var = "cell") %>%
-           dplyr::left_join(y = {Seurat::GetAssayData(object = sample,
+           dplyr::left_join(y = {.GetAssayData(sample = sample,
                                                       assay = assay,
                                                       slot = "scale.data") %>%
                                  as.matrix() %>%
