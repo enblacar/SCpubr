@@ -239,7 +239,9 @@ do_CopyNumberVariantPlot <- function(sample,
   
   list.data <- list()
   for (group in group.by){
-    data.use  <- sample@assays$CNV_scores@data %>% 
+    data.use  <- .GetAssayData(sample = sample,
+                               assay = "CNV_scores",
+                               slot = "data") %>% 
                  as.matrix() %>% 
                  t() %>% 
                  as.data.frame() %>% 

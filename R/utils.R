@@ -1392,6 +1392,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       not_found_features <- c(not_found_features, feature)
     }
   }
+  
   # Return the error logs if there were features not found.
   if (length(not_found_features) > 0){
     if (isTRUE(permissive)){

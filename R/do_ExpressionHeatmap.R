@@ -198,8 +198,8 @@ do_ExpressionHeatmap <- function(sample,
       sample$group.by <- sample@meta.data[, group]
 
       df <- .GetAssayData(sample,
-                                 assay = assay,
-                                 slot = slot)[features, , drop = FALSE] %>%
+                          assay = assay,
+                          slot = slot)[features, , drop = FALSE] %>%
             as.matrix() %>%
             t() %>%
             as.data.frame() %>%

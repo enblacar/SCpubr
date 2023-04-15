@@ -172,7 +172,9 @@ do_TFActivityPlot <- function(sample,
       suppressMessages({
         sample$group.by <- sample@meta.data[, group]
 
-        df <- t(as.matrix(sample@assays$dorothea@scale.data)) %>%
+        df <- t(as.matrix(.GetAssayData(sample = sample,
+                                        assay = "dorothea",
+                                        slot = "scale.data"))) %>%
               as.data.frame() %>%
               tibble::rownames_to_column(var = "cell") %>%
               dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
@@ -189,7 +191,9 @@ do_TFActivityPlot <- function(sample,
         if (!is.null(split.by)){
           sample$split.by <- sample@meta.data[, split.by]
           
-          df.split <- t(as.matrix(sample@assays$dorothea@scale.data)) %>%
+          df.split <- t(as.matrix(.GetAssayData(sample = sample,
+                                                assay = "dorothea",
+                                                slot = "scale.data"))) %>%
                       as.data.frame() %>%
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
