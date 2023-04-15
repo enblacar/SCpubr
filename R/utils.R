@@ -3396,9 +3396,10 @@ get_SCpubr_colors <- function(){
     
     # nocov end
   } else {
-    SeuratObject::SetAssayData(object = sample,
-                               assay = assay,
-                               slot = slot)
+    sample <- SeuratObject::SetAssayData(object = sample,
+                                         assay = assay,
+                                         slot = slot,
+                                         new.data = data)
   }
   return(sample)
 }
