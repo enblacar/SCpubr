@@ -1828,60 +1828,6 @@ check_length <- function(vector_of_parameters,
 }
 
 
-#' Return a SC count matrix
-#'
-#' @return None
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-use_dataset <- function(n_cells = 180){
-  # We want this function to be completely silent.
-  suppressWarnings({
-    genes <- readRDS(system.file("extdata/genes_example.rds", package = "SCpubr"))
-    values <- seq(0, 15, 0.1)
-    counts <- matrix(ncol = n_cells, nrow = length(genes))
-    cols <- c()
-    for (i in seq(1, n_cells)){
-      cts <- sample(values, size = length(genes), replace = TRUE, prob = c(0.66, rep((0.34 / 150), length(values) - 1)))
-      counts[, i] <- cts
-      cols <- c(cols, paste0("Cell_", i))
-    }
-    rownames(counts) <- genes
-    colnames(counts) <- cols
-    sample <- Seurat::CreateSeuratObject(counts)
-    sample <- Seurat::PercentageFeatureSet(sample, pattern = "^MT-", col.name = "percent.mt")
-    # Compute QC.
-    mask1 <- sample$nCount_RNA >= 1000
-    mask2 <- sample$nFeature_RNA >= 500
-    mask3 <- sample$percent.mt <= 20
-    mask <- mask1 & mask2 & mask3
-    sample <- sample[, mask]
-    # Normalize.
-    sample <- suppressWarnings({Seurat::SCTransform(sample, verbose = FALSE)})
-
-    # Dimensional reduction.
-    sample <- Seurat::RunPCA(sample, verbose = FALSE)
-    sample <- Seurat::RunUMAP(sample, dims = 1:30, verbose = FALSE)
-    # Find clusters.
-    sample <- Seurat::FindNeighbors(sample, dims = 1:30, verbose = FALSE)
-    sample <- Seurat::FindClusters(sample, resolution = 0.5, verbose = FALSE)
-    sample$seurat_clusters <- as.character(sample$seurat_clusters)
-    sample$seurat_clusters[1:20] <- "0"
-    sample$seurat_clusters[21:40] <- "1"
-    sample$seurat_clusters[41:60] <- "2"
-    sample$seurat_clusters[61:80] <- "3"
-    sample$seurat_clusters[81:100] <- "4"
-    sample$seurat_clusters[101:120] <- "5"
-    sample$seurat_clusters[121:140] <- "6"
-    sample$seurat_clusters[141:160] <- "7"
-    sample$seurat_clusters[161:180] <- "8"
-    Seurat::Idents(sample) <- sample$seurat_clusters
-  })
-
-  return(sample)
-}
 
 #' Add viridis color scale while suppressing the warning that comes with adding a second scale.
 #'
@@ -2207,9 +2153,9 @@ get_data_column <- function(sample,
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
-    feature_column <- .GetAssayData(object = sample,
-                                           assay = assay,
-                                           slot = slot)[feature, , drop = FALSE] %>%
+    feature_column <- .GetAssayData(sample = sample,
+                                    assay = assay,
+                                    slot = slot)[feature, , drop = FALSE] %>%
       as.matrix() %>%
       t() %>%
       as.data.frame() %>%
@@ -3367,6 +3313,8 @@ get_SCpubr_colors <- function(){
   return(colors)
 }
 
+# This needs to be modified when Seurat V5 is on CRAN.
+
 #' Retrieve assay data depending on the version of SeuratObject
 #'
 #' @param sample Seurat object.
@@ -3382,13 +3330,25 @@ get_SCpubr_colors <- function(){
 .GetAssayData <- function(sample,
                          assay,
                          slot){
+  
   # Check version of SeuratObject.
   version <- utils::packageVersion("SeuratObject")
-  
+  # nocov start
   if (version > "4.1.3"){
-    data <- SeuratObject::LayerData(object = sample,
-                                    assay = assay,
-                                    layer = slot)
+    if (slot == "counts"){
+      data <- sample@assays[[assay]]$counts
+    } else if (slot == "data"){
+      data <- sample@assays[[assay]]$data
+    } else if (slot == "scale.data"){
+      data <- sample@assays[[assay]]$scale.data
+    }
+    
+    # Uncomment once the version is on CRAN.
+    # data <- SeuratObject::LayerData(object = sample,
+    #                                 assay = assay,
+    #                                 layer = slot)
+  
+    # nocov end
   } else {
     data <- SeuratObject::GetAssayData(object = sample,
                                        assay = assay,

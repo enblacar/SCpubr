@@ -18,6 +18,11 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 
 
 sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+
+if (isTRUE(getOption("SCpubr.v5"))){
+  suppressWarnings(sample[["SCT"]] <- as(object = sample[["SCT"]], Class = "Assay5"))
+}
+
 metacell_mapping <- readRDS(system.file("extdata/metacell_mapping_example.rds", package = "SCpubr"))
 infercnv_object <- readRDS(system.file("extdata/infercnv_object_example.rds", package = "SCpubr"))
 infercnv_object_metacells <- readRDS(system.file("extdata/infercnv_object_metacells_example.rds", package = "SCpubr"))
