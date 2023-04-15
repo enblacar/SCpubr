@@ -3357,3 +3357,48 @@ get_SCpubr_colors <- function(){
   }
   return(data)
 }
+
+
+#' Set assay data depending on the version of SeuratObject
+#'
+#' @param sample Seurat object.
+#' @param assay Assay name.
+#' @param slot slot name.
+#' @param data data to set.
+#'
+#' @return The assay data.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+.SetAssayData <- function(sample,
+                          assay,
+                          slot,
+                          data){
+  
+  # Check version of SeuratObject.
+  version <- utils::packageVersion("SeuratObject")
+  # nocov start
+  if (version > "4.1.3"){
+    if (slot == "counts"){
+      sample@assays[[assay]]$counts <- data
+    } else if (slot == "data"){
+      sample@assays[[assay]]$data <- data
+    } else if (slot == "scale.data"){
+      sample@assays[[assay]]$scale.data <- data
+    }
+    
+    # Uncomment once the version is on CRAN.
+    # SeuratObject::LayerData(object = sample,
+    #                         assay = assay,
+    #                         layer = slot) <- data
+    
+    # nocov end
+  } else {
+    SeuratObject::SetAssayData(object = sample,
+                               assay = assay,
+                               slot = slot)
+  }
+  return(sample)
+}

@@ -716,7 +716,10 @@ do_AffinityAnalysisPlot <- function(sample,
                     t()
       
       # Set it to the scale.data slot.
-      sample@assays$robustness$scale.data <- scale.data
+      sample <- .SetAssayData(sample = sample,
+                              assay = "robustness",
+                              slot = "scale.data",
+                              data = scale.data)
       
       # Pull out scores and add as meta.data.
       sample$group <- Seurat::Idents(sample)
