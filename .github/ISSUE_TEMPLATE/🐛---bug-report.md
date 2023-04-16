@@ -49,43 +49,32 @@ Enrique
 
 
 **Bug:**
-<!-- How did you encounter this bug? Please be as precise and complete as possible -->
-
 ```
 # Your description of the bug goes here.
 ```
 
 
-**Reprex:**
-<!-- Include a the code that triggers the error. Do not just put the line of code that triggers it. Please include as much context as possible. 
-
-If you are unsure on how to do it, please check: https://www.r-bloggers.com/2020/10/how-to-make-a-reprex/ -->
-
+**Reproducible example:**
 ```r
-# Your reprex goes here.
+# Your reproducible example goes here.
+# How to make a good one: https://www.r-bloggers.com/2020/10/how-to-make-a-reprex/
 ```
 
 
 **Error log:**
-<!-- Please, also include the full error log that you get.-->
-
 ```r
-# Your error log goes here
+# Paste the full error log here
 ```
 
 
 **SCpubr version:**
-<!-- Which version of SCpubr are you using? Is it a dev version? -->
-
 ```r
-# Put the version here.
-# You can check it in R by doing: utils::packageVersion("SCpubr")
+# Put SCpubr's version here.
+# Can be checked by: utils::packageVersion("SCpubr")
 ```
 
 
 **Session info:**
-<!-- Please, also include the full output of sessionInfo().-->
-
 ```r
 # Include the output of sessionInfo() here.
 ```
