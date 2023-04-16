@@ -322,19 +322,20 @@ do_CellularStatesPlot <- function(sample,
         x <- vapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-          d <- max(score_1, score_2)
-          ifelse(score_1 > score_2, d, -d)
-        }, FUN.VALUE = double(1))
+          d <- max(score_1, score_2, na.rm = TRUE)
+          output <- ifelse(score_1 > score_2, d, -d)
+          return(output)
+        }, FUN.VALUE = numeric(1))
         
 
         # Compute the scores for the Y axis.
         y <- vapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
-          d <- max(score_1, score_2)
-          y <- scores[x, y1] - d
-          y
-        }, FUN.VALUE = double(1))
+          d <- max(score_1, score_2, na.rm = TRUE)
+          output <- as.data.frame(scores)[x, y1] - d
+          return(output)
+        }, FUN.VALUE = numeric(1))
 
         names(x) <- scores[["cell"]]
         names(y) <- scores[["cell"]]

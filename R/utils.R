@@ -2545,7 +2545,7 @@ check_parameters <- function(parameter,
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(vapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
+                                         paste(vapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   } else if (parameter_name == "sequential.palette"){
     assertthat::assert_that(parameter %in% c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
