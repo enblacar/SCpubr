@@ -50,14 +50,8 @@ do_CorrelationPlot <- function(sample = NULL,
                                axis.text.face = "bold",
                                legend.title.face = "bold",
                                legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   `%>%` <- magrittr::`%>%`
   
@@ -312,11 +306,11 @@ do_CorrelationPlot <- function(sample = NULL,
     
     jaccard_scores <- list()
     for(listname_store in names(input_gene_list)){
-      vector_scores <- c()
+      vector_scores <- NULL
       for(listname in names(input_gene_list)){
         scores <- jaccard(set_1 = input_gene_list[[listname_store]], set_2 = input_gene_list[[listname]])
         names(scores) <- listname
-        vector_scores <- c(vector_scores, round(scores, 2))
+        vector_scores <- append(vector_scores, round(scores, 2))
       }
       jaccard_scores[[listname_store]] <- vector_scores
     }
@@ -338,7 +332,7 @@ do_CorrelationPlot <- function(sample = NULL,
     data <- jaccard_matrix %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "x") %>% 
-            tidyr::pivot_longer(cols = -dplyr::all_of(c("x")),
+            tidyr::pivot_longer(cols = -dplyr::all_of("x"),
                                 names_to = "y",
                                 values_to = "score") %>% 
             dplyr::mutate("x" = factor(.data$x, levels = order),

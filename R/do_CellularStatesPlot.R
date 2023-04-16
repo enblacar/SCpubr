@@ -78,14 +78,8 @@ do_CellularStatesPlot <- function(sample,
                                   axis.text.face = "bold",
                                   legend.title.face = "bold",
                                   legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+    # Add lengthy error messages.
+    withr::local_options(.new = list("warning.length" = 8170))
   
     check_suggests(function_name = "do_CellularStatesPlot")
     # Check if the sample provided is a Seurat object.
@@ -325,21 +319,22 @@ do_CellularStatesPlot <- function(sample,
         scores <- tidyr::tibble(scores)
 
         # Compute the scores for the X axis.
-        x <- unlist(sapply(seq_len(nrow(scores)), function(x) {
+        x <- vapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
           d <- max(score_1, score_2)
           ifelse(score_1 > score_2, d, -d)
-        }))
+        }, FUN.VALUE = double(1))
+        
 
         # Compute the scores for the Y axis.
-        y <- unlist(sapply(seq_len(nrow(scores)), function(x) {
+        y <- vapply(seq_len(nrow(scores)), function(x) {
           score_1 <- scores[x, x1] + stats::runif(1, min=0, max=0.15)
           score_2 <- scores[x, x2] + stats::runif(1, min=0, max=0.15)
           d <- max(score_1, score_2)
           y <- scores[x, y1] - d
           y
-        }))
+        }, FUN.VALUE = double(1))
 
         names(x) <- scores[["cell"]]
         names(y) <- scores[["cell"]]
@@ -436,7 +431,7 @@ do_CellularStatesPlot <- function(sample,
         d <- apply(scores, 1, function(x){max(x[c(x1, x2)]) - max(x[c(y1, y2)])})
 
         # Compute X axis values.
-        x <- sapply(seq_along(d), function(x) {
+        x <- vapply(seq_along(d), function(x) {
           if (d[x] > 0) {
             d <- log2(abs(scores[x, x1] - scores[x, x2]) + 1)
             ifelse(scores[x, x1] < scores[x, x2], d, -d)
@@ -444,7 +439,7 @@ do_CellularStatesPlot <- function(sample,
             d <- log2(abs(scores[x, y1] - scores[x, y2]) + 1)
             ifelse(scores[x, y1] < scores[x, y2], d, -d)
           }
-        })
+        }, FUN.VALUE = numeric(1))
 
         names(x) <- rownames(scores)
 

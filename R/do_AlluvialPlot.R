@@ -72,19 +72,14 @@ do_AlluvialPlot <- function(sample,
                             axis.text.face = "bold",
                             legend.title.face = "bold",
                             legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
-  
+  check_suggests(function_name = "do_AlluvialPlot")
   check_Seurat(sample)
   
   
-  check_suggests(function_name = "do_AlluvialPlot")
+  
 
   # Check logical parameters.
   logical_list <- list("use_labels" = use_labels,

@@ -52,14 +52,8 @@ do_LoadingsPlot <- function(sample,
                             axis.text.face = "bold",
                             legend.title.face = "bold",
                             legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests("do_LoadingsPlot")
   
@@ -147,7 +141,7 @@ do_LoadingsPlot <- function(sample,
   loadings <- Seurat::Loadings(sample)[, dims] %>% 
               as.data.frame() %>% 
               tibble::rownames_to_column(var = "Gene") %>% 
-              tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of(c("Gene"))),
+              tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of("Gene")),
                                   values_to = "Loading_Score",
                                   names_to = "PC")
   
@@ -163,7 +157,7 @@ do_LoadingsPlot <- function(sample,
                        dplyr::slice_head(n = top_loadings) %>% 
                        dplyr::pull(.data$Gene)
   
-  genes.use <- c()
+  genes.use <- NULL
   
   for (i in seq(1, length(dims) * top_loadings, by = top_loadings)){
     range <- seq(i, i + (top_loadings  - 1))
@@ -178,7 +172,7 @@ do_LoadingsPlot <- function(sample,
   embeddings <- Seurat::Embeddings(sample, reduction = "pca")[, dims] %>% 
                 as.data.frame() %>% 
                 tibble::rownames_to_column(var = "Cell") %>% 
-                tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of(c("Cell"))),
+                tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of("Cell")),
                                     values_to = "Embedding_Score",
                                     names_to = "PC")
   
@@ -192,7 +186,7 @@ do_LoadingsPlot <- function(sample,
               dplyr::left_join(y = embeddings,
                                by = "Cell") %>% 
               dplyr::left_join(y = loadings,
-                               by = c("PC"),
+                               by = "PC",
                                relationship = "many-to-many")
   
   data.use <- data.use %>% 
@@ -203,7 +197,7 @@ do_LoadingsPlot <- function(sample,
                                     t() %>% 
                                     as.data.frame() %>% 
                                     tibble::rownames_to_column(var = "Cell") %>% 
-                                    tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell")),
+                                    tidyr::pivot_longer(cols = -dplyr::all_of("Cell"),
                                                         names_to = "Gene",
                                                         values_to = "Expression")},
                                by = c("Gene", "Cell")) %>% 

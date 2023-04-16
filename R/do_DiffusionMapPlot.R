@@ -55,14 +55,8 @@ do_DiffusionMapPlot <- function(sample,
                                 axis.text.face = "bold",
                                 legend.title.face = "bold",
                                 legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests("do_DiffusionMapPlot")
   check_Seurat(sample = sample)
@@ -218,15 +212,15 @@ do_DiffusionMapPlot <- function(sample,
               tibble::rownames_to_column(var = "Cell") %>% 
               as.data.frame() %>% 
               tibble::as_tibble() %>% 
-              tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell")),
+              tidyr::pivot_longer(cols = -dplyr::all_of("Cell"),
                                   names_to = key_col,
                                   values_to = "Score") %>% 
-              dplyr::filter(.data[[key_col]] %in% sapply(dims, function(x){paste0(key, x)})) %>% 
+              dplyr::filter(.data[[key_col]] %in% vapply(dims, function(x){paste0(key, x)}, FUN.VALUE = character(1))) %>% 
               dplyr::group_by(.data[[key_col]]) %>% 
               dplyr::reframe("rank" = rank(.data$Score),
                              "Cell" = .data$Cell,
                              "Score" = .data$Score) %>% 
-              dplyr::mutate("{key_col}" := factor(.data[[key_col]], levels = rev(sapply(dims, function(x){paste0(key, x)})))) %>% 
+              dplyr::mutate("{key_col}" := factor(.data[[key_col]], levels = rev(vapply(dims, function(x){paste0(key, x)}, FUN.VALUE = character(1))))) %>% 
               dplyr::left_join(y = {sample@meta.data %>% 
                                     tibble::rownames_to_column(var = "Cell") %>% 
                                     tibble::as_tibble() %>% 
@@ -251,7 +245,7 @@ do_DiffusionMapPlot <- function(sample,
   # Generate DC-based heatmaps.
   list.out <- list()
   
-  for (dc.use in sapply(dims, function(x){paste0(key, x)})){
+  for (dc.use in vapply(dims, function(x){paste0(key, x)}, FUN.VALUE = character(1))){
     # Filter for the DC.
     data.plot <- data.use %>% 
                   dplyr::filter(.data[[key_col]] == dc.use)

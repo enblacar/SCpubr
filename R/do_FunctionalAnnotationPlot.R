@@ -64,14 +64,8 @@ do_FunctionalAnnotationPlot <- function(genes,
                                         axis.text.face = "bold",
                                         legend.title.face = "bold",
                                         legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   
 
@@ -161,7 +155,7 @@ do_FunctionalAnnotationPlot <- function(genes,
   suppressMessages({
     suppressWarnings({
       conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
-                                         toType = c("ENTREZID"),
+                                         toType = "ENTREZID",
                                          OrgDb = org.db)
     })
   })
@@ -211,15 +205,15 @@ do_FunctionalAnnotationPlot <- function(genes,
       # nocov end
     }
 
-    geneID_column <- c()
+    geneID_column <- NULL
     for (input in result@result$geneID){
       genes.use <- stringr::str_split(input, pattern = "/")[[1]]
       suppressMessages({
         conversion <- clusterProfiler::bitr(genes.use, fromType = "ENTREZID",
-                                            toType = c("SYMBOL"),
+                                            toType = "SYMBOL",
                                             OrgDb = org.db)
       })
-      geneID_column <- c(geneID_column, paste(conversion$SYMBOL, collapse = "/"))
+      geneID_column <- append(geneID_column, paste(conversion$SYMBOL, collapse = "/"))
     }
     result@result$geneID <- geneID_column
   }
@@ -265,7 +259,7 @@ do_FunctionalAnnotationPlot <- function(genes,
     
     p.terms <- df.presence %>% 
                tibble::rownames_to_column(var = "Gene") %>% 
-               tidyr::pivot_longer(cols = -dplyr::all_of(c("Gene")),
+               tidyr::pivot_longer(cols = -dplyr::all_of("Gene"),
                                    names_to = "Description",
                                    values_to = "Status") %>% 
                dplyr::mutate("Status" = factor(.data$Status, levels = c("Present", "Absent")),

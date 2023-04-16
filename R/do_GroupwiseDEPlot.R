@@ -47,14 +47,8 @@ do_GroupwiseDEPlot <- function(sample,
                                axis.text.face = "bold",
                                legend.title.face = "bold",
                                legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
@@ -193,7 +187,7 @@ do_GroupwiseDEPlot <- function(sample,
   }
   
   data.use <- data.use %>% 
-              dplyr::select(-dplyr::all_of(c("combination"))) %>% 
+              dplyr::select(-dplyr::all_of("combination")) %>% 
               dplyr::mutate("gene" = factor(.data$gene, levels = genes.use),
                             "cluster" = factor(.data$cluster, levels = rev(unique(data.use$cluster))))
   
@@ -311,7 +305,7 @@ do_GroupwiseDEPlot <- function(sample,
                                  slot = slot)[genes.use, ] %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "gene") %>% 
-            tidyr::pivot_longer(cols = -dplyr::all_of(c("gene")),
+            tidyr::pivot_longer(cols = -dplyr::all_of("gene"),
                                 names_to = "cell",
                                 values_to = "expression") %>% 
             dplyr::left_join(y = {sample@meta.data %>% 
@@ -329,8 +323,8 @@ do_GroupwiseDEPlot <- function(sample,
   
   
   # Compute limits.
-  min.vector <- c()
-  max.vector <- c()
+  min.vector <- NULL
+  max.vector <- NULL
   
   for (group in group.by){
     data.limits <- list.exp[[group]]

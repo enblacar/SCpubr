@@ -48,14 +48,8 @@ do_ExpressionHeatmap <- function(sample,
                                  legend.title.face = "bold",
                                  legend.text.face = "plain"){
 
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
@@ -160,7 +154,7 @@ do_ExpressionHeatmap <- function(sample,
                    crayon_body(" of the specified "),
                    crayon_key("assay"),
                    crayon_body(" (default assay if not):/n"),
-                   paste(sapply(features[!features %in% rownames(sample)], crayon_key), collapse = crayon_body(", "))), call. = FALSE)
+                   paste(vapply(features[!features %in% rownames(sample)], crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", "))), call. = FALSE)
   }
 
   # Check the different values of group.by.
@@ -208,7 +202,7 @@ do_ExpressionHeatmap <- function(sample,
                                   tibble::rownames_to_column(var = "cell")},
                                   by = "cell") %>%
             dplyr::select(-"cell") %>%
-            tidyr::pivot_longer(cols = -c("group.by"),
+            tidyr::pivot_longer(cols = -"group.by",
                                 names_to = "gene",
                                 values_to = "expression") %>%
             dplyr::group_by(.data$group.by, .data$gene) %>%
@@ -269,8 +263,8 @@ do_ExpressionHeatmap <- function(sample,
   }
 
   # Compute limits.
-  min.vector <- c()
-  max.vector <- c()
+  min.vector <- NULL
+  max.vector <- NULL
 
   for (group in group.by){
     data <- matrix.list[[group]][["data"]]

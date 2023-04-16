@@ -413,41 +413,42 @@ return_dependencies <- function(){
                                     "grid",
                                     "assertthat",
                                     "RColorBrewer",
-                                    "labeling"),
-                   "do_AffinityAnalysisPlot" = c("decoupleR"),
-                   "do_AlluvialPlot" = c("ggalluvial"),
-                   "do_AzimuthAnalysisPlot" = c(),
+                                    "labeling",
+                                    "withr"),
+                   "do_AffinityAnalysisPlot" = "decoupleR",
+                   "do_AlluvialPlot" = "ggalluvial",
+                   "do_AzimuthAnalysisPlot" = NULL,
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
-                   "do_BoxPlot" = c("ggsignif"),
+                   "do_BoxPlot" = "ggsignif",
                    "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
-                   "do_ChordDiagramPlot" = c("circlize"),
-                   "do_ColorPalette" = c(),
-                   "do_CopyNumberVariantPlot" = c("ggdist"),
-                   "do_CorrelationPlot" = c(),
+                   "do_ChordDiagramPlot" = "circlize",
+                   "do_ColorPalette" = NULL,
+                   "do_CopyNumberVariantPlot" = "ggdist",
+                   "do_CorrelationPlot" = NULL,
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
-                   "do_DotPlot" = c(),
-                   "do_EnrichmentHeatmap" = c(),
-                   "do_ExpressionHeatmap" = c(),
+                   "do_DotPlot" = NULL,
+                   "do_EnrichmentHeatmap" = NULL,
+                   "do_ExpressionHeatmap" = NULL,
                    "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
-                   "do_GeyserPlot" = c("ggdist"),
+                   "do_GeyserPlot" = "ggdist",
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
-                   "do_GroupwiseDEPlot" = c(),
-                   "do_MetadataPlot" = c("cluster"),
-                   "do_LigandReceptorPlot" = c("liana"),
-                   "do_LoadingsPlot" = c(),
-                   "do_DiffusionMapPlot" = c("Matrix"),
-                   "do_NebulosaPlot" = c("Nebulosa"),
-                   "do_PathwayActivityPlot" = c(),
-                   "do_RidgePlot" = c("ggridges"),
-                   "do_SCExpressionHeatmap" = c(),
-                   "do_SCEnrichmentHeatmap" = c(),
-                   "do_TermEnrichmentPlot" = c(),
-                   "do_TFActivityPlot" = c(),
-                   "do_ViolinPlot" = c(),
-                   "do_VolcanoPlot" = c("ggrepel"),
-                   "save_Plot" = c("svglite"))
+                   "do_GroupwiseDEPlot" = NULL,
+                   "do_MetadataPlot" = "cluster",
+                   "do_LigandReceptorPlot" = "liana",
+                   "do_LoadingsPlot" = NULL,
+                   "do_DiffusionMapPlot" = "Matrix",
+                   "do_NebulosaPlot" = "Nebulosa",
+                   "do_PathwayActivityPlot" = NULL,
+                   "do_RidgePlot" = "ggridges",
+                   "do_SCExpressionHeatmap" = NULL,
+                   "do_SCEnrichmentHeatmap" = NULL,
+                   "do_TermEnrichmentPlot" = NULL,
+                   "do_TFActivityPlot" = NULL,
+                   "do_ViolinPlot" = NULL,
+                   "do_VolcanoPlot" = "ggrepel",
+                   "save_Plot" = "svglite")
   return(pkg_list)
 }
 
@@ -478,14 +479,14 @@ check_suggests <- function(function_name, passive = FALSE){
     pkgs <- pkgs[!(pkgs %in% c("Seurat", "SeuratObject"))]
   }
 
-  pkgs <- sapply(pkgs, requireNamespace, quietly = TRUE)
+  pkgs <- vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
   # nocov start
   if(sum(!pkgs) > 0){
     missing_pkgs <- names(pkgs[isFALSE(pkgs)])
     if (isFALSE(passive)){
       if (isFALSE(requireNamespace("cli", quietly = TRUE))){
         stop(paste0(add_cross(), crayon_body("Packages "), 
-                    paste(sapply(missing_pkgs, crayon_key), collapse = crayon_body(", ")), 
+                    paste(vapply(missing_pkgs, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")), 
                     crayon_body(" must be installed to use "), 
                     crayon_key(function_name), 
                     crayon_body(".")), call. = FALSE)
@@ -555,7 +556,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
           }
         }
         crayon_key(func)
-        paste(sapply(packages, crayon_body), collapse = ", ")
+        paste(vapply(packages, crayon_body, FUN.VALUE = character(1)), collapse = ", ")
       } else {
         # nocov end
         format_installed <- function(name, value, max_length){
@@ -601,30 +602,30 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
             packages <- packages[packages != "Seurat"]
           }
           
-          check_installed <- sapply(packages, requireNamespace, quietly = TRUE)
+          check_installed <- vapply(packages, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
           
           
-          packages.print <- c()
+          packages.print <- NULL
           for(item in sort(names(check_installed))){
-            packages.print <- c(packages.print, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
+            packages.print <- append(packages.print, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
           }
           
           counter <- 0
           print.list <- list()
-          print.vector <- c()
+          print.vector <- NULL
           for(item in packages.print){
             counter <- counter + 1
             
             if (counter %% 5 != 0){
-              print.vector <- c(print.vector, item)
+              print.vector <- append(print.vector, item)
               if (counter == length(packages.print)){
                 print.list[[item]] <- paste(print.vector, collapse = "     ")
-                print.vector <- c()
+                print.vector <- NULL
               }
             } else {
-              print.vector <- c(print.vector, item)
+              print.vector <- append(print.vector, item)
               print.list[[item]] <- paste(print.vector, collapse = "     ")
-              print.vector <- c()
+              print.vector <- NULL
             }
           }
           
@@ -755,22 +756,22 @@ package_report <- function(startup = FALSE){
     functions <- sort(unique(names(check_dependencies(return_dependencies = TRUE))))
     
     if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
-      names.use <- unname(sapply(functions, function(x){if (x %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){x <- paste0(x, cli::col_yellow(" | DEV"))} else {x}}))
-      functions <- sapply(functions, check_suggests, passive = TRUE)
+      names.use <- unname(vapply(functions, function(x){if (x %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){x <- paste0(x, cli::col_yellow(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+      functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       names(functions) <- names.use
       # nocov start
     } else {
       functions <- functions[!(functions %in% c("do_LigandReceptorPlot", "save_Plot"))]
-      functions <- sapply(functions, check_suggests, passive = TRUE)
+      functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
     }
     # nocov end
     
     
     functions <- functions[names(functions) != "Essentials"]
     
-    check_installed <- sapply(packages, requireNamespace, quietly = TRUE)
-    max_length <- max(sapply(packages, nchar))
-    max_length_functions <- max(sapply(names(functions), nchar))
+    check_installed <- vapply(packages, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
+    max_length <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
+    max_length_functions <- max(vapply(names(functions), nchar, FUN.VALUE = numeric(1)))
     format_installed <- function(name, value, max_length){
       func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
       name_use <- ifelse(isTRUE(value),
@@ -779,34 +780,34 @@ package_report <- function(startup = FALSE){
       paste0(func_use, " ", name_use)
     }
     
-    packages <- c()
+    packages <- NULL
     for(item in names(check_installed)){
-      packages <- c(packages, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
+      packages <- append(packages, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
     }
     
-    functions.use <- c()
+    functions.use <- NULL
     for(item in names(functions)){
-      functions.use <- c(functions.use, format_installed(name = item, value = functions[[item]], max_length = max_length_functions))
+      functions.use <- append(functions.use, format_installed(name = item, value = functions[[item]], max_length = max_length_functions))
     }
     
     counter <- 0
     print.list <- list()
     print.list.functions <- list()
-    print.vector <- c()
-    print.vector.functions <- c()
+    print.vector <- NULL
+    print.vector.functions <- NULL
     for(item in packages){
       counter <- counter + 1
       
       if (counter %% 5 != 0){
-        print.vector <- c(print.vector, item)
+        print.vector <- append(print.vector, item)
         if (counter == length(packages)){
           print.list[[item]] <- paste(print.vector, collapse = "     ")
-          print.vector <- c()
+          print.vector <- NULL
         }
       } else {
-        print.vector <- c(print.vector, item)
+        print.vector <- append(print.vector, item)
         print.list[[item]] <- paste(print.vector, collapse = "     ")
-        print.vector <- c()
+        print.vector <- NULL
       }
     }
     
@@ -815,14 +816,14 @@ package_report <- function(startup = FALSE){
       counter <- counter + 1
       
       if (counter %% 4 != 0){
-        print.vector.functions <- c(print.vector.functions, item)
+        print.vector.functions <- append(print.vector.functions, item)
         if (counter == length(functions.use)){
           print.list.functions[[item]] <- paste(print.vector.functions, collapse = "     ")
         }
       } else {
-        print.vector.functions <- c(print.vector.functions, item)
+        print.vector.functions <- append(print.vector.functions, item)
         print.list.functions[[item]] <- paste(print.vector.functions, collapse = "     ")
-        print.vector.functions <- c()
+        print.vector.functions <- NULL
       }
       
       
@@ -927,10 +928,10 @@ check_Seurat <- function(sample){
 #' TBD
 #' }
 check_colors <- function(colors, parameter_name = "") {
-  check <- sapply(colors, function(color) {
+  check <- vapply(colors, function(color) {
     tryCatch(is.matrix(grDevices::col2rgb(colors)),
              error = function(e) FALSE)
-  })
+  }, FUN.VALUE = logical(1))
   # Check for cols.highlight.
   assertthat::assert_that(sum(check) == length(colors),
                           msg = paste0(add_cross(), crayon_body("The colors provided to "),
@@ -955,8 +956,8 @@ check_colors <- function(colors, parameter_name = "") {
 #' }
 check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL){
 
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
@@ -986,16 +987,16 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
       paste0(func_use, " ", name_use)
     }
       
-      color_check <- sapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)})
+      color_check <- vapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)}, FUN.VALUE = logical(1))
       
-      max_length <- max(sapply(check_values, nchar))
-      max_length_colors <- max(sapply(unname(colors), nchar))
+      max_length <- max(vapply(check_values, nchar, FUN.VALUE = numeric(1)))
+      max_length_colors <- max(vapply(unname(colors), nchar, FUN.VALUE = numeric(1)))
       length.use <- max_length + 3 + max_length_colors
       
       
-      colors.print <- c()
+      colors.print <- NULL
       for(item in sort(names(color_check))){
-        colors.print <- c(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
+        colors.print <- append(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
       }
       
       
@@ -1085,7 +1086,6 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
     assay <- Seurat::DefaultAssay(sample)
   }
   if (is.null(reduction)){
-    dim_colnames <- c()
     for(red in Seurat::Reductions(object = sample)){
       if (feature %in% colnames(sample@reductions[[red]][[]])){
         reduction <- red
@@ -1359,7 +1359,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     features_check <- features
   }
   check_enforcers <- list() # Store the results of the checks.
-  not_found_features <- c() # Store the features not found.
+  not_found_features <- NULL # Store the features not found.
   # Check each of the features.
   for (feature in features_check){
     check <- 0
@@ -1377,9 +1377,9 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       check_enforcers[["metadata"]] <- TRUE
     }
 
-    dim_colnames <- c()
+    dim_colnames <- NULL
     for(red in Seurat::Reductions(object = sample)){
-      dim_colnames <- c(dim_colnames, colnames(sample@reductions[[red]][[]]))
+      dim_colnames <- append(dim_colnames, colnames(sample@reductions[[red]][[]]))
     }
     if (!(feature %in% dim_colnames)){
       check <- check + 1
@@ -1389,7 +1389,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     }
 
     if (check == 3) {
-      not_found_features <- c(not_found_features, feature)
+      not_found_features <- append(not_found_features, feature)
     }
   }
   
@@ -1411,7 +1411,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                               msg = paste0(add_cross(), crayon_body("The following "),
                                            crayon_key("features"),
                                            crayon_body(" were not be found:"),
-                                           paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
+                                           paste(vapply(not_found_features, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                                            crayon_body(".")))
     }
   } else {
@@ -1484,7 +1484,7 @@ remove_duplicated_features <- function(features){
     }
   } else if (is.list(features)){
     features_out <- list()
-    all_genes <- c() # Will update with the genes as they iterate to check duplicates.
+    all_genes <- NULL # Will update with the genes as they iterate to check duplicates.
     for (list_name in names(features)){
       genes <- features[[list_name]]
       # Remove genes duplicated within the list.
@@ -1498,7 +1498,7 @@ remove_duplicated_features <- function(features){
       genes <- genes[!(duplicated(genes))]
       # Remove genes duplicated in the vector of all genes.
       duplicated_features <- genes[genes %in% all_genes]
-      all_genes <- c(all_genes, genes[!(genes %in% all_genes)])
+      all_genes <- append(all_genes, genes[!(genes %in% all_genes)])
       genes <- genes[!(genes %in% duplicated_features)]
       if (length(duplicated_features) > 0){
         warning(paste0(add_warning(),crayon_body("Found duplicated features:\n"),
@@ -1850,14 +1850,14 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
   if (num_plots == 1){
     # Find the index in which the scale is stored.
     # Adapted from: https://stackoverflow.com/a/46003178
-    x <- which(sapply(p$scales$scales, function(x) scale %in% x$aesthetics))
+    x <- which(vapply(p$scales$scales, function(x){scale %in% x$aesthetics}, FUN.VALUE = logical(1)))
     # Remove it.
     p$scales$scales[[x]] <- NULL
   } else {
     for (i in seq(1, num_plots)){
       # Find the index in which the scale is stored.
       # Adapted from: https://stackoverflow.com/a/46003178
-      x <- which(sapply(p[[i]]$scales$scales, function(x) scale %in% x$aesthetics))
+      x <- which(vapply(p[[i]]$scales$scales, function(x){scale %in% x$aesthetics}, FUN.VALUE = logical(1)))
       # Remove it.
       p[[i]]$scales$scales[[x]] <- NULL
     }
@@ -1973,7 +1973,7 @@ compute_enrichment_scores <- function(sample,
     }
   }
   if (flavor == "UCell"){
-    list.names <- c()
+    list.names <- NULL
     for (celltype in names(input_gene_list)){
       col_name <- celltype
       col_name <- stringr::str_replace_all(col_name, "-", ">")
@@ -2138,10 +2138,10 @@ get_data_column <- function(sample,
                             assay,
                             slot){
   `%>%` <- magrittr::`%>%`
-  dim_colnames <- c()
+  dim_colnames <- NULL
   for(red in Seurat::Reductions(object = sample)){
     col.names <- colnames(sample@reductions[[red]][[]])
-    dim_colnames <- c(dim_colnames, col.names)
+    dim_colnames <- append(dim_colnames, col.names)
     if (feature %in% col.names){
       # Get the reduction in which the feature is, if this is the case.
       reduction <- red
@@ -2157,16 +2157,16 @@ get_data_column <- function(sample,
     feature_column <- .GetAssayData(sample = sample,
                                     assay = assay,
                                     slot = slot)[feature, , drop = FALSE] %>%
-      as.matrix() %>%
-      t() %>%
-      as.data.frame() %>%
-      tibble::rownames_to_column(var = "cell") %>%
-      dplyr::rename("feature" = dplyr::all_of(c(feature)))
+                      as.matrix() %>%
+                      t() %>%
+                      as.data.frame() %>%
+                      tibble::rownames_to_column(var = "cell") %>%
+                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% dim_colnames)){
     feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
-      as.data.frame() %>%
-      tibble::rownames_to_column(var = "cell") %>%
-      dplyr::rename("feature" = dplyr::all_of(c(feature)))
+                      as.data.frame() %>%
+                      tibble::rownames_to_column(var = "cell") %>%
+                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   }
   return(feature_column)
 }
@@ -2545,21 +2545,21 @@ check_parameters <- function(parameter,
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(sapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key), collapse = crayon_body(", ")),
+                                         paste(vapply(c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   } else if (parameter_name == "sequential.palette"){
     assertthat::assert_that(parameter %in% c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(sapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key), collapse = crayon_body(", ")),
+                                         paste(vapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   }  else if (parameter_name %in% c("plot.title.face", "plot.subtitle.face", "plot.caption.face", "axis.title.face", "axis.text.face", "legend.title.face", "legend.text.face", "strip.text.face")){
     assertthat::assert_that(parameter %in% c("plain", "italic", "bold", "bold.italic"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(sapply(c("plain", "italic", "bold", "bold.italic"), crayon_key), collapse = crayon_body(", ")),
+                                         paste(vapply(c("plain", "italic", "bold", "bold.italic"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   }
 }
@@ -2743,7 +2743,7 @@ do_GroupedGO_matrices <- function(genes,
   # Convert genes to ENTREZIDs.
   suppressMessages({
     conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
-                                       toType = c("ENTREZID"),
+                                       toType = "ENTREZID",
                                        OrgDb = org.db)
   })
 
@@ -2911,7 +2911,7 @@ compute_umap_layer <- function(sample,
                                      tibble::rownames_to_column(var = "cell"),
                                    by = "cell") %>%
                   tibble::column_to_rownames(var = "cell")
-    colnames(embeddings) <- c(colnames(embeddings)[1:length(colnames(embeddings)) - 1], "group.by")
+    colnames(embeddings) <- c(colnames(embeddings)[seq(1, (length(colnames(embeddings)) - 1))], "group.by")
 
 
     density.center.group.by <- embeddings %>%
@@ -2935,7 +2935,7 @@ compute_umap_layer <- function(sample,
                                      tibble::rownames_to_column(var = "cell"),
                                    by = "cell") %>%
                   tibble::column_to_rownames(var = "cell")
-    colnames(embeddings) <- c(colnames(embeddings)[1:length(colnames(embeddings)) - 1], "split.by")
+    colnames(embeddings) <- c(colnames(embeddings)[seq(1, (length(colnames(embeddings)) - 1))], "split.by")
   }
 
   # Apply filtering criteria:

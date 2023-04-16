@@ -51,14 +51,8 @@ do_ViolinPlot <- function(sample,
                           axis.text.face = "bold",
                           legend.title.face = "bold",
                           legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_ViolinPlot")
   # Check if the sample provided is a Seurat object.
@@ -199,12 +193,14 @@ do_ViolinPlot <- function(sample,
   counter <- 0
 
   # Get the feature limits.
-  max_values <- c()
-  min_values <- c()
+  max_values <- NULL
+  min_values <- NULL
+  
   for(feature in features){
     max_values <- append(max_values, max(get_data_column(sample = sample, feature = feature, assay = assay, slot = slot)[, "feature"], na.rm = TRUE))
     min_values <- append(min_values, min(get_data_column(sample = sample, feature = feature, assay = assay, slot = slot)[, "feature"], na.rm = TRUE))
   }
+  
   limits <- c(min(min_values), max(max_values))
 
   for (feature in features){

@@ -58,14 +58,8 @@ do_LigandReceptorPlot <- function(liana_output,
                                   legend.title.face = "bold",
                                   legend.text.face = "plain",
                                   return_interactions = FALSE){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")

@@ -64,14 +64,8 @@ do_EnrichmentHeatmap <- function(sample,
                                  axis.text.face = "bold",
                                  legend.title.face = "bold",
                                  legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_EnrichmentHeatmap")
   # Check if the sample provided is a Seurat object.
@@ -296,7 +290,7 @@ do_EnrichmentHeatmap <- function(sample,
 
       df <- sample@meta.data %>%
             dplyr::select(dplyr::all_of(c("group.by", names(input_list)))) %>%
-            tidyr::pivot_longer(cols = -c("group.by"),
+            tidyr::pivot_longer(cols = -"group.by",
                                 names_to = "gene_list",
                                 values_to = "enrichment") %>%
             dplyr::group_by(.data$group.by, .data$gene_list) %>%
@@ -365,8 +359,8 @@ do_EnrichmentHeatmap <- function(sample,
 
 
   # Compute limits.
-  min.vector <- c()
-  max.vector <- c()
+  min.vector <- NULL
+  max.vector <- NULL
 
   for (group in group.by){
     data <- matrix.list[[group]][["data"]]

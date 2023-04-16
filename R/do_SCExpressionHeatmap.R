@@ -64,14 +64,8 @@ do_SCExpressionHeatmap <- function(sample,
                                    axis.text.face = "bold",
                                    legend.title.face = "bold",
                                    legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
@@ -182,7 +176,7 @@ do_SCExpressionHeatmap <- function(sample,
                      crayon_body(" using the slot "),
                      crayon_key(slot),
                      crayon_body(":\n"),
-                     paste(sapply(missing_features, crayon_key), collapse = crayon_body(", "))), call. = FALSE)
+                     paste(vapply(missing_features, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", "))), call. = FALSE)
     }
   }
 
@@ -265,7 +259,7 @@ do_SCExpressionHeatmap <- function(sample,
     for (item in order.use){
       cells.use <- matrix %>%
         dplyr::filter(.data[[group.by]] == item) %>%
-        dplyr::pull(dplyr::all_of(c("cell")))
+        dplyr::pull(dplyr::all_of("cell"))
       
       matrix.subset <- matrix %>% 
                        dplyr::ungroup() %>% 

@@ -63,14 +63,8 @@ do_AffinityAnalysisPlot <- function(sample,
                                     axis.text.face = "bold",
                                     legend.title.face = "bold",
                                     legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests("do_AffinityAnalysisPlot")
   
@@ -78,16 +72,6 @@ do_AffinityAnalysisPlot <- function(sample,
   
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
   if (is.null(slot)){slot <- check_and_set_slot(slot)}
-  
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
-  
   
   # Check logical parameters.
   logical_list <- list("verbose" = verbose,
@@ -231,7 +215,7 @@ do_AffinityAnalysisPlot <- function(sample,
   # Turn them into a matrix compatible to turn into a Seurat assay.
   acts.matrix <- acts %>% 
                  dplyr::filter(.data$statistic == .env$statistic) %>% 
-                 tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
+                 tidyr::pivot_wider(id_cols = dplyr::all_of("source"),
                                     names_from = "condition",
                                     values_from = "score") %>%
                  tibble::column_to_rownames('source')
@@ -344,8 +328,8 @@ do_AffinityAnalysisPlot <- function(sample,
   
   
   # Compute limits.
-  min.vector <- c()
-  max.vector <- c()
+  min.vector <- NULL
+  max.vector <- NULL
   
   for (group in group.by){
     data.limits <-  list.data[[group]][["data.mean"]]
@@ -566,9 +550,9 @@ do_AffinityAnalysisPlot <- function(sample,
     }
     
     if (isFALSE(flip)){
-      layout <- paste(c(base::LETTERS[1:length(group.by)], 
+      layout <- paste(c(base::LETTERS[seq_len(length(group.by))], 
                         "\n", 
-                        base::LETTERS[(length(group.by) + 1):(2 * length(group.by))]), 
+                        base::LETTERS[seq((length(group.by) + 1), (2 * length(group.by)))]),
                       collapse = "")
       
       p <- patchwork::wrap_plots(list.plots,
@@ -654,7 +638,7 @@ do_AffinityAnalysisPlot <- function(sample,
       
       # Generate 50 randomized control gene sets.
       for (i in seq_len(control.sets.number)){
-        control_genes <- c()
+        control_genes <- NULL
         for (bin in unique(empiric_bin)){
           control.use <- data.avg %>% 
                          tibble::rownames_to_column(var = "gene") %>% 
@@ -662,7 +646,7 @@ do_AffinityAnalysisPlot <- function(sample,
                          dplyr::filter(.data$bin == .env$bin) %>%  
                          dplyr::pull(.data$gene) %>% 
                          sample(size = sum(empiric_bin == bin), replace = FALSE)
-          control_genes <- c(control_genes, control.use)
+          control_genes <- append(control_genes, control.use)
         }
         geneset_list[[paste0("Control.", i)]] <- control_genes
       }
@@ -691,7 +675,7 @@ do_AffinityAnalysisPlot <- function(sample,
       # Turn them into a matrix, scale, center and get the average across cells.
       acts.matrix <- acts %>% 
                      dplyr::filter(.data$statistic == .env$statistic) %>% 
-                     tidyr::pivot_wider(id_cols = dplyr::all_of(c("source")),
+                     tidyr::pivot_wider(id_cols = dplyr::all_of("source"),
                                         names_from = "condition",
                                         values_from = "score") %>%
                      tibble::column_to_rownames('source') 
@@ -741,7 +725,7 @@ do_AffinityAnalysisPlot <- function(sample,
                                    tibble::rownames_to_column(var = "cell"),
                                  by = "cell") %>% 
                 dplyr::select(-dplyr::all_of(c("deleteme", "cell"))) %>% 
-                tidyr::pivot_longer(cols = -dplyr::all_of(c("group")),
+                tidyr::pivot_longer(cols = -dplyr::all_of("group"),
                                     names_to = "Sets",
                                     values_to = "Scores")
         

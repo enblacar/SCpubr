@@ -66,14 +66,8 @@ do_RidgePlot <- function(sample,
                          axis.text.face = "bold",
                          legend.title.face = "bold",
                          legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_RidgePlot")
   `%>%` <- magrittr::`%>%`
@@ -204,15 +198,15 @@ do_RidgePlot <- function(sample,
                                     legend.tickwidth = legend.tickwidth)
     } else if (isTRUE(compute_quantiles)){
       if (isTRUE(compute_custom_quantiles)){
-        labels <- c()
+        labels <- NULL
         for (i in seq_along(quantiles)){
           if (i == 1){
-            labels <- c(labels, paste0("[0 , ", quantiles[i], "["))
+            labels <- append(labels, paste0("[0 , ", quantiles[i], "["))
           } else if (i == length(quantiles)){
-            labels <- c(labels, paste0("]", quantiles[i], ", 1]"))
+            labels <- append(labels, paste0("]", quantiles[i], ", 1]"))
           } else {
-            labels <- c(labels, paste0("]", quantiles[i - 1], ", ", quantiles[i], "]"))
-            labels <- c(labels, paste0("]", quantiles[i], ", ", quantiles[i + 1], "]"))
+            labels <- append(labels, paste0("]", quantiles[i - 1], ", ", quantiles[i], "]"))
+            labels <- append(labels, paste0("]", quantiles[i], ", ", quantiles[i + 1], "]"))
           }
         }
         p <- data %>%

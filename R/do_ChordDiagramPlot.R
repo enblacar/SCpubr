@@ -72,14 +72,8 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 annotationTrack = c("grid", "axis"),
                                 padding_labels = 4,
                                 ...){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
 
   `%>%` <- magrittr::`%>%`
   check_suggests(function_name = "do_ChordDiagramPlot")
@@ -180,7 +174,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                          crayon_key("factor"),
                                          crayon_body(" column.")))
 
-    assertthat::assert_that(class(data[["value"]]) %in% c("integer"),
+    assertthat::assert_that("integer" %in% class(data[["value"]]),
                             msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
                                          crayon_key("from"),
                                          crayon_body(" in the dataframe provided to "),
@@ -309,7 +303,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
   }
 
   if (!(is.null(highlight_group))){
-    alpha.colors <- c()
+    alpha.colors <- NULL
     highlight_group <- stringr::str_pad(highlight_group, width = max_char, side = "both")
     for (color in names(colors.use)){
       name <- color

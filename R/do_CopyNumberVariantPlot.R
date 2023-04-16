@@ -53,14 +53,8 @@ do_CopyNumberVariantPlot <- function(sample,
                                      axis.text.face = "bold",
                                      legend.title.face = "bold",
                                      legend.text.face = "plain"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests("do_CopyNumberVariantPlot")
   
@@ -206,11 +200,11 @@ do_CopyNumberVariantPlot <- function(sample,
           scores.assay[[scores_name]] <- sample@meta.data %>%
                                          dplyr::mutate("cells" = colnames(sample)) %>%
                                          dplyr::left_join(y = {sample@meta.data %>%
-                                                               dplyr::select(dplyr::all_of(c("metacell_mapping"))) %>%
+                                                               dplyr::select(dplyr::all_of("metacell_mapping")) %>%
                                                                tibble::rownames_to_column(var = "cells") %>%
-                                                               dplyr::left_join(y = {CNV_scores_final %>% dplyr::rename("metacell_mapping" = dplyr::all_of(c("cells")))},
+                                                               dplyr::left_join(y = {CNV_scores_final %>% dplyr::rename("metacell_mapping" = dplyr::all_of("cells"))},
                                                                                 by = "metacell_mapping") %>%
-                                                               dplyr::select(-dplyr::all_of(c("metacell_mapping")))},
+                                                               dplyr::select(-dplyr::all_of("metacell_mapping"))},
                                                           by = "cells") %>%
                                          tibble::column_to_rownames(var = "cells") %>% 
                                          dplyr::select(.env$scores_name)
@@ -257,8 +251,7 @@ do_CopyNumberVariantPlot <- function(sample,
                  dplyr::group_by(.data[[group]], .data$Event) %>% 
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
     
-    events <- c(as.character(seq(1,22)), sapply(seq(1,22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}))
-    
+    events <- c(as.character(seq(1,22)), vapply(seq(1,22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
     if (isFALSE(flip)){
       factor.levels <- events[events %in% unique(data.use$Event)]
     } else {
@@ -271,8 +264,8 @@ do_CopyNumberVariantPlot <- function(sample,
   }
   
   # Compute limits.
-  min.vector <- c()
-  max.vector <- c()
+  min.vector <- NULL
+  max.vector <- NULL
   
   for (group in group.by){
     data.limits <- list.data[[group]][["data"]]

@@ -81,7 +81,7 @@ save_Plot <- function(plot,
 
   # is ggplot?
 
-  if (sum(class(plot) %in% c("ggplot")) >= 1){
+  if (sum(class(plot) %in% "ggplot") >= 1){
     # Having width = NULL and height = NULL will make the ggsave() function crash.
     for (device in devices_use){
         suppressMessages({
@@ -130,7 +130,7 @@ save_Plot <- function(plot,
 
     })
 
-  } else if (sum(class(plot) %in% c("pheatmap")) >= 1){
+  } else if (sum(class(plot) %in% "pheatmap") >= 1){
     suppressMessages({
       filename <- paste0(figure_path, "/", file_name)
       if ("png" %in% devices_use){
@@ -164,7 +164,7 @@ save_Plot <- function(plot,
         grDevices::dev.off()
       }
     })
-  } else if (sum(class(plot) %in% c("recordedplot")) >= 1){
+  } else if (sum(class(plot) %in% "recordedplot") >= 1){
     suppressMessages({
       filename <- paste0(figure_path, "/", file_name)
       if ("png" %in% devices_use){

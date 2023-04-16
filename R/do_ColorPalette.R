@@ -30,14 +30,8 @@ do_ColorPalette <- function(colors.use,
                             plot = FALSE,
                             font.size = 14,
                             font.type = "sans"){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
   
   check_suggests(function_name = "do_ColorPalette")
   # Check logical parameters.
@@ -195,7 +189,7 @@ do_ColorPalette <- function(colors.use,
     # Define blank labels.
     count <- 0
     if ("grey75" %in% colors.use){
-      names.vector <- c()
+      names.vector <- NULL
       # Iterate over each color.
       for (name in names(colors.use)){
         if (colors.use[name] == "grey75"){
@@ -204,7 +198,7 @@ do_ColorPalette <- function(colors.use,
         } else {
           label.use <- name
         }
-        names.vector <- c(names.vector, label.use)
+        names.vector <- append(names.vector, label.use)
       }
       names(colors.use) <- names.vector
       df[["names"]] <- factor(names(colors.use), levels = names(colors.use))

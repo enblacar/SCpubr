@@ -43,14 +43,8 @@ do_AzimuthAnalysisPlot <- function(sample,
                                    sequential.palette = "YlGnBu",
                                    sequential.direction = -1,
                                    number.breaks = 5){
-  # Get defaults user warning length.
-  length.use <- getOption("warning.length")
-  
-  # Restore the warning length on exit.
-  on.exit(options(warning.length = length.use))
-  
-  # Set warning length to maximum.
-  options(warning.length = 8170)
+  # Add lengthy error messages.
+  withr::local_options(.new = list("warning.length" = 8170))
 
   check_suggests(function_name = "do_AzimuthAnalysisPlot")
 

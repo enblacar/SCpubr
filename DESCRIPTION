@@ -70,6 +70,7 @@ Suggests:
     cluster,
     decoupleR,
     cli,
+    withr,
     liana (>= 0.1.6)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
