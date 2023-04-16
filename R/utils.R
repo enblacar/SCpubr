@@ -2552,14 +2552,14 @@ check_parameters <- function(parameter,
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(vapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
+                                         paste(vapply(c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   }  else if (parameter_name %in% c("plot.title.face", "plot.subtitle.face", "plot.caption.face", "axis.title.face", "axis.text.face", "legend.title.face", "legend.text.face", "strip.text.face")){
     assertthat::assert_that(parameter %in% c("plain", "italic", "bold", "bold.italic"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
-                                         paste(vapply(c("plain", "italic", "bold", "bold.italic"), crayon_key, FUN.VALUE = chracter(1)), collapse = crayon_body(", ")),
+                                         paste(vapply(c("plain", "italic", "bold", "bold.italic"), crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
   }
 }
