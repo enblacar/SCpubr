@@ -9,21 +9,37 @@ assignees: ''
 
 <!-- 
 -----------------------------------------------------------------------------------
-Hello! Thanks for opening an Issue to SCpubr!
+Hello! 
 
-Please, replace the content of the code placeholders (denoted with these quotes 
+Thanks for opening an Issue in SCpubr!
+
+Here are some guidelines to correctly generate an Issue for SCpubr:
+
+Put all relevant information asked inside of the code placeholders, 
+which are denoted by these quotes:
+
 ``` 
+# Some important info goes here.
 ```
-) with the relevant information being asked. 
 
-Please, put everything, excluding the initial salutation, in the code placeholders
-(it will make the issue very neat, structured and easy to read).
+or 
 
-Please, follow the title scheme so that other people can find the issues faster. 
+```r
+# Some R code goes here.
+```
+
+The only exception is the initial salutation, which should go as normal text.
+This will make the Issue look neat, structured and easy to read :P 
+
+Finally, provide a title following the suggested scheme:
+
+Scheme: 
+BUG | function name | Description
+
 Example: 
 BUG | do_FeaturePlot | Doing this causes this problem.
 
-Best,
+Thanks a lot!
 Enrique
 -----------------------------------------------------------------------------------
 -->
