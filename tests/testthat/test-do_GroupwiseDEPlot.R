@@ -3,7 +3,9 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",
                             slot = "scale.data",
-                            data = as.matrix(sample@assays$SCT$data))
+                            data = as.matrix(.GetAssayData(sample = sample,
+                                                           assay = "SCT",
+                                                           slot = "data")))
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -25,7 +27,9 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",
                             slot = "scale.data",
-                            data = as.matrix(sample@assays$SCT$data))
+                            data = as.matrix(.GetAssayData(sample = sample,
+                                                           assay = "SCT",
+                                                           slot = "data")))
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -105,7 +109,9 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",
                             slot = "scale.data",
-                            data = as.matrix(sample@assays$SCT$data))
+                            data = as.matrix(.GetAssayData(sample = sample,
+                                                           assay = "SCT",
+                                                           slot = "data")))
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -129,7 +135,9 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",
                             slot = "scale.data",
-                            data = as.matrix(sample@assays$SCT$data))
+                            data = as.matrix(.GetAssayData(sample = sample,
+                                                           assay = "SCT",
+                                                           slot = "data")))
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
@@ -151,7 +159,9 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",
                             slot = "scale.data",
-                            data = as.matrix(sample@assays$SCT$data))
+                            data = as.matrix(.GetAssayData(sample = sample,
+                                                           assay = "SCT",
+                                                           slot = "data")))
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
