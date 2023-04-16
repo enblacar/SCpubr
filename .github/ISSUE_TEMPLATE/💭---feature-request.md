@@ -1,9 +1,9 @@
 ---
-name: "\U0001F41B | Bug report"
-about: 'Found a bug?! '
-title: BUG | FUNCTION NAME | BRIEF DESCRIPTION
-labels: bug
-assignees: ''
+name: "\U0001F4AD | Feature request"
+about: Do you have a cool idea you wish to be added to SCpubr?
+title: REQUEST | FUNCTION NAME | DESCRIPTION
+labels: enhancement
+assignees: enblacar
 
 ---
 
@@ -34,36 +34,36 @@ This will make the Issue look neat, structured and easy to read :P
 Finally, provide a title following the suggested scheme:
 
 Scheme: 
-BUG | function name | Description
+REQUEST | function name | Description
 
 Example: 
-BUG | do_FeaturePlot | Doing this causes this problem.
+REQUEST | do_FeaturePlot | I want this to be added.
 
 Thanks a lot!
 Enrique
 -----------------------------------------------------------------------------------
 -->
 
-
 <!-- Initial salutation -->
 
 
-**Bug:**
+**Feature request:**
 ```
-# Your description of the bug goes here.
+# Your description of the feature goes here.
 ```
 
 
-**Reproducible example:**
+**Example:**
 ```r
-# Your reproducible example goes here.
-# How to make a good one: https://www.r-bloggers.com/2020/10/how-to-make-a-reprex/
+# Add an example image of how would you want the output to look like.
+# Can be a screenshot from another source, a sketch concept, etc.
 ```
 
 
-**Error log:**
+**Implementation:**
 ```r
-# Paste the full error log here
+# Do you have any ideas/leads on how to implement your suggestion?
+# If not, just remove this part entirely.
 ```
 
 
@@ -71,10 +71,4 @@ Enrique
 ```r
 # Put the version of SCpubr that you are using here.
 # Can be checked by: utils::packageVersion("SCpubr")
-```
-
-
-**Session info:**
-```r
-# Include the output of sessionInfo() here.
 ```
