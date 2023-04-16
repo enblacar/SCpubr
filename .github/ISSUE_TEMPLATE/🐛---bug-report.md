@@ -3,7 +3,7 @@ name: "\U0001F41B | Bug report"
 about: 'Found a bug?! '
 title: BUG | FUNCTION NAME | BRIEF DESCRIPTION
 labels: bug
-assignees: ''
+assignees: enblacar
 
 ---
 
