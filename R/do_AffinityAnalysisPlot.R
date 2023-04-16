@@ -701,6 +701,7 @@ do_AffinityAnalysisPlot <- function(sample,
       
       # Add the assay to the Seurat object.
       sample@assays$robustness <- assay.add
+      sample@assays$robustness@key <- "robustness_"
       
       # Set it as default assay.
       Seurat::DefaultAssay(sample) <- "robustness"
