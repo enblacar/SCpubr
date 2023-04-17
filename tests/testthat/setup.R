@@ -1,9 +1,8 @@
 de_genes <- readRDS(system.file("extdata/de_genes_example.rds", package = "SCpubr"))
+# nolint start
 if (requireNamespace("Seurat", quietly = TRUE)) {
  suppressMessages(library("Seurat"))
 }
-
-
 
 if (requireNamespace("magrittr", quietly = TRUE)) {
  suppressMessages(library("magrittr"))
@@ -14,8 +13,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   de_genes_scaled <- dplyr::rename(.data = de_genes,
                                    "avg_diff" = "avg_log2FC")
 }
-
-
+# nolint end
 
 sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
@@ -63,6 +61,7 @@ for (func in names(dependencies)){
   dep_check[[func]] <- value
 }
 
+# nolint start
 if (isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
   if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
     suppressMessages(library("org.Hs.eg.db"))
@@ -73,6 +72,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | isFALSE(dep_check[["do_Functi
     org.db <- AnnotationDbi::loadDb(system.file("./extdata/org.Hs.eg.sqlite", package = "org.Hs.eg.db"))
   }
 }
+# nolint end
 
 # Remove this for publication in CRAN.
 if (isFALSE(dep_check[["do_LigandReceptorPlot"]])){
