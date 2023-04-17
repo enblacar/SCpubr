@@ -291,7 +291,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     testthat::expect_error({SCpubr::do_DimPlot(sample = sample,
                                                plot_marginal_distributions = TRUE,
                                                plot_cell_borders = FALSE,
-                                               idents.highlight =  c("1"))})
+                                               idents.highlight =  "1")})
   })
 
   testthat::test_that("do_DimPlot: PASS - title", {

@@ -78,27 +78,27 @@ if (isFALSE(dep_check[["do_ColorPalette"]])){
 
   testthat::test_that("do_BarPlot: FAIL - negative n", {
 
-    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = c("steelblue"), n = -8)})
+    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = "steelblue", n = -8)})
   })
 
   testthat::test_that("do_BarPlot: FAIL - more than one option", {
 
-    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = c("steelblue"), opposite = TRUE, tetradic = TRUE)})
+    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = "steelblue", opposite = TRUE, tetradic = TRUE)})
   })
 
   testthat::test_that("do_BarPlot: FAIL - not a number", {
 
-    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = c("steelblue"), n = "wrong")})
+    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = "steelblue", n = "wrong")})
   })
 
   testthat::test_that("do_BarPlot: WARNING - n set when an option is used", {
 
-    testthat::expect_warning({SCpubr::do_ColorPalette(colors.use = c("steelblue"), n = 8, opposite = TRUE)})
+    testthat::expect_warning({SCpubr::do_ColorPalette(colors.use = "steelblue", n = 8, opposite = TRUE)})
   })
 
   testthat::test_that("do_BarPlot: FAIL - complete output and plot are TRUE", {
 
-    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = c("steelblue"), complete_output = TRUE, plot = TRUE)})
+    testthat::expect_error({SCpubr::do_ColorPalette(colors.use = "steelblue", complete_output = TRUE, plot = TRUE)})
   })
 }
 

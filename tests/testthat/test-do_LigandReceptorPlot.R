@@ -45,7 +45,7 @@ if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
 
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, 
                                        keep_source = c("NK", "B"),
-                                       keep_target = c("CD8 T"))
+                                       keep_target = "CD8 T")
     testthat::expect_type(p, "list")
   })
 

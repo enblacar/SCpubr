@@ -252,10 +252,10 @@ do_GeyserPlot <- function(sample,
 
 
     # Get a vector of all dimensional reduction components.
-    dim_colnames <- c()
+    dim_colnames <- NULL
     for(red in Seurat::Reductions(object = sample)){
       col.names <- colnames(sample@reductions[[red]][[]])
-      dim_colnames <- c(dim_colnames, col.names)
+      dim_colnames <- append(dim_colnames, col.names)
       if (feature %in% col.names){
         # Get the reduction in which the feature is, if this is the case.
         reduction <- red

@@ -259,7 +259,7 @@ if (isFALSE(dep_check[["do_BarPlot"]])){
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")
     sample$factor_seurat_clusters <- factor(sample$seurat_clusters)
     p <- SCpubr::do_BarPlot(sample = sample,
-                            group.by = c("seurat_clusters"),
+                            group.by = "seurat_clusters",
                             split.by = "factor_seurat_clusters",
                             position = "stack",
                             legend.position = "none")

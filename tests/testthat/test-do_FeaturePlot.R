@@ -714,7 +714,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
     cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("EPC1"),
+                                features = "EPC1",
                                 cells.highlight = cells.plot)
     testthat::expect_type(p, "list")
   })
@@ -724,7 +724,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("EPC1"),
+                                features = "EPC1",
                                 idents.highlight = c("1", "2"))
     testthat::expect_type(p, "list")
   })
@@ -735,7 +735,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
     cells.plot <- colnames(sample[, !(sample$seurat_clusters %in% c("2", "5", "8"))])
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("EPC1"),
+                                features = "EPC1",
                                 cells.highlight = cells.plot,
                                 idents.highlight = c("1", "2"))
     testthat::expect_type(p, "list")
@@ -746,7 +746,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("EPC1"),
+                                features = "EPC1",
                                 split.by = "seurat_clusters")
     testthat::expect_type(p, "list")
   })
@@ -756,7 +756,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("EPC1"),
+                                features = "EPC1",
                                 split.by = "seurat_clusters",
                                 split.by.idents = c("1", "2"))
     testthat::expect_type(p, "list")
@@ -778,7 +778,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("nCount_RNA"),
+                                features = "nCount_RNA",
                                 viridis.palette = "F")
     testthat::expect_type(p, "list")
   })
@@ -788,7 +788,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     testthat::expect_warning(SCpubr::do_FeaturePlot(sample,
-                                                    features = list("A" = c("nCount_RNA"))))
+                                                    features = list("A" = "nCount_RNA")))
   })
 
   testthat::test_that("do_FeaturePlot: FAIL - individual titles, subtitles or captions do not match with number of features", {
@@ -811,7 +811,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("nCount_RNA"),
+                                features = "nCount_RNA",
                                 legend.position = "right")
     testthat::expect_type(p, "list")
   })
@@ -826,7 +826,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
     sample@reductions$diffusion <- obj
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("nCount_RNA"),
+                                features = "nCount_RNA",
                                 reduction = "diffusion")
     testthat::expect_type(p, "list")
   })
@@ -836,7 +836,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     testthat::expect_message(SCpubr::do_FeaturePlot(sample,
-                                                    features = c("nCount_RNA"),
+                                                    features = "nCount_RNA",
                                                     split.by = "seurat_clusters",
                                                     split.by.idents = c("2", "2")))
   })
@@ -847,7 +847,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"))
+                                features = "PC_1")
     testthat::expect_type(p, "list")
   })
 
@@ -857,7 +857,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
     sample$factor_seurat_clusters <- factor(sample$seurat_clusters, levels = c("2", "0", "1", "3", "4", "5", "6", "7", "8"))
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 split.by = "factor_seurat_clusters")
     testthat::expect_type(p, "list")
   })
@@ -867,7 +867,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 split.by = "seurat_clusters",
                                 plot.title = "Title",
                                 plot.subtitle = "Subtitle",
@@ -880,7 +880,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 split.by = "seurat_clusters",
                                 reduction = "pca")
     testthat::expect_type(p, "list")
@@ -895,7 +895,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
     obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
     sample@reductions$diffusion <- obj
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 split.by = "seurat_clusters",
                                 reduction = "diffusion")
     testthat::expect_type(p, "list")
@@ -906,7 +906,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 legend.position = "none")
     testthat::expect_type(p, "list")
   })
@@ -916,7 +916,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 legend.type = "normal")
     testthat::expect_type(p, "list")
   })
@@ -926,7 +926,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 legend.type = "colorbar")
     testthat::expect_type(p, "list")
   })
@@ -938,7 +938,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 legend.type = "normal",
                                 split.by = "seurat_clusters")
     testthat::expect_type(p, "list")
@@ -949,7 +949,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample,
-                                features = c("PC_1"),
+                                features = "PC_1",
                                 legend.type = "colorbar",
                                 split.by = "seurat_clusters")
     testthat::expect_type(p, "list")
@@ -962,7 +962,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                  features = c("PC_1"),
+                                                  features = "PC_1",
                                                   legend.type = "wrong"))
   })
 
@@ -971,7 +971,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                  features = c("PC_1"),
+                                                  features = "PC_1",
                                                   legend.position = "wrong"))
   })
   testthat::test_that("do_FeaturePlot: FAIL - wrong font.type", {
@@ -979,7 +979,7 @@ if (isFALSE(dep_check[["do_FeaturePlot"]])){
 
 
     testthat::expect_error(SCpubr::do_FeaturePlot(sample,
-                                                  features = c("PC_1"),
+                                                  features = "PC_1",
                                                   font.type = "wrong"))
   })
 

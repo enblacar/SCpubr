@@ -219,7 +219,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       flip = TRUE,
                                       nbin = 1,
                                       ctrl = 10)
@@ -360,7 +360,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
 
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = list("A" = c("EPC1")),
+                                                         input_gene_list = list("A" = "EPC1"),
                                                          group.by = c("seurat_clusters", "annotation"),
                                                          nbin = 1,
                                                          ctrl = 10,
@@ -368,14 +368,14 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                          geneset.order = "wrong")})
     
     testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = list("A_A" = c("EPC1")),
+                                                         input_gene_list = list("A_A" = "EPC1"),
                                                          group.by = c("seurat_clusters", "annotation"),
                                                          nbin = 1,
                                                          ctrl = 10,
                                                          flip = FALSE)})
     
     testthat::expect_error({SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                                         input_gene_list = c("EPC1"),
+                                                         input_gene_list = "EPC1",
                                                          nbin = 1,
                                                          ctrl = 10)})
   })

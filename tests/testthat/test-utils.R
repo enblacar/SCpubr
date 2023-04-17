@@ -2,23 +2,23 @@ if (isFALSE(dep_check[["utils"]])){
   # CHECK SUGGESTS
   testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_suggests("wrong_name"))
+    testthat::expect_error(check_suggests("wrong_name"))
   })
 
   testthat::test_that("utils: check_suggests - FAIL - Package not installed", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_suggests("testing"))
+    testthat::expect_error(check_suggests("testing"))
   })
 
   testthat::test_that("utils: check_suggests - PASS - Correct function", {
     testthat::skip_on_cran()
-    testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot"))
+    testthat::expect_silent(check_suggests("do_DimPlot"))
   })
 
   testthat::test_that("utils: check_suggests - PASS - Correct function", {
     testthat::skip_on_cran()
-    testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot", passive = TRUE))
-    testthat::expect_silent(SCpubr:::check_suggests("do_DimPlot", passive = FALSE))
+    testthat::expect_silent(check_suggests("do_DimPlot", passive = TRUE))
+    testthat::expect_silent(check_suggests("do_DimPlot", passive = FALSE))
   })
 
 
@@ -58,37 +58,37 @@ if (isFALSE(dep_check[["utils"]])){
   # CHECK SUGGESTS
   testthat::test_that("utils: check_Seurat - FAIL - Not Seurat object", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_Seurat("not a Seurat object"))
+    testthat::expect_error(check_Seurat("not a Seurat object"))
   })
 
   testthat::test_that("utils: check_suggests - PASS - Seurat object", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_silent(SCpubr:::check_Seurat(sample))
+    testthat::expect_silent(check_Seurat(sample))
   })
 
 
   # CHECK COLORS
   testthat::test_that("utils: check_colors - FAIL - wrong color", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_colors("not_a_color"))
+    testthat::expect_error(check_colors("not_a_color"))
 
   })
 
   testthat::test_that("utils: check_colors - FAIL - wrong color in a vector of colors", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_colors(c("not_a_color", "red", "blue")))
+    testthat::expect_error(check_colors(c("not_a_color", "red", "blue")))
   })
 
   testthat::test_that("utils: check_colors - PASS - One color", {
     testthat::skip_on_cran()
-    testthat::expect_silent(SCpubr:::check_colors("red"))
+    testthat::expect_silent(check_colors("red"))
   })
 
   testthat::test_that("utils: check_colors - PASS - Several colors", {
     testthat::skip_on_cran()
-    testthat::expect_silent(SCpubr:::check_colors(c("red", "blue")))
+    testthat::expect_silent(check_colors(c("red", "blue")))
   })
 
 
@@ -100,7 +100,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
+    testthat::expect_error(check_consistency_colors_and_names(sample = sample,
                                                                        colors = c("a" = "red", "b" = "blue"),
                                                                        grouping_variable = "orig.ident"))
   })
@@ -109,7 +109,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
+    testthat::expect_error(check_consistency_colors_and_names(sample = sample,
                                                                        colors = c("a" = "red"),
                                                                        grouping_variable = "orig.ident"))
   })
@@ -118,7 +118,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_consistency_colors_and_names(sample = sample,
+    testthat::expect_error(check_consistency_colors_and_names(sample = sample,
                                                                        colors = c("1" = "red"),
                                                                        grouping_variable = "seurat_clusters"))
   })
@@ -127,7 +127,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_silent(SCpubr:::check_consistency_colors_and_names(sample = sample,
+    testthat::expect_silent(check_consistency_colors_and_names(sample = sample,
                                                                         colors = c("0" = "red",
                                                                                    "1" = "red",
                                                                                    "2" = "red",
@@ -143,7 +143,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_silent(SCpubr:::check_consistency_colors_and_names(sample = sample,
+    testthat::expect_silent(check_consistency_colors_and_names(sample = sample,
                                                                         colors = c("Cell" = "red"),
                                                                         grouping_variable = "orig.ident"))
   })
@@ -163,7 +163,7 @@ if (isFALSE(dep_check[["utils"]])){
 
     testthat::skip_on_cran()
 
-    output <- SCpubr:::compute_scale_limits(sample = sample,
+    output <- compute_scale_limits(sample = sample,
                                             feature = "EPC1")
     testthat::expect_length(output, 2)
   })
@@ -172,7 +172,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::compute_scale_limits(sample = sample,
+    output <- compute_scale_limits(sample = sample,
                                             feature = "orig.ident")
     testthat::expect_length(output, 2)
   })
@@ -181,7 +181,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::compute_scale_limits(sample = sample,
+    output <- compute_scale_limits(sample = sample,
                                             feature = "PC_1")
     testthat::expect_length(output, 2)
   })
@@ -200,7 +200,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_feature(sample = sample,
+    testthat::expect_error(check_feature(sample = sample,
                                                   features = "oris.ident"))
   })
 
@@ -208,7 +208,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_feature(sample = sample,
+    testthat::expect_error(check_feature(sample = sample,
                                                   features = "UMAP_38"))
   })
 
@@ -216,7 +216,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_feature(sample = sample,
+    testthat::expect_error(check_feature(sample = sample,
                                                   features = c("NOTEPC1", "UMAP_38"),
                                                   permissive = TRUE))
   })
@@ -225,7 +225,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_warning(SCpubr:::check_feature(sample = sample,
+    testthat::expect_warning(check_feature(sample = sample,
                                                     features = c("NOTEPC1", "EPC1"),
                                                     permissive = TRUE))
   })
@@ -234,7 +234,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_warning(SCpubr:::check_feature(sample = sample,
+    testthat::expect_warning(check_feature(sample = sample,
                                                     features = c("oris.ident", "orig.ident"),
                                                     permissive = TRUE))
   })
@@ -243,7 +243,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_warning(SCpubr:::check_feature(sample = sample,
+    testthat::expect_warning(check_feature(sample = sample,
                                                     features = c("UMAP_38", "PC_1"),
                                                     permissive = TRUE))
   })
@@ -252,8 +252,8 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    dim_names <- SCpubr:::check_feature(sample = sample,
-                                        features = c("PC_1"),
+    dim_names <- check_feature(sample = sample,
+                                        features = "PC_1",
                                         dump_reduction_names = TRUE)
     expected_output <- 0
     for (dim_red in names(sample@reductions)){
@@ -267,7 +267,7 @@ if (isFALSE(dep_check[["utils"]])){
 
 
     testthat::expect_warning({
-      features <- SCpubr:::check_feature(sample = sample,
+      features <- check_feature(sample = sample,
                                          features = c("PC_1", "PC_99"),
                                          permissive = TRUE)
       testthat::expect_length(features, 1)
@@ -278,8 +278,8 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_feature(sample = sample,
-                                     features = c("PC_1"),
+    output <- check_feature(sample = sample,
+                                     features = "PC_1",
                                      dump_reduction_names = TRUE,
                                      permissive = TRUE)
     testthat::expect_length(output, 2)
@@ -289,8 +289,8 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_feature(sample = sample,
-                                                  features = c("EPC1"),
+    testthat::expect_error(check_feature(sample = sample,
+                                                  features = "EPC1",
                                                   enforce_check = "Gene",
                                                   enforce_parameter = "group.by"))
   })
@@ -299,8 +299,8 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_feature(sample = sample,
-                                                  features = c("EPC1"),
+    testthat::expect_error(check_feature(sample = sample,
+                                                  features = "EPC1",
                                                   enforce_check = "reductions",
                                                   enforce_parameter = "group.by"))
   })
@@ -311,7 +311,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     features <- c("a", "b")
     not_found_features <- ""
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output, 2)
     testthat::expect_type(output, "character")
   })
@@ -320,7 +320,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     features <- c("a", "b")
     not_found_features <- "a"
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output, 1)
     testthat::expect_type(output, "character")
   })
@@ -329,17 +329,17 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     features <- c("a", "b")
     not_found_features <- c("a", "b")
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output, 0)
     testthat::expect_type(output, "character")
   })
 
   testthat::test_that("utils: remove_not_found_features - PASS - 0 features removed - list", {
     testthat::skip_on_cran()
-    features <- list("A" = c("a"),
-                     "B" = c("b"))
+    features <- list("A" = "a",
+                     "B" = "b")
     not_found_features <- ""
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output$A, 1)
     testthat::expect_length(output$B, 1)
     testthat::expect_type(output, "list")
@@ -347,10 +347,10 @@ if (isFALSE(dep_check[["utils"]])){
 
   testthat::test_that("utils: remove_not_found_features - PASS - 1 features removed - list", {
     testthat::skip_on_cran()
-    features <- list("A" = c("a"),
-                     "B" = c("b"))
+    features <- list("A" = "a",
+                     "B" = "b")
     not_found_features <- "a"
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output$A, 0)
     testthat::expect_length(output$B, 1)
     testthat::expect_type(output, "list")
@@ -358,10 +358,10 @@ if (isFALSE(dep_check[["utils"]])){
 
   testthat::test_that("utils: remove_not_found_features - PASS - 2 features removed - list", {
     testthat::skip_on_cran()
-    features <- list("A" = c("a"),
+    features <- list("A" = "a",
                      "B" = c("b"))
     not_found_features <- c("a", "b")
-    output <- SCpubr:::remove_not_found_features(features = features, not_found_features = not_found_features)
+    output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output$A, 0)
     testthat::expect_length(output$B, 0)
     testthat::expect_type(output, "list")
@@ -373,35 +373,35 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: remove_duplicated_features - WARNING - having duplicated features - character", {
     testthat::skip_on_cran()
     features <- c("a", "a")
-    testthat::expect_warning(SCpubr:::remove_duplicated_features(features))
-    output <- suppressWarnings({SCpubr:::remove_duplicated_features(features)})
+    testthat::expect_warning(remove_duplicated_features(features))
+    output <- suppressWarnings({remove_duplicated_features(features)})
     testthat::expect_type(output, "character")
   })
 
   testthat::test_that("utils: remove_duplicated_features - WARNING - having duplicated features across lists - list", {
     testthat::skip_on_cran()
-    features <- list("A" = c("a"),
-                     "B" = c("a"))
-    testthat::expect_warning(SCpubr:::remove_duplicated_features(features))
-    output <- suppressWarnings({SCpubr:::remove_duplicated_features(features)})
+    features <- list("A" = "a",
+                     "B" = "a")
+    testthat::expect_warning(remove_duplicated_features(features))
+    output <- suppressWarnings({remove_duplicated_features(features)})
     testthat::expect_type(output, "list")
   })
 
   testthat::test_that("utils: remove_duplicated_features - WARNING - having duplicated features within lists - list", {
     testthat::skip_on_cran()
     features <- list("A" = c("a", "a"),
-                     "B" = c("b"))
-    testthat::expect_warning(SCpubr:::remove_duplicated_features(features))
-    output <- suppressWarnings({SCpubr:::remove_duplicated_features(features)})
+                     "B" = "b")
+    testthat::expect_warning(remove_duplicated_features(features))
+    output <- suppressWarnings({remove_duplicated_features(features)})
     testthat::expect_type(output, "list")
   })
 
   testthat::test_that("utils: remove_duplicated_features - WARNING - having duplicated features across and between lists - list", {
     testthat::skip_on_cran()
     features <- list("A" = c("a", "a"),
-                     "B" = c("a"))
-    suppressWarnings({testthat::expect_warning(SCpubr:::remove_duplicated_features(features))})
-    output <- suppressWarnings({SCpubr:::remove_duplicated_features(features)})
+                     "B" = "a")
+    suppressWarnings({testthat::expect_warning(remove_duplicated_features(features))})
+    output <- suppressWarnings({remove_duplicated_features(features)})
     testthat::expect_type(output, "list")
 
   })
@@ -413,14 +413,14 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_identity(sample, "wrong_identity"))
+    testthat::expect_error(check_identity(sample, "wrong_identity"))
   })
 
   testthat::test_that("utils: check_identity - PASS - right identity", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_silent(SCpubr:::check_identity(sample, "0"))
+    testthat::expect_silent(check_identity(sample, "0"))
   })
 
 
@@ -433,14 +433,14 @@ if (isFALSE(dep_check[["utils"]])){
     test <- sample
     test@reductions[["pca"]] <- NULL
     test@reductions[["umap"]] <- NULL
-    testthat::expect_error(SCpubr:::check_and_set_reduction(sample = test, reduction = "umap"))
+    testthat::expect_error(check_and_set_reduction(sample = test, reduction = "umap"))
   })
 
   testthat::test_that("utils: check_and_set_reduction - FAIL - wrong reductions", {
 
     testthat::skip_on_cran()
 
-    testthat::expect_error(SCpubr:::check_and_set_reduction(sample = sample, reduction = "wrong_reduction"))
+    testthat::expect_error(check_and_set_reduction(sample = sample, reduction = "wrong_reduction"))
   })
 
   testthat::test_that("utils: check_and_set_reduction - PASS - null reduction, check that the output is the last computed reduction", {
@@ -448,7 +448,7 @@ if (isFALSE(dep_check[["utils"]])){
 
     sample@reductions$ref.umap <- NULL
     sample@reductions$umap <- NULL
-    output <- SCpubr:::check_and_set_reduction(sample = sample)
+    output <- check_and_set_reduction(sample = sample)
     last_reduction <- names(sample@reductions)[length(names(sample@reductions))]
     testthat::expect_identical(output, last_reduction)
   })
@@ -457,7 +457,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
     sample@reductions$ref.umap <- NULL
-    output <- SCpubr:::check_and_set_reduction(sample = sample, reduction = "umap")
+    output <- check_and_set_reduction(sample = sample, reduction = "umap")
     reduction_check <- "umap"
     testthat::expect_identical(output, reduction_check)
   })
@@ -469,7 +469,7 @@ if (isFALSE(dep_check[["utils"]])){
     sample@reductions$umap <- NULL
     sample@reductions$ref.umap <- NULL
     sample@reductions$diffusion <- NULL
-    output <- SCpubr:::check_and_set_reduction(sample = sample)
+    output <- check_and_set_reduction(sample = sample)
     reduction_check <- "pca"
     testthat::expect_identical(output, reduction_check)
   })
@@ -481,21 +481,21 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = "wrong_input"))
+    testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = "wrong_input"))
   })
 
   testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being a pair of integers", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, "wrong_input")))
+    testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, "wrong_input")))
   })
 
   testthat::test_that("utils: check_and_set_dimensions - FAIL - dims not being in the available list of dims", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, 20)))
+    testthat::expect_error(check_and_set_dimensions(sample = sample, reduction = "umap", dims = c(1, 20)))
   })
 
   testthat::test_that("utils: check_and_set_dimensions - FAIL - reduction only having 1 dim", {
@@ -505,14 +505,14 @@ if (isFALSE(dep_check[["utils"]])){
     test <- sample
     obj <- Seurat::CreateDimReducObject(test@reductions$umap[[]][, "UMAP_1", drop = FALSE], key = "UMAP_", assay = "SCT")
     test@reductions$umap <- obj
-    testthat::expect_error(SCpubr:::check_and_set_dimensions(sample = test, reduction = "umap", dims = c(1, 2)))
+    testthat::expect_error(check_and_set_dimensions(sample = test, reduction = "umap", dims = c(1, 2)))
   })
 
   testthat::test_that("utils: check_and_set_dimensions - PASS - NULL parameters", {
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_and_set_dimensions(sample = sample)
+    output <- check_and_set_dimensions(sample = sample)
     testthat::expect_identical(output, c(1, 2))
   })
 
@@ -520,7 +520,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_and_set_dimensions(sample = sample, dims = c(2, 1))
+    output <- check_and_set_dimensions(sample = sample, dims = c(2, 1))
     testthat::expect_identical(output, c(2, 1))
   })
 
@@ -528,7 +528,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_and_set_dimensions(sample = sample, reduction = "pca", dims = c(20, 11))
+    output <- check_and_set_dimensions(sample = sample, reduction = "pca", dims = c(20, 11))
     testthat::expect_identical(output, c(20, 11))
   })
 
@@ -538,7 +538,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_and_set_assay(sample = sample, assay = FALSE))
+    testthat::expect_error(check_and_set_assay(sample = sample, assay = FALSE))
   })
 
   testthat::test_that("utils: check_and_set_assay - FAIL - no assays in object", {
@@ -548,21 +548,21 @@ if (isFALSE(dep_check[["utils"]])){
     test <- sample
     test@assays$RNA <- NULL
     test@assays$SCT <- NULL
-    testthat::expect_error(SCpubr:::check_and_set_assay(sample = test))
+    testthat::expect_error(check_and_set_assay(sample = test))
   })
 
   testthat::test_that("utils: check_and_set_assay - FAIL - assay not present", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_and_set_assay(sample = sample, assay = "ATAC"))
+    testthat::expect_error(check_and_set_assay(sample = sample, assay = "ATAC"))
   })
 
   testthat::test_that("utils: check_and_set_assay - PASS - null parameters", {
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_and_set_assay(sample = sample)
+    output <- check_and_set_assay(sample = sample)
     testthat::expect_identical(output$assay, Seurat::DefaultAssay(sample))
   })
 
@@ -570,7 +570,7 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::check_and_set_assay(sample = sample, assay = "SCT")
+    output <- check_and_set_assay(sample = sample, assay = "SCT")
     testthat::expect_identical(output$assay, "SCT")
   })
 
@@ -579,7 +579,7 @@ if (isFALSE(dep_check[["utils"]])){
 
 
     sample@assays$RNA <- sample@assays$SCT
-    output <- SCpubr:::check_and_set_assay(sample = sample, assay = "RNA")
+    output <- check_and_set_assay(sample = sample, assay = "RNA")
     testthat::expect_identical(output$assay, "RNA")
   })
 
@@ -591,14 +591,14 @@ if (isFALSE(dep_check[["utils"]])){
     parameters <- c("first" = 1,
                     "second" = 2,
                     "third" = "a")
-    testthat::expect_error(SCpubr:::check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+    testthat::expect_error(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
   })
 
   testthat::test_that("utils: check_type - PASS - numeric", {
     testthat::skip_on_cran()
     parameters <- c("first" = 1,
                     "second" = 2)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
   })
 
   testthat::test_that("utils: check_type - PASS - numeric with NULL", {
@@ -606,14 +606,14 @@ if (isFALSE(dep_check[["utils"]])){
     parameters <- c("first" = 1,
                     "second" = 2,
                     "third" = NULL)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "numeric", test_function = is.numeric))
   })
 
   testthat::test_that("utils: check_type - PASS - character", {
     testthat::skip_on_cran()
     parameters <- c("first" = "a",
                     "second" = "b")
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "character", test_function = is.character))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "character", test_function = is.character))
   })
 
   testthat::test_that("utils: check_type - PASS - character with NULL", {
@@ -621,14 +621,14 @@ if (isFALSE(dep_check[["utils"]])){
     parameters <- c("first" = "a",
                     "second" = "b",
                     "third" = NULL)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "character", test_function = is.character))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "character", test_function = is.character))
   })
 
   testthat::test_that("utils: check_type - PASS - logical", {
     testthat::skip_on_cran()
     parameters <- c("first" = TRUE,
                     "second" = FALSE)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
   })
 
   testthat::test_that("utils: check_type - PASS - logical with NULL", {
@@ -636,14 +636,14 @@ if (isFALSE(dep_check[["utils"]])){
     parameters <- c("first" = TRUE,
                     "second" = FALSE,
                     "third" = NULL)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "logical", test_function = is.logical))
   })
 
   testthat::test_that("utils: check_type - PASS - list", {
     testthat::skip_on_cran()
     parameters <- c("first" = list(),
                     "second" = list())
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "list", test_function = is.list))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "list", test_function = is.list))
   })
 
   testthat::test_that("utils: check_type - PASS - list with NULL", {
@@ -651,7 +651,7 @@ if (isFALSE(dep_check[["utils"]])){
     parameters <- c("first" = list(),
                     "second" = list(),
                     "third" = NULL)
-    testthat::expect_silent(SCpubr:::check_type(parameters = parameters, required_type = "list", test_function = is.list))
+    testthat::expect_silent(check_type(parameters = parameters, required_type = "list", test_function = is.list))
   })
 
 
@@ -659,24 +659,24 @@ if (isFALSE(dep_check[["utils"]])){
 
   testthat::test_that("utils: check_and_set_slot - FAIL - wrong slot", {
     testthat::skip_on_cran()
-    testthat::expect_error(SCpubr:::check_and_set_slot("wrong_slot"))
+    testthat::expect_error(check_and_set_slot("wrong_slot"))
   })
 
   testthat::test_that("utils: check_and_set_slot - PASS - counts", {
     testthat::skip_on_cran()
-    output <- SCpubr:::check_and_set_slot("counts")
+    output <- check_and_set_slot("counts")
     testthat::expect_identical(output, "counts")
   })
 
   testthat::test_that("utils: check_and_set_slot - PASS - data", {
 
-    output <- SCpubr:::check_and_set_slot("data")
+    output <- check_and_set_slot("data")
     testthat::expect_identical(output, "data")
   })
 
   testthat::test_that("utils: check_and_set_slot - PASS - scale.data", {
     testthat::skip_on_cran()
-    output <- SCpubr:::check_and_set_slot("scale.data")
+    output <- check_and_set_slot("scale.data")
     testthat::expect_identical(output, "scale.data")
   })
 
@@ -686,14 +686,14 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 30))
+    testthat::expect_error(check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 30))
   })
 
   testthat::test_that("utils: check_and_set_slot - PASS - good limit", {
     testthat::skip_on_cran()
 
 
-    testthat::expect_silent(SCpubr:::check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 2))
+    testthat::expect_silent(check_limits(sample = sample, feature = "EPC1", value_name = "scale.end", value = 2))
   })
 
 
@@ -703,56 +703,56 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    testthat::expect_error(SCpubr:::compute_factor_levels(sample = sample, feature = "seurat_clusters", position = "upper"))
+    testthat::expect_error(compute_factor_levels(sample = sample, feature = "seurat_clusters", position = "upper"))
   })
 
   testthat::test_that("utils: compute_factor_levels - PASS - order.by and group.by", {
     testthat::skip_on_cran()
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "seurat_clusters",
                                                          position = "fill",
                                                          group.by = NULL), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "seurat_clusters",
                                                          position = "fill",
                                                          group.by = "orig.ident",
                                                          order = TRUE), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "seurat_clusters",
                                                          position = "fill",
                                                          group.by = "orig.ident"), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "EPC1",
                                                          position = "fill",
                                                          group.by = "orig.ident",
                                                          order = TRUE), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "EPC1",
                                                          position = "fill",
                                                          group.by = "orig.ident"), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "seurat_clusters",
                                                          position = "stack",
                                                          group.by = "orig.ident",
                                                          order = TRUE), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "seurat_clusters",
                                                          position = "stack",
                                                          group.by = "orig.ident"), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "EPC1",
                                                          position = "stack",
                                                          group.by = "orig.ident",
                                                          order = TRUE), "character")
 
-    testthat::expect_type(SCpubr:::compute_factor_levels(sample = sample,
+    testthat::expect_type(compute_factor_levels(sample = sample,
                                                          feature = "EPC1",
                                                          position = "stack",
                                                          group.by = "orig.ident"), "character")
@@ -764,10 +764,10 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: check_length - FAIL - distinct length", {
     testthat::skip_on_cran()
     vector_parameters <- c(1, 2)
-    vector_features <- c(1)
+    vector_features <- 1
     parameters_name <- "A"
     features_name <- "B"
-    testthat::expect_error(SCpubr:::check_length(vector_of_parameters = vector_parameters,
+    testthat::expect_error(check_length(vector_of_parameters = vector_parameters,
                                                  vector_of_features = vector_features,
                                                  parameters_name = parameters_name,
                                                  features_name = features_name))
@@ -779,7 +779,7 @@ if (isFALSE(dep_check[["utils"]])){
     vector_features <- c(1, 2)
     parameters_name <- "A"
     features_name <- "B"
-    testthat::expect_silent(SCpubr:::check_length(vector_of_parameters = vector_parameters,
+    testthat::expect_silent(check_length(vector_of_parameters = vector_parameters,
                                                   vector_of_features = vector_features,
                                                   parameters_name = parameters_name,
                                                   features_name = features_name))
@@ -793,11 +793,11 @@ if (isFALSE(dep_check[["utils"]])){
 
 
     p <- SCpubr::do_FeaturePlot(sample, features = "EPC1")
-    output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
+    output <- add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b())
     testthat::expect_true("ggplot" %in% class(output))
     
     p <- SCpubr::do_FeaturePlot(sample, features = rownames(sample)[1:5])
-    output <- SCpubr:::add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b(), num_plots = 5)
+    output <- add_scale(p = p, scale = "color", function_use = ggplot2::scale_color_viridis_b(), num_plots = 5)
     testthat::expect_true("ggplot" %in% class(output))
   })
 
@@ -807,7 +807,7 @@ if (isFALSE(dep_check[["utils"]])){
 
   testthat::test_that("utils: modify_string - PASS - checks", {
     testthat::skip_on_cran()
-    output <- SCpubr:::modify_string("This is a string to cut")
+    output <- modify_string("This is a string to cut")
     testthat::expect_type(output, "character")
   })
 
@@ -818,23 +818,23 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10)
+    output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), nbin = 1, ctrl = 10)
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
-    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10, flavor = "UCell")
+    output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), nbin = 1, ctrl = 10, flavor = "UCell")
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
-    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), nbin = 1, ctrl = 10, flavor = "AUCell")
+    output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), nbin = 1, ctrl = 10, flavor = "AUCell")
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
-    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = list("test" = c("EPC1")), verbose = TRUE, nbin = 1, ctrl = 10)
+    output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), verbose = TRUE, nbin = 1, ctrl = 10)
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
-    output <- SCpubr:::compute_enrichment_scores(sample = sample, input_gene_list = c("EPC1"), nbin = 1, ctrl = 10)
+    output <- compute_enrichment_scores(sample = sample, input_gene_list = "EPC1", nbin = 1, ctrl = 10)
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("Input" %in% colnames(output@meta.data))
   })
@@ -845,15 +845,15 @@ if (isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
 
 
-    data <- SCpubr:::get_data_column(sample = sample, feature = "EPC1", assay = "SCT", slot = "data")
+    data <- get_data_column(sample = sample, feature = "EPC1", assay = "SCT", slot = "data")
     testthat::expect_true("data.frame" %in% class(data))
     testthat::expect_true("feature" %in% colnames(data))
 
-    data <- SCpubr:::get_data_column(sample = sample, feature = "nCount_RNA", assay = "SCT", slot = "data")
+    data <- get_data_column(sample = sample, feature = "nCount_RNA", assay = "SCT", slot = "data")
     testthat::expect_true("data.frame" %in% class(data))
     testthat::expect_true("feature" %in% colnames(data))
 
-    data <- SCpubr:::get_data_column(sample = sample, feature = "PC_1", assay = "SCT", slot = "data")
+    data <- get_data_column(sample = sample, feature = "PC_1", assay = "SCT", slot = "data")
     testthat::expect_true("data.frame" %in% class(data))
     testthat::expect_true("feature" %in% colnames(data))
   })
@@ -861,29 +861,29 @@ if (isFALSE(dep_check[["utils"]])){
   # CHECK PARAMETERS
   testthat::test_that("utils: check parameters - FAIL ", {
     testthat::skip_on_cran()
-    testthat::expect_error({SCpubr:::check_parameters(parameter = -2, parameter_name = "viridis.direction")})
-    testthat::expect_error({SCpubr:::check_parameters(parameter = "ERROR", parameter_name = "viridis.palette")})
+    testthat::expect_error({check_parameters(parameter = -2, parameter_name = "viridis.direction")})
+    testthat::expect_error({check_parameters(parameter = "ERROR", parameter_name = "viridis.palette")})
   })
 
   # GET AXIS PARAMETERS
   testthat::test_that("utils: check get_axis_parameters - PASS ", {
     testthat::skip_on_cran()
-    out <- SCpubr:::get_axis_parameters(angle = 0, flip = FALSE)
+    out <- get_axis_parameters(angle = 0, flip = FALSE)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr:::get_axis_parameters(angle = 0, flip = TRUE)
+    out <- get_axis_parameters(angle = 0, flip = TRUE)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr:::get_axis_parameters(angle = 45, flip = FALSE)
+    out <- get_axis_parameters(angle = 45, flip = FALSE)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr:::get_axis_parameters(angle = 45, flip = TRUE)
+    out <- get_axis_parameters(angle = 45, flip = TRUE)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr:::get_axis_parameters(angle = 90, flip = FALSE)
+    out <- get_axis_parameters(angle = 90, flip = FALSE)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr:::get_axis_parameters(angle = 90, flip = TRUE)
+    out <- get_axis_parameters(angle = 90, flip = TRUE)
     testthat::expect_type(out, "list")
   })
 }

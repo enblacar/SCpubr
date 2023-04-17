@@ -1402,7 +1402,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       warning(paste0(add_warning(),add_warning(),crayon_body("The following "),
                      crayon_key("features"),
                      crayon_body(" were not be found:"),
-                     paste(sapply(not_found_features, crayon_key), collapse = crayon_body(", ")),
+                     paste(vapply(not_found_features, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                      crayon_body(".")), call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 

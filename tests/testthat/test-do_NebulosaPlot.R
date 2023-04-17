@@ -1,7 +1,7 @@
 if(isFALSE(dep_check[["do_NebulosaPlot"]])){
   testthat::test_that("do_NebulosaPlot: CRAN essentials", {
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"))
+                                 features = "EPC1")
     testthat::expect_type(p, "list")
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -20,25 +20,25 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  use_viridis = TRUE,
                                  viridis.direction = 1)
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  use_viridis = TRUE,
                                  viridis.direction = -1)
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  use_viridis = FALSE,
                                  sequential.direction = 1)
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  use_viridis = FALSE,
                                  sequential.direction = -1)
     testthat::expect_type(p, "list")
@@ -113,7 +113,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  legend.type = "normal")
     testthat::expect_type(p, "list")
   })
@@ -123,7 +123,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  legend.type = "colorbar")
     testthat::expect_type(p, "list")
   })
@@ -135,7 +135,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                   features = c("EPC1"),
+                                                   features = "EPC1",
                                                    legend.type = "wrong"))
   })
 
@@ -144,7 +144,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                   features = c("EPC1"),
+                                                   features = "EPC1",
                                                    legend.position = "wrong"))
   })
 
@@ -153,7 +153,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     testthat::expect_error(SCpubr::do_NebulosaPlot(sample = sample,
-                                                   features = c("EPC1"),
+                                                   features = "EPC1",
                                                    font.type = "wrong"))
   })
 
@@ -162,7 +162,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  dims = c(2, 1))
     testthat::expect_type(p, "list")
   })
@@ -176,7 +176,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
     obj <- Seurat::CreateDimReducObject(test, assay = "SCT", key = "DC_")
     sample@reductions$diffusion <- obj
     p <- suppressWarnings(SCpubr::do_NebulosaPlot(sample,
-                                                  features = c("PC_1"),
+                                                  features = "PC_1",
                                                   reduction = "diffusion"))
     testthat::expect_type(p, "list")
   })
@@ -253,7 +253,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  viridis.palette = "F")
     testthat::expect_type(p, "list")
   })
@@ -263,7 +263,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  legend.position = "left")
     testthat::expect_type(p, "list")
   })
@@ -273,7 +273,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  legend.position = "top")
     testthat::expect_type(p, "list")
   })
@@ -293,7 +293,7 @@ if(isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
-                                 features = c("EPC1"),
+                                 features = "EPC1",
                                  legend.position = "none")
     testthat::expect_type(p, "list")
   })

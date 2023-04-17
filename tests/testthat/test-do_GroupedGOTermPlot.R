@@ -1,7 +1,7 @@
 if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
   testthat::test_that("do_GroupedGOTermPlot: CRAN essential tests", {
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       levels.use = c(1, 2),
@@ -14,7 +14,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
   testthat::test_that("do_GroupedGOTermPlot: PASS", {
     testthat::skip_on_cran()
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
@@ -24,7 +24,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
 
     suppressMessages({
-      p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+      p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                         org.db = org.db,
                                         GO_ontology = "BP",
                                         verbose = TRUE,
@@ -33,7 +33,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
@@ -52,7 +52,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
 
     suppressMessages({
-      p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+      p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                         org.db = org.db,
                                         GO_ontology = "BP",
                                         verbose = TRUE,
@@ -62,7 +62,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
@@ -72,7 +72,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
@@ -82,7 +82,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,
@@ -93,7 +93,7 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
 
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupedGOTermPlot(genes = c("MBP"),
+    p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",
                                       org.db = org.db,
                                       GO_ontology = "BP",
                                       verbose = FALSE,

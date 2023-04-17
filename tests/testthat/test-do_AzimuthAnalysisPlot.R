@@ -71,7 +71,7 @@ if (isFALSE(dep_check[["do_AzimuthAnalysisPlot"]])){
                                         label = FALSE,
                                         legend.position = "right",
                                         raster = FALSE,
-                                        colors.use = SCpubr:::generate_color_scale(names_use = unique(sample$seurat_clusters)))
+                                        colors.use = generate_color_scale(names_use = unique(sample$seurat_clusters)))
 
     testthat::expect_type(p, "list")
 

@@ -135,7 +135,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
                                      highlight_group = "Cell")
     testthat::expect_type(p, "list")
 
-    sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("0"), "A", "B")
+    sample$orig.ident <- ifelse(sample$seurat_clusters == "0", "A", "B")
     p <- SCpubr::do_ChordDiagramPlot(sample = sample,
                                      from = "orig.ident",
                                      to = "seurat_clusters",

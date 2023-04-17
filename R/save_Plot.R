@@ -75,8 +75,8 @@ save_Plot <- function(plot,
   } else if (output_format == "all"){
     devices_use <- c("pdf", "png", "jpeg", "svg", "tiff")
   } else {
-    options <- c("pdf", "png", "jpeg", "svg", "tiff")
-    devices_use <- output_format[output_format %in% options]
+    possible_options <- c("pdf", "png", "jpeg", "svg", "tiff")
+    devices_use <- output_format[output_format %in% possible_options]
   }
 
   # is ggplot?

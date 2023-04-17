@@ -144,13 +144,13 @@ if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
                                                        assay = "SCT",
                                                        slot = "data",
                                                        group.by = c("seurat_clusters", "orig.ident"),
-                                                       row_title_expression = c("a"))})
+                                                       row_title_expression = "a")})
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes_scaled,
                                                        assay = "SCT",
                                                        slot = "scale.data",
                                                        group.by = c("seurat_clusters", "orig.ident"),
-                                                       row_title_expression = c("a"))})
+                                                       row_title_expression = "a")})
   })
 
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong direction", {

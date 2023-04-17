@@ -14,7 +14,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     testthat::expect_warning({ p <- SCpubr::do_ExpressionHeatmap(sample,
                                                                  features = list("A" = rownames(sample)[1:5]),
-                                                                 group.by = c("orig.ident"),
+                                                                 group.by = "orig.ident",
                                                                  flip = TRUE)})
     
     testthat::expect_true("ggplot" %in% class(p))
@@ -22,14 +22,14 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     testthat::expect_warning({ p <- SCpubr::do_ExpressionHeatmap(sample,
                                                                  features = list("A" = rownames(sample)[1:5],
                                                                                  "B" = rownames(sample)[6:10]),
-                                                                 group.by = c("orig.ident"),
+                                                                 group.by = "orig.ident",
                                                                  flip = TRUE)})
     
     testthat::expect_true("ggplot" %in% class(p))
     
     testthat::expect_warning({ p <- SCpubr::do_ExpressionHeatmap(sample,
                                                                  features = c("TOX2", "Wront"),
-                                                                 group.by = c("orig.ident"),
+                                                                 group.by = "orig.ident",
                                                                  flip = TRUE)})
     
     testthat::expect_true("ggplot" %in% class(p))
@@ -38,14 +38,14 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       flip = TRUE)
 
     testthat::expect_true("ggplot" %in% class(p))
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       flip = FALSE)
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
@@ -66,14 +66,14 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       enforce_symmetry = TRUE)
     
     testthat::expect_true("ggplot" %in% class(p))
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       enforce_symmetry = FALSE,
                                       use_viridis = TRUE,
                                       viridis.direction = 1)
@@ -82,7 +82,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       enforce_symmetry = FALSE,
                                       use_viridis = TRUE,
                                       viridis.direction = -1)
@@ -91,7 +91,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       enforce_symmetry = FALSE,
                                       use_viridis = FALSE,
                                       sequential.direction = 1)
@@ -100,7 +100,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       enforce_symmetry = FALSE,
                                       use_viridis = FALSE,
                                       sequential.direction = -1)
@@ -109,7 +109,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       flip = FALSE)
 
     testthat::expect_true("ggplot" %in% class(p))
@@ -129,14 +129,14 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       assay = NULL)
 
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       assay = "SCT")
 
     testthat::expect_true("ggplot" %in% class(p))
@@ -147,14 +147,14 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       legend.position = "bottom")
 
     testthat::expect_true("ggplot" %in% class(p))
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       legend.position = "right")
 
     testthat::expect_true("ggplot" %in% class(p))
@@ -165,7 +165,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       assay = NULL,
                                       min.cutoff = 0.7)
 
@@ -173,7 +173,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       assay = "SCT",
                                       max.cutoff = 0.72)
 
@@ -181,7 +181,7 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
     p <- SCpubr::do_ExpressionHeatmap(sample,
                                       features = rownames(sample)[1:5],
-                                      group.by = c("orig.ident"),
+                                      group.by = "orig.ident",
                                       assay = "SCT",
                                       min.cutoff = 0.7,
                                       max.cutoff = 0.72)
@@ -192,15 +192,15 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
   testthat::test_that("do_ExpressionHeatmap: FAIL", {
     testthat::skip_on_cran()
     testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
-                                                         features = c("EPC1"),
+                                                         features = "EPC1",
                                                          min.cutoff = -10)})
 
     testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
-                                                         features = c("EPC1"),
+                                                         features = "EPC1",
                                                          max.cutoff = 200)})
 
     testthat::expect_error({SCpubr::do_ExpressionHeatmap(sample = sample,
-                                                         features = c("EPC1"),
+                                                         features = "EPC1",
                                                          max.cutoff = 1,
                                                          min.cutoff = 2)})
 
