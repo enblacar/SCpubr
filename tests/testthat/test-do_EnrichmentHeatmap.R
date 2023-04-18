@@ -17,6 +17,43 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
   testthat::test_that("do_EnrichmentHeatmap: PASS -flavors", {
     testthat::skip_on_cran()
+    
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
+    
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      cluster = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      cluster = FALSE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      cluster = TRUE,
+                                      features.order = c("B", "A", "C"))
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                      input_gene_list = genes,
+                                      nbin = 1,
+                                      ctrl = 10,
+                                      cluster = TRUE,
+                                      features.order = c("B", "A", "C"),
+                                      groups.order = list("Groups" = c("1", "3", "5", "7", "0", "2", "4", "6", "8")))
+    testthat::expect_true("ggplot" %in% class(p))
+    
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
@@ -93,7 +130,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       input_gene_list = genes,
                                       nbin = 1,
                                       ctrl = 10,
-                                      geneset.order = c("A", "B", "C"))
+                                      features.order = c("A", "B", "C"))
     testthat::expect_true("ggplot" %in% class(p))
     
     
@@ -365,7 +402,7 @@ if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                                          nbin = 1,
                                                          ctrl = 10,
                                                          flip = FALSE,
-                                                         geneset.order = "wrong")})
+                                                         features.order = "wrong")})
     
     testthat::expect_warning({SCpubr::do_EnrichmentHeatmap(sample = sample,
                                                          input_gene_list = list("A_A" = "EPC1"),

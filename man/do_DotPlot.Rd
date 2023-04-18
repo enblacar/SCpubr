@@ -10,6 +10,8 @@ do_DotPlot(
   features,
   assay = NULL,
   group.by = NULL,
+  scale = FALSE,
+  legend.title = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.framewidth = 0.5,
@@ -59,6 +61,10 @@ do_DotPlot(
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
+
+\item{scale}{\strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.}
+
+\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{

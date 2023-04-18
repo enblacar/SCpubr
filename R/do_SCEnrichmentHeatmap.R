@@ -19,10 +19,11 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    assay = NULL,
                                    slot = NULL,
                                    group.by = NULL,
+                                   features.order = NULL,
                                    metadata = NULL,
                                    metadata.colors = NULL,
                                    subsample = NA,
-                                   cluster_cells = TRUE,
+                                   cluster = TRUE,
                                    flavor = "Seurat",
                                    return_object = FALSE,
                                    ncores = 1,
@@ -37,7 +38,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    plot.subtitle = NULL,
                                    plot.caption = NULL,
                                    legend.position = "bottom",
-                                   legend.title = if (flavor != "AUCell") {"Enrichment"} else {"AUC"},
+                                   legend.title = NULL,
                                    legend.type = "colorbar",
                                    legend.framewidth = 0.5,
                                    legend.tickwidth = 0.5,
@@ -85,7 +86,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                        "verbose" = verbose,
                        "legend.byrow" = legend.byrow,
                        "use_viridis" = use_viridis,
-                       "cluster_cells" = cluster_cells,
+                       "cluster" = cluster,
                        "storeRanks" = storeRanks,
                        "return_object" = return_object) 
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
@@ -208,6 +209,32 @@ do_SCEnrichmentHeatmap <- function(sample,
     
   }
   
+  if (!is.null(features.order)){
+    assertthat::assert_that(sum(features.order %in% names(input_gene_list)) == length(names(input_gene_list)),
+                            msg = paste0(add_cross(), crayon_body("The names provided to "),
+                                         crayon_key("features.order"),
+                                         crayon_body(" do not match the names of the gene sets in "),
+                                         crayon_key("input_gene_list"),
+                                         crayon_body(".")))
+  }
+  
+  
+  # nocov start
+  if (!is.null(features.order)){
+    features.order <- stringr::str_replace_all(features.order, "_", ".")
+  }
+  # nocov end
+  
+  if (is.null(legend.title)){
+    if (flavor == "AUCell") {
+      legend.title <- "AUC"
+    } else if (flavor == "UCell"){
+      legend.title <- "UCell score"
+    } else if (flavor == "Seurat"){
+      legend.title <- "Enrichment"
+    }
+  }
+  
   input_list <- input_gene_list
   assertthat::assert_that(!is.null(names(input_list)),
                           msg = paste0(add_cross(), crayon_body("Please provide a "),
@@ -289,26 +316,28 @@ do_SCEnrichmentHeatmap <- function(sample,
   if (length(names(input_list)) == 1) {
     row_order <- names(input_list)[1]
   } else {
-    row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
-    row_order <- names(input_list)[row_order]
+    if (isTRUE(cluster)){
+      row_order <- names(input_list)[stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order]
+    } else {
+      row_order <- names(input_list)
+    }
   }
-  
   
   # Compute cell order to group cells withing heatmap bodies.
   # nocov start
-  if (isTRUE(cluster_cells)){
+  if (isTRUE(cluster)){
     if (sum(matrix %>% dplyr::pull(.data[[group.by]]) %>% table() > 65536)){
       warning(paste0(add_warning(), crayon_body("A given group in "),
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
                      crayon_key("65536"),
                      crayon_body(" cells. Disabling clustering of the cells.")))
-      cluster_cells <- FALSE
+      cluster <- FALSE
     }
   }
   # nocov end
   
-  if (isTRUE(cluster_cells)){
+  if (isTRUE(cluster)){
     col_order <- list()
     for (item in order.use){
       cells.use <- matrix %>%
@@ -405,7 +434,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    values_to = "expression") %>%
                dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>% 
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
-                             "gene" = factor(.data$gene, levels = rev(row_order)),
+                             "gene" = factor(.data$gene, levels = if (is.null(features.order)){rev(row_order)} else {features.order}),
                              "cell" = factor(.data$cell, levels = col_order))
   
   
@@ -457,7 +486,7 @@ do_SCEnrichmentHeatmap <- function(sample,
            ggplot2::scale_fill_viridis_c(na.value = na.value,
                                          option = viridis.palette,
                                          direction = viridis.direction,
-                                         name = legend.title,
+                                         name = ,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
@@ -466,7 +495,7 @@ do_SCEnrichmentHeatmap <- function(sample,
            # nocov start
            ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
                                          na.value = na.value,
-                                         name = legend.title,
+                                         name = ,
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
@@ -479,7 +508,7 @@ do_SCEnrichmentHeatmap <- function(sample,
     p <- p + 
          ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
                                        na.value = na.value,
-                                       name = "Regulon Score",
+                                       name = ,
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)

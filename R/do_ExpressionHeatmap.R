@@ -13,6 +13,9 @@ do_ExpressionHeatmap <- function(sample,
                                  features,
                                  group.by = NULL,
                                  assay = NULL,
+                                 cluster = TRUE,
+                                 features.order = NULL,
+                                 groups.order = NULL,
                                  slot = "data",
                                  legend.title = "Avg. Expression",
                                  na.value = "grey75",
@@ -58,7 +61,8 @@ do_ExpressionHeatmap <- function(sample,
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "use_viridis" = use_viridis,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "cluster" = cluster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("axis.text.x.angle" = axis.text.x.angle,
@@ -208,9 +212,7 @@ do_ExpressionHeatmap <- function(sample,
             dplyr::group_by(.data$group.by, .data$gene) %>%
             dplyr::summarise(mean = mean(.data$expression, na.rm = TRUE))
       df.order <- df
-
     })
-
     matrix.list[[group]][["df"]] <- df
     matrix.list[[group]][["df.order"]] <- df.order
   }
@@ -235,20 +237,36 @@ do_ExpressionHeatmap <- function(sample,
     if(length(rownames(df.order)) == 1){
       row_order <- rownames(df.order)[1]
     } else {
-      row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
+      if (isTRUE(cluster)){
+        row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
+      } else {
+        row_order <- rownames(df.order)
+      }
+      
     }
     if (counter == 1){
       if (length(colnames(df.order)) == 1){
         col_order <- colnames(df.order)[1]
       } else {
-        col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
+        if (isTRUE(cluster)){
+          col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
+        } else {
+          col_order <- colnames(df.order)
+        }
+        
       }
     }
-
+    
+    if (!is.null(groups.order) & (group %in% names(groups.order))){
+      groups.order.use <- groups.order[[group]]
+    } else {
+      groups.order.use <- row_order
+    }
+    
     data <- df %>%
-            dplyr::mutate("gene" = factor(.data$gene, levels = rev(col_order)),
-                          "group.by" = factor(.data$group.by, levels = row_order))
-
+            dplyr::mutate("gene" = factor(.data$gene, levels = if (is.null(features.order)){rev(col_order)} else {features.order}),
+                          "group.by" = factor(.data$group.by, levels = groups.order.use))
+    
     if (!is.na(min.cutoff)){
       data <- data %>%
               dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))

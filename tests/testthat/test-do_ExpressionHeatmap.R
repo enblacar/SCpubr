@@ -11,6 +11,28 @@ if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
   testthat::test_that("do_ExpressionHeatmap: PASS - normal", {
     testthat::skip_on_cran()
     
+    p <- SCpubr::do_ExpressionHeatmap(sample = sample,
+                                      features = rownames(sample)[1:5],
+                                      cluster = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_ExpressionHeatmap(sample = sample,
+                                      features = rownames(sample)[1:5],
+                                      cluster = FALSE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_ExpressionHeatmap(sample = sample,
+                                      features = rownames(sample)[1:5],
+                                      cluster = TRUE,
+                                      features.order = rownames(sample)[c(2, 1, 5, 3, 4)])
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_ExpressionHeatmap(sample = sample,
+                                      features = rownames(sample)[1:5],
+                                      cluster = TRUE,
+                                      features.order = rownames(sample)[c(2, 1, 5, 3, 4)],
+                                      groups.order = list("Groups" = c("1", "3", "5", "7", "0", "2", "4", "6", "8")))
+    testthat::expect_true("ggplot" %in% class(p))
     
     testthat::expect_warning({ p <- SCpubr::do_ExpressionHeatmap(sample,
                                                                  features = list("A" = rownames(sample)[1:5]),

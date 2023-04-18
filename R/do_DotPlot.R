@@ -4,6 +4,7 @@
 #' @inheritParams doc_function
 #' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
 #' @param cluster.idents \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
+#' @param scale \strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.
 #' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
 #' \itemize{
 #'   \item \emph{\code{radius}}: use radius aesthetic.
@@ -19,6 +20,8 @@ do_DotPlot <- function(sample,
                        features,
                        assay = NULL,
                        group.by = NULL,
+                       scale = FALSE,
+                       legend.title = NULL,
                        legend.type = "colorbar",
                        legend.position = "bottom",
                        legend.framewidth = 0.5,
@@ -73,7 +76,8 @@ do_DotPlot <- function(sample,
                          "cluster.idents" = cluster.idents,
                          "use_viridis" = use_viridis,
                          "dot_border" = dot_border,
-                         "plot.grid" = plot.grid)
+                         "plot.grid" = plot.grid,
+                         "scale" = scale)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -109,7 +113,8 @@ do_DotPlot <- function(sample,
                            "axis.title.face" = axis.title.face,
                            "axis.text.face" = axis.text.face,
                            "legend.title.face" = legend.title.face,
-                           "legend.text.face" = legend.text.face)
+                           "legend.text.face" = legend.text.face,
+                           "legend.title" = legend.title)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
     # Check the features.
@@ -165,13 +170,15 @@ do_DotPlot <- function(sample,
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
     check_colors(na.value, parameter_name = "na.value")
     check_colors(grid.color, parameter_name = "grid.color")
-
-    p <- Seurat::DotPlot(sample,
-                         features = features,
-                         group.by = group.by,
-                         dot.scale = dot.scale,
-                         cluster.idents = cluster.idents,
-                         scale.by = scale.by)
+  
+    # Until they resolve ggplot2 deprecation.
+    p <- suppressWarnings({Seurat::DotPlot(sample,
+                                           features = features,
+                                           group.by = group.by,
+                                           dot.scale = dot.scale,
+                                           cluster.idents = cluster.idents,
+                                           scale = scale,
+                                           scale.by = scale.by)})
     if (isTRUE(dot_border)){
       suppressMessages({
         p <- p +
@@ -194,33 +201,33 @@ do_DotPlot <- function(sample,
                                                                      option = viridis.palette,
                                                                      direction = viridis.direction,
                                                                      breaks = scales::extended_breaks(n = number.breaks),
-                                                                     name = "Avg. Expression"),
+                                                                     name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title}),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
           ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                         option = viridis.palette,
-                                         direction = viridis.direction,
+                                        option = viridis.palette,
+                                        direction = viridis.direction,
                                         breaks = scales::extended_breaks(n = number.breaks),
-                                         name = "Avg. Expression")
+                                        name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
       }
     } else if (isFALSE(use_viridis)){
       if (isFALSE(dot_border)){
         p <- add_scale(p = p,
                        # nocov start
-                       function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+                       function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
                        # nocov end                                               
                                                                      na.value = na.value,
-                                                                     name = "Avg. Expression",
+                                                                     name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
                                                                      breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
              # nocov start
-             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
+             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
              # nocov end
                                            na.value = na.value,
-                                           name = "Avg. Expression",
+                                           name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
                                            breaks = scales::extended_breaks(n = number.breaks))
       }
     }
@@ -258,7 +265,7 @@ do_DotPlot <- function(sample,
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
     # Add leyend modifiers.
     p <- modify_continuous_legend(p = p,
-                                  legend.title = "Avg. Expression",
+                                  legend.title = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
                                   legend.aes = if (isTRUE(dot_border)) {"fill"} else {"color"},
                                   legend.type = legend.type,
                                   legend.position = legend.position,

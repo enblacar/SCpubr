@@ -7,8 +7,9 @@
 do_EnrichmentHeatmap(
   sample,
   input_gene_list,
-  geneset.order = NULL,
-  group.order = NULL,
+  features.order = NULL,
+  groups.order = NULL,
+  cluster = TRUE,
   assay = NULL,
   slot = NULL,
   reduction = NULL,
@@ -63,9 +64,11 @@ do_EnrichmentHeatmap(
 
 \item{input_gene_list}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of lists of genes to be used as input.}
 
-\item{geneset.order}{\strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.}
+\item{features.order}{\strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.}
 
-\item{group.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
+\item{groups.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
+
+\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 

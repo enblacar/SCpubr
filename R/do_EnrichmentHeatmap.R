@@ -7,16 +7,15 @@
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
 #' @param return_object \strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.
-#' @param geneset.order \strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.
-#' @param group.order \strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.
 #' @return A ggplot2 object.
 #' @export
 #'
 #' @example /man/examples/examples_do_EnrichmentHeatmap.R
 do_EnrichmentHeatmap <- function(sample,
                                  input_gene_list,
-                                 geneset.order = NULL,
-                                 group.order = NULL,
+                                 features.order = NULL,
+                                 groups.order = NULL,
+                                 cluster = TRUE,
                                  assay = NULL,
                                  slot = NULL,
                                  reduction = NULL,
@@ -75,7 +74,8 @@ do_EnrichmentHeatmap <- function(sample,
   logical_list <- list("use_viridis" = use_viridis,
                        "enforce_symmetry" = enforce_symmetry,
                        "plot_cell_borders" = plot_cell_borders,
-                       "flip" = flip)
+                       "flip" = flip,
+                       "cluster" = cluster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("viridis.direction" = viridis.direction,
@@ -189,10 +189,10 @@ do_EnrichmentHeatmap <- function(sample,
   }
   
   
-  if (!is.null(geneset.order)){
-    assertthat::assert_that(sum(geneset.order %in% names(input_gene_list)) == length(names(input_gene_list)),
+  if (!is.null(features.order)){
+    assertthat::assert_that(sum(features.order %in% names(input_gene_list)) == length(names(input_gene_list)),
                             msg = paste0(add_cross(), crayon_body("The names provided to "),
-                                         crayon_key("geneset.order"),
+                                         crayon_key("features.order"),
                                          crayon_body(" do not match the names of the gene sets in "),
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
@@ -226,8 +226,8 @@ do_EnrichmentHeatmap <- function(sample,
     names(input_list) <- names.use
     
     # nocov start
-    if (!is.null(geneset.order)){
-      geneset.order <- stringr::str_replace_all(geneset.order, "_", ".")
+    if (!is.null(features.order)){
+      features.order <- stringr::str_replace_all(features.order, "_", ".")
     }
     # nocov end
   }
@@ -321,26 +321,39 @@ do_EnrichmentHeatmap <- function(sample,
                 as.matrix()
 
     df.order[is.na(df.order)] <- 0
-    if(length(rownames(df.order)) == 1){
+    
+    if (length(rownames(df.order)) == 1){
       row_order <- rownames(df.order)[1]
     } else {
-      row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
+      if (isTRUE(cluster)){
+        row_order <- rownames(df.order)[stats::hclust(stats::dist(df.order, method = "euclidean"), method = "ward.D")$order]
+      } else {
+        row_order <- rownames(df.order)
+      }
+      
     }
+    
     if (counter == 1){
       if (length(colnames(df.order)) == 1){
         col_order <- colnames(df.order)[1]
       } else {
-        col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
+        if (isTRUE(cluster)){
+          col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
+        } else {
+          col_order <- colnames(df.order)
+        }
       }
     }
-    if (!is.null(group.order) & (group %in% names(group.order))){
-      group.order.use <- group.order[[group]]
+    
+    
+    if (!is.null(groups.order) & (group %in% names(groups.order))){
+      groups.order.use <- groups.order[[group]]
     } else {
-      group.order.use <- row_order
+      groups.order.use <- row_order
     }
     data <- df %>%
-            dplyr::mutate("gene_list" = factor(.data$gene_list, levels = if (is.null(geneset.order)){rev(col_order)} else {geneset.order}),
-                          "group.by" = factor(.data$group.by, levels = group.order.use))
+            dplyr::mutate("gene_list" = factor(.data$gene_list, levels = if (is.null(features.order)){rev(col_order)} else {features.order}),
+                          "group.by" = factor(.data$group.by, levels = groups.order.use))
 
     if (!is.na(min.cutoff)){
       data <- data %>%

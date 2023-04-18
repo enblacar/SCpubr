@@ -241,6 +241,10 @@
 
 \item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
 
+\item{features.order}{\strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.}
+
+\item{groups.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
+
 \item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
@@ -266,7 +270,7 @@
 \item \emph{\code{corr_wmean}}: For corrected weighted mean.
 }}
 
-\item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
+\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
 }
 \value{
 Nothing. This is a mock function.

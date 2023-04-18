@@ -84,6 +84,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 ## `SCpubr::do_DotPlot`
 
+-   Added `scale` parameter to allow for the data to be scaled or not scaled.
 -   Removed `split.by` parameter in favor or the higher consistency and proper functionality accross parameters. Will probably come in the future, implemented outside of the umbrella of Seurat.
 
 ## `SCpubr::do_EnrichmentHeatmap`
@@ -91,6 +92,15 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed options to plot FeaturePlots, GeyserPlots, ViolinPlots, etc. - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the enrichment scores separately, that are stored as a new Assay.
 -   Removed `return_matrix` parameter as the scores can now be retrieved from the Seurat object as an assay.
 -   Enforcing the use of `named lists` as input for the function.
+-   Added `cluster` parameter to allow for clustering of rows and columns.
+-   Added `groups.order` to allow for specifically arrange the groups defined by `group.by` with a given order.
+-   Added `features.order` to allow for specifically arrange the gene sets defined by `input_gene_list`.
+
+## `SCpubr::do_ExpressionHeatmap`
+
+-   Added `cluster` parameter to allow for clustering of rows and columns.
+-   Added `groups.order` to allow for specifically arrange the groups defined by `group.by` with a given order.
+-   Added `features.order` to allow for specifically arrange the features defined by `features`.
 
 ## `SCpubr::do_FeaturePlot`
 

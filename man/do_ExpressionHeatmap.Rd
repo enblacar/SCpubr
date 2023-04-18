@@ -9,6 +9,9 @@ do_ExpressionHeatmap(
   features,
   group.by = NULL,
   assay = NULL,
+  cluster = TRUE,
+  features.order = NULL,
+  groups.order = NULL,
   slot = "data",
   legend.title = "Avg. Expression",
   na.value = "grey75",
@@ -53,6 +56,12 @@ do_ExpressionHeatmap(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
+
+\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
+
+\item{features.order}{\strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.}
+
+\item{groups.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 

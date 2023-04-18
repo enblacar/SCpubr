@@ -16,10 +16,11 @@ do_SCExpressionHeatmap <- function(sample,
                                    assay = NULL,
                                    slot = NULL,
                                    group.by = NULL,
+                                   features.order = NULL,
                                    metadata = NULL,
                                    metadata.colors = NULL,
                                    subsample = NA,
-                                   cluster_cells = TRUE,
+                                   cluster = TRUE,
                                    xlab = "Cells",
                                    ylab = "Genes",
                                    font.size = 14,
@@ -79,7 +80,7 @@ do_SCExpressionHeatmap <- function(sample,
                        "verbose" = verbose,
                        "legend.byrow" = legend.byrow,
                        "use_viridis" = use_viridis,
-                       "cluster_cells" = cluster_cells)
+                       "cluster" = cluster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -167,7 +168,7 @@ do_SCExpressionHeatmap <- function(sample,
                                        crayon_key("scale.data"),
                                        crayon_body(", sometimes some of the features are missing.")))
 
-
+  
   missing_features <- features[!(features %in% genes.avail)]
   if (length(missing_features) > 0){
     if (isTRUE(verbose)){
@@ -181,7 +182,17 @@ do_SCExpressionHeatmap <- function(sample,
   }
 
   features <- features[features %in% genes.avail]
-
+  
+  if (!is.null(features.order)){
+    features.order <- features.order[features.order %in% genes.avail]
+    assertthat::assert_that(sum(features.order %in% features) == length(features),
+                            msg = paste0(add_cross(), crayon_body("The names provided to "),
+                                         crayon_key("features.order"),
+                                         crayon_body(" do not match the names of the gene sets in "),
+                                         crayon_key("input_gene_list"),
+                                         crayon_body(".")))
+  }
+  
 
   matrix <- .GetAssayData(sample,
                                  assay = assay,
@@ -235,26 +246,29 @@ do_SCExpressionHeatmap <- function(sample,
   if (length(features) == 1) {
     row_order <- features[1]
   } else {
-    row_order <- stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order
-    row_order <- features[row_order]
+    if (isTRUE(cluster)){
+      row_order <- features[stats::hclust(stats::dist(median.matrix, method = "euclidean"), method = "ward.D")$order]
+    } else {
+      row_order <- features
+    }
   }
 
 
   # Compute cell order to group cells withing heatmap bodies.
   # nocov start
-  if (isTRUE(cluster_cells)){
+  if (isTRUE(cluster)){
     if (sum(matrix %>% dplyr::pull(dplyr::all_of(c(group.by))) %>% table() > 65536)){
       warning(paste0(add_warning(), crayon_body("A given group in "),
                      crayon_key("group.by"),
                      crayon_body(" has more than "),
                      crayon_key("65536"),
                      crayon_body(" cells. Disabling clustering of the cells.")), call. = FALSE)
-      cluster_cells <- FALSE
+      cluster <- FALSE
     }
   }
   # nocov end
   
-  if (isTRUE(cluster_cells)){
+  if (isTRUE(cluster)){
     col_order <- list()
     for (item in order.use){
       cells.use <- matrix %>%
@@ -362,7 +376,7 @@ do_SCExpressionHeatmap <- function(sample,
                                    values_to = "expression") %>%
                dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>% 
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
-                             "gene" = factor(.data$gene, levels = rev(row_order)),
+                             "gene" = factor(.data$gene, levels = if (is.null(features.order)){rev(row_order)} else {features.order}),
                              "cell" = factor(.data$cell, levels = col_order))
 
 

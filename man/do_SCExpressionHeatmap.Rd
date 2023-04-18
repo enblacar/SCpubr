@@ -10,10 +10,11 @@ do_SCExpressionHeatmap(
   assay = NULL,
   slot = NULL,
   group.by = NULL,
+  features.order = NULL,
   metadata = NULL,
   metadata.colors = NULL,
   subsample = NA,
-  cluster_cells = TRUE,
+  cluster = TRUE,
   xlab = "Cells",
   ylab = "Genes",
   font.size = 14,
@@ -71,13 +72,15 @@ do_SCExpressionHeatmap(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
+\item{features.order}{\strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.}
+
 \item{metadata}{\strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.}
 
 \item{metadata.colors}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.}
 
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
-\item{cluster_cells}{\strong{\code{\link[base]{logical}}} | Whether to cluster internally the cells in each group. If the group is too large, this will disable automatically.}
+\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 

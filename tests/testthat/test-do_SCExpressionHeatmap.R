@@ -11,7 +11,12 @@ if (isFALSE(dep_check[["do_SCExpressionHeatmap"]])){
   
   testthat::test_that("do_SCExpressionHeatmap: PASS - default", {
     testthat::skip_on_cran()
-
+    p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
+                                        features = rownames(sample)[1:5],
+                                        features.order = rownames(sample)[c(4, 2, 1, 3, 5)],
+                                        cluster = FALSE)
+    testthat::expect_type(p, "list")
+    
     p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
                                         features = rownames(sample)[1:5])
     testthat::expect_type(p, "list")
@@ -38,7 +43,7 @@ if (isFALSE(dep_check[["do_SCExpressionHeatmap"]])){
     
     p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
                                         features = rownames(sample)[1:5],
-                                        cluster_cells = FALSE)
+                                        cluster = FALSE)
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_SCExpressionHeatmap(sample = sample,
