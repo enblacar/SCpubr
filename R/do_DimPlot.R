@@ -619,7 +619,7 @@ do_DimPlot <- function(sample,
     sample$selected_cells <- ifelse(colnames(sample) %in% cells.use, "Selected cells", NA)
     colors.use.highlight <- c("Selected cells" = colors.use)
     if (utils::packageVersion("Seurat") >= "4.1.0"){
-      p <- Seurat::DimPlot(sample,
+      p <- Seurat::DimPlot(sample[, cells.use],
                            reduction = reduction,
                            group.by = "selected_cells",
                            dims = dims,
@@ -630,7 +630,8 @@ do_DimPlot <- function(sample,
                            cols = colors.use.highlight,
                            na.value = "#bfbfbf00")
     } else { # nocov start
-      p <- Seurat::DimPlot(sample,
+      p <- Seurat::DimPlot(sample[, cells.use],
+                           group.by = "selected_cells",
                            reduction = reduction,
                            dims = dims,
                            pt.size = pt.size,
