@@ -359,7 +359,7 @@ if (isFALSE(dep_check[["utils"]])){
   testthat::test_that("utils: remove_not_found_features - PASS - 2 features removed - list", {
     testthat::skip_on_cran()
     features <- list("A" = "a",
-                     "B" = c("b"))
+                     "B" = "b")
     not_found_features <- c("a", "b")
     output <- remove_not_found_features(features = features, not_found_features = not_found_features)
     testthat::expect_length(output$A, 0)
