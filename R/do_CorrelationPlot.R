@@ -299,7 +299,7 @@ do_CorrelationPlot <- function(sample = NULL,
       union <- length(set_1) + length(set_2) - intersection
       # Jaccard index is just the number of shared genes divided by the number of non-shared genes.
       jaccard_index <- intersection / union
-      return (jaccard_index)
+      return(jaccard_index)
     }
     
     jaccard_scores <- list()
