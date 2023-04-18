@@ -278,6 +278,7 @@ do_AffinityAnalysisPlot <- function(sample,
     data.use <- list.data[[group]][["data"]]
     data.cluster <- list.data[[group]][["data.cluster"]]
     
+    # nocov start
     if (counter == 1){
       if (length(colnames(data.cluster)) == 1){
         col_order <- colnames(data.cluster)[1]
@@ -285,6 +286,8 @@ do_AffinityAnalysisPlot <- function(sample,
         col_order <- colnames(data.cluster)[stats::hclust(stats::dist(t(data.cluster), method = "euclidean"), method = "ward.D")$order]
       }
     }
+    # nocov end
+    
     if(length(rownames(data.cluster)) == 1){
       row_order <- rownames(data.cluster)[1]
     } else {

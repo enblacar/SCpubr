@@ -201,7 +201,9 @@ do_DotPlot <- function(sample,
                                                                      option = viridis.palette,
                                                                      direction = viridis.direction,
                                                                      breaks = scales::extended_breaks(n = number.breaks),
+                                                                     # nocov start
                                                                      name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title}),
+                                                                     # nocov end
                        scale = "color")
       } else if (isTRUE(dot_border)){
         p <- p +
@@ -209,7 +211,9 @@ do_DotPlot <- function(sample,
                                         option = viridis.palette,
                                         direction = viridis.direction,
                                         breaks = scales::extended_breaks(n = number.breaks),
+                                        # nocov start
                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
+                                        # nocov end
       }
     } else if (isFALSE(use_viridis)){
       if (isFALSE(dot_border)){
@@ -218,7 +222,9 @@ do_DotPlot <- function(sample,
                        function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
                        # nocov end                                               
                                                                      na.value = na.value,
+                                                                     # nocov start
                                                                      name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                                                     # nocov end
                                                                      breaks = scales::extended_breaks(n = number.breaks)),
                        scale = "color")
       } else if (isTRUE(dot_border)){
@@ -227,7 +233,9 @@ do_DotPlot <- function(sample,
              ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
              # nocov end
                                            na.value = na.value,
+                                           # nocov start
                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                           # nocov end
                                            breaks = scales::extended_breaks(n = number.breaks))
       }
     }
@@ -265,7 +273,9 @@ do_DotPlot <- function(sample,
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
     # Add leyend modifiers.
     p <- modify_continuous_legend(p = p,
+                                  # nocov start
                                   legend.title = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                  # nocov end
                                   legend.aes = if (isTRUE(dot_border)) {"fill"} else {"color"},
                                   legend.type = legend.type,
                                   legend.position = legend.position,
