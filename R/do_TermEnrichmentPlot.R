@@ -100,15 +100,6 @@ do_TermEnrichmentPlot <- function(enriched_terms,
     check_parameters(legend.title.face, parameter_name = "legend.title.face")
     check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
-    # Define legend parameters. Width and height values will change depending on the legend orientation.
-    if (legend.position %in% c("top", "bottom")){
-      legend.barwidth <- legend.length
-      legend.barheight <- legend.width
-    } else if (legend.position %in% c("left", "right")){
-      legend.barwidth <- legend.width
-      legend.barheight <- legend.length
-    }
-
     # Check the colors provided to legend.framecolor and legend.tickcolor.
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")

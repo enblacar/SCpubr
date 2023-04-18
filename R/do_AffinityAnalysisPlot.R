@@ -121,6 +121,7 @@ do_AffinityAnalysisPlot <- function(sample,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   `%>%` <- magrittr::`%>%`
   

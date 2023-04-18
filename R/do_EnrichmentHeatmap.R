@@ -252,7 +252,6 @@ do_EnrichmentHeatmap <- function(sample,
                             msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
                                          crayon_key("group.by")))
 
-    aggr_entities <- levels(sample)
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }

@@ -152,7 +152,7 @@ do_TFActivityPlot <- function(sample,
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
-    group.by = "Groups"
+    group.by <- "Groups"
   }
   
   

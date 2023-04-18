@@ -136,7 +136,7 @@ do_GroupwiseDEPlot <- function(sample,
     }
   } else if (is.null(group.by)) {
     sample@meta.data[, "Groups"] <- Seurat::Idents(sample)
-    group.by = "Groups"
+    group.by <- "Groups"
   }
 
 

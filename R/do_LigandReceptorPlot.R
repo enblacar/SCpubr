@@ -146,13 +146,9 @@ do_LigandReceptorPlot <- function(liana_output,
 
   # Define legend parameters. Width and height values will change depending on the legend orientation.
   if (legend.position %in% c("top", "bottom")){
-    legend.barwidth <- legend.length
-    legend.barheight <- legend.width
     size_title <- "Interaction specificity"
     fill.title <- "Expression Magnitude"
   } else if (legend.position %in% c("left", "right")){
-    legend.barwidth <- legend.width
-    legend.barheight <- legend.length
     size_title <- stringr::str_wrap("Interaction specificity", width = 10)
     fill.title <- stringr::str_wrap("Expression Magnitude", width = 10)
   }

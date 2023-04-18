@@ -869,7 +869,7 @@ package_report <- function(startup = FALSE){
                          packages_check, "\n", "\n",
                          paste(print.list, collapse = "\n"), "\n", "\n", "\n",
                          functions_check, "\n", "\n",
-                         paste(print.list.functions, collapse = "\n"), "\n","\n",
+                         paste(print.list.functions, collapse = "\n"), "\n", "\n",
                          functions_tip, "\n", "\n", "\n",
                          tip_rule, "\n", "\n",
                          tip_message, "\n", "\n",
@@ -886,7 +886,7 @@ package_report <- function(startup = FALSE){
                          packages_check, "\n", "\n",
                          paste(print.list, collapse = "\n"), "\n", "\n", "\n",
                          functions_check, "\n", "\n",
-                         paste(print.list.functions, collapse = "\n"), "\n","\n",
+                         paste(print.list.functions, collapse = "\n"), "\n", "\n",
                          functions_tip, "\n", "\n", "\n",
                          end_rule)
       rlang::inform(msg_wrap)
@@ -1094,7 +1094,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (is.null(slot)){
-    slot = "data"
+    slot <- "data"
   }
 
   if (feature %in% rownames(sample)){
@@ -1399,7 +1399,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       # Stop if neither of the features are found.
       assertthat::assert_that(length(unlist(not_found_features)) != length(unlist(features)),
                               msg = "Neither of the provided features are found.")
-      warning(paste0(add_warning(),add_warning(),crayon_body("The following "),
+      warning(paste0(add_warning(), crayon_body("The following "),
                      crayon_key("features"),
                      crayon_body(" were not be found:"),
                      paste(vapply(not_found_features, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
@@ -1477,7 +1477,7 @@ remove_duplicated_features <- function(features){
   if (is.character(features)){
     check <- sum(duplicated(features))
     if (check > 0){
-      warning(paste0(add_warning(),add_warning(),crayon_body("Found duplicated features:\n"),
+      warning(paste0(add_warning(), crayon_body("Found duplicated features:\n"),
                        crayon_key(paste(features[duplicated(features)])),
                        crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
       features <- features[!(duplicated(features))]
@@ -1489,8 +1489,8 @@ remove_duplicated_features <- function(features){
       genes <- features[[list_name]]
       # Remove genes duplicated within the list.
       if (sum(duplicated(genes)) > 0){
-        warning(paste0(add_warning(),crayon_body("Found duplicated features:\n"),
-                       crayon_key( paste(genes[duplicated(genes)], collapse = ", ")),
+        warning(paste0(add_warning(), crayon_body("Found duplicated features:\n"),
+                       crayon_key(paste(genes[duplicated(genes)], collapse = ", ")),
                        crayon_body("\nIn the list named: "),
                        crayon_key(list_name),
                        crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
@@ -1501,7 +1501,7 @@ remove_duplicated_features <- function(features){
       all_genes <- append(all_genes, genes[!(genes %in% all_genes)])
       genes <- genes[!(genes %in% duplicated_features)]
       if (length(duplicated_features) > 0){
-        warning(paste0(add_warning(),crayon_body("Found duplicated features:\n"),
+        warning(paste0(add_warning(), crayon_body("Found duplicated features:\n"),
                        crayon_key(paste(duplicated_features, collapse = ", ")),
                        crayon_body("\nIn the list named: "),
                        crayon_key(list_name),
@@ -2987,11 +2987,6 @@ compute_umap_layer <- function(sample,
                                               pixels = c(raster.dpi, raster.dpi),
                                               na.rm = TRUE)
   }
-  # Generate embeddings limits.
-  x_limits <- c(min(embeddings$x, na.rm = TRUE),
-                max(embeddings$x, na.rm = TRUE))
-  y_limits <- c(min(embeddings$y, na.rm = TRUE),
-                max(embeddings$y, na.rm = TRUE))
 
   # Generate center points layer.
   out <- list()

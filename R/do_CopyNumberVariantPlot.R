@@ -131,7 +131,6 @@ do_CopyNumberVariantPlot <- function(sample,
   
   # Fix for group.by.
   if (is.null(group.by)){
-    aggr_entities <- levels(sample)
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }
@@ -251,7 +250,7 @@ do_CopyNumberVariantPlot <- function(sample,
                  dplyr::group_by(.data[[group]], .data$Event) %>% 
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
     
-    events <- c(as.character(seq(1,22)), vapply(seq(1,22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
+    events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
     if (isFALSE(flip)){
       factor.levels <- events[events %in% unique(data.use$Event)]
     } else {

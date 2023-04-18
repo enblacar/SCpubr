@@ -229,7 +229,7 @@ if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
     testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
                                                         from = "seurat_clusters",
                                                         to = "orig.ident",
-                                                        self.link = 3 )})
+                                                        self.link = 3)})
 
     testthat::expect_error({SCpubr::do_ChordDiagramPlot(sample = sample,
                                                         from = "CD14",

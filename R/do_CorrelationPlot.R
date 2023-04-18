@@ -147,8 +147,6 @@ do_CorrelationPlot <- function(sample = NULL,
     # Scale the data
     sample <- Seurat::ScaleData(sample, verbose = FALSE)
 
-    expr_mat <- data.frame("rownames" = rownames(sample))
-
     # Retrieve correlation matrix.
     out <- sample@meta.data %>%
            dplyr::select(dplyr::all_of(c(group.by))) %>%
@@ -179,7 +177,7 @@ do_CorrelationPlot <- function(sample = NULL,
     if (isTRUE(cluster)){
       order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
     } else {
-      order = rownames(out)
+      order <- rownames(out)
     }
     
 
@@ -296,9 +294,9 @@ do_CorrelationPlot <- function(sample = NULL,
     # Compute jaccard indext.
     jaccard <- function(set_1, set_2) {
       # Compute intersection.
-      intersection = length(dplyr::intersect(set_1, set_2))
+      intersection <- length(dplyr::intersect(set_1, set_2))
       # Compute the union.
-      union = length(set_1) + length(set_2) - intersection
+      union <- length(set_1) + length(set_2) - intersection
       # Jaccard index is just the number of shared genes divided by the number of non-shared genes.
       jaccard_index <- intersection / union
       return (jaccard_index)
@@ -370,7 +368,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                   from_data = TRUE,
                                   limits.use = limits)
     
-    axis.parameters <- handle_axis(flip = F,
+    axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = "A",
                                    group = "A",
                                    counter = 1,

@@ -10,7 +10,7 @@ if (isFALSE(dep_check[["do_DimPlot"]])){
     p <- SCpubr::do_DimPlot(sample = sample, split.by = "seurat_clusters")
     testthat::expect_type(p, "list")
 
-    sample$orig.ident <- sample(c("A", "B"), ncol(sample), replace = T)
+    sample$orig.ident <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     p <- SCpubr::do_DimPlot(sample = sample, group.by = "seurat_clusters", split.by = "orig.ident")
     testthat::expect_type(p, "list")
   })

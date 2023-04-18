@@ -366,14 +366,14 @@ do_FunctionalAnnotationPlot <- function(genes,
       counter <- counter + 1
       
       if (name == "Terms"){
-        xlab = "Genes"
-        ylab = "Terms"
+        xlab <- "Genes"
+        ylab <- "Terms"
       } else if (name == "Counts"){
-        xlab = NULL
-        ylab = NULL
+        xlab <- NULL
+        ylab <- NULL
       } else if (name == "Signif"){
-        xlab = NULL
-        ylab = NULL
+        xlab <- NULL
+        ylab <- NULL
       }
       p.use <- list.plots[[name]]
       

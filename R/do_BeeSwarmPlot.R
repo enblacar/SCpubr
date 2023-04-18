@@ -165,18 +165,8 @@ do_BeeSwarmPlot <- function(sample,
                                        crayon_body(" to "),
                                        crayon_key("feature_to_rank"),
                                        crayon_body(".")))
-
-  # Define legend parameters.
-  if (legend.position %in% c("top", "bottom")){
-    legend.barwidth <- legend.length
-    legend.barheight <- legend.width
-  } else if (legend.position %in% c("left", "right")){
-    legend.barwidth <- legend.width
-    legend.barheight <- legend.length
-  }
-
+  
   if (is.null(group.by)){
-    aggr_entities <- levels(sample)
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }

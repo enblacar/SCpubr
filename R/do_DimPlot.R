@@ -74,7 +74,7 @@ do_DimPlot <- function(sample,
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
-  dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
+  dims <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
   logical_list <- list("label" = label,
                        "repel" = repel,

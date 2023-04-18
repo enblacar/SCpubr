@@ -328,15 +328,10 @@ do_DiffusionMapPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
     
     # Generate metadata plots to use on top of the main heatmap.
-    counter <- 0
     list.plots <- list()
     list.plots[["main"]] <- p
     for (name in group.by){
-      counter <- counter + 1
-      if (counter == 1){
-        name_labels <- name
-      }
-      
+
       # Select color palette for metadata.
       if (name %in% names(colors.use)){
         colors.use.iteration <- colors.use[[name]]

@@ -115,7 +115,7 @@ do_AlluvialPlot <- function(sample,
                          "curve_type" = curve_type,
                          "viridis.palette" = viridis.palette,
                          "grid.color" = grid.color,
-                         "grid.type" = grid.type ,
+                         "grid.type" = grid.type,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
                          "legend.title" = legend.title,
@@ -139,7 +139,7 @@ do_AlluvialPlot <- function(sample,
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
 
-  StatStratum <- ggalluvial::StatStratum
+  #StatStratum <- ggalluvial::StatStratum
   `%>%` <- magrittr::`%>%`
 
   if (isTRUE(use_labels)){
@@ -215,9 +215,9 @@ do_AlluvialPlot <- function(sample,
   # COLORS.
   if (is.null(colors.use)){
     if (is.factor(data[[fill.by]])){
-      colors.use = generate_color_scale(levels(data[[fill.by]]))
+      colors.use <- generate_color_scale(levels(data[[fill.by]]))
     } else {
-      colors.use = generate_color_scale(sort(unique(data[[fill.by]])))
+      colors.use <- generate_color_scale(sort(unique(data[[fill.by]])))
     }
   } else {
     check_colors(colors.use)

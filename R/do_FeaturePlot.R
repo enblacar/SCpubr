@@ -104,7 +104,7 @@ do_FeaturePlot <- function(sample,
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
-  dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
+  dims <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
   logical_list <- list("verbose" = verbose,
                        "raster" = raster,
@@ -281,16 +281,6 @@ do_FeaturePlot <- function(sample,
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
 
-
-  # Define legend parameters. Width and height values will change depending on the legend orientation.
-  if (legend.position %in% c("top", "bottom")){
-    legend.barwidth <- legend.length
-    legend.barheight <- legend.width
-  } else if (legend.position %in% c("left", "right")){
-    legend.barwidth <- legend.width
-    legend.barheight <- legend.length
-  }
-  
   if (length(min.cutoff) != length(features)){
     warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
                    crayon_key("min.cutoff"),
@@ -332,7 +322,6 @@ do_FeaturePlot <- function(sample,
       center_layer_2 <- center_layers$center_layer_2
       color_layer <- out$color_layer
     }
-    embeddings <- out$embeddings
   }
 
   # CONDITION: Regular FeaturePlot, under default parameters.
@@ -378,10 +367,10 @@ do_FeaturePlot <- function(sample,
                                label.size = label.size,
                                label.color = label.color)
     } # nocov end
-    p$layers[[length(p$layers)]]$aes_params$fontface = "bold"
+    p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
      p <- p &
-      # Remove Seurat::FeaturePlot() default plot title.
-      ggplot2::ggtitle("")
+          # Remove Seurat::FeaturePlot() default plot title.
+          ggplot2::ggtitle("")
 
     # Add color scales.
     num_plots <- length(features)
@@ -679,7 +668,7 @@ do_FeaturePlot <- function(sample,
                                         label.size = label.size,
                                         label.color = label.color)
         } # nocov end
-        p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface = "bold"
+        p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"
 
         # Add scale.
 
@@ -877,7 +866,7 @@ do_FeaturePlot <- function(sample,
                                           label.size = label.size,
                                           label.color = label.color)
           } # nocov end
-          p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface = "bold"
+          p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"
 
 
           scale.setup <- compute_scales(sample = sample,
@@ -1111,7 +1100,7 @@ do_FeaturePlot <- function(sample,
 
   # Add individual titles.
   if (!is.null(individual.titles)){
-    for (counter in seq(1,length(features))){
+    for (counter in seq(1, length(features))){
       if (!(is.na(individual.titles[counter]))){
         if (is.null(split.by)){
           p[[counter]]$labels$title <- individual.titles[counter]
@@ -1122,7 +1111,7 @@ do_FeaturePlot <- function(sample,
 
   # Add individual subtitles.
   if (!is.null(individual.subtitles)){
-    for (counter in seq(1,length(features))){
+    for (counter in seq(1, length(features))){
       if (!(is.na(individual.subtitles[counter]))){
         if (is.null(split.by)){
           p[[counter]]$labels$subtitle <- individual.subtitles[counter]
@@ -1133,7 +1122,7 @@ do_FeaturePlot <- function(sample,
 
   # Add individual captions
   if (!is.null(individual.captions)){
-    for (counter in seq(1,length(features))){
+    for (counter in seq(1, length(features))){
       if (!(is.na(individual.captions[counter]))){
         if (is.null(split.by)){
           p[[counter]]$labels$caption <- individual.captions[counter]

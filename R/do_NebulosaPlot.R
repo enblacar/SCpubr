@@ -63,7 +63,7 @@ do_NebulosaPlot <- function(sample,
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
-  dimensions <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
+  dims <- check_and_set_dimensions(sample = sample, reduction = reduction, dims = dims)
   # Check logical parameters.
   logical_list <- list("combine" = combine,
                        "joint" = joint,
@@ -141,15 +141,6 @@ do_NebulosaPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-
-  # Define legend parameters.
-  if (legend.position %in% c("top", "bottom")){
-    legend.barwidth <- legend.length
-    legend.barheight <- legend.width
-  } else if (legend.position %in% c("left", "right")){
-    legend.barwidth <- legend.width
-    legend.barheight <- legend.length
-  }
 
   # Plot a density plot using Nebulosa package.
     p <- Nebulosa::plot_density(object = sample,

@@ -130,6 +130,7 @@ do_RidgePlot <- function(sample,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -304,7 +305,7 @@ do_RidgePlot <- function(sample,
   if (!is.null(split.by)){
     # Facet.
     p <- p +
-         ggplot2::facet_grid( ~ .data$split.by)
+         ggplot2::facet_grid(~ .data$split.by)
   }
 
 

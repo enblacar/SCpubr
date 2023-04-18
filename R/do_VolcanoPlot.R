@@ -100,7 +100,6 @@ do_VolcanoPlot <- function(sample,
   assertthat::assert_that(order_tags_by %in% c("both", "pvalue", "logfc"),
                           msg = "Please use either both, pvalue or logfc in order_tags_by.")
 
-  `.` <- plyr::.()
   `%>%` <- magrittr::`%>%`
   colors <- do_ColorPalette(colors.use, tetradic = TRUE)
   names(colors) <- c("A", "C", "B", "D")

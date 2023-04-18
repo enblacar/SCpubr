@@ -120,8 +120,6 @@ do_PathwayActivityPlot <- function(sample,
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
   
-  
-  `%v%` <- ComplexHeatmap::`%v%`
   `%>%` <- magrittr::`%>%`
   
   sample[["progeny"]] <- activities %>%
@@ -153,7 +151,7 @@ do_PathwayActivityPlot <- function(sample,
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
-    group.by = "Groups"
+    group.by <- "Groups"
   }
   # Plotting
   list.out <- list()

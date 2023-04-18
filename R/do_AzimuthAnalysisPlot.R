@@ -319,7 +319,7 @@ do_AzimuthAnalysisPlot <- function(sample,
   # Generate the output list.
   output_list[["mapping_scores"]] <- p.mapping
   output_list[["umap_in_reference"]] <- p.umap.ref
-  output_list[["inferred_annotation"]] <- sample@meta.data[, "inferred_annotation", drop = F]
+  output_list[["inferred_annotation"]] <- sample@meta.data[, "inferred_annotation", drop = FALSE]
   output_list[["umap_prediction"]] <- p.umap
   output_list[["umap_clusters"]] <- p.umap.cluster
   output_list[["barplot_pred"]] <- p.barplot

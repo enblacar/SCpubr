@@ -166,16 +166,6 @@ do_DotPlot <- function(sample,
     check_colors(na.value, parameter_name = "na.value")
     check_colors(grid.color, parameter_name = "grid.color")
 
-    # Define legend parameters.
-    if (legend.position %in% c("top", "bottom")){
-      legend.barwidth <- legend.length
-      legend.barheight <- legend.width
-    } else if (legend.position %in% c("left", "right")){
-      legend.barwidth <- legend.width
-      legend.barheight <- round(legend.length / 2, 0)
-    }
-
-
     p <- Seurat::DotPlot(sample,
                          features = features,
                          group.by = group.by,

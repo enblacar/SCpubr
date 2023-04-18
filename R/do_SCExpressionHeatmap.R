@@ -129,7 +129,7 @@ do_SCExpressionHeatmap <- function(sample,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
-
+  check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_colors(na.value, parameter_name = "na.value")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
