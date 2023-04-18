@@ -40,8 +40,8 @@ jobs:
                                                              "vector_logic_linter" = NULL,
                                                              "object_length_linter" = NULL,
                                                              "spaces_inside_linter" = NULL,
-                                                             "commented_code_linter" = NULL), 
-                                "implicit_integer_linter" = NULL, 
+                                                             "commented_code_linter" = NULL),
+                                "implicit_integer_linter" = NULL,
                                 "extraction_operator_linter" = NULL))
         shell: Rscript {0}
         env:
