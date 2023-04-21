@@ -53,6 +53,13 @@ Many (except a few selected cases) of the functions that returned list of differ
     -   `legend.text.face`: To control the style of the **legend text**.
 -   Changed default font style for legend text from `bold` to `plain`. 
 
+## `SCpubr::do_BarPlot`
+
+-   Added `facet.by` parameter to extra group the bars by a third metadata variable.
+-   Added `facet.by.direction` parameter to decide in which direction the facets are drawn.
+-   Added `order.by` to reorder the bars when using `position = fill` based on a value in `group.by`.
+-   Limited the possible interactions from `group.by`, `split.by` and `order.by` to those that make sense to plot. For instance, a bar plot using `group.by` and `position = fill` but not using `split.by ` resulted in bars of equal lenght with only one value per group of proportion `1`.
+
 ## `SCpubr::do_BeeSwarmPlot`
 
 -   Added `order` parameter to reorder the groups based on the median rank.

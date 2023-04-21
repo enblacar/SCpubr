@@ -8,7 +8,9 @@ do_BarPlot(
   sample,
   group.by,
   order = TRUE,
+  order.by = NULL,
   split.by = NULL,
+  facet.by = NULL,
   position = "stack",
   font.size = 14,
   font.type = "sans",
@@ -34,7 +36,8 @@ do_BarPlot(
   axis.title.face = "bold",
   axis.text.face = "bold",
   legend.title.face = "bold",
-  legend.text.face = "plain"
+  legend.text.face = "plain",
+  strip.text.face = "bold"
 )
 }
 \arguments{
@@ -44,7 +47,11 @@ do_BarPlot(
 
 \item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.}
 
+\item{order.by}{\strong{\code{\link[base]{character}}} | When \strong{\code{split.by}} is used, value of \strong{\code{group.by}} to reorder the columns based on its value.}
+
 \item{split.by}{\strong{\code{\link[base]{character}}} | Metadata column to split the values of group.by by. If not used, defaults to the active idents.}
+
+\item{facet.by}{\strong{\code{\link[base]{character}}} | Metadata column to gather the columns by. This is useful if you have other overarching metadata.}
 
 \item{position}{\strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
 \itemize{

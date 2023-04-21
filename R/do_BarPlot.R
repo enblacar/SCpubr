@@ -4,7 +4,9 @@
 #' @inheritParams doc_function
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata column to compute the counts of. Has to be either a character or factor column.
 #' @param split.by \strong{\code{\link[base]{character}}} | Metadata column to split the values of group.by by. If not used, defaults to the active idents.
+#' @param facet.by \strong{\code{\link[base]{character}}} | Metadata column to gather the columns by. This is useful if you have other overarching metadata.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.
+#' @param order.by \strong{\code{\link[base]{character}}} | When \strong{\code{split.by}} is used, value of \strong{\code{group.by}} to reorder the columns based on its value.
 #' @param position \strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
 #' \itemize{
 #'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
@@ -18,7 +20,9 @@
 do_BarPlot <- function(sample,
                        group.by,
                        order = TRUE,
+                       order.by = NULL,
                        split.by = NULL,
+                       facet.by = NULL,
                        position = "stack",
                        font.size = 14,
                        font.type = "sans",
@@ -44,7 +48,8 @@ do_BarPlot <- function(sample,
                        axis.title.face = "bold",
                        axis.text.face = "bold",
                        legend.title.face = "bold",
-                       legend.text.face = "plain") {
+                       legend.text.face = "plain",
+                       strip.text.face = "bold") {
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
@@ -70,6 +75,8 @@ do_BarPlot <- function(sample,
 
   character_list <- list("group.by" = group.by,
                          "split.by" = split.by,
+                         "facet.by" = facet.by,
+                         "order.by" = order.by,
                          "position" = position,
                          "font.type" = font.type,
                          "legend.position" = legend.position,
@@ -105,7 +112,8 @@ do_BarPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-  
+  check_parameters(strip.text.face, parameter_name = "strip.text.face")
+  check_parameters(facet.by.direction, parameter_name = "facet.by.direction")
   # Get the general table.
   assertthat::assert_that(class(sample@meta.data[, group.by]) %in% c("character", "factor"),
                           msg = paste0(add_cross(), crayon_body("Please provide to "),
@@ -113,7 +121,31 @@ do_BarPlot <- function(sample,
                                        crayon_body(" a "),
                                        crayon_key(" metadta categorical "),
                                        crayon_body(" variable.")))
-
+  
+  assertthat::assert_that(isFALSE(position == "fill" & is.null(split.by)),
+                          msg = paste0(add_cross(),
+                                       crayon_body("Please use "),
+                                       crayon_key("position =  fill"),
+                                       crayon_body(" alongisde "),
+                                       crayon_key("split.by"),
+                                       crayon_body(".")))
+  
+  assertthat::assert_that(isFALSE(position == "stack" & isTRUE(order) & !is.null(order.by)),
+                          msg = paste0(add_cross(),
+                                       crayon_body("Please use "),
+                                       crayon_key("order.by"),
+                                       crayon_body(" alongisde "),
+                                       crayon_key("position = fill"),
+                                       crayon_body(".")))
+  
+  assertthat::assert_that(isFALSE(position == "fill" & isTRUE(order) & is.null(order.by)),
+                          msg = paste0(add_cross(),
+                                       crayon_body("Please use "),
+                                       crayon_key("order.by"),
+                                       crayon_body(" alongisde "),
+                                       crayon_key("position = fill"),
+                                       crayon_body(".")))
+  
   if (is.null(colors.use)){
     colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
   } else {
@@ -121,17 +153,48 @@ do_BarPlot <- function(sample,
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     colors.use <- colors.use[unique(sample@meta.data[, group.by])]
   }
+  
   data <-  sample@meta.data %>%
            tibble::as_tibble() %>%
-           dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
-           dplyr::mutate("{group.by}" := if(isFALSE(order)) {.data[[group.by]]} else {factor(as.character(.data[[group.by]]), levels = {sample@meta.data %>%
-                                                                                                                                        tibble::as_tibble() %>%
-                                                                                                                                        dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
-                                                                                                                                        dplyr::group_by(.data[[group.by]]) %>%
-                                                                                                                                        dplyr::summarise("n" = dplyr::n()) %>%
-                                                                                                                                        dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["n"]])} else {.data[["n"]]}) %>%
-                                                                                                                                        dplyr::pull(.data[[group.by]]) %>%
-                                                                                                                                        as.character()})})
+           dplyr::select(dplyr::all_of(c(group.by, split.by, facet.by)))
+  
+  if (isTRUE(order)){
+    if (is.null(order.by)){
+      order.use <- sample@meta.data %>%
+                   tibble::as_tibble() %>%
+                   dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
+                   dplyr::group_by(.data[[group.by]]) %>%
+                   dplyr::summarise("n" = dplyr::n()) %>%
+                   dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["n"]])} else {.data[["n"]]}) %>%
+                   dplyr::pull(.data[[group.by]]) %>%
+                   as.character()
+      data <- data %>% 
+              dplyr::mutate("{group.by}" := factor(as.character(.data[[group.by]]), 
+                                                   levels = order.use))
+    } else {
+      order.use <- sample@meta.data %>%
+                   tibble::as_tibble() %>%
+                   dplyr::mutate(dplyr::across(dplyr::all_of(c(group.by, split.by)), as.character)) %>% 
+                   tidyr::complete(.data[[split.by]], .data[[group.by]], explicit = FALSE) %>% 
+                   dplyr::group_by(.data[[split.by]], .data[[group.by]]) %>%
+                   dplyr::summarise("n" = dplyr::n(),
+                                    "{split.by}" := unique(.data[[split.by]])) %>% 
+                   dplyr::reframe("freq" = .data$n / sum(.data$n),
+                                  "{split.by}" := unique(.data[[split.by]]),
+                                  "{group.by}" := unique(.data[[group.by]])) %>% 
+                   dplyr::filter(.data[[group.by]] == order.by) %>% 
+                   dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["freq"]])} else {.data[["freq"]]}) %>% 
+                   dplyr::pull(.data[[split.by]]) %>% 
+                   as.character()
+      
+      data <- data %>% 
+              dplyr::mutate("{split.by}" := factor(as.character(.data[[split.by]]), 
+                                                   levels = order.use))
+    }
+  }
+  
+  
+          
   if (is.null(split.by)){
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data[[group.by]],
@@ -141,35 +204,55 @@ do_BarPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data[[split.by]],
                                                 fill = .data[[group.by]]))
   }
-
-  xlab <- {
-    if (!is.null(xlab)){
-      xlab
-    } else {
-      if (!is.null(group.by) & is.null(split.by)){
-        group.by
-      } else if (!is.null(group.by) & !is.null(split.by)){
-        split.by
-      }
+  
+  
+  if (is.null(xlab)){
+    if (!is.null(group.by) & is.null(split.by)){
+      xlab <- group.by
+    } else if (!is.null(group.by) & !is.null(split.by)){
+      xlab <- split.by
     }
   }
-
- ylab <- {
-   ifelse(is.null(ylab),
-          paste0(ifelse(position == "stack", "Count", "Frequency"), " of ", group.by),
-          ylab)
- }
-
- legend.title <- {
-   if (!is.null(legend.title)){
-     legend.title
+  
+  if (is.null(ylab)){
+    ylab <- ifelse(position == "stack", "Count", "Proportion")
+  }
+  
+ if (is.null(legend.title)){
+   if (position == "stack"){
+     if (is.null(split.by)){
+       legend.title <- NULL
+     } else {
+       legend.title <- split.by
+     }
    } else {
-     group.by
+     legend.title <- group.by
    }
  }
 
   p <- p +
-       ggplot2::stat_count(geom = "bar", position = position, color = "black") +
+       ggplot2::stat_count(geom = "bar", position = position, color = "black")
+  
+  if (isTRUE(flip)){
+    p <- p + ggplot2::coord_flip()
+  }
+  
+  if (!is.null(facet.by)){
+    if (isFALSE(flip)){
+      p <- p + 
+        ggplot2::facet_grid(cols = ggplot2::vars(.data[[facet.by]]),
+                            scales = "free",
+                            space = "free",
+                            drop = TRUE)
+    } else {
+      p <- p + 
+        ggplot2::facet_grid(rows = ggplot2::vars(.data[[facet.by]]),
+                            scales = "free",
+                            space = "free",
+                            drop = TRUE)
+    }
+  }
+  p <- p +
        ggplot2::xlab(xlab) +
        ggplot2::ylab(ylab) +
        ggplot2::labs(title = plot.title,
@@ -211,12 +294,8 @@ do_BarPlot <- function(sample,
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"),
-                      strip.text =ggplot2::element_text(color = "black", face = "bold"))
-
-
-  if (isTRUE(flip)){
-    p <- p + ggplot2::coord_flip()
-  }
+                      strip.text = ggplot2::element_text(color = "black", face = strip.text.face),
+                      strip.background = ggplot2::element_blank())
 
  return(p)
 }
