@@ -15,6 +15,7 @@ do_SCExpressionHeatmap(
   metadata.colors = NULL,
   subsample = NA,
   cluster = TRUE,
+  interpolate = FALSE,
   xlab = "Cells",
   ylab = "Genes",
   font.size = 14,
@@ -81,6 +82,8 @@ do_SCExpressionHeatmap(
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
 \item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
+
+\item{interpolate}{\strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 

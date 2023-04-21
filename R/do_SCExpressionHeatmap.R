@@ -21,6 +21,7 @@ do_SCExpressionHeatmap <- function(sample,
                                    metadata.colors = NULL,
                                    subsample = NA,
                                    cluster = TRUE,
+                                   interpolate = FALSE,
                                    xlab = "Cells",
                                    ylab = "Genes",
                                    font.size = 14,
@@ -80,7 +81,8 @@ do_SCExpressionHeatmap <- function(sample,
                        "verbose" = verbose,
                        "legend.byrow" = legend.byrow,
                        "use_viridis" = use_viridis,
-                       "cluster" = cluster)
+                       "cluster" = cluster,
+                       "interpolate" = interpolate)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -349,7 +351,7 @@ do_SCExpressionHeatmap <- function(sample,
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                                   y = .data$y_row,
                                                   fill = .data$y)) +
-           ggplot2::geom_tile() +
+           ggplot2::geom_raster(interpolate = interpolate) +
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
                                space = if(isTRUE(proportional.size)) {"fixed"} else {"free"}) +

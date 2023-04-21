@@ -19,6 +19,7 @@ do_SCEnrichmentHeatmap(
   return_object = FALSE,
   ncores = 1,
   storeRanks = TRUE,
+  interpolate = FALSE,
   nbin = 24,
   ctrl = 100,
   xlab = "Cells",
@@ -95,6 +96,8 @@ do_SCEnrichmentHeatmap(
 \item{ncores}{\strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.}
 
 \item{storeRanks}{\strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.}
+
+\item{interpolate}{\strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 

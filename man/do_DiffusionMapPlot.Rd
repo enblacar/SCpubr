@@ -15,6 +15,7 @@ do_DiffusionMapPlot(
   reduction = "diffusion",
   group.by = NULL,
   colors.use = NULL,
+  interpolate = FALSE,
   nbin = 24,
   ctrl = 100,
   flavor = "Seurat",
@@ -73,7 +74,9 @@ do_DiffusionMapPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{colors.use}{\strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column!}
+\item{colors.use}{\strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the package but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column!}
+
+\item{interpolate}{\strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
 

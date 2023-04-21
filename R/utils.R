@@ -162,6 +162,7 @@
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param features.order \strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.
 #' @param groups.order \strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.
+#' @param interpolate \strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -279,7 +280,8 @@ doc_function <- function(sample,
                          legend.text.face,
                          flavor,
                          features.order,
-                         groups.order){}
+                         groups.order,
+                         interpolate){}
 
 #' Named vector.
 #'

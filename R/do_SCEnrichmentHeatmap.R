@@ -28,6 +28,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    return_object = FALSE,
                                    ncores = 1,
                                    storeRanks = TRUE,
+                                   interpolate = FALSE,
                                    nbin = 24,
                                    ctrl = 100,
                                    xlab = "Cells",
@@ -88,7 +89,8 @@ do_SCEnrichmentHeatmap <- function(sample,
                        "use_viridis" = use_viridis,
                        "cluster" = cluster,
                        "storeRanks" = storeRanks,
-                       "return_object" = return_object) 
+                       "return_object" = return_object,
+                       "interpolate" = interpolate) 
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -454,7 +456,7 @@ do_SCEnrichmentHeatmap <- function(sample,
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                               y = .data$gene,
                                               fill = .data$expression)) +
-       ggplot2::geom_raster()
+       ggplot2::geom_raster(interpolate = interpolate)
   
   
   p <- p + ggplot2::facet_grid(~ .data$group.by,

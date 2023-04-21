@@ -1,7 +1,7 @@
 #' Compute a heatmap of enrichment of gene sets on the context of a diffusion component.
 #'
 #' @inheritParams doc_function
-#' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
+#' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the package but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | A number from 0 to 1 corresponding to how big the main heatmap plot should be with regards to the rest (corresponds to the proportion in size).  
 #' @param scale.enrichment \strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.
 #' @return A list of ggplot2 objects and a Seurat object if desired.
@@ -18,6 +18,7 @@ do_DiffusionMapPlot <- function(sample,
                                 reduction = "diffusion",
                                 group.by = NULL,
                                 colors.use = NULL,
+                                interpolate = FALSE,
                                 nbin = 24,
                                 ctrl = 100,
                                 flavor = "Seurat",
@@ -67,7 +68,8 @@ do_DiffusionMapPlot <- function(sample,
                        "return_object" = return_object,
                        "scale.enrichment" = scale.enrichment,
                        "use_viridis" = use_viridis,
-                       "verbose" = verbose)
+                       "verbose" = verbose,
+                       "interpolate" = interpolate)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -278,7 +280,7 @@ do_DiffusionMapPlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                 y = .data$Gene_Set,
                                                 fill = .data$Enrichment)) + 
-         ggplot2::geom_raster()
+         ggplot2::geom_raster(interpolate = interpolate)
     
     legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"}
     legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name), legend.name)
@@ -347,7 +349,7 @@ do_DiffusionMapPlot <- function(sample,
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                   y = .data$grouped.var,
                                                   fill = .data[[name]])) + 
-           ggplot2::geom_raster() + 
+           ggplot2::geom_raster(interpolate = interpolate) + 
            ggplot2::scale_fill_manual(values = colors.use.iteration) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                         title.position = "top",
