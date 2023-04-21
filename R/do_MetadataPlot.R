@@ -24,6 +24,7 @@ do_MetadataPlot <- function(sample = NULL,
                             from_df = FALSE,
                             df = NULL,
                             colors.use = NULL,
+                            cluster = TRUE,
                             flip = TRUE,
                             heatmap.gap = 1,
                             axis.text.x.angle = 45,
@@ -53,7 +54,8 @@ do_MetadataPlot <- function(sample = NULL,
   # Check logical parameters.
   logical_list <- list("flip" = flip,
                        "from_df" = from_df,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "cluster" = cluster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -141,7 +143,12 @@ do_MetadataPlot <- function(sample = NULL,
                                          crayon_body(" parameter.")))
     
     group.by <- "Groups"
-    metadata <- colnames(df)
+    if (isFALSE(flip)){
+      metadata <- colnames(df)
+    } else {
+      metadata <- rev(colnames(df))
+    }
+    
     data.plot <- df %>% 
                  tibble::rownames_to_column(var = group.by)
     data.order <-  data.plot %>% 
@@ -149,8 +156,12 @@ do_MetadataPlot <- function(sample = NULL,
                    dplyr::mutate(dplyr::across(dplyr::everything(), as.factor))
   }
   
-
-  order.use <- rownames(data.order)[stats::hclust(cluster::daisy(data.order, metric = "gower"), method = "ward.D")$order]
+  if (isTRUE(cluster)){
+    order.use <- rownames(data.order)[stats::hclust(cluster::daisy(data.order, metric = "gower"), method = "ward.D")$order]
+  } else {
+    order.use <- rev(rownames(data.order))
+  }
+  
   
   
   list.heatmaps <- list()
