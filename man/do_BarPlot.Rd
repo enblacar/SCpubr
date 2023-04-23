@@ -7,7 +7,7 @@
 do_BarPlot(
   sample,
   group.by,
-  order = TRUE,
+  order = FALSE,
   order.by = NULL,
   split.by = NULL,
   facet.by = NULL,

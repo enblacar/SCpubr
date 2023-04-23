@@ -171,14 +171,6 @@ do_LigandReceptorPlot <- function(liana_output,
   # For Chord diagrams.
   output_copy <- liana_output %>% dplyr::filter(.data$aggregate_rank <= 0.05)
 
-
-  liana_output <- liana_output %>%
-                  # Filter based on the top X interactions of ascending sensibilities.
-                  dplyr::inner_join(y = {liana_output %>%
-                                         dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
-                                         dplyr::slice_head(n = top_interactions)},
-                                    by = c("ligand.complex", "receptor.complex"))
-
   # If the user wants to trim the matrix and subset interacting entities.
   if (!(is.null(keep_source))){
     liana_output <- liana_output %>%
@@ -193,7 +185,14 @@ do_LigandReceptorPlot <- function(liana_output,
     output_copy <- output_copy %>%
                    dplyr::filter(.data$target %in% keep_target)
   }
-
+  
+  liana_output <- liana_output %>%
+                  # Filter based on the top X interactions of ascending sensibilities.
+                  dplyr::inner_join(y = {liana_output %>%
+                      dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
+                      dplyr::slice_head(n = top_interactions)},
+                      by = c("ligand.complex", "receptor.complex"))
+  
   assertthat::assert_that(nrow(liana_output) > 0,
                           msg = paste0(add_cross(), crayon_body("Whith the current presets of "),
                                        crayon_key("keep_source"),
@@ -237,7 +236,7 @@ do_LigandReceptorPlot <- function(liana_output,
   p <- p +
        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$interaction)))) +
        ggplot2::scale_size_continuous(name = size_title,
-                                      range = c(1 * dot.size, 5 * dot.size)) 
+                                      range = c(2 * dot.size, 10 * dot.size)) 
   
   # Settings for bordered dots.
   limits <- c(min(liana_output$magnitude, na.rm = TRUE),
@@ -270,7 +269,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                          limits = scale.setup$limits)
     } else {
       p <- p +
-           ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+           ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9])},
                                           na.value = NA,
                                           name = fill.title,
                                           breaks = scale.setup$breaks,
@@ -290,7 +289,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                        limits = scale.setup$limits)
     } else {
       p <- p +
-        ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+        ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9])},
                                       na.value = NA,
                                       name = fill.title,
                                       breaks = scale.setup$breaks,

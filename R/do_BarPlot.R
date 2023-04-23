@@ -19,7 +19,7 @@
 #' @example /man/examples/examples_do_BarPlot.R
 do_BarPlot <- function(sample,
                        group.by,
-                       order = TRUE,
+                       order = FALSE,
                        order.by = NULL,
                        split.by = NULL,
                        facet.by = NULL,

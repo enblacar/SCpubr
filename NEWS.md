@@ -135,6 +135,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed `arrange_interactions_by` as now the function only accepts the output of `liana::liana_aggregate()`.
 -   Removed `flip` parameter as the output was prone to errors.
 -   Removed parameter `compute_ChordDiagrams` and added `return_interactions`. This parameter returns two tibbles that can be used alongside `SCpubr::do_ChordDiagramPlot` to plot the diagrams. 
+-   Now the filtering applied by using `keep_source` and `keep_target` takes place before subsetting for the top N interactions defined by `top_interactions`. This ensures that, if the user wants to focus on a given interaction subset, we retrieve the most important interactions for the subset.
 
 ## `SCpubr::do_PathwayActivityPlot()`
 
