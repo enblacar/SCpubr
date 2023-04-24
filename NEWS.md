@@ -59,6 +59,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Added `facet.by.direction` parameter to decide in which direction the facets are drawn.
 -   Added `order.by` to reorder the bars when using `position = fill` based on a value in `group.by`.
 -   Limited the possible interactions from `group.by`, `split.by` and `order.by` to those that make sense to plot. For instance, a bar plot using `group.by` and `position = fill` but not using `split.by ` resulted in bars of equal lenght with only one value per group of proportion `1`.
+-   Set default value of `plot.grid` to `FALSE`.
 
 ## `SCpubr::do_BeeSwarmPlot`
 

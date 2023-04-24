@@ -27,7 +27,7 @@ do_BarPlot(
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  plot.grid = TRUE,
+  plot.grid = FALSE,
   grid.color = "grey75",
   grid.type = "dashed",
   plot.title.face = "bold",
@@ -111,6 +111,14 @@ do_BarPlot(
 }}
 
 \item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
+
+\item{strip.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the strip text.  One of:
 \itemize{
 \item \emph{\code{plain}}: For normal text.
 \item \emph{\code{italic}}: For text in itallic.

@@ -12,7 +12,13 @@
 #'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
 #'   \item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
 #' }
-#'
+#' @param strip.text.face \strong{\code{\link[base]{character}}} | Controls the style of the font for the strip text.  One of:
+#' \itemize{
+#'   \item \emph{\code{plain}}: For normal text.
+#'   \item \emph{\code{italic}}: For text in itallic.
+#'   \item \emph{\code{bold}}: For text in bold.
+#'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
+#' }
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'
@@ -39,7 +45,7 @@ do_BarPlot <- function(sample,
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
-                       plot.grid = TRUE,
+                       plot.grid = FALSE,
                        grid.color = "grey75",
                        grid.type = "dashed",
                        plot.title.face = "bold",
@@ -113,7 +119,6 @@ do_BarPlot <- function(sample,
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
   check_parameters(strip.text.face, parameter_name = "strip.text.face")
-  check_parameters(facet.by.direction, parameter_name = "facet.by.direction")
   # Get the general table.
   assertthat::assert_that(class(sample@meta.data[, group.by]) %in% c("character", "factor"),
                           msg = paste0(add_cross(), crayon_body("Please provide to "),
