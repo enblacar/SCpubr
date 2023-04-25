@@ -34,13 +34,13 @@ do_BoxPlot <- function(sample,
                        plot.caption = NULL,
                        xlab = NULL,
                        ylab = NULL,
-                       legend.title = if (is.null(split.by)){if (is.null(group.by)) {"Groups"} else {group.by}} else {split.by},
+                       legend.title = NULL,
                        legend.title.position = "top",
-                       legend.position = if (is.null(split.by)) {"none"} else {"bottom"},
+                       legend.position = NULL,
                        boxplot.line.color = "black",
                        outlier.color = "black",
                        outlier.alpha = 0.5,
-                       boxplot.linewidth = 1,
+                       boxplot.linewidth = 0.5,
                        boxplot.width = NULL,
                        plot.grid = TRUE,
                        grid.color = "grey75",
@@ -121,7 +121,14 @@ do_BoxPlot <- function(sample,
   feature <- check_feature(sample = sample, features = feature, permissive = TRUE)
 
   `%>%` <- magrittr::`%>%`
-
+  
+  if (is.null(legend.position)){
+    if (is.null(split.by)) {
+      legend.position <- "none"
+    } else {
+      legend.position <- "bottom"
+    }
+  }
 
   check_colors(na.value, parameter_name = "na.value")
   check_colors(boxplot.line.color, parameter_name = "boxplot.line.color")
@@ -139,6 +146,20 @@ do_BoxPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  
+  if (is.null(legend.title)){
+    if (is.null(split.by)){
+      if (is.null(group.by)) {
+        legend.title <- "Groups"
+      } else {
+        legend.title <- group.by
+      }
+    } else {
+      legend.title <- split.by
+    }
+  }
+  
+ 
   
   if (is.null(group.by)){
     sample[["group.by"]] <- Seurat::Idents(sample)

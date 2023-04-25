@@ -21,27 +21,13 @@ do_BoxPlot(
   plot.caption = NULL,
   xlab = NULL,
   ylab = NULL,
-  legend.title = if (is.null(split.by)) {
-     if (is.null(group.by)) {
-        
-    "Groups"
-     }
-     else {
-         group.by
-     }
- } else {
-     split.by
- },
+  legend.title = NULL,
   legend.title.position = "top",
-  legend.position = if (is.null(split.by)) {
-     "none"
- } else {
-     "bottom"
- },
+  legend.position = NULL,
   boxplot.line.color = "black",
   outlier.color = "black",
   outlier.alpha = 0.5,
-  boxplot.linewidth = 1,
+  boxplot.linewidth = 0.5,
   boxplot.width = NULL,
   plot.grid = TRUE,
   grid.color = "grey75",

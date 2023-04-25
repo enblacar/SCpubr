@@ -346,11 +346,16 @@ do_EnrichmentHeatmap <- function(sample,
     }
     
     
-    if (!is.null(groups.order) & (group %in% names(groups.order))){
-      groups.order.use <- groups.order[[group]]
+    if (!is.null(groups.order)){
+      if (group %in% names(groups.order)){
+        groups.order.use <- groups.order[[group]]
+      } else {
+        groups.order.use <- groups.order
+      }
     } else {
       groups.order.use <- row_order
     }
+    
     data <- df %>%
             dplyr::mutate("gene_list" = factor(.data$gene_list, levels = if (is.null(features.order)){rev(col_order)} else {features.order}),
                           "group.by" = factor(.data$group.by, levels = groups.order.use))

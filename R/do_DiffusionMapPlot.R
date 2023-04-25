@@ -253,8 +253,8 @@ do_DiffusionMapPlot <- function(sample,
                   dplyr::filter(.data[[key_col]] == dc.use)
     
     # Limit the scale to quantiles 0.1 and 0.9 to avoid extreme outliers.
-    limits <- c(stats::quantile(data.plot$Enrichment, 0.1),
-                stats::quantile(data.plot$Enrichment, 0.9))
+    limits <- c(stats::quantile(data.plot$Enrichment, 0.1, na.rm = TRUE),
+                stats::quantile(data.plot$Enrichment, 0.9, na.rm = TRUE))
     
     # Bring extreme values to the cutoffs.
     data.plot <- data.plot %>% 

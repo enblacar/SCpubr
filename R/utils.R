@@ -735,7 +735,7 @@ package_report <- function(startup = FALSE){
                                       crayon_key(system_version)), line_col = "cadetblue")
     
     system_version_message <- paste0(cli::col_magenta("Installed: "), cli::ansi_align(crayon_key(system_version), max_length, align = "right"))
-    cran_version_message <- paste0(cli::col_magenta("CRAN:   "), cli::ansi_align(crayon_key(cran_version), max_length, align = "right"))
+    cran_version_message <- paste0(cli::col_magenta("CRAN:      "), cli::ansi_align(crayon_key(cran_version), max_length, align = "right"))
     
     
     # nocov start

@@ -13,7 +13,6 @@ do_AffinityAnalysisPlot(
   slot = NULL,
   statistic = "norm_wmean",
   number.breaks = 5,
-  compute_robustness = FALSE,
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
@@ -36,12 +35,10 @@ do_AffinityAnalysisPlot(
   colors.use = NULL,
   min.cutoff = NA,
   max.cutoff = NA,
-  control.sets.number = 50,
   verbose = TRUE,
   return_object = FALSE,
   grid.color = "white",
   border.color = "black",
-  add.enrichment = FALSE,
   flavor = "Seurat",
   nbin = 24,
   ctrl = 100,
@@ -67,11 +64,10 @@ do_AffinityAnalysisPlot(
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
-\item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.}
+\item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use for the analysis.
+values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
-
-\item{compute_robustness}{\strong{\code{\link[base]{logical}}} | This will query each of the individual gene sets for a robustness analysis. This is, for the Seurat object provided, the expression matrix (defined by the assay and slot parameter) will be binned in 24 bins. A total of}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
@@ -127,9 +123,6 @@ do_AffinityAnalysisPlot(
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{control.sets.number}{datasets will be generated pooling as many genes as genes in each original gene set, matching the expression bins. Then, a network is generated and activities are computed as usual. Barplots of each individual gene set split by the unique
-values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
-
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 
 \item{return_object}{\strong{\code{\link[base]{logical}}} | Returns the Seurat object with the modifications performed in the function. Nomally, this contains a new assay with the data that can then be used for any other visualization desired.}
@@ -137,8 +130,6 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
-
-\item{add.enrichment}{\strong{\code{\link[base]{logical}}} | Whether the include a heatmap with the enrichment scores for the gene sets together with the activities.}
 
 \item{flavor}{\strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.}
 

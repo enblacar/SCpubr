@@ -67,9 +67,10 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 ## `SCpubr::do_BoxPlot`
 
--   Change the reordering of boxplots based on the median rather than the mean.
+-   Changed the reordering of boxplots based on the median rather than the mean.
 -   Added `na.rm` to `geom_boxplot` to avoid unnecessary warnings when introducing NAs as part of the data.
 -   Fixe bug in which `order` would not work if `NAs` are in the data.
+-   Changed default value of `boxplot.linewidth` from `1` to `0.5`.
 
 ## `SCpubr::do_CorrelationPlot`
 
