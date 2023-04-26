@@ -3437,14 +3437,14 @@ check_group_by <- function(sample,
   for (group in group.by){
     assertthat::assert_that(group %in% colnames(sample@meta.data),
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
-                                         yon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
+                                         crayon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
                                          crayon_body(" is not part of the Seurat object "),
                                          crayon_key("meta.data"),
                                          crayon_body(".")))
     
     assertthat::assert_that(class(sample@meta.data[, group]) %in% c("character", "factor"),
                             msg = paste0(add_cross(), crayon_body("The value provided to"),
-                                         cyon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
+                                         crayon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
                                          crayon_body(" is not a "),
                                          crayon_key("character"),
                                          crayon_body( "or "),
