@@ -138,9 +138,6 @@ do_AffinityAnalysisPlot <- function(sample,
     group.by <- "Groups"
   }
   
-  # For robustness analysis.
-  sample.original <- sample
-  
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample), subsample)]
   }
@@ -162,7 +159,7 @@ do_AffinityAnalysisPlot <- function(sample,
   max_value <- max(unname(unlist(lapply(input_gene_list, length))))
   min_value <- min(unname(unlist(lapply(input_gene_list, length))))
   
-  assertthat::assert_that(length(markers) >= 2,
+  assertthat::assert_that(length(input_gene_list) >= 2,
                           msg = paste0(add_cross, 
                                        crayon_body("Please make sure that the gene list you provide to "),
                                        crayon_key("input_gene_list"),
