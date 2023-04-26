@@ -423,7 +423,6 @@ return_dependencies <- function(){
                                     "withr"),
                    "do_AffinityAnalysisPlot" = "decoupleR",
                    "do_AlluvialPlot" = "ggalluvial",
-                   "do_AzimuthAnalysisPlot" = NULL,
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = "ggsignif",

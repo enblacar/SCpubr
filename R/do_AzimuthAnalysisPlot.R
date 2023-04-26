@@ -95,11 +95,9 @@ do_AzimuthAnalysisPlot <- function(sample,
 
 
   # Assign a group.by if this is null.
-  out <- check_group_by(sample = sample,
-                        group.by = group.by,
-                        is.heatmap = FALSE)
-  sample <- out[["sample"]]
-  group.by <- out[["group.by"]]
+  sample <- check_group_by(sample = sample,
+                           group.by = group.by,
+                           is.heatmap = FALSE)
 
   if (!is.null(colors.use)){
     check_colors(colors.use)

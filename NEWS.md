@@ -32,6 +32,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 -   `SCpubr::do_SankeyPlot()` has been removed and replaced by `SCpubr::do_AlluvialPlot()`, which is present in the official CRAN versions.
 -   `SCpubr::do_PseudotimePlot()` has been removed indefinitely until a better, revamped, state-of-the-art version is generated.
+-   `SCpubr::do_AzimuthAnalysisPlot()` has been removed as the output can be accomplished by a combination of the current functions in `SCpubr`. A vignette will be added to reproduce the same analysis.
 
 ## General
 

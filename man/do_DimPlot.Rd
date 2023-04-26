@@ -12,6 +12,7 @@ do_DimPlot(
   colors.use = NULL,
   shuffle = TRUE,
   order = NULL,
+  raster = FALSE,
   pt.size = 1,
   label = FALSE,
   label.color = "white",
@@ -33,8 +34,7 @@ do_DimPlot(
   legend.nrow = NULL,
   legend.icon.size = 4,
   legend.byrow = FALSE,
-  raster = FALSE,
-  raster.dpi = 1024,
+  raster.dpi = 2048,
   dims = c(1, 2),
   font.size = 14,
   font.type = "sans",
@@ -77,6 +77,8 @@ do_DimPlot(
 \item{shuffle}{\strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.}
 
 \item{order}{\strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.}
+
+\item{raster}{\strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
@@ -126,8 +128,6 @@ do_DimPlot(
 \item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
-
-\item{raster}{\strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 
 \item{raster.dpi}{\strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.}
 
