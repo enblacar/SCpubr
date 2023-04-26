@@ -133,10 +133,11 @@ do_AffinityAnalysisPlot <- function(sample,
   
   
   # Assign a group.by if this is null.
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample), subsample)]

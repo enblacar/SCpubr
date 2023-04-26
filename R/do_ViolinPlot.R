@@ -156,25 +156,25 @@ do_ViolinPlot <- function(sample,
 
   # Check the feature.
   features <- check_feature(sample = sample, features = features, permissive = TRUE)
-
-  if (is.null(group.by)){
-    if (is.null(colors.use)){
-      colors.use <- generate_color_scale(levels(sample))
+  
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                           group.by = group.by,
+                           is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
+  
+  if (is.null(colors.use)){
+    if (is.factor(sample@meta.data[, group.by])){
+      names.use <- levels(sample@meta.data[, group.by])
     } else {
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
+      names.use <- sort(unique(sample@meta.data[, group.by]))
     }
-  } else if (!(is.null(group.by))){
-    if (is.null(colors.use)){
-      if (is.factor(sample@meta.data[, group.by])){
-        names.use <- levels(sample@meta.data[, group.by])
-      } else {
-        names.use <- sort(unique(sample@meta.data[, group.by]))
-      }
-      colors.use <- generate_color_scale(names.use)
-    } else {
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
-    }
+    colors.use <- generate_color_scale(names.use)
+  } else {
+    colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
   }
+  
   check_colors(grid.color, parameter_name = "grid.color")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")

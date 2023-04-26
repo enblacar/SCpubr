@@ -83,7 +83,6 @@ do_LoadingsPlot <- function(sample,
                          "legend.position" = legend.position,
                          "legend.framecolor" = legend.framecolor,
                          "legend.tickcolor" = legend.tickcolor,
-                         "group.by" = group.by,
                          "na.value" = na.value,
                          "slot" = slot,
                          "assay" = assay,
@@ -129,10 +128,12 @@ do_LoadingsPlot <- function(sample,
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
   
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample), subsample, replace = FALSE)]

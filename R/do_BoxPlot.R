@@ -159,16 +159,13 @@ do_BoxPlot <- function(sample,
     }
   }
   
- 
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
-  if (is.null(group.by)){
-    sample[["group.by"]] <- Seurat::Idents(sample)
-    group.by <- "group.by"
-  } else {
-    sample[["group.by"]] <- sample@meta.data[, group.by]
-    group.by <- "group.by"
-  }
-
   if (is.null(colors.use)){
     if (is.null(split.by)){
       colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {

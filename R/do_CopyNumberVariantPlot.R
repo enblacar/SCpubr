@@ -129,12 +129,12 @@ do_CopyNumberVariantPlot <- function(sample,
   
   chromosome_list <- c(as.character(seq(1, 22)))
   
-  # Fix for group.by.
-  if (is.null(group.by)){
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
-  
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   # Retrieve the genes.
   genes <- infercnv_object@gene_order

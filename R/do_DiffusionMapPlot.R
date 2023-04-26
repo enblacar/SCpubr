@@ -157,10 +157,12 @@ do_DiffusionMapPlot <- function(sample,
     sample <- sample[, sample(colnames(sample, subsample))]
   }
   
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   genes.use <- unlist(input_gene_list) %>% unname() %>% unique()
   genes.use <- genes.use[genes.use %in% rownames(sample)]

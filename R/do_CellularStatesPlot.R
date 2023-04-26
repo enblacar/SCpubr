@@ -167,19 +167,13 @@ do_CellularStatesPlot <- function(sample,
     # Check border color.
     check_colors(border.color, parameter_name = "border.color")
 
-    # Check group.by
-    if (is.null(group.by)){
-      assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                              msg = paste0(add_cross(), crayon_body("Please provide a value for "),
-                                           crayon_key("group.by"),
-                                           crayon_body(" and that this value is not called "),
-                                           crayon_key("Groups"),
-                                           crayon_body(".")))
-
-      sample@meta.data[, "Groups"] <- sample@active.ident
-      group.by <- "Groups"
-    }
-
+    # Check group.by.
+    out <- check_group_by(sample = sample,
+                          group.by = group.by,
+                          is.heatmap = FALSE)
+    sample <- out[["sample"]]
+    group.by <- out[["group.by"]]
+    
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
     check_parameters(parameter = marginal.type, parameter_name = "marginal.type")

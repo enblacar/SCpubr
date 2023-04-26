@@ -275,11 +275,12 @@ do_SCEnrichmentHeatmap <- function(sample,
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
                                       # nocov end
   
-  if (is.null(group.by)){
-    sample$Groups <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
-  
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   assertthat::assert_that(length(group.by) == 1,
                           msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),

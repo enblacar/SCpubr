@@ -128,17 +128,13 @@ do_CorrelationPlot <- function(sample = NULL,
     sample <- out[["sample"]]
     assay <- out[["assay"]]
     
-    if (is.null(group.by)){
-      assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                              msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
-                                           crayon_key("group.by"),
-                                           crayon_body(" and that this is not called "),
-                                           crayon_key("Groups")))
-
-      sample@meta.data[, "Groups"] <- sample@active.ident
-      group.by <- "Groups"
-    }
-
+    # Check group.by.
+    out <- check_group_by(sample = sample,
+                          group.by = group.by,
+                          is.heatmap = TRUE)
+    sample <- out[["sample"]]
+    group.by <- out[["group.by"]]
+    
     # Generate a correlation matrix of the HVG.
     variable_genes <- Seurat::VariableFeatures(sample)
 

@@ -135,10 +135,12 @@ do_ExpressionHeatmap <- function(sample,
 
   Seurat::DefaultAssay(sample) <- assay
 
-  if (is.null(group.by)){
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
 
   if (is.list(features)){
     warning(paste0(add_warning(), crayon_body("You have provided a "),
@@ -159,25 +161,6 @@ do_ExpressionHeatmap <- function(sample,
                    crayon_key("assay"),
                    crayon_body(" (default assay if not):/n"),
                    paste(vapply(features[!features %in% rownames(sample)], crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", "))), call. = FALSE)
-  }
-
-  # Check the different values of group.by.
-  for (variant in group.by){
-    assertthat::assert_that(variant %in% colnames(sample@meta.data),
-                            msg = paste0(add_cross(), crayon_body("The value provided to parameter "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" is not in the sample "),
-                                         crayon_key("metadata"),
-                                         crayon_body(".")))
-
-    assertthat::assert_that(class(sample@meta.data[, variant]) %in% c("character", "factor"),
-                            msg = paste0(add_cross(), crayon_body("The value provided to parameter "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" is not a "),
-                                         crayon_key("character"),
-                                         crayon_body(" or "),
-                                         crayon_key("factor"),
-                                         crayon_body(" column in the sample metadata.")))
   }
 
   features <- features[features %in% rownames(sample)]

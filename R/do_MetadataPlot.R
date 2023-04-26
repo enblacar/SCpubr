@@ -118,6 +118,13 @@ do_MetadataPlot <- function(sample = NULL,
                                          crayon_key("metadata"),
                                          crayon_body(" parameters.")))
     
+    # Check group.by.
+    out <- check_group_by(sample = sample,
+                          group.by = group.by,
+                          is.heatmap = TRUE)
+    sample <- out[["sample"]]
+    group.by <- out[["group.by"]]
+    
     data.plot <- sample@meta.data %>% 
                  tibble::rownames_to_column(var = "cell") %>% 
                  dplyr::select(dplyr::all_of(c(group.by, metadata))) %>% 

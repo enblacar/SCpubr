@@ -221,11 +221,12 @@ do_GeyserPlot <- function(sample,
   # Will contain the output.
   list.out <- list()
 
-  # Assign group.by to a metadata variable.
-  if (is.null(group.by)){
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
   
   if (is.null(colors.use)){
     colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {

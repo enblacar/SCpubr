@@ -94,11 +94,12 @@ do_AzimuthAnalysisPlot <- function(sample,
   `%>%` <- magrittr::`%>%`
 
 
-  # Assign group.by to a metadata variable.
-  if (is.null(group.by)){
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
+  # Assign a group.by if this is null.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
 
   if (!is.null(colors.use)){
     check_colors(colors.use)

@@ -156,7 +156,14 @@ do_RidgePlot <- function(sample,
   if (is.null(legend.position)){
     legend.position <- ifelse(isTRUE(continuous_scale), "bottom", "none")
   }
-
+  
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
+  
   data <- get_data_column_in_context(sample = sample,
                                      feature = feature,
                                      assay = assay,

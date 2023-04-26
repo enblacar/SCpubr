@@ -166,11 +166,13 @@ do_BeeSwarmPlot <- function(sample,
                                        crayon_key("feature_to_rank"),
                                        crayon_body(".")))
   
-  if (is.null(group.by)){
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
-
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
+  
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {
     sample@meta.data$rank_me <- sample@meta.data[, feature_to_rank]

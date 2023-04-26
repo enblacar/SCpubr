@@ -126,20 +126,12 @@ do_GroupwiseDEPlot <- function(sample,
   sample <- out[["sample"]]
   assay <- out[["assay"]]
 
-  if (!is.null(group.by)){
-    for (value in group.by){
-      assertthat::assert_that(isTRUE(value %in% colnames(sample@meta.data)),
-                              msg = "Please provide a value for group.by that corresponds to a metadata column.")
-
-      assertthat::assert_that(isTRUE(class(sample@meta.data[, value]) %in% c("factor", "character")),
-                              msg = "Please provide a value for group.by that corresponds to a metadata column and this is either a factor or a character column.")
-    }
-  } else if (is.null(group.by)) {
-    sample@meta.data[, "Groups"] <- Seurat::Idents(sample)
-    group.by <- "Groups"
-  }
-
-
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
 
   magnitude <- ifelse(slot == "data", "avg_log2FC", "avg_diff")
   specificity <- "p_val_adj"

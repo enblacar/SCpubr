@@ -247,43 +247,16 @@ do_EnrichmentHeatmap <- function(sample,
                                       slot = if (flavor == "Seurat"){NULL} else {slot})
                                       # nocov end
   out.list <- list()
-  if (is.null(group.by)){
-    assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
-                            msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
-                                         crayon_key("group.by")))
-
-    sample@meta.data[, "Groups"] <- sample@active.ident
-    group.by <- "Groups"
-  }
-
-  for (g in group.by){
-    assertthat::assert_that(g %in% colnames(sample@meta.data),
-                            msg = paste0(add_cross(), crayon_body("The value "),
-                                         crayon_key(g),
-                                         crayon_body(" in "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" is not present in the sample "),
-                                         crayon_key(" metadata.")))
-
-    assertthat::assert_that(class(sample@meta.data[, g]) %in% c("character", "factor"),
-                            msg = paste0(add_cross(), crayon_body("The value "),
-                                         crayon_key(g),
-                                         crayon_body(" in "),
-                                         crayon_key("group.by"),
-                                         crayon_body(" is not a "),
-                                         crayon_key(" character"),
-                                         crayon_body( "or "),
-                                         crayon_key("factor"),
-                                         crayon_body(" column in the sample"),
-                                         crayon_key("metadata"),
-                                         crayon_body(".")))
-  }
-
-
+  
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = TRUE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
 
   matrix.list <- list()
   for (group in group.by){
-    # Extract activities from object as a long dataframe
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
 
@@ -301,9 +274,6 @@ do_EnrichmentHeatmap <- function(sample,
     matrix.list[[group]][["df"]] <- df
     matrix.list[[group]][["df.order"]] <- df.order
   }
-
-
-
 
   counter <- 0
   for (group in group.by){

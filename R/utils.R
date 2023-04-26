@@ -3404,3 +3404,65 @@ get_SCpubr_colors <- function(){
   }
   return(sample)
 }
+
+#' Check the group.by parameter
+#'
+#' @param sample Seurat object.
+#' @param group.by group.by parameter.
+#' @param is.heatmap Whether the function computes a heatmap.
+#'
+#' @return The Seurat object.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+check_group_by <- function(sample,
+                           group.by,
+                           is.heatmap){
+  
+  group.by.return <- NULL
+  
+  if (is.null(group.by)){
+    assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
+                            msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
+                                         crayon_key("group.by"),
+                                         crayon_body(". The metadata column "),
+                                         crayon_key("Groups"),
+                                         crayon_body(" is used instead, but there is already such column in your metadata.")))
+    sample@meta.data[, "Groups"] <- sample@active.ident
+    group.by <- "Groups"
+  }
+  
+  for (group in group.by){
+    assertthat::assert_that(group %in% colnames(sample@meta.data),
+                            msg = paste0(add_cross(), crayon_body("The value provided to "),
+                                         yon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
+                                         crayon_body(" is not part of the Seurat object "),
+                                         crayon_key("meta.data"),
+                                         crayon_body(".")))
+    
+    assertthat::assert_that(class(sample@meta.data[, group]) %in% c("character", "factor"),
+                            msg = paste0(add_cross(), crayon_body("The value provided to"),
+                                         cyon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
+                                         crayon_body(" is not a "),
+                                         crayon_key("character"),
+                                         crayon_body( "or "),
+                                         crayon_key("factor"),
+                                         crayon_body(" column in the sample"),
+                                         crayon_key("metadata of the Seurat object"),
+                                         crayon_body(".")))
+    
+    if (isTRUE(is.heatmap)){
+      assertthat::assert_that(sum(is.na(sample@meta.data[, group])) == 0,
+                              msg = paste0(add_warning(), crayon_body("Found "),
+                                           crayon_key("NAs"),
+                                           crayon_body(" in the metadata variable provided to "),
+                                           crayon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
+                                           crayon_body(". Please remove them before running the function.")))
+    }
+    group.by.return <- append(group.by.return, group)
+  }
+  return(list("sample" = sample,
+              "group.by" = group.by.return))
+}

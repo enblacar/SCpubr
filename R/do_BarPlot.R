@@ -159,6 +159,13 @@ do_BarPlot <- function(sample,
     colors.use <- colors.use[unique(sample@meta.data[, group.by])]
   }
   
+  # Check group.by.
+  out <- check_group_by(sample = sample,
+                        group.by = group.by,
+                        is.heatmap = FALSE)
+  sample <- out[["sample"]]
+  group.by <- out[["group.by"]]
+  
   data <-  sample@meta.data %>%
            tibble::as_tibble() %>%
            dplyr::select(dplyr::all_of(c(group.by, split.by, facet.by)))
