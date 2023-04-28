@@ -316,7 +316,7 @@ do_GeyserPlot <- function(sample,
                                                                              dplyr::pull(.data[[group.by]]) %>%
                                                                              as.character()}),
                             "values" = .data[[feature]])
-    } else if (isFALSE(order)){
+    } else if (base::isFALSE(order)){
       data <- data %>%
               dplyr::mutate("group.by" = .data[[group.by]],
                             "values" = .data[[feature]])
@@ -400,7 +400,7 @@ do_GeyserPlot <- function(sample,
                                                     labels = scale.setup$labels,
                                                     limits = scale.setup$limits)
 
-      } else if (isFALSE(enforce_symmetry)){
+      } else if (base::isFALSE(enforce_symmetry)){
         if (isTRUE(use_viridis)){
           scale.use <- ggplot2::scale_color_viridis_c(na.value = na.value,
                                                       option = viridis.palette,
@@ -458,8 +458,8 @@ do_GeyserPlot <- function(sample,
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                            face = axis.title.face),
-                        axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                        axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                        axis.line.x = if (base::isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                        axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                         axis.text.x = ggplot2::element_text(color = "black",
                                                             face = axis.text.face,
                                                             angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],

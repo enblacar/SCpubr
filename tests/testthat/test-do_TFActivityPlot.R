@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_TFActivityPlot"]])){
+if(base::isFALSE(dep_check[["do_TFActivityPlot"]])){
 
   testthat::test_that("do_TFActivityPlot: PASS - minimal input", {
     out <- SCpubr::do_TFActivityPlot(sample = sample,

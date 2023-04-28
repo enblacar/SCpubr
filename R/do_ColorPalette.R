@@ -150,7 +150,7 @@ do_ColorPalette <- function(colors.use,
     colors.mod <- colors
   }
 
-  if (isTRUE(plot) & isFALSE(complete_output)){
+  if (isTRUE(plot) & base::isFALSE(complete_output)){
     # Dummy df to plot.
     names(colors) <- colors
     df <- data.frame("values" = rep(1, n), "names" = factor(colors, levels = names(colors)))

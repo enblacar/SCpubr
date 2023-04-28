@@ -209,7 +209,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                          dplyr::select(.env$scores_name)
           
           # If no metacells were used.
-        } else if (isFALSE(using_metacells)){
+        } else if (base::isFALSE(using_metacells)){
           scores.assay[[scores_name]] <- CNV_scores_final[, scores_name]
         }
       } else {
@@ -251,7 +251,7 @@ do_CopyNumberVariantPlot <- function(sample,
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
     
     events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
-    if (isFALSE(flip)){
+    if (base::isFALSE(flip)){
       factor.levels <- events[events %in% unique(data.use$Event)]
     } else {
       factor.levels <- rev(events[events %in% unique(data.use$Event)])
@@ -293,7 +293,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                 center_on_value = TRUE,
                                 value_center = 1)
   list.plots <- list()
-  if (isFALSE(flip)){
+  if (base::isFALSE(flip)){
     values.use <- rev(group.by)
   } else {
     values.use <- group.by
@@ -302,8 +302,8 @@ do_CopyNumberVariantPlot <- function(sample,
     data <- list.data[[group]][["data"]]
     p <- data %>% 
          # nocov start
-         ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$Event} else {.data[[group]]},
-                                                y = if(isFALSE(flip)){.data[[group]]} else {.data$Event},
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data$Event} else {.data[[group]]},
+                                                y = if(base::isFALSE(flip)){.data[[group]]} else {.data$Event},
                                                 fill = .data$mean)) + 
          # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
@@ -311,8 +311,8 @@ do_CopyNumberVariantPlot <- function(sample,
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
          # nocov start
-         ggplot2::guides(x.sec = guide_axis_label_trans(~paste0(levels(if(isFALSE(flip)){.data[[group]]} else {.data$Event}))),
-                         y.sec = guide_axis_label_trans(~paste0(levels(if(isFALSE(flip)){.data[[group]]} else {.data$Event})))) + 
+         ggplot2::guides(x.sec = guide_axis_label_trans(~paste0(levels(if(base::isFALSE(flip)){.data[[group]]} else {.data$Event}))),
+                         y.sec = guide_axis_label_trans(~paste0(levels(if(base::isFALSE(flip)){.data[[group]]} else {.data$Event})))) + 
          # nocov end
          ggplot2::coord_equal() + 
          ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette),
@@ -432,7 +432,7 @@ do_CopyNumberVariantPlot <- function(sample,
   
   # Plot the combined plot
   p <- patchwork::wrap_plots(list.plots[rev(group.by)],
-                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){1} else {NULL},
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +

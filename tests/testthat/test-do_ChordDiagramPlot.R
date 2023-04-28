@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_ChordDiagramPlot"]])){
+if (base::isFALSE(dep_check[["do_ChordDiagramPlot"]])){
 
   testthat::test_that("do_ChordDiagramPlot: CRAN essentials", {
     sample$seurat_clusters_char <- as.character(sample$seurat_clusters)

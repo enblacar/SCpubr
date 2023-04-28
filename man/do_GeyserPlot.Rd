@@ -208,7 +208,7 @@ Special thanks to Christina Blume for coming up with the name of the plot.
 
     p
 
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

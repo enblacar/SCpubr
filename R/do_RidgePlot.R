@@ -171,7 +171,7 @@ do_RidgePlot <- function(sample,
                                      group.by = group.by,
                                      split.by = split.by)
   if (isTRUE(continuous_scale)){
-    if (isFALSE(compute_quantiles)){
+    if (base::isFALSE(compute_quantiles)){
       p <- data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                   y = .data$group.by,
@@ -294,7 +294,7 @@ do_RidgePlot <- function(sample,
       }
     }
 
-  } else if (isFALSE(continuous_scale)){
+  } else if (base::isFALSE(continuous_scale)){
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                 y = .data$group.by,
@@ -325,8 +325,8 @@ do_RidgePlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = axis.title.face),
-                      axis.line.y = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      axis.line.x = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                      axis.line.y = if (base::isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      axis.line.x = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = axis.text.face,
                                                           angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],

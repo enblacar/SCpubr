@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
+if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   testthat::test_that("do_GroupwiseDEPlot: CRAN essentials", {
     sample <- .SetAssayData(sample = sample,
                             assay = "SCT",

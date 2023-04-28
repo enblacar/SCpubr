@@ -145,13 +145,13 @@ do_AlluvialPlot <- function(sample,
   if (isTRUE(use_labels)){
     if (isTRUE(repel)){
       func_use <- ggrepel::geom_label_repel
-    } else if (isFALSE(repel)){
+    } else if (base::isFALSE(repel)){
       func_use <- ggplot2::geom_label
     }
-  } else if (isFALSE(use_labels)){
+  } else if (base::isFALSE(use_labels)){
     if (isTRUE(repel)){
       func_use <- ggrepel::geom_text_repel
-    } else if (isFALSE(repel)){
+    } else if (base::isFALSE(repel)){
       func_use <- ggplot2::geom_text
     }
   }
@@ -231,7 +231,7 @@ do_AlluvialPlot <- function(sample,
     p <- p +
          ggalluvial::geom_flow(mapping = ggplot2::aes(fill = .data[[fill.by]]),
                                color = flow.color)
-  } else if (isFALSE(use_geom_flow)){
+  } else if (base::isFALSE(use_geom_flow)){
     p <- p +
          ggalluvial::geom_alluvium(mapping = ggplot2::aes(fill = .data[[fill.by]]),
                                                           color = alluvium.color,
@@ -242,7 +242,7 @@ do_AlluvialPlot <- function(sample,
          ggalluvial::geom_stratum(color = stratum.color,
                                   mapping = ggplot2::aes(fill = .data[[fill.by]]),
                                   width = stratum.width)
-  } else if (isFALSE(stratum.fill.conditional)){
+  } else if (base::isFALSE(stratum.fill.conditional)){
     p <- p +
          ggalluvial::geom_stratum(color = stratum.color,
                                   fill = stratum.fill,
@@ -260,7 +260,7 @@ do_AlluvialPlot <- function(sample,
          ggplot2::scale_fill_viridis_d(option = viridis.palette,
                                        direction = viridis.direction,
                                        na.value = na.value)
-  } else if (isFALSE(use_viridis)){
+  } else if (base::isFALSE(use_viridis)){
     p <- p +
          ggplot2::scale_fill_manual(values = colors.use,
                                     na.value = na.value)
@@ -275,10 +275,10 @@ do_AlluvialPlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = axis.title.face),
-                      axis.line.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                      axis.line.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
-                      axis.ticks.y = if (isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
-                      axis.ticks.x = if (isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                      axis.line.x = if (base::isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                      axis.line.y = if (base::isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
+                      axis.ticks.y = if (base::isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
+                      axis.ticks.x = if (base::isFALSE(flip)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                       axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
                       axis.text.x = ggplot2::element_text(color = "black", face = axis.text.face),
                       panel.grid.major = ggplot2::element_blank(),
@@ -287,8 +287,8 @@ do_AlluvialPlot <- function(sample,
                       plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
                       plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
                       panel.grid = ggplot2::element_blank(),
-                      panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.y = if (base::isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                       text = ggplot2::element_text(family = font.type),
                       plot.caption.position = "plot",
                       legend.text = ggplot2::element_text(face = legend.text.face),

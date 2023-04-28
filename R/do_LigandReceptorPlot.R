@@ -205,7 +205,7 @@ do_LigandReceptorPlot <- function(liana_output,
     liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
     liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
     liana_output$interaction <- factor(liana_output$interaction, levels = rev(sort(unique(liana_output$interaction))))
-  } else if (isFALSE(sort_interactions_alphabetically)){
+  } else if (base::isFALSE(sort_interactions_alphabetically)){
     liana_output$source <- factor(liana_output$source, levels = sort(unique(liana_output$source)))
     liana_output$target <- factor(liana_output$target, levels = sort(unique(liana_output$target)))
     liana_output$interaction <- factor(liana_output$interaction, levels = rev(unique(liana_output$interaction)))
@@ -222,7 +222,7 @@ do_LigandReceptorPlot <- function(liana_output,
                                                  group = .data$interacting_clusters)) +
           ggplot2::geom_point(shape = 21,
                               na.rm = TRUE)
-  } else if (isFALSE(dot_border)){
+  } else if (base::isFALSE(dot_border)){
     p <-  liana_output %>%
           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$target,
                                                  y = .data$interaction,

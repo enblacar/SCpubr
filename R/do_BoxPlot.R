@@ -194,7 +194,7 @@ do_BoxPlot <- function(sample,
                                                   tibble::as_tibble() %>%
                                                   dplyr::group_by(.data[["group.by"]]) %>%
                                                   dplyr::summarise("median" = stats::median(.data[["feature"]], na.rm = TRUE)) %>%
-                                                  dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
+                                                  dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
                                                   dplyr::pull(.data[["group.by"]]) %>%
                                                   as.character()}))
   }
@@ -208,7 +208,7 @@ do_BoxPlot <- function(sample,
   }
 
   if (!is.null(split.by)){
-    assertthat::assert_that(isFALSE(order),
+    assertthat::assert_that(base::isFALSE(order),
                             msg = paste0(add_cross(), crayon_body("Parameter "),
                                          crayon_key("split.by"),
                                          crayon_body(" cannot be used alonside "),
@@ -231,7 +231,7 @@ do_BoxPlot <- function(sample,
                                na.rm = TRUE)
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
     stop(paste0(add_cross(), crayon_body("Parameter "), crayon_key("use_silhouette"),  crayon_body("can not be used alongside "), crayon_key("split.by"), crayon_body(".")), call. = FALSE)
-  } else if (isFALSE(use_silhouette)){
+  } else if (base::isFALSE(use_silhouette)){
     if (is.null(split.by)){
       p <- data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],
@@ -267,8 +267,8 @@ do_BoxPlot <- function(sample,
         ggplot2::theme_minimal(base_size = font.size) +
         ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                           face = axis.title.face),
-                       axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                       axis.line.x = if (base::isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                       axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                        axis.text.x = ggplot2::element_text(color = "black",
                                                            face = axis.text.face,
                                                            angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],
@@ -277,8 +277,8 @@ do_BoxPlot <- function(sample,
                        axis.text.y = ggplot2::element_text(color = "black", face = axis.text.face),
                        axis.ticks = ggplot2::element_line(color = "black"),
                        panel.grid.major = ggplot2::element_blank(),
-                       panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                       panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                       panel.grid.major.y = if (base::isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                       panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                        plot.title.position = "plot",
                        plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),

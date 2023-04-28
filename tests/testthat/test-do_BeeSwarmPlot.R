@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_BeeSwarmPlot"]])){
+if (base::isFALSE(dep_check[["do_BeeSwarmPlot"]])){
 
   testthat::test_that("do_BeeSwarmPlot: CRAN essentials", {
     p <- SCpubr::do_BeeSwarmPlot(sample = sample,

@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
+if (base::isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
 
   testthat::test_that("do_FunctionalAnnotationPlot: CRAN essential tests", {
 

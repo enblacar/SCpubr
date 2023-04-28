@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_VolcanoPlot"]])){
+if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
   testthat::test_that("do_VolcanoPlot: CRAN essentials", {
 
     `%>%` <- magrittr::`%>%`

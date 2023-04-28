@@ -127,7 +127,7 @@ do_BarPlot <- function(sample,
                                        crayon_key(" metadta categorical "),
                                        crayon_body(" variable.")))
   
-  assertthat::assert_that(isFALSE(position == "fill" & is.null(split.by)),
+  assertthat::assert_that(base::isFALSE(position == "fill" & is.null(split.by)),
                           msg = paste0(add_cross(),
                                        crayon_body("Please use "),
                                        crayon_key("position =  fill"),
@@ -135,7 +135,7 @@ do_BarPlot <- function(sample,
                                        crayon_key("split.by"),
                                        crayon_body(".")))
   
-  assertthat::assert_that(isFALSE(position == "stack" & isTRUE(order) & !is.null(order.by)),
+  assertthat::assert_that(base::isFALSE(position == "stack" & isTRUE(order) & !is.null(order.by)),
                           msg = paste0(add_cross(),
                                        crayon_body("Please use "),
                                        crayon_key("order.by"),
@@ -143,7 +143,7 @@ do_BarPlot <- function(sample,
                                        crayon_key("position = fill"),
                                        crayon_body(".")))
   
-  assertthat::assert_that(isFALSE(position == "fill" & isTRUE(order) & is.null(order.by)),
+  assertthat::assert_that(base::isFALSE(position == "fill" & isTRUE(order) & is.null(order.by)),
                           msg = paste0(add_cross(),
                                        crayon_body("Please use "),
                                        crayon_key("order.by"),
@@ -177,7 +177,7 @@ do_BarPlot <- function(sample,
                    dplyr::select(dplyr::all_of(c(group.by, split.by))) %>%
                    dplyr::group_by(.data[[group.by]]) %>%
                    dplyr::summarise("n" = dplyr::n()) %>%
-                   dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["n"]])} else {.data[["n"]]}) %>%
+                   dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["n"]])} else {.data[["n"]]}) %>%
                    dplyr::pull(.data[[group.by]]) %>%
                    as.character()
       data <- data %>% 
@@ -195,7 +195,7 @@ do_BarPlot <- function(sample,
                                   "{split.by}" := unique(.data[[split.by]]),
                                   "{group.by}" := unique(.data[[group.by]])) %>% 
                    dplyr::filter(.data[[group.by]] == order.by) %>% 
-                   dplyr::arrange(if(isFALSE(flip)){dplyr::desc(.data[["freq"]])} else {.data[["freq"]]}) %>% 
+                   dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["freq"]])} else {.data[["freq"]]}) %>% 
                    dplyr::pull(.data[[split.by]]) %>% 
                    as.character()
       
@@ -250,7 +250,7 @@ do_BarPlot <- function(sample,
   }
   
   if (!is.null(facet.by)){
-    if (isFALSE(flip)){
+    if (base::isFALSE(flip)){
       p <- p + 
         ggplot2::facet_grid(cols = ggplot2::vars(.data[[facet.by]]),
                             scales = "free",
@@ -280,10 +280,10 @@ do_BarPlot <- function(sample,
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = axis.title.face),
-                      panel.grid.major.y = if (isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isFALSE(flip)) {ggplot2::element_blank()},
-                      axis.line.x = if (isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
-                      axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (isFALSE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.y = if (base::isFALSE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      panel.grid.major.x = if (isTRUE(flip)) {if (isTRUE(plot.grid)){ggplot2::element_line(color = grid.color, linetype = grid.type)}} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
+                      axis.line.x = if (base::isFALSE(flip)) {ggplot2::element_line(color = "black")} else if (isTRUE(flip)) {ggplot2::element_blank()},
+                      axis.line.y = if (isTRUE(flip)) {ggplot2::element_line(color = "black")} else if (base::isFALSE(flip)) {ggplot2::element_blank()},
                       axis.text.x = ggplot2::element_text(color = "black",
                                                           face = axis.text.face,
                                                           angle = get_axis_parameters(angle = axis.text.x.angle, flip = flip)[["angle"]],

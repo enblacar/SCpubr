@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_BarPlot"]])){
+if (base::isFALSE(dep_check[["do_BarPlot"]])){
 
   testthat::test_that("do_BarPlot: CRAN essential tests", {
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")

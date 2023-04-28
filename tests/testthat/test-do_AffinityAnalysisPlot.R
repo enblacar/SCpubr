@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
+if (base::isFALSE(dep_check[["do_AffinityAnalysisPlot"]])){
   
   testthat::test_that("do_AffinityAnalysisPlot: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],

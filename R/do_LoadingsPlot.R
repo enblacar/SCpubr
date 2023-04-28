@@ -342,7 +342,7 @@ do_LoadingsPlot <- function(sample,
                   ggplot2::xlab(NULL) +
                   ggplot2::ylab(group.by)
   
-  if (isFALSE(use_viridis)){
+  if (base::isFALSE(use_viridis)){
     colors <- RColorBrewer::brewer.pal(n = 9, name = "YlGnBu")[2:9]
     if (sequential.direction == -1){
       colors <- rev(colors)

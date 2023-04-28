@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_GeyserPlot"]])){
+if(base::isFALSE(dep_check[["do_GeyserPlot"]])){
 
   testthat::test_that("do_GeyserPlot: CRAN essentials", {
 

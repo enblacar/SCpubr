@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_NebulosaPlot"]])){
+if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
   testthat::test_that("do_NebulosaPlot: CRAN essentials", {
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1")

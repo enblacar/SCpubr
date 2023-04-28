@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_LigandReceptorPlot"]])){
+if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
   testthat::test_that("do_LigandReceptorPlot: CRAN essentials", {
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output)
     testthat::expect_type(p, "list")

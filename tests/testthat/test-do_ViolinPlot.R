@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_ViolinPlot"]])){
+if(base::isFALSE(dep_check[["do_ViolinPlot"]])){
   testthat::test_that("do_ViolinPlot: CRAN essentials", {
 
     p <- SCpubr::do_ViolinPlot(sample = sample,

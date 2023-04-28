@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
+if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
   
   testthat::test_that("do_SCEnrichmentHeatmap: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],

@@ -243,7 +243,7 @@ do_CellularStatesPlot <- function(sample,
                                                   y = .data[["set_y"]],
                                                   color = .data[["group.by"]]))
 
-      if (isFALSE(raster)){
+      if (base::isFALSE(raster)){
         p <- p +
              ggplot2::geom_point(size = pt.size)
       } else if (isTRUE(raster)){
@@ -346,7 +346,7 @@ do_CellularStatesPlot <- function(sample,
                                                         y = .data[["set_y"]],
                                                         color = .data[["group.by"]]))
 
-        if (isFALSE(raster)){
+        if (base::isFALSE(raster)){
           p <- p +
                ggplot2::geom_point(size = pt.size)
         } else if (isTRUE(raster)){
@@ -454,7 +454,7 @@ do_CellularStatesPlot <- function(sample,
                                                         y = .data[["set_y"]],
                                                         color = .data[["group.by"]]))
 
-        if (isFALSE(raster)){
+        if (base::isFALSE(raster)){
           p <- p +
                ggplot2::geom_point(size = pt.size)
         } else if (isTRUE(raster)){
@@ -535,7 +535,7 @@ do_CellularStatesPlot <- function(sample,
 
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){
-      if (isFALSE(raster)){
+      if (base::isFALSE(raster)){
         base_layer <-  ggplot2::geom_point(data = df,
                                            mapping = ggplot2::aes(x = .data[["set_x"]],
                                                                   y = .data[["set_y"]]),
@@ -573,7 +573,7 @@ do_CellularStatesPlot <- function(sample,
 
       if (isTRUE(plot_features) & isTRUE(plot_enrichment_scores)){
         features <- c(features, names(input_gene_list))
-      } else if (isFALSE(plot_features) & isTRUE(plot_enrichment_scores)){
+      } else if (base::isFALSE(plot_features) & isTRUE(plot_enrichment_scores)){
         features <- names(input_gene_list)
       }
 
@@ -706,7 +706,7 @@ do_CellularStatesPlot <- function(sample,
     if (isTRUE(plot_features) | isTRUE(plot_enrichment_scores)){
       output_list[["main"]] <- p
       return_object <- output_list
-    } else if (isFALSE(plot_features) & isFALSE(plot_enrichment_scores)){
+    } else if (base::isFALSE(plot_features) & base::isFALSE(plot_enrichment_scores)){
       return_object <- p
     }
     

@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_ExpressionHeatmap"]])){
+if (base::isFALSE(dep_check[["do_ExpressionHeatmap"]])){
 
   testthat::test_that("do_ExpressionHeatmap: CRAN essential tests", {
 

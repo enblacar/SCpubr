@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_FeaturePlot"]])){
+if (base::isFALSE(dep_check[["do_FeaturePlot"]])){
   testthat::test_that("do_FeaturePlot: CRAN essential", {
 
     p <- SCpubr::do_FeaturePlot(sample = sample,

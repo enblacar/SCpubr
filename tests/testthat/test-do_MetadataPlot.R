@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_MetadataPlot"]])){
+if (base::isFALSE(dep_check[["do_MetadataPlot"]])){
   
   testthat::test_that("do_MetadataPlot: CRAN essentials", {
     df <- data.frame(row.names = letters[1:5],

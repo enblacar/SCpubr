@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
+if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
 
   testthat::test_that("do_BarPlot: CRAN essentials", {
     out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,

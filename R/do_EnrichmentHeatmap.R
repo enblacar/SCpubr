@@ -385,8 +385,8 @@ do_EnrichmentHeatmap <- function(sample,
 
     p <- data %>% 
          # nocov start
-         ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data$gene_list} else {.data$group.by},
-                                                y = if(isFALSE(flip)){.data$group.by} else {.data$gene_list},
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data$gene_list} else {.data$group.by},
+                                                y = if(base::isFALSE(flip)){.data$group.by} else {.data$gene_list},
                                                 fill = .data$mean)) +
          # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
@@ -441,7 +441,7 @@ do_EnrichmentHeatmap <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
     # nocov start
     # Set axis titles.
-    if(isFALSE(flip)){
+    if(base::isFALSE(flip)){
       if (counter == 1){
         if (length(group.by) > 1){
           xlab <- NULL
@@ -530,9 +530,9 @@ do_EnrichmentHeatmap <- function(sample,
   }
 
   # Plot the combined plot
-  input <- if(isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
+  input <- if(base::isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
   p <- patchwork::wrap_plots(input,
-                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){1} else {NULL},
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +
@@ -576,7 +576,7 @@ do_EnrichmentHeatmap <- function(sample,
     out.list[["Object"]] <- sample
   }
 
-  if (isFALSE(return_object)){
+  if (base::isFALSE(return_object)){
     return_me <- out.list[["Heatmap"]]
   } else {
     return_me <- out.list

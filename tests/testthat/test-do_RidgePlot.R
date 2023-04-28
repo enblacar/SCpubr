@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_RidgePlot"]])){
+if(base::isFALSE(dep_check[["do_RidgePlot"]])){
 
   testthat::test_that("do_RidgePlot: CRAN essentials", {
 

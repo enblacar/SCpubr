@@ -485,9 +485,9 @@ check_suggests <- function(function_name, passive = FALSE){
   pkgs <- vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
   # nocov start
   if(sum(!pkgs) > 0){
-    missing_pkgs <- names(pkgs[isFALSE(pkgs)])
-    if (isFALSE(passive)){
-      if (isFALSE(requireNamespace("cli", quietly = TRUE))){
+    missing_pkgs <- names(pkgs[base::isFALSE(pkgs)])
+    if (base::isFALSE(passive)){
+      if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
         stop(paste0(add_cross(), crayon_body("Packages "), 
                     paste(vapply(missing_pkgs, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")), 
                     crayon_body(" must be installed to use "), 
@@ -522,14 +522,13 @@ check_suggests <- function(function_name, passive = FALSE){
 #' }
 check_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
   # nocov start
-  if (isFALSE(requireNamespace("cli", quietly = TRUE))){
+  if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
     message(paste(rep("-", 63), collapse = ""))
     message('This is a placeholder message. Please install "cli" package to have an optimal experience using the package.')
     message(paste(rep("-", 63), collapse = ""))
   } else {
     # nocov end
     pkg_list <- return_dependencies()
-    max_length <- max(nchar(sort(unique(unname(unlist(pkg_list))))))
     # The function is not in the current list of possibilities.
     if (!(is.null(function_name))){
       for (func in function_name){
@@ -544,14 +543,14 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                               "do_LigandReceptorPlot",
                               "do_ColorPalette")
     
-    if (isFALSE(return_dependencies)){
+    if (base::isFALSE(return_dependencies)){
       func_list <- sort(names(pkg_list[!(names(pkg_list) %in% "Essentials")]))
       if (!(is.null(function_name))){
         func_list <- sort(function_name)
       } 
       
       # nocov start
-      if (isFALSE(requireNamespace("cli", quietly = TRUE))){
+      if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
         for (func in func_list){
           packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
           if (func %in% non_seurat_functions){
@@ -562,13 +561,6 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
         paste(vapply(packages, crayon_body, FUN.VALUE = character(1)), collapse = ", ")
       } else {
         # nocov end
-        format_installed <- function(name, value, max_length){
-          func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
-          name_use <- ifelse(isTRUE(value),
-                             cli::ansi_align(crayon_key(name), max_length, align = "left"),
-                             cli::ansi_align(cli::col_red(name), max_length, align = "left"))
-          paste0(func_use, " ", name_use)
-        }
         
         system_version <- as.character(utils::packageVersion("SCpubr"))
         
@@ -676,6 +668,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                              installed, 
                              crayon_body(" | "), 
                              latest)
+              return(name)
             } else {
               return(paste0(cli::col_red(cli::symbol$cross),
                             crayon_body(" "),
@@ -749,8 +742,8 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 
 package_report <- function(startup = FALSE){
   # nocov start
-  if (isFALSE(requireNamespace("cli", quietly = TRUE))){
-    if (isFALSE(startup)){
+  if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
+    if (base::isFALSE(startup)){
       message(paste(rep("-", 63), collapse = ""))
       message('This is a placeholder message. Please install "cli" package to have an optimal experience using the package.')
       message(paste(rep("-", 63), collapse = ""))
@@ -915,6 +908,7 @@ package_report <- function(startup = FALSE){
                        installed, 
                        crayon_body(" | "), 
                        latest)
+        return(name)
       } else {
         return(paste0(cli::col_red(cli::symbol$cross),
                       crayon_body(" "),
@@ -1107,7 +1101,7 @@ package_report <- function(startup = FALSE){
                          disable_message, "\n", "\n",
                          end_rule)
       rlang::inform(msg_wrap, class = "packageStartupMessage")
-    } else if (isFALSE(startup)){
+    } else if (base::isFALSE(startup)){
       msg_wrap <- paste0("\n", "\n", 
                          header, "\n", "\n", "\n",
                          updates_check, "\n", "\n", 
@@ -1219,7 +1213,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
     colors <- colors[names(colors) %in% check_values]
   }
   
-  if (isFALSE(length(colors) == length(check_values)) | isFALSE(sum(names(colors) %in% check_values) == length(check_values))){
+  if (base::isFALSE(length(colors) == length(check_values)) | base::isFALSE(sum(names(colors) %in% check_values) == length(check_values))){
     
     format_colors <- function(name, value, colors,  max_length){
       
@@ -1488,7 +1482,7 @@ compute_scales <- function(sample,
                            limits.use = NULL,
                            center_on_value = FALSE,
                            value_center = NULL){
-  if (isFALSE(from_data)){
+  if (base::isFALSE(from_data)){
     limits <- compute_scale_limits(sample = sample,
                                    feature = feature,
                                    assay = assay,
@@ -1507,7 +1501,7 @@ compute_scales <- function(sample,
   limits <- out$limits
 
   if (isTRUE(enforce_symmetry)){
-    if (isFALSE(center_on_value)){
+    if (base::isFALSE(center_on_value)){
       end_value <- max(abs(limits))
       limits <- c(-end_value, end_value)
     } else {
@@ -1653,7 +1647,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                      crayon_body(".")), call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
 
-    } else if (isFALSE(permissive)){
+    } else if (base::isFALSE(permissive)){
       assertthat::assert_that(length(not_found_features) == 0,
                               msg = paste0(add_cross(), crayon_body("The following "),
                                            crayon_key("features"),
@@ -1680,8 +1674,8 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   }
 
   # Return options.
-  if (isTRUE(dump_reduction_names) & isFALSE(permissive)){return(dim_colnames)}
-  if (isTRUE(permissive) & isFALSE(dump_reduction_names)){return(features_out)}
+  if (isTRUE(dump_reduction_names) & base::isFALSE(permissive)){return(dim_colnames)}
+  if (isTRUE(permissive) & base::isFALSE(dump_reduction_names)){return(features_out)}
   if (isTRUE(dump_reduction_names) & isTRUE(permissive)){return(list("features" = features_out, "reduction_names" = dim_colnames))}
 }
 
@@ -1859,7 +1853,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
     null_check <- is.null(dims[1]) & is.null(dims[2])
     integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
 
-    assertthat::assert_that(isFALSE(null_check) &  isTRUE(integer_check),
+    assertthat::assert_that(base::isFALSE(null_check) &  isTRUE(integer_check),
                             msg = paste0(add_cross(), crayon_body("The dimensions provided to "),
                                          crayon_key("dims"),
                                          crayon_body(" need to be of class "),
@@ -2027,7 +2021,7 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
   }
   group.by <- "group.by"
 
-  if (isFALSE(order)){
+  if (base::isFALSE(order)){
     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
   } else if (isTRUE(order)){
     factor_levels <- get_data_column_in_context(sample = sample,
@@ -2946,7 +2940,7 @@ get_axis_parameters <- function(angle,
                   "hjust" = 0.5,
                   "vjust" = 0.5)
     }
-  } else if (isFALSE(flip)){
+  } else if (base::isFALSE(flip)){
     if (angle == 0){
       out <- list("angle" = angle,
                   "hjust" = 0.5,
@@ -3013,7 +3007,7 @@ do_GroupedGO_matrices <- function(genes,
       if (isTRUE(verbose)){
         message(paste0(add_info(), crayon_body("Computing for all possible ontology levels...")))
       }
-      while(isFALSE(breakpoint)){
+      while(base::isFALSE(breakpoint)){
         # Set the ontology level.
         counter <- counter + 1
         if (isTRUE(verbose)){
@@ -3190,7 +3184,7 @@ compute_umap_layer <- function(sample,
                 dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
 
   # Generate base layer.
-  if (isFALSE(raster)){
+  if (base::isFALSE(raster)){
     base_layer <- ggplot2::geom_point(data = embeddings,
                                       mapping = ggplot2::aes(x = .data$x,
                                                              y = .data$y),
@@ -3214,7 +3208,7 @@ compute_umap_layer <- function(sample,
 
 
   # Generate NA layer.
-  if (isFALSE(raster)){
+  if (base::isFALSE(raster)){
     na_layer <- ggplot2::geom_point(data = embeddings,
                                     mapping = ggplot2::aes(x = .data$x,
                                                            y = .data$y),
@@ -3239,7 +3233,7 @@ compute_umap_layer <- function(sample,
   out <- list()
   if (!is.null(group.by)){
     # Generate colored based layer.
-    if (isFALSE(raster)){
+    if (base::isFALSE(raster)){
       color_layer <- ggplot2::geom_point(data = embeddings,
                                          mapping = ggplot2::aes(x = .data$x,
                                                                 y = .data$y,
@@ -3342,7 +3336,7 @@ handle_axis <- function(flip,
                         legend.title.face,
                         legend.text.face){
   # Set axis theme parameters.
-  if (isFALSE(flip)){
+  if (base::isFALSE(flip)){
     # Strips
     if (counter == length(group.by)){
       strip.background <- ggplot2::element_blank()

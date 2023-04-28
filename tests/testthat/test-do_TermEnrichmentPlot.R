@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["do_TermEnrichmentPlot"]])){
+if(base::isFALSE(dep_check[["do_TermEnrichmentPlot"]])){
 
   testthat::test_that("do_TermEnrichmentPlot: CRAN essentials", {
 

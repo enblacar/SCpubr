@@ -302,8 +302,8 @@ do_ExpressionHeatmap <- function(sample,
 
     p <- data %>% 
          # nocov start
-         ggplot2::ggplot(mapping = ggplot2::aes(x = if (isFALSE(flip)){.data$gene} else {.data$group.by},
-                                                y = if (isFALSE(flip)){.data$group.by} else {.data$gene},
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$gene} else {.data$group.by},
+                                                y = if (base::isFALSE(flip)){.data$group.by} else {.data$gene},
                                                 fill = .data$mean)) +
          # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
@@ -371,7 +371,7 @@ do_ExpressionHeatmap <- function(sample,
                                    legend.text.face = legend.text.face)
     # nocov start
     # Set axis titles.
-    if (isFALSE(flip)){
+    if (base::isFALSE(flip)){
       if (counter == 1){
         if (length(group.by) > 1){
           xlab <- NULL
@@ -445,9 +445,9 @@ do_ExpressionHeatmap <- function(sample,
   }
 
   # Plot the combined plot
-  input <- if(isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
+  input <- if(base::isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
   p <- patchwork::wrap_plots(input,
-                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){1} else {NULL},
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +

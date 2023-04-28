@@ -138,7 +138,7 @@ do_DotPlot <- function(sample,
     }
 
     if (is.list(features)){
-      assertthat::assert_that(isFALSE(flip),
+      assertthat::assert_that(base::isFALSE(flip),
                               msg = paste0(add_cross(), crayon_body("Please, provide the a "),
                                            crayon_key("character vector"),
                                            crayon_body(" to "),
@@ -195,7 +195,7 @@ do_DotPlot <- function(sample,
 
 
     if (isTRUE(use_viridis)){
-      if (isFALSE(dot_border)){
+      if (base::isFALSE(dot_border)){
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
                                                                      option = viridis.palette,
@@ -215,8 +215,8 @@ do_DotPlot <- function(sample,
                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
                                         # nocov end
       }
-    } else if (isFALSE(use_viridis)){
-      if (isFALSE(dot_border)){
+    } else if (base::isFALSE(use_viridis)){
+      if (base::isFALSE(dot_border)){
         p <- add_scale(p = p,
                        # nocov start
                        function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},

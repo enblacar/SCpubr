@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_LoadingsPlot"]])){
+if (base::isFALSE(dep_check[["do_LoadingsPlot"]])){
   
   testthat::test_that("do_LoadingsPlot: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],

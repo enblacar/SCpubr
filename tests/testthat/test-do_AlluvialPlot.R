@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_AlluvialPlot"]])){
+if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
 
   testthat::test_that("do_AlluvialPlot: CRAN essential tests", {
 

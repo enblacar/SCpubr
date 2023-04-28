@@ -154,7 +154,7 @@ Compute a heatmap summary of the top and bottom genes in the PCA loadings for th
                                  dims = 1:2)
     p
     
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

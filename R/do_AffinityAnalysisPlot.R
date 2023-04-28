@@ -361,7 +361,7 @@ do_AffinityAnalysisPlot <- function(sample,
   for (group in group.by){
     p <- list.heatmaps[[group]]
     
-    if (isFALSE(enforce_symmetry)){
+    if (base::isFALSE(enforce_symmetry)){
       if (isTRUE(use_viridis)){
         p <- p + 
              ggplot2::scale_fill_viridis_c(direction = viridis.direction,
@@ -502,8 +502,8 @@ do_AffinityAnalysisPlot <- function(sample,
     list.heatmaps <- list.heatmaps[rev(group.by)]
   }
   p <- patchwork::wrap_plots(list.heatmaps,
-                             ncol = if (isFALSE(flip)){NULL} else {1},
-                             nrow = if(isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){NULL} else {1},
+                             nrow = if(base::isFALSE(flip)){1} else {NULL},
                              guides = "collect")
   p <- p +
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,

@@ -290,7 +290,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
   names(colors.to) <- stringr::str_pad(names(colors.to), width = max_char, side = "both")
   colors.use <- c(colors.from, colors.to)
   if (is.null(link.sort)){link.sort <- "default"}
-  if (isFALSE(z_index)){link.zindex <- NULL} else {link.zindex <- rank(data[["value"]])}
+  if (base::isFALSE(z_index)){link.zindex <- NULL} else {link.zindex <- rank(data[["value"]])}
 
   if (alignment == "vertical"){
     circlize::circos.par(start.degree = 0)

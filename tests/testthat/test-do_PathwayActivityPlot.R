@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_PathwayActivityPlot"]])){
+if (base::isFALSE(dep_check[["do_PathwayActivityPlot"]])){
 
   testthat::test_that("do_PathwayActivityPlot: CRAN essentials", {
 

@@ -95,7 +95,7 @@ do_MetadataPlot <- function(sample = NULL,
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
   
-  if (isFALSE(from_df)){
+  if (base::isFALSE(from_df)){
     check_Seurat(sample = sample)
     
     for (meta in metadata){
@@ -150,7 +150,7 @@ do_MetadataPlot <- function(sample = NULL,
                                          crayon_body(" parameter.")))
     
     group.by <- "Groups"
-    if (isFALSE(flip)){
+    if (base::isFALSE(flip)){
       metadata <- colnames(df)
     } else {
       metadata <- rev(colnames(df))
@@ -194,8 +194,8 @@ do_MetadataPlot <- function(sample = NULL,
                               "{name}" := .env$name,
                               "{group.by}" := factor(.data[[group.by]], levels = order.use)) %>% 
                 # nocov start
-                ggplot2::ggplot(mapping = ggplot2::aes(x = if(isFALSE(flip)){.data[[group.by]]} else {.data[[name]]},
-                                                       y = if(isFALSE(flip)){.data[[name]]} else {.data[[group.by]]},
+                ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data[[group.by]]} else {.data[[name]]},
+                                                       y = if(base::isFALSE(flip)){.data[[name]]} else {.data[[group.by]]},
                                                        fill = .data[[paste0(name, "_fill")]])) + 
                 # nocov end
                 ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
@@ -227,7 +227,7 @@ do_MetadataPlot <- function(sample = NULL,
   for (name in rev(names(list.heatmaps))){
     counter <- counter + 1
     # Set axis titles.
-    if (isFALSE(flip)){
+    if (base::isFALSE(flip)){
       if (counter == 1){
         xlab <- NULL
         ylab <- NULL
@@ -317,7 +317,7 @@ do_MetadataPlot <- function(sample = NULL,
     names.use <- metadata
   }
   p <- patchwork::wrap_plots(list.heatmaps[names.use],
-                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){1} else {NULL},
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +

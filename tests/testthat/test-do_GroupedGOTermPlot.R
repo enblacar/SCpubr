@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
+if (base::isFALSE(dep_check[["do_GroupedGOTermPlot"]])){
   testthat::test_that("do_GroupedGOTermPlot: CRAN essential tests", {
 
     p <- SCpubr::do_GroupedGOTermPlot(genes = "MBP",

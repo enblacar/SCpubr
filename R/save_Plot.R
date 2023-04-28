@@ -67,7 +67,7 @@ save_Plot <- function(plot,
   assertthat::assert_that(sum(output_format %in% output_options) >= 1,
                           msg = "Please select a valid output format from the available options: all, publication, pdf, png, jpeg, svg, tiff")
 
-  assertthat::assert_that(isFALSE("all" %in% output_format & "publication" %in% output_format),
+  assertthat::assert_that(base::isFALSE("all" %in% output_format & "publication" %in% output_format),
                           msg = "Please select either `all` or `publication`.")
 
   if (output_format == "publication"){

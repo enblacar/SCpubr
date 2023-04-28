@@ -87,7 +87,7 @@ Save a plot as png, pdf and svg.
                       width = 8,
                       height = 8,
                       dpi = 300)
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

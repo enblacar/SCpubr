@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["utils"]])){
+if (base::isFALSE(dep_check[["utils"]])){
   # CHECK SUGGESTS
   testthat::test_that("utils: check_suggests - FAIL - Wrong function", {
     testthat::skip_on_cran()

@@ -1,4 +1,4 @@
-if(isFALSE(dep_check[["save_Plot"]])){
+if(base::isFALSE(dep_check[["save_Plot"]])){
   testthat::test_that("save_Plot: PASS - no file", {
     testthat::skip_on_ci()
     testthat::expect_silent(SCpubr::save_Plot(plot = p,

@@ -264,7 +264,7 @@ do_BeeSwarmPlot <- function(sample,
                       legend.justification = "center",
                       axis.title.x = ggplot2::element_text(face = axis.title.face),
                       axis.title.y = ggplot2::element_text(face = axis.title.face, angle = 90),
-                      axis.ticks.y = if(isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
+                      axis.ticks.y = if(base::isFALSE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
                       axis.ticks.x = if(isTRUE(flip)){ggplot2::element_line(color = "black")} else {ggplot2::element_blank()},
                       axis.text = ggplot2::element_text(face = axis.text.face, color = "black"),
                       axis.line = ggplot2::element_line(color = "black"),
@@ -361,7 +361,7 @@ do_BeeSwarmPlot <- function(sample,
                                                    color = border.color,
                                                    size = pt.size * border.size,
                                                    show.legend = FALSE)
-    } else if (isFALSE(raster)){
+    } else if (base::isFALSE(raster)){
       base_layer <-ggbeeswarm::geom_quasirandom(data = sample@meta.data,
                                                  mapping = ggplot2::aes(x = .data[["rank"]],
                                                                         y = .data[["ranked_groups"]]),

@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_DiffusionMapPlot"]])){
+if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
   
   testthat::test_that("do_DiffusionMapPlot: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],

@@ -483,7 +483,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   p <- p + ggplot2::ylab(ylab) + 
            ggplot2::xlab(xlab)
   
-  if (isFALSE(enforce_symmetry)){
+  if (base::isFALSE(enforce_symmetry)){
     if (isTRUE(use_viridis)){
       p <- p +
            ggplot2::scale_fill_viridis_c(na.value = na.value,

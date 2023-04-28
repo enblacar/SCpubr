@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_BoxPlot"]])){
+if (base::isFALSE(dep_check[["do_BoxPlot"]])){
 
   testthat::test_that("do_BoxPlot: CRAN essentials", {
     p <- SCpubr::do_BoxPlot(sample = sample,

@@ -1,7 +1,7 @@
 # Add Start-Up message.
 .onAttach <- function(...) {
   # nocov start
-  if (isFALSE(getOption("SCpubr.verbose"))){
+  if (base::isFALSE(getOption("SCpubr.verbose"))){
     return()
   }
   # nocov end

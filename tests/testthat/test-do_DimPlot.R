@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_DimPlot"]])){
+if (base::isFALSE(dep_check[["do_DimPlot"]])){
 
   testthat::test_that("do_DimPlot: CRAN essentials", {
     p <- SCpubr::do_DimPlot(sample = sample)

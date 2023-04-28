@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_CorrelationPlot"]])){
+if (base::isFALSE(dep_check[["do_CorrelationPlot"]])){
 
   testthat::test_that("do_CorrelationPlot: CRAN essentials", {
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")

@@ -204,7 +204,7 @@ do_VolcanoPlot <- function(sample,
     }
     data.label <- dplyr::bind_rows(data.up, data.down)
 
-    if (isFALSE(use_labels)){
+    if (base::isFALSE(use_labels)){
       p <- p +
            ggrepel::geom_text_repel(data = data.label,
                                     mapping = ggplot2::aes(label = .data$gene),

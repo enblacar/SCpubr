@@ -291,16 +291,16 @@ do_NebulosaPlot <- function(sample,
       # if dims is first and then second.
       if (sum(dims == c(1, 2)) == 2){
         p <- p &
-          ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
-                         axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
+          ggplot2::theme(axis.title = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
+                         axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       } else {
         labels <- colnames(sample@reductions[[reduction]][[]])[dims]
         p <- p &
-          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+          ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                          axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
           ggplot2::xlab(labels[1]) &
           ggplot2::ylab(labels[2])
@@ -309,9 +309,9 @@ do_NebulosaPlot <- function(sample,
     } else {
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       p <- p &
-        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                        axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
@@ -328,9 +328,9 @@ do_NebulosaPlot <- function(sample,
           ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, labels[2]]),
                           max(sample@reductions$diffusion[[]][, labels[2]]))) &
           # Remove axis elements so that the axis title is the only thing left.
-          ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+          ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                          axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black"))
       })
 

@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_CellularStatesPlot"]])){
+if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
 
   testthat::test_that("do_CellularStatesPlot: CRAN essentials", {
 

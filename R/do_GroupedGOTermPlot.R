@@ -280,7 +280,7 @@ do_GroupedGOTermPlot <- function(genes,
   input <- list.heatmaps[names.use]
   
   p <- patchwork::wrap_plots(input,
-                             ncol = if (isFALSE(flip)){1} else {NULL},
+                             ncol = if (base::isFALSE(flip)){1} else {NULL},
                              nrow = if(isTRUE(flip)) {1} else {NULL},
                              guides = "collect")
   p <- p +

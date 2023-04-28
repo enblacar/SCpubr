@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
+if (base::isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
 
   testthat::test_that("do_EnrichmentHeatmap: CRAN essential", {
     sample$orig.ident <- ifelse(sample$seurat_clusters %in% c("1", "2"), "A", "B")

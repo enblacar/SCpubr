@@ -119,7 +119,7 @@ Compute an overview of the GO terms associated with the input list of genes.
     # Compute the grouped GO terms.
     out <- SCpubr::do_GroupedGOTermPlot(genes = genes.use,
                                         org.db = org.Hs.eg.db)
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

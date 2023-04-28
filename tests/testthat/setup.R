@@ -62,7 +62,7 @@ for (func in names(dependencies)){
 }
 
 # nolint start
-if (isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
+if (base::isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | base::isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
   if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
     suppressMessages(library("org.Hs.eg.db"))
   }
@@ -75,15 +75,15 @@ if (isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | isFALSE(dep_check[["do_Functi
 # nolint end
 
 # Remove this for publication in CRAN.
-if (isFALSE(dep_check[["do_LigandReceptorPlot"]])){
+if (base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
   liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
 }
 
-if (isFALSE(dep_check[["do_DimPlot"]]) &
-    isFALSE(dep_check[["do_CorrelationPlot"]]) &
-    isFALSE(dep_check[["do_ChordDiagramPlot"]]) &
+if (base::isFALSE(dep_check[["do_DimPlot"]]) &
+    base::isFALSE(dep_check[["do_CorrelationPlot"]]) &
+    base::isFALSE(dep_check[["do_ChordDiagramPlot"]]) &
     isTRUE(requireNamespace(pkg, quietly = TRUE)) &
-    isFALSE(dep_check[["save_Plot"]])){
+    base::isFALSE(dep_check[["save_Plot"]])){
   p <- SCpubr::do_DimPlot(sample)
   data <- data.frame("A" = stats::runif(n = 10),
                      "B" = stats::runif(n = 10),

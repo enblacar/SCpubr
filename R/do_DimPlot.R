@@ -772,19 +772,19 @@ do_DimPlot <- function(sample,
     if (sum(dims == c(1, 2)) == 2){
       # Remove axes completely.
       p <- p &
-        ggplot2::theme(axis.title = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
-                       axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
+        ggplot2::theme(axis.title = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
+                       axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
       # If dims do not follow the usual order.
     } else {
       # Get the name of the selected dims.
       labels <- colnames(sample@reductions[[reduction]][[]])[dims]
       # Remove everything in the axes but the axis titles.
       p <- p &
-        ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                       axis.line =if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                        axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
         ggplot2::xlab(labels[1]) &
         ggplot2::ylab(labels[2])
@@ -795,16 +795,16 @@ do_DimPlot <- function(sample,
     labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     # Remove everything in the axes but not the axis titles.
     p <- p &
-      ggplot2::theme(axis.text = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                     axis.ticks = if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.line =if (isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+      ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
+                     axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
+                     axis.line =if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
                      axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
       ggplot2::xlab(labels[1]) &
       ggplot2::ylab(labels[2])
   }
 
   # Add marginal plots.
-  if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions & isFALSE(plot_cell_borders))){
+  if (not_highlighting_and_not_split_by & isTRUE(plot_marginal_distributions & base::isFALSE(plot_cell_borders))){
     # Remove annoying warnings when violin is used as marginal distribution.
     if (marginal.type == "violin"){
       p <- suppressWarnings({ggExtra::ggMarginal(p = p,

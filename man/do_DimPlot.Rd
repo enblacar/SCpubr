@@ -226,7 +226,7 @@ Wrapper for \link[Seurat]{DimPlot}.
     p <- SCpubr::do_DimPlot(sample,
                             idents.highlight = c("1", "3"))
 
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

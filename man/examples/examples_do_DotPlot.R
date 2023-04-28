@@ -48,7 +48,7 @@
                             features = genes,
                             cluster.idents = TRUE,
                             plot.title = "Clustered")
-  } else if (isFALSE(value)){
+  } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
   }

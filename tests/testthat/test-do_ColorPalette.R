@@ -1,4 +1,4 @@
-if (isFALSE(dep_check[["do_ColorPalette"]])){
+if (base::isFALSE(dep_check[["do_ColorPalette"]])){
   testthat::test_that("do_BarPlot: PASS - color vectors", {
 
     out <- SCpubr::do_ColorPalette(colors.use = "steelblue")
