@@ -409,14 +409,12 @@ return_dependencies <- function(){
                                     "tidyr",
                                     "tibble",
                                     "stringr",
+                                    "ggplot2",
                                     "patchwork",
                                     "plyr",
-                                    "grDevices",
-                                    "stats",
                                     "viridis",
                                     "forcats",
                                     "scales",
-                                    "grid",
                                     "assertthat",
                                     "RColorBrewer",
                                     "labeling",
@@ -601,29 +599,120 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
             }
           }
           # nocov end
+          r_packages <- utils::available.packages(repos = c("https://bioconductor.org/packages/3.15/bioc",  "http://cran.us.r-project.org"))[, "Version"]
           
           packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
           if (func %in% non_seurat_functions){
             packages <- packages[packages != "Seurat"]
           }
           
-          check_installed <- vapply(packages, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
-          
-          
-          packages.print <- NULL
-          for(item in sort(names(check_installed))){
-            packages.print <- append(packages.print, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
+          format_package_name <- function(package, 
+                                          avail_packages,
+                                          max_length_packages,
+                                          max_length_version_available,
+                                          max_length_version_installed){
+            color_version <- function(version,
+                                      max_version,
+                                      type){
+              if (length(strsplit(as.character(version), split = "\\.")[[1]]) > 3){
+                parts <- strsplit(as.character(version), split = "\\.")[[1]]
+                version_parts <- paste(parts[seq_len(length(parts) - 1)], collapse = ".")
+                dev_parts <- paste(parts[length(parts)], collapse =  ".")
+                length.use <- nchar(version_parts) + nchar(dev_parts) + 1
+                if (type == "installed"){
+                  version_parts <- paste0(paste(rep(" ", (max_version - length.use)), collapse = ""), version_parts)
+                  version_parts <- crayon_key(version_parts)
+                  dev_parts <- cli::col_yellow(dev_parts)
+                } else {
+                  version_parts <- crayon_key(version_parts)
+                  dev_parts <- paste0(dev_parts, paste(rep(" ", (max_version - length.use)), collapse = ""))
+                  dev_parts <- cli::col_yellow(dev_parts)
+                }
+                parts <- c(version_parts, dev_parts)
+                version <- paste(parts, collapse = ".")
+                
+              } else {
+                parts <- strsplit(as.character(version), split = "\\.")[[1]]
+                version_parts <- paste(parts[seq_len(length(parts))], collapse = ".")
+                length.use <- nchar(version_parts)
+                times <- max_version - length.use
+                if (type == "installed"){
+                  version_parts <- paste0(paste(rep(" ", times), collapse = ""), version_parts)
+                  version <- crayon_key(version_parts)
+                } else {
+                  version_parts <- paste0(version_parts, paste(rep(" ", times), collapse = ""))
+                  version <- crayon_key(version_parts)
+                }
+              }
+              return(version)
+            }
+            length.use <- max_length_packages - nchar(package)
+            package.use <- paste0(package, paste(rep(" ", length.use), collapse = ""))
+            if (isTRUE(requireNamespace(package, quietly = TRUE))){
+              installed <- color_version(version = utils::packageVersion(package),
+                                         max_version = max_length_version_installed,
+                                         type = "installed")
+              
+              latest <- color_version(version = avail_packages[package],
+                                      max_version = max_length_version_available,
+                                      type = "available")
+              
+              if ((package == "ggplot2")  & (utils::packageVersion(package) < "3.4.0")){
+                intro <- paste0(cli::col_yellow(cli::style_bold("!")), 
+                                " ", 
+                                cli::col_magenta(package.use))
+              } else if ((package == "dplyr")  & (utils::packageVersion(package) < "1.1.0")){
+                intro <- paste0(cli::col_yellow(cli::style_bold("!")), 
+                                " ", 
+                                cli::col_magenta(package.use))
+              } else {
+                intro <- paste0(cli::col_green(cli::symbol$tick),
+                                crayon_body(" "),
+                                crayon_body(package.use))
+              }
+              
+              name <- paste0(intro, 
+                             crayon_body(" "), 
+                             installed, 
+                             crayon_body(" | "), 
+                             latest)
+            } else {
+              return(paste0(cli::col_red(cli::symbol$cross),
+                            crayon_body(" "),
+                            cli::col_red(package.use),
+                            paste(rep(" ", max_length_version_installed), collapse = ""),
+                            "    ",
+                            paste(rep(" ", max_length_version_available), collapse = "")))
+            }
           }
+          
+          
+
+          packages_version <- vapply(packages, function(x){ifelse(isTRUE(requireNamespace(x, quietly = TRUE)),
+                                                                         as.character(utils::packageVersion(x)),
+                                                                         "NA")}, FUN.VALUE = character(1))
+          avail_packages <- r_packages[packages]
+          avail_packages[is.na(avail_packages)] <- "GitHub"
+          names(avail_packages)[is.na(names(avail_packages))] <- "liana"
+          max_length_available <- max(vapply(avail_packages, nchar, FUN.VALUE = numeric(1)))
+          max_length_installed <- max(vapply(packages_version, nchar, FUN.VALUE = numeric(1)))
+          max_length_packages <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
+          packages_mod <- vapply(packages, function(x){format_package_name(x, 
+                                                                           avail_packages = avail_packages,
+                                                                           max_length_packages = max_length_packages,
+                                                                           max_length_version_available = max_length_available,
+                                                                           max_length_version_installed = max_length_installed)}, FUN.VALUE = character(1))
+          
           
           counter <- 0
           print.list <- list()
           print.vector <- NULL
-          for(item in packages.print){
+          for(item in packages_mod){
             counter <- counter + 1
             
-            if (counter %% 5 != 0){
+            if (counter %% 3 != 0){
               print.vector <- append(print.vector, item)
-              if (counter == length(packages.print)){
+              if (counter == length(packages_mod)){
                 print.list[[item]] <- paste(print.vector, collapse = "     ")
                 print.vector <- NULL
               }
@@ -717,6 +806,7 @@ package_report <- function(startup = FALSE){
     
     updates_check <- cli::rule(left = "Package version", width = nchar("Package version") + 6)
     
+    r_packages <- utils::available.packages(repos = c("https://bioconductor.org/packages/3.15/bioc",  "http://cran.us.r-project.org"))[, "Version"]
     cran_version <- utils::available.packages(repos = "http://cran.us.r-project.org")["SCpubr", "Version"]
     system_version <- as.character(utils::packageVersion("SCpubr"))
     
@@ -755,9 +845,101 @@ package_report <- function(startup = FALSE){
                                                 crayon_body(" version!")))
     }
     
-    
+    format_package_name <- function(package, 
+                                    avail_packages,
+                                    max_length_packages,
+                                    max_length_version_available,
+                                    max_length_version_installed){
+      color_version <- function(version,
+                                max_version,
+                                type){
+        if (length(strsplit(as.character(version), split = "\\.")[[1]]) > 3){
+          parts <- strsplit(as.character(version), split = "\\.")[[1]]
+          version_parts <- paste(parts[seq_len(length(parts) - 1)], collapse = ".")
+          dev_parts <- paste(parts[length(parts)], collapse =  ".")
+          length.use <- nchar(version_parts) + nchar(dev_parts) + 1
+          if (type == "installed"){
+            version_parts <- paste0(paste(rep(" ", (max_version - length.use)), collapse = ""), version_parts)
+            version_parts <- crayon_key(version_parts)
+            dev_parts <- cli::col_yellow(dev_parts)
+          } else {
+            version_parts <- crayon_key(version_parts)
+            dev_parts <- paste0(dev_parts, paste(rep(" ", (max_version - length.use)), collapse = ""))
+            dev_parts <- cli::col_yellow(dev_parts)
+          }
+          parts <- c(version_parts, dev_parts)
+          version <- paste(parts, collapse = ".")
+          
+        } else {
+          parts <- strsplit(as.character(version), split = "\\.")[[1]]
+          version_parts <- paste(parts[seq_len(length(parts))], collapse = ".")
+          length.use <- nchar(version_parts)
+          times <- max_version - length.use
+          if (type == "installed"){
+            version_parts <- paste0(paste(rep(" ", times), collapse = ""), version_parts)
+            version <- crayon_key(version_parts)
+          } else {
+            version_parts <- paste0(version_parts, paste(rep(" ", times), collapse = ""))
+            version <- crayon_key(version_parts)
+          }
+        }
+        return(version)
+      }
+      length.use <- max_length_packages - nchar(package)
+      package.use <- paste0(package, paste(rep(" ", length.use), collapse = ""))
+      if (isTRUE(requireNamespace(package, quietly = TRUE))){
+        installed <- color_version(version = utils::packageVersion(package),
+                                   max_version = max_length_version_installed,
+                                   type = "installed")
+        
+        latest <- color_version(version = avail_packages[package],
+                                max_version = max_length_version_available,
+                                type = "available")
+        
+        if ((package == "ggplot2")  & (utils::packageVersion(package) < "3.4.0")){
+          intro <- paste0(cli::col_yellow(cli::style_bold("!")), 
+                          " ", 
+                          cli::col_magenta(package.use))
+        } else if ((package == "dplyr")  & (utils::packageVersion(package) < "1.1.0")){
+          intro <- paste0(cli::col_yellow(cli::style_bold("!")), 
+                          " ", 
+                          cli::col_magenta(package.use))
+        } else {
+          intro <- paste0(cli::col_green(cli::symbol$tick),
+                          crayon_body(" "),
+                          crayon_body(package.use))
+        }
+        
+        name <- paste0(intro, 
+                       crayon_body(" "), 
+                       installed, 
+                       crayon_body(" | "), 
+                       latest)
+      } else {
+        return(paste0(cli::col_red(cli::symbol$cross),
+                      crayon_body(" "),
+                      cli::col_red(package.use),
+                      paste(rep(" ", max_length_version_installed), collapse = ""),
+                      "    ",
+                      paste(rep(" ", max_length_version_available), collapse = "")))
+      }
+    }
     
     packages <- sort(unique(unlist(check_dependencies(return_dependencies = TRUE))))
+    packages_version <- vapply(packages, function(x){ifelse(isTRUE(requireNamespace(x, quietly = TRUE)),
+                                                                   as.character(utils::packageVersion(x)),
+                                                                   "NA")}, FUN.VALUE = character(1))
+    avail_packages <- r_packages[packages]
+    avail_packages[is.na(avail_packages)] <- "GitHub"
+    names(avail_packages)[is.na(names(avail_packages))] <- "liana"
+    max_length_available <- max(vapply(avail_packages, nchar, FUN.VALUE = numeric(1)))
+    max_length_installed <- max(vapply(packages_version, nchar, FUN.VALUE = numeric(1)))
+    max_length_packages <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
+    packages_mod <- vapply(packages, function(x){format_package_name(x, 
+                                                                     avail_packages = avail_packages,
+                                                                     max_length_packages = max_length_packages,
+                                                                     max_length_version_available = max_length_available,
+                                                                     max_length_version_installed = max_length_installed)}, FUN.VALUE = character(1))
     functions <- sort(unique(names(check_dependencies(return_dependencies = TRUE))))
     
     if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
@@ -774,25 +956,18 @@ package_report <- function(startup = FALSE){
     
     functions <- functions[names(functions) != "Essentials"]
     
-    check_installed <- vapply(packages, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
-    max_length <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
     max_length_functions <- max(vapply(names(functions), nchar, FUN.VALUE = numeric(1)))
-    format_installed <- function(name, value, max_length){
+    format_functions <- function(name, value, max_length){
       func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
       name_use <- ifelse(isTRUE(value),
-                         cli::ansi_align(crayon_key(name), max_length, align = "left"),
+                         cli::ansi_align(crayon_body(name), max_length, align = "left"),
                          cli::ansi_align(cli::col_red(name), max_length, align = "left"))
       paste0(func_use, " ", name_use)
     }
     
-    packages <- NULL
-    for(item in names(check_installed)){
-      packages <- append(packages, format_installed(name = item, value = check_installed[[item]], max_length = max_length))
-    }
-    
     functions.use <- NULL
     for(item in names(functions)){
-      functions.use <- append(functions.use, format_installed(name = item, value = functions[[item]], max_length = max_length_functions))
+      functions.use <- append(functions.use, format_functions(name = item, value = functions[[item]], max_length = max_length_functions))
     }
     
     counter <- 0
@@ -800,10 +975,10 @@ package_report <- function(startup = FALSE){
     print.list.functions <- list()
     print.vector <- NULL
     print.vector.functions <- NULL
-    for(item in packages){
+    for(item in packages_mod){
       counter <- counter + 1
       
-      if (counter %% 5 != 0){
+      if (counter %% 3 != 0){
         print.vector <- append(print.vector, item)
         if (counter == length(packages)){
           print.list[[item]] <- paste(print.vector, collapse = "     ")
@@ -820,7 +995,7 @@ package_report <- function(startup = FALSE){
     for(item in functions.use){
       counter <- counter + 1
       
-      if (counter %% 4 != 0){
+      if (counter %% 3 != 0){
         print.vector.functions <- append(print.vector.functions, item)
         if (counter == length(functions.use)){
           print.list.functions[[item]] <- paste(print.vector.functions, collapse = "     ")
@@ -835,9 +1010,55 @@ package_report <- function(startup = FALSE){
     }
     
     packages_check <- cli::rule(left = "Required packages", width = nchar("Required packages") + 6)
+    
+    packages_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                            crayon_body(" Installed packages are denoted by a "), 
+                            crayon_key("tick"),
+                            crayon_body(" ("),
+                            cli::style_bold(cli::col_green(cli::symbol$tick)),
+                            crayon_body(") and missing packages by a "),
+                            crayon_key("cross"),
+                            crayon_body(" ("),
+                            cli::style_bold(cli::col_red(cli::symbol$cross)),
+                            crayon_body(")."))
+    
+    packages_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                            crayon_body(" Installed packages that still require an update to correctly run "), 
+                            crayon_key("SCpubr"),
+                            crayon_body(" have an "),
+                            crayon_key("exclamation mark"),
+                            crayon_body(" ("),
+                            cli::style_bold(cli::col_yellow("!")),
+                            crayon_body(")."))
+    
+    packages_tip3 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                            crayon_body(" Packages version are displayed as: "), 
+                            crayon_key("Installed"),
+                            crayon_body(" | "),
+                            crayon_key("Available"),
+                            crayon_body("."))
+    
+    
     functions_check <- cli::rule(left = "Available functions", width = nchar("Available functions") + 6)
     
-    functions_tip <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+    functions_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                             crayon_body(" Functions tied to "),
+                             crayon_key("development"),
+                             crayon_body(" builds of "),
+                             crayon_key("SCpubr"),
+                             crayon_body(" are marked by the ("),
+                             cli::style_bold(cli::col_yellow("| DEV")),
+                             crayon_body(") tag."))
+    
+    functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+                             crayon_body(" You can install development builds of "),
+                             crayon_key("SCpubr"),
+                             crayon_body(" by following the instructions in the "),
+                             crayon_key(cli::style_hyperlink(text = "Releases",
+                                                             url = "https://github.com/enblacar/SCpubr/releases")),
+                             crayon_body(" page."))
+    
+    functions_tip3 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
                             crayon_body(" Check the package requirements function-wise with: "), 
                             cli::style_italic(crayon_key('SCpubr::check_dependencies()')))
     
@@ -866,16 +1087,21 @@ package_report <- function(startup = FALSE){
                          cite, "\n", "\n",
                          stars, "\n", "\n",
                          updates, "\n", "\n",
-                         plotting, "\n", "\n", "\n",
-                         updates_check, "\n", "\n",
+                         plotting, "\n", "\n", "\n", "\n",
+                         updates_check, "\n", "\n", 
                          cran_version_message, "\n",
                          system_version_message, "\n", "\n",
-                         veredict_message, "\n", "\n", "\n",
-                         packages_check, "\n", "\n",
-                         paste(print.list, collapse = "\n"), "\n", "\n", "\n",
-                         functions_check, "\n", "\n",
+                         veredict_message, "\n", "\n", "\n", "\n",
+                         packages_check, "\n", "\n", 
+                         paste(print.list, collapse = "\n"), "\n", "\n",
+                         packages_tip1, "\n", 
+                         packages_tip2, "\n", 
+                         packages_tip3, "\n", "\n", "\n", "\n",
+                         functions_check, "\n", "\n", 
                          paste(print.list.functions, collapse = "\n"), "\n", "\n",
-                         functions_tip, "\n", "\n", "\n",
+                         functions_tip1, "\n", 
+                         functions_tip2, "\n", 
+                         functions_tip3, "\n", "\n", "\n", "\n",
                          tip_rule, "\n", "\n",
                          tip_message, "\n", "\n",
                          disable_message, "\n", "\n",
@@ -883,16 +1109,21 @@ package_report <- function(startup = FALSE){
       rlang::inform(msg_wrap, class = "packageStartupMessage")
     } else if (isFALSE(startup)){
       msg_wrap <- paste0("\n", "\n", 
-                         header, "\n", "\n",
-                         updates_check, "\n", "\n",
+                         header, "\n", "\n", "\n",
+                         updates_check, "\n", "\n", 
                          cran_version_message, "\n",
                          system_version_message, "\n", "\n",
-                         veredict_message, "\n", "\n", "\n",
+                         veredict_message, "\n", "\n", "\n", "\n",
                          packages_check, "\n", "\n",
                          paste(print.list, collapse = "\n"), "\n", "\n", "\n",
+                         packages_tip1, "\n", 
+                         packages_tip2, "\n", 
+                         packages_tip3, "\n", "\n", "\n", "\n",
                          functions_check, "\n", "\n",
                          paste(print.list.functions, collapse = "\n"), "\n", "\n",
-                         functions_tip, "\n", "\n", "\n",
+                         functions_tip1, "\n", 
+                         functions_tip2, "\n", 
+                         functions_tip3, "\n", "\n", "\n",
                          end_rule)
       rlang::inform(msg_wrap)
     }
@@ -953,13 +1184,14 @@ check_colors <- function(colors, parameter_name = "") {
 #' @param sample Seurat object.
 #' @param colors Named vector of colors.
 #' @param grouping_variable Metadata variable in sample to obtain its unique values.
+#' @param idents.keep Identities to keep from the grouping_variable.
 #' @return None
 #' @noRd
 #' @examples
 #' \donttest{
 #' TBD
 #' }
-check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL){
+check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL, idents.keep = NULL){
 
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
@@ -967,11 +1199,21 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
-    check_values <- as.character(unique(sample@meta.data[, grouping_variable]))
+    if (is.factor(sample@meta.data[, grouping_variable])){
+      check_values <- levels(sample@meta.data[, grouping_variable])
+    } else {
+      check_values <- as.character(unique(sample@meta.data[, grouping_variable]))
+    }
   }
+  
+  if (!is.null(idents.keep)){
+    # Remove unwanted idents.
+    check_values <- check_values[check_values %in% idents.keep]
+  }
+  
   # Remove NAs.
   check_values <- check_values[!(is.na(check_values))]
-
+  
   # Remove values that are not in the vector.
   if (sum(names(colors) %in% check_values) == length(check_values) & length(names(colors)) > length(check_values)){
     colors <- colors[names(colors) %in% check_values]

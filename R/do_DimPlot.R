@@ -275,20 +275,23 @@ do_DimPlot <- function(sample,
     if (isTRUE(default_parameters)){
       # Check that the color palette has the right amount of named colors with regards to the current identities.
       colors.use <- check_consistency_colors_and_names(sample = sample,
-                                                       colors = colors.use)
+                                                       colors = colors.use,
+                                                       idents.keep = idents.keep)
       # When using group.by or a combination of group.by and split.by.
     } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
       # Check that the color palette has the right amount of named colors with regards to group.by values.
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use,
-                                                       grouping_variable = group.by)
+                                                       grouping_variable = group.by,
+                                                       idents.keep = idents.keep)
       # When using split.by.
     } else if (isTRUE(split_by_is_used)){
       if (length(colors.use) != 1){
         # Check that the color palette has the right amount of named colors with regards to split.by values.
         colors.use <- check_consistency_colors_and_names(sample = sample,
                                                          colors = colors.use,
-                                                         grouping_variable = split.by)
+                                                         grouping_variable = split.by,
+                                                         idents.keep = idents.keep)
       }
       # When highlighting cells.
     } else if (isTRUE(highlighting_cells)){
@@ -326,7 +329,9 @@ do_DimPlot <- function(sample,
       # Set the identities that the user wants to exclude as NA.
       Seurat::Idents(sample)[!(Seurat::Idents(sample) %in% idents.keep)] <- NA
 
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use)
+      colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                       colors = colors.use,
+                                                       idents.keep = idents.keep)
       # When using group.by, check with the values in group.by.
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
@@ -338,7 +343,10 @@ do_DimPlot <- function(sample,
                                            crayon_body(" metadata variable provided.")))
       # Convert to NA values in group.by not included in the user's selected values.
       sample@meta.data[, group.by][!(sample@meta.data[, group.by] %in% idents.keep)] <- NA
-      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+      colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                       colors = colors.use, 
+                                                       grouping_variable = group.by,
+                                                       idents.keep = idents.keep)
       # If split.by is used instead.
     } else if (split_by_is_used | group_by_and_split_by_used){
       # Check that the values in idents.keep are in the unique values of split.by.
@@ -349,9 +357,15 @@ do_DimPlot <- function(sample,
                                            crayon_key("split.by"),
                                            crayon_body(" metadata provided.")))
       if (is.null(group.by)){
-        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+        colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                         colors = colors.use, 
+                                                         grouping_variable = split.by,
+                                                         idents.keep = idents.keep)
       } else {
-        colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+        colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                         colors = colors.use, 
+                                                         grouping_variable = group.by,
+                                                         idents.keep = idents.keep)
       }
 
     }
