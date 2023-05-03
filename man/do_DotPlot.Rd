@@ -29,7 +29,7 @@ do_DotPlot(
   ylab = NULL,
   font.size = 14,
   font.type = "sans",
-  cluster.idents = FALSE,
+  cluster = FALSE,
   flip = FALSE,
   axis.text.x.angle = 45,
   scale.by = "size",
@@ -106,7 +106,7 @@ do_DotPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{cluster.idents}{\strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.}
+\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 

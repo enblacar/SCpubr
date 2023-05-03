@@ -116,7 +116,9 @@ do_DotPlot <- function(sample,
                            "legend.text.face" = legend.text.face,
                            "legend.title" = legend.title)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
-
+    
+    `%>%` <- magrittr::`%>%`
+    
     # Check the features.
     features <- check_feature(sample = sample, features = features, permissive = TRUE)
     features <- remove_duplicated_features(features = features)
