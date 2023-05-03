@@ -96,6 +96,8 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 -   Added `scale` parameter to allow for the data to be scaled or not scaled.
 -   Removed `split.by` parameter in favor or the higher consistency and proper functionality accross parameters. Will probably come in the future, implemented outside of the umbrella of Seurat.
+-   Renamed parameter `cluster.idents` to `cluster`.
+-   Removed the limitation of `flip` when `features` was a list of genes. Now any combination of `flip` and `features` is possible.
 
 ## `SCpubr::do_EnrichmentHeatmap`
 

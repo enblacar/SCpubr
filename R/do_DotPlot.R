@@ -3,7 +3,7 @@
 #'
 #' @inheritParams doc_function
 #' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
-#' @param cluster.idents \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
+#' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
 #' @param scale \strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.
 #' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
 #' \itemize{
@@ -39,7 +39,7 @@ do_DotPlot <- function(sample,
                        ylab = NULL,
                        font.size = 14,
                        font.type = "sans",
-                       cluster.idents = FALSE,
+                       cluster = FALSE,
                        flip = FALSE,
                        axis.text.x.angle = 45,
                        scale.by = "size",
@@ -73,7 +73,7 @@ do_DotPlot <- function(sample,
 
     # Check logical parameters.
     logical_list <- list("flip" = flip,
-                         "cluster.idents" = cluster.idents,
+                         "cluster" = cluster,
                          "use_viridis" = use_viridis,
                          "dot_border" = dot_border,
                          "plot.grid" = plot.grid,
@@ -125,29 +125,6 @@ do_DotPlot <- function(sample,
       check_colors(colors.use)
     }
 
-    # Check that flip is not set to TRUE and features is not a named list.
-    if (isTRUE(flip)){
-      assertthat::assert_that(!is.list(features),
-                              msg = paste0(add_cross(), crayon_body("Please, provide the a "),
-                                           crayon_key("character vector"),
-                                           crayon_body(" to "),
-                                           crayon_key("features"),
-                                           crayon_body(" or set "),
-                                           crayon_key("flip = FALSE"),
-                                           crayon_body(".")))
-    }
-
-    if (is.list(features)){
-      assertthat::assert_that(base::isFALSE(flip),
-                              msg = paste0(add_cross(), crayon_body("Please, provide the a "),
-                                           crayon_key("character vector"),
-                                           crayon_body(" to "),
-                                           crayon_key("features"),
-                                           crayon_body(" or set "),
-                                           crayon_key("flip = FALSE"),
-                                           crayon_body(".")))
-    }
-
     # Check that split.by is set and the user has not provided a correct vector of colors.
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -176,69 +153,77 @@ do_DotPlot <- function(sample,
                                            features = features,
                                            group.by = group.by,
                                            dot.scale = dot.scale,
-                                           cluster.idents = cluster.idents,
+                                           cluster.idents = cluster,
                                            scale = scale,
                                            scale.by = scale.by)})
+    # Retrieve original data and plot again to allow the use of flip parameter.
     if (isTRUE(dot_border)){
-      suppressMessages({
-        p <- p +
-          ggplot2::geom_point(mapping = ggplot2::aes(x = p[["data"]][["features.plot"]],
-                                                     y = p[["data"]][["id"]],
-                                                     fill = p[["data"]][["avg.exp.scaled"]],
-                                                     size = p[["data"]][["pct.exp"]]),
-                              shape = 21) +
-          ggplot2::scale_size_continuous(range = c(0, dot.scale))
-      })
-
-      p[["layers"]][[1]] <- NULL
-    }
-
-
-    if (isTRUE(use_viridis)){
-      if (base::isFALSE(dot_border)){
-        p <- add_scale(p = p,
-                       function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                     option = viridis.palette,
-                                                                     direction = viridis.direction,
-                                                                     breaks = scales::extended_breaks(n = number.breaks),
-                                                                     # nocov start
-                                                                     name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title}),
-                                                                     # nocov end
-                       scale = "color")
-      } else if (isTRUE(dot_border)){
-        p <- p +
-          ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                        option = viridis.palette,
-                                        direction = viridis.direction,
-                                        breaks = scales::extended_breaks(n = number.breaks),
-                                        # nocov start
-                                        name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
-                                        # nocov end
-      }
-    } else if (base::isFALSE(use_viridis)){
-      if (base::isFALSE(dot_border)){
-        p <- add_scale(p = p,
-                       # nocov start
-                       function_use = ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
-                       # nocov end                                               
-                                                                     na.value = na.value,
-                                                                     # nocov start
-                                                                     name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                                                     # nocov end
-                                                                     breaks = scales::extended_breaks(n = number.breaks)),
-                       scale = "color")
-      } else if (isTRUE(dot_border)){
-        p <- p +
+      p <- p$data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$features.plot} else {.data$id},
+                                                  y = if (base::isFALSE(flip)){.data$id} else {.data$features.plot},
+                                                  fill = .data$avg.exp.scaled,
+                                                  size = .data$pct.exp)) + 
+           ggplot2::geom_point(color = "black", shape = 21) +
+           ggplot2::scale_size_continuous(range = c(0, dot.scale))
+      
+      if (isTRUE(use_viridis)){
+        p <- p + 
+             ggplot2::scale_fill_viridis_c(na.value = na.value,
+                                           option = viridis.palette,
+                                           direction = viridis.direction,
+                                           breaks = scales::extended_breaks(n = number.breaks),
+                                           name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
+      } else {
+        p <- p + 
              # nocov start
-             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])}},
-             # nocov end
+             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette))}},
                                            na.value = na.value,
-                                           # nocov start
                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                           # nocov end
                                            breaks = scales::extended_breaks(n = number.breaks))
+             # nocov end
+      }
+    } else {
+      p <- p$data %>%
+           ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$features.plot} else {.data$id},
+                                                  y = if (base::isFALSE(flip)){.data$id} else {.data$features.plot},
+                                                  color = .data$avg.exp.scaled,
+                                                  size = .data$pct.exp)) + 
+           ggplot2::geom_point() +
+           ggplot2::scale_size_continuous(range = c(0, dot.scale))
+      
+      if (isTRUE(use_viridis)){
+        p <- p + 
+             ggplot2::scale_color_viridis_c(na.value = na.value,
+                                            option = viridis.palette,
+                                            direction = viridis.direction,
+                                            breaks = scales::extended_breaks(n = number.breaks),
+                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
+      } else {
+        p <- p + 
+             # nocov start
+             ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette))}},
+                                            na.value = na.value,
+                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                            breaks = scales::extended_breaks(n = number.breaks))
+             # nocov end
       }
     }
+    
+    # Facet grid.
+    if (isTRUE(is.list(features))){
+      if (base::isFALSE(flip)){
+        p <- p +
+             ggplot2::facet_grid(cols = ggplot2::vars(.data$feature.groups),
+                                 scales = "free",
+                                 space = "free")
+      } else {
+        p <- p +
+             ggplot2::facet_grid(rows = ggplot2::vars(.data$feature.groups),
+                                 scales = "free",
+                                 space = "free")
+      }
+    }
+     
     p <- p +
          ggplot2::xlab(xlab) +
          ggplot2::ylab(ylab) +
@@ -301,12 +286,13 @@ do_DotPlot <- function(sample,
     }
 
     if (is.list(features)){
-      p <- p + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'black', fill = 'white'),
-                                    strip.text = ggplot2::element_text(face = "bold", color = "black"))
-    }
-    if (flip == TRUE){
-        p <- p + ggplot2::coord_flip()
+      if (base::isFALSE(flip)){
+        p <- p + ggplot2::theme(strip.background = ggplot2::element_blank(),
+                                strip.text.x = ggplot2::element_text(face = "bold", color = "black", angle = 0))
+      } else {
+        p <- p + ggplot2::theme(strip.background = ggplot2::element_blank(),
+                                strip.text.y = ggplot2::element_text(face = "bold", color = "black", angle = 0, hjust = 0))
+      } 
     }
     return(p)
-
 }
