@@ -9,8 +9,18 @@
 #' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.
 #' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.
 #' @param dot.size \strong{\code{\link[base]{numeric}}} | Size aesthetic for the dots.
+#' @param sort.by \strong{\code{\link[base]{character}}} | How to arrange the top interactions. Interactions are sorted and then the top N are retrieved and displayed. This takes place after subsetting for \strong{\code{keep_source}} and \strong{\code{keep_target}}  One of:
+#' \itemize{
+#'   \item \emph{\code{A}}: Sorts by specificity.
+#'   \item \emph{\code{B}}: Sorts by magnitude.
+#'   \item \emph{\code{C}}: Sorts by specificity, then magnitude (gives extra weight to specificity).
+#'   \item \emph{\code{D}}: Sorts by magnitude, then specificity (gives extra weight to magnitude). Might lead to the display of non-significant results.
+#'   \item \emph{\code{E}}: Sorts by specificity and magnitude equally.
+#' }
+#' @param specificity,magnitude \strong{\code{\link[base]{character}}} | Which columns to use for \strong{\code{specificity}} and \strong{\code{magnitude}}.
+#' @param invert_specificity,invert_magnitude \strong{\code{\link[base]{logical}}} | Whether to \strong{\code{-log10}} transform \strong{\code{specificity}} and \strong{\code{magnitude}} columns.
+#' @param sorting.type.specificity,sorting.type.magnitude \strong{\code{\link[base]{character}}} | Whether the sorting of e \strong{\code{magnitude}} or \strong{\code{specificity}} columns is done in ascending or descending order. This synergises with the value of e \strong{\code{invert_specificity}} and e \strong{\code{invert_magnitude}} parameters.
 #' @param compute_ChordDiagrams \strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.
-#' @param add_missing_LR_combinations \strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.
 #' @param sort_interactions_alphabetically \strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).
 #' @param return_interactions \strong{\code{\link[base]{logical}}} | Whether to return the data.frames with the interactions so that they can be plotted as chord plots using other package functions.
 #' 
@@ -25,6 +35,11 @@ do_LigandReceptorPlot <- function(liana_output,
                                   keep_target = NULL,
                                   top_interactions = 25,
                                   dot_border = TRUE,
+                                  magnitude = "sca.LRscore",
+                                  specificity = "aggregate_rank",
+                                  sort.by = "E",
+                                  sorting.type.specificity = "descending",
+                                  sorting.type.magnitude = "descending",
                                   border.color = "black",
                                   axis.text.x.angle = 45,
                                   legend.position = "bottom",
@@ -47,7 +62,6 @@ do_LigandReceptorPlot <- function(liana_output,
                                   grid.color = "grey90",
                                   grid.type = "dotted",
                                   compute_ChordDiagrams = FALSE,
-                                  add_missing_LR_combinations = TRUE,
                                   sort_interactions_alphabetically = FALSE,
                                   number.breaks = 5,
                                   plot.title.face = "bold",
@@ -57,20 +71,27 @@ do_LigandReceptorPlot <- function(liana_output,
                                   axis.text.face = "bold",
                                   legend.title.face = "bold",
                                   legend.text.face = "plain",
-                                  return_interactions = FALSE){
+                                  return_interactions = FALSE,
+                                  invert_specificity = TRUE,
+                                  invert_magnitude = FALSE,
+                                  verbose = TRUE){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
   # Checks for packages.
   check_suggests(function_name = "do_LigandReceptorPlot")
   `%>%` <- magrittr::`%>%`
+  `:=` <- rlang::`:=`
 
   # Check logical parameters.
   logical_list <- list("dot_border" = dot_border,
                        "plot.grid" = plot.grid,
                        "sort_interactions_alphabetically" = sort_interactions_alphabetically,
                        "use_viridis" = use_viridis,
-                       "return_interactions" = return_interactions)
+                       "return_interactions" = return_interactions,
+                       "invert_specificity" = invert_specificity,
+                       "invert_magnitude" = invert_magnitude,
+                       "verbose" = verbose)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -105,7 +126,10 @@ do_LigandReceptorPlot <- function(liana_output,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "sort.by" = sort.by,
+                         "sorting.type.specificity" = sorting.type.specificity,
+                         "sorting.type.magnitude" = sorting.type.magnitude)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check border color.
@@ -152,11 +176,33 @@ do_LigandReceptorPlot <- function(liana_output,
     size_title <- stringr::str_wrap("Interaction specificity", width = 10)
     fill.title <- stringr::str_wrap("Expression Magnitude", width = 10)
   }
-
+  
+  if (isTRUE(verbose)){
+    rlang::inform(paste0(add_info(initial_newline = FALSE),
+                         crayon_body("Column for specificity: "),
+                         crayon_key(specificity)))
+    
+    rlang::inform(paste0(add_info(initial_newline = FALSE),
+                         crayon_body("Column for magnitude: "),
+                         crayon_key(magnitude)))
+  }
+  
   liana_output <- liana_output %>%
-                  dplyr::mutate("magnitude" = .data$sca.LRscore) %>%
-                  dplyr::mutate("specificity" = .data$natmi.edge_specificity)
-
+                  dplyr::mutate("magnitude" = .data[[magnitude]]) %>%
+                  dplyr::mutate("specificity" = .data[[specificity]])
+  
+  invert_function <- function(x){-log10(x + 1e-10)}
+    
+  if (isTRUE(invert_specificity)){
+    liana_output <- liana_output %>% 
+                    dplyr::mutate("specificity" := invert_function(x = .data$specificity))
+  }
+    
+  if (isTRUE(invert_magnitude)){
+    liana_output <- liana_output %>% 
+                    dplyr::mutate("magnitude" := invert_function(.data$magnitude))
+  }
+ 
   # Differential arrangement of the interactions.
   liana_output <- liana_output %>%
                   # Merge ligand.complex and receptor.complex columns into one, that will be used for the Y axis.
@@ -186,12 +232,145 @@ do_LigandReceptorPlot <- function(liana_output,
                    dplyr::filter(.data$target %in% keep_target)
   }
   
+  # Sort interactions according to user's preference.
+  if (sort.by == "A"){
+    if (isTRUE(verbose)){
+      rlang::inform(paste0(add_info(initial_newline = FALSE),
+                           crayon_body("Sorting interactions by: "),
+                           crayon_key("specificify")))
+    }
+    
+    if (sorting.type.specificity == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$specificity))
+    } else {
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$specificity)
+    }
+    
+  } else if (sort.by == "B"){
+    if (isTRUE(verbose)){
+      rlang::inform(paste0(add_info(initial_newline = FALSE),
+                           crayon_body("Sorting interactions by: "),
+                           crayon_key("magnitude")))
+    }
+    
+    if (sorting.type.magnitude == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$magnitude))
+    } else {
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$magnitude)
+    }
+  } else if (sort.by == "C"){
+    if (isTRUE(verbose)){
+      rlang::inform(paste0(add_info(initial_newline = FALSE),
+                           crayon_body("Sorting interactions by: "),
+                           crayon_key("specificify"),
+                           crayon_body(" then "),
+                           crayon_key("magnitude"),
+                           crayon_body(".")))
+    }
+    
+    if (sorting.type.magnitude == "ascending" & sorting.type.specificity == "ascending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$specificity, .data$magnitude)
+    } else if (sorting.type.magnitude == "descending" & sorting.type.specificity == "ascending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$specificity, dplyr::desc(.data$magnitude))
+    } else if (sorting.type.magnitude == "ascending" & sorting.type.specificity == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$specificity), .data$magnitude)
+    } else if (sorting.type.magnitude == "descending" & sorting.type.specificity == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$specificity), dplyr::desc(.data$magnitude))
+    }
+    
+  } else if (sort.by == "D"){
+    if (isTRUE(verbose)){
+      rlang::inform(paste0(add_info(initial_newline = FALSE),
+                           crayon_body("Sorting interactions by: "),
+                           crayon_key("magnitude"),
+                           crayon_body(" then "),
+                           crayon_key("specificity"),
+                           crayon_body(".")))
+    }
+    
+    if (sorting.type.magnitude == "ascending" & sorting.type.specificity == "ascending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$magnitude, .data$specificity)
+    } else if (sorting.type.magnitude == "descending" & sorting.type.specificity == "ascending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(.data$magnitude, dplyr::desc(.data$specificity))
+    } else if (sorting.type.magnitude == "ascending" & sorting.type.specificity == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$magnitude), .data$specificity)
+    } else if (sorting.type.magnitude == "descending" & sorting.type.specificity == "descending"){
+      liana_output <- liana_output %>% 
+                      dplyr::arrange(dplyr::desc(.data$magnitude), dplyr::desc(.data$specificity))
+    }
+  } else if (sort.by == "E"){
+    if (isTRUE(verbose)){
+      rlang::inform(paste0(add_info(initial_newline = FALSE),
+                           crayon_body("Sorting interactions by: "),
+                           crayon_key("magnitude"),
+                           crayon_body(" and "),
+                           crayon_key("specificity"),
+                           crayon_body(" with equal weights.")))
+    }
+    
+    if (sorting.type.magnitude == "ascending"){
+      liana_output_magnitude <- liana_output %>%
+                                dplyr::arrange(.data$magnitude) %>% 
+                                tibble::rowid_to_column(var = "magnitude_rank")
+    } else {
+      liana_output_magnitude <- liana_output %>%
+                                dplyr::arrange(dplyr::desc(.data$magnitude)) %>% 
+                                tibble::rowid_to_column(var = "magnitude_rank")
+    }
+    
+    if (sorting.type.specificity == "ascending"){
+      liana_output_specificity <- liana_output %>%
+                                  dplyr::arrange(.data$specificity) %>% 
+                                  tibble::rowid_to_column(var = "specificity_rank")
+    } else {
+      liana_output_specificity <- liana_output %>%
+                                  dplyr::arrange(dplyr::desc(.data$specificity)) %>% 
+                                  tibble::rowid_to_column(var = "specificity_rank")
+    }
+    
+    liana_output <- liana_output %>% 
+                    dplyr::left_join(y = liana_output_specificity %>% dplyr::select(dplyr::all_of(c("interaction", "specificity_rank"))),
+                                     by = "interaction") %>% 
+                    dplyr::left_join(y = liana_output_magnitude %>% dplyr::select(dplyr::all_of(c("interaction", "magnitude_rank"))),
+                                     by = "interaction") %>% 
+                    dplyr::mutate("rank" = .data$magnitude_rank + .data$specificity_rank) %>% 
+                    dplyr::arrange(.data$rank) %>% 
+                    dplyr::select(!dplyr::all_of(c("rank", "magnitude_rank", "specificity_rank")))
+    rm(liana_output_magnitude)
+    rm(liana_output_specificity)
+  }
+  
+  if (isTRUE(verbose)){
+    rlang::inform(paste0(add_info(initial_newline = FALSE),
+                         crayon_body("Sorting type specificity: "),
+                         crayon_key(sorting.type.specificity)))
+    
+    rlang::inform(paste0(add_info(initial_newline = FALSE),
+                         crayon_body("Sorting type magnitude: "),
+                         crayon_key(sorting.type.magnitude)))
+    
+    rlang::inform(paste0(add_info(initial_newline = FALSE),
+                         crayon_body("Plotting the following top interanctions: "),
+                         crayon_key(top_interactions)))
+  }
+  
   liana_output <- liana_output %>%
                   # Filter based on the top X interactions of ascending sensibilities.
                   dplyr::inner_join(y = {liana_output %>%
-                      dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
-                      dplyr::slice_head(n = top_interactions)},
-                      by = c("ligand.complex", "receptor.complex"))
+                                         dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
+                                         dplyr::slice_head(n = top_interactions)},
+                                         by = c("ligand.complex", "receptor.complex"))
   
   assertthat::assert_that(nrow(liana_output) > 0,
                           msg = paste0(add_cross(), crayon_body("Whith the current presets of "),

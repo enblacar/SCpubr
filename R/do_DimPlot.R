@@ -405,7 +405,7 @@ do_DimPlot <- function(sample,
   # When running under default parameters or using group.by
   if (not_highlighting_and_not_split_by){
     if (utils::packageVersion("Seurat") >= "4.1.0"){
-      p <- Seurat::DimPlot(sample,
+      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {sample[, Seurat::Idents(sample) %in% idents.keep]},
                            reduction = reduction,
                            label = label,
                            dims = dims,
@@ -423,7 +423,7 @@ do_DimPlot <- function(sample,
                            raster.dpi = c(raster.dpi, raster.dpi),
                            ncol = ncol)
     } else { # nocov start
-      p <- Seurat::DimPlot(sample,
+      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {sample[, Seurat::Idents(sample) %in% idents.keep]},
                            reduction = reduction,
                            label = label,
                            dims = dims,
@@ -461,7 +461,33 @@ do_DimPlot <- function(sample,
       # Remove automatic title inserted by Seurat.
       p <- p & ggplot2::ggtitle("")
     }
-
+    
+    
+    # Add another layer of black dots to make the colored ones stand up.
+    if (!is.null(idents.keep)){
+      if (isTRUE(plot_cell_borders)){
+        sample.use <- sample[, Seurat::Idents(sample) %in% idents.keep]
+        out <- compute_umap_layer(sample = sample.use,
+                                  labels = colnames(sample.use@reductions[[reduction]][[]])[dims],
+                                  pt.size = pt.size,
+                                  border.density = border.density,
+                                  border.size = border.size,
+                                  border.color = border.color,
+                                  raster = raster,
+                                  raster.dpi = raster.dpi,
+                                  reduction = reduction,
+                                  group.by = group.by,
+                                  split.by = split.by,
+                                  na.value = na.value,
+                                  n = 100)
+        base_layer.subset <- out$base_layer
+        p$layers <- append(base_layer.subset, p$layers)
+      }
+      # Add NA layer.
+      p$layers <- append(na_layer, p$layers)
+    }
+    
+    
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){
       p$layers <- append(base_layer, p$layers)

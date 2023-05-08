@@ -90,7 +90,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 ## `SCpubr::do_DimPlot`
 
--   Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.
+-   Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` or `idents.keep` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.
 
 ## `SCpubr::do_DotPlot`
 
@@ -138,9 +138,19 @@ Many (except a few selected cases) of the functions that returned list of differ
 ## `SCpubr::do_LigandReceptorPlot()`
 -   Modified the accepted input so that only the result of `liana::liana_aggregate()` is taken into account.
 -   Removed `arrange_interactions_by` as now the function only accepts the output of `liana::liana_aggregate()`.
+-   Added a `sort.by` parameter instead to select how the output of `liana::liana_aggregate()` should be ordered prior the subset by `top_interactions`. Five modes are available:
+    - `A`: Orders the output by `specificity`.
+    - `B`: Orders the output by `magnitude`.
+    - `C`: Orders the output by `specificity` then `magnitude`. This prioritizes the `specificity` column.
+    - `D`: Orders the output by `magnitude` then `specificity`. This prioritizes the `magnitude` column.
+    - `E`: Orders the output by `specificity` and `magnitude` providing equal weights to both columns.
 -   Removed `flip` parameter as the output was prone to errors.
 -   Removed parameter `compute_ChordDiagrams` and added `return_interactions`. This parameter returns two tibbles that can be used alongside `SCpubr::do_ChordDiagramPlot` to plot the diagrams. 
 -   Now the filtering applied by using `keep_source` and `keep_target` takes place before subsetting for the top N interactions defined by `top_interactions`. This ensures that, if the user wants to focus on a given interaction subset, we retrieve the most important interactions for the subset.
+-   Added `magnitude` and `specificity` columns to allow the user to choose which variables to use for plotting.
+-   Added `sorting.type.magnitude` and `sorting.type.specificity` to allow the user to choose how the columns are sorted prior plotting.
+-   Added `invert_magnitude` and `invert_specificity` to allow the user to choose how the data is displayed for columns that tend to 0. Inverting performs a `-log10` transformation on the column.
+-   Added a `verbose` parameter and set it to `TRUE` by default to inform the user of the arrangements taking place in the output of `liana::liana_aggregate()` prior plotting.
 
 ## `SCpubr::do_PathwayActivityPlot()`
 

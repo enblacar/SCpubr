@@ -11,6 +11,11 @@ do_LigandReceptorPlot(
   keep_target = NULL,
   top_interactions = 25,
   dot_border = TRUE,
+  magnitude = "sca.LRscore",
+  specificity = "aggregate_rank",
+  sort.by = "E",
+  sorting.type.specificity = "descending",
+  sorting.type.magnitude = "descending",
   border.color = "black",
   axis.text.x.angle = 45,
   legend.position = "bottom",
@@ -33,7 +38,6 @@ do_LigandReceptorPlot(
   grid.color = "grey90",
   grid.type = "dotted",
   compute_ChordDiagrams = FALSE,
-  add_missing_LR_combinations = TRUE,
   sort_interactions_alphabetically = FALSE,
   number.breaks = 5,
   plot.title.face = "bold",
@@ -43,7 +47,10 @@ do_LigandReceptorPlot(
   axis.text.face = "bold",
   legend.title.face = "bold",
   legend.text.face = "plain",
-  return_interactions = FALSE
+  return_interactions = FALSE,
+  invert_specificity = TRUE,
+  invert_magnitude = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -56,6 +63,19 @@ do_LigandReceptorPlot(
 \item{top_interactions}{\strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.}
 
 \item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to draw a black border in the dots.}
+
+\item{specificity, magnitude}{\strong{\code{\link[base]{character}}} | Which columns to use for \strong{\code{specificity}} and \strong{\code{magnitude}}.}
+
+\item{sort.by}{\strong{\code{\link[base]{character}}} | How to arrange the top interactions. Interactions are sorted and then the top N are retrieved and displayed. This takes place after subsetting for \strong{\code{keep_source}} and \strong{\code{keep_target}}  One of:
+\itemize{
+\item \emph{\code{A}}: Sorts by specificity.
+\item \emph{\code{B}}: Sorts by magnitude.
+\item \emph{\code{C}}: Sorts by specificity, then magnitude (gives extra weight to specificity).
+\item \emph{\code{D}}: Sorts by magnitude, then specificity (gives extra weight to magnitude). Might lead to the display of non-significant results.
+\item \emph{\code{E}}: Sorts by specificity and magnitude equally.
+}}
+
+\item{sorting.type.specificity, sorting.type.magnitude}{\strong{\code{\link[base]{character}}} | Whether the sorting of e \strong{\code{magnitude}} or \strong{\code{specificity}} columns is done in ascending or descending order. This synergises with the value of e \strong{\code{invert_specificity}} and e \strong{\code{invert_magnitude}} parameters.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 
@@ -122,8 +142,6 @@ do_LigandReceptorPlot(
 
 \item{compute_ChordDiagrams}{\strong{\code{\link[base]{logical}}} | Whether to also compute Chord Diagrams for both the number of interactions between source and target but also between ligand.complex and receptor.complex.}
 
-\item{add_missing_LR_combinations}{\strong{\code{\link[base]{logical}}} | Depending on the value provided to \strong{\code{top_interactions}}, there might be some source-target combinations missing. If set to TRUE, those combinations will be brought back to the plot as NA values.}
-
 \item{sort_interactions_alphabetically}{\strong{\code{\link[base]{logical}}} | Sort the interactions to be plotted alphabetically (\strong{\code{TRUE}}) or keep them in their original order in the matrix (\strong{\code{FALSE}}).}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
@@ -137,6 +155,10 @@ do_LigandReceptorPlot(
 }}
 
 \item{return_interactions}{\strong{\code{\link[base]{logical}}} | Whether to return the data.frames with the interactions so that they can be plotted as chord plots using other package functions.}
+
+\item{invert_specificity, invert_magnitude}{\strong{\code{\link[base]{logical}}} | Whether to \strong{\code{-log10}} transform \strong{\code{specificity}} and \strong{\code{magnitude}} columns.}
+
+\item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 }
 \value{
 A ggplot2 plot with the results of the Ligand-Receptor analysis.

@@ -254,6 +254,16 @@ do_SCEnrichmentHeatmap <- function(sample,
     names(input_list) <- names.use
   }
   
+  if (length(unlist(stringr::str_match_all(names(input_list), "-"))) > 0){
+    warning(paste0(add_warning(), crayon_body("Found "),
+                   crayon_key("dashes (-)"),
+                   crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                   crayon_key("dots (.)"),
+                   crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+    names.use <- stringr::str_replace_all(names(input_list), "-", ".")
+    names(input_list) <- names.use
+  }
+  
   
   assertthat::assert_that(sum(names(input_list) %in% colnames(sample@meta.data)) == 0,
                           msg = paste0(add_cross(), crayon_body("Please make sure you do not provide a list of gene sets whose "),

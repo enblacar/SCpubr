@@ -232,6 +232,22 @@ do_EnrichmentHeatmap <- function(sample,
     # nocov end
   }
   
+  if (length(unlist(stringr::str_match_all(names(input_list), "-"))) > 0){
+    warning(paste0(add_warning(), crayon_body("Found "),
+                   crayon_key("dashes (-)"),
+                   crayon_body(" in the name of the gene sets provided. Replacing them with "),
+                   crayon_key("dots (.)"),
+                   crayon_body(" to avoid conflicts when generating the Seurat assay.")), call. = FALSE)
+    names.use <- stringr::str_replace_all(names(input_list), "-", ".")
+    names(input_list) <- names.use
+    
+    # nocov start
+    if (!is.null(features.order)){
+      features.order <- stringr::str_replace_all(features.order, "-", ".")
+    }
+    # nocov end
+  }
+  
 
   # Compute the enrichment scores.
   sample <- compute_enrichment_scores(sample = sample,
