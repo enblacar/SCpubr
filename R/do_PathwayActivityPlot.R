@@ -12,6 +12,7 @@ do_PathwayActivityPlot <- function(sample,
                                    activities,
                                    group.by = NULL,
                                    split.by = NULL,
+                                   slot = "scale.data",
                                    statistic = "norm_wmean",
                                    pt.size = 1,
                                    border.size = 2,
@@ -79,6 +80,7 @@ do_PathwayActivityPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
+                         "slot" = slot,
                          "split.by" = split.by,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
@@ -164,7 +166,7 @@ do_PathwayActivityPlot <- function(sample,
       
       df <- t(as.matrix(.GetAssayData(sample = sample,
                                       assay = "progeny",
-                                      slot = "scale.data"))) %>%
+                                      slot = slot))) %>%
             as.data.frame() %>%
             tibble::rownames_to_column(var = "cell") %>%
             dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
@@ -189,7 +191,7 @@ do_PathwayActivityPlot <- function(sample,
         
         df.split <- t(as.matrix(.GetAssayData(sample = sample,
                                               assay = "progeny",
-                                              slot = "scale.data"))) %>%
+                                              slot = slot))) %>%
                     as.data.frame() %>%
                     tibble::rownames_to_column(var = "cell") %>%
                     dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
@@ -279,7 +281,7 @@ do_PathwayActivityPlot <- function(sample,
                                 feature = " ",
                                 assay = "progeny",
                                 reduction = NULL,
-                                slot = "scale.data",
+                                slot = slot,
                                 number.breaks = number.breaks,
                                 min.cutoff = min.cutoff,
                                 max.cutoff = max.cutoff,
@@ -308,13 +310,36 @@ do_PathwayActivityPlot <- function(sample,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) +
-         ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                       na.value = na.value,
-                                       name = paste0("Progeny | ", statistic),
-                                       breaks = scale.setup$breaks,
-                                       labels = scale.setup$labels,
-                                       limits = scale.setup$limits) +
          ggplot2::coord_equal()
+    
+    if (isTRUE(enforce_symmetry)){
+      p <- p + 
+           ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                         na.value = na.value,
+                                         name = paste0("Pathway score | ", statistic),
+                                         breaks = scale.setup$breaks,
+                                         labels = scale.setup$labels,
+                                         limits = scale.setup$limits)
+    } else {
+      if (isTRUE(use_viridis)){
+        p <- p +
+             ggplot2::scale_fill_viridis_c(na.value = na.value,
+                                           option = viridis.palette,
+                                           direction = viridis.direction,
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits,
+                                           name = paste0("Pathway score | ", statistic))
+      } else {
+        p <- p +
+             ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                           na.value = na.value,
+                                           name = paste0("Pathway score | ", statistic),
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits)
+      }
+    }
     
     if (!is.null(split.by)){
       p <- p + 
@@ -323,7 +348,7 @@ do_PathwayActivityPlot <- function(sample,
     }
     
     p <- modify_continuous_legend(p = p,
-                                  legend.title = paste0("Progeny | ", statistic),
+                                  legend.title = paste0("Pathway score | ", statistic),
                                   legend.aes = "fill",
                                   legend.type = legend.type,
                                   legend.position = legend.position,

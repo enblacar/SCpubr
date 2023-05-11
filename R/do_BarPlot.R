@@ -7,7 +7,11 @@
 #' @param facet.by \strong{\code{\link[base]{character}}} | Metadata column to gather the columns by. This is useful if you have other overarching metadata.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.
 #' @param order.by \strong{\code{\link[base]{character}}} | When \strong{\code{split.by}} is used, value of \strong{\code{group.by}} to reorder the columns based on its value.
-#' @param position \strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
+#' @param position \strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. Either stack or fill.
+#' @param return_data \strong{\code{\link[base]{logical}}} | Returns a data.frame with the count and proportions displayed in the plot.
+#' @param add.n \strong{\code{\link[base]{logical}}} | Whether to add the total counts on top of each bar.
+#' @param add.n.face \strong{\code{\link[base]{character}}} | Font face of the labels added by \strong{\code{add.n}}.
+#' @param add.n.expand \strong{\code{\link[base]{numeric}}} | Vector of two numerics representing the start and end of the scale. Minimum should be 0 and max should be above 1. This basically expands the Y axis so that the labels fit when \strong{\code{flip = TRUE}}.
 #' \itemize{
 #'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
 #'   \item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
@@ -26,6 +30,9 @@
 do_BarPlot <- function(sample,
                        group.by,
                        order = FALSE,
+                       add.n = FALSE,
+                       add.n.face = "bold",
+                       add.n.expand = c(0, 1.15),
                        order.by = NULL,
                        split.by = NULL,
                        facet.by = NULL,
@@ -55,7 +62,8 @@ do_BarPlot <- function(sample,
                        axis.text.face = "bold",
                        legend.title.face = "bold",
                        legend.text.face = "plain",
-                       strip.text.face = "bold") {
+                       strip.text.face = "bold",
+                       return_data = FALSE) {
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
@@ -69,13 +77,16 @@ do_BarPlot <- function(sample,
   logical_list <- list("order" = order,
                        "flip" = flip,
                        "plot.grid" = plot.grid,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "add.n" = add.n,
+                       "return_data" = return_data)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
                        "axis.text.x.angle" = axis.text.x.angle,
                        "legend.ncol" = legend.ncol,
-                       "legend.nrow" = legend.nrow)
+                       "legend.nrow" = legend.nrow,
+                       "add.n.expand" = add.n.expand)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -186,10 +197,11 @@ do_BarPlot <- function(sample,
     } else {
       order.use <- sample@meta.data %>%
                    tibble::as_tibble() %>%
-                   dplyr::mutate(dplyr::across(dplyr::all_of(c(group.by, split.by)), as.character)) %>% 
+                   dplyr::mutate(dplyr::across(dplyr::all_of(c(group.by, split.by)), as.character),
+                                 "count" = 1) %>% 
                    tidyr::complete(.data[[split.by]], .data[[group.by]], explicit = FALSE) %>% 
                    dplyr::group_by(.data[[split.by]], .data[[group.by]]) %>%
-                   dplyr::summarise("n" = dplyr::n(),
+                   dplyr::summarise("n" = sum(.data$count, na.rm = TRUE),
                                     "{split.by}" := unique(.data[[split.by]])) %>% 
                    dplyr::reframe("freq" = .data$n / sum(.data$n),
                                   "{split.by}" := unique(.data[[split.by]]),
@@ -205,6 +217,28 @@ do_BarPlot <- function(sample,
     }
   }
   
+  if (isTRUE(add.n)){
+    assertthat::assert_that(position == "fill",
+                            msg = paste0(add_cross(),
+                                         crayon_body("Parameter "),
+                                         crayon_key("add.n"),
+                                         crayon_body(" can only be used alongside "),
+                                         crayon_key("position = fill"),
+                                         crayon_body(".")))
+    if (is.null(split.by) & !is.null(group.by)){
+      data.n <- data %>% 
+                dplyr::group_by(.data[[group.by]]) %>% 
+                dplyr::summarise(n = dplyr::n()) %>% 
+                dplyr::mutate(n = paste0("n = ", .data$n))
+    } else if (!is.null(split.by) & !is.null(group.by)){
+      data.n <- data %>% 
+                dplyr::group_by(.data[[split.by]]) %>% 
+                dplyr::summarise(n = dplyr::n()) %>% 
+                dplyr::mutate(n = paste0("n = ", .data$n))
+    }
+    max.char <- max(vapply(data.n$n, nchar, FUN.VALUE = integer(1)))
+    data.n$n <- vapply(data.n$n, function(x){return(paste0(x, paste(rep(" ", (max.char - nchar(x))), collapse = "")))}, FUN.VALUE = character(1))
+  }
   
           
   if (is.null(split.by)){
@@ -244,6 +278,31 @@ do_BarPlot <- function(sample,
 
   p <- p +
        ggplot2::stat_count(geom = "bar", position = position, color = "black")
+  
+  if (isTRUE(add.n)){
+    if (is.null(split.by) & !is.null(group.by)){
+      p <- p + 
+           ggplot2::geom_text(data = data.n,
+                              mapping = ggplot2::aes(x = .data[[group.by]],
+                                                     y = ifelse(base::isFALSE(flip), 1.03, 1.01),
+                                                     label = .data$n,
+                                                     fill = NULL),
+                              hjust = ifelse(isTRUE(flip), 0, 0.5),
+                              fontface = "bold")
+    } else if (!is.null(split.by) & !is.null(group.by)){
+      p <- p + 
+           ggplot2::geom_text(data = data.n,
+                              mapping = ggplot2::aes(x = .data[[split.by]],
+                                                     y = ifelse(base::isFALSE(flip), 1.03, 1.01),
+                                                     label = .data$n,
+                                                     fill = NULL),
+                              hjust = ifelse(isTRUE(flip), 0, 0.5),
+                              fontface = "bold")
+    }
+    p <- p + 
+         ggplot2::scale_y_continuous(limits = add.n.expand, labels = c("0", "0.25", "0.5", "0.75", "1"), breaks = c(0, 0.25, 0.5, 0.75, 1))
+
+  }
   
   if (isTRUE(flip)){
     p <- p + ggplot2::coord_flip()
@@ -308,6 +367,23 @@ do_BarPlot <- function(sample,
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                       strip.text = ggplot2::element_text(color = "black", face = strip.text.face),
                       strip.background = ggplot2::element_blank())
-
- return(p)
+ 
+  if (isTRUE(return_data)){
+    data <- sample@meta.data %>%
+            tibble::as_tibble() %>%
+            dplyr::mutate(dplyr::across(dplyr::all_of(c(group.by, split.by)), as.character),
+                          "count" = 1) %>% 
+            tidyr::complete(.data[[split.by]], .data[[group.by]], explicit = FALSE) %>% 
+            dplyr::group_by(.data[[split.by]], .data[[group.by]]) %>%
+            dplyr::summarise("n" = sum(.data$count, na.rm = TRUE),
+                             "{split.by}" := unique(.data[[split.by]])) %>% 
+            dplyr::reframe("n" = .data$n,
+                           "freq" = .data$n / sum(.data$n),
+                           "{split.by}" := unique(.data[[split.by]]),
+                           "{group.by}" := unique(.data[[group.by]]))
+    return(list("Plot" = p,
+                "Data" = data))
+  } else {
+    return(p)
+  }
 }

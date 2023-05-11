@@ -61,6 +61,9 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Added `order.by` to reorder the bars when using `position = fill` based on a value in `group.by`.
 -   Limited the possible interactions from `group.by`, `split.by` and `order.by` to those that make sense to plot. For instance, a bar plot using `group.by` and `position = fill` but not using `split.by ` resulted in bars of equal lenght with only one value per group of proportion `1`.
 -   Set default value of `plot.grid` to `FALSE`.
+-   Added parameter `add.n` to display the total count on top when `position = fill`.
+-   Added parameter `add.n.face` to control the appearance of the text displayed.
+-   Added parameter `add.n.expand` to control the range of values in the Y axis. This has to be minimum 0 and maximum at least 1. This is set in order to tweak the limits so that the labels fit when `flip = TRUE`.
 
 ## `SCpubr::do_BeeSwarmPlot`
 
@@ -157,12 +160,16 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 -   Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 -   Removed options to plot FeaturePlots, GeyserPlots - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the scores separately.
+-   Added `slot` parameter to decide whether to plot scale data or not.
+-   Fixed bug in which after setting `enforce_symmetry = FALSE` the color palette used was `diverging.palette` instead.
 
 ## `SCpubr::do_TFActivityPlot()`
 
 -   Removed the option to plot geyser and feature plots to simplify the use (and computational time) of the function.
 -   Introduced `return_object` parameter that returns the Seurat object with the new assay to use for other plotting purposes (such as Geyser and Feature plots).
 -   Removed options to plot FeaturePlots, GeyserPlots - together with its related parameters. For the sake of simplicity in the function and its use, the user can get the Seurat object back with `return_object = TRUE` and plot the scores separately.
+-   Added `slot` parameter to decide whether to plot scale data or not.
+-   Fixed bug in which after setting `enforce_symmetry = FALSE` the color palette used was `diverging.palette` instead.
 
 # SCpubr v1.1.2
 

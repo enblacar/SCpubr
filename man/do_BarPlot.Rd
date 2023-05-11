@@ -8,6 +8,9 @@ do_BarPlot(
   sample,
   group.by,
   order = FALSE,
+  add.n = FALSE,
+  add.n.face = "bold",
+  add.n.expand = c(0, 1.15),
   order.by = NULL,
   split.by = NULL,
   facet.by = NULL,
@@ -37,7 +40,8 @@ do_BarPlot(
   axis.text.face = "bold",
   legend.title.face = "bold",
   legend.text.face = "plain",
-  strip.text.face = "bold"
+  strip.text.face = "bold",
+  return_data = FALSE
 )
 }
 \arguments{
@@ -47,17 +51,23 @@ do_BarPlot(
 
 \item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the results in descending order of counts.}
 
+\item{add.n}{\strong{\code{\link[base]{logical}}} | Whether to add the total counts on top of each bar.}
+
+\item{add.n.face}{\strong{\code{\link[base]{character}}} | Font face of the labels added by \strong{\code{add.n}}.}
+
+\item{add.n.expand}{\strong{\code{\link[base]{numeric}}} | Vector of two numerics representing the start and end of the scale. Minimum should be 0 and max should be above 1. This basically expands the Y axis so that the labels fit when \strong{\code{flip = TRUE}}.
+\itemize{
+\item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
+\item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
+}}
+
 \item{order.by}{\strong{\code{\link[base]{character}}} | When \strong{\code{split.by}} is used, value of \strong{\code{group.by}} to reorder the columns based on its value.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Metadata column to split the values of group.by by. If not used, defaults to the active idents.}
 
 \item{facet.by}{\strong{\code{\link[base]{character}}} | Metadata column to gather the columns by. This is useful if you have other overarching metadata.}
 
-\item{position}{\strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. One of:
-\itemize{
-\item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
-\item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
-}}
+\item{position}{\strong{\code{\link[base]{character}}} | Position function from \pkg{ggplot2}. Either stack or fill.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
@@ -125,6 +135,8 @@ do_BarPlot(
 \item \emph{\code{bold}}: For text in bold.
 \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
+
+\item{return_data}{\strong{\code{\link[base]{logical}}} | Returns a data.frame with the count and proportions displayed in the plot.}
 }
 \value{
 A ggplot2 object containing a Bar plot.

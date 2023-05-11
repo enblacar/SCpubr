@@ -15,6 +15,7 @@
 do_TFActivityPlot <- function(sample,
                               activities,
                               n_tfs = 25,
+                              slot = "scale.data",
                               statistic = "norm_wmean",
                               tfs.use = NULL,
                               group.by = NULL,
@@ -81,6 +82,7 @@ do_TFActivityPlot <- function(sample,
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
+                         "slot" = slot,
                          "split.by" = split.by,
                          "na.value" = na.value,
                          "legend.position" = legend.position,
@@ -168,7 +170,7 @@ do_TFActivityPlot <- function(sample,
 
         df <- t(as.matrix(.GetAssayData(sample = sample,
                                         assay = "dorothea",
-                                        slot = "scale.data"))) %>%
+                                        slot = slot))) %>%
               as.data.frame() %>%
               tibble::rownames_to_column(var = "cell") %>%
               dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
@@ -187,7 +189,7 @@ do_TFActivityPlot <- function(sample,
           
           df.split <- t(as.matrix(.GetAssayData(sample = sample,
                                                 assay = "dorothea",
-                                                slot = "scale.data"))) %>%
+                                                slot = slot))) %>%
                       as.data.frame() %>%
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
@@ -308,7 +310,7 @@ do_TFActivityPlot <- function(sample,
                                   feature = " ",
                                   assay = "dorothea",
                                   reduction = NULL,
-                                  slot = "scale.data",
+                                  slot = slot,
                                   number.breaks = number.breaks,
                                   min.cutoff = min.cutoff,
                                   max.cutoff = max.cutoff,
@@ -336,14 +338,38 @@ do_TFActivityPlot <- function(sample,
            ggplot2::scale_x_discrete(expand = c(0, 0),
                                      position = "top") +
            ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
-                           x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) +
-           ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                         na.value = na.value,
-                                         name = "Regulon Score",
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits) + 
+                           x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) + 
            ggplot2::coord_equal()
+      
+      if (isTRUE(enforce_symmetry)){
+        p <- p + 
+             ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                                           na.value = na.value,
+                                           name = paste0("Regulon score | ", statistic),
+                                           breaks = scale.setup$breaks,
+                                           labels = scale.setup$labels,
+                                           limits = scale.setup$limits)
+      } else {
+        if (isTRUE(use_viridis)){
+          p <- p +
+               ggplot2::scale_fill_viridis_c(na.value = na.value,
+                                             option = viridis.palette,
+                                             direction = viridis.direction,
+                                             breaks = scale.setup$breaks,
+                                             labels = scale.setup$labels,
+                                             limits = scale.setup$limits,
+                                             name = paste0("Regulon score | ", statistic))
+        } else {
+          p <- p +
+               ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                             na.value = na.value,
+                                             name = paste0("Regulon score | ", statistic),
+                                             breaks = scale.setup$breaks,
+                                             labels = scale.setup$labels,
+                                             limits = scale.setup$limits)
+        }
+      }
+           
       
       if (!is.null(split.by)){
         p <- p + 
@@ -353,7 +379,7 @@ do_TFActivityPlot <- function(sample,
       }
         
       p <- modify_continuous_legend(p = p,
-                                    legend.title = paste0("Dorothea | ", statistic),
+                                    legend.title = paste0("Regulon score | ", statistic),
                                     legend.aes = "fill",
                                     legend.type = legend.type,
                                     legend.position = legend.position,

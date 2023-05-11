@@ -8,6 +8,7 @@ do_TFActivityPlot(
   sample,
   activities,
   n_tfs = 25,
+  slot = "scale.data",
   statistic = "norm_wmean",
   tfs.use = NULL,
   group.by = NULL,
@@ -53,6 +54,8 @@ do_TFActivityPlot(
 \item{activities}{\strong{\code{\link[tibble]{tibble}}} | Result of running decoupleR method with dorothea regulon prior knowledge.}
 
 \item{n_tfs}{\strong{\code{\link[base]{numeric}}} | Number of top regulons to consider for downstream analysis.}
+
+\item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use. One of:
 \itemize{

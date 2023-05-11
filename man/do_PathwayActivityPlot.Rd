@@ -9,6 +9,7 @@ do_PathwayActivityPlot(
   activities,
   group.by = NULL,
   split.by = NULL,
+  slot = "scale.data",
   statistic = "norm_wmean",
   pt.size = 1,
   border.size = 2,
@@ -55,6 +56,8 @@ do_PathwayActivityPlot(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
+
+\item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
 
 \item{statistic}{\strong{\code{\link[base]{character}}} | DecoupleR statistic to use. One of:
 \itemize{
