@@ -137,11 +137,23 @@ do_CorrelationPlot <- function(sample = NULL,
     
     # Generate a correlation matrix of the HVG.
     variable_genes <- Seurat::VariableFeatures(sample)
-
+    
+    # Sort them in order (for ATAC experiments).
+    genes <- rownames(.GetAssayData(sample = sample,
+                                    assay = assay,
+                                    slot = "data"))
+    genes <- data.frame("Genes" = genes) %>% 
+             tibble::rowid_to_column(var = "Position") %>% 
+             tibble::as_tibble() %>% 
+             dplyr::filter(.data$Genes %in% variable_genes) %>% 
+             dplyr::arrange(.data$Position) %>% 
+             dplyr::pull(.data$Genes)
+    
+    
     # Subset sample according to the variable genes.
-    sample <- sample[variable_genes, ]
+    sample <- sample[genes, ]
     # Scale the data
-    sample <- Seurat::ScaleData(sample, verbose = FALSE)
+    sample <- Seurat::ScaleData(sample, features = genes, verbose = FALSE)
 
     # Retrieve correlation matrix.
     out <- sample@meta.data %>%
