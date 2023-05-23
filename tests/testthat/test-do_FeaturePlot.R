@@ -751,25 +751,25 @@ if (base::isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents", {
+  testthat::test_that("do_FeaturePlot: PASS - split.by and idents.keep", {
     testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
                                 features = "EPC1",
                                 split.by = "seurat_clusters",
-                                split.by.idents = c("1", "2"))
+                                idents.keep = c("1", "2"))
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: PASS - split.by and split.by.idents multiple features", {
+  testthat::test_that("do_FeaturePlot: PASS - split.by and idents.keep multiple features", {
     testthat::skip_on_cran()
 
 
     p <- SCpubr::do_FeaturePlot(sample,
                                 features = c("EPC1", "nCount_RNA"),
                                 split.by = "seurat_clusters",
-                                split.by.idents = c("1", "2"))
+                                idents.keep = c("1", "2"))
     testthat::expect_type(p, "list")
   })
 
@@ -831,14 +831,14 @@ if (base::isFALSE(dep_check[["do_FeaturePlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_FeaturePlot: PASS - duplicated split.by.idents", {
+  testthat::test_that("do_FeaturePlot: PASS - duplicated idents.keep", {
     testthat::skip_on_cran()
 
 
     testthat::expect_message(SCpubr::do_FeaturePlot(sample,
                                                     features = "nCount_RNA",
                                                     split.by = "seurat_clusters",
-                                                    split.by.idents = c("2", "2")))
+                                                    idents.keep = c("2", "2")))
   })
 
 

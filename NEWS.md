@@ -122,11 +122,12 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Modified underlying code to show a border around selected cells when using `split.by`, `cells.hightlight` and `idents.highlight`.
 -   Added parameter `border.density` to reduce the amount of extra cells drawn on the background to generate the borders. This will be a number between 0 and 1 corresponding to the quantile of the distribution of density of the points in the scatterplot drawn in the background. The lower the value, the harder it will be to keep a border around all cells, while it will significantly reduce the overall weight of the plot object.
 -   Added parameter `group.by`, that allows to plot a big dot in the center of each group designated by `group.by` and thus allowing to locate easily where each identity is in the FeaturePlot. Also, plots a legend matching the color of the dots. This can be tweaked with additional parameters such as:
-    -   `group.by.show.dots` to controlw hether these dots are plotted or not (to allow only plotting colored borders around cells - see below).
-    -   `group.by.dot.size` to control the size of the introduced dots.
-    -   `group.by.cell_border` to plot another contour-like border which also displays the color coding of the clusters designated by `group.by`, to signal the reach of each cluster. However, this basically signals the cluster the cells in the periphery of the cell blobs belong to. Take that into account.
-    -   `group.by.cell_borders.alpha` controls the alpha of the new cell borders.
-    -   `group.by.legend` controls the legend title of the new legend.
+-   `group.by.show.dots` to controlw hether these dots are plotted or not (to allow only plotting colored borders around cells - see below).
+-   `group.by.dot.size` to control the size of the introduced dots.
+-   `group.by.cell_border` to plot another contour-like border which also displays the color coding of the clusters designated by `group.by`, to signal the reach of each cluster. However, this basically signals the cluster the cells in the periphery of the cell blobs belong to. Take that into account.
+-   `group.by.cell_borders.alpha` controls the alpha of the new cell borders.
+-   `group.by.legend` controls the legend title of the new legend.
+-   Renamed `split.by.idents` to `idents.keep` to better synergize with the parameter in `SCpubr::do_DimPlot`. Only works when `split.by` is used.
 
 ## `SCpubr::do_FunctionalAnnotationPlot`
 

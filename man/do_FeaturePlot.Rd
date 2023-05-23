@@ -19,7 +19,7 @@ do_FeaturePlot(
   group.by.cell_borders = FALSE,
   group.by.cell_borders.alpha = 0.1,
   split.by = NULL,
-  split.by.idents = NULL,
+  idents.keep = NULL,
   cells.highlight = NULL,
   idents.highlight = NULL,
   dims = c(1, 2),
@@ -111,7 +111,7 @@ do_FeaturePlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
-\item{split.by.idents}{\strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.}
+\item{idents.keep}{\strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.}
 
 \item{cells.highlight, idents.highlight}{\strong{\code{\link[base]{character}}} | Vector of cells/identities to focus into. The identities have to much those in \code{Seurat::Idents(sample)} The rest of the cells will be grayed out. Both parameters can be used at the same time.}
 

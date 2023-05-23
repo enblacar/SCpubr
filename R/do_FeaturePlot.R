@@ -1,7 +1,7 @@
 #' Wrapper for \link[Seurat]{FeaturePlot}.
 #'
 #' @inheritParams doc_function
-#' @param split.by.idents \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
+#' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.
 #' @param individual.titles,individual.subtitles,individual.captions \strong{\code{\link[base]{character}}} | Titles or subtitles. for each feature if needed. Either NULL or a vector of equal length of features.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the cells based on expression.
 #' @param group.by \strong{\code{\link[base]{character}}} | Metadata variable based on which cells are grouped. This will effectively introduce a big dot in the center of each cluster, colored using a categorical color scale or with the values provided by the user in \strong{\code{group.by.colors.use}}. It will also displays a legend.
@@ -29,7 +29,7 @@ do_FeaturePlot <- function(sample,
                            group.by.cell_borders = FALSE,
                            group.by.cell_borders.alpha = 0.1,
                            split.by = NULL,
-                           split.by.idents = NULL,
+                           idents.keep = NULL,
                            cells.highlight = NULL,
                            idents.highlight = NULL,
                            dims = c(1, 2),
@@ -158,7 +158,7 @@ do_FeaturePlot <- function(sample,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
-                         "split.by.idents" = split.by.idents,
+                         "idents.keep" = idents.keep,
                          "viridis.palette" = viridis.palette,
                          "individual.titles" = individual.titles,
                          "individual.subtitles" = individual.subtitles,
@@ -572,17 +572,17 @@ do_FeaturePlot <- function(sample,
       # If split.by is used.
     } else if (!(is.null(split.by))){
       # No identities selected by the user.
-      if (is.null(split.by.idents)){
+      if (is.null(idents.keep)){
         cells.use <- colnames(sample)
         # Identitites selected by the user.
       } else {
         # Check if the identitites are duplicated. If so, remove them.
-        if (sum(duplicated(split.by.idents)) != 0){
-          message(paste0(add_info(), crayon_body("Found and removed duplicated values in split.by.idents.")))
-          split.by.idents <- split.by.idents[!duplicated(split.by.idents)]
+        if (sum(duplicated(idents.keep)) != 0){
+          message(paste0(add_info(), crayon_body("Found and removed duplicated values in idents.keep.")))
+          idents.keep <- idents.keep[!duplicated(idents.keep)]
         }
         # Get the names of the cells to plot.
-        cells.use <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% split.by.idents])
+        cells.use <- names(Seurat::Idents(sample)[Seurat::Idents(sample) %in% idents.keep])
       }
     }
     # Plots are generated independently if more than one feature is provided.
@@ -787,10 +787,10 @@ do_FeaturePlot <- function(sample,
         # Retrieve the metadata column belonging to the split.by parameter.
         data.use <- data[, split.by, drop = FALSE]
         # Retrieve the plotting order, keep factor levels if the column is a factor.
-        if (is.null(split.by.idents)){
+        if (is.null(idents.keep)){
           plot_order <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         } else {
-          plot_order <- sort(split.by.idents)
+          plot_order <- sort(idents.keep)
         }
         list.plots.split.by <- list()
         count_plot <- 0 # Will update for each unique value in split.by.

@@ -858,7 +858,7 @@ do_DimPlot <- function(sample,
                 crayon_key("split.by"), 
                 crayon_body("), highlighting cells ("), 
                 crayon_key("cells.highlight/idents.highlight"), 
-                crayon_body("or plotting cell borders ("), 
+                crayon_body(") or plotting cell borders ("), 
                 crayon_key("plot_cell_borders"), 
                 crayon_body(").")), call. = FALSE)
   }
