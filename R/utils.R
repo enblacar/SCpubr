@@ -3701,3 +3701,24 @@ check_group_by <- function(sample,
   return(list("sample" = sample,
               "group.by" = group.by.return))
 }
+
+
+#' Temporal fix for DimPlots/FeaturePlots when using Assay5 and asplit.by
+#'
+#' @param sample Seurat object.
+#' @param assay assay to use.
+#'
+#' @return The Seurat object.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+check_Assay5 <- function(sample,
+                         assay = Seurat::DefaultAssay(sample)){
+  if (class(sample@assays[[assay]]) == "Assay5"){
+    suppressWarnings(sample@assays[[assay]] <- as(sample@assays[[assay]], "Assay"))
+  }
+  as(object = sample[["RNA"]], Class = "Assay5")
+  return(sample)
+}

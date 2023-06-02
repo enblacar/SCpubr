@@ -101,6 +101,9 @@ do_FeaturePlot <- function(sample,
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
   assay <- out[["assay"]]
+  
+  sample <- check_Assay5(sample, assay = assay)
+  
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
