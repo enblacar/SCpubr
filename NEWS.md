@@ -84,6 +84,8 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Added `use_viridis`, `sequential.palette` and `sequential_direction` and `diverging.palette` to control color palettes.
 -   Added `cluster` parameter to toggle on/off the clustering of the rows and columns in the heatmap.
 -   Added `remove.diagonal` parameter to toggle on/off the conversion of the diagonal in the correlation matrix to `NA`.
+-   Fixed several issues with setting cutoffs for the color scale using `min.cutoff` and `max.cutoff`. 
+-   Fixed an issue where `number.breaks` will not work in `mode = "jaccard"`.
 
 ## `SCpubr::do_CopyNumberVariantPlot()`
 

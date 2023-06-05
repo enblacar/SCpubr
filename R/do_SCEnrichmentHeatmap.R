@@ -313,17 +313,20 @@ do_SCEnrichmentHeatmap <- function(sample,
     matrix <- matrix %>% 
               dplyr::slice_sample(n = subsample)
   }
-  # Retrieve the order median-wise to cluster heatmap bodies.
-  median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(names(input_list)), function(x){stats::median(x, na.rm = TRUE)})) %>%
-                   dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
-                   dplyr::select(-dplyr::all_of(group.by)) %>%
-                   as.data.frame() %>%
-                   tibble::column_to_rownames(var = "group.by") %>%
-                   as.matrix() %>%
-                   t()
-  group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
-  order.use <- order.use[group_order]
+  if (isTRUE(cluster)){
+    # Retrieve the order median-wise to cluster heatmap bodies.
+    median.matrix <- matrix %>%
+                     dplyr::summarise(dplyr::across(dplyr::all_of(names(input_list)), function(x){stats::median(x, na.rm = TRUE)})) %>%
+                     dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
+                     dplyr::select(-dplyr::all_of(group.by)) %>%
+                     as.data.frame() %>%
+                     tibble::column_to_rownames(var = "group.by") %>%
+                     as.matrix() %>%
+                     t()
+    group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
+    order.use <- order.use[group_order]
+  }
+  
   
   # Retrieve the order median-wise for the genes.
   if (length(names(input_list)) == 1) {
@@ -386,7 +389,6 @@ do_SCEnrichmentHeatmap <- function(sample,
     metadata.matrix <- sample@meta.data %>%
                        dplyr::select(dplyr::all_of(c(metadata, group.by))) %>%
                        dplyr::mutate("group.by" = .data[[group.by]]) %>%
-                       dplyr::select(-dplyr::all_of(group.by)) %>%
                        as.matrix() %>%
                        t()
     metadata.matrix <- metadata.matrix[, col_order]

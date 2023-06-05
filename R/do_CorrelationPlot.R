@@ -204,8 +204,6 @@ do_CorrelationPlot <- function(sample = NULL,
     limits <- c(min(out.long$score, na.rm = TRUE),
                 max(out.long$score, na.rm = TRUE))
 
-
-
     # Compute scale limits, breaks, etc.
     scale.setup <- compute_scales(sample = sample,
                                   feature = " ",
@@ -219,6 +217,18 @@ do_CorrelationPlot <- function(sample = NULL,
                                   enforce_symmetry = enforce_symmetry,
                                   from_data = TRUE,
                                   limits.use = limits)
+    
+    # Modify according to min.cutoff and max.cutoff.
+    if (!is.na(min.cutoff)){
+      out.long <- out.long %>% 
+                  dplyr::mutate("score" = ifelse(.data$score < min.cutoff, min.cutoff, .data$score))
+    }
+    
+    if (!is.na(max.cutoff)){
+      out.long <- out.long %>% 
+                  dplyr::mutate("score" = ifelse(.data$score > max.cutoff, max.cutoff, .data$score))
+    }
+    
 
     p <- ggplot2::ggplot(out.long,
                          mapping = ggplot2::aes(x = .data$x,
@@ -343,17 +353,6 @@ do_CorrelationPlot <- function(sample = NULL,
                                 values_to = "score") %>% 
             dplyr::mutate("x" = factor(.data$x, levels = order),
                           "y" = factor(.data$y, levels = rev(order)))
-    p <- data %>% 
-         ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x,
-                                                y = .data$y,
-                                                fill = .data$score)) +
-         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
-         ggplot2::scale_y_discrete(expand = c(0, 0)) +
-         ggplot2::scale_x_discrete(expand = c(0, 0),
-                                   position = "top") + 
-         ggplot2::coord_equal() + 
-         ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$y))),
-                         x.sec = guide_axis_label_trans(~paste0(levels(.data$x)))) 
     
     limits <- c(min(data$score, na.rm = TRUE),
                 max(data$score, na.rm = TRUE))
@@ -368,13 +367,36 @@ do_CorrelationPlot <- function(sample = NULL,
                                   assay = NULL,
                                   reduction = NULL,
                                   slot = NULL,
-                                  number.breaks = 5,
-                                  min.cutoff = NA,
-                                  max.cutoff = NA,
+                                  number.breaks = number.breaks,
+                                  min.cutoff = min.cutoff,
+                                  max.cutoff = max.cutoff,
                                   flavor = "Seurat",
                                   enforce_symmetry = FALSE,
                                   from_data = TRUE,
                                   limits.use = limits)
+    
+    # Modify according to min.cutoff and max.cutoff.
+    if (!is.na(min.cutoff)){
+      data <- data %>% 
+              dplyr::mutate("score" = ifelse(.data$score < min.cutoff, min.cutoff, .data$score))
+    }
+    
+    if (!is.na(max.cutoff)){
+      data <- data %>% 
+              dplyr::mutate("score" = ifelse(.data$score > max.cutoff, max.cutoff, .data$score))
+    }
+    
+    p <- data %>% 
+         ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x,
+                                                y = .data$y,
+                                                fill = .data$score)) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::scale_y_discrete(expand = c(0, 0)) +
+         ggplot2::scale_x_discrete(expand = c(0, 0),
+                                   position = "top") + 
+         ggplot2::coord_equal() + 
+         ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$y))),
+                         x.sec = guide_axis_label_trans(~paste0(levels(.data$x)))) 
     
     axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = "A",

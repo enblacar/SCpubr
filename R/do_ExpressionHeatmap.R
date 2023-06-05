@@ -159,8 +159,8 @@ do_ExpressionHeatmap <- function(sample,
                    crayon_key("row names"),
                    crayon_body(" of the specified "),
                    crayon_key("assay"),
-                   crayon_body(" (default assay if not):/n"),
-                   paste(vapply(features[!features %in% rownames(sample)], crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", "))), call. = FALSE)
+                   crayon_body(" (default assay if not):\n"),
+                   paste(vapply(features[!features %in% rownames(sample)], crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")), "\n"), call. = FALSE)
   }
 
   features <- features[features %in% rownames(sample)]

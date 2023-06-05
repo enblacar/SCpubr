@@ -235,16 +235,19 @@ do_SCExpressionHeatmap <- function(sample,
              dplyr::slice_sample(n = subsample)
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
-  median.matrix <- matrix %>%
-                   dplyr::summarise(dplyr::across(dplyr::all_of(features), function(x){stats::median(x, na.rm = TRUE)})) %>%
-                   dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
-                   dplyr::select(-dplyr::all_of(group.by)) %>%
-                   as.data.frame() %>%
-                   tibble::column_to_rownames(var = "group.by") %>%
-                   as.matrix() %>%
-                   t()
-  group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
-  order.use <- order.use[group_order]
+  if (isTRUE(cluster)){
+    median.matrix <- matrix %>%
+                     dplyr::summarise(dplyr::across(dplyr::all_of(features), function(x){stats::median(x, na.rm = TRUE)})) %>%
+                     dplyr::mutate("group.by" = as.character(.data[[group.by]])) %>%
+                     dplyr::select(-dplyr::all_of(group.by)) %>%
+                     as.data.frame() %>%
+                     tibble::column_to_rownames(var = "group.by") %>%
+                     as.matrix() %>%
+                     t()
+    group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
+    order.use <- order.use[group_order]
+  }
+  
 
   # Retrieve the order median-wise for the genes.
   if (length(features) == 1) {
@@ -321,7 +324,6 @@ do_SCExpressionHeatmap <- function(sample,
     metadata.matrix <- sample@meta.data %>%
                        dplyr::select(dplyr::all_of(c(metadata, group.by))) %>%
                        dplyr::mutate("group.by" = .data[[group.by]]) %>%
-                       dplyr::select(-dplyr::all_of(group.by)) %>%
                        as.matrix() %>%
                        t()
     metadata.matrix <- metadata.matrix[, col_order]
