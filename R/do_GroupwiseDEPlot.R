@@ -106,7 +106,6 @@ do_GroupwiseDEPlot <- function(sample,
   check_colors(border.color, parameter_name = "border.color")
   
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette.pvalue, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis.palette.logfc, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis.palette.expression, parameter_name = "viridis_color_map")
@@ -120,6 +119,8 @@ do_GroupwiseDEPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
   
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
@@ -132,6 +133,23 @@ do_GroupwiseDEPlot <- function(sample,
                         is.heatmap = TRUE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
+  
+  
+  colors.gradient.pvalue <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.pvalue, sequential.palette.pvalue),
+                                                       use_viridis = use_viridis,
+                                                       direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                       enforce_symmetry = FALSE)
+  
+  colors.gradient.expression <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.expression, sequential.palette.expression),
+                                                           use_viridis = use_viridis,
+                                                           direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                           enforce_symmetry = FALSE)
+  
+  colors.gradient.logfc <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.logfc, sequential.palette.logfc),
+                                                      use_viridis = use_viridis,
+                                                      direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                      enforce_symmetry = FALSE)
+  
 
   magnitude <- ifelse(slot == "data", "avg_log2FC", "avg_diff")
   specificity <- "p_val_adj"
@@ -211,27 +229,14 @@ do_GroupwiseDEPlot <- function(sample,
                                  position = "top") +
        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$cluster))),
                        x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-       ggplot2::coord_equal()
-  
-  if (isTRUE(use_viridis)){
-    p <- p + 
-         ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                       option = viridis.palette.pvalue,
-                                       na.value = na.value,
-                                       breaks = scale.setup$breaks,
-                                       labels = scale.setup$labels,
-                                       limits = scale.setup$limits,
-                                       name = expression(bold(paste("-", log["10"], "(p.adjust)"))))
-  } else {
-    p <- p + 
-         ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.pvalue)[2:9])},
-                                       na.value = na.value,
-                                       name =  expression(bold(paste("-", log["10"], "(p.adjust)"))),
-                                       breaks = scale.setup$breaks,
-                                       labels = scale.setup$labels,
-                                       limits = scale.setup$limits)
-  }
-       
+       ggplot2::coord_equal() + 
+       ggplot2::scale_fill_gradientn(colors = colors.gradient.pvalue,
+                                     na.value = na.value,
+                                     name = expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                     breaks = scale.setup$breaks,
+                                     labels = scale.setup$labels,
+                                     limits = scale.setup$limits)
+          
   list.plots[["pval"]] <- p
   
   
@@ -263,27 +268,13 @@ do_GroupwiseDEPlot <- function(sample,
                                  position = "top") +
        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$cluster))),
                        x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-       ggplot2::coord_equal()
-  
-  
-  if (isTRUE(use_viridis)){
-    p <- p + 
-      ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                    option = viridis.palette.logfc,
-                                    na.value = na.value,
-                                    breaks = scale.setup$breaks,
-                                    labels = scale.setup$labels,
-                                    limits = scale.setup$limits,
-                                    name = expression(bold(paste("Avg. ", log["2"], "(FC)"))))
-  } else {
-    p <- p + 
-      ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.logfc)[2:9])},
-                                    na.value = na.value,
-                                    name =  expression(bold(paste("Avg. ", log["2"], "(FC)"))),
-                                    breaks = scale.setup$breaks,
-                                    labels = scale.setup$labels,
-                                    limits = scale.setup$limits)
-  }
+       ggplot2::coord_equal() + 
+       ggplot2::scale_fill_gradientn(colors = colors.gradient.logfc,
+                                     na.value = na.value,
+                                     name = expression(bold(paste("Avg. ", log["2"], "(FC)"))),
+                                     breaks = scale.setup$breaks,
+                                     labels = scale.setup$labels,
+                                     limits = scale.setup$limits)
   list.plots[["FC"]] <- p
   
   
@@ -366,27 +357,14 @@ do_GroupwiseDEPlot <- function(sample,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Group))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-         ggplot2::coord_equal()
-    
-    if (isTRUE(use_viridis)){
-      p <- p + 
-        ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                      option = viridis.palette.expression,
-                                      na.value = na.value,
-                                      breaks = scale.setup$breaks,
-                                      labels = scale.setup$labels,
-                                      limits = scale.setup$limits,
-                                      name = "Avg. Expression")
-    } else {
-      p <- p + 
-        ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette.expression)[2:9])},
-                                      na.value = na.value,
-                                      name =  "Avg. Expression",
-                                      breaks = scale.setup$breaks,
-                                      labels = scale.setup$labels,
-                                      limits = scale.setup$limits)
-    }
-    
+         ggplot2::coord_equal() + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient.expression,
+                                       na.value = na.value,
+                                       name = "Avg. Expression",
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
+       
     list.plots[[group]] <- p
   }
   

@@ -46,6 +46,7 @@ do_EnrichmentHeatmap(
   number.breaks = 5,
   sequential.palette = "YlGnBu",
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   sequential.direction = 1,
   flip = FALSE,
   grid.color = "white",
@@ -151,6 +152,8 @@ do_EnrichmentHeatmap(
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 

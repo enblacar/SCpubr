@@ -54,6 +54,9 @@ Many (except a few selected cases) of the functions that returned list of differ
     -   `legend.text.face`: To control the style of the **legend text**.
 -   Changed default font style for legend text from `bold` to `plain`. 
 
+## `SCpubr::do_AlluvialPlot`
+-   Added `sequential.palette` and `sequential.direction` parameters.
+
 ## `SCpubr::do_BarPlot`
 
 -   Added `facet.by` parameter to extra group the bars by a third metadata variable.

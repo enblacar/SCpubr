@@ -56,7 +56,7 @@ do_FeaturePlot <- function(sample,
                            individual.subtitles = NULL,
                            individual.captions = NULL,
                            ncol = NULL,
-                           use_viridis = TRUE,
+                           use_viridis = FALSE,
                            viridis.palette = "G",
                            viridis.direction = 1,
                            raster = FALSE,
@@ -81,6 +81,7 @@ do_FeaturePlot <- function(sample,
                            label.size = 4,
                            number.breaks = 5,
                            diverging.palette = "RdBu",
+                           diverging.direction = -1,
                            sequential.palette = "YlGnBu",
                            sequential.direction = -1,
                            plot.title.face = "bold",
@@ -143,7 +144,8 @@ do_FeaturePlot <- function(sample,
                        "legend.ncol" = legend.ncol,
                        "group.by.dot.size" = group.by.dot.size,
                        "group.by.cell_borders.alpha" = group.by.cell_borders.alpha,
-                       "sequential.direction" = sequential.direction)
+                       "sequential.direction" = sequential.direction,
+                       "diverging.direction" = diverging.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -266,7 +268,6 @@ do_FeaturePlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = contour.lineend, parameter_name = "contour.lineend")
   check_parameters(parameter = contour.linejoin, parameter_name = "contour.linejoin")
@@ -275,7 +276,6 @@ do_FeaturePlot <- function(sample,
   check_parameters(parameter = border.density, parameter_name = "border.density")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -283,6 +283,9 @@ do_FeaturePlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
 
   if (length(min.cutoff) != length(features)){
     warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
@@ -299,6 +302,20 @@ do_FeaturePlot <- function(sample,
                    crayon_key("features"),
                    crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")), call. = FALSE)
   }
+  
+  # Generate the continuous color palette.
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
+  }
+  
   
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
@@ -389,37 +406,14 @@ do_FeaturePlot <- function(sample,
                                       max.cutoff = max.cutoff,
                                       flavor = "Seurat",
                                       enforce_symmetry = enforce_symmetry)
-        if (base::isFALSE(enforce_symmetry)){
-          if (isTRUE(use_viridis)){
-            p <- add_scale(p = p,
-                           function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                         option = viridis.palette,
-                                                                         direction = viridis.direction,
-                                                                         breaks = scale.setup$breaks,
-                                                                         labels = scale.setup$labels,
-                                                                         limits = scale.setup$limits,
-                                                                         name = features),
-                           scale = "color")
-          } else {
-            p <- add_scale(p = p,
-                           function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                         na.value = na.value,
-                                                                         name = legend.title,
-                                                                         breaks = scale.setup$breaks,
-                                                                         labels = scale.setup$labels,
-                                                                         limits = scale.setup$limits),
-                           scale = "color")
-          }
-        } else if (isTRUE(enforce_symmetry)){
-          p <- add_scale(p = p,
-                         function_use = ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                                       na.value = na.value,
-                                                                       name = features,
-                                                                       breaks = scale.setup$breaks,
-                                                                       labels = scale.setup$labels,
-                                                                       limits = scale.setup$limits),
-                         scale = "color")
-        }
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                     na.value = na.value,
+                                                                     name = legend.title,
+                                                                     breaks = scale.setup$breaks,
+                                                                     labels = scale.setup$labels,
+                                                                     limits = scale.setup$limits),
+                       scale = "color")
       } else if (num_plots > 1){
         
         feature.use <- features[counter]
@@ -434,37 +428,14 @@ do_FeaturePlot <- function(sample,
                                       flavor = "Seurat",
                                       enforce_symmetry = enforce_symmetry)
 
-        if (base::isFALSE(enforce_symmetry)){
-          if (isTRUE(use_viridis)){
-            p[[counter]] <- add_scale(p = p[[counter]],
-                                      function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                                    option = viridis.palette,
-                                                                                    direction = viridis.direction,
-                                                                                    breaks = scale.setup$breaks,
-                                                                                    labels = scale.setup$labels,
-                                                                                    limits = scale.setup$limits,
-                                                                                    name = features),
-                                      scale = "color")
-          } else {
-            p[[counter]] <- add_scale(p = p[[counter]],
-                                      function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                                    na.value = na.value,
-                                                                                    name = legend.title,
-                                                                                    breaks = scale.setup$breaks,
-                                                                                    labels = scale.setup$labels,
-                                                                                    limits = scale.setup$limits),
-                                      scale = "color")
-          }
-        } else if (isTRUE(enforce_symmetry)){
-          p[[counter]] <- add_scale(p = p[[counter]],
-                                    function_use = ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                                                  na.value = na.value,
-                                                                                  name = feature.use,
-                                                                                  breaks = scale.setup$breaks,
-                                                                                  labels = scale.setup$labels,
-                                                                                  limits = scale.setup$limits),
-                                    scale = "color")
-        }
+        p[[counter]] <- add_scale(p = p[[counter]],
+                                  function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                                na.value = na.value,
+                                                                                name = legend.title,
+                                                                                breaks = scale.setup$breaks,
+                                                                                labels = scale.setup$labels,
+                                                                                limits = scale.setup$limits),
+                                  scale = "color")
       }
     }
 
@@ -623,7 +594,7 @@ do_FeaturePlot <- function(sample,
       if (is.null(split.by)){
         feature.use <- "dummy"
 
-        sample.use <- sample[, !is.na(sample$dummy)]
+        sample.use <- sample[, cells.use]
 
         if (isTRUE(plot_cell_borders)){
           out <- compute_umap_layer(sample = sample.use,
@@ -642,7 +613,7 @@ do_FeaturePlot <- function(sample,
         }
 
         if (utils::packageVersion("Seurat") >= "4.1.0"){
-          p.loop <- Seurat::FeaturePlot(sample,
+          p.loop <- Seurat::FeaturePlot(sample.use,
                                         feature.use,
                                         reduction = reduction,
                                         slot = slot,
@@ -657,7 +628,7 @@ do_FeaturePlot <- function(sample,
                                         label.size = label.size,
                                         label.color = label.color)
         } else { # nocov start
-          p.loop <- Seurat::FeaturePlot(sample,
+          p.loop <- Seurat::FeaturePlot(sample.use,
                                         feature.use,
                                         reduction = reduction,
                                         slot = slot,
@@ -686,37 +657,15 @@ do_FeaturePlot <- function(sample,
                                       flavor = "Seurat",
                                       enforce_symmetry = enforce_symmetry)
 
-        if (base::isFALSE(enforce_symmetry)){
-          if (isTRUE(use_viridis)){
-            p.loop <- add_scale(p = p.loop,
-                                function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                              option = viridis.palette,
-                                                                              direction = viridis.direction,
-                                                                              breaks = scale.setup$breaks,
-                                                                              labels = scale.setup$labels,
-                                                                              limits = scale.setup$limits,
-                                                                              name = features),
-                                scale = "color")
-          } else {
-            p.loop <- add_scale(p = p.loop,
-                                function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                              na.value = na.value,
-                                                                              name = legend.title,
-                                                                              breaks = scale.setup$breaks,
-                                                                              labels = scale.setup$labels,
-                                                                              limits = scale.setup$limits),
-                                scale = "color")
-          }
-        } else if (isTRUE(enforce_symmetry)){
-          p.loop <- add_scale(p = p.loop,
-                              function_use = ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                                            na.value = "#bfbfbf00",
-                                                                            name = feature.use,
-                                                                            breaks = scale.setup$breaks,
-                                                                            labels = scale.setup$labels,
-                                                                            limits = scale.setup$limits),
-                              scale = "color")
-        }
+        p.loop <- add_scale(p = p.loop,
+                            function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                          na.value = na.value,
+                                                                          name = legend.title,
+                                                                          breaks = scale.setup$breaks,
+                                                                          labels = scale.setup$labels,
+                                                                          limits = scale.setup$limits),
+                            scale = "color")
+        
         p.loop <- p.loop +
                   ggplot2::ggtitle("")
 
@@ -725,7 +674,15 @@ do_FeaturePlot <- function(sample,
           p.loop$layers <- append(base_layer_subset, p.loop$layers)
           p.loop$layers <- append(na_layer, p.loop$layers)
           p.loop$layers <- append(base_layer, p.loop$layers)
-
+          
+          suppressMessages({
+            p.loop <- p.loop + 
+              ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x), 
+                                                     max(p.loop$layers[[1]]$data$x))) + 
+              ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y), 
+                                                     max(p.loop$layers[[1]]$data$y)))
+          })
+          
           if (!(is.null(group.by))){
             if (isTRUE(group.by.show.dots)){
               p.loop$layers <- append(p.loop$layers, c(center_layer_2, center_layer_1))
@@ -840,7 +797,7 @@ do_FeaturePlot <- function(sample,
 
 
           if (utils::packageVersion("Seurat") >= "4.1.0"){
-            p.loop <- Seurat::FeaturePlot(sample,
+            p.loop <- Seurat::FeaturePlot(sample.use,
                                           feature.use,
                                           slot = slot,
                                           reduction = reduction,
@@ -855,7 +812,7 @@ do_FeaturePlot <- function(sample,
                                           label.size = label.size,
                                           label.color = label.color)
           } else { # nocov start
-            p.loop <- Seurat::FeaturePlot(sample,
+            p.loop <- Seurat::FeaturePlot(sample.use,
                                           feature.use,
                                           slot = slot,
                                           reduction = reduction,
@@ -883,37 +840,14 @@ do_FeaturePlot <- function(sample,
                                         flavor = "Seurat",
                                         enforce_symmetry = enforce_symmetry)
 
-          if (base::isFALSE(enforce_symmetry)){
-            if (isTRUE(use_viridis)){
-              p.loop <- add_scale(p = p.loop,
-                                  function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                                option = viridis.palette,
-                                                                                direction = viridis.direction,
-                                                                                breaks = scale.setup$breaks,
-                                                                                labels = scale.setup$labels,
-                                                                                limits = scale.setup$limits,
-                                                                                name = features),
-                                  scale = "color")
-            } else {
-              p.loop <- add_scale(p = p.loop,
-                                  function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                                na.value = na.value,
-                                                                                name = legend.title,
-                                                                                breaks = scale.setup$breaks,
-                                                                                labels = scale.setup$labels,
-                                                                                limits = scale.setup$limits),
-                                  scale = "color")
-            }
-          } else if (isTRUE(enforce_symmetry)){
-            p.loop <- add_scale(p = p.loop,
-                                function_use = ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                                              na.value = "#bfbfbf00",
-                                                                              name = feature.use,
-                                                                              breaks = scale.setup$breaks,
-                                                                              labels = scale.setup$labels,
-                                                                              limits = scale.setup$limits),
-                                scale = "color")
-          }
+          p.loop <- add_scale(p = p.loop,
+                              function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                            na.value = na.value,
+                                                                            name = legend.title,
+                                                                            breaks = scale.setup$breaks,
+                                                                            labels = scale.setup$labels,
+                                                                            limits = scale.setup$limits),
+                              scale = "color")
 
           p.loop <- p.loop +
                     ggplot2::ggtitle(iteration)
@@ -941,7 +875,15 @@ do_FeaturePlot <- function(sample,
             p.loop$layers <- append(base_layer_subset, p.loop$layers)
             p.loop$layers <- append(na_layer, p.loop$layers)
             p.loop$layers <- append(base_layer, p.loop$layers)
-
+    
+            suppressMessages({
+              p.loop <- p.loop + 
+                ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x), 
+                                                       max(p.loop$layers[[1]]$data$x))) + 
+                ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y), 
+                                                       max(p.loop$layers[[1]]$data$y)))
+            })
+            
             if (!(is.null(group.by))){
               if (isTRUE(group.by.show.dots)){
                 p.loop$layers <- append(p.loop$layers, c(center_layer_2, center_layer_1))

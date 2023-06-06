@@ -138,7 +138,6 @@ do_RidgePlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   if (!is.null(legend.position)){check_parameters(parameter = legend.position, parameter_name = "legend.position")}
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
@@ -150,7 +149,14 @@ do_RidgePlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  
+  colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                use_viridis = use_viridis,
+                                                direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                enforce_symmetry = FALSE)
+  
   if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
 
   if (is.null(legend.position)){
@@ -177,23 +183,11 @@ do_RidgePlot <- function(sample,
                                                   y = .data$group.by,
                                                   fill = ggplot2::after_stat(x))) +
            ggridges::geom_density_ridges_gradient(color = "black",
-                                                  size = 1.25)
-
-      if (isTRUE(use_viridis)){
-        p <- p +
-             ggplot2::scale_fill_viridis_c(option = viridis.palette,
-                                           direction = viridis.direction,
-                                           name = feature,
-                                           breaks = scales::extended_breaks(n = number.breaks))
-      } else {
-        p <- p +
-          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
+                                                  size = 1.25) + 
+           ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                          na.value = "grey75",
                                          name = feature,
-                                        breaks = scales::extended_breaks(n = number.breaks))
-      }
-
-
+                                         breaks = scales::extended_breaks(n = number.breaks))
       p <- modify_continuous_legend(p = p,
                                     legend.aes = "fill",
                                     legend.type = legend.type,
@@ -226,10 +220,19 @@ do_RidgePlot <- function(sample,
                                            quantile_lines = TRUE,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
-                                           quantiles = quantiles) +
-             ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis.palette, direction = viridis.direction),
-                                        name = ifelse(is.null(legend.title), "Probability", legend.title),
-                                        labels = unique(labels)) +
+                                           quantiles = quantiles)
+        if (isTRUE(use_viridis)){
+          p  <- p + 
+                ggplot2::scale_fill_manual(values = viridis::viridis(n = length(quantiles) + 1, option = viridis.palette, direction = viridis.direction),
+                                           name = ifelse(is.null(legend.title), "Probability", legend.title),
+                                           labels = unique(labels))
+        } else {
+          p <- p + 
+               ggplot2::scale_fill_manual(values = if (sequential.direction == 1) {RColorBrewer::brewer.pal(n = length(quantiles) + 1, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = length(quantiles) + 1, name = sequential.palette))},
+                                          name = ifelse(is.null(legend.title), "Probability", legend.title),
+                                          labels = unique(labels))
+        }
+        p <- p +
              ggplot2::guides(fill = ggplot2::guide_legend(title = ifelse(is.null(legend.title), "Probability", legend.title),
                                                           title.position = "top",
                                                           title.hjust = 0.5,
@@ -264,21 +267,11 @@ do_RidgePlot <- function(sample,
              ggridges::stat_density_ridges(color = "black",
                                            size = 1.25,
                                            calc_ecdf = TRUE,
-                                           geom = "density_ridges_gradient")
-
-        if (isTRUE(use_viridis)){
-          p <- p +
-            ggplot2::scale_fill_viridis_c(option = viridis.palette,
-                                          direction = viridis.direction,
-                                          name = "Tail probability",
-                                          breaks = scales::extended_breaks(n = number.breaks))
-        } else {
-          p <- p +
-            ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                          na.value = "grey75",
-                                          name = "Tail probability",
-                                          breaks = scales::extended_breaks(n = number.breaks))
-        }
+                                           geom = "density_ridges_gradient") + 
+             ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                           na.value = "grey75",
+                                           name = "Tail probability",
+                                           breaks = scales::extended_breaks(n = number.breaks))
 
         p <- modify_continuous_legend(p = p,
                                       legend.title = legend.title,

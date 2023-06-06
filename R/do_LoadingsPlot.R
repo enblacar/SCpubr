@@ -40,6 +40,7 @@ do_LoadingsPlot <- function(sample,
                             viridis.palette = "G",
                             viridis.direction = -1,
                             diverging.palette = "RdBu",
+                            diverging.direction = -1,
                             flip = FALSE,
                             min.cutoff.loadings = NA,
                             max.cutoff.loadings = NA,
@@ -114,8 +115,6 @@ do_LoadingsPlot <- function(sample,
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
-  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -123,10 +122,23 @@ do_LoadingsPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
   
   
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
+  
+  colors.gradient.loading <- compute_continuous_palette(name = diverging.palette,
+                                                        use_viridis = FALSE,
+                                                        direction = diverging.direction,
+                                                        enforce_symmetry = TRUE)
+  
+  colors.gradient.expression <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                           use_viridis = use_viridis,
+                                                           direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                           enforce_symmetry = FALSE)
   
   # Check group.by.
   out <- check_group_by(sample = sample,
@@ -302,8 +314,8 @@ do_LoadingsPlot <- function(sample,
                ggplot2::scale_x_discrete(expand = c(0, 0),
                                          position = "top") +
                ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$PC))),
-                               x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
-               ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+                               x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) + 
+               ggplot2::scale_fill_gradientn(colors = colors.gradient.loading,
                                              na.value = na.value,
                                              name = "Avg. Loading score",
                                              breaks = scale.setup$breaks,
@@ -340,29 +352,13 @@ do_LoadingsPlot <- function(sample,
                                   x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
                   ggplot2::coord_equal() +
                   ggplot2::xlab(NULL) +
-                  ggplot2::ylab(group.by)
-  
-  if (base::isFALSE(use_viridis)){
-    colors <- RColorBrewer::brewer.pal(n = 9, name = "YlGnBu")[2:9]
-    if (sequential.direction == -1){
-      colors <- rev(colors)
-    }
-    p.expression <- p.expression + 
-                    ggplot2::scale_fill_gradientn(colors = colors,
-                                                  na.value = na.value,
-                                                  name = "Avg. Expression",
-                                                  breaks = scale.setup$breaks,
-                                                  labels = scale.setup$labels,
-                                                  limits = scale.setup$limits)
-  } else {
-    p.expression <- p.expression + 
-                    ggplot2::scale_fill_viridis_c(option = viridis.palette,
-                                                  direction = viridis.direction,
-                                                  name = "Avg. Expression",
-                                                  breaks = scale.setup$breaks,
-                                                  labels = scale.setup$labels,
-                                                  limits = scale.setup$limits)
-  }
+                  ggplot2::ylab(group.by) + 
+                  ggplot2::scale_fill_gradientn(colors = colors.gradient.expression,
+                                                na.value = na.value,
+                                                name = "Avg. Expression",
+                                                breaks = scale.setup$breaks,
+                                                labels = scale.setup$labels,
+                                                limits = scale.setup$limits)
                   
                   
   

@@ -229,6 +229,8 @@
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
+
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 
 \item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:

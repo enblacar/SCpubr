@@ -30,6 +30,7 @@ do_PathwayActivityPlot(
   max.cutoff = NA,
   number.breaks = 5,
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
@@ -113,6 +114,8 @@ do_PathwayActivityPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 

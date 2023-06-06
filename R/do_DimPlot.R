@@ -607,6 +607,13 @@ do_DimPlot <- function(sample,
       # Add cell borders.
       if (isTRUE(plot_cell_borders)){
         p.loop$layers <- append(base_layer, p.loop$layers)
+        suppressMessages({
+          p.loop <- p.loop + 
+                    ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x), 
+                                                           max(p.loop$layers[[1]]$data$x))) + 
+                    ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y), 
+                                                           max(p.loop$layers[[1]]$data$y)))
+        })
       }
 
       if (isTRUE(plot_density_contour)){
@@ -685,14 +692,14 @@ do_DimPlot <- function(sample,
     } # nocov end
 
     p <- p &
-      ggplot2::ggtitle("") &
-      ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
-                                                    ncol = legend.ncol,
-                                                    nrow = legend.nrow,
-                                                    byrow = legend.byrow,
-                                                    override.aes = list(size = legend.icon.size),
-                                                    title.position = legend.title.position))
-
+         ggplot2::ggtitle("") &
+         ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
+                                                       ncol = legend.ncol,
+                                                       nrow = legend.nrow,
+                                                       byrow = legend.byrow,
+                                                       override.aes = list(size = legend.icon.size),
+                                                       title.position = legend.title.position))
+   
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){
       # Compute extra layer for the highlighted cells.
@@ -712,6 +719,14 @@ do_DimPlot <- function(sample,
       p$layers <- append(base_layer_subset, p$layers)
       p$layers <- append(na_layer, p$layers)
       p$layers <- append(base_layer, p$layers)
+      
+      suppressMessages({
+        p <- p + 
+             ggplot2::scale_x_continuous(limits = c(min(p$layers[[1]]$data$x), 
+                                                    max(p$layers[[1]]$data$x))) + 
+             ggplot2::scale_y_continuous(limits = c(min(p$layers[[1]]$data$y), 
+                                                    max(p$layers[[1]]$data$y)))
+      })
     }
 
     if (isTRUE(plot_density_contour)){

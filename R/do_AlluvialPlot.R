@@ -59,6 +59,8 @@ do_AlluvialPlot <- function(sample,
                             use_viridis = FALSE,
                             viridis.palette = "G",
                             viridis.direction = -1,
+                            sequential.palette = "YlGnBu",
+                            sequential.direction = 1,
                             plot.grid = FALSE,
                             grid.color = "grey75",
                             grid.type = "dashed",
@@ -93,7 +95,8 @@ do_AlluvialPlot <- function(sample,
   # Check numeric parameters.
   numeric_list <- list("stratum.width" = stratum.width,
                        "font.size" = font.size,
-                       "viridis.direction" = viridis.direction)
+                       "viridis.direction" = viridis.direction,
+                       "sequential.direction" = sequential.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("first_group" = first_group,
@@ -125,7 +128,8 @@ do_AlluvialPlot <- function(sample,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "sequential.palette" = sequential.palette)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -137,11 +141,18 @@ do_AlluvialPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
   
 
   #StatStratum <- ggalluvial::StatStratum
   `%>%` <- magrittr::`%>%`
-
+  
+  colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                use_viridis = use_viridis,
+                                                direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                enforce_symmetry = FALSE)
+  
   if (isTRUE(use_labels)){
     if (isTRUE(repel)){
       func_use <- ggrepel::geom_label_repel
@@ -255,15 +266,16 @@ do_AlluvialPlot <- function(sample,
              fontface = "bold") +
     ggplot2::scale_x_discrete(limits = vars.use)
 
-  if (isTRUE(use_viridis)){
-    p <- p +
-         ggplot2::scale_fill_viridis_d(option = viridis.palette,
-                                       direction = viridis.direction,
-                                       na.value = na.value)
+  if (is.null(colors.use)){
+    p <- p + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = legend.title)
   } else if (base::isFALSE(use_viridis)){
     p <- p +
          ggplot2::scale_fill_manual(values = colors.use,
-                                    na.value = na.value)
+                                    na.value = na.value,
+                                    name = legend.title)
   }
   p <- p +
        ggplot2::xlab(xlab) +

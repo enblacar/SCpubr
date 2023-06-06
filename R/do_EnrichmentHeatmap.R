@@ -52,6 +52,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  number.breaks = 5,
                                  sequential.palette = "YlGnBu",
                                  diverging.palette = "RdBu",
+                                 diverging.direction = -1,
                                  sequential.direction = 1,
                                  flip = FALSE,
                                  grid.color = "white",
@@ -94,7 +95,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "min.cutoff" = min.cutoff,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
-                       "sequential.direction" = sequential.direction)
+                       "sequential.direction" = sequential.direction,
+                       "diverging.direction" = diverging.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -127,8 +129,6 @@ do_EnrichmentHeatmap <- function(sample,
   check_colors(border.color, parameter_name = "border.color")
 
 
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
-  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -143,11 +143,25 @@ do_EnrichmentHeatmap <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
   
   
   `%>%` <- magrittr::`%>%`
   
   
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
+  }
   
   if (!(is.null(assay)) & flavor == "UCell"){
     warning(paste0(add_warning(), crayon_body("When using "),
@@ -411,37 +425,13 @@ do_EnrichmentHeatmap <- function(sample,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) +
-         ggplot2::coord_equal()
-
-
-    if (isTRUE(enforce_symmetry)){
-      p <- p +
-        ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                      na.value = na.value,
-                                      name = legend.title,
-                                      breaks = scale.setup$breaks,
-                                      labels = scale.setup$labels,
-                                      limits = scale.setup$limits)
-    } else {
-      if (isTRUE(use_viridis)){
-        p <- p +
-          ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                        option = viridis.palette,
-                                        na.value = na.value,
-                                        breaks = scale.setup$breaks,
-                                        labels = scale.setup$labels,
-                                        limits = scale.setup$limits,
-                                        name = legend.title)
-      } else {
-        p <- p +
-          ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                        na.value = na.value,
-                                        name = legend.title,
-                                        breaks = scale.setup$breaks,
-                                        labels = scale.setup$labels,
-                                        limits = scale.setup$limits)
-      }
-    }
+         ggplot2::coord_equal() + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = legend.title,
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
 
 
     p <- modify_continuous_legend(p = p,

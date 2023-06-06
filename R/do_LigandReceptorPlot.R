@@ -143,7 +143,6 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = grid.type, parameter_name = "grid.type")
   check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
@@ -155,7 +154,15 @@ do_LigandReceptorPlot <- function(liana_output,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  
+  
+  colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                use_viridis = use_viridis,
+                                                direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                enforce_symmetry = FALSE)
+  
   if (!is.null(split.by)){
     assertthat::assert_that(split.by %in% c("receptor.complex", "ligand.complex"),
                             msg = paste0(add_cross,
@@ -341,9 +348,11 @@ do_LigandReceptorPlot <- function(liana_output,
     
     liana_output <- liana_output %>% 
                     dplyr::left_join(y = liana_output_specificity %>% dplyr::select(dplyr::all_of(c("interaction", "specificity_rank"))),
-                                     by = "interaction") %>% 
+                                     by = "interaction",
+                                     relationship = "many-to-many") %>% 
                     dplyr::left_join(y = liana_output_magnitude %>% dplyr::select(dplyr::all_of(c("interaction", "magnitude_rank"))),
-                                     by = "interaction") %>% 
+                                     by = "interaction",
+                                     relationship = "many-to-many") %>% 
                     dplyr::mutate("rank" = .data$magnitude_rank + .data$specificity_rank) %>% 
                     dplyr::arrange(.data$rank) %>% 
                     dplyr::select(!dplyr::all_of(c("rank", "magnitude_rank", "specificity_rank")))
@@ -370,7 +379,8 @@ do_LigandReceptorPlot <- function(liana_output,
                   dplyr::inner_join(y = {liana_output %>%
                                          dplyr::distinct_at(c("ligand.complex", "receptor.complex")) %>%
                                          dplyr::slice_head(n = top_interactions)},
-                                         by = c("ligand.complex", "receptor.complex"))
+                                    by = c("ligand.complex", "receptor.complex"),
+                                    relationship = "many-to-many")
   
   assertthat::assert_that(nrow(liana_output) > 0,
                           msg = paste0(add_cross(), crayon_body("Whith the current presets of "),
@@ -437,44 +447,21 @@ do_LigandReceptorPlot <- function(liana_output,
   if (isTRUE(dot_border)){
     # Add color to aesthetics.
     p$layers[[1]]$aes_params$color <- border.color
-    if (isTRUE(use_viridis)){
-      p <- p +
-           ggplot2::scale_fill_viridis_c(option = viridis.palette,
-                                         name = fill.title,
-                                         direction = viridis.direction,
-                                         na.value = NA,
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits)
-    } else {
-      p <- p +
-           ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9])},
-                                          na.value = NA,
-                                          name = fill.title,
-                                          breaks = scale.setup$breaks,
-                                          labels = scale.setup$labels,
-                                          limits = scale.setup$limits)
-    }
-
-  } else {
-    if (isTRUE(use_viridis)){
-      p <- p +
-        ggplot2::scale_color_viridis_c(option = viridis.palette,
-                                       name = fill.title,
-                                       direction = viridis.direction,
+    p <- p + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = NA,
+                                       name = fill.title,
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
-    } else {
-      p <- p +
-        ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[1:9])},
-                                      na.value = NA,
-                                      name = fill.title,
-                                      breaks = scale.setup$breaks,
-                                      labels = scale.setup$labels,
-                                      limits = scale.setup$limits)
-    }
+  } else {
+    p <- p + 
+         ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                       na.value = NA,
+                                       name = fill.title,
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
   }
   # Continue plotting.
   if (is.null(split.by)){

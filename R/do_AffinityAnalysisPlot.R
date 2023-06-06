@@ -27,6 +27,7 @@ do_AffinityAnalysisPlot <- function(sample,
                                     sequential.palette = "YlGnBu",
                                     sequential.direction = 1,
                                     diverging.palette = "RdBu",
+                                    diverging.direction = -1,
                                     enforce_symmetry = TRUE,
                                     legend.position = "bottom",
                                     legend.width = 1,
@@ -36,6 +37,7 @@ do_AffinityAnalysisPlot <- function(sample,
                                     legend.framecolor = "grey50",
                                     legend.tickcolor = "white",
                                     legend.type = "colorbar",
+                                    na.value = "grey75",
                                     font.size = 14,
                                     font.type = "sans",
                                     axis.text.x.angle = 45,
@@ -87,7 +89,8 @@ do_AffinityAnalysisPlot <- function(sample,
                        "number.breaks" = number.breaks,
                        "sequential.direction" = sequential.direction,
                        "nbin" = nbin,
-                       "ctrl" = ctrl)
+                       "ctrl" = ctrl,
+                       "diverging.direction" = diverging.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -111,12 +114,14 @@ do_AffinityAnalysisPlot <- function(sample,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   `%>%` <- magrittr::`%>%`
   
   check_colors(grid.color, parameter_name = "grid.color")
+  check_colors(na.value, parameter_name = "na.value")
   check_colors(border.color, parameter_name = "border.color")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
@@ -130,7 +135,9 @@ do_AffinityAnalysisPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-  
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
   
   # Assign a group.by if this is null.
   out <- check_group_by(sample = sample,
@@ -141,6 +148,19 @@ do_AffinityAnalysisPlot <- function(sample,
   
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample), subsample)]
+  }
+  
+  # Generate the continuous color palette.
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
   }
   
   
@@ -361,36 +381,13 @@ do_AffinityAnalysisPlot <- function(sample,
   for (group in group.by){
     p <- list.heatmaps[[group]]
     
-    if (base::isFALSE(enforce_symmetry)){
-      if (isTRUE(use_viridis)){
-        p <- p + 
-             ggplot2::scale_fill_viridis_c(direction = viridis.direction,
-                                           option = viridis.palette,
-                                           na.value = "grey75",
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits,
-                                           name = statistic)
-      } else {
-        p <- p + 
-             # nocov start
-             ggplot2::scale_fill_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-             # nocov end
-                                           na.value = "grey75",
-                                           name =  statistic,
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits)
-      }
-    } else {
-      p <- p + 
-           ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                         na.value = "grey75",
-                                         name = statistic,
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits)
-    }
+    p <- p + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = paste0(statistic, " | Scaled and Centered"),
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
     
     list.heatmaps[[group]] <- p
   }

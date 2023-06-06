@@ -54,6 +54,7 @@ do_BeeSwarmPlot(
   pt.size = 2,
   min.cutoff = NA,
   max.cutoff = NA,
+  na.value = "grey75",
   number.breaks = 5,
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
@@ -154,6 +155,8 @@ do_BeeSwarmPlot(
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 

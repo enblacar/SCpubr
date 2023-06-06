@@ -139,6 +139,7 @@
 #' @param strip.text.color \strong{\code{\link[base]{character}}} | Color of the strip text.
 #' @param strip.text.angle \strong{\code{\link[base]{numeric}}} | Rotation of the strip text (angles).
 #' @param diverging.palette \strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
+#' @param diverging.direction \strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.
 #' @param sequential.palette \strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.palette.pvalue,sequential.palette.expression,sequential.palette.logfc \strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.
 #' @param sequential.direction \strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.
@@ -270,6 +271,7 @@ doc_function <- function(sample,
                          strip.text.color,
                          strip.text.angle,
                          diverging.palette,
+                         diverging.direction,
                          subsample,
                          plot.title.face,
                          plot.subtitle.face,
@@ -418,7 +420,8 @@ return_dependencies <- function(){
                                     "assertthat",
                                     "RColorBrewer",
                                     "labeling",
-                                    "withr"),
+                                    "withr",
+                                    "methods"),
                    "do_AffinityAnalysisPlot" = "decoupleR",
                    "do_AlluvialPlot" = "ggalluvial",
                    "do_BarPlot" = c("colorspace", "ggrepel"),
@@ -2543,6 +2546,15 @@ check_parameters <- function(parameter,
                                           crayon_body(", "),
                                           crayon_key("-1"),
                                           crayon_body(".")))
+  } else if (parameter_name == "diverging.direction"){
+    assertthat::assert_that(parameter %in% c(1, -1),
+                            msg =  paste0(crayon_body("Please provide one of the following to "),
+                                          crayon_key(parameter_name),
+                                          crayon_body(": "),
+                                          crayon_key("1"),
+                                          crayon_body(", "),
+                                          crayon_key("-1"),
+                                          crayon_body(".")))
   } else if (parameter_name == "viridis.palette"){
     viridis_options <- c("A", "B", "C", "D", "E", "F", "G", "H", "magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
     assertthat::assert_that(parameter %in% viridis_options,
@@ -3717,8 +3729,52 @@ check_group_by <- function(sample,
 check_Assay5 <- function(sample,
                          assay = Seurat::DefaultAssay(sample)){
   if (class(sample@assays[[assay]]) == "Assay5"){
-    suppressWarnings(sample@assays[[assay]] <- as(sample@assays[[assay]], "Assay"))
+    suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
   }
-  as(object = sample[["RNA"]], Class = "Assay5")
+  methods::as(object = sample@assays[[assay]], Class = "Assay5")
   return(sample)
 }
+
+
+#' Handles the generation of continuous color palettes for the plots.
+#'
+#' @param name Name of the palette.
+#' @param use_viridis Whether it is a viridis palette or not.
+#' @param direction Direction of the color scale.
+#' @param enforce_symmetry Whether it is a diverging palette or not.
+#'
+#' @return The colors to use.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+compute_continuous_palette <- function(name = "YlGnBu",
+                                       use_viridis = FALSE,
+                                       direction = ifelse(isTRUE(use_viridis), -1, 1),
+                                       enforce_symmetry = FALSE){
+  light_end <- "grey90"
+  if (base::isFALSE(enforce_symmetry)){
+    if (isTRUE(use_viridis)){
+      if (direction == 1){
+        colors <- c(viridis::viridis(n = 9, direction = direction, option = name), light_end)
+      } else if (direction == -1){
+        colors <- c(light_end, viridis::viridis(n = 9, direction = direction, option = name))
+      }
+    } else if (isFALSE(use_viridis)){
+      if (direction == 1){
+        colors <- c(light_end, RColorBrewer::brewer.pal(n = 9, name = name))
+      } else if (direction == -1){
+        colors <- c(rev(RColorBrewer::brewer.pal(n = 9, name = name)), light_end)
+      }
+    }
+  } else {
+    if (direction == 1){
+      colors <- RColorBrewer::brewer.pal(n = 11, name = name)
+    } else if (direction == -1){
+      colors <- rev(RColorBrewer::brewer.pal(n = 11, name = name))
+    }
+  }
+  return(colors)
+}
+

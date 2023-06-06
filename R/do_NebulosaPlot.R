@@ -131,7 +131,6 @@ do_NebulosaPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
@@ -141,7 +140,14 @@ do_NebulosaPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  
+  colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                use_viridis = use_viridis,
+                                                direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                enforce_symmetry = FALSE)
+  
   # Plot a density plot using Nebulosa package.
     p <- Nebulosa::plot_density(object = sample,
                                 features = features,
@@ -195,26 +201,15 @@ do_NebulosaPlot <- function(sample,
                                       from_data = TRUE,
                                       limits.use = limits)
 
-        if (isTRUE(use_viridis)){
-          p <- add_scale(p = p,
-                         function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                       option = viridis.palette,
-                                                                       direction = viridis.direction,
-                                                                       breaks = scale.setup$breaks,
-                                                                       labels = scale.setup$labels,
-                                                                       limits = scale.setup$limits,
-                                                                       name = name.use),
-                         scale = "color")
-        } else {
-          p <- add_scale(p = p,
-                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                       na.value = na.value,
-                                                                       name = name.use,
-                                                                       breaks = scale.setup$breaks,
-                                                                       labels = scale.setup$labels,
-                                                                       limits = scale.setup$limits),
-                         scale = "color")
-        }
+        p <- add_scale(p = p,
+                       function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                     na.value = na.value,
+                                                                     name = name.use,
+                                                                     breaks = scale.setup$breaks,
+                                                                     labels = scale.setup$labels,
+                                                                     limits = scale.setup$limits),
+                       scale = "color")
+
       } else {
         limits <- c(p[[counter]]$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::head(1) %>% dplyr::pull(.data$feature),
                     p[[counter]]$data[, "feature", drop = FALSE] %>% dplyr::arrange(.data$feature) %>% utils::tail(1) %>% dplyr::pull(.data$feature))
@@ -231,27 +226,14 @@ do_NebulosaPlot <- function(sample,
                                       enforce_symmetry = FALSE,
                                       from_data = TRUE,
                                       limits.use = limits)
-
-        if (isTRUE(use_viridis)){
-          p[[counter]] <- add_scale(p = p[[counter]],
-                         function_use = ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                                       option = viridis.palette,
-                                                                       direction = viridis.direction,
-                                                                       breaks = scale.setup$breaks,
-                                                                       labels = scale.setup$labels,
-                                                                       limits = scale.setup$limits,
-                                                                       name = name.use),
-                         scale = "color")
-        } else {
-          p[[counter]] <- add_scale(p = p[[counter]],
-                         function_use = ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                                       na.value = na.value,
-                                                                       name = name.use,
-                                                                       breaks = scale.setup$breaks,
-                                                                       labels = scale.setup$labels,
-                                                                       limits = scale.setup$limits),
-                         scale = "color")
-        }
+        p[[counter]] <- add_scale(p =  p[[counter]],
+                                  function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                                                                na.value = na.value,
+                                                                                name = name.use,
+                                                                                breaks = scale.setup$breaks,
+                                                                                labels = scale.setup$labels,
+                                                                                limits = scale.setup$limits),
+                                  scale = "color")
       }
 
 

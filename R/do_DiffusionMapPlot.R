@@ -45,6 +45,7 @@ do_DiffusionMapPlot <- function(sample,
                                 legend.byrow = FALSE,
                                 number.breaks = 5,
                                 diverging.palette = "RdBu",
+                                diverging.direction = -1,
                                 axis.text.x.angle = 45,
                                 border.color = "black",
                                 return_object = FALSE,
@@ -88,7 +89,8 @@ do_DiffusionMapPlot <- function(sample,
                        "legend.ncol" = legend.ncol,
                        "main.heatmap.size" = main.heatmap.size,
                        "viridis.direction" = viridis.direction,
-                       "sequential.direction" = sequential.direction)
+                       "sequential.direction" = sequential.direction,
+                       "diverging.direction" = diverging.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   
   # Check character parameters.
@@ -125,8 +127,6 @@ do_DiffusionMapPlot <- function(sample,
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = flavor, parameter_name = "flavor")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
@@ -136,6 +136,9 @@ do_DiffusionMapPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
   
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
@@ -163,6 +166,18 @@ do_DiffusionMapPlot <- function(sample,
                         is.heatmap = TRUE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
+  
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
+  }
   
   genes.use <- unlist(input_gene_list) %>% unname() %>% unique()
   genes.use <- genes.use[genes.use %in% rownames(sample)]
@@ -286,34 +301,14 @@ do_DiffusionMapPlot <- function(sample,
     
     legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"}
     legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name), legend.name)
-    if (isTRUE(enforce_symmetry)){
-      p <- p + 
-           ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 11, name = diverging.palette)),
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits,
-                                         name = legend.name.use)
-    } else {
-      if (isTRUE(use_viridis)){
-        p <- p + 
-             ggplot2::scale_fill_viridis_c(option = viridis.palette,
-                                           direction = viridis.direction,
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits,
-                                           name = legend.name.use)
-      } else {
-        colors <- RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]
-        if (sequential.direction == -1){colors <- rev(colors)}
-        p <- p + 
-             ggplot2::scale_fill_gradientn(colors = colors,
-                                           breaks = scale.setup$breaks,
-                                           labels = scale.setup$labels,
-                                           limits = scale.setup$limits,
-                                           name = legend.name.use)
-      }
-    }
+    
     p <- p + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = legend.name.use,
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits) + 
          ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
          ggplot2::ylab("Gene sets") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 

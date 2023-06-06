@@ -16,7 +16,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                assay = NULL,
                                group.by = NULL,
                                legend.title = "Pearson coef.",
-                               enforce_symmetry = TRUE,
+                               enforce_symmetry = ifelse(mode == "hvg", TRUE, FALSE),
                                font.size = 14,
                                font.type = "sans",
                                na.value = "grey75",
@@ -35,6 +35,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                plot.subtitle = NULL,
                                plot.caption = NULL,
                                diverging.palette = "RdBu",
+                               diverging.direction = -1,
                                use_viridis = FALSE,
                                viridis.palette = "G",
                                viridis.direction = -1,
@@ -71,7 +72,8 @@ do_CorrelationPlot <- function(sample = NULL,
                        "font.size" = font.size,
                        "axis.text.x.angle" = axis.text.x.angle,
                        "sequential.direction" = sequential.direction,
-                       "viridis.direction" = viridis.direction)
+                       "viridis.direction" = viridis.direction,
+                       "diverging.direction" = diverging.direction)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("mode" = mode,
@@ -119,6 +121,21 @@ do_CorrelationPlot <- function(sample = NULL,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
+  
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
+  }
   
   
   if (mode == "hvg"){
@@ -240,7 +257,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$y))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$x)))) +
-         ggplot2::scale_fill_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
                                        name = legend.title,
                                        breaks = scale.setup$breaks,
@@ -411,26 +428,13 @@ do_CorrelationPlot <- function(sample = NULL,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
     
-    if (isTRUE(use_viridis)){
-      p <- p + 
-           ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                         option = viridis.palette,
-                                         direction = viridis.direction,
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits,
-                                         name = "Jaccard score")
-    } else {
-      p <- p + 
-           # nocov start
-           ggplot2::scale_fill_gradientn(colors = if (sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else if (sequential.direction == -1){rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-           # nocov end
-                                         na.value = na.value,
-                                         name = "Jaccard score",
-                                         breaks = scale.setup$breaks,
-                                         labels = scale.setup$labels,
-                                         limits = scale.setup$limits)
-    }
+    p <- p + 
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = legend.title,
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
    
     p <- modify_continuous_legend(p = p,
                                   legend.title = "Jaccard score",

@@ -53,6 +53,7 @@ do_BeeSwarmPlot <- function(sample,
                             pt.size = 2,
                             min.cutoff = NA,
                             max.cutoff = NA,
+                            na.value = "grey75",
                             number.breaks = 5,
                             plot.title.face = "bold",
                             plot.subtitle.face = "plain",
@@ -133,7 +134,8 @@ do_BeeSwarmPlot <- function(sample,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
   slot <- check_and_set_slot(slot = slot)
@@ -142,6 +144,7 @@ do_BeeSwarmPlot <- function(sample,
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(border.color, parameter_name = "border.color")
+  check_colors(na.value, parameter_name = "na.value")
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = number.breaks, parameter_name = "number.breaks")
@@ -149,7 +152,6 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
-  check_parameters(parameter = sequential.direction, parameter_name = "sequential.direction")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -157,6 +159,8 @@ do_BeeSwarmPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
 
 
   assertthat::assert_that(length(feature_to_rank) == 1,
@@ -165,6 +169,11 @@ do_BeeSwarmPlot <- function(sample,
                                        crayon_body(" to "),
                                        crayon_key("feature_to_rank"),
                                        crayon_body(".")))
+  
+  colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                use_viridis = use_viridis,
+                                                direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                enforce_symmetry = FALSE)
   
   # Check group.by.
   out <- check_group_by(sample = sample,
@@ -274,24 +283,13 @@ do_BeeSwarmPlot <- function(sample,
 
   if (continuous_feature == TRUE){
 
-    if (isTRUE(use_viridis)){
-      p <- p +
-           ggplot2::scale_color_viridis_c(na.value = "grey75",
-                                          option = viridis.palette,
-                                          direction = viridis.direction,
-                                          breaks = scale.setup$breaks,
-                                          labels = scale.setup$labels,
-                                          limits = scale.setup$limits,
-                                          name = feature_to_rank)
-    } else {
-      p <- p +
-           ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                          na.value = feature_to_rank,
-                                          name = legend.title,
-                                          breaks = scale.setup$breaks,
-                                          labels = scale.setup$labels,
-                                          limits = scale.setup$limits)
-    }
+    p <- p + 
+         ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                        na.value = na.value,
+                                        name = legend.title,
+                                        breaks = scale.setup$breaks,
+                                        labels = scale.setup$labels,
+                                        limits = scale.setup$limits)
 
     p <- modify_continuous_legend(p = p,
                                   legend.title = legend.title,

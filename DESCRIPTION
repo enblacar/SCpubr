@@ -32,6 +32,7 @@ Suggests:
     ggsignif,
     graphics,
     magrittr,
+    methods,
     Nebulosa,
     patchwork,
     pheatmap,

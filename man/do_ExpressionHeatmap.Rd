@@ -30,6 +30,7 @@ do_ExpressionHeatmap(
   min.cutoff = NA,
   max.cutoff = NA,
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   number.breaks = 5,
@@ -108,6 +109,8 @@ do_ExpressionHeatmap(
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 

@@ -19,6 +19,7 @@ do_AffinityAnalysisPlot(
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   enforce_symmetry = TRUE,
   legend.position = "bottom",
   legend.width = 1,
@@ -28,6 +29,7 @@ do_AffinityAnalysisPlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   legend.type = "colorbar",
+  na.value = "grey75",
   font.size = 14,
   font.type = "sans",
   axis.text.x.angle = 45,
@@ -81,6 +83,8 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
+
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
@@ -105,6 +109,8 @@ values in the Idents of the Seurat object are reported, assessing how specific a
 \item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
 \item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
 }}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

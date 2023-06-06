@@ -131,7 +131,6 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.type, parameter_name = "legend.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
-    check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
     check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
     check_parameters(parameter = grid.type, parameter_name = "grid.type")
     check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
@@ -143,13 +142,20 @@ do_DotPlot <- function(sample,
     check_parameters(axis.text.face, parameter_name = "axis.text.face")
     check_parameters(legend.title.face, parameter_name = "legend.title.face")
     check_parameters(legend.text.face, parameter_name = "legend.text.face")
+    check_parameters(viridis.direction, parameter_name = "viridis.direction")
+    check_parameters(sequential.direction, parameter_name = "sequential.direction")
 
     # Check the colors provided to legend.framecolor and legend.tickcolor.
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
     check_colors(na.value, parameter_name = "na.value")
     check_colors(grid.color, parameter_name = "grid.color")
-  
+    
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = FALSE)
+    
     # Until they resolve ggplot2 deprecation.
     p <- suppressWarnings({Seurat::DotPlot(sample,
                                            features = features,
@@ -166,24 +172,12 @@ do_DotPlot <- function(sample,
                                                   fill = .data$avg.exp.scaled,
                                                   size = .data$pct.exp)) + 
            ggplot2::geom_point(color = "black", shape = 21) +
-           ggplot2::scale_size_continuous(range = c(0, dot.scale))
-      
-      if (isTRUE(use_viridis)){
-        p <- p + 
-             ggplot2::scale_fill_viridis_c(na.value = na.value,
-                                           option = viridis.palette,
-                                           direction = viridis.direction,
-                                           breaks = scales::extended_breaks(n = number.breaks),
-                                           name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
-      } else {
-        p <- p + 
-             # nocov start
-             ggplot2::scale_fill_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette))}},
-                                           na.value = na.value,
-                                           name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                           breaks = scales::extended_breaks(n = number.breaks))
-             # nocov end
-      }
+           ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
+           ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                         na.value = na.value,
+                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                         breaks = scales::extended_breaks(n = number.breaks))
+
     } else {
       p <- p$data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$features.plot} else {.data$id},
@@ -191,24 +185,11 @@ do_DotPlot <- function(sample,
                                                   color = .data$avg.exp.scaled,
                                                   size = .data$pct.exp)) + 
            ggplot2::geom_point() +
-           ggplot2::scale_size_continuous(range = c(0, dot.scale))
-      
-      if (isTRUE(use_viridis)){
-        p <- p + 
-             ggplot2::scale_color_viridis_c(na.value = na.value,
-                                            option = viridis.palette,
-                                            direction = viridis.direction,
-                                            breaks = scales::extended_breaks(n = number.breaks),
-                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title})
-      } else {
-        p <- p + 
-             # nocov start
-             ggplot2::scale_color_gradientn(colors = if(!is.null(colors.use)){colors.use} else {if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette))}},
-                                            na.value = na.value,
-                                            name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                            breaks = scales::extended_breaks(n = number.breaks))
-             # nocov end
-      }
+           ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
+           ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                         na.value = na.value,
+                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                         breaks = scales::extended_breaks(n = number.breaks))
     }
     
     # Facet grid.

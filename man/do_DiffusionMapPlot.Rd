@@ -42,6 +42,7 @@ do_DiffusionMapPlot(
   legend.byrow = FALSE,
   number.breaks = 5,
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   axis.text.x.angle = 45,
   border.color = "black",
   return_object = FALSE,
@@ -141,6 +142,8 @@ do_DiffusionMapPlot(
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 

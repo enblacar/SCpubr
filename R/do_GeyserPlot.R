@@ -64,6 +64,7 @@ do_GeyserPlot <- function(sample,
                           max.cutoff = rep(NA, length(features)),
                           number.breaks = 5,
                           diverging.palette = "RdBu",
+                          diverging.direction = -1,
                           sequential.palette = "YlGnBu",
                           sequential.direction = -1,
                           use_viridis = TRUE,
@@ -144,7 +145,6 @@ do_GeyserPlot <- function(sample,
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
-  check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
   check_parameters(parameter = scale_type, parameter_name = "scale_type")
   check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
@@ -157,8 +157,25 @@ do_GeyserPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
+  check_parameters(viridis.direction, parameter_name = "viridis.direction")
+  check_parameters(sequential.direction, parameter_name = "sequential.direction")
+  check_parameters(diverging.direction, parameter_name = "diverging.direction")
   
   `%>%` <- magrittr::`%>%`
+  
+  # Generate the continuous color palette.
+  if (isTRUE(enforce_symmetry)){
+    colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                  use_viridis = FALSE,
+                                                  direction = diverging.direction,
+                                                  enforce_symmetry = enforce_symmetry)
+  } else {
+    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                  use_viridis = use_viridis,
+                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                  enforce_symmetry = enforce_symmetry)
+  }
+  
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
@@ -391,36 +408,17 @@ do_GeyserPlot <- function(sample,
     }
     end_value <- max(abs(limits))
     if (isTRUE(scale_type == "continuous")){
-
-      if (isTRUE(enforce_symmetry)){
-        scale.use <- ggplot2::scale_color_gradientn(colors = RColorBrewer::brewer.pal(n = 11, name = diverging.palette) %>% rev(),
-                                                    na.value = na.value,
-                                                    name = feature,
-                                                    breaks = scale.setup$breaks,
-                                                    labels = scale.setup$labels,
-                                                    limits = scale.setup$limits)
-
-      } else if (base::isFALSE(enforce_symmetry)){
-        if (isTRUE(use_viridis)){
-          scale.use <- ggplot2::scale_color_viridis_c(na.value = na.value,
-                                                      option = viridis.palette,
-                                                      direction = viridis.direction,
-                                                      breaks = scale.setup$breaks,
-                                                      labels = scale.setup$labels,
-                                                      limits = scale.setup$limits,
-                                                      name = feature)
-        } else {
-          scale.use <- ggplot2::scale_color_gradientn(colors = if(sequential.direction == 1){RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9]} else {rev(RColorBrewer::brewer.pal(n = 9, name = sequential.palette)[2:9])},
-                                                      na.value = na.value,
-                                                      name = feature,
-                                                      breaks = scale.setup$breaks,
-                                                      labels = scale.setup$labels,
-                                                      limits = scale.setup$limits)
-        }
-      }
+      p <- p + 
+           ggplot2::scale_color_gradientn(colors = colors.gradient,
+                                          na.value = na.value,
+                                          name = legend.title,
+                                          breaks = scale.setup$breaks,
+                                          labels = scale.setup$labels,
+                                          limits = scale.setup$limits)
     } else if (isTRUE(scale_type == "categorical")){
-      scale.use <- ggplot2::scale_color_manual(values = colors.use,
-                                               na.value = na.value)
+      p <- p + 
+           ggplot2::scale_color_manual(values = colors.use,
+                                       na.value = na.value)
     }
 
     p <- p +
@@ -440,8 +438,7 @@ do_GeyserPlot <- function(sample,
                                     point_color = "black",
                                     position = ggplot2::position_dodge(width = 1),
                                     na.rm = TRUE,
-                                    show.legend = FALSE) +
-         scale.use
+                                    show.legend = FALSE)
 
     if (!(is.null(split.by))){
       p <- p +

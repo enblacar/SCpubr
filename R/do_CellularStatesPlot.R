@@ -166,7 +166,7 @@ do_CellularStatesPlot <- function(sample,
     }
     # Check border color.
     check_colors(border.color, parameter_name = "border.color")
-
+    
     # Check group.by.
     out <- check_group_by(sample = sample,
                           group.by = group.by,
@@ -178,7 +178,6 @@ do_CellularStatesPlot <- function(sample,
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
     check_parameters(parameter = marginal.type, parameter_name = "marginal.type")
     check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
-    check_parameters(parameter = viridis.direction, parameter_name = "viridis.direction")
     check_parameters(plot.title.face, parameter_name = "plot.title.face")
     check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
     check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -186,6 +185,8 @@ do_CellularStatesPlot <- function(sample,
     check_parameters(axis.text.face, parameter_name = "axis.text.face")
     check_parameters(legend.title.face, parameter_name = "legend.title.face")
     check_parameters(legend.text.face, parameter_name = "legend.text.face")
+    check_parameters(viridis.direction, parameter_name = "viridis.direction")
+    check_parameters(sequential.direction, parameter_name = "sequential.direction")
 
     # Compute the enrichment scores.
     sample <- compute_enrichment_scores(sample = sample, input_gene_list = input_gene_list, verbose = verbose, nbin = nbin, ctrl = ctrl)

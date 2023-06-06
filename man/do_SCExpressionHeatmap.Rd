@@ -48,6 +48,7 @@ do_SCExpressionHeatmap(
   viridis.direction = -1,
   na.value = "grey75",
   diverging.palette = "RdBu",
+  diverging.direction = -1,
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
   proportional.size = TRUE,
@@ -152,6 +153,8 @@ do_SCExpressionHeatmap(
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
