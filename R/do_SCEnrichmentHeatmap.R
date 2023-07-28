@@ -73,7 +73,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    plot.subtitle.face = "plain",
                                    plot.caption.face = "italic",
                                    axis.title.face = "bold",
-                                   axis.text.face = "bold",
+                                   axis.text.face = "plain",
                                    legend.title.face = "bold",
                                    legend.text.face = "plain"){
   # Add lengthy error messages.

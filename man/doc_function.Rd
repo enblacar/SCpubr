@@ -200,6 +200,8 @@
 
 \item{label.color}{\strong{\code{\link[base]{character}}} | Color of the labels in the plot.}
 
+\item{label.fill}{\strong{\code{\link[base]{character}}} | Color to fill the labels. Has to be a single color, that will be used for all labels. If \strong{\code{NULL}}, the colors of the clusters will be used instead.}
+
 \item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
 
 \item{label.box}{\strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).}

@@ -73,12 +73,12 @@ do_FeaturePlot(
   diverging.palette = "RdBu",
   diverging.direction = -1,
   sequential.palette = "YlGnBu",
-  sequential.direction = -1,
+  sequential.direction = 1,
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
-  axis.text.face = "bold",
+  axis.text.face = "plain",
   legend.title.face = "bold",
   legend.text.face = "plain"
 )

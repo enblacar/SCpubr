@@ -121,6 +121,7 @@
 #' @param min.cutoff,max.cutoff \strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.
 #' @param label \strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.
 #' @param label.color \strong{\code{\link[base]{character}}} | Color of the labels in the plot.
+#' @param label.fill \strong{\code{\link[base]{character}}} | Color to fill the labels. Has to be a single color, that will be used for all labels. If \strong{\code{NULL}}, the colors of the clusters will be used instead.
 #' @param label.size \strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.
 #' @param label.box \strong{\code{\link[base]{logical}}} | Whether to plot the plot labels as \strong{\code{\link[ggplot2]{geom_text}}} (FALSE) or \strong{\code{\link[ggplot2]{geom_label}}} (TRUE).
 #' @param min.overlap \strong{\code{\link[base]{numeric}}} | Filter the output result to the terms which are supported by this many genes.
@@ -259,6 +260,7 @@ doc_function <- function(sample,
                          contour_expand_axes,
                          label,
                          label.color,
+                         label.fill,
                          label.size,
                          label.box,
                          min.overlap,
@@ -1063,7 +1065,10 @@ package_report <- function(startup = FALSE){
     
     tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
                           crayon_body(" To adjust package messages to dark mode themes, use: "), 
-                          cli::style_italic(crayon_key('options("SCpubr.darkmode" = TRUE)')))
+                          cli::style_italic(crayon_key('options("SCpubr.darkmode" = TRUE)\n')),
+                          cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                          crayon_body(" To remove the white and black end from continuous palettes, use: "),
+                          cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
     
     disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
                               crayon_body(" To suppress this startup message, use: "), 
@@ -2279,6 +2284,12 @@ compute_enrichment_scores <- function(sample,
                                          by = "cell") %>%
                         tibble::column_to_rownames(var = "cell")
   }
+  
+  # Compute a 0-1 normalization.
+  for (name in names(input_gene_list)){
+    sample@meta.data[, paste0(name, "_scaled")] <- zero_one_norm(sample@meta.data[, name])
+  }
+  
   return(sample)
 }
 
@@ -3389,10 +3400,10 @@ handle_axis <- function(flip,
                                                   hjust = 0.5)
         axis.title.x.bottom <- ggplot2::element_blank()
       }
-
+      
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
-                                                 angle = 0,
-                                                 hjust = 1,
+                                                 angle = 90,
+                                                 hjust = 0.5,
                                                  vjust = 0.5)
       axis.title.y.right <- ggplot2::element_blank()
     } else {
@@ -3416,8 +3427,8 @@ handle_axis <- function(flip,
       }
       
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
-                                                 angle = 0,
-                                                 hjust = 1,
+                                                 angle = 90,
+                                                 hjust = 0.5,
                                                  vjust = 0.5)
       axis.title.y.right <- ggplot2::element_blank()
       
@@ -3461,7 +3472,7 @@ handle_axis <- function(flip,
         axis.text.y.left <- ggplot2::element_blank()
         axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face)
         axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
-                                                   angle = 0,
+                                                   angle = 90,
                                                    vjust = 0.5,
                                                    hjust = 0.5)
         axis.title.y.right <- ggplot2::element_blank()
@@ -3471,12 +3482,12 @@ handle_axis <- function(flip,
         axis.text.y.left <- ggplot2::element_blank()
         axis.text.y.right <- ggplot2::element_blank()
         axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
-                                                   angle = 0,
+                                                   angle = 90,
                                                    vjust = 0.5,
                                                    hjust = 0.5)
         axis.title.y.right <- ggplot2::element_blank()
       }
-
+      
     } else {
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3507,7 +3518,7 @@ handle_axis <- function(flip,
       }
     }
   }
-
+  
   out_list <- list("axis.ticks.x.top" = axis.ticks.x.top,
                    "axis.ticks.x.bottom" = axis.ticks.x.bottom,
                    "axis.ticks.y.left" = axis.ticks.y.left,
@@ -3525,9 +3536,8 @@ handle_axis <- function(flip,
                    "strip.text" = strip.text,
                    "legend.position" = legend.position)
   return(out_list)
-
+  
 }
-
 
 #' Generate a list of colors that will be used for metadata plots.
 #'
@@ -3731,7 +3741,6 @@ check_Assay5 <- function(sample,
   if (class(sample@assays[[assay]]) == "Assay5"){
     suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
   }
-  methods::as(object = sample@assays[[assay]], Class = "Assay5")
   return(sample)
 }
 
@@ -3753,21 +3762,39 @@ compute_continuous_palette <- function(name = "YlGnBu",
                                        use_viridis = FALSE,
                                        direction = ifelse(isTRUE(use_viridis), -1, 1),
                                        enforce_symmetry = FALSE){
-  light_end <- "grey90"
+  light_end <- "grey95"
+  dark_end <- "grey5"
   if (base::isFALSE(enforce_symmetry)){
-    if (isTRUE(use_viridis)){
-      if (direction == 1){
-        colors <- c(viridis::viridis(n = 9, direction = direction, option = name), light_end)
-      } else if (direction == -1){
-        colors <- c(light_end, viridis::viridis(n = 9, direction = direction, option = name))
+    if (base::isFALSE("SCpubr.ColorPaletteEnds")){
+      if (isTRUE(use_viridis)){
+        if (direction == 1){
+          colors <- c(viridis::viridis(n = 9, direction = direction, option = name))
+        } else if (direction == -1){
+          colors <- c(viridis::viridis(n = 9, direction = direction, option = name))
+        }
+      } else if (isFALSE(use_viridis)){
+        if (direction == 1){
+          colors <- c(RColorBrewer::brewer.pal(n = 9, name = name))
+        } else if (direction == -1){
+          colors <- c(rev(RColorBrewer::brewer.pal(n = 9, name = name)))
+        }
       }
-    } else if (isFALSE(use_viridis)){
-      if (direction == 1){
-        colors <- c(light_end, RColorBrewer::brewer.pal(n = 9, name = name))
-      } else if (direction == -1){
-        colors <- c(rev(RColorBrewer::brewer.pal(n = 9, name = name)), light_end)
+    } else {
+      if (isTRUE(use_viridis)){
+        if (direction == 1){
+          colors <- c(dark_end, viridis::viridis(n = 9, direction = direction, option = name), light_end)
+        } else if (direction == -1){
+          colors <- c(light_end, viridis::viridis(n = 9, direction = direction, option = name), dark_end)
+        }
+      } else if (isFALSE(use_viridis)){
+        if (direction == 1){
+          colors <- c(light_end, RColorBrewer::brewer.pal(n = 9, name = name), dark_end)
+        } else if (direction == -1){
+          colors <- c(dark_end, rev(RColorBrewer::brewer.pal(n = 9, name = name)), light_end)
+        }
       }
     }
+    
   } else {
     if (direction == 1){
       colors <- RColorBrewer::brewer.pal(n = 11, name = name)
@@ -3776,5 +3803,52 @@ compute_continuous_palette <- function(name = "YlGnBu",
     }
   }
   return(colors)
+}
+
+#' Normalizes a continuous variable to comprise it between 0 to 1.
+#'
+#' @param x Continuous variable.
+#'
+#' @return A normalized variable.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+zero_one_norm <- function(x){
+  y <- (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  return(y)
+}
+
+#' Normalizes a continuous variable to comprise it between -1 to 1.
+#'
+#' @param x Continuous variable.
+#'
+#' @return A normalized variable.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+one_one_norm <- function(x){
+  y <- 2 * ((x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))) - 1
+  return(y)
+}
+
+
+#' Normalizes a continuous variable to comprise it between a to b.
+#'
+#' @param x Continuous variable.
+#' @param a,b Ends of the range.
+#'
+#' @return A normalized variable.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+range_norm <- function(x, a, b){
+  y <- (b - a) * ((x - (min(x, na.rm = TRUE))) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))) + a
+  return(y)
 }
 

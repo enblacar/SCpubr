@@ -10,6 +10,7 @@ do_EnrichmentHeatmap(
   features.order = NULL,
   groups.order = NULL,
   cluster = TRUE,
+  scale_scores = TRUE,
   assay = NULL,
   slot = NULL,
   reduction = NULL,
@@ -55,7 +56,7 @@ do_EnrichmentHeatmap(
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
-  axis.text.face = "bold",
+  axis.text.face = "plain",
   legend.title.face = "bold",
   legend.text.face = "plain"
 )
@@ -70,6 +71,8 @@ do_EnrichmentHeatmap(
 \item{groups.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
 
 \item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
+
+\item{scale_scores}{\strong{\code{\link[base]{logical}}} | Whether to transform the scores to a range of 0-1 for plotting.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 

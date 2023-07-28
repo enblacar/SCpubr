@@ -43,9 +43,11 @@ do_MetadataPlot <- function(sample = NULL,
                             plot.subtitle.face = "plain",
                             plot.caption.face = "italic",
                             axis.title.face = "bold",
-                            axis.text.face = "bold",
+                            axis.text.face = "plain",
                             legend.title.face = "bold",
-                            legend.text.face = "plain"){
+                            legend.text.face = "plain",
+                            xlab = "",
+                            ylab = ""){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
@@ -79,7 +81,9 @@ do_MetadataPlot <- function(sample = NULL,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "xlab" = xlab,
+                         "ylab" = ylab)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   check_colors(grid.color, parameter_name = "grid.color")
@@ -164,7 +168,7 @@ do_MetadataPlot <- function(sample = NULL,
   }
   
   if (isTRUE(cluster)){
-    order.use <- rownames(data.order)[stats::hclust(cluster::daisy(data.order, metric = "gower"), method = "ward.D")$order]
+    order.use <- suppressWarnings({rownames(data.order)[stats::hclust(cluster::daisy(data.order, metric = "gower"), method = "ward.D")$order]})
   } else {
     order.use <- rev(rownames(data.order))
   }
@@ -229,22 +233,22 @@ do_MetadataPlot <- function(sample = NULL,
     # Set axis titles.
     if (base::isFALSE(flip)){
       if (counter == 1){
-        xlab <- NULL
-        ylab <- NULL
+        xlab.use <- NULL
+        ylab.use <- NULL
       } else if (counter == length(metadata)){
-        xlab <- group.by
-        ylab <- NULL
+        xlab.use <- ifelse(is.null(xlab), group.by, xlab)
+        ylab.use <- ifelse(is.null(ylab), "", ylab)
       } else {
-        xlab <- NULL
-        ylab <- NULL
+        xlab.use <- NULL
+        ylab.use <- NULL
       }
     } else {
       if (counter == 1){
-        xlab <- NULL
-        ylab <- group.by
+        xlab.use <- ifelse(is.null(xlab), "", xlab)
+        ylab.use <- ifelse(is.null(ylab), group.by, ylab)
       } else {
-        xlab <- NULL
-        ylab <- NULL
+        xlab.use <- NULL
+        ylab.use <- NULL
       }
     }
     
@@ -265,8 +269,8 @@ do_MetadataPlot <- function(sample = NULL,
                                    legend.text.face = legend.text.face)
     
     p <- p +
-         ggplot2::xlab(xlab) +
-         ggplot2::ylab(ylab) +
+         ggplot2::xlab(xlab.use) +
+         ggplot2::ylab(ylab.use) +
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
                         axis.ticks.x.top = axis.parameters$axis.ticks.x.top,
@@ -334,7 +338,8 @@ do_MetadataPlot <- function(sample = NULL,
                                                                                               family = font.type,
                                                                                               color = "black",
                                                                                               hjust = 1),
-                                                         plot.caption.position = "plot"))
+                                                         plot.caption.position = "plot"),
+                                  )
      
   return(p)
 }

@@ -53,6 +53,7 @@ Many (except a few selected cases) of the functions that returned list of differ
     -   `legend.title.face`: To control the style of the **legend title**.
     -   `legend.text.face`: To control the style of the **legend text**.
 -   Changed default font style for legend text from `bold` to `plain`. 
+-   Changed default font style for axis text from `bold` to `plain`.
 
 ## `SCpubr::do_AlluvialPlot`
 -   Added `sequential.palette` and `sequential.direction` parameters.
@@ -76,8 +77,9 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 -   Changed the reordering of boxplots based on the median rather than the mean.
 -   Added `na.rm` to `geom_boxplot` to avoid unnecessary warnings when introducing NAs as part of the data.
--   Fixe bug in which `order` would not work if `NAs` are in the data.
+-   Fixed a bug in which `order` would not work if `NAs` are in the data.
 -   Changed default value of `boxplot.linewidth` from `1` to `0.5`.
+-   Fixed a bug in which when using a combination of `group.by` and `split.by`, the package would check that the colors provided to `colors.use` need to match the values in `group.by` and not `split.by`.
 
 ## `SCpubr::do_CorrelationPlot`
 

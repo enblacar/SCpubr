@@ -83,12 +83,12 @@ do_FeaturePlot <- function(sample,
                            diverging.palette = "RdBu",
                            diverging.direction = -1,
                            sequential.palette = "YlGnBu",
-                           sequential.direction = -1,
+                           sequential.direction = 1,
                            plot.title.face = "bold",
                            plot.subtitle.face = "plain",
                            plot.caption.face = "italic",
                            axis.title.face = "bold",
-                           axis.text.face = "bold",
+                           axis.text.face = "plain",
                            legend.title.face = "bold",
                            legend.text.face = "plain"){
   # Add lengthy error messages.
@@ -440,7 +440,7 @@ do_FeaturePlot <- function(sample,
     }
 
     # Special patches for diffusion maps: Adding "DC" labels to the axis.
-    if (reduction == "diffusion"){
+    if (stringr::str_starts(reduction, "diff|DIFF")){
       p <- p &
         ggplot2::xlab(paste0("DC_", dims[1])) &
         ggplot2::ylab(paste0("DC_", dims[2]))
@@ -953,7 +953,7 @@ do_FeaturePlot <- function(sample,
       }
 
       # Patch for diffusion maps.
-      if (reduction == "diffusion"){
+      if (stringr::str_starts(reduction, "diff|DIFF")){
         # Add "DC" labels.
         p.loop <- p.loop &
           ggplot2::xlab(paste0("DC_", dims[1])) &
@@ -1108,15 +1108,15 @@ do_FeaturePlot <- function(sample,
   }
 
   # Further patch for diffusion maps.
-  if (reduction == "diffusion"){
-    labels <- colnames(sample@reductions[["diffusion"]][[]])[dims]
+  if (stringr::str_starts(reduction, "diff|DIFF")){
+    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
     # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
     p <-  suppressMessages({
       p &
-        ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, labels[1]]),
-                        max(sample@reductions$diffusion[[]][, labels[1]]))) &
-        ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, labels[2]]),
-                        max(sample@reductions$diffusion[[]][, labels[2]]))) &
+        ggplot2::xlim(c(min(sample@reductions[[reduction]][[]][, labels[1]], na.rm = TRUE),
+                        max(sample@reductions[[reduction]][[]][, labels[1]], na.rm = TRUE))) &
+        ggplot2::ylim(c(min(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE),
+                        max(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE))) &
         # Remove axis elements so that the axis title is the only thing left.
         ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
                        axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},

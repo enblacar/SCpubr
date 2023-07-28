@@ -30,9 +30,11 @@ do_MetadataPlot(
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
-  axis.text.face = "bold",
+  axis.text.face = "plain",
   legend.title.face = "bold",
-  legend.text.face = "plain"
+  legend.text.face = "plain",
+  xlab = "",
+  ylab = ""
 )
 }
 \arguments{
@@ -97,6 +99,8 @@ do_MetadataPlot(
 \item \emph{\code{bold}}: For text in bold.
 \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
+
+\item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
 }
 \value{
 A ggplot2 object.

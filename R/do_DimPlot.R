@@ -19,7 +19,8 @@ do_DimPlot <- function(sample,
                        raster = FALSE,
                        pt.size = 1,
                        label = FALSE,
-                       label.color = "white",
+                       label.color = "black",
+                       label.fill = "white",
                        label.size = 4,
                        label.box = TRUE,
                        repel = FALSE,
@@ -62,7 +63,7 @@ do_DimPlot <- function(sample,
                        plot.subtitle.face = "plain",
                        plot.caption.face = "italic",
                        axis.title.face = "bold",
-                       axis.text.face = "bold",
+                       axis.text.face = "plain",
                        legend.title.face = "bold",
                        legend.text.face = "plain"){
   # Add lengthy error messages.
@@ -309,6 +310,30 @@ do_DimPlot <- function(sample,
                                            crayon_body(".")))
     }
   }
+  
+  # Compute the colors for the labels.
+  if (isTRUE(label)){
+    if (isTRUE(label.box)){
+      if (is.null(label.fill)){
+        colors.use.label.fill <- colors.use
+      } else {
+        # Check that only one color has been provided to label.fill.
+        assertthat::assert_that(length(label.fill) == 1,
+                                msg = paste0(add_cross(), crayon_body("Please, provide only "),
+                                             crayon_key("one color"),
+                                             crayon_body(" to "),
+                                             crayon_key("label.fill"),
+                                             crayon_body(" or "),
+                                             crayon_key("NULL"),
+                                             crayon_body(".")))
+        
+        # And check that is a valid color.
+        check_colors(label.fill, parameter_name = "label.fill")
+        
+        colors.use.label.fill <- rep(label.fill, length(colors.use))
+      }
+    }
+  }
 
   # Set cells to NA according to idents.keep.
   # If the user does not want to highlight cells or split by identities but wants to remove some identities.
@@ -453,8 +478,17 @@ do_DimPlot <- function(sample,
 
     if (isTRUE(label)){
       if (isTRUE(label.box)){
+        if (is.null(label.fill)){
+          colors.use.label.fill <- colors.use
+        } else {
+          colors.use.label.fill <- rep(label.fill, length(colors.use))
+        }
         p <- add_scale(p = p,
-                       function_use = ggplot2::scale_fill_manual(values = colors.use),
+                       function_use = ggplot2::scale_fill_manual(values = colors.use.label.fill),
+                       scale = "fill")
+        
+        p <- add_scale(p = p[length(p$layers)],
+                       function_use = ggplot2::scale_fill_manual(values = colors.use.label.fill),
                        scale = "fill")
       }
       p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
@@ -577,7 +611,7 @@ do_DimPlot <- function(sample,
       if (isTRUE(label)){
         if (isTRUE(label.box)){
           p.loop <- add_scale(p = p.loop,
-                              function_use = ggplot2::scale_fill_manual(values = colors.use),
+                              function_use = ggplot2::scale_fill_manual(values = colors.use.label.fill),
                               scale = "fill")
         }
         p.loop$layers[[length(p.loop$layers)]]$aes_params$fontface <- "bold"

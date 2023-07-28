@@ -16,6 +16,7 @@ do_DimPlot(
   pt.size = 1,
   label = FALSE,
   label.color = "white",
+  label.fill = NULL,
   label.size = 4,
   label.box = TRUE,
   repel = FALSE,
@@ -58,7 +59,7 @@ do_DimPlot(
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
-  axis.text.face = "bold",
+  axis.text.face = "plain",
   legend.title.face = "bold",
   legend.text.face = "plain"
 )
@@ -85,6 +86,8 @@ do_DimPlot(
 \item{label}{\strong{\code{\link[base]{logical}}} | Whether to plot the cluster labels in the UMAP. The cluster labels will have the same color as the cluster colors.}
 
 \item{label.color}{\strong{\code{\link[base]{character}}} | Color of the labels in the plot.}
+
+\item{label.fill}{\strong{\code{\link[base]{character}}} | Color to fill the labels. Has to be a single color, that will be used for all labels. If \strong{\code{NULL}}, the colors of the clusters will be used instead.}
 
 \item{label.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels in the plot.}
 

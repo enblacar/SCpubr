@@ -11,6 +11,7 @@ do_BarPlot(
   add.n = FALSE,
   add.n.face = "bold",
   add.n.expand = c(0, 1.15),
+  add.n.size = 1,
   order.by = NULL,
   split.by = NULL,
   facet.by = NULL,
@@ -37,7 +38,7 @@ do_BarPlot(
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
-  axis.text.face = "bold",
+  axis.text.face = "plain",
   legend.title.face = "bold",
   legend.text.face = "plain",
   strip.text.face = "bold",
@@ -60,6 +61,8 @@ do_BarPlot(
 \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
 \item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
 }}
+
+\item{add.n.size}{\strong{\code{\link[base]{numeric}}} | Size of the labels}
 
 \item{order.by}{\strong{\code{\link[base]{character}}} | When \strong{\code{split.by}} is used, value of \strong{\code{group.by}} to reorder the columns based on its value.}
 

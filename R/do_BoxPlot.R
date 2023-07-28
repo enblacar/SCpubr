@@ -56,7 +56,7 @@ do_BoxPlot <- function(sample,
                        plot.subtitle.face = "plain",
                        plot.caption.face = "italic",
                        axis.title.face = "bold",
-                       axis.text.face = "bold",
+                       axis.text.face = "plain",
                        legend.title.face = "bold",
                        legend.text.face = "plain"){
   # Add lengthy error messages.
@@ -178,7 +178,7 @@ do_BoxPlot <- function(sample,
     }
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
-    check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = ifelse(!is.null(split.by), split.by, group.by))
   }
 
   data <- get_data_column_in_context(sample,

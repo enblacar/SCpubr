@@ -11,6 +11,7 @@
 #' @param return_data \strong{\code{\link[base]{logical}}} | Returns a data.frame with the count and proportions displayed in the plot.
 #' @param add.n \strong{\code{\link[base]{logical}}} | Whether to add the total counts on top of each bar.
 #' @param add.n.face \strong{\code{\link[base]{character}}} | Font face of the labels added by \strong{\code{add.n}}.
+#' @param add.n.size \strong{\code{\link[base]{numeric}}} | Size of the labels
 #' @param add.n.expand \strong{\code{\link[base]{numeric}}} | Vector of two numerics representing the start and end of the scale. Minimum should be 0 and max should be above 1. This basically expands the Y axis so that the labels fit when \strong{\code{flip = TRUE}}.
 #' \itemize{
 #'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
@@ -33,6 +34,7 @@ do_BarPlot <- function(sample,
                        add.n = FALSE,
                        add.n.face = "bold",
                        add.n.expand = c(0, 1.15),
+                       add.n.size = 1,
                        order.by = NULL,
                        split.by = NULL,
                        facet.by = NULL,
@@ -59,7 +61,7 @@ do_BarPlot <- function(sample,
                        plot.subtitle.face = "plain",
                        plot.caption.face = "italic",
                        axis.title.face = "bold",
-                       axis.text.face = "bold",
+                       axis.text.face = "plain",
                        legend.title.face = "bold",
                        legend.text.face = "plain",
                        strip.text.face = "bold",
@@ -288,7 +290,8 @@ do_BarPlot <- function(sample,
                                                      label = .data$n,
                                                      fill = NULL),
                               hjust = ifelse(isTRUE(flip), 0, 0.5),
-                              fontface = "bold")
+                              fontface = "plain",
+                              size = add.n.size)
     } else if (!is.null(split.by) & !is.null(group.by)){
       p <- p + 
            ggplot2::geom_text(data = data.n,
@@ -297,7 +300,8 @@ do_BarPlot <- function(sample,
                                                      label = .data$n,
                                                      fill = NULL),
                               hjust = ifelse(isTRUE(flip), 0, 0.5),
-                              fontface = "bold")
+                              fontface = "plain",
+                              size = add.n.size)
     }
     p <- p + 
          ggplot2::scale_y_continuous(limits = add.n.expand, labels = c("0", "0.25", "0.5", "0.75", "1"), breaks = c(0, 0.25, 0.5, 0.75, 1))

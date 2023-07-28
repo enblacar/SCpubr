@@ -6,6 +6,7 @@
 #' @param enforce_symmetry \strong{\code{\link[base]{logical}}} | Whether the geyser and feature plot has a symmetrical color scale.
 #' @param ncores \strong{\code{\link[base]{numeric}}} | Number of cores used to run UCell scoring.
 #' @param storeRanks \strong{\code{\link[base]{logical}}} | Whether to store the ranks for faster UCell scoring computations. Might require large amounts of RAM.
+#' @param scale_scores \strong{\code{\link[base]{logical}}} | Whether to transform the scores to a range of 0-1 for plotting.
 #' @param return_object \strong{\code{\link[base]{logical}}} | Return the Seurat object with the enrichment scores stored.
 #' @return A ggplot2 object.
 #' @export
@@ -16,6 +17,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  features.order = NULL,
                                  groups.order = NULL,
                                  cluster = TRUE,
+                                 scale_scores = TRUE,
                                  assay = NULL,
                                  slot = NULL,
                                  reduction = NULL,
@@ -61,7 +63,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  plot.subtitle.face = "plain",
                                  plot.caption.face = "italic",
                                  axis.title.face = "bold",
-                                 axis.text.face = "bold",
+                                 axis.text.face = "plain",
                                  legend.title.face = "bold",
                                  legend.text.face = "plain"){
   # Add lengthy error messages.
@@ -76,7 +78,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "enforce_symmetry" = enforce_symmetry,
                        "plot_cell_borders" = plot_cell_borders,
                        "flip" = flip,
-                       "cluster" = cluster)
+                       "cluster" = cluster,
+                       "scale_scores" = scale_scores)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("viridis.direction" = viridis.direction,
@@ -282,16 +285,23 @@ do_EnrichmentHeatmap <- function(sample,
   out <- check_group_by(sample = sample,
                         group.by = group.by,
                         is.heatmap = TRUE)
+
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
 
   matrix.list <- list()
+  
+  if (base::isFALSE(scale_scores)){
+    names.use <- names(input_list)
+  } else {
+    names.use <- unname(vapply(names(input_list), function(x){paste0(x, "_scaled")}, FUN.VALUE = character(1)))
+  }
   for (group in group.by){
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
 
       df <- sample@meta.data %>%
-            dplyr::select(dplyr::all_of(c("group.by", names(input_list)))) %>%
+            dplyr::select(dplyr::all_of(c("group.by", names.use))) %>%
             tidyr::pivot_longer(cols = -"group.by",
                                 names_to = "gene_list",
                                 values_to = "enrichment") %>%
