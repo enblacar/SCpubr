@@ -71,6 +71,7 @@ Suggests:
     cluster,
     decoupleR,
     cli,
+    methods,
     withr,
     liana (>= 0.1.6)
 VignetteBuilder: knitr

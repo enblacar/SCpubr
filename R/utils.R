@@ -422,41 +422,40 @@ return_dependencies <- function(){
                                     "assertthat",
                                     "RColorBrewer",
                                     "labeling",
-                                    "withr",
-                                    "methods"),
-                   "do_AffinityAnalysisPlot" = "decoupleR",
-                   "do_AlluvialPlot" = "ggalluvial",
+                                    "withr"),
+                   "do_AffinityAnalysisPlot" = c("decoupleR"),
+                   "do_AlluvialPlot" = c("ggalluvial"),
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
                    "do_BoxPlot" = "ggsignif",
                    "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
-                   "do_ChordDiagramPlot" = "circlize",
+                   "do_ChordDiagramPlot" = c("circlize"),
                    "do_ColorPalette" = NULL,
-                   "do_CopyNumberVariantPlot" = "ggdist",
+                   "do_CopyNumberVariantPlot" = c("ggdist"),
                    "do_CorrelationPlot" = NULL,
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
                    "do_DotPlot" = NULL,
-                   "do_EnrichmentHeatmap" = NULL,
+                   "do_EnrichmentHeatmap" = c("UCell", "AUCell"),
                    "do_ExpressionHeatmap" = NULL,
                    "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
-                   "do_GeyserPlot" = "ggdist",
+                   "do_GeyserPlot" = c("ggdist"),
                    "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = NULL,
                    "do_MetadataPlot" = "cluster",
-                   "do_LigandReceptorPlot" = "liana",
+                   "do_LigandReceptorPlot" = c("liana"),
                    "do_LoadingsPlot" = NULL,
-                   "do_DiffusionMapPlot" = "Matrix",
-                   "do_NebulosaPlot" = "Nebulosa",
+                   "do_DiffusionMapPlot" = c("Matrix"),
+                   "do_NebulosaPlot" = c("Nebulosa"),
                    "do_PathwayActivityPlot" = NULL,
-                   "do_RidgePlot" = "ggridges",
+                   "do_RidgePlot" = c("ggridges"),
                    "do_SCExpressionHeatmap" = NULL,
-                   "do_SCEnrichmentHeatmap" = NULL,
+                   "do_SCEnrichmentHeatmap" = c("UCell", "AUCell"),
                    "do_TermEnrichmentPlot" = NULL,
                    "do_TFActivityPlot" = NULL,
                    "do_ViolinPlot" = NULL,
-                   "do_VolcanoPlot" = "ggrepel",
-                   "save_Plot" = "svglite")
+                   "do_VolcanoPlot" = c("ggrepel"),
+                   "save_Plot" = c("svglite"))
   return(pkg_list)
 }
 
@@ -3743,7 +3742,7 @@ check_group_by <- function(sample,
 #' }
 check_Assay5 <- function(sample,
                          assay = Seurat::DefaultAssay(sample)){
-  if (isTRUE(is(sample@assays[[assay]]), "Assay5")){
+  if (isTRUE(methods::is(sample@assays[[assay]], "Assay5"))){
     suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
   }
   return(sample)
