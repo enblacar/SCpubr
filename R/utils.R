@@ -747,14 +747,14 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 
 package_report <- function(startup = FALSE){
   # nocov start
-  if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
+  if (base::isFALSE(requireNamespace("cli", quietly = TRUE)) | base::isFALSE(requireNamespace("rlang", quietly = TRUE))){
     if (base::isFALSE(startup)){
       message(paste(rep("-", 63), collapse = ""))
-      message('This is a placeholder message. Please install "cli" package to have an optimal experience using the package.')
+      message('This is a placeholder message. Please install "cli" and "rlang" packages to have an optimal experience using the package.')
       message(paste(rep("-", 63), collapse = ""))
     } else if(isTRUE(startup)){
       packageStartupMessage(paste(rep("-", 63), collapse = ""))
-      packageStartupMessage('This is a placeholder message. Please install "cli" package to have an optimal experience using the package.')
+      packageStartupMessage('This is a placeholder message. Please install "cli" and "rlang" packages to have an optimal experience using the package.')
       packageStartupMessage(paste(rep("-", 63), collapse = ""))
       packageStartupMessage("\n\n\nSCpubr")
       packageStartupMessage("\nIf you use SCpubr in your research, please cite it accordingly: \nBlanco-Carmona, E. Generating publication ready visualizations for Single Cell transcriptomics using SCpubr. bioRxiv (2022) doi:10.1101/2022.02.28.482303.\n")
@@ -2179,6 +2179,11 @@ compute_enrichment_scores <- function(sample,
       stop(paste0(add_cross(), crayon_body("Package "), crayon_key("UCell"), crayon_body("must be installed to run UCell scoring.")), call. = FALSE)
       # nocov end
     }
+  }
+  if (!requireNamespace("AUCell", quietly = TRUE)) {
+    # nocov start
+    stop(paste0(add_cross(), crayon_body("Package "), crayon_key("AUCell"), crayon_body("must be installed to run AUCell scoring.")), call. = FALSE)
+    # nocov end
   }
 
   if (!is.list(input_gene_list) & is.character(input_gene_list)){

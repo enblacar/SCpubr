@@ -94,7 +94,6 @@ do_FeaturePlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
-  `%>%` <- magrittr::`%>%`
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -974,23 +973,23 @@ do_FeaturePlot <- function(sample,
 
   # Fix the extra space and add theme parameters.
   p <- p &
-    ggplot2::theme_minimal(base_size = font.size) &
-    ggplot2::theme(plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
-                   plot.title = ggplot2::element_text(face = plot.title.face,
-                                                      hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
-                   plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
-                   plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
-                   panel.grid = ggplot2::element_blank(),
-                   plot.title.position = "plot",
-                   plot.caption.position = "plot",
-                   text = ggplot2::element_text(family = font.type),
-                   legend.position = legend.position,
-                   legend.text = ggplot2::element_text(face = legend.text.face),
-                   legend.title = ggplot2::element_text(face = legend.title.face),
-                   legend.justification = "center",
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+       ggplot2::theme_minimal(base_size = font.size) &
+       ggplot2::theme(plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
+                      plot.title = ggplot2::element_text(face = plot.title.face,
+                                                         hjust = ifelse(!(is.null(split.by)), 0.5, 0)),
+                      plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                      plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                      panel.grid = ggplot2::element_blank(),
+                      plot.title.position = "plot",
+                      plot.caption.position = "plot",
+                      text = ggplot2::element_text(family = font.type),
+                      legend.position = legend.position,
+                      legend.text = ggplot2::element_text(face = legend.text.face),
+                      legend.title = ggplot2::element_text(face = legend.title.face),
+                      legend.justification = "center",
+                      plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                      legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   if (is.null(split.by) & legend.position != "none"){
     counter <- 0
     for (feature in features){
@@ -1076,35 +1075,18 @@ do_FeaturePlot <- function(sample,
     }
   }
 
-  # For embeddings that are umap of tsne, we remove all axes..
-  if (reduction %in% c("umap", "tsne")){
-    # if dims is first and then second.
-    if (sum(dims == c(1, 2)) == 2){
-      p <- p &
-        ggplot2::theme(axis.title = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
-                       axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line =if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
-    } else {
-      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-      p <- p &
-        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-        ggplot2::xlab(labels[1]) &
-        ggplot2::ylab(labels[2])
-    }
-    # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
-  } else {
-    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+  if (base::isFALSE(plot.axes)){
     p <- p &
-      ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                     axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-      ggplot2::xlab(labels[1]) &
-      ggplot2::ylab(labels[2])
+         ggplot2::theme(axis.title = ggplot2::element_blank(),
+                        axis.text = ggplot2::element_blank(),
+                        axis.ticks = ggplot2::element_blank(),
+                        axis.line = ggplot2::element_blank())
+  } else {
+    p <- p &
+         ggplot2::theme(axis.title = ggplot2::element_text(face = axis.title.face),
+                        axis.text = ggplot2::element_text(face = axis.text.face),
+                        axis.ticks = ggplot2::element_line(color = "black"),
+                        axis.line = ggplot2::element_line(color = "black"))
   }
 
   # Further patch for diffusion maps.
@@ -1116,12 +1098,7 @@ do_FeaturePlot <- function(sample,
         ggplot2::xlim(c(min(sample@reductions[[reduction]][[]][, labels[1]], na.rm = TRUE),
                         max(sample@reductions[[reduction]][[]][, labels[1]], na.rm = TRUE))) &
         ggplot2::ylim(c(min(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE),
-                        max(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE))) &
-        # Remove axis elements so that the axis title is the only thing left.
-        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black"))
+                        max(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE)))
     })
 
   }

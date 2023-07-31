@@ -487,9 +487,6 @@ do_DimPlot <- function(sample,
                        function_use = ggplot2::scale_fill_manual(values = colors.use.label.fill),
                        scale = "fill")
         
-        p <- add_scale(p = p[length(p$layers)],
-                       function_use = ggplot2::scale_fill_manual(values = colors.use.label.fill),
-                       scale = "fill")
       }
       p$layers[[length(p$layers)]]$aes_params$fontface <- "bold"
     }
@@ -550,9 +547,12 @@ do_DimPlot <- function(sample,
       min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
       max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
       # Expand axes limits to allocate the new contours.
-      p <- p +
-           ggplot2::xlim(c(min_x, max_x)) +
-           ggplot2::ylim(c(min_y, max_y))
+      suppressMessages({
+        p <- p +
+             ggplot2::xlim(c(min_x, max_x)) +
+             ggplot2::ylim(c(min_y, max_y))
+      })
+      
     }
   } else if (isTRUE(group_by_and_split_by_used) | isTRUE(split_by_used)){
     list.plots <- list()
@@ -670,9 +670,12 @@ do_DimPlot <- function(sample,
         min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
         max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
         # Expand axes limits to allocate the new contours.
-        p.loop <- p.loop +
-          ggplot2::xlim(c(min_x, max_x)) +
-          ggplot2::ylim(c(min_y, max_y))
+        suppressMessages({
+          p.loop <- p.loop +
+                    ggplot2::xlim(c(min_x, max_x)) +
+                    ggplot2::ylim(c(min_y, max_y))
+        })
+        
       }
 
       list.plots[[value]] <- p.loop
@@ -783,9 +786,11 @@ do_DimPlot <- function(sample,
       min_y <- min(data$data[[1]]$y) * (1 + contour_expand_axes)
       max_y <- max(data$data[[1]]$y) * (1 + contour_expand_axes)
       # Expand axes limits to allocate the new contours.
-      p <- p +
-        ggplot2::xlim(c(min_x, max_x)) +
-        ggplot2::ylim(c(min_y, max_y))
+      suppressMessages({
+        p <- p +
+             ggplot2::xlim(c(min_x, max_x)) +
+             ggplot2::ylim(c(min_y, max_y))
+      })
     }
 
   }
@@ -805,7 +810,7 @@ do_DimPlot <- function(sample,
                    legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
                    legend.position = legend.position,
                    panel.grid = ggplot2::element_blank(),
-                   plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                   plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
                    plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                    panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                    legend.background = ggplot2::element_rect(fill = "white", color = "white"))
@@ -843,42 +848,19 @@ do_DimPlot <- function(sample,
         ggplot2::labs(caption = plot.caption)
     }
   }
-
-  # For embeddings that are umap of tsne, we remove all axes.
-  if (reduction %in% c("umap", "tsne")){
-    # If dims is first and then second (most of the cases).
-    if (sum(dims == c(1, 2)) == 2){
-      # Remove axes completely.
-      p <- p &
-        ggplot2::theme(axis.title = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
-                       axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
-      # If dims do not follow the usual order.
-    } else {
-      # Get the name of the selected dims.
-      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-      # Remove everything in the axes but the axis titles.
-      p <- p &
-        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line =if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-        ggplot2::xlab(labels[1]) &
-        ggplot2::ylab(labels[2])
-    }
-    # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
-  } else {
-    # Get the name of the selected dims.
-    labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-    # Remove everything in the axes but not the axis titles.
+  
+  if (base::isFALSE(plot.axes)){
     p <- p &
-      ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                     axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.line =if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                     axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-      ggplot2::xlab(labels[1]) &
-      ggplot2::ylab(labels[2])
+         ggplot2::theme(axis.title = ggplot2::element_blank(),
+                        axis.text = ggplot2::element_blank(),
+                        axis.ticks = ggplot2::element_blank(),
+                        axis.line = ggplot2::element_blank())
+  } else {
+    p <- p &
+         ggplot2::theme(axis.title = ggplot2::element_text(face = axis.title.face),
+                        axis.text = ggplot2::element_text(face = axis.text.face),
+                        axis.ticks = ggplot2::element_line(color = "black"),
+                        axis.line = ggplot2::element_line(color = "black"))
   }
 
   # Add marginal plots.

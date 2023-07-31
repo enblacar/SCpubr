@@ -42,9 +42,9 @@ do_NebulosaPlot <- function(sample,
                             na.value = "grey75",
                             plot.axes = FALSE,
                             number.breaks = 5,
-                            use_viridis = TRUE,
+                            use_viridis = FALSE,
                             sequential.palette = "YlGnBu",
-                            sequential.direction = -1,
+                            sequential.direction = 1,
                             plot.title.face = "bold",
                             plot.subtitle.face = "plain",
                             plot.caption.face = "italic",
@@ -166,7 +166,7 @@ do_NebulosaPlot <- function(sample,
                         plot.caption.position = "plot",
                         legend.position = legend.position,
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 10, r = 10, b = 10, l = 10),
+                        plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
                         panel.grid.major = ggplot2::element_blank(),
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
@@ -268,39 +268,22 @@ do_NebulosaPlot <- function(sample,
     }
 
 
-    # For embeddings that are umap of tsne, we remove all axes..
-    if (reduction %in% c("umap", "tsne")){
-      # if dims is first and then second.
-      if (sum(dims == c(1, 2)) == 2){
-        p <- p &
-          ggplot2::theme(axis.title = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.title.face, hjust = 0.5)},
-                         axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")})
-      } else {
-        labels <- colnames(sample@reductions[[reduction]][[]])[dims]
-        p <- p &
-          ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-          ggplot2::xlab(labels[1]) &
-          ggplot2::ylab(labels[2])
-      }
-      # For diffusion maps, we do want to keep at least the axis titles so that we know which DC are we plotting.
-    } else {
-      labels <- colnames(sample@reductions[[reduction]][[]])[dims]
+    if (base::isFALSE(plot.axes)){
       p <- p &
-        ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                       axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                       axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black")) &
-        ggplot2::xlab(labels[1]) &
-        ggplot2::ylab(labels[2])
+           ggplot2::theme(axis.title = ggplot2::element_blank(),
+                          axis.text = ggplot2::element_blank(),
+                          axis.ticks = ggplot2::element_blank(),
+                          axis.line = ggplot2::element_blank())
+    } else {
+      p <- p &
+           ggplot2::theme(axis.title = ggplot2::element_text(face = axis.title.face),
+                          axis.text = ggplot2::element_text(face = axis.text.face),
+                          axis.ticks = ggplot2::element_line(color = "black"),
+                          axis.line = ggplot2::element_line(color = "black"))
     }
 
     # Further patch for diffusion maps.
-    if (reduction == "diffusion"){
+    if (stringr::str_starts(reduction, "diff|DIFF")){
       labels <- colnames(sample@reductions[["diffusion"]][[]])[dims]
       # Fix the axis scale so that the highest and lowest values are in the range of the DCs (previously was around +-1.5, while DCs might range to +-0.004 or so).
       p <-  suppressMessages({
@@ -308,12 +291,7 @@ do_NebulosaPlot <- function(sample,
           ggplot2::xlim(c(min(sample@reductions$diffusion[[]][, labels[1]]),
                           max(sample@reductions$diffusion[[]][, labels[1]]))) &
           ggplot2::ylim(c(min(sample@reductions$diffusion[[]][, labels[2]]),
-                          max(sample@reductions$diffusion[[]][, labels[2]]))) &
-          # Remove axis elements so that the axis title is the only thing left.
-          ggplot2::theme(axis.text = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_text(color = "black", face = axis.text.face)},
-                         axis.ticks = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.line = if (base::isFALSE(plot.axes)){ggplot2::element_blank()} else {ggplot2::element_line(color = "black")},
-                         axis.title = ggplot2::element_text(face = axis.title.face, hjust = 0.5, color = "black"))
+                          max(sample@reductions$diffusion[[]][, labels[2]])))
       })
 
     }

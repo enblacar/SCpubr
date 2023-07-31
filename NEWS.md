@@ -54,6 +54,8 @@ Many (except a few selected cases) of the functions that returned list of differ
     -   `legend.text.face`: To control the style of the **legend text**.
 -   Changed default font style for legend text from `bold` to `plain`. 
 -   Changed default font style for axis text from `bold` to `plain`.
+-   When using `plot.axes = TRUE` parameter in `SCpubr::do_DimPlot()`, `SCpubr::do_FeaturePlot()` and `SCpubr::do_NebulosaPlot()`, now the entirety of the X and Y axis is removed, titles included.
+-   Remove plot margin padding in `SCpubr::do_DimPlot()`, `SCpubr::do_FeaturePlot()` and `SCpubr::do_NebulosaPlot()`. 
 
 ## `SCpubr::do_AlluvialPlot`
 -   Added `sequential.palette` and `sequential.direction` parameters.
