@@ -3743,7 +3743,7 @@ check_group_by <- function(sample,
 #' }
 check_Assay5 <- function(sample,
                          assay = Seurat::DefaultAssay(sample)){
-  if (class(sample@assays[[assay]]) == "Assay5"){
+  if (isTRUE(is(sample@assays[[assay]]), "Assay5")){
     suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
   }
   return(sample)
