@@ -11,7 +11,7 @@ do_BarPlot(
   add.n = FALSE,
   add.n.face = "bold",
   add.n.expand = c(0, 1.15),
-  add.n.size = 1,
+  add.n.size = 4,
   order.by = NULL,
   split.by = NULL,
   facet.by = NULL,

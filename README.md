@@ -1,7 +1,6 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/SCpubr)](https://CRAN.R-project.org/package=SCpubr)
 [![R-CMD-check](https://github.com/enblacar/SCpubr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/enblacar/SCpubr/actions/workflows/R-CMD-check.yaml)
-[![lint](https://github.com/enblacar/SCpubr/actions/workflows/lint.yaml/badge.svg)](https://github.com/enblacar/SCpubr/actions/workflows/lint.yaml)
 [![Code Coverage](https://codecov.io/gh/enblacar/SCpubr/branch/main/graph/badge.svg?token=HK7JB08VFD)](https://app.codecov.io/gh/enblacar/SCpubr/)
 [![CodeFactor](https://www.codefactor.io/repository/github/enblacar/scpubr/badge/main)](https://www.codefactor.io/repository/github/enblacar/scpubr/overview/main)
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/grand-total/SCpubr)](https://cran.r-project.org/package=SCpubr)
