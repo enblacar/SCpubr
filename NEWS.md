@@ -103,6 +103,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 ## `SCpubr::do_DimPlot`
 
 -   Modified underlying code to correctly display borders around cells when `cells.highlight` or `idents.hightlight` or `idents.keep` are used. Also removed the "Not selected" item from the legend when doing so, as it was redundant.
+-   Fixed a bug in which multiple legend would appear when using a combination of `group.by` and `split.by`, given that the individual UMAPs would not have the same number of entities to plot and color.
 
 ## `SCpubr::do_DotPlot`
 
