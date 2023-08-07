@@ -20,12 +20,12 @@ Many (except a few selected cases) of the functions that returned list of differ
 
 ## New functions
 
--   `SCpubr::do_MetadataPlot()` to generate metadata heatmaps with ease both from Seurat object or from a data frame.
--   `SCpubr::do_SCExpressionHeatmap()` to generate heatmaps of expression of genes across all cells in the dataset.
--   `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset.
--   `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weighted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/).
--   `SCpubr::do_LoadingsPlot()` to generate a summary heatmap of the PCA loadings (top and bottom scored genes for each PC) together with a expression heatmap of the same genes.
--   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map.
+-   `SCpubr::do_MetadataPlot()` to generate metadata heatmaps with ease both from Seurat object or from a data frame. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
+-   `SCpubr::do_SCExpressionHeatmap()` to generate heatmaps of expression of genes across all cells in the dataset. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
+-   `SCpubr::do_SCEnrichementHeatmap()` to generate heatmaps of enrichment of genes across all cells in the dataset. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
+-   `SCpubr::do_AffinityAnalysisPlot()` to assess the affinity of gene sets to subset of cells in the Seurat objects using the weighted means algorithms from [DecoupleR](https://saezlab.github.io/decoupleR/). Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
+-   `SCpubr::do_LoadingsPlot()` to generate a summary heatmap of the PCA loadings (top and bottom scored genes for each PC) together with a expression heatmap of the same genes. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
+-   `SCpubr::do_DiffusionMapPlot()` to analyze the output of a diffusion map analysis on the context of enrichment in gene sets used for the generation of the diffusion map. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
 -   `SCpubr::check_dependencies()` to generate a per-function summary of the needed packages to run the function. The report has been enhanced with `cli` package and now clearly illustrates what is missing to run the function.
 
 ## Removed functions

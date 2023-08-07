@@ -581,7 +581,13 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
         
         for (func in func_list){
           if (rev(strsplit(as.character(as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
-            if (func %in% c("do_LigandReceptorPlot", "save_Plot")){
+            if (func %in% c("do_LigandReceptorPlot", 
+                            "save_Plot", 
+                            "do_MetadataPlot", 
+                            "do_SCExpressionHeatmap", 
+                            "do_SCEnrichmentHeatmap", 
+                            "do_AffinityAnalysisPlot", 
+                            "do_DiffusionMapPlot")){
               func.name <- paste0(func, cli::col_yellow(" | DEV"))
               nchar.use <- nchar(func) + nchar(" | DEV")
             } else {
@@ -590,7 +596,13 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
             }
           # nocov start
           } else {
-            if (func %in% c("do_LigandReceptorPlot", "save_Plot")){
+            if (func %in% c("do_LigandReceptorPlot", 
+                            "save_Plot", 
+                            "do_MetadataPlot", 
+                            "do_SCExpressionHeatmap", 
+                            "do_SCEnrichmentHeatmap", 
+                            "do_AffinityAnalysisPlot", 
+                            "do_DiffusionMapPlot")){
               next
             }
           }
@@ -941,12 +953,24 @@ package_report <- function(startup = FALSE){
     functions <- sort(unique(names(check_dependencies(return_dependencies = TRUE))))
     
     if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
-      names.use <- unname(vapply(functions, function(x){if (x %in% c("do_SankeyPlot", "do_PseudotimePlot", "do_LigandReceptorPlot", "save_Plot")){x <- paste0(x, cli::col_yellow(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+      names.use <- unname(vapply(functions, function(x){if (x %in% c("do_LigandReceptorPlot", 
+                                                                     "save_Plot", 
+                                                                     "do_MetadataPlot", 
+                                                                     "do_SCExpressionHeatmap", 
+                                                                     "do_SCEnrichmentHeatmap", 
+                                                                     "do_AffinityAnalysisPlot", 
+                                                                     "do_DiffusionMapPlot")){x <- paste0(x, cli::col_yellow(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
       functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       names(functions) <- names.use
       # nocov start
     } else {
-      functions <- functions[!(functions %in% c("do_LigandReceptorPlot", "save_Plot"))]
+      functions <- functions[!(functions %in% c("do_LigandReceptorPlot", 
+                                                "save_Plot", 
+                                                "do_MetadataPlot", 
+                                                "do_SCExpressionHeatmap", 
+                                                "do_SCEnrichmentHeatmap", 
+                                                "do_AffinityAnalysisPlot", 
+                                                "do_DiffusionMapPlot"))]
       functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
     }
     # nocov end
@@ -3769,7 +3793,7 @@ compute_continuous_palette <- function(name = "YlGnBu",
   light_end <- "grey95"
   dark_end <- "grey5"
   if (base::isFALSE(enforce_symmetry)){
-    if (base::isFALSE("SCpubr.ColorPaletteEnds")){
+    if (base::isFALSE(getOption("SCpubr.ColorPaletteEnds"))){
       if (isTRUE(use_viridis)){
         if (direction == 1){
           colors <- c(viridis::viridis(n = 9, direction = direction, option = name))

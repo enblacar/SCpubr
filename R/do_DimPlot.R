@@ -263,6 +263,8 @@ do_DimPlot <- function(sample,
         colors.use <- "#0A305F"
       }
     }
+    # For split.by + group.by cases.
+    colors.use.original <- colors.use
     # But, if the user has provided a custom color palette.
   } else {
     # Check that the provided values are valid color representations.
@@ -275,6 +277,10 @@ do_DimPlot <- function(sample,
     split_by_is_used <- is.null(group.by) & !(is.null(split.by)) & is.null(cells.highlight) & is.null(idents.highlight)
     # When either cells.highlight or idents.highlight was used.
     highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
+    
+    # For split.by + group.by cases.
+    colors.use.original <- colors.use
+    
     # When running under default parameters.
     if (isTRUE(default_parameters)){
       # Check that the color palette has the right amount of named colors with regards to the current identities.
@@ -290,13 +296,12 @@ do_DimPlot <- function(sample,
                                                        idents.keep = idents.keep)
       # When using split.by.
     } else if (isTRUE(split_by_is_used)){
-      if (length(colors.use) != 1){
-        # Check that the color palette has the right amount of named colors with regards to split.by values.
-        colors.use <- check_consistency_colors_and_names(sample = sample,
-                                                         colors = colors.use,
-                                                         grouping_variable = split.by,
-                                                         idents.keep = idents.keep)
-      }
+      # Check that the color palette has the right amount of named colors with regards to split.by values.
+      colors.use <- check_consistency_colors_and_names(sample = sample,
+                                                       colors = colors.use,
+                                                       grouping_variable = split.by,
+                                                       idents.keep = idents.keep)
+    
       # When highlighting cells.
     } else if (isTRUE(highlighting_cells)){
       # Stop the execution if more than one color is provided to highlight the cells.
@@ -360,13 +365,40 @@ do_DimPlot <- function(sample,
       colors.use <- check_consistency_colors_and_names(sample = sample, 
                                                        colors = colors.use,
                                                        idents.keep = idents.keep)
+      # If split.by is used instead.
+    } else if (group_by_and_split_by_used){
+      # Check that the values in idents.keep are in the unique values of split.by.
+      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
+                              msg = paste0(add_cross(), crayon_body("All the values in "),
+                                           crayon_key("idents.keep"),
+                                           crayon_body(" must be in the "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" metadata provided.")))
+      
+      colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                       colors = colors.use, 
+                                                       grouping_variable = group.by)
+    } else if (split_by_is_used){
+      # Check that the values in idents.keep are in the unique values of split.by.
+      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
+                              msg = paste0(add_cross(), crayon_body("All the values in "),
+                                           crayon_key("idents.keep"),
+                                           crayon_body(" must be in the "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" metadata provided.")))
+      
+      colors.use <- check_consistency_colors_and_names(sample = sample, 
+                                                       colors = colors.use, 
+                                                       grouping_variable = split.by,
+                                                       idents.keep = idents.keep)
+
       # When using group.by, check with the values in group.by.
     } else if (group_by_is_used) {
       # Check that idents.keep matches the values, if not, stop the execution.
       assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, group.by]))),
                               msg = paste0(add_cross(), crayon_body("All the values in "),
                                            crayon_key("idents.keep"),
-                                           crayon_body(" must be in the"),
+                                           crayon_body(" must be in the "),
                                            crayon_key("group.by"),
                                            crayon_body(" metadata variable provided.")))
       # Convert to NA values in group.by not included in the user's selected values.
@@ -375,33 +407,12 @@ do_DimPlot <- function(sample,
                                                        colors = colors.use, 
                                                        grouping_variable = group.by,
                                                        idents.keep = idents.keep)
-      # If split.by is used instead.
-    } else if (split_by_is_used | group_by_and_split_by_used){
-      # Check that the values in idents.keep are in the unique values of split.by.
-      assertthat::assert_that(isTRUE(length(idents.keep) == sum(idents.keep %in% unique(sample@meta.data[, split.by]))),
-                              msg = paste0(add_cross(), crayon_body("All the values in "),
-                                           crayon_key("idents.keep"),
-                                           crayon_body(" must be in the "),
-                                           crayon_key("split.by"),
-                                           crayon_body(" metadata provided.")))
-      if (is.null(group.by)){
-        colors.use <- check_consistency_colors_and_names(sample = sample, 
-                                                         colors = colors.use, 
-                                                         grouping_variable = split.by,
-                                                         idents.keep = idents.keep)
-      } else {
-        colors.use <- check_consistency_colors_and_names(sample = sample, 
-                                                         colors = colors.use, 
-                                                         grouping_variable = group.by,
-                                                         idents.keep = idents.keep)
-      }
-
+      
     }
   }
 
 
   # Generate base layer.
-  if (isTRUE(plot_cell_borders)){
     out <- compute_umap_layer(sample = sample,
                               labels = colnames(sample@reductions[[reduction]][[]])[dims],
                               pt.size = pt.size,
@@ -417,7 +428,6 @@ do_DimPlot <- function(sample,
                               n = 100)
     base_layer <- out$base_layer
     na_layer <- out$na_layer
-  }
 
   # PLOTTING
 
@@ -433,7 +443,7 @@ do_DimPlot <- function(sample,
   # When running under default parameters or using group.by
   if (not_highlighting_and_not_split_by){
     if (utils::packageVersion("Seurat") >= "4.1.0"){
-      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {sample[, Seurat::Idents(sample) %in% idents.keep]},
+      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {if (is.null(group.by)) {sample[, Seurat::Idents(sample) %in% idents.keep]} else {sample[, sample@meta.data[, group.by] %in% idents.keep]}},
                            reduction = reduction,
                            label = label,
                            dims = dims,
@@ -451,7 +461,7 @@ do_DimPlot <- function(sample,
                            raster.dpi = c(raster.dpi, raster.dpi),
                            ncol = ncol)
     } else { # nocov start
-      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {sample[, Seurat::Idents(sample) %in% idents.keep]},
+      p <- Seurat::DimPlot(if (is.null(idents.keep)) {sample} else {if (is.null(group.by)) {sample[, Seurat::Idents(sample) %in% idents.keep]} else {sample[, sample@meta.data[, group.by] %in% idents.keep]}},
                            reduction = reduction,
                            label = label,
                            dims = dims,
@@ -500,7 +510,7 @@ do_DimPlot <- function(sample,
     # Add another layer of black dots to make the colored ones stand up.
     if (!is.null(idents.keep)){
       if (isTRUE(plot_cell_borders)){
-        sample.use <- sample[, Seurat::Idents(sample) %in% idents.keep]
+        sample.use <- if (is.null(group.by)) {sample[, Seurat::Idents(sample) %in% idents.keep]} else {sample[, sample@meta.data[, group.by] %in% idents.keep]}
         out <- compute_umap_layer(sample = sample.use,
                                   labels = colnames(sample.use@reductions[[reduction]][[]])[dims],
                                   pt.size = pt.size,
@@ -554,12 +564,93 @@ do_DimPlot <- function(sample,
       })
       
     }
+    # Add theme settings to all plots.
+    p <- p &
+         ggplot2::theme_minimal(base_size = font.size) &
+         ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
+                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                        plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
+                        text = ggplot2::element_text(family = font.type),
+                        legend.justification = "center",
+                        legend.text = ggplot2::element_text(face = legend.text.face),
+                        legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
+                        legend.position = legend.position,
+                        panel.grid = ggplot2::element_blank(),
+                        plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   } else if (isTRUE(group_by_and_split_by_used) | isTRUE(split_by_used)){
     list.plots <- list()
     unique_values <- if(is.factor(sample@meta.data[, split.by])){levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))}
     if (!is.null(idents.keep)){
       unique_values <- unique_values[unique_values %in% idents.keep]
     }
+    
+    # If group.by and split.by are used, add a general view that will have a legend with all parameters.
+    p.extra <- do_DimPlot(sample = sample,
+                          reduction = reduction,
+                          group.by = ifelse(isTRUE(group_by_and_split_by_used), group.by, split.by),
+                          split.by = NULL,
+                          colors.use = colors.use.original,
+                          shuffle = shuffle,
+                          order = order,
+                          raster = raster,
+                          pt.size = pt.size,
+                          label = label,
+                          label.color = label.color,
+                          label.fill = label.fill,
+                          label.size = label.size,
+                          label.box = label.box,
+                          repel = repel,
+                          cells.highlight = NULL,
+                          idents.highlight = NULL,
+                          idents.keep = NULL,
+                          sizes.highlight = sizes.highlight,
+                          ncol = ncol,
+                          plot.title = "Combined",
+                          plot.subtitle = NULL,
+                          plot.caption = NULL,
+                          legend.title = legend.title,
+                          legend.position = legend.position,
+                          legend.title.position = legend.title.position,
+                          legend.ncol = legend.ncol,
+                          legend.nrow = legend.nrow,
+                          legend.icon.size = legend.icon.size,
+                          legend.byrow = legend.byrow,
+                          raster.dpi = raster.dpi,
+                          dims = dims,
+                          font.size = font.size,
+                          font.type = font.type,
+                          na.value = na.value,
+                          plot_cell_borders = plot_cell_borders,
+                          border.size = border.size,
+                          border.color = border.color,
+                          border.density = border.density,
+                          plot_marginal_distributions = plot_marginal_distributions,
+                          marginal.type = marginal.type,
+                          marginal.size = marginal.size,
+                          marginal.group = marginal.group,
+                          plot.axes = plot.axes,
+                          plot_density_contour = plot_density_contour,
+                          contour.position = contour.position,
+                          contour.color = contour.color,
+                          contour.lineend = contour.lineend,
+                          contour.linejoin = contour.linejoin,
+                          contour_expand_axes = contour_expand_axes,
+                          plot.title.face = plot.title.face,
+                          plot.subtitle.face = plot.subtitle.face,
+                          plot.caption.face = plot.caption.face,
+                          axis.title.face = axis.title.face,
+                          axis.text.face = axis.text.face,
+                          legend.title.face = legend.title.face,
+                          legend.text.face = legend.text.face)
+    p.extra <- p.extra + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    # Add plot to list.
+    list.plots[[1]] <- p.extra
+
     num_values <- length(unique_values)
     for (i in seq_len(num_values)){
       value <- unique_values[i]
@@ -677,11 +768,34 @@ do_DimPlot <- function(sample,
         })
         
       }
+      
+      p.loop <- p.loop +
+                ggplot2::theme_minimal(base_size = font.size) +
+                ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0.5),
+                               plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                               plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                               plot.title.position = "plot",
+                               plot.caption.position = "plot",
+                               text = ggplot2::element_text(family = font.type),
+                               legend.justification = "center",
+                               legend.text = ggplot2::element_text(face = legend.text.face),
+                               legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
+                               panel.grid = ggplot2::element_blank(),
+                               plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
+                               plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                               panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                               legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                               legend.position = "none")
 
       list.plots[[value]] <- p.loop
     }
-    p <- patchwork::wrap_plots(list.plots, ncol = ncol, guides = "collect") +
-         ggplot2::theme(legend.position = legend.position)
+    
+    
+    p <- patchwork::wrap_plots(list.plots, ncol = ncol, guides = "collect") 
+    
+    p <- p + 
+         patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
+    
   }
    # If the user wants to highlight some of the cells.
   else if (highlighting_cells){
@@ -792,28 +906,29 @@ do_DimPlot <- function(sample,
              ggplot2::ylim(c(min_y, max_y))
       })
     }
-
+    
+    # Titles in split.by are centered by default.
+    hjust_use <- if(split_by_used){0.5} else {0}
+    # Add theme settings to all plots.
+    p <- p &
+         ggplot2::theme_minimal(base_size = font.size) &
+         ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = hjust_use),
+                        plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
+                        plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
+                        plot.title.position = "plot",
+                        plot.caption.position = "plot",
+                        text = ggplot2::element_text(family = font.type),
+                        legend.justification = "center",
+                        legend.text = ggplot2::element_text(face = legend.text.face),
+                        legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
+                        legend.position = legend.position,
+                        panel.grid = ggplot2::element_blank(),
+                        plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
+                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   }
-  # Titles in split.by are centered by default.
-  hjust_use <- if(split_by_used){0.5} else {0}
-  # Add theme settings to all plots.
-  p <- p &
-    ggplot2::theme_minimal(base_size = font.size) &
-    ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = hjust_use),
-                   plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
-                   plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
-                   plot.title.position = "plot",
-                   plot.caption.position = "plot",
-                   text = ggplot2::element_text(family = font.type),
-                   legend.justification = "center",
-                   legend.text = ggplot2::element_text(face = legend.text.face),
-                   legend.title = if (legend.position != "none") {ggplot2::element_text(face = legend.title.face)} else {ggplot2::element_blank()},
-                   legend.position = legend.position,
-                   panel.grid = ggplot2::element_blank(),
-                   plot.margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0),
-                   plot.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   panel.background = ggplot2::element_rect(fill = "white", color = "white"),
-                   legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+
 
   # Add plot title to the plots.
   if (!is.null(plot.title)){
