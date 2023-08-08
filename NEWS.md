@@ -1,8 +1,4 @@
-# SCpubr v2.0.0 (to be released)
-
-**THIS IS A SNEAK PEEK OF THE UPDATE TO COME TO HAVE PEOPLE WARNED ABOUT THE CHANGES THAT WILL LIKELY BREAK THE EXISTING CODE**
-
-**The update will still take some time (date of writing: 15.03.2023)**
+# SCpubr v2.0.0 
 
 This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. The trade-off between the difficulty of debug, expand and maintain the existing heatmap-based functions with regards to the capabilities ComplexHeatmap offers with regards to ggplot2 was not worthy.
 
@@ -18,7 +14,7 @@ Many (except a few selected cases) of the functions that returned list of differ
 -   Changed `rotate_x_axis_labels` to `axis.text.x.angle`.
 -   Changed `rotate_strip_text` to `strip.text.angle`.
 
-## New functions
+## New functions (available on the development build for extended texting)
 
 -   `SCpubr::do_MetadataPlot()` to generate metadata heatmaps with ease both from Seurat object or from a data frame. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
 -   `SCpubr::do_SCExpressionHeatmap()` to generate heatmaps of expression of genes across all cells in the dataset. Will be first released as part of the `development version` and then released in CRAN as part of future updates. The idea is to gather feedback from users before officially releasing it.
