@@ -75,7 +75,11 @@ Suggests:
     tidyr,
     UCell,
     viridis,
-    withr
+    withr,
+    liana (>= 0.1.6)
+Remotes: 
+    saezlab/liana,
+    davidsjoberg/ggsankey
 VignetteBuilder: 
     knitr
 biocViews: Software, SingleCell, Visualization
