@@ -78,8 +78,7 @@ Suggests:
     withr,
     liana (>= 0.1.6)
 Remotes: 
-    saezlab/liana,
-    davidsjoberg/ggsankey
+    saezlab/liana
 VignetteBuilder: 
     knitr
 biocViews: Software, SingleCell, Visualization
