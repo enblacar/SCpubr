@@ -55,7 +55,7 @@ do_ExpressionHeatmap <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
-  check_suggests(function_name = "do_EnrichmentHeatmap")
+  check_suggests(function_name = "do_ExpressionHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

@@ -1,3 +1,9 @@
+# SCpubr v2.X.X (next release)
+
+## `SCpubr::do_EnrichmentHeatmap`
+
+-   Fixed a bug that checked the pacakge dependencies for the wrong function.
+
 # SCpubr v2.0.0 
 
 This major update focus on a complete re-implementation of all heatmap-based functions into `ggplot2` instead of `ComplexHeatmap`. This will lead to many of the existing code to break. The trade-off between the difficulty of debug, expand and maintain the existing heatmap-based functions with regards to the capabilities ComplexHeatmap offers with regards to ggplot2 was not worthy.
