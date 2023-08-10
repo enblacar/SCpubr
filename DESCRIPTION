@@ -1,29 +1,43 @@
-Package: SCpubr
 Type: Package
-Title: Generate Publication Ready Visualizations of Single Cell Transcriptomics Data
-Version: 2.0.0.9000
-Authors@R: person("Enrique", "Blanco-Carmona", email = "scpubr@gmail.com", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-1208-1691"))
-Description: A system that provides a streamlined way of generating publication ready plots for known Single-Cell transcriptomics data in a “publication ready” format. This is, the goal is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article.
+Package: SCpubr
+Title: Generate Publication Ready Visualizations of Single Cell
+    Transcriptomics Data
+Version: 2.0.0
+Authors@R: 
+    person("Enrique", "Blanco-Carmona", , "scpubr@gmail.com", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-1208-1691"))
+Description: A system that provides a streamlined way of generating
+    publication ready plots for known Single-Cell transcriptomics data in
+    a “publication ready” format. This is, the goal is to automatically
+    generate plots with the highest quality possible, that can be used
+    right away or with minimal modifications for a research article.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
-LazyDataCompression: xz
-Depends: R (>= 4.0.0)
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
-URL: https://github.com/enblacar/SCpubr/, https://enblacar.github.io/SCpubr-book/
+URL: https://github.com/enblacar/SCpubr/,
+    https://enblacar.github.io/SCpubr-book/
 BugReports: https://github.com/enblacar/SCpubr/issues/
+Depends: 
+    R (>= 4.0.0)
 Suggests:
+    AnnotationDbi,
     assertthat,
+    AUCell,
     circlize,
+    cli,
+    cluster,
+    clusterProfiler,
     colorspace,
-    covr,
     ComplexHeatmap,
+    covr,
+    decoupleR,
     dplyr (>= 1.1.0),
+    enrichplot,
+    forcats,
+    ggalluvial,
     ggbeeswarm,
     ggdist,
     ggExtra,
     ggh4x,
+    ggnewscale,
     ggplot2 (>= 3.4.0),
     ggplotify,
     ggrastr,
@@ -31,51 +45,43 @@ Suggests:
     ggridges,
     ggsignif,
     graphics,
+    infercnv,
+    knitr,
+    labeling,
     magrittr,
+    MASS,
+    Matrix,
     methods,
     Nebulosa,
+    org.Hs.eg.db,
     patchwork,
     pheatmap,
     plyr,
+    purrr,
+    qpdf,
+    RColorBrewer,
+    rgdal,
+    rjags,
     rlang,
+    rmarkdown,
     scales,
     scattermore,
     Seurat,
     SeuratObject,
-    tibble,
-    tidyr,
-    forcats,
-    infercnv,
-    knitr,
-    Matrix,
-    purrr,
-    qpdf,
-    rgdal,
-    rjags,
-    rmarkdown,
     stringr,
     svglite,
-    ggalluvial,
     testthat (>= 3.0.0),
-    viridis,
+    tibble,
+    tidyr,
     UCell,
-    AUCell,
-    clusterProfiler,
-    enrichplot,
-    ggnewscale,
-    AnnotationDbi,
-    org.Hs.eg.db,
-    labeling,
-    MASS,
-    RColorBrewer,
-    cluster,
-    decoupleR,
-    cli,
-    withr,
-    liana (>= 0.1.6)
-VignetteBuilder: knitr
+    viridis,
+    withr
+VignetteBuilder: 
+    knitr
+biocViews: Software, SingleCell, Visualization
 Config/testthat/edition: 3
-biocViews: 
-    Software, SingleCell, Visualization
-Remotes: 
-    saezlab/liana
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1

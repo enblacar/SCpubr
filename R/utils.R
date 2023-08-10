@@ -604,6 +604,9 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
                             "do_AffinityAnalysisPlot", 
                             "do_DiffusionMapPlot")){
               next
+            } else {
+              func.name <- func
+              nchar.use <- nchar(func)
             }
           }
           # nocov end
@@ -2199,14 +2202,17 @@ compute_enrichment_scores <- function(sample,
                                           crayon_body(" if you are running a lower version.")))
     if (!requireNamespace("UCell", quietly = TRUE)) {
       # nocov start
-      stop(paste0(add_cross(), crayon_body("Package "), crayon_key("UCell"), crayon_body("must be installed to run UCell scoring.")), call. = FALSE)
+      stop(paste0(add_cross(), crayon_body("Package "), crayon_key("UCell"), crayon_body(" must be installed to run UCell scoring.")), call. = FALSE)
       # nocov end
     }
   }
-  if (!requireNamespace("AUCell", quietly = TRUE)) {
-    # nocov start
-    stop(paste0(add_cross(), crayon_body("Package "), crayon_key("AUCell"), crayon_body("must be installed to run AUCell scoring.")), call. = FALSE)
-    # nocov end
+  
+  if (flavor == "AUCell"){
+    if (!requireNamespace("AUCell", quietly = TRUE)) {
+      # nocov start
+      stop(paste0(add_cross(), crayon_body("Package "), crayon_key("AUCell"), crayon_body(" must be installed to run AUCell scoring.")), call. = FALSE)
+      # nocov end
+    }
   }
 
   if (!is.list(input_gene_list) & is.character(input_gene_list)){

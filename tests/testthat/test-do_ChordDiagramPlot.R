@@ -33,15 +33,15 @@ if (base::isFALSE(dep_check[["do_ChordDiagramPlot"]])){
                                      z_index = FALSE)
     testthat::expect_type(p, "list")
     
-    # From df.
-    liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
-    out <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, return_interactions = TRUE)
-    
-    p <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, 
-                                     df = out$`Group Interactions`, 
-                                     link.border.color = "black", 
-                                     z_index = TRUE)
-    testthat::expect_type(p, "list")
+    # # From df.
+    # liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))
+    # out <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, return_interactions = TRUE)
+    # 
+    # p <- SCpubr::do_ChordDiagramPlot(from_df = TRUE, 
+    #                                  df = out$`Group Interactions`, 
+    #                                  link.border.color = "black", 
+    #                                  z_index = TRUE)
+    # testthat::expect_type(p, "list")
   })
 
 

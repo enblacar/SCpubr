@@ -1,7 +1,7 @@
 citHeader("To cite SCpubr in publications use:")
 
-citEntry(
-  entry    = "Article",
+bibentry(
+  bibtype    = "Article",
   title    = "Generating publication ready visualizations for Single Cell transcriptomics using {SCpubr}",
   author   = c(person("Enrique", "Blanco-Carmona")),
   doi      = "10.1101/2022.02.28.482303",
@@ -12,4 +12,3 @@ citEntry(
     "Blanco-Carmona, E. Generating publication ready visualizations for Single Cell transcriptomics using SCpubr. bioRxiv (2022) doi:10.1101/2022.02.28.482303."
   )
 )
-
