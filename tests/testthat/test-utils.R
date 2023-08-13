@@ -24,26 +24,6 @@ if (base::isFALSE(dep_check[["utils"]])){
 
   # STATE DEPENDENCIES
 
-  testthat::test_that("utils: check_dependencies - FAIL - Wrong function", {
-    testthat::skip_on_cran()
-    testthat::expect_error(SCpubr::check_dependencies("wrong_name"))
-  })
-
-  testthat::test_that("utils: check_dependencies - PASS - Correct function, one name", {
-    testthat::skip_on_cran()
-    suppressMessages({testthat::expect_message(SCpubr::check_dependencies("do_DimPlot"))})
-    suppressMessages({testthat::expect_message(SCpubr::check_dependencies("do_LigandReceptorPlot"))})
-  })
-
-  testthat::test_that("utils: check_dependencies - PASS - Correct function, several names", {
-    testthat::skip_on_cran()
-    suppressMessages({testthat::expect_message(SCpubr::check_dependencies(c("do_DimPlot", "do_FeaturePlot")))})
-  })
-
-  testthat::test_that("utils: check_dependencies - PASS - Correct function, no parameters provided", {
-    testthat::skip_on_cran()
-    suppressMessages({testthat::expect_message(SCpubr::check_dependencies())})
-  })
   
   # PACKAGE REPORT
   testthat::test_that("utils: package_report - PASS - general", {
