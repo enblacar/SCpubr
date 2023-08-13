@@ -488,8 +488,6 @@ check_suggests <- function(function_name, passive = FALSE){
 #' 
 #' @param startup \strong{\code{\link[base]{logical}}} | Whether the message should be displayed at startup, therefore, also containing welcoming messages and tips. If \strong{\code{FALSE}}, only the report itself will be printed.
 #' @param extended  \strong{\code{\link[base]{logical}}} | Whether the message should also include installed packages, current and available version, and which \strong{\code{SCpubr}} functions can be used with the currently installed packages.
-#' @param bioconductor_repo  \strong{\code{\link[base]{character}}} | Link to the repository that should be used to check \strong{\code{Bioconductor}} packages.
-#' @param cran_repo  \strong{\code{\link[base]{character}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.
 #' @return None
 #' @export
 #'
