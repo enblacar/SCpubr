@@ -320,20 +320,7 @@ named_list <- function(){}
 
 # nocov start
 crayon_body <- function(text){
-  if (isTRUE(getOption("SCpubr.darkmode"))){
-    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-      return(cli::col_white(text))
-    } else {
-      return(text)
-    }
-    
-  } else {
-    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-      return(cli::col_black(text))
-    } else {
-      return(text)
-    }
-  }
+  return(cli::col_none(text))
 }
 
 add_star <- function(initial_newline = TRUE){
@@ -378,19 +365,7 @@ add_tick <- function(initial_newline = TRUE){
 
 
 crayon_key <- function(text){
-  if (isTRUE(getOption("SCpubr.darkmode"))){
-    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-      return(cli::col_cyan(text))
-    } else {
-      return(text)
-    }
-  } else {
-    if (isTRUE(requireNamespace("cli", quietly = TRUE))){
-      return(cli::col_blue(text))
-    } else {
-      return(text)
-    }
-  }
+  return(cli::col_green(text))
 }
 
 # nocov end
@@ -575,7 +550,7 @@ check_dependencies <- function(function_name = NULL,
         
         if (rev(strsplit(as.character(system_version), split = "\\.")[[1]])[1] >= 9000){
           parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
-          parts[[length(parts)]] <- cli::col_yellow(parts[[length(parts)]])
+          parts[[length(parts)]] <- cli::col_cyan(parts[[length(parts)]])
           system_version <- paste(parts, collapse = ".")
         }
         
@@ -593,7 +568,7 @@ check_dependencies <- function(function_name = NULL,
                             "do_SCEnrichmentHeatmap", 
                             "do_AffinityAnalysisPlot", 
                             "do_DiffusionMapPlot")){
-              func.name <- paste0(func, cli::col_yellow(" | DEV"))
+              func.name <- paste0(func, cli::col_cyan(" | DEV"))
               nchar.use <- nchar(func) + nchar(" | DEV")
             } else {
               func.name <- func
@@ -638,11 +613,11 @@ check_dependencies <- function(function_name = NULL,
                 if (type == "installed"){
                   version_parts <- paste0(paste(rep(" ", (max_version - length.use)), collapse = ""), version_parts)
                   version_parts <- crayon_key(version_parts)
-                  dev_parts <- cli::col_yellow(dev_parts)
+                  dev_parts <- cli::col_cyan(dev_parts)
                 } else {
                   version_parts <- crayon_key(version_parts)
                   dev_parts <- paste0(dev_parts, paste(rep(" ", (max_version - length.use)), collapse = ""))
-                  dev_parts <- cli::col_yellow(dev_parts)
+                  dev_parts <- cli::col_cyan(dev_parts)
                 }
                 parts <- c(version_parts, dev_parts)
                 version <- paste(parts, collapse = ".")
@@ -849,7 +824,7 @@ package_report <- function(startup = FALSE,
       
       if (rev(strsplit(as.character(system_version), split = "\\.")[[1]])[1] >= 9000){
         parts <- strsplit(as.character(system_version), split = "\\.")[[1]]
-        parts[[length(parts)]] <- cli::col_yellow(parts[[length(parts)]])
+        parts[[length(parts)]] <- cli::col_cyan(parts[[length(parts)]])
         system_version <- paste(parts, collapse = ".")
       }
       
@@ -860,12 +835,12 @@ package_report <- function(startup = FALSE,
       
       # nocov start
       if (system_version < cran_version){
-        veredict_message <- paste0(cli::col_yellow(cli::symbol$warning,
+        veredict_message <- paste0(cli::col_yellow(cli::symbol$warning),
                                                    crayon_body(" There is a "),
                                                    crayon_key("new version"),
                                                    crayon_body(" available on"),
                                                    crayon_key("CRAN"),
-                                                   crayon_body("!")))
+                                                   crayon_body("!"))
       } else {
         # nocov end
         veredict_message <- paste0(cli::col_green(cli::symbol$tick,
@@ -892,11 +867,11 @@ package_report <- function(startup = FALSE,
             if (type == "installed"){
               version_parts <- paste0(paste(rep(" ", (max_version - length.use)), collapse = ""), version_parts)
               version_parts <- crayon_key(version_parts)
-              dev_parts <- cli::col_yellow(dev_parts)
+              dev_parts <- cli::col_cyan(dev_parts)
             } else {
               version_parts <- crayon_key(version_parts)
               dev_parts <- paste0(dev_parts, paste(rep(" ", (max_version - length.use)), collapse = ""))
-              dev_parts <- cli::col_yellow(dev_parts)
+              dev_parts <- cli::col_cyan(dev_parts)
             }
             parts <- c(version_parts, dev_parts)
             version <- paste(parts, collapse = ".")
@@ -981,7 +956,7 @@ package_report <- function(startup = FALSE,
                                                                        "do_SCExpressionHeatmap", 
                                                                        "do_SCEnrichmentHeatmap", 
                                                                        "do_AffinityAnalysisPlot", 
-                                                                       "do_DiffusionMapPlot")){x <- paste0(x, cli::col_yellow(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+                                                                       "do_DiffusionMapPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
         names(functions) <- names.use
         # nocov start
@@ -1091,7 +1066,7 @@ package_report <- function(startup = FALSE,
                                crayon_body(" builds of "),
                                crayon_key("SCpubr"),
                                crayon_body(" are marked by the ("),
-                               cli::style_bold(cli::col_yellow("| DEV")),
+                               cli::style_bold(cli::col_cyan("| DEV")),
                                crayon_body(") tag."))
       
       functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
@@ -1108,10 +1083,7 @@ package_report <- function(startup = FALSE,
     }
     tip_rule <- cli::rule(left = "Tips!", width = nchar("Tips!") + 6)
     
-    tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
-                          crayon_body(" To adjust package messages to dark mode themes, use: "), 
-                          cli::style_italic(crayon_key('options("SCpubr.darkmode" = TRUE)\n')),
-                          cli::style_bold(cli::col_cyan(cli::symbol$info)),
+    tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" To remove the white and black end from continuous palettes, use: "),
                           cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
     
@@ -1304,7 +1276,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
     format_colors <- function(name, value, colors,  max_length){
       
       if (name %in% names(colors)){
-        name <- paste(c(name, crayon_body(" | "), cli::col_yellow(paste0(colors[[name]]))), collapse = "")
+        name <- paste(c(name, crayon_body(" | "), cli::col_cyan(paste0(colors[[name]]))), collapse = "")
       }
       
       func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
@@ -1361,7 +1333,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
                   cli::style_italic(crayon_key('colors.use = c("A" = "red", "B" = "blue")')),
                   "\n",
                   "\n", "\n",
-                  crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_yellow("assigned color")), width = nchar("Values with an assigned color") + 6)), 
+                  crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_cyan("assigned color")), width = nchar("Values with an assigned color") + 6)), 
                   "\n", "\n", 
                   paste(colors.print, collapse = "\n"), "\n", "\n")
     stop(msg, call. = FALSE)
