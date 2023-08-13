@@ -1,5 +1,8 @@
 # SCpubr v2.X.X (next release)
 
+## General
+-   Refactored startup messages to comply with CRAN policies.
+
 ## `SCpubr::do_EnrichmentHeatmap`
 
 -   Fixed a bug that checked the pacakge dependencies for the wrong function.
