@@ -7,7 +7,7 @@
 package_report(
   startup = FALSE,
   extended = FALSE,
-  bioconductor_repo = "https://bioconductor.org/packages/release/bioc/",
+  bioconductor_repo = "https://bioconductor.org/packages/release/bioc",
   cran_repo = "http://cran.us.r-project.org"
 )
 }
