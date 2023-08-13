@@ -14,7 +14,11 @@ package_report(
 \arguments{
 \item{startup}{\strong{\code{\link[base]{logical}}} | Whether the message should be displayed at startup, therefore, also containing welcoming messages and tips. If \strong{\code{FALSE}}, only the report itself will be printed.}
 
-\item{extended}{\strong{\code{\link[base]{cran_repo}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.}
+\item{extended}{\strong{\code{\link[base]{logical}}} | Whether the message should also include installed packages, current and available version, and which \strong{\code{SCpubr}} functions can be used with the currently installed packages.}
+
+\item{bioconductor_repo}{\strong{\code{\link[base]{bioconductor_repo}}} | Link to the repository that should be used to check \strong{\code{Bioconductor}} packages.}
+
+\item{cran_repo}{\strong{\code{\link[base]{cran_repo}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.}
 }
 \value{
 None

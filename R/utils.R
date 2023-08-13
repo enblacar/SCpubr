@@ -513,6 +513,8 @@ check_suggests <- function(function_name, passive = FALSE){
 #'
 #' @param function_name \strong{\code{\link[base]{character}}} | Name of an exported function from SCpubr. If NULL, return all functions.
 #' @param return_dependencies \strong{\code{\link[base]{logical}}} | Whether to have the dependencies as an output object instead of a printed message.
+#' @param bioconductor_repo  \strong{\code{\link[base]{bioconductor_repo}}} | Link to the repository that should be used to check \strong{\code{Bioconductor}} packages.
+#' @param cran_repo  \strong{\code{\link[base]{cran_repo}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.
 #' @return None
 #' @export
 #'
@@ -524,7 +526,10 @@ check_suggests <- function(function_name, passive = FALSE){
 #' # See the dependencies for a single package.
 #' SCpubr::check_dependencies(function_name = "do_DimPlot")
 #' }
-check_dependencies <- function(function_name = NULL, return_dependencies = FALSE){
+check_dependencies <- function(function_name = NULL, 
+                               return_dependencies = FALSE,
+                               bioconductor_repo = "https://bioconductor.org/packages/release/bioc",
+                               cran_repo = "http://cran.us.r-project.org"){
   # nocov start
   if (base::isFALSE(requireNamespace("cli", quietly = TRUE))){
     message(paste(rep("-", 63), collapse = ""))
@@ -610,7 +615,7 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
             }
           }
           # nocov end
-          r_packages <- utils::available.packages(repos = c("https://bioconductor.org/packages/3.15/bioc",  "http://cran.us.r-project.org"))[, "Version"]
+          r_packages <- utils::available.packages(repos = c(bioconductor_repo,  cran_repo))[, "Version"]
           
           packages <- sort(c(pkg_list[[func]], pkg_list[["Essentials"]]))
           if (func %in% non_seurat_functions){
@@ -750,8 +755,8 @@ check_dependencies <- function(function_name = NULL, return_dependencies = FALSE
 #' 
 #' @param startup \strong{\code{\link[base]{logical}}} | Whether the message should be displayed at startup, therefore, also containing welcoming messages and tips. If \strong{\code{FALSE}}, only the report itself will be printed.
 #' @param extended  \strong{\code{\link[base]{logical}}} | Whether the message should also include installed packages, current and available version, and which \strong{\code{SCpubr}} functions can be used with the currently installed packages.
-#' @param extended  \strong{\code{\link[base]{bioconductor_repo}}} | Link to the repository that should be used to check \strong{\code{Bioconductor}} packages.
-#' @param extended  \strong{\code{\link[base]{cran_repo}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.
+#' @param bioconductor_repo  \strong{\code{\link[base]{bioconductor_repo}}} | Link to the repository that should be used to check \strong{\code{Bioconductor}} packages.
+#' @param cran_repo  \strong{\code{\link[base]{cran_repo}}} | Link to the repository that should be used to check \strong{\code{CRAN}} packages.
 #' @return None
 #' @export
 #'
