@@ -1,4 +1,4 @@
-# SCpbur v2.0.1 
+# SCpbur v2.X.X (in development)
 
 ## General.
 -   Fixed a bug that prevented error messages stating the dependencies missing per function to show up properly.
