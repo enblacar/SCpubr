@@ -20,7 +20,7 @@ do_BeeSwarmPlot <- function(sample,
                             colors.use = NULL,
                             legend.title = NULL,
                             legend.type = "colorbar",
-                            legend.position = if (isTRUE(continuous_feature)) {"bottom"} else {"none"},
+                            legend.position = "bottom",
                             legend.framewidth = 0.5,
                             legend.tickwidth = 0.5,
                             legend.length = 20,
@@ -39,11 +39,11 @@ do_BeeSwarmPlot <- function(sample,
                             remove_x_axis = FALSE,
                             remove_y_axis = FALSE,
                             flip = FALSE,
-                            use_viridis = TRUE,
+                            use_viridis = FALSE,
                             viridis.palette = "G",
                             viridis.direction = 1,
                             sequential.palette = "YlGnBu",
-                            sequential.direction = -1,
+                            sequential.direction = 1,
                             verbose = TRUE,
                             raster = FALSE,
                             raster.dpi = 300,
@@ -181,6 +181,12 @@ do_BeeSwarmPlot <- function(sample,
                         is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
+  
+  # Assign legend title.
+  if (is.null(legend.title)){
+    legend.title <- if (isTRUE(continuous_feature)) {feature_to_rank} else {group.by}
+  }
+  
   
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {

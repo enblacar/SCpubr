@@ -464,7 +464,7 @@ check_suggests <- function(function_name, passive = FALSE){
   pkgs <- vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
   # nocov start
   if(sum(!pkgs) > 0){
-    missing_pkgs <- names(pkgs[base::isFALSE(pkgs)])
+    missing_pkgs <- names(pkgs[vapply(pkgs, function(x){base::isFALSE(x)}, FUN.VALUE = logical(1))])
     if (base::isFALSE(passive)){
       stop(paste0(add_cross(), crayon_body("Packages "), 
                   paste(vapply(missing_pkgs, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")), 
@@ -600,7 +600,8 @@ package_report <- function(startup = FALSE,
                                                                        "do_SCExpressionHeatmap", 
                                                                        "do_SCEnrichmentHeatmap", 
                                                                        "do_AffinityAnalysisPlot", 
-                                                                       "do_DiffusionMapPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+                                                                       "do_DiffusionMapPlot",
+                                                                       "do_LoadingsPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
         names(functions) <- names.use
         # nocov start
@@ -611,7 +612,8 @@ package_report <- function(startup = FALSE,
                                                   "do_SCExpressionHeatmap", 
                                                   "do_SCEnrichmentHeatmap", 
                                                   "do_AffinityAnalysisPlot", 
-                                                  "do_DiffusionMapPlot"))]
+                                                  "do_DiffusionMapPlot",
+                                                  "do_LoadingsPlot"))]
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       }
       # nocov end

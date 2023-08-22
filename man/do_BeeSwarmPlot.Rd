@@ -16,12 +16,7 @@ do_BeeSwarmPlot(
   colors.use = NULL,
   legend.title = NULL,
   legend.type = "colorbar",
-  legend.position = if (isTRUE(continuous_feature)) {
-     "bottom"
- } else {
-    
-    "none"
- },
+  legend.position = "bottom",
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
   legend.length = 20,
@@ -40,11 +35,11 @@ do_BeeSwarmPlot(
   remove_x_axis = FALSE,
   remove_y_axis = FALSE,
   flip = FALSE,
-  use_viridis = TRUE,
+  use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = 1,
   sequential.palette = "YlGnBu",
-  sequential.direction = -1,
+  sequential.direction = 1,
   verbose = TRUE,
   raster = FALSE,
   raster.dpi = 300,

@@ -25,7 +25,7 @@ do_ViolinPlot <- function(sample,
                           y_cut = rep(NA, length(features)),
                           plot_boxplot = TRUE,
                           boxplot_width = 0.2,
-                          legend.position = "none",
+                          legend.position = "bottom",
                           plot.title = NULL,
                           plot.subtitle = NULL,
                           plot.caption = NULL,
@@ -41,6 +41,7 @@ do_ViolinPlot <- function(sample,
                           ncol = NULL,
                           share.y.lims = FALSE,
                           legend.title = NULL,
+                          legend.title.position = "top",
                           legend.ncol = NULL,
                           legend.nrow = NULL,
                           legend.byrow = FALSE,
@@ -103,7 +104,8 @@ do_ViolinPlot <- function(sample,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "legend.title.position" = legend.title.position)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   
@@ -163,6 +165,11 @@ do_ViolinPlot <- function(sample,
                            is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
+  
+  # Assign legend title.
+  if (is.null(legend.title)){
+    legend.title <- group.by
+  }
   
   if (is.null(colors.use)){
     if (is.factor(sample@meta.data[, group.by])){
@@ -226,7 +233,8 @@ do_ViolinPlot <- function(sample,
     p <- p +
          ggplot2::geom_violin(color = "black",
                               linewidth = line_width,
-                              na.rm = TRUE)
+                              na.rm = TRUE) +
+         ggplot2::scale_fill_manual(values = colors.use)
     if (isTRUE(plot_boxplot)){
       assertthat::assert_that(is.null(split.by),
                               msg = paste0(add_cross(), crayon_key("Boxplots"),
@@ -243,8 +251,7 @@ do_ViolinPlot <- function(sample,
                                  width = boxplot_width,
                                  outlier.shape = NA,
                                  fatten = 1,
-                                 na.rm = TRUE) +
-           ggplot2::scale_fill_manual(values = colors.use)
+                                 na.rm = TRUE)
     }
     if (is.na(xlab[counter])){
       xlab.use <- "Groups"
@@ -265,10 +272,11 @@ do_ViolinPlot <- function(sample,
                        subtitle = plot.subtitle,
                        caption = plot.caption) +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                      title.hjust = 0.5,
                                                       ncol = legend.ncol,
                                                       nrow = legend.nrow,
                                                       byrow = legend.byrow,
-                                                      title.position = "top")) +
+                                                      title.position = legend.title.position)) +
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black",
                                                             face = axis.text.face,

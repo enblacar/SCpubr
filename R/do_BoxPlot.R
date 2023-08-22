@@ -36,7 +36,7 @@ do_BoxPlot <- function(sample,
                        ylab = NULL,
                        legend.title = NULL,
                        legend.title.position = "top",
-                       legend.position = NULL,
+                       legend.position = "bottom",
                        boxplot.line.color = "black",
                        outlier.color = "black",
                        outlier.alpha = 0.5,
@@ -122,14 +122,7 @@ do_BoxPlot <- function(sample,
 
   `%>%` <- magrittr::`%>%`
   
-  if (is.null(legend.position)){
-    if (is.null(split.by)) {
-      legend.position <- "none"
-    } else {
-      legend.position <- "bottom"
-    }
-  }
-
+  
   check_colors(na.value, parameter_name = "na.value")
   check_colors(boxplot.line.color, parameter_name = "boxplot.line.color")
   check_colors(outlier.color, parameter_name = "outlier.color")
@@ -227,8 +220,10 @@ do_BoxPlot <- function(sample,
                                width = boxplot.width,
                                lwd = boxplot.linewidth,
                                fatten = 1,
-                               key_glyph = "rect",
-                               na.rm = TRUE)
+                               na.rm = TRUE)   +
+         ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
+                                                       title.position = legend.title.position,
+                                                       title.hjust = 0.5))
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
     stop(paste0(add_cross(), crayon_body("Parameter "), crayon_key("use_silhouette"),  crayon_body("can not be used alongside "), crayon_key("split.by"), crayon_body(".")), call. = FALSE)
   } else if (base::isFALSE(use_silhouette)){
@@ -252,7 +247,10 @@ do_BoxPlot <- function(sample,
                                lwd = boxplot.linewidth,
                                fatten = 1,
                                key_glyph = "rect",
-                               na.rm = TRUE)
+                               na.rm = TRUE)   +
+         ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                      title.position = legend.title.position,
+                                                      title.hjust = 0.5))
   }
 
    p <- p +
@@ -260,10 +258,7 @@ do_BoxPlot <- function(sample,
                       subtitle = plot.subtitle,
                       caption = plot.caption) +
         ggplot2::xlab(if (is.null(xlab)) {"Groups"} else (xlab)) +
-        ggplot2::ylab(if (is.null(ylab)) {feature} else (ylab))  +
-        ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
-                                                     title.position = legend.title.position,
-                                                     title.hjust = 0.5)) +
+        ggplot2::ylab(if (is.null(ylab)) {feature} else (ylab)) +
         ggplot2::theme_minimal(base_size = font.size) +
         ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                           face = axis.title.face),

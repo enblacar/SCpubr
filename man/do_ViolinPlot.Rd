@@ -17,7 +17,7 @@ do_ViolinPlot(
   y_cut = rep(NA, length(features)),
   plot_boxplot = TRUE,
   boxplot_width = 0.2,
-  legend.position = "none",
+  legend.position = "bottom",
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -33,6 +33,7 @@ do_ViolinPlot(
   ncol = NULL,
   share.y.lims = FALSE,
   legend.title = NULL,
+  legend.title.position = "top",
   legend.ncol = NULL,
   legend.nrow = NULL,
   legend.byrow = FALSE,
@@ -116,6 +117,14 @@ do_ViolinPlot(
 \item{share.y.lims}{\strong{\code{\link[base]{logical}}} | When querying multiple features, force the Y axis of all of them to be on the same range of values (this being the max and min of all features combined).}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
+\item{legend.title.position}{\strong{\code{\link[base]{character}}} | Position for the title of the legend. One of:
+\itemize{
+\item \emph{\code{top}}: Top of the legend.
+\item \emph{\code{bottom}}: Bottom of the legend.
+\item \emph{\code{left}}: Left of the legend.
+\item \emph{\code{right}}: Right of the legend.
+}}
 
 \item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
 

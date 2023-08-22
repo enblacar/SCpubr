@@ -23,7 +23,7 @@ do_BoxPlot(
   ylab = NULL,
   legend.title = NULL,
   legend.title.position = "top",
-  legend.position = NULL,
+  legend.position = "bottom",
   boxplot.line.color = "black",
   outlier.color = "black",
   outlier.alpha = 0.5,

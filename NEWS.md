@@ -1,4 +1,24 @@
-# SCpubr v2.X.X (next release)
+# SCpbur v2.0.1 
+
+## General.
+-   Fixed a bug that prevented error messages stating the dependencies missing per function to show up properly.
+
+## do_BeeSwarmPlot()
+-   Changed default continuous palette to `YlGnBu`.
+-   Changed default legend title to `feature_to_rank` if `continous_feature = TRUE`. 
+-   Changed default value of `sequential.direction` to `1`. 
+-   Changed default value of `legend.position` to `bottom` when `continuous_feature = FALSE`. 
+
+## do_BoxPlot()
+-   Changed default value of `legend.position` to `bottom`. 
+-   Fixed a bug in which legend key glyphs would not show up when using `use_silhouette = TRUE`. 
+
+## do_ViolinPlot()
+-   Changed default value of `legend.position` to `bottom`. 
+-   Fixed a bug in which the default color palette would not be applied when `plot_boxplots = FALSE`.
+-   Added `legend.title.position` parameter and set it up as `top` by default.
+
+# SCpubr v2.0.1 
 
 ## General
 -   Refactored startup messages to comply with CRAN policies.
@@ -8,7 +28,7 @@
 
 ## `SCpubr::do_EnrichmentHeatmap`
 
--   Fixed a bug that checked the pacakge dependencies for the wrong function.
+-   Fixed a bug that checked the package dependencies for the wrong function.
 
 # SCpubr v2.0.0 
 
@@ -71,7 +91,6 @@ Many (except a few selected cases) of the functions that returned list of differ
 ## `SCpubr::do_BarPlot`
 
 -   Added `facet.by` parameter to extra group the bars by a third metadata variable.
--   Added `facet.by.direction` parameter to decide in which direction the facets are drawn.
 -   Added `order.by` to reorder the bars when using `position = fill` based on a value in `group.by`.
 -   Limited the possible interactions from `group.by`, `split.by` and `order.by` to those that make sense to plot. For instance, a bar plot using `group.by` and `position = fill` but not using `split.by ` resulted in bars of equal lenght with only one value per group of proportion `1`.
 -   Set default value of `plot.grid` to `FALSE`.
