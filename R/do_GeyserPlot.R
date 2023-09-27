@@ -77,7 +77,7 @@ do_GeyserPlot <- function(sample,
                           legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_GeyserPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -160,9 +160,9 @@ do_GeyserPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
+
   `%>%` <- magrittr::`%>%`
-  
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -175,7 +175,7 @@ do_GeyserPlot <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
+
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
@@ -244,7 +244,7 @@ do_GeyserPlot <- function(sample,
                         is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
+
   if (is.null(colors.use)){
     colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {
       levels(sample@meta.data[, group.by])
@@ -288,7 +288,7 @@ do_GeyserPlot <- function(sample,
               tibble::rownames_to_column(var = "cell") %>%
               tibble::as_tibble()
     } else if (isTRUE(feature %in% rownames(sample))){
-      data <- .GetAssayData(sample = sample,
+      data <- SeuratObject::GetAssayData(object = sample,
                                    assay = assay,
                                    slot = slot)[feature, , drop = FALSE] %>%
               as.matrix() %>%
@@ -408,7 +408,7 @@ do_GeyserPlot <- function(sample,
     }
     end_value <- max(abs(limits))
     if (isTRUE(scale_type == "continuous")){
-      p <- p + 
+      p <- p +
            ggplot2::scale_color_gradientn(colors = colors.gradient,
                                           na.value = na.value,
                                           name = legend.title,
@@ -416,7 +416,7 @@ do_GeyserPlot <- function(sample,
                                           labels = scale.setup$labels,
                                           limits = scale.setup$limits)
     } else if (isTRUE(scale_type == "categorical")){
-      p <- p + 
+      p <- p +
            ggplot2::scale_color_manual(values = colors.use,
                                        na.value = na.value)
     }

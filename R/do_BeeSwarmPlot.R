@@ -64,7 +64,7 @@ do_BeeSwarmPlot <- function(sample,
                             legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_BeeSwarmPlot")
   `%>%` <- magrittr::`%>%`
   # Check ggbeeswarm version:
@@ -169,31 +169,31 @@ do_BeeSwarmPlot <- function(sample,
                                        crayon_body(" to "),
                                        crayon_key("feature_to_rank"),
                                        crayon_body(".")))
-  
+
   colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
                                                 use_viridis = use_viridis,
                                                 direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                 enforce_symmetry = FALSE)
-  
+
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,
                         is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
+
   # Assign legend title.
   if (is.null(legend.title)){
     legend.title <- if (isTRUE(continuous_feature)) {feature_to_rank} else {group.by}
   }
-  
-  
+
+
   dim_colnames <- check_feature(sample = sample, features = feature_to_rank, dump_reduction_names = TRUE)
   if (feature_to_rank %in% colnames(sample@meta.data)) {
     sample@meta.data$rank_me <- sample@meta.data[, feature_to_rank]
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% rownames(sample)){
-    sample@meta.data$rank_me  <- .GetAssayData(sample = sample, slot = slot, assay = assay)[feature_to_rank, ]
+    sample@meta.data$rank_me  <- SeuratObject::GetAssayData(object = sample, slot = slot, assay = assay)[feature_to_rank, ]
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% dim_colnames){
     for(red in Seurat::Reductions(object = sample)){
@@ -206,21 +206,21 @@ do_BeeSwarmPlot <- function(sample,
   }
   # Compute the ranking
   sample@meta.data$ranked_groups <- factor(sample@meta.data[, group.by], levels = sort(unique(sample@meta.data[, group.by])))
-  
+
   if (isTRUE(order)){
     # Get median rank by group.
-    order <- sample@meta.data %>% 
-             dplyr::select(dplyr::all_of(c("ranked_groups", "rank"))) %>% 
-             dplyr::group_by(.data$ranked_groups) %>% 
-             dplyr::summarise("median" = stats::median(.data$rank, na.rm = TRUE)) %>% 
-             dplyr::arrange(dplyr::desc(.data$median)) %>% 
-             dplyr::pull(.data$ranked_groups) %>% 
+    order <- sample@meta.data %>%
+             dplyr::select(dplyr::all_of(c("ranked_groups", "rank"))) %>%
+             dplyr::group_by(.data$ranked_groups) %>%
+             dplyr::summarise("median" = stats::median(.data$rank, na.rm = TRUE)) %>%
+             dplyr::arrange(dplyr::desc(.data$median)) %>%
+             dplyr::pull(.data$ranked_groups) %>%
              as.character()
     sample@meta.data$ranked_groups <- factor(sample@meta.data$ranked_groups, levels = rev(order))
   }
-  
+
   color_by <- ifelse(continuous_feature == TRUE, "rank_me", "ranked_groups")
-  
+
 
   # Compute the limits.
   if (isTRUE(continuous_feature)){
@@ -244,7 +244,7 @@ do_BeeSwarmPlot <- function(sample,
     sample$rank_me[sample$rank_me < min.cutoff] <- min.cutoff
     sample$rank_me[sample$rank_me > max.cutoff] <- max.cutoff
   }
-  
+
   p <- ggplot2::ggplot(sample@meta.data,
                        mapping = ggplot2::aes(x = .data[["rank"]],
                                               y = .data[["ranked_groups"]],
@@ -289,7 +289,7 @@ do_BeeSwarmPlot <- function(sample,
 
   if (continuous_feature == TRUE){
 
-    p <- p + 
+    p <- p +
          ggplot2::scale_color_gradientn(colors = colors.gradient,
                                         na.value = na.value,
                                         name = legend.title,
@@ -376,7 +376,7 @@ do_BeeSwarmPlot <- function(sample,
     p[["layers"]] <- append(base_layer, p[["layers"]])
 
   }
-  
+
 
   return(p)
 

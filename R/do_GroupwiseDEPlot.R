@@ -49,7 +49,7 @@ do_GroupwiseDEPlot <- function(sample,
                                legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_GroupwiseDEPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -98,13 +98,13 @@ do_GroupwiseDEPlot <- function(sample,
 
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
-  
+
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
   check_colors(grid.color, parameter_name = "grid.color")
   check_colors(border.color, parameter_name = "border.color")
-  
+
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = viridis.palette.pvalue, parameter_name = "viridis_color_map")
   check_parameters(parameter = viridis.palette.logfc, parameter_name = "viridis_color_map")
@@ -121,7 +121,7 @@ do_GroupwiseDEPlot <- function(sample,
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
-  
+
   # Check the assay.
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
@@ -133,27 +133,27 @@ do_GroupwiseDEPlot <- function(sample,
                         is.heatmap = TRUE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
-  
+
+
   colors.gradient.pvalue <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.pvalue, sequential.palette.pvalue),
                                                        use_viridis = use_viridis,
                                                        direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                        enforce_symmetry = FALSE)
-  
+
   colors.gradient.expression <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.expression, sequential.palette.expression),
                                                            use_viridis = use_viridis,
                                                            direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                            enforce_symmetry = FALSE)
-  
+
   colors.gradient.logfc <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette.logfc, sequential.palette.logfc),
                                                       use_viridis = use_viridis,
                                                       direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                       enforce_symmetry = FALSE)
-  
+
 
   magnitude <- ifelse(slot == "data", "avg_log2FC", "avg_diff")
   specificity <- "p_val_adj"
-  
+
   # Compute the top N genes per cluster.
   genes.use <- de_genes %>%
                dplyr::arrange(.data$p_val_adj, dplyr::desc(.data[[magnitude]])) %>%
@@ -161,7 +161,7 @@ do_GroupwiseDEPlot <- function(sample,
                dplyr::slice_head(n = top_genes) %>%
                dplyr::pull("gene") %>%
                unique()
-  
+
   # Compute heatmap of log2FC.
   data.use <- de_genes %>%
               dplyr::arrange(.data[[specificity]], dplyr::desc(.data[[magnitude]])) %>%
@@ -169,15 +169,15 @@ do_GroupwiseDEPlot <- function(sample,
               dplyr::slice_head(n = top_genes) %>%
               dplyr::select(dplyr::all_of(c("gene", "cluster", magnitude, specificity)))
   max.cutoff.pval <- ceiling(-1 * (data.use %>% dplyr::filter(.data$p_val_adj != 0) %>% dplyr::pull(.data$p_val_adj) %>% min(na.rm = TRUE) %>% log10()))
-  data.use <- data.use %>% 
+  data.use <- data.use %>%
               dplyr::mutate("-log10_padj" = -1 * log10(.data$p_val_adj),
-                            "-log10_padj" = ifelse(is.infinite(.data$`-log10_padj`), max.cutoff.pval, .data$`-log10_padj`)) %>% 
+                            "-log10_padj" = ifelse(is.infinite(.data$`-log10_padj`), max.cutoff.pval, .data$`-log10_padj`)) %>%
               dplyr::mutate("specificity" = .data$`-log10_padj`,
                             "magnitude" = .data[[magnitude]])
 
-  
+
   # Add missing data.
-  data.use <- data.use %>% 
+  data.use <- data.use %>%
               dplyr::mutate("combination" = paste0(.data$gene, "_", .data$cluster))
   for (cluster in unique(data.use$cluster)){
     for (gene in unique(data.use$gene)){
@@ -195,13 +195,13 @@ do_GroupwiseDEPlot <- function(sample,
       }
     }
   }
-  
-  data.use <- data.use %>% 
-              dplyr::select(-dplyr::all_of("combination")) %>% 
+
+  data.use <- data.use %>%
+              dplyr::select(-dplyr::all_of("combination")) %>%
               dplyr::mutate("gene" = factor(.data$gene, levels = genes.use),
                             "cluster" = factor(.data$cluster, levels = rev(unique(data.use$cluster))))
-  
-  
+
+
   limits <- c(min(data.use$specificity, na.rm = TRUE),
               max.cutoff.pval)
   scale.setup <- compute_scales(sample = sample,
@@ -216,31 +216,31 @@ do_GroupwiseDEPlot <- function(sample,
                                 enforce_symmetry = FALSE,
                                 from_data = TRUE,
                                 limits.use = limits)
-  
+
   list.plots <- list()
-  
-  p <- data.use %>% 
+
+  p <- data.use %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                               y = .data$cluster,
-                                              fill = .data$specificity)) + 
+                                              fill = .data$specificity)) +
        ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
        ggplot2::scale_y_discrete(expand = c(0, 0)) +
        ggplot2::scale_x_discrete(expand = c(0, 0),
                                  position = "top") +
        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$cluster))),
-                       x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-       ggplot2::coord_equal() + 
+                       x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) +
+       ggplot2::coord_equal() +
        ggplot2::scale_fill_gradientn(colors = colors.gradient.pvalue,
                                      na.value = na.value,
                                      name = expression(bold(paste("-", log["10"], "(p.adjust)"))),
                                      breaks = scale.setup$breaks,
                                      labels = scale.setup$labels,
                                      limits = scale.setup$limits)
-          
+
   list.plots[["pval"]] <- p
-  
-  
-  
+
+
+
   # Heatmap of avg_log2FC.
   limits <- c(min(data.use$magnitude, na.rm = TRUE),
               max(data.use$magnitude, na.rm = TRUE))
@@ -256,19 +256,19 @@ do_GroupwiseDEPlot <- function(sample,
                                 enforce_symmetry = FALSE,
                                 from_data = TRUE,
                                 limits.use = limits)
-  
 
-  p <- data.use %>% 
+
+  p <- data.use %>%
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                               y = .data$cluster,
-                                              fill = .data$magnitude)) + 
+                                              fill = .data$magnitude)) +
        ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
        ggplot2::scale_y_discrete(expand = c(0, 0)) +
        ggplot2::scale_x_discrete(expand = c(0, 0),
                                  position = "top") +
        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$cluster))),
-                       x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-       ggplot2::coord_equal() + 
+                       x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) +
+       ggplot2::coord_equal() +
        ggplot2::scale_fill_gradientn(colors = colors.gradient.logfc,
                                      na.value = na.value,
                                      name = expression(bold(paste("Avg. ", log["2"], "(FC)"))),
@@ -276,50 +276,50 @@ do_GroupwiseDEPlot <- function(sample,
                                      labels = scale.setup$labels,
                                      limits = scale.setup$limits)
   list.plots[["FC"]] <- p
-  
-  
-  
+
+
+
   # Add averaged expression data.
   list.exp <- list()
   for (group in group.by){
     order.use <- if (is.factor(sample@meta.data[, group])){levels(sample@meta.data[, group])} else {sort(unique(sample@meta.data[, group]))}
-    data <- .GetAssayData(sample,
+    data <- SeuratObject::GetAssayData(sample,
                                  assay = assay,
-                                 slot = slot)[genes.use, ] %>% 
-            as.data.frame() %>% 
-            tibble::rownames_to_column(var = "gene") %>% 
+                                 slot = slot)[genes.use, ] %>%
+            as.data.frame() %>%
+            tibble::rownames_to_column(var = "gene") %>%
             tidyr::pivot_longer(cols = -dplyr::all_of("gene"),
                                 names_to = "cell",
-                                values_to = "expression") %>% 
-            dplyr::left_join(y = {sample@meta.data %>% 
-                                  tibble::rownames_to_column(var = "cell") %>% 
+                                values_to = "expression") %>%
+            dplyr::left_join(y = {sample@meta.data %>%
+                                  tibble::rownames_to_column(var = "cell") %>%
                                   dplyr::select(dplyr::all_of(c("cell", group)))},
-                             by = "cell") %>% 
-            dplyr::group_by(.data$gene, .data[[group]]) %>% 
-            dplyr::summarize("Avg.Exp" = mean(.data$expression)) %>% 
+                             by = "cell") %>%
+            dplyr::group_by(.data$gene, .data[[group]]) %>%
+            dplyr::summarize("Avg.Exp" = mean(.data$expression)) %>%
             dplyr::mutate("gene" = factor(.data$gene, levels = genes.use),
                           "Group" = factor(.data[[group]], levels = rev(order.use)))
-    
+
     list.exp[[group]] <- data
   }
-  
-  
-  
+
+
+
   # Compute limits.
   min.vector <- NULL
   max.vector <- NULL
-  
+
   for (group in group.by){
     data.limits <- list.exp[[group]]
-    
+
     min.vector <- append(min.vector, min(data.limits$Avg.Exp, na.rm = TRUE))
     max.vector <- append(max.vector, max(data.limits$Avg.Exp, na.rm = TRUE))
   }
-  
+
   # Get the absolute limits of the datasets.
   limits <- c(min(min.vector, na.rm = TRUE),
               max(max.vector, na.rm = TRUE))
-  
+
   # Compute overarching scales for all heatmaps.
   scale.setup <- compute_scales(sample = sample,
                                 feature = " ",
@@ -333,41 +333,41 @@ do_GroupwiseDEPlot <- function(sample,
                                 enforce_symmetry = FALSE,
                                 from_data = TRUE,
                                 limits.use = limits)
-  
+
   for (group in group.by){
     data <- list.exp[[group]]
-    
+
     if (!is.na(min.cutoff)){
-      data <- data %>% 
+      data <- data %>%
               dplyr::mutate("Avg.Exp" = ifelse(.data$Avg.Exp < min.cutoff, min.cutoff, .data$Avg.Exp))
     }
-    
+
     if (!is.na(max.cutoff)){
-      data <- data %>% 
+      data <- data %>%
               dplyr::mutate("Avg.Exp" = ifelse(.data$Avg.Exp > max.cutoff, max.cutoff, .data$Avg.Exp))
     }
-    
-    p <- data %>% 
+
+    p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$gene,
                                                 y = .data$Group,
-                                                fill = .data$Avg.Exp)) + 
+                                                fill = .data$Avg.Exp)) +
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Group))),
-                         x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) + 
-         ggplot2::coord_equal() + 
+                         x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) +
+         ggplot2::coord_equal() +
          ggplot2::scale_fill_gradientn(colors = colors.gradient.expression,
                                        na.value = na.value,
                                        name = "Avg. Expression",
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
-       
+
     list.plots[[group]] <- p
   }
-  
+
   # Modify legends.
   for (name in names(list.plots)){
     p <- list.plots[[name]]
@@ -383,7 +383,7 @@ do_GroupwiseDEPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
     list.plots[[name]] <- p
   }
-  
+
   # Add theme
   counter <- 0
   for (name in rev(names(list.plots))){
@@ -397,10 +397,10 @@ do_GroupwiseDEPlot <- function(sample,
       xlab <- NULL
       ylab <- paste0("Avg. Exp | ", name)
     }
-    
+
     counter <- counter + 1
     p <- list.plots[[name]]
-    
+
     axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = rep("A", length(names(list.plots))),
                                    group = name,
@@ -413,7 +413,7 @@ do_GroupwiseDEPlot <- function(sample,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
-    
+
     p <- p +
          ggplot2::xlab(xlab) +
          ggplot2::ylab(ylab) +
@@ -453,10 +453,10 @@ do_GroupwiseDEPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.spacing.x = ggplot2::unit(0, "cm"))
-    
+
     list.plots[[name]] <- p
   }
-  
+
   p <- patchwork::wrap_plots(list.plots,
                              ncol = 1,
                              guides = "collect")

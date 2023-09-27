@@ -53,9 +53,9 @@ do_CorrelationPlot <- function(sample = NULL,
                                legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   `%>%` <- magrittr::`%>%`
-  
+
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "cluster" = cluster,
@@ -124,7 +124,7 @@ do_CorrelationPlot <- function(sample = NULL,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
+
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
                                                   use_viridis = FALSE,
@@ -136,37 +136,37 @@ do_CorrelationPlot <- function(sample = NULL,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
-  
+
+
   if (mode == "hvg"){
     # Check if the sample provided is a Seurat object.
     check_Seurat(sample = sample)
     out <- check_and_set_assay(sample = sample, assay = assay)
     sample <- out[["sample"]]
     assay <- out[["assay"]]
-    
+
     # Check group.by.
     out <- check_group_by(sample = sample,
                           group.by = group.by,
                           is.heatmap = TRUE)
     sample <- out[["sample"]]
     group.by <- out[["group.by"]]
-    
+
     # Generate a correlation matrix of the HVG.
     variable_genes <- Seurat::VariableFeatures(sample)
-    
+
     # Sort them in order (for ATAC experiments).
-    genes <- rownames(.GetAssayData(sample = sample,
+    genes <- rownames(SeuratObject::GetAssayData(object = sample,
                                     assay = assay,
                                     slot = "data"))
-    genes <- data.frame("Genes" = genes) %>% 
-             tibble::rowid_to_column(var = "Position") %>% 
-             tibble::as_tibble() %>% 
-             dplyr::filter(.data$Genes %in% variable_genes) %>% 
-             dplyr::arrange(.data$Position) %>% 
+    genes <- data.frame("Genes" = genes) %>%
+             tibble::rowid_to_column(var = "Position") %>%
+             tibble::as_tibble() %>%
+             dplyr::filter(.data$Genes %in% variable_genes) %>%
+             dplyr::arrange(.data$Position) %>%
              dplyr::pull(.data$Genes)
-    
-    
+
+
     # Subset sample according to the variable genes.
     sample <- sample[genes, ]
     # Scale the data
@@ -176,7 +176,7 @@ do_CorrelationPlot <- function(sample = NULL,
     out <- sample@meta.data %>%
            dplyr::select(dplyr::all_of(c(group.by))) %>%
            tibble::rownames_to_column(var = "cell") %>%
-           dplyr::left_join(y = {.GetAssayData(sample = sample,
+           dplyr::left_join(y = {SeuratObject::GetAssayData(object = sample,
                                                       assay = assay,
                                                       slot = "scale.data") %>%
                                  as.matrix() %>%
@@ -197,14 +197,14 @@ do_CorrelationPlot <- function(sample = NULL,
            as.matrix() %>%
            stats::cor() %>%
            round(digits = 2)
-    
+
     # Compute hclust.
     if (isTRUE(cluster)){
       order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]
     } else {
       order <- rownames(out)
     }
-    
+
 
 
     out.long <- out %>%
@@ -234,18 +234,18 @@ do_CorrelationPlot <- function(sample = NULL,
                                   enforce_symmetry = enforce_symmetry,
                                   from_data = TRUE,
                                   limits.use = limits)
-    
+
     # Modify according to min.cutoff and max.cutoff.
     if (!is.na(min.cutoff)){
-      out.long <- out.long %>% 
+      out.long <- out.long %>%
                   dplyr::mutate("score" = ifelse(.data$score < min.cutoff, min.cutoff, .data$score))
     }
-    
+
     if (!is.na(max.cutoff)){
-      out.long <- out.long %>% 
+      out.long <- out.long %>%
                   dplyr::mutate("score" = ifelse(.data$score > max.cutoff, max.cutoff, .data$score))
     }
-    
+
 
     p <- ggplot2::ggplot(out.long,
                          mapping = ggplot2::aes(x = .data$x,
@@ -325,7 +325,7 @@ do_CorrelationPlot <- function(sample = NULL,
 
 
   } else if (mode == "jaccard"){
-  
+
     # Compute jaccard indext.
     jaccard <- function(set_1, set_2) {
       # Compute intersection.
@@ -336,7 +336,7 @@ do_CorrelationPlot <- function(sample = NULL,
       jaccard_index <- intersection / union
       return(jaccard_index)
     }
-    
+
     jaccard_scores <- list()
     for(listname_store in names(input_gene_list)){
       vector_scores <- NULL
@@ -347,7 +347,7 @@ do_CorrelationPlot <- function(sample = NULL,
       }
       jaccard_scores[[listname_store]] <- vector_scores
     }
-    
+
     jaccard_matrix <- as.matrix(as.data.frame(jaccard_scores))
     colnames(jaccard_matrix) <- rownames(jaccard_matrix)
     if (isTRUE(cluster)){
@@ -355,30 +355,30 @@ do_CorrelationPlot <- function(sample = NULL,
     } else {
       order <- rownames(jaccard_matrix)
     }
-    
+
     jaccard_matrix <- jaccard_matrix[order, order]
     if (isTRUE(remove.diagonal)){
       jaccard_matrix[jaccard_matrix == 1] <- NA
     }
-    
-    
-    data <- jaccard_matrix %>% 
-            as.data.frame() %>% 
-            tibble::rownames_to_column(var = "x") %>% 
+
+
+    data <- jaccard_matrix %>%
+            as.data.frame() %>%
+            tibble::rownames_to_column(var = "x") %>%
             tidyr::pivot_longer(cols = -dplyr::all_of("x"),
                                 names_to = "y",
-                                values_to = "score") %>% 
+                                values_to = "score") %>%
             dplyr::mutate("x" = factor(.data$x, levels = order),
                           "y" = factor(.data$y, levels = rev(order)))
-    
+
     limits <- c(min(data$score, na.rm = TRUE),
                 max(data$score, na.rm = TRUE))
-    
+
     assertthat::assert_that(limits[[1]] != limits[[2]],
                             msg = paste0(add_cross(), crayon_body("The "),
                                          crayon_key(" jaccard similarity matrix "),
                                          crayon_body(" has no different values. Try another gene set.")))
-    
+
     scale.setup <- compute_scales(sample = NULL,
                                   feature = NULL,
                                   assay = NULL,
@@ -391,30 +391,30 @@ do_CorrelationPlot <- function(sample = NULL,
                                   enforce_symmetry = FALSE,
                                   from_data = TRUE,
                                   limits.use = limits)
-    
+
     # Modify according to min.cutoff and max.cutoff.
     if (!is.na(min.cutoff)){
-      data <- data %>% 
+      data <- data %>%
               dplyr::mutate("score" = ifelse(.data$score < min.cutoff, min.cutoff, .data$score))
     }
-    
+
     if (!is.na(max.cutoff)){
-      data <- data %>% 
+      data <- data %>%
               dplyr::mutate("score" = ifelse(.data$score > max.cutoff, max.cutoff, .data$score))
     }
-    
-    p <- data %>% 
+
+    p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x,
                                                 y = .data$y,
                                                 fill = .data$score)) +
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
-                                   position = "top") + 
-         ggplot2::coord_equal() + 
+                                   position = "top") +
+         ggplot2::coord_equal() +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$y))),
-                         x.sec = guide_axis_label_trans(~paste0(levels(.data$x)))) 
-    
+                         x.sec = guide_axis_label_trans(~paste0(levels(.data$x))))
+
     axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = "A",
                                    group = "A",
@@ -427,15 +427,15 @@ do_CorrelationPlot <- function(sample = NULL,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
-    
-    p <- p + 
+
+    p <- p +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
                                        name = legend.title,
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
-   
+
     p <- modify_continuous_legend(p = p,
                                   legend.title = "Jaccard score",
                                   legend.aes = "fill",
@@ -447,7 +447,7 @@ do_CorrelationPlot <- function(sample = NULL,
                                   legend.tickcolor = legend.tickcolor,
                                   legend.framewidth = 0.5,
                                   legend.tickwidth = 0.5)
-    
+
     p <- p +
          ggplot2::xlab("") +
          ggplot2::ylab("") +
@@ -480,9 +480,9 @@ do_CorrelationPlot <- function(sample = NULL,
                         legend.text = ggplot2::element_text(face = legend.text.face),
                         legend.title = ggplot2::element_text(face = legend.title.face),
                         legend.justification = "center",
-                        plot.margin = ggplot2::margin(t = 10, 
-                                                      r = 0, 
-                                                      b = 0, 
+                        plot.margin = ggplot2::margin(t = 10,
+                                                      r = 0,
+                                                      b = 0,
                                                       l = 40),
                         panel.border = ggplot2::element_rect(fill = NA, color = border.color, linewidth = 1),
                         panel.grid.major = ggplot2::element_blank(),

@@ -56,7 +56,7 @@ do_TFActivityPlot <- function(sample,
                               legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_TFActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -131,7 +131,7 @@ do_TFActivityPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -144,8 +144,8 @@ do_TFActivityPlot <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
-  
+
+
   sample[['dorothea']] <- activities %>%
                           dplyr::filter(.data$statistic == .env$statistic) %>%
                           tidyr::pivot_wider(id_cols = 'source',
@@ -156,27 +156,27 @@ do_TFActivityPlot <- function(sample,
 
   Seurat::DefaultAssay(sample) <- "dorothea"
   sample@assays$dorothea@key <- "dorothea_"
-  
+
   # Scale the data.
   sample <- Seurat::ScaleData(sample, verbose = FALSE)
-  
+
   if (!is.null(split.by) & !is.null(group.by)){
     assertthat::assert_that(length(group.by) == 1,
                             msg = paste0(add_cross(), crayon_body("When using "),
-                                         crayon_key("split.by"), 
+                                         crayon_key("split.by"),
                                          crayon_body(" make sure you only provide a single value to "),
                                          crayon_key("group.by"),
                                          crayon_body(". Otherwise, the prot will not keep the proportions. This is a design choice. Thanks!")))
   }
-  
-  
+
+
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
     group.by <- "Groups"
   }
-  
-  
+
+
   # Plotting
   list.out <- list()
 
@@ -187,7 +187,7 @@ do_TFActivityPlot <- function(sample,
       suppressMessages({
         sample$group.by <- sample@meta.data[, group]
 
-        df <- t(as.matrix(.GetAssayData(sample = sample,
+        df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                         assay = "dorothea",
                                         slot = slot))) %>%
               as.data.frame() %>%
@@ -202,11 +202,11 @@ do_TFActivityPlot <- function(sample,
               dplyr::group_by(.data$group.by, .data$source) %>%
               dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         df.order <- df
-        
+
         if (!is.null(split.by)){
           sample$split.by <- sample@meta.data[, split.by]
-          
-          df.split <- t(as.matrix(.GetAssayData(sample = sample,
+
+          df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                                 assay = "dorothea",
                                                 slot = slot))) %>%
                       as.data.frame() %>%
@@ -222,7 +222,7 @@ do_TFActivityPlot <- function(sample,
                       dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
           matrix.list[[group]][["df.split"]] <- df.split
         }
-        
+
 
       })
 
@@ -258,13 +258,13 @@ do_TFActivityPlot <- function(sample,
       # Subset long data frame to top tfs and transform to wide matrix
       data <- df %>%
               dplyr::filter(.data$source %in% shared_tfs)
-      
+
       if (!is.null(split.by)){
         df.split <- matrix.list[[group]][["df.split"]]
         data <- df.split %>%
                 dplyr::filter(.data$source %in% shared_tfs)
       }
-      
+
       # Transform to wide to retrieve the hclust.
       df.order <- df.order %>%
                   dplyr::filter(.data$source %in% shared_tfs) %>%
@@ -293,9 +293,9 @@ do_TFActivityPlot <- function(sample,
       data <- data %>%
               dplyr::mutate("source" = factor(.data$source, levels = rev(col_order)),
                             "group.by" = factor(.data$group.by, levels = row_order))
-      
+
       matrix.list[[group]][["data.mean"]] <- data
-      
+
       if (!is.na(min.cutoff)){
         data <- data %>%
                 dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
@@ -346,7 +346,7 @@ do_TFActivityPlot <- function(sample,
       counter <- counter + 1
       data <- matrix.list[[group]][["data"]]
 
-      p <- data %>% 
+      p <- data %>%
            # nocov start
            ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data$source} else {.data$group.by},
                                                   y = if(base::isFALSE(flip)){.data$group.by} else {.data$source},
@@ -357,23 +357,23 @@ do_TFActivityPlot <- function(sample,
            ggplot2::scale_x_discrete(expand = c(0, 0),
                                      position = "top") +
            ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
-                           x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) + 
-           ggplot2::coord_equal() + 
+                           x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) +
+           ggplot2::coord_equal() +
            ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                          na.value = na.value,
                                          name = paste0("Regulon score | ", statistic, ifelse(slot == "scale.data", " | Scaled + Centered", "")),
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
-           
-      
+
+
       if (!is.null(split.by)){
-        p <- p + 
+        p <- p +
           ggplot2::facet_grid(.data$split.by ~ .,
                               drop = FALSE,
                               switch = "y")
       }
-        
+
       p <- modify_continuous_legend(p = p,
                                     legend.title = paste0("Regulon score | ", statistic),
                                     legend.aes = "fill",
@@ -385,7 +385,7 @@ do_TFActivityPlot <- function(sample,
                                     legend.tickcolor = legend.tickcolor,
                                     legend.framewidth = legend.framewidth,
                                     legend.tickwidth = legend.tickwidth)
-      
+
       # nocov start
       # Set axis titles.
       if (base::isFALSE(flip)){
@@ -479,7 +479,7 @@ do_TFActivityPlot <- function(sample,
       list.heatmaps[[group]] <- p
     }
 
-    
+
     # Plot the combined plot
     input <- if(base::isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
     p <- patchwork::wrap_plots(input,
@@ -501,17 +501,17 @@ do_TFActivityPlot <- function(sample,
                                                                                                 color = "black",
                                                                                                 hjust = 1),
                                                            plot.caption.position = "plot"))
-    
-    
+
+
     list.out[["Heatmap"]] <- p
-    
-    
+
+
     if (isTRUE(return_object)){
       list.out[["Object"]] <- sample
       return_me <- list.out
     } else{
       return_me <- list.out[["Heatmap"]]
     }
-    
+
     return(return_me)
 }

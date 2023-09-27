@@ -1,7 +1,7 @@
 #' Compute a heatmap summary of the top and bottom genes in the PCA loadings for the desired PCs in a Seurat object.
 #'
 #' @inheritParams doc_function
-#' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subsample the Seurat object to increase computational speed. Use NA to include the Seurat object as is. 
+#' @param subsample \strong{\code{\link[base]{numeric}}} | Number of cells to subsample the Seurat object to increase computational speed. Use NA to include the Seurat object as is.
 #' @param dims \strong{\code{\link[base]{numeric}}} | PCs to include in the analysis.
 #' @param top_loadings \strong{\code{\link[base]{numeric}}} | Number of top and bottom scored genes in the PCA Loadings for each PC.
 #' @param min.cutoff.loadings,max.cutoff.loadings \strong{\code{\link[base]{numeric}}} | Cutoff to subset the scale of the Loading score heatmap. NA will use quantiles 0.05 and 0.95.
@@ -55,9 +55,9 @@ do_LoadingsPlot <- function(sample,
                             legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests("do_LoadingsPlot")
-  
+
   # Check logical parameters.
   logical_list <- list("use_viridis" = use_viridis,
                        "flip" = flip)
@@ -77,7 +77,7 @@ do_LoadingsPlot <- function(sample,
                        "min.cutoff.expression" = min.cutoff.expression,
                        "max.cutoff.expression" = max.cutoff.expression)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
-  
+
   # Check character parameters.
   character_list <- list("legend.type" = legend.type,
                          "font.type" = font.type,
@@ -101,13 +101,13 @@ do_LoadingsPlot <- function(sample,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-  
+
   check_colors(na.value)
   check_colors(legend.framecolor)
   check_colors(legend.tickcolor)
   check_colors(grid.color)
   check_colors(border.color)
-  
+
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
@@ -125,117 +125,117 @@ do_LoadingsPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
-  
+
+
   `%>%` <- magrittr::`%>%`
   `:=` <- rlang::`:=`
-  
+
   colors.gradient.loading <- compute_continuous_palette(name = diverging.palette,
                                                         use_viridis = FALSE,
                                                         direction = diverging.direction,
                                                         enforce_symmetry = TRUE)
-  
+
   colors.gradient.expression <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
                                                            use_viridis = use_viridis,
                                                            direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                            enforce_symmetry = FALSE)
-  
+
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,
                         is.heatmap = TRUE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
+
   if (!is.na(subsample)){
     sample <- sample[, sample(colnames(sample), subsample, replace = FALSE)]
   }
-  
-  loadings <- Seurat::Loadings(sample)[, dims] %>% 
-              as.data.frame() %>% 
-              tibble::rownames_to_column(var = "Gene") %>% 
+
+  loadings <- Seurat::Loadings(sample)[, dims] %>%
+              as.data.frame() %>%
+              tibble::rownames_to_column(var = "Gene") %>%
               tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of("Gene")),
                                   values_to = "Loading_Score",
                                   names_to = "PC")
-  
-  top_loadings.up <- loadings %>% 
-                     dplyr::group_by(.data$PC) %>% 
-                     dplyr::arrange(dplyr::desc(.data$Loading_Score)) %>% 
-                     dplyr::slice_head(n = top_loadings) %>% 
+
+  top_loadings.up <- loadings %>%
+                     dplyr::group_by(.data$PC) %>%
+                     dplyr::arrange(dplyr::desc(.data$Loading_Score)) %>%
+                     dplyr::slice_head(n = top_loadings) %>%
                      dplyr::pull(.data$Gene)
-  
-  top_loadings.down <- loadings %>% 
-                       dplyr::group_by(.data$PC) %>% 
-                       dplyr::arrange(.data$Loading_Score) %>% 
-                       dplyr::slice_head(n = top_loadings) %>% 
+
+  top_loadings.down <- loadings %>%
+                       dplyr::group_by(.data$PC) %>%
+                       dplyr::arrange(.data$Loading_Score) %>%
+                       dplyr::slice_head(n = top_loadings) %>%
                        dplyr::pull(.data$Gene)
-  
+
   genes.use <- NULL
-  
+
   for (i in seq(1, length(dims) * top_loadings, by = top_loadings)){
     range <- seq(i, i + (top_loadings  - 1))
     genes.add <- c(top_loadings.up[range], top_loadings.down[range])
     genes.add <- genes.add[!(genes.add %in% genes.use)]
     genes.use <- append(genes.use, genes.add)
   }
-  
-  loadings <- loadings %>% 
+
+  loadings <- loadings %>%
               dplyr::filter(.data$Gene %in% genes.use)
-  
-  embeddings <- Seurat::Embeddings(sample, reduction = "pca")[, dims] %>% 
-                as.data.frame() %>% 
-                tibble::rownames_to_column(var = "Cell") %>% 
+
+  embeddings <- Seurat::Embeddings(sample, reduction = "pca")[, dims] %>%
+                as.data.frame() %>%
+                tibble::rownames_to_column(var = "Cell") %>%
                 tidyr::pivot_longer(cols = -dplyr::all_of(dplyr::all_of("Cell")),
                                     values_to = "Embedding_Score",
                                     names_to = "PC")
-  
-  metadata <- sample@meta.data %>% 
-              as.data.frame() %>% 
-              tibble::rownames_to_column(var = "Cell") %>% 
-              dplyr::select(dplyr::all_of(c("Cell", group.by))) %>% 
+
+  metadata <- sample@meta.data %>%
+              as.data.frame() %>%
+              tibble::rownames_to_column(var = "Cell") %>%
+              dplyr::select(dplyr::all_of(c("Cell", group.by))) %>%
               tibble::as_tibble()
-  
-  data.use <- metadata %>% 
+
+  data.use <- metadata %>%
               dplyr::left_join(y = embeddings,
-                               by = "Cell") %>% 
+                               by = "Cell") %>%
               dplyr::left_join(y = loadings,
                                by = "PC",
                                relationship = "many-to-many")
-  
-  data.use <- data.use %>% 
-              dplyr::left_join(y = {.GetAssayData(sample,
+
+  data.use <- data.use %>%
+              dplyr::left_join(y = {SeuratObject::GetAssayData(sample,
                                                          assay = assay,
                                                          slot = slot)[unique(data.use$Gene), ] %>%
-                                    as.matrix() %>% 
-                                    t() %>% 
-                                    as.data.frame() %>% 
-                                    tibble::rownames_to_column(var = "Cell") %>% 
+                                    as.matrix() %>%
+                                    t() %>%
+                                    as.data.frame() %>%
+                                    tibble::rownames_to_column(var = "Cell") %>%
                                     tidyr::pivot_longer(cols = -dplyr::all_of("Cell"),
                                                         names_to = "Gene",
                                                         values_to = "Expression")},
-                               by = c("Gene", "Cell")) %>% 
+                               by = c("Gene", "Cell")) %>%
               dplyr::mutate("Gene" = factor(.data$Gene, levels = genes.use))
-  
-  data.loading <- data.use %>% 
-                  dplyr::group_by(.data$Gene, .data$PC) %>% 
+
+  data.loading <- data.use %>%
+                  dplyr::group_by(.data$Gene, .data$PC) %>%
                   dplyr::reframe("mean_Loading_Score" = mean(.data$Loading_Score, na.rm = TRUE))
-  
-  data.expression <- data.use %>% 
-                     dplyr::group_by(.data[[group.by]], .data$Gene) %>% 
+
+  data.expression <- data.use %>%
+                     dplyr::group_by(.data[[group.by]], .data$Gene) %>%
                      dplyr::reframe("mean_Expression" = mean(.data$Expression, na.rm = TRUE))
-  
-  data.expression.wide <- data.expression %>% 
+
+  data.expression.wide <- data.expression %>%
                           tidyr::pivot_wider(names_from = "Gene",
-                                             values_from = "mean_Expression") %>% 
-                          as.data.frame() %>% 
+                                             values_from = "mean_Expression") %>%
+                          as.data.frame() %>%
                           tibble::column_to_rownames(var = group.by)
-  
-  data.loadings.wide <- data.loading %>% 
+
+  data.loadings.wide <- data.loading %>%
                         tidyr::pivot_wider(names_from = "Gene",
-                                           values_from = "mean_Loading_Score") %>% 
-                        as.data.frame() %>% 
+                                           values_from = "mean_Loading_Score") %>%
+                        as.data.frame() %>%
                         tibble::column_to_rownames(var = "PC")
-  
+
   # Cluster items.
   gene.order <- genes.use[stats::hclust(stats::dist(t(data.expression.wide), method = "euclidean"), method = "ward.D")$order]
   # nocov start
@@ -244,54 +244,54 @@ do_LoadingsPlot <- function(sample,
   group.order <- group.order[stats::hclust(stats::dist(data.expression.wide, method = "euclidean"), method = "ward.D")$order]
   pc.order <- as.character(sort(unique(data.loading[["PC"]])))
   pc.order <- pc.order[stats::hclust(stats::dist(data.loadings.wide, method = "euclidean"), method = "ward.D")$order]
-  
+
   # Reorder items.
-  data.loading <- data.loading %>% 
+  data.loading <- data.loading %>%
                   dplyr::mutate("PC" = factor(.data$PC, levels = pc.order),
                                 "Gene" = factor(.data$Gene, levels = gene.order))
-  
-  data.expression <- data.expression %>% 
+
+  data.expression <- data.expression %>%
                      dplyr::mutate("{group.by}" := factor(.data[[group.by]], levels = group.order),
                                    "Gene" = factor(.data$Gene, levels = gene.order))
-  
- 
-  
+
+
+
   # Apply cutoffs.
   if (!is.na(min.cutoff.loadings)){
-    data.loading <- data.loading %>% 
+    data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < min.cutoff.loadings, min.cutoff.loadings, .data$mean_Loading_Score))
   } else {
-    data.loading <- data.loading %>% 
+    data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < stats::quantile(.data$mean_Loading_Score, 0.05), stats::quantile(.data$mean_Loading_Score, 0.05), .data$mean_Loading_Score))
   }
-  
+
   if (!is.na(max.cutoff.loadings)){
-    data.loading <- data.loading %>% 
+    data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > max.cutoff.loadings, max.cutoff.loadings, .data$mean_Loading_Score))
   } else {
-    data.loading <- data.loading %>% 
+    data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > stats::quantile(.data$mean_Loading_Score, 0.95), stats::quantile(.data$mean_Loading_Score, 0.95), .data$mean_Loading_Score))
   }
-  
-  
+
+
   if (!is.na(min.cutoff.expression)){
-    data.expression <- data.expression %>% 
+    data.expression <- data.expression %>%
                        dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression < min.cutoff.expression, min.cutoff.expression, .data$mean_Expression))
   }
-  
+
   if (!is.na(max.cutoff.expression)){
-    data.expression <- data.expression %>% 
+    data.expression <- data.expression %>%
                        dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > max.cutoff.expression, max.cutoff.expression, .data$mean_Expression))
   } else {
-    data.expression <- data.expression %>% 
+    data.expression <- data.expression %>%
                        dplyr::mutate("mean_Expression" = ifelse(.data$mean_Expression > stats::quantile(.data$mean_Expression, 0.95), stats::quantile(.data$mean_Expression, 0.95), .data$mean_Expression))
   }
-  
+
   # Compute scales.
   limits <- c(min(data.loading$mean_Loading_Score, na.rm = TRUE),
               max(data.loading$mean_Loading_Score, na.rm = TRUE))
-  
-  
+
+
   scale.setup <- compute_scales(sample = sample,
                                 feature = " ",
                                 assay = "SCT",
@@ -304,8 +304,8 @@ do_LoadingsPlot <- function(sample,
                                 enforce_symmetry = TRUE,
                                 from_data = TRUE,
                                 limits.use = limits)
-  
-  p.loading <- data.loading %>% 
+
+  p.loading <- data.loading %>%
                ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Gene,
                                                       y = .data$PC,
                                                       fill = .data$mean_Loading_Score)) +
@@ -314,7 +314,7 @@ do_LoadingsPlot <- function(sample,
                ggplot2::scale_x_discrete(expand = c(0, 0),
                                          position = "top") +
                ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$PC))),
-                               x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) + 
+                               x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
                ggplot2::scale_fill_gradientn(colors = colors.gradient.loading,
                                              na.value = na.value,
                                              name = "Avg. Loading score",
@@ -324,7 +324,7 @@ do_LoadingsPlot <- function(sample,
                ggplot2::coord_equal() +
                ggplot2::xlab("Top genes") +
                ggplot2::ylab("PCs")
-  
+
   limits <- c(min(data.expression$mean_Expression, na.rm = TRUE),
               max(data.expression$mean_Expression, na.rm = TRUE))
   scale.setup <- compute_scales(sample = sample,
@@ -339,8 +339,8 @@ do_LoadingsPlot <- function(sample,
                                          enforce_symmetry = FALSE,
                                          from_data = TRUE,
                                          limits.use = limits)
-  
-  p.expression <- data.expression %>% 
+
+  p.expression <- data.expression %>%
                   ggplot2::ggplot(mapping = ggplot2::aes(x = .data$Gene,
                                                          y = .data[[group.by]],
                                                          fill = .data$mean_Expression)) +
@@ -352,16 +352,16 @@ do_LoadingsPlot <- function(sample,
                                   x.sec = guide_axis_label_trans(~paste0(levels(.data$Gene)))) +
                   ggplot2::coord_equal() +
                   ggplot2::xlab(NULL) +
-                  ggplot2::ylab(group.by) + 
+                  ggplot2::ylab(group.by) +
                   ggplot2::scale_fill_gradientn(colors = colors.gradient.expression,
                                                 na.value = na.value,
                                                 name = "Avg. Expression",
                                                 breaks = scale.setup$breaks,
                                                 labels = scale.setup$labels,
                                                 limits = scale.setup$limits)
-                  
-                  
-  
+
+
+
   p.loading <- modify_continuous_legend(p = p.loading,
                                         legend.title = "Avg. Loading score",
                                         legend.aes = "fill",
@@ -373,7 +373,7 @@ do_LoadingsPlot <- function(sample,
                                         legend.tickcolor = legend.tickcolor,
                                         legend.framewidth = legend.framewidth,
                                         legend.tickwidth = legend.tickwidth)
-  
+
   p.expression <- modify_continuous_legend(p = p.expression,
                                            legend.title = "Avg. Expression",
                                            legend.aes = "fill",
@@ -385,13 +385,13 @@ do_LoadingsPlot <- function(sample,
                                            legend.tickcolor = legend.tickcolor,
                                            legend.framewidth = legend.framewidth,
                                            legend.tickwidth = legend.tickwidth)
-  
+
   list.plots <- list("Loadings" = p.loading,
                      "Expression" = p.expression)
   counter <- 0
   for (name in rev(names(list.plots))){
     counter <- counter + 1
-    
+
     axis.parameters <- handle_axis(flip = FALSE,
                                    group.by = "A",
                                    group = "A",
@@ -404,7 +404,7 @@ do_LoadingsPlot <- function(sample,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
-    
+
     list.plots[[name]] <- list.plots[[name]] +
                           ggplot2::theme_minimal(base_size = font.size) +
                           ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
@@ -439,15 +439,15 @@ do_LoadingsPlot <- function(sample,
                                          panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                                          legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   }
-  list.plots[["Loadings"]] <- list.plots[["Loadings"]] + 
+  list.plots[["Loadings"]] <- list.plots[["Loadings"]] +
                               ggplot2::xlab(paste0("Top and bottom ", top_loadings, " genes in PCA loadings")) +
                               ggplot2::theme(axis.title.x.top = ggplot2::element_text(face = "bold", color = "black"))
-  
+
   p <- patchwork::wrap_plots(A = list.plots$Loadings,
                              B = list.plots$Expression,
                              design = "A
                                        B",
-                             guides = "collect") + 
+                             guides = "collect") +
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
                                                          plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
@@ -462,6 +462,6 @@ do_LoadingsPlot <- function(sample,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))
-  
+
   return(p)
 }

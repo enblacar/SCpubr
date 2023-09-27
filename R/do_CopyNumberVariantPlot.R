@@ -56,9 +56,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                      legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests("do_CopyNumberVariantPlot")
-  
+
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
                        "enforce_symmetry" = enforce_symmetry,
@@ -100,17 +100,17 @@ do_CopyNumberVariantPlot <- function(sample,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-  
-  
+
+
   `:=` <- rlang::`:=`
   `%>%` <- magrittr::`%>%`
-  
+
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
   check_colors(grid.color, parameter_name = "grid.color")
   check_colors(border.color, parameter_name = "border.color")
-  
+
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = legend.position, parameter_name = "legend.position")
@@ -129,17 +129,17 @@ do_CopyNumberVariantPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
+
   chromosome_list <- c(as.character(seq(1, 22)))
-  
+
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,
                         is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
-  
+
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -152,13 +152,13 @@ do_CopyNumberVariantPlot <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
+
   # Retrieve the genes.
   genes <- infercnv_object@gene_order
-  
+
   # Retrieve chr 1p start and end coordinates.
   chr_locations <- chromosome_locations
-  
+
   # This list will contain all the outputs.
   return_list <- list()
   scores.assay <- data.frame(row.names = colnames(sample))
@@ -166,7 +166,7 @@ do_CopyNumberVariantPlot <- function(sample,
     # Retrieve chr locations of the chromosome.
     locations <- chr_locations %>%
                  dplyr::filter(.data[["chr"]] == chromosome)
-    
+
     for (chr_arm in c("p", "q", "whole")){
       if (chr_arm != "whole"){
         # Retrieve the start.
@@ -177,7 +177,7 @@ do_CopyNumberVariantPlot <- function(sample,
         end <- locations %>%
                dplyr::filter(.data[["arm"]] == chr_arm) %>%
                dplyr::pull(end)
-        
+
         # Retrieve the genes present in the chromosome arm.
         genes_use <- rownames(genes %>%
                               dplyr::filter(.data[["chr"]] == paste0("chr", chromosome),
@@ -191,25 +191,25 @@ do_CopyNumberVariantPlot <- function(sample,
         end <- locations %>%
                dplyr::filter(.data[["arm"]] == "q") %>%
                dplyr::pull(end)
-        
+
         # Retrieve the genes present in the chromosome arm.
         genes_use <- rownames(genes %>%
                               dplyr::filter(.data[["chr"]] == paste0("chr", chromosome)))
       }
-      
+
       # Retrieve the CNV scores from the inferCNV object.
       CNV_scores <- infercnv_object@expr.data
-      
+
       # Make it at least 2 genes in the object (this will only be applicable in VERY LOW QUALITY DATASETS)
       if (sum(genes_use %in% rownames(CNV_scores)) > 1){
         # Filter the scores for only the genes in the chromosome arm.
         CNV_scores <- CNV_scores[genes_use[genes_use %in% rownames(CNV_scores)], ]
-        
+
         scores_name <- if (chr_arm != "whole"){paste0(chromosome, chr_arm)} else {chromosome}
         CNV_scores_final <- tibble::tibble(!!scores_name := colMeans(CNV_scores),
                                            "cells" = colnames(CNV_scores))
-        
-        
+
+
         # If metacells were used.
         if (isTRUE(using_metacells)){
           sample[["metacell_mapping"]] <- metacell_mapping
@@ -222,9 +222,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                                                                 by = "metacell_mapping") %>%
                                                                dplyr::select(-dplyr::all_of("metacell_mapping"))},
                                                           by = "cells") %>%
-                                         tibble::column_to_rownames(var = "cells") %>% 
+                                         tibble::column_to_rownames(var = "cells") %>%
                                          dplyr::select(.env$scores_name)
-          
+
           # If no metacells were used.
         } else if (base::isFALSE(using_metacells)){
           scores.assay[[scores_name]] <- CNV_scores_final[, scores_name]
@@ -236,64 +236,64 @@ do_CopyNumberVariantPlot <- function(sample,
       }
     }
   }
-  
+
   # Generate an assay.
-  assay <- scores.assay %>% 
-           t() %>% 
+  assay <- scores.assay %>%
+           t() %>%
            Seurat::CreateAssayObject(.)
-  
+
   sample@assays$CNV_scores <- assay
   Seurat::DefaultAssay(sample) <- "CNV_scores"
   sample@assays$CNV_scores@key <- "CNV_scores_"
-  
-  
+
+
   list.data <- list()
   for (group in group.by){
-    data.use  <- .GetAssayData(sample = sample,
+    data.use  <- SeuratObject::GetAssayData(object = sample,
                                assay = "CNV_scores",
-                               slot = "data") %>% 
-                 as.matrix() %>% 
-                 t() %>% 
-                 as.data.frame() %>% 
-                 tibble::rownames_to_column(var = "Cell") %>% 
-                 dplyr::left_join(y = {sample@meta.data %>% 
-                                       tibble::rownames_to_column(var = "Cell") %>% 
+                               slot = "data") %>%
+                 as.matrix() %>%
+                 t() %>%
+                 as.data.frame() %>%
+                 tibble::rownames_to_column(var = "Cell") %>%
+                 dplyr::left_join(y = {sample@meta.data %>%
+                                       tibble::rownames_to_column(var = "Cell") %>%
                                        dplyr::select(dplyr::all_of(c("Cell", group)))},
-                                  by = "Cell") %>% 
+                                  by = "Cell") %>%
                  tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell", group)),
                                      values_to = "CNV_score",
-                                     names_to = "Event") %>% 
-                 
-                 dplyr::group_by(.data[[group]], .data$Event) %>% 
+                                     names_to = "Event") %>%
+
+                 dplyr::group_by(.data[[group]], .data$Event) %>%
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
-    
+
     events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
     if (base::isFALSE(flip)){
       factor.levels <- events[events %in% unique(data.use$Event)]
     } else {
       factor.levels <- rev(events[events %in% unique(data.use$Event)])
     }
-    data.use <- data.use %>% 
+    data.use <- data.use %>%
                 dplyr::mutate("Event" = factor(.data$Event, levels = factor.levels))
-    
+
     list.data[[group]][["data"]] <- data.use
   }
-  
+
   # Compute limits.
   min.vector <- NULL
   max.vector <- NULL
-  
+
   for (group in group.by){
     data.limits <- list.data[[group]][["data"]]
-    
+
     min.vector <- append(min.vector, min(data.limits$mean, na.rm = TRUE))
     max.vector <- append(max.vector, max(data.limits$mean, na.rm = TRUE))
   }
-  
+
   # Get the absolute limits of the datasets.
   limits <- c(min(min.vector, na.rm = TRUE),
               max(max.vector, na.rm = TRUE))
-  
+
   # Compute overarching scales for all heatmaps.
   scale.setup <- compute_scales(sample = sample,
                                 feature = " ",
@@ -317,11 +317,11 @@ do_CopyNumberVariantPlot <- function(sample,
   }
   for (group in values.use){
     data <- list.data[[group]][["data"]]
-    p <- data %>% 
+    p <- data %>%
          # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data$Event} else {.data[[group]]},
                                                 y = if(base::isFALSE(flip)){.data[[group]]} else {.data$Event},
-                                                fill = .data$mean)) + 
+                                                fill = .data$mean)) +
          # nocov end
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
@@ -329,9 +329,9 @@ do_CopyNumberVariantPlot <- function(sample,
                                    position = "top") +
          # nocov start
          ggplot2::guides(x.sec = guide_axis_label_trans(~paste0(levels(if(base::isFALSE(flip)){.data[[group]]} else {.data$Event}))),
-                         y.sec = guide_axis_label_trans(~paste0(levels(if(base::isFALSE(flip)){.data[[group]]} else {.data$Event})))) + 
+                         y.sec = guide_axis_label_trans(~paste0(levels(if(base::isFALSE(flip)){.data[[group]]} else {.data$Event})))) +
          # nocov end
-         ggplot2::coord_equal() + 
+         ggplot2::coord_equal() +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
                                        name =  "CNV scores",
@@ -339,10 +339,10 @@ do_CopyNumberVariantPlot <- function(sample,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
 
-    
+
     list.plots[[group]] <- p
   }
-  
+
   # Modify legends.
   for (name in names(list.plots)){
     p <- list.plots[[name]]
@@ -358,12 +358,12 @@ do_CopyNumberVariantPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
     list.plots[[name]] <- p
   }
-  
+
   # Add theme
   counter <- 0
   for (name in rev(names(list.plots))){
     counter <- counter + 1
-    
+
     if (isTRUE(flip)){
       if (counter == 1){
         xlab <- name
@@ -387,9 +387,9 @@ do_CopyNumberVariantPlot <- function(sample,
         ylab <- name
       }
     }
-    
+
     p <- list.plots[[name]]
-    
+
     axis.parameters <- handle_axis(flip = flip,
                                    group.by = rep("A", length(names(list.plots))),
                                    group = name,
@@ -402,7 +402,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
-    
+
     p <- p +
          ggplot2::xlab(xlab) +
          ggplot2::ylab(ylab) +
@@ -442,11 +442,11 @@ do_CopyNumberVariantPlot <- function(sample,
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.spacing.x = ggplot2::unit(0, "cm"))
-    
+
 
     list.plots[[name]] <- p
   }
-  
+
   # Plot the combined plot
   p <- patchwork::wrap_plots(list.plots[rev(group.by)],
                              ncol = if (base::isFALSE(flip)){1} else {NULL},
@@ -467,7 +467,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                                                                               color = "black",
                                                                                               hjust = 1),
                                                          plot.caption.position = "plot"))
-  
+
   if (isTRUE(return_object)){
     return_list <- list("Plot" = p,
                         "Object" = sample)
