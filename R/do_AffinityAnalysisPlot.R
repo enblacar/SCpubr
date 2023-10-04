@@ -217,10 +217,11 @@ do_AffinityAnalysisPlot <- function(sample,
              dplyr::filter(.data$target != "deleteme")
 
   # Get expression data.
+  suppressWarnings({
   mat <- SeuratObject::GetAssayData(sample,
-                      assay = assay,
-                      slot = slot)
-
+                                    assay = assay,
+                                    slot = slot)
+  })
   # Compute activities.
   if(isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "),
                                      crayon_key("activities"),
@@ -256,6 +257,7 @@ do_AffinityAnalysisPlot <- function(sample,
   counter <- 0
   for (group in group.by){
     counter <- counter + 1
+    suppressWarnings({
     data.use <- SeuratObject::GetAssayData(sample,
                              assay = "affinity",
                              slot = "scale.data") %>%
@@ -269,7 +271,7 @@ do_AffinityAnalysisPlot <- function(sample,
                 tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
                                     names_to = "source",
                                     values_to = "score")
-
+    })
     # Clustering based on the median across all cells.
     data.cluster <- data.use %>%
                     tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),

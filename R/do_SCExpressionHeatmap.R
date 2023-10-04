@@ -174,8 +174,11 @@ do_SCExpressionHeatmap <- function(sample,
   }
 
   `%>%` <- magrittr::`%>%`
+  
+  suppressWarnings({
   genes.avail <- rownames(SeuratObject::GetAssayData(sample, slot = slot, assay = assay))
-
+  })
+  
   assertthat::assert_that(sum(features %in% genes.avail) > 0,
                           msg = paste0(add_cross(), crayon_body("None of the features are present in the row names of the assay "),
                                        crayon_key(assay),
@@ -212,12 +215,12 @@ do_SCExpressionHeatmap <- function(sample,
                                          crayon_body(".")))
   }
 
-
+  suppressWarnings({
   matrix <- SeuratObject::GetAssayData(sample,
                                  assay = assay,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix()
-
+  })
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,

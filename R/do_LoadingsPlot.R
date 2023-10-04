@@ -201,7 +201,7 @@ do_LoadingsPlot <- function(sample,
               dplyr::left_join(y = loadings,
                                by = "PC",
                                relationship = "many-to-many")
-
+  suppressWarnings({
   data.use <- data.use %>%
               dplyr::left_join(y = {SeuratObject::GetAssayData(sample,
                                                          assay = assay,
@@ -215,7 +215,7 @@ do_LoadingsPlot <- function(sample,
                                                         values_to = "Expression")},
                                by = c("Gene", "Cell")) %>%
               dplyr::mutate("Gene" = factor(.data$Gene, levels = genes.use))
-
+  })
   data.loading <- data.use %>%
                   dplyr::group_by(.data$Gene, .data$PC) %>%
                   dplyr::reframe("mean_Loading_Score" = mean(.data$Loading_Score, na.rm = TRUE))

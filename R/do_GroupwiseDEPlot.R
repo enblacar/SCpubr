@@ -283,6 +283,7 @@ do_GroupwiseDEPlot <- function(sample,
   list.exp <- list()
   for (group in group.by){
     order.use <- if (is.factor(sample@meta.data[, group])){levels(sample@meta.data[, group])} else {sort(unique(sample@meta.data[, group]))}
+    suppressWarnings({
     data <- SeuratObject::GetAssayData(sample,
                                  assay = assay,
                                  slot = slot)[genes.use, ] %>%
@@ -301,6 +302,7 @@ do_GroupwiseDEPlot <- function(sample,
                           "Group" = factor(.data[[group]], levels = rev(order.use)))
 
     list.exp[[group]] <- data
+    })
   }
 
 

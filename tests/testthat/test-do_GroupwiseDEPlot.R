@@ -1,11 +1,13 @@
 if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   testthat::test_that("do_GroupwiseDEPlot: CRAN essentials", {
-    sample <- .SetAssayData(sample = sample,
-                            assay = "SCT",
-                            slot = "scale.data",
-                            data = as.matrix(.GetAssayData(sample = sample,
-                                                           assay = "SCT",
-                                                           slot = "data")))
+    suppressWarnings({
+    sample <- SeuratObject::SetAssayData(object = sample,
+                                         assay = "SCT",
+                                         slot = "scale.data",
+                                         new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                         assay = "SCT",
+                                                                                         slot = "data")))
+    })
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -24,12 +26,14 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
     testthat::skip_on_cran()
 
 
-    sample <- .SetAssayData(sample = sample,
-                            assay = "SCT",
-                            slot = "scale.data",
-                            data = as.matrix(.GetAssayData(sample = sample,
-                                                           assay = "SCT",
-                                                           slot = "data")))
+    suppressWarnings({
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           slot = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                       assay = "SCT",
+                                                                                       slot = "data")))
+    })
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -106,12 +110,14 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   testthat::test_that("do_GroupwiseDEPlot: PASS - heatmap legend side", {
     testthat::skip_on_cran()
 
-    sample <- .SetAssayData(sample = sample,
-                            assay = "SCT",
-                            slot = "scale.data",
-                            data = as.matrix(.GetAssayData(sample = sample,
-                                                           assay = "SCT",
-                                                           slot = "data")))
+    suppressWarnings({
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           slot = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                       assay = "SCT",
+                                                                                       slot = "data")))
+    })
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -132,12 +138,14 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong number of titles", {
     testthat::skip_on_cran()
 
-    sample <- .SetAssayData(sample = sample,
-                            assay = "SCT",
-                            slot = "scale.data",
-                            data = as.matrix(.GetAssayData(sample = sample,
-                                                           assay = "SCT",
-                                                           slot = "data")))
+    suppressWarnings({
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           slot = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                       assay = "SCT",
+                                                                                       slot = "data")))
+    })
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
@@ -156,12 +164,14 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong direction", {
     testthat::skip_on_cran()
 
-    sample <- .SetAssayData(sample = sample,
-                            assay = "SCT",
-                            slot = "scale.data",
-                            data = as.matrix(.GetAssayData(sample = sample,
-                                                           assay = "SCT",
-                                                           slot = "data")))
+    suppressWarnings({
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           slot = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                       assay = "SCT",
+                                                                                       slot = "data")))
+    })
 
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,

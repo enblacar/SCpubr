@@ -288,6 +288,7 @@ do_GeyserPlot <- function(sample,
               tibble::rownames_to_column(var = "cell") %>%
               tibble::as_tibble()
     } else if (isTRUE(feature %in% rownames(sample))){
+      suppressWarnings({
       data <- SeuratObject::GetAssayData(object = sample,
                                    assay = assay,
                                    slot = slot)[feature, , drop = FALSE] %>%
@@ -300,6 +301,7 @@ do_GeyserPlot <- function(sample,
                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
                                by = "cell")
+      })
     } else if (isTRUE(feature %in% dim_colnames)){
       data <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
               as.data.frame() %>%

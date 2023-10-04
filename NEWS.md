@@ -2,7 +2,7 @@
 
 ## General.
 -   Fixed a bug that prevented error messages stating the dependencies missing per function to show up properly.
--   Fixed assumptions on Seurat v4 and v5 and reverted to the use of cannonical `GetAssayData` functions.
+-   Fixed assumptions on Seurat v4 and v5 and reverted to the use of cannonical `GetAssayData` and `SetAssayData` functions.
 
 ## do_BeeSwarmPlot()
 -   Changed default continuous palette to `YlGnBu`.

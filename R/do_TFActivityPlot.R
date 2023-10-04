@@ -186,7 +186,7 @@ do_TFActivityPlot <- function(sample,
       # Extract activities from object as a long dataframe
       suppressMessages({
         sample$group.by <- sample@meta.data[, group]
-
+        suppressWarnings({
         df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                         assay = "dorothea",
                                         slot = slot))) %>%
@@ -202,10 +202,10 @@ do_TFActivityPlot <- function(sample,
               dplyr::group_by(.data$group.by, .data$source) %>%
               dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         df.order <- df
-
+        })
         if (!is.null(split.by)){
           sample$split.by <- sample@meta.data[, split.by]
-
+          suppressWarnings({
           df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                                 assay = "dorothea",
                                                 slot = slot))) %>%
@@ -221,6 +221,7 @@ do_TFActivityPlot <- function(sample,
                       dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
                       dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
           matrix.list[[group]][["df.split"]] <- df.split
+          })
         }
 
 

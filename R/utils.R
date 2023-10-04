@@ -1026,9 +1026,11 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (feature %in% rownames(sample)){
+    suppressWarnings({
     data.check <- SeuratObject::GetAssayData(sample,
                                        assay = assay,
                                        slot = slot)[feature, ]
+    })
     scale.begin <- min(data.check, na.rm = TRUE)
     scale.end <- max(data.check, na.rm = TRUE)
   } else if (feature %in% colnames(sample@meta.data)){
@@ -1950,8 +1952,10 @@ compute_enrichment_scores <- function(sample,
     if (is.null(slot)){
       slot <- "data"
     }
+    suppressWarnings({
     scores <- AUCell::AUCell_run(exprMat = SeuratObject::GetAssayData(sample, assay = assay, slot = slot),
                                  geneSets = input_gene_list)
+    })
     scores <- scores@assays@data$AUC %>%
               as.matrix() %>%
               t() %>%
@@ -2096,6 +2100,7 @@ get_data_column <- function(sample,
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
+    suppressWarnings({
     feature_column <- SeuratObject::GetAssayData(object = sample,
                                     assay = assay,
                                     slot = slot)[feature, , drop = FALSE] %>%
@@ -2104,6 +2109,7 @@ get_data_column <- function(sample,
                       as.data.frame() %>%
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
+    })
   } else if (isTRUE(feature %in% dim_colnames)){
     feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
                       as.data.frame() %>%
@@ -3259,50 +3265,6 @@ get_SCpubr_colors <- function(){
   return(colors)
 }
 
-#' Set assay data depending on the version of SeuratObject
-#'
-#' @param sample Seurat object.
-#' @param assay Assay name.
-#' @param slot slot name.
-#' @param data data to set.
-#'
-#' @return The assay data.
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-.SetAssayData <- function(sample,
-                          assay,
-                          slot,
-                          data){
-
-  # Check version of SeuratObject.
-  version <- utils::packageVersion("SeuratObject")
-  # nocov start
-  if (version > "4.1.3"){
-    if (slot == "counts"){
-      sample@assays[[assay]]$counts <- data
-    } else if (slot == "data"){
-      sample@assays[[assay]]$data <- data
-    } else if (slot == "scale.data"){
-      sample@assays[[assay]]$scale.data <- data
-    }
-
-    # Uncomment once the version is on CRAN.
-    # SeuratObject::LayerData(object = sample,
-    #                         assay = assay,
-    #                         layer = slot) <- data
-
-    # nocov end
-  } else {
-    sample <- SeuratObject::SetAssayData(object = sample,
-                                         assay = assay,
-                                         slot = slot,
-                                         new.data = data)
-  }
-  return(sample)
-}
 
 #' Check the group.by parameter
 #'

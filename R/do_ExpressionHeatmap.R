@@ -193,7 +193,7 @@ do_ExpressionHeatmap <- function(sample,
     # Extract activities from object as a long dataframe
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
-
+      suppressWarnings({
       df <- SeuratObject::GetAssayData(sample,
                           assay = assay,
                           slot = slot)[features, , drop = FALSE] %>%
@@ -211,6 +211,7 @@ do_ExpressionHeatmap <- function(sample,
             dplyr::group_by(.data$group.by, .data$gene) %>%
             dplyr::summarise(mean = mean(.data$expression, na.rm = TRUE))
       df.order <- df
+      })
     })
     matrix.list[[group]][["df"]] <- df
     matrix.list[[group]][["df.order"]] <- df.order

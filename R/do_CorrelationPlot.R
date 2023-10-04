@@ -156,6 +156,7 @@ do_CorrelationPlot <- function(sample = NULL,
     variable_genes <- Seurat::VariableFeatures(sample)
 
     # Sort them in order (for ATAC experiments).
+    suppressWarnings({
     genes <- rownames(SeuratObject::GetAssayData(object = sample,
                                     assay = assay,
                                     slot = "data"))
@@ -165,7 +166,7 @@ do_CorrelationPlot <- function(sample = NULL,
              dplyr::filter(.data$Genes %in% variable_genes) %>%
              dplyr::arrange(.data$Position) %>%
              dplyr::pull(.data$Genes)
-
+    })
 
     # Subset sample according to the variable genes.
     sample <- sample[genes, ]
@@ -173,6 +174,7 @@ do_CorrelationPlot <- function(sample = NULL,
     sample <- Seurat::ScaleData(sample, features = genes, verbose = FALSE)
 
     # Retrieve correlation matrix.
+    suppressWarnings({
     out <- sample@meta.data %>%
            dplyr::select(dplyr::all_of(c(group.by))) %>%
            tibble::rownames_to_column(var = "cell") %>%
@@ -197,7 +199,7 @@ do_CorrelationPlot <- function(sample = NULL,
            as.matrix() %>%
            stats::cor() %>%
            round(digits = 2)
-
+    })
     # Compute hclust.
     if (isTRUE(cluster)){
       order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]

@@ -181,7 +181,8 @@ do_PathwayActivityPlot <- function(sample,
     # Extract activities from object as a long dataframe
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
-
+      
+      suppressWarnings({
       df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                       assay = "progeny",
                                       slot = slot))) %>%
@@ -196,7 +197,7 @@ do_PathwayActivityPlot <- function(sample,
                                 values_to = "score") %>%
             dplyr::group_by(.data$group.by, .data$source) %>%
             dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
-
+      })
       df.order <- df
       df.order[is.na(df.order)] <- 0
 
@@ -206,7 +207,7 @@ do_PathwayActivityPlot <- function(sample,
 
       if (!is.null(split.by)){
         sample$split.by <- sample@meta.data[, split.by]
-
+        suppressWarnings({
         df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                               assay = "progeny",
                                               slot = slot))) %>%
@@ -222,6 +223,7 @@ do_PathwayActivityPlot <- function(sample,
                     dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
                     dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         matrix.list[[group]][["df.split"]] <- df.split
+        })
       }
     })
   }

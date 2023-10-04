@@ -249,6 +249,7 @@ do_CopyNumberVariantPlot <- function(sample,
 
   list.data <- list()
   for (group in group.by){
+    suppressWarnings({
     data.use  <- SeuratObject::GetAssayData(object = sample,
                                assay = "CNV_scores",
                                slot = "data") %>%
@@ -266,6 +267,7 @@ do_CopyNumberVariantPlot <- function(sample,
 
                  dplyr::group_by(.data[[group]], .data$Event) %>%
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
+    })
 
     events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
     if (base::isFALSE(flip)){
