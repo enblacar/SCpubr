@@ -444,7 +444,7 @@ return_dependencies <- function(){
 #' TBD
 #' }
 check_suggests <- function(function_name, passive = FALSE){
-  
+
   pkg_list <- return_dependencies()
   # The function is not in the current list of possibilities.
   if (function_name %!in% names(pkg_list)){
@@ -466,15 +466,15 @@ check_suggests <- function(function_name, passive = FALSE){
   if(sum(!pkgs) > 0){
     missing_pkgs <- names(pkgs[vapply(pkgs, function(x){base::isFALSE(x)}, FUN.VALUE = logical(1))])
     if (base::isFALSE(passive)){
-      stop(paste0(add_cross(), crayon_body("Packages "), 
-                  paste(vapply(missing_pkgs, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")), 
-                  crayon_body(" must be installed to use "), 
-                  crayon_key(function_name), 
+      stop(paste0(add_cross(), crayon_body("Packages "),
+                  paste(vapply(missing_pkgs, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
+                  crayon_body(" must be installed to use "),
+                  crayon_key(function_name),
                   crayon_body(".")), call. = FALSE)
     }
   }
-  
-  
+
+
   value <-  if(sum(pkgs) != length(pkgs)){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
   # nocov end
@@ -483,9 +483,9 @@ check_suggests <- function(function_name, passive = FALSE){
 
 
 #' Generate a status report of SCpubr and its dependencies.
-#' 
+#'
 #' This function generates a summary report of the installation status of SCpubr, which packages are still missing and which functions can or can not currently be used.
-#' 
+#'
 #' @param startup \strong{\code{\link[base]{logical}}} | Whether the message should be displayed at startup, therefore, also containing welcoming messages and tips. If \strong{\code{FALSE}}, only the report itself will be printed.
 #' @param extended  \strong{\code{\link[base]{logical}}} | Whether the message should also include installed packages, current and available version, and which \strong{\code{SCpubr}} functions can be used with the currently installed packages.
 #' @return None
@@ -520,13 +520,13 @@ package_report <- function(startup = FALSE,
   } else {
     # nocov end
     tip_rule <- cli::rule(left = "General", width = nchar("General") + 6)
-    
+
     tutorials <- paste0(add_info(initial_newline = FALSE),
                         crayon_body("Have a look at extensive tutorials in "),
                         crayon_key(cli::style_hyperlink(text = "SCpubr's book",
                                                         url = "https://enblacar.github.io/SCpubr-book/")),
                         crayon_body("."))
-    
+
     cite <- paste0(add_tick(initial_newline = FALSE),
                    crayon_body("If you use "),
                    crayon_key("SCpubr"),
@@ -534,7 +534,7 @@ package_report <- function(startup = FALSE,
                    crayon_key(cli::style_hyperlink(text = "cite it accordingly",
                                                    url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
                    crayon_body("."))
-    
+
     stars <- paste0(add_star(initial_newline = FALSE),
                     crayon_body("If the package is useful to you, consider leaving a "),
                     crayon_key("Star"),
@@ -542,7 +542,7 @@ package_report <- function(startup = FALSE,
                     crayon_key(cli::style_hyperlink(text = "GitHub repository",
                                                     url = "https://github.com/enblacar/SCpubr")),
                     crayon_body("."))
-    
+
     updates <- paste0(cli::style_bold(cli::col_blue("!")),
                       crayon_body(" Keep track of the package "),
                       crayon_key("updates"),
@@ -553,25 +553,25 @@ package_report <- function(startup = FALSE,
                       crayon_key(cli::style_hyperlink(text = "Official NEWS website",
                                                       url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
                       crayon_body("."))
-    
+
     plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", crayon_body("Happy plotting!"))
-    
+
     header <- cli::rule(left = paste0(crayon_body("SCpubr "),
                                       crayon_key(utils::packageVersion("SCpubr"))), line_col = "cadetblue")
-    
+
     if (isTRUE(extended)){
-      format_package_name <- function(package, 
+      format_package_name <- function(package,
                                       max_length_packages){
         length.use <- max_length_packages - nchar(package)
         package.use <- paste0(package, paste(rep(" ", length.use), collapse = ""))
         if (isTRUE(requireNamespace(package, quietly = TRUE))){
           if ((package == "ggplot2")  & (utils::packageVersion(package) < "3.4.0")){
-            name <- paste0(cli::col_yellow(cli::style_bold("!")), 
-                           " ", 
+            name <- paste0(cli::col_yellow(cli::style_bold("!")),
+                           " ",
                            cli::col_magenta(package.use))
           } else if ((package == "dplyr")  & (utils::packageVersion(package) < "1.1.0")){
-            name <- paste0(cli::col_yellow(cli::style_bold("!")), 
-                           " ", 
+            name <- paste0(cli::col_yellow(cli::style_bold("!")),
+                           " ",
                            cli::col_magenta(package.use))
           } else {
             name <- paste0(cli::col_green(cli::symbol$tick),
@@ -586,41 +586,41 @@ package_report <- function(startup = FALSE,
                         cli::col_red(package.use)))
         }
       }
-      
+
       packages <- sort(unique(unlist(return_dependencies())))
       max_length_packages <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
-      packages_mod <- vapply(packages, function(x){format_package_name(x, 
+      packages_mod <- vapply(packages, function(x){format_package_name(x,
                                                                        max_length_packages = max_length_packages)}, FUN.VALUE = character(1))
       functions <- sort(unique(names(return_dependencies())))
-      
+
       if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
-        names.use <- unname(vapply(functions, function(x){if (x %in% c("do_LigandReceptorPlot", 
-                                                                       "save_Plot", 
-                                                                       "do_MetadataPlot", 
-                                                                       "do_SCExpressionHeatmap", 
-                                                                       "do_SCEnrichmentHeatmap", 
-                                                                       "do_AffinityAnalysisPlot", 
+        names.use <- unname(vapply(functions, function(x){if (x %in% c("do_LigandReceptorPlot",
+                                                                       "save_Plot",
+                                                                       "do_MetadataPlot",
+                                                                       "do_SCExpressionHeatmap",
+                                                                       "do_SCEnrichmentHeatmap",
+                                                                       "do_AffinityAnalysisPlot",
                                                                        "do_DiffusionMapPlot",
                                                                        "do_LoadingsPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
         names(functions) <- names.use
         # nocov start
       } else {
-        functions <- functions[!(functions %in% c("do_LigandReceptorPlot", 
-                                                  "save_Plot", 
-                                                  "do_MetadataPlot", 
-                                                  "do_SCExpressionHeatmap", 
-                                                  "do_SCEnrichmentHeatmap", 
-                                                  "do_AffinityAnalysisPlot", 
+        functions <- functions[!(functions %in% c("do_LigandReceptorPlot",
+                                                  "save_Plot",
+                                                  "do_MetadataPlot",
+                                                  "do_SCExpressionHeatmap",
+                                                  "do_SCEnrichmentHeatmap",
+                                                  "do_AffinityAnalysisPlot",
                                                   "do_DiffusionMapPlot",
                                                   "do_LoadingsPlot"))]
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       }
       # nocov end
-      
-      
+
+
       functions <- functions[names(functions) != "Essentials"]
-      
+
       max_length_functions <- max(vapply(names(functions), nchar, FUN.VALUE = numeric(1)))
       format_functions <- function(name, value, max_length){
         func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
@@ -629,12 +629,12 @@ package_report <- function(startup = FALSE,
                            cli::ansi_align(cli::col_red(name), max_length, align = "left"))
         paste0(func_use, " ", name_use)
       }
-      
+
       functions.use <- NULL
       for(item in names(functions)){
         functions.use <- append(functions.use, format_functions(name = item, value = functions[[item]], max_length = max_length_functions))
       }
-      
+
       counter <- 0
       print.list <- list()
       print.list.functions <- list()
@@ -642,7 +642,7 @@ package_report <- function(startup = FALSE,
       print.vector.functions <- NULL
       for(item in packages_mod){
         counter <- counter + 1
-        
+
         if (counter %% 4 != 0){
           print.vector <- append(print.vector, item)
           if (counter == length(packages)){
@@ -655,11 +655,11 @@ package_report <- function(startup = FALSE,
           print.vector <- NULL
         }
       }
-      
+
       counter <- 0
       for(item in functions.use){
         counter <- counter + 1
-        
+
         if (counter %% 3 != 0){
           print.vector.functions <- append(print.vector.functions, item)
           if (counter == length(functions.use)){
@@ -670,14 +670,14 @@ package_report <- function(startup = FALSE,
           print.list.functions[[item]] <- paste(print.vector.functions, collapse = "     ")
           print.vector.functions <- NULL
         }
-        
-        
+
+
       }
-      
+
       packages_check <- cli::rule(left = "Required packages", width = nchar("Required packages") + 6)
-      
-      packages_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
-                              crayon_body(" Installed packages are denoted by a "), 
+
+      packages_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                              crayon_body(" Installed packages are denoted by a "),
                               crayon_key("tick"),
                               crayon_body(" ("),
                               cli::style_bold(cli::col_green(cli::symbol$tick)),
@@ -686,20 +686,20 @@ package_report <- function(startup = FALSE,
                               crayon_body(" ("),
                               cli::style_bold(cli::col_red(cli::symbol$cross)),
                               crayon_body(")."))
-      
-      packages_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
-                              crayon_body(" Installed packages that still require an update to correctly run "), 
+
+      packages_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                              crayon_body(" Installed packages that still require an update to correctly run "),
                               crayon_key("SCpubr"),
                               crayon_body(" have an "),
                               crayon_key("exclamation mark"),
                               crayon_body(" ("),
                               cli::style_bold(cli::col_yellow("!")),
                               crayon_body(")."))
-      
-      
+
+
       functions_check <- cli::rule(left = "Available functions", width = nchar("Available functions") + 6)
-      
-      functions_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+
+      functions_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                                crayon_body(" Functions tied to "),
                                crayon_key("development"),
                                crayon_body(" builds of "),
@@ -707,61 +707,61 @@ package_report <- function(startup = FALSE,
                                crayon_body(" are marked by the ("),
                                cli::style_bold(cli::col_cyan("| DEV")),
                                crayon_body(") tag."))
-      
-      functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
+
+      functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                                crayon_body(" You can install development builds of "),
                                crayon_key("SCpubr"),
                                crayon_body(" by following the instructions in the "),
                                crayon_key(cli::style_hyperlink(text = "Releases",
                                                                url = "https://github.com/enblacar/SCpubr/releases")),
                                crayon_body(" page."))
-      
-      functions_tip3 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)), 
-                              crayon_body(" Check the package requirements function-wise with: "), 
+
+      functions_tip3 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                              crayon_body(" Check the package requirements function-wise with: "),
                               cli::style_italic(crayon_key('SCpubr:::return_dependencies()')))
     }
     tip_rule <- cli::rule(left = "Tips!", width = nchar("Tips!") + 6)
-    
+
     tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" To remove the white and black end from continuous palettes, use: "),
                           cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
-    
-    disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)), 
-                              crayon_body(" To suppress this startup message, use: "), 
+
+    disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)),
+                              crayon_body(" To suppress this startup message, use: "),
                               cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n')),
-                              cli::style_bold(cli::col_red(cli::symbol$cross)), 
+                              cli::style_bold(cli::col_red(cli::symbol$cross)),
                               crayon_body(" Alternatively, you can also set the following option: "),
                               cli::style_italic(crayon_key('options("SCpubr.verbose" = FALSE)\n')),
                               crayon_body("  And then load the package normally (and faster) as: "),
                               cli::style_italic(crayon_key('library(SCpubr)')))
-    
+
     end_rule <- cli::rule(col = "cadetblue")
-    
+
     # Mount all individual messages into a big one that will be then be printed as a packageStartupMessage.
     if (isTRUE(startup)){
       if (isTRUE(extended)){
-        msg_wrap <- paste0("\n", "\n", 
+        msg_wrap <- paste0("\n", "\n",
                            header, "\n", "\n",
                            tutorials, "\n", "\n",
                            cite, "\n", "\n",
                            stars, "\n", "\n",
                            updates, "\n", "\n",
                            plotting, "\n", "\n", "\n", "\n",
-                           packages_check, "\n", "\n", 
+                           packages_check, "\n", "\n",
                            paste(print.list, collapse = "\n"), "\n", "\n",
-                           packages_tip1, "\n", 
+                           packages_tip1, "\n",
                            packages_tip2, "\n", "\n", "\n", "\n",
-                           functions_check, "\n", "\n", 
+                           functions_check, "\n", "\n",
                            paste(print.list.functions, collapse = "\n"), "\n", "\n",
-                           functions_tip1, "\n", 
-                           functions_tip2, "\n", 
+                           functions_tip1, "\n",
+                           functions_tip2, "\n",
                            functions_tip3, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       } else {
-        msg_wrap <- paste0("\n", "\n", 
+        msg_wrap <- paste0("\n", "\n",
                            header, "\n", "\n",
                            tutorials, "\n", "\n",
                            cite, "\n", "\n",
@@ -773,27 +773,27 @@ package_report <- function(startup = FALSE,
                            disable_message, "\n", "\n",
                            end_rule)
       }
-      
+
       rlang::inform(msg_wrap, class = "packageStartupMessage")
     } else if (base::isFALSE(startup)){
       if (isTRUE(extended)){
-        msg_wrap <- paste0("\n", "\n", 
+        msg_wrap <- paste0("\n", "\n",
                            header, "\n", "\n",
-                           packages_check, "\n", "\n", 
+                           packages_check, "\n", "\n",
                            paste(print.list, collapse = "\n"), "\n", "\n",
-                           packages_tip1, "\n", 
+                           packages_tip1, "\n",
                            packages_tip2, "\n", "\n", "\n", "\n",
-                           functions_check, "\n", "\n", 
+                           functions_check, "\n", "\n",
                            paste(print.list.functions, collapse = "\n"), "\n", "\n",
-                           functions_tip1, "\n", 
-                           functions_tip2, "\n", 
+                           functions_tip1, "\n",
+                           functions_tip2, "\n",
                            functions_tip3, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       } else {
-        msg_wrap <- paste0("\n", "\n", 
+        msg_wrap <- paste0("\n", "\n",
                            header, "\n", "\n",
                            tutorials, "\n", "\n",
                            cite, "\n", "\n",
@@ -805,7 +805,7 @@ package_report <- function(startup = FALSE,
                            disable_message, "\n", "\n",
                            end_rule)
       }
-      
+
       rlang::inform(msg_wrap)
     }
   }
@@ -876,7 +876,7 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
@@ -886,53 +886,53 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
       check_values <- as.character(unique(sample@meta.data[, grouping_variable]))
     }
   }
-  
+
   if (!is.null(idents.keep)){
     # Remove unwanted idents.
     check_values <- check_values[check_values %in% idents.keep]
   }
-  
+
   # Remove NAs.
   check_values <- check_values[!(is.na(check_values))]
-  
+
   # Remove values that are not in the vector.
   if (sum(names(colors) %in% check_values) == length(check_values) & length(names(colors)) > length(check_values)){
     colors <- colors[names(colors) %in% check_values]
   }
-  
+
   if (base::isFALSE(length(colors) == length(check_values)) | base::isFALSE(sum(names(colors) %in% check_values) == length(check_values))){
-    
+
     format_colors <- function(name, value, colors,  max_length){
-      
+
       if (name %in% names(colors)){
         name <- paste(c(name, crayon_body(" | "), cli::col_cyan(paste0(colors[[name]]))), collapse = "")
       }
-      
+
       func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
       name_use <- ifelse(isTRUE(value),
                          cli::ansi_align(crayon_key(name), max_length, align = "left"),
                          cli::ansi_align(cli::col_red(name), max_length, align = "left"))
       paste0(func_use, " ", name_use)
     }
-      
+
       color_check <- vapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)}, FUN.VALUE = logical(1))
-      
+
       max_length <- max(vapply(check_values, nchar, FUN.VALUE = numeric(1)))
       max_length_colors <- max(vapply(unname(colors), nchar, FUN.VALUE = numeric(1)))
       length.use <- max_length + 3 + max_length_colors
-      
-      
+
+
       colors.print <- NULL
       for(item in sort(names(color_check))){
         colors.print <- append(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
       }
-      
-      
+
+
     msg <- paste0("\n", "\n",
-                  add_cross(), 
+                  add_cross(),
                   crayon_body("The "),
                   crayon_key("number"),
-                  crayon_body(" or "), 
+                  crayon_body(" or "),
                   crayon_key("names"),
                   crayon_body(" of the provided "),
                   crayon_key("colors"),
@@ -940,9 +940,9 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
                   crayon_key("number of unique values"),
                   crayon_body(" in "),
                   crayon_key("group.by"),
-                  crayon_body(" (which defaults to "), 
+                  crayon_body(" (which defaults to "),
                   cli::style_italic(crayon_key("Seurat::Idents(sample)")),
-                  crayon_body(" if "), 
+                  crayon_body(" if "),
                   crayon_key("NULL"),
                   crayon_body(")."),
                   "\n",
@@ -953,17 +953,17 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
                   crayon_key("named vector"),
                   crayon_body(" where the names are the "),
                   crayon_key("unique values"),
-                  crayon_body(" to which you then assign the "), 
+                  crayon_body(" to which you then assign the "),
                   crayon_key("colors"),
-                  crayon_body(" to."), 
+                  crayon_body(" to."),
                   "\n", "\n",
                   add_warning(),
                   crayon_body("Example: "),
                   cli::style_italic(crayon_key('colors.use = c("A" = "red", "B" = "blue")')),
                   "\n",
                   "\n", "\n",
-                  crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_cyan("assigned color")), width = nchar("Values with an assigned color") + 6)), 
-                  "\n", "\n", 
+                  crayon_body(cli::rule(left = paste0(crayon_key("Values"), crayon_body(" with an "), cli::col_cyan("assigned color")), width = nchar("Values with an assigned color") + 6)),
+                  "\n", "\n",
                   paste(colors.print, collapse = "\n"), "\n", "\n")
     stop(msg, call. = FALSE)
   }
@@ -1026,7 +1026,7 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
 
   if (feature %in% rownames(sample)){
-    data.check <- .GetAssayData(sample,
+    data.check <- SeuratObject::GetAssayData(sample,
                                        assay = assay,
                                        slot = slot)[feature, ]
     scale.begin <- min(data.check, na.rm = TRUE)
@@ -1197,7 +1197,7 @@ compute_scales <- function(sample,
       value.use <- max(c(low_end, high_end))
       limits <- c(1 - value.use, 1 + value.use)
     }
-    
+
   }
 
   breaks <- labeling::extended(dmin = limits[1],
@@ -1218,9 +1218,9 @@ compute_scales <- function(sample,
       labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", max.cutoff)
     }
   }
-  
+
   # Fix for the one value limit.
-  
+
   if(limits[[1]] == limits[[2]]){
     breaks <- limits[[1]]
     labels <- as.character(limits[[1]])
@@ -1320,7 +1320,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
       not_found_features <- append(not_found_features, feature)
     }
   }
-  
+
   # Return the error logs if there were features not found.
   if (length(not_found_features) > 0){
     if (isTRUE(permissive)){
@@ -1859,7 +1859,7 @@ compute_enrichment_scores <- function(sample,
       # nocov end
     }
   }
-  
+
   if (flavor == "AUCell"){
     if (!requireNamespace("AUCell", quietly = TRUE)) {
       # nocov start
@@ -1950,7 +1950,7 @@ compute_enrichment_scores <- function(sample,
     if (is.null(slot)){
       slot <- "data"
     }
-    scores <- AUCell::AUCell_run(exprMat = .GetAssayData(sample, assay = assay, slot = slot),
+    scores <- AUCell::AUCell_run(exprMat = SeuratObject::GetAssayData(sample, assay = assay, slot = slot),
                                  geneSets = input_gene_list)
     scores <- scores@assays@data$AUC %>%
               as.matrix() %>%
@@ -1971,12 +1971,12 @@ compute_enrichment_scores <- function(sample,
                                          by = "cell") %>%
                         tibble::column_to_rownames(var = "cell")
   }
-  
+
   # Compute a 0-1 normalization.
   for (name in names(input_gene_list)){
     sample@meta.data[, paste0(name, "_scaled")] <- zero_one_norm(sample@meta.data[, name])
   }
-  
+
   return(sample)
 }
 
@@ -2096,7 +2096,7 @@ get_data_column <- function(sample,
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
-    feature_column <- .GetAssayData(sample = sample,
+    feature_column <- SeuratObject::GetAssayData(object = sample,
                                     assay = assay,
                                     slot = slot)[feature, , drop = FALSE] %>%
                       as.matrix() %>%
@@ -3064,7 +3064,7 @@ handle_axis <- function(flip,
       strip.text <- ggplot2::element_blank()
       legend.position <- "none"
     }
-    
+
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3087,7 +3087,7 @@ handle_axis <- function(flip,
                                                   hjust = 0.5)
         axis.title.x.bottom <- ggplot2::element_blank()
       }
-      
+
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 90,
                                                  hjust = 0.5,
@@ -3112,13 +3112,13 @@ handle_axis <- function(flip,
         axis.title.x.top <- ggplot2::element_blank()
         axis.title.x.bottom <- ggplot2::element_blank()
       }
-      
+
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 90,
                                                  hjust = 0.5,
                                                  vjust = 0.5)
       axis.title.y.right <- ggplot2::element_blank()
-      
+
     }
   } else {
     # Strips and legend.
@@ -3138,8 +3138,8 @@ handle_axis <- function(flip,
       strip.text <- ggplot2::element_blank()
       legend.position <- "none"
     }
-    
-    
+
+
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3174,7 +3174,7 @@ handle_axis <- function(flip,
                                                    hjust = 0.5)
         axis.title.y.right <- ggplot2::element_blank()
       }
-      
+
     } else {
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3205,7 +3205,7 @@ handle_axis <- function(flip,
       }
     }
   }
-  
+
   out_list <- list("axis.ticks.x.top" = axis.ticks.x.top,
                    "axis.ticks.x.bottom" = axis.ticks.x.bottom,
                    "axis.ticks.y.left" = axis.ticks.y.left,
@@ -3223,7 +3223,7 @@ handle_axis <- function(flip,
                    "strip.text" = strip.text,
                    "legend.position" = legend.position)
   return(out_list)
-  
+
 }
 
 #' Generate a list of colors that will be used for metadata plots.
@@ -3235,7 +3235,7 @@ handle_axis <- function(flip,
 #' TBD
 #' }
 get_SCpubr_colors <- function(){
-  
+
   colors <- c("#457b9d",
               "#b5838d",
               "#d4a276",
@@ -3259,51 +3259,6 @@ get_SCpubr_colors <- function(){
   return(colors)
 }
 
-# This needs to be modified when Seurat V5 is on CRAN.
-
-#' Retrieve assay data depending on the version of SeuratObject
-#'
-#' @param sample Seurat object.
-#' @param assay Assay name.
-#' @param slot slot name.
-#'
-#' @return The assay data.
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-.GetAssayData <- function(sample,
-                         assay,
-                         slot){
-  
-  # Check version of SeuratObject.
-  version <- utils::packageVersion("SeuratObject")
-  # nocov start
-  if (version > "4.1.3"){
-    if (slot == "counts"){
-      data <- sample@assays[[assay]]$counts
-    } else if (slot == "data"){
-      data <- sample@assays[[assay]]$data
-    } else if (slot == "scale.data"){
-      data <- sample@assays[[assay]]$scale.data
-    }
-    
-    # Uncomment once the version is on CRAN.
-    # data <- SeuratObject::LayerData(object = sample,
-    #                                 assay = assay,
-    #                                 layer = slot)
-  
-    # nocov end
-  } else {
-    data <- SeuratObject::GetAssayData(object = sample,
-                                       assay = assay,
-                                       slot = slot)
-  }
-  return(data)
-}
-
-
 #' Set assay data depending on the version of SeuratObject
 #'
 #' @param sample Seurat object.
@@ -3321,7 +3276,7 @@ get_SCpubr_colors <- function(){
                           assay,
                           slot,
                           data){
-  
+
   # Check version of SeuratObject.
   version <- utils::packageVersion("SeuratObject")
   # nocov start
@@ -3333,12 +3288,12 @@ get_SCpubr_colors <- function(){
     } else if (slot == "scale.data"){
       sample@assays[[assay]]$scale.data <- data
     }
-    
+
     # Uncomment once the version is on CRAN.
     # SeuratObject::LayerData(object = sample,
     #                         assay = assay,
     #                         layer = slot) <- data
-    
+
     # nocov end
   } else {
     sample <- SeuratObject::SetAssayData(object = sample,
@@ -3364,9 +3319,9 @@ get_SCpubr_colors <- function(){
 check_group_by <- function(sample,
                            group.by,
                            is.heatmap){
-  
+
   group.by.return <- NULL
-  
+
   if (is.null(group.by)){
     assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
                             msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
@@ -3377,7 +3332,7 @@ check_group_by <- function(sample,
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }
-  
+
   for (group in group.by){
     assertthat::assert_that(group %in% colnames(sample@meta.data),
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
@@ -3385,7 +3340,7 @@ check_group_by <- function(sample,
                                          crayon_body(" is not part of the Seurat object "),
                                          crayon_key("meta.data"),
                                          crayon_body(".")))
-    
+
     assertthat::assert_that(class(sample@meta.data[, group]) %in% c("character", "factor"),
                             msg = paste0(add_cross(), crayon_body("The value provided to"),
                                          crayon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
@@ -3396,7 +3351,7 @@ check_group_by <- function(sample,
                                          crayon_body(" column in the sample"),
                                          crayon_key("metadata of the Seurat object"),
                                          crayon_body(".")))
-    
+
     if (isTRUE(is.heatmap)){
       assertthat::assert_that(sum(is.na(sample@meta.data[, group])) == 0,
                               msg = paste0(add_warning(), crayon_body("Found "),
@@ -3481,7 +3436,7 @@ compute_continuous_palette <- function(name = "YlGnBu",
         }
       }
     }
-    
+
   } else {
     if (direction == 1){
       colors <- RColorBrewer::brewer.pal(n = 11, name = name)
@@ -3538,4 +3493,3 @@ range_norm <- function(x, a, b){
   y <- (b - a) * ((x - (min(x, na.rm = TRUE))) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))) + a
   return(y)
 }
-

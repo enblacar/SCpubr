@@ -52,12 +52,12 @@ do_PathwayActivityPlot <- function(sample,
                                    legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
-  
+
+
   check_suggests(function_name = "do_PathwayActivityPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
-  
+
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "flip" = flip,
@@ -104,13 +104,13 @@ do_PathwayActivityPlot <- function(sample,
                          "legend.title.face" = legend.title.face,
                          "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
-  
+
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")
   check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
   check_colors(na.value, parameter_name = "na.value")
   check_colors(grid.color, parameter_name = "grid.color")
   check_colors(border.color, parameter_name = "border.color")
-  
+
   check_parameters(parameter = font.type, parameter_name = "font.type")
   check_parameters(parameter = legend.type, parameter_name = "legend.type")
   check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
@@ -126,9 +126,9 @@ do_PathwayActivityPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
+
   `%>%` <- magrittr::`%>%`
-  
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -141,7 +141,7 @@ do_PathwayActivityPlot <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
+
   sample[["progeny"]] <- activities %>%
                          dplyr::filter(.data$statistic == .env$statistic) %>%
                          tidyr::pivot_wider(id_cols = "source",
@@ -149,25 +149,25 @@ do_PathwayActivityPlot <- function(sample,
                                             values_from = "score") %>%
                          tibble::column_to_rownames("source") %>%
                          Seurat::CreateAssayObject()
-  
+
   Seurat::DefaultAssay(sample) <- "progeny"
   sample@assays$progeny@key <- "progeny_"
-  
+
   # Scale the data.
   sample <- Seurat::ScaleData(sample, verbose = FALSE)
-  
+
   list.out <- list()
-  
+
   if (!is.null(split.by) & !is.null(group.by)){
     assertthat::assert_that(length(group.by) == 1,
                             msg = paste0(add_cross(), crayon_body("When using "),
-                                         crayon_key("split.by"), 
+                                         crayon_key("split.by"),
                                          crayon_body(" make sure you only provide a single value to "),
                                          crayon_key("group.by"),
                                          crayon_body(". Otherwise, the prot will not keep the proportions. This is a design choice. Thanks!")))
   }
-  
-  
+
+
   if (is.null(group.by)) {
     sample$Groups <- Seurat::Idents(sample)
     sample$group.by <- sample$Groups
@@ -175,14 +175,14 @@ do_PathwayActivityPlot <- function(sample,
   }
   # Plotting
   list.out <- list()
-  
+
   matrix.list <- list()
   for (group in group.by){
     # Extract activities from object as a long dataframe
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
-      
-      df <- t(as.matrix(.GetAssayData(sample = sample,
+
+      df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                       assay = "progeny",
                                       slot = slot))) %>%
             as.data.frame() %>%
@@ -196,18 +196,18 @@ do_PathwayActivityPlot <- function(sample,
                                 values_to = "score") %>%
             dplyr::group_by(.data$group.by, .data$source) %>%
             dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
-      
+
       df.order <- df
       df.order[is.na(df.order)] <- 0
-      
+
       matrix.list[[group]][["df"]] <- df
       matrix.list[[group]][["df.order"]] <- df.order
-      
-      
+
+
       if (!is.null(split.by)){
         sample$split.by <- sample@meta.data[, split.by]
-        
-        df.split <- t(as.matrix(.GetAssayData(sample = sample,
+
+        df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
                                               assay = "progeny",
                                               slot = slot))) %>%
                     as.data.frame() %>%
@@ -225,21 +225,21 @@ do_PathwayActivityPlot <- function(sample,
       }
     })
   }
-  
-  
+
+
   counter <- 0
   for (group in group.by){
     counter <- counter + 1
-    
+
     df <- matrix.list[[group]][["df"]]
     df.order <- matrix.list[[group]][["df.order"]]
-    
+
     data <- df
-    
+
     if (!is.null(split.by)){
       data <- matrix.list[[group]][["df.split"]]
     }
-    
+
     # Transform to wide to retrieve the hclust.
     df.order <- df.order %>%
                 tidyr::pivot_wider(id_cols = "group.by",
@@ -261,7 +261,7 @@ do_PathwayActivityPlot <- function(sample,
         col_order <- colnames(df.order)[stats::hclust(stats::dist(t(df.order), method = "euclidean"), method = "ward.D")$order]
       }
     }
-    
+
     data <- data %>%
             dplyr::mutate("source" = factor(.data$source, levels = rev(col_order)),
                           "group.by" = factor(.data$group.by, levels = row_order))
@@ -270,30 +270,30 @@ do_PathwayActivityPlot <- function(sample,
       data <- data %>%
               dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
     }
-    
+
     if (!is.na(max.cutoff)){
       data <- data %>%
               dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
     }
-    
+
     matrix.list[[group]][["data"]] <- data
   }
-  
+
   # Compute limits.
   min.vector <- NULL
   max.vector <- NULL
-  
+
   for (group in group.by){
     data <- matrix.list[[group]][["data.mean"]]
-    
+
     min.vector <- append(min.vector, min(data$mean, na.rm = TRUE))
     max.vector <- append(max.vector, max(data$mean, na.rm = TRUE))
   }
-  
+
   # Get the absolute limits of the datasets.
   limits <- c(min(min.vector),
               max(max.vector))
-  
+
   # Compute overarching scales for all heatmaps.
   scale.setup <- compute_scales(sample = sample,
                                 feature = " ",
@@ -307,16 +307,16 @@ do_PathwayActivityPlot <- function(sample,
                                 enforce_symmetry = enforce_symmetry,
                                 from_data = TRUE,
                                 limits.use = limits)
-  
-  
+
+
   # Plot individual heatmaps.
   counter <- 0
   list.heatmaps <- list()
   for (group in group.by){
     counter <- counter + 1
     data <- matrix.list[[group]][["data"]]
-    
-    p <- data %>% 
+
+    p <- data %>%
          # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if(base::isFALSE(flip)){.data$source} else {.data$group.by},
                                                 y = if(base::isFALSE(flip)){.data$group.by} else {.data$source},
@@ -328,20 +328,20 @@ do_PathwayActivityPlot <- function(sample,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$source)))) +
-         ggplot2::coord_equal() + 
+         ggplot2::coord_equal() +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
                                        name = paste0("Pathway score | ", statistic, ifelse(slot == "scale.data", " | Scaled + Centered", "")),
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
-    
+
     if (!is.null(split.by)){
-      p <- p + 
+      p <- p +
            ggplot2::facet_grid(~ .data$split.by,
                                drop = FALSE)
     }
-    
+
     p <- modify_continuous_legend(p = p,
                                   legend.title = paste0("Pathway score | ", statistic),
                                   legend.aes = "fill",
@@ -362,7 +362,7 @@ do_PathwayActivityPlot <- function(sample,
         } else {
           xlab <- "Pathway"
         }
-        
+
         ylab <- group
       } else {
         if (length(group.by) > 1){
@@ -379,7 +379,7 @@ do_PathwayActivityPlot <- function(sample,
     } else {
       if (counter == 1){
         ylab <- "Pathway"
-        
+
         xlab <- group
       } else {
         ylab <- NULL
@@ -387,8 +387,8 @@ do_PathwayActivityPlot <- function(sample,
       }
     }
     # nocov end
-    
-    
+
+
     axis.parameters <- handle_axis(flip = flip,
                                    group.by = group.by,
                                    group = group,
@@ -401,7 +401,7 @@ do_PathwayActivityPlot <- function(sample,
                                    axis.text.face = axis.text.face,
                                    legend.title.face = legend.title.face,
                                    legend.text.face = legend.text.face)
-    
+
     # Set theme
     p <- p +
          ggplot2::xlab(xlab) +
@@ -441,10 +441,10 @@ do_PathwayActivityPlot <- function(sample,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
-    
+
     list.heatmaps[[group]] <- p
   }
-  
+
   # Plot the combined plot
   input <- if(base::isFALSE(flip)){list.heatmaps[rev(group.by)]}else{list.heatmaps[group.by]}
   p <- patchwork::wrap_plots(input,
@@ -466,15 +466,15 @@ do_PathwayActivityPlot <- function(sample,
                                                                                            hjust = 1,
                                                                                            family = font.type),
                                                       plot.caption.position = "plot"))
-  
+
   list.out[["Heatmap"]] <- p
-  
+
   if (isTRUE(return_object)){
     list.out[["Object"]] <- sample
     return_me <- list.out
   } else{
     return_me <- list.out[["Heatmap"]]
   }
-  
+
   return(return_me)
 }

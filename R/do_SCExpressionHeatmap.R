@@ -69,13 +69,13 @@ do_SCExpressionHeatmap <- function(sample,
                                    legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_SCExpressionHeatmap")
   check_Seurat(sample)
-  
+
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
   if (is.null(slot)){slot <- check_and_set_slot(slot)}
-  
+
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "proportional.size" = proportional.size,
@@ -158,8 +158,8 @@ do_SCExpressionHeatmap <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-  
-  
+
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -172,9 +172,9 @@ do_SCExpressionHeatmap <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
+
   `%>%` <- magrittr::`%>%`
-  genes.avail <- rownames(.GetAssayData(sample, slot = slot, assay = assay))
+  genes.avail <- rownames(SeuratObject::GetAssayData(sample, slot = slot, assay = assay))
 
   assertthat::assert_that(sum(features %in% genes.avail) > 0,
                           msg = paste0(add_cross(), crayon_body("None of the features are present in the row names of the assay "),
@@ -187,7 +187,7 @@ do_SCExpressionHeatmap <- function(sample,
                                        crayon_key("scale.data"),
                                        crayon_body(", sometimes some of the features are missing.")))
 
-  
+
   missing_features <- features[!(features %in% genes.avail)]
   if (length(missing_features) > 0){
     if (isTRUE(verbose)){
@@ -201,7 +201,7 @@ do_SCExpressionHeatmap <- function(sample,
   }
 
   features <- features[features %in% genes.avail]
-  
+
   if (!is.null(features.order)){
     features.order <- features.order[features.order %in% genes.avail]
     assertthat::assert_that(sum(features.order %in% features) == length(features),
@@ -211,33 +211,33 @@ do_SCExpressionHeatmap <- function(sample,
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
   }
-  
 
-  matrix <- .GetAssayData(sample,
+
+  matrix <- SeuratObject::GetAssayData(sample,
                                  assay = assay,
                                  slot = slot)[features, , drop = FALSE] %>%
             as.matrix()
-  
+
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,
                         is.heatmap = TRUE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
-  
+
   assertthat::assert_that(length(group.by) == 1,
                           msg = paste0(add_cross(), crayon_body("Please provide only a single value to "),
                                        crayon_key("group.by"),
                                        crayon_body(".")))
-  
-  
-  
+
+
+
 
   # nocov start
   # Perform hierarchical clustering cluster-wise
   order.use <- if (is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}
   # nocov end
-  
+
   matrix <-  matrix %>%
              t() %>%
              as.data.frame() %>%
@@ -248,7 +248,7 @@ do_SCExpressionHeatmap <- function(sample,
                                    by = "cell") %>%
              dplyr::group_by(.data[[group.by]])
   if (!is.na(subsample)){
-   matrix <- matrix %>% 
+   matrix <- matrix %>%
              dplyr::slice_sample(n = subsample)
   }
   # Retrieve the order median-wise to cluster heatmap bodies.
@@ -264,7 +264,7 @@ do_SCExpressionHeatmap <- function(sample,
     group_order <- stats::hclust(stats::dist(t(median.matrix), method = "euclidean"), method = "ward.D")$order
     order.use <- order.use[group_order]
   }
-  
+
 
   # Retrieve the order median-wise for the genes.
   if (length(features) == 1) {
@@ -291,20 +291,20 @@ do_SCExpressionHeatmap <- function(sample,
     }
   }
   # nocov end
-  
+
   if (isTRUE(cluster)){
     col_order <- list()
     for (item in order.use){
       cells.use <- matrix %>%
         dplyr::filter(.data[[group.by]] == item) %>%
         dplyr::pull(dplyr::all_of("cell"))
-      
-      matrix.subset <- matrix %>% 
-                       dplyr::ungroup() %>% 
-                       dplyr::select(-dplyr::all_of(c(group.by))) %>% 
-                       tibble::column_to_rownames(var = "cell") %>% 
-                       as.data.frame() %>% 
-                       as.matrix() %>% 
+
+      matrix.subset <- matrix %>%
+                       dplyr::ungroup() %>%
+                       dplyr::select(-dplyr::all_of(c(group.by))) %>%
+                       tibble::column_to_rownames(var = "cell") %>%
+                       as.data.frame() %>%
+                       as.matrix() %>%
                        t()
       matrix.subset <- matrix.subset[, cells.use]
       # nocov start
@@ -323,16 +323,16 @@ do_SCExpressionHeatmap <- function(sample,
         matrix.use <- t(matrix.subset)
       }
       col_order.use <- stats::hclust(stats::dist(matrix.use, method = "euclidean"), method = "ward.D")$order
-      
+
       col_order[[item]] <- cells.use[col_order.use]
     }
     col_order <- unlist(unname(col_order))
   } else {
     col_order <- matrix %>% dplyr::pull("cell")
   }
-  
 
-  
+
+
 
 
   # Retrieve metadata matrix.
@@ -361,7 +361,7 @@ do_SCExpressionHeatmap <- function(sample,
                                  "cell" = factor(.data$cell, levels = col_order)) %>%
                    dplyr::select(-dplyr::all_of(name)) %>%
                    tibble::as_tibble()
-      
+
       if (name %in% names(metadata.colors)){
         colors.use <- metadata.colors[[name]]
       } else {
@@ -376,7 +376,7 @@ do_SCExpressionHeatmap <- function(sample,
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
                                space = if(isTRUE(proportional.size)) {"fixed"} else {"free"}) +
-           ggplot2::scale_fill_manual(values = colors.use) + 
+           ggplot2::scale_fill_manual(values = colors.use) +
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                        title.position = "top",
                                                        title.hjust = 0.5,
@@ -392,12 +392,12 @@ do_SCExpressionHeatmap <- function(sample,
 
   # Generate the plotting data.
   plot_data <- matrix %>%
-               dplyr::ungroup() %>% 
+               dplyr::ungroup() %>%
                as.data.frame() %>%
                tidyr::pivot_longer(cols = -dplyr::all_of(c(group.by, "cell")),
                                    names_to = "gene",
                                    values_to = "expression") %>%
-               dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>% 
+               dplyr::rename("group.by" = dplyr::all_of(c(group.by))) %>%
                dplyr::mutate("group.by" = factor(.data$group.by, levels = order.use),
                              "gene" = factor(.data$gene, levels = if (is.null(features.order)){rev(row_order)} else {features.order}),
                              "cell" = factor(.data$cell, levels = col_order))
@@ -441,10 +441,10 @@ do_SCExpressionHeatmap <- function(sample,
                                 enforce_symmetry = enforce_symmetry,
                                 from_data = TRUE,
                                 limits.use = limits.use)
-  
-  p <- p + 
-       ggplot2::ylab(ylab) + 
-       ggplot2::xlab(xlab) + 
+
+  p <- p +
+       ggplot2::ylab(ylab) +
+       ggplot2::xlab(xlab) +
        ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                      na.value = na.value,
                                      name = legend.title,
@@ -464,8 +464,8 @@ do_SCExpressionHeatmap <- function(sample,
                                 legend.framewidth = legend.framewidth,
                                 legend.tickwidth = legend.tickwidth)
 
-  
-  
+
+
   # Theme setup.
   metadata_plots[["main"]] <- p
 
@@ -528,7 +528,7 @@ do_SCExpressionHeatmap <- function(sample,
     plots_wrap <- c(metadata_plots[c(metadata, "main")])
     main_body_size <- main.heatmap.size
     height_unit <- c(rep((1 - main_body_size) / length(metadata), length(metadata)), main_body_size)
-    
+
     out <- patchwork::wrap_plots(plots_wrap,
                                  ncol = 1,
                                  guides = "collect",
@@ -550,7 +550,7 @@ do_SCExpressionHeatmap <- function(sample,
                                                                                                   face = plot.caption.face,
                                                                                                   hjust = 1),
                                                              plot.caption.position = "plot"))
-    
+
   } else {
     out <- metadata_plots[["main"]]
   }

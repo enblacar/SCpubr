@@ -93,7 +93,7 @@ do_FeaturePlot <- function(sample,
                            legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_FeaturePlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -101,9 +101,9 @@ do_FeaturePlot <- function(sample,
   out <- check_and_set_assay(sample = sample, assay = assay)
   sample <- out[["sample"]]
   assay <- out[["assay"]]
-  
+
   sample <- check_Assay5(sample, assay = assay)
-  
+
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   # Check the dimensions.
@@ -293,7 +293,7 @@ do_FeaturePlot <- function(sample,
                    crayon_key("features"),
                    crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")), call. = FALSE)
   }
-  
+
   if (length(max.cutoff) != length(features)){
     warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
                    crayon_key("max.cutoff"),
@@ -301,7 +301,7 @@ do_FeaturePlot <- function(sample,
                    crayon_key("features"),
                    crayon_body(" provided. The values will be used in order and, when outside of the range, no cutoffs will be applied.")), call. = FALSE)
   }
-  
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -314,8 +314,8 @@ do_FeaturePlot <- function(sample,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-  
-  
+
+
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
     out <- compute_umap_layer(sample = sample,
@@ -414,7 +414,7 @@ do_FeaturePlot <- function(sample,
                                                                      limits = scale.setup$limits),
                        scale = "color")
       } else if (num_plots > 1){
-        
+
         feature.use <- features[counter]
         scale.setup <- compute_scales(sample = sample,
                                       feature = feature.use,
@@ -575,7 +575,7 @@ do_FeaturePlot <- function(sample,
         sample$dummy <- sample@meta.data[, feature]
         ## Or is a gene in the object.
       } else if (feature %in% rownames(sample)){
-        sample$dummy <- .GetAssayData(sample = sample, slot = slot, assay = assay)[feature, ]
+        sample$dummy <- SeuratObject::GetAssayData(object = sample, slot = slot, assay = assay)[feature, ]
         ## Or is a dimensional reduction component.
       } else if (feature %in% dim_colnames){
         # Iterate over each dimensional reduction in the object.
@@ -664,7 +664,7 @@ do_FeaturePlot <- function(sample,
                                                                           labels = scale.setup$labels,
                                                                           limits = scale.setup$limits),
                             scale = "color")
-        
+
         p.loop <- p.loop +
                   ggplot2::ggtitle("")
 
@@ -673,15 +673,15 @@ do_FeaturePlot <- function(sample,
           p.loop$layers <- append(base_layer_subset, p.loop$layers)
           p.loop$layers <- append(na_layer, p.loop$layers)
           p.loop$layers <- append(base_layer, p.loop$layers)
-          
+
           suppressMessages({
-            p.loop <- p.loop + 
-              ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x), 
-                                                     max(p.loop$layers[[1]]$data$x))) + 
-              ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y), 
+            p.loop <- p.loop +
+              ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x),
+                                                     max(p.loop$layers[[1]]$data$x))) +
+              ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y),
                                                      max(p.loop$layers[[1]]$data$y)))
           })
-          
+
           if (!(is.null(group.by))){
             if (isTRUE(group.by.show.dots)){
               p.loop$layers <- append(p.loop$layers, c(center_layer_2, center_layer_1))
@@ -874,15 +874,15 @@ do_FeaturePlot <- function(sample,
             p.loop$layers <- append(base_layer_subset, p.loop$layers)
             p.loop$layers <- append(na_layer, p.loop$layers)
             p.loop$layers <- append(base_layer, p.loop$layers)
-    
+
             suppressMessages({
-              p.loop <- p.loop + 
-                ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x), 
-                                                       max(p.loop$layers[[1]]$data$x))) + 
-                ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y), 
+              p.loop <- p.loop +
+                ggplot2::scale_x_continuous(limits = c(min(p.loop$layers[[1]]$data$x),
+                                                       max(p.loop$layers[[1]]$data$x))) +
+                ggplot2::scale_y_continuous(limits = c(min(p.loop$layers[[1]]$data$y),
                                                        max(p.loop$layers[[1]]$data$y)))
             })
-            
+
             if (!(is.null(group.by))){
               if (isTRUE(group.by.show.dots)){
                 p.loop$layers <- append(p.loop$layers, c(center_layer_2, center_layer_1))

@@ -54,7 +54,7 @@ do_ExpressionHeatmap <- function(sample,
 
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_ExpressionHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -133,7 +133,7 @@ do_ExpressionHeatmap <- function(sample,
 
 
   `%>%` <- magrittr::`%>%`
-  
+
   # Generate the continuous color palette.
   if (isTRUE(enforce_symmetry)){
     colors.gradient <- compute_continuous_palette(name = diverging.palette,
@@ -194,7 +194,7 @@ do_ExpressionHeatmap <- function(sample,
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]
 
-      df <- .GetAssayData(sample,
+      df <- SeuratObject::GetAssayData(sample,
                           assay = assay,
                           slot = slot)[features, , drop = FALSE] %>%
             as.matrix() %>%
@@ -241,7 +241,7 @@ do_ExpressionHeatmap <- function(sample,
       } else {
         row_order <- rownames(df.order)
       }
-      
+
     }
     if (counter == 1){
       if (length(colnames(df.order)) == 1){
@@ -252,20 +252,20 @@ do_ExpressionHeatmap <- function(sample,
         } else {
           col_order <- colnames(df.order)
         }
-        
+
       }
     }
-    
+
     if (!is.null(groups.order) & (group %in% names(groups.order))){
       groups.order.use <- groups.order[[group]]
     } else {
       groups.order.use <- row_order
     }
-    
+
     data <- df %>%
             dplyr::mutate("gene" = factor(.data$gene, levels = if (is.null(features.order)){rev(col_order)} else {features.order}),
                           "group.by" = factor(.data$group.by, levels = groups.order.use))
-    
+
     if (!is.na(min.cutoff)){
       data <- data %>%
               dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
@@ -316,7 +316,7 @@ do_ExpressionHeatmap <- function(sample,
     counter <- counter + 1
     data <- matrix.list[[group]][["data"]]
 
-    p <- data %>% 
+    p <- data %>%
          # nocov start
          ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$gene} else {.data$group.by},
                                                 y = if (base::isFALSE(flip)){.data$group.by} else {.data$gene},
@@ -328,7 +328,7 @@ do_ExpressionHeatmap <- function(sample,
                                    position = "top") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$group.by))),
                          x.sec = guide_axis_label_trans(~paste0(levels(.data$gene)))) +
-         ggplot2::coord_equal() + 
+         ggplot2::coord_equal() +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
                                        name = legend.title,
@@ -460,4 +460,3 @@ do_ExpressionHeatmap <- function(sample,
 
   return(p)
 }
-
