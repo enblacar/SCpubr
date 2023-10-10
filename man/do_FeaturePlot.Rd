@@ -124,7 +124,7 @@ do_FeaturePlot(
 
 \item{symmetry.type}{\strong{\code{\link[base]{character}}} | Type of symmetry to be enforced. One of:
 \itemize{
-\item \emph{\code{absolute}}: The highest absolute value will be taken into a account to generate the color scale ranging from \link{-value, value}. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
+\item \emph{\code{absolute}}: The highest absolute value will be taken into a account to generate the color scale. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
 \item \emph{\code{centered}}: Centers the scale around the provided value in \strong{\code{symmetry.center}}. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
 }}
 
