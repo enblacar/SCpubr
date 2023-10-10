@@ -2518,6 +2518,13 @@ check_parameters <- function(parameter,
                                          crayon_body(": "),
                                          paste(vapply(c("plain", "italic", "bold", "bold.italic"), crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                                          crayon_body(".")))
+  }   else if (parameter_name %in% c("symmetry.type")){
+    assertthat::assert_that(parameter %in% c("absolute", "centered"),
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         paste(vapply(c("absolute", "centered"), crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
+                                         crayon_body(".")))
   }
 }
 

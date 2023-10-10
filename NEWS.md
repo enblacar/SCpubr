@@ -3,6 +3,7 @@
 ## General.
 -   Fixed a bug that prevented error messages stating the dependencies missing per function to show up properly.
 -   Fixed assumptions on Seurat v4 and v5 and reverted to the use of cannonical `GetAssayData` and `SetAssayData` functions.
+-   Fixed dependency problems with archived packages.
 
 ## do_BeeSwarmPlot()
 -   Changed default continuous palette to `YlGnBu`.
@@ -13,6 +14,13 @@
 ## do_BoxPlot()
 -   Changed default value of `legend.position` to `bottom`. 
 -   Fixed a bug in which legend key glyphs would not show up when using `use_silhouette = TRUE`. 
+
+## do_CopyNumberVariantPlot()
+-   Fixed an issue in which using `min.cutoff` or `max.cutoff` would render the values outside these bounds to NA and therefore being plotted as grey. Now they will have the highest/lowest value possible.
+
+## do_FeaturePlot()
+-   Added `symmetry.type` parameter, that allows to control how the symmetry is computed: either in absolute values (taking into account the highest and lowest value) or in the middle point specified by `symmetry.center`.
+-   Added `symmetry.center` parameter, that allows to control the center of symmetry when `symmetry.type` is set to `centered`. 
 
 ## do_ViolinPlot()
 -   Changed default value of `legend.position` to `bottom`. 

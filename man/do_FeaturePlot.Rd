@@ -24,6 +24,8 @@ do_FeaturePlot(
   idents.highlight = NULL,
   dims = c(1, 2),
   enforce_symmetry = FALSE,
+  symmetry.type = "absolute",
+  symmetry.center = NA,
   pt.size = 1,
   font.size = 14,
   font.type = "sans",
@@ -119,6 +121,14 @@ do_FeaturePlot(
 \item{dims}{\strong{\code{\link[base]{numeric}}} | Vector of 2 numerics indicating the dimensions to plot out of the selected reduction. Defaults to c(1, 2) if not specified.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
+
+\item{symmetry.type}{\strong{\code{\link[base]{character}}} | Type of symmetry to be enforced. One of:
+\itemize{
+\item \emph{\code{absolute}}: The highest absolute value will be taken into a account to generate the color scale ranging from \link{-value, value}. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
+\item \emph{\code{centered}}: Centers the scale around the provided value in \strong{\code{symmetry.center}}. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
+}}
+
+\item{symmetry.center}{\strong{\code{\link[base]{numeric}}} | Value upon which the scale will be centered.}
 
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 

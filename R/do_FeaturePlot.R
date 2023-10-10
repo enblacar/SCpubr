@@ -11,6 +11,12 @@
 #' @param group.by.colors.use \strong{\code{\link[base]{character}}} | Colors to use for the group dots.
 #' @param group.by.show.dots \strong{\code{\link[base]{logical}}} | Controls whether to place in the middle of the groups.
 #' @param group.by.cell_borders.alpha \strong{\code{\link[base]{numeric}}} | Controls the transparency of the new borders drawn by \strong{\code{group.by.cell_borders}}.
+#' @param symmetry.type \strong{\code{\link[base]{character}}} | Type of symmetry to be enforced. One of:
+#' \itemize{
+#'   \item \emph{\code{absolute}}: The highest absolute value will be taken into a account to generate the color scale ranging from [-value, value]. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
+#'   \item \emph{\code{centered}}: Centers the scale around the provided value in \strong{\code{symmetry.center}}. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
+#' }
+#' @param symmetry.center \strong{\code{\link[base]{numeric}}} | Value upon which the scale will be centered.
 #' @return  A ggplot2 object containing a Feature Plot.
 #' @export
 #'
@@ -34,6 +40,8 @@ do_FeaturePlot <- function(sample,
                            idents.highlight = NULL,
                            dims = c(1, 2),
                            enforce_symmetry = FALSE,
+                           symmetry.type = "absolute", 
+                           symmetry.center = NA,
                            pt.size = 1,
                            font.size = 14,
                            font.type = "sans",
@@ -144,7 +152,8 @@ do_FeaturePlot <- function(sample,
                        "group.by.dot.size" = group.by.dot.size,
                        "group.by.cell_borders.alpha" = group.by.cell_borders.alpha,
                        "sequential.direction" = sequential.direction,
-                       "diverging.direction" = diverging.direction)
+                       "diverging.direction" = diverging.direction,
+                       "symmetry.center" = symmetry.center)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   # Workaround for features.
@@ -188,7 +197,8 @@ do_FeaturePlot <- function(sample,
                          "axis.title.face" = axis.title.face,
                          "axis.text.face" = axis.text.face,
                          "legend.title.face" = legend.title.face,
-                         "legend.text.face" = legend.text.face)
+                         "legend.text.face" = legend.text.face,
+                         "symmetry.type" = symmetry.type)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
@@ -285,7 +295,9 @@ do_FeaturePlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   check_parameters(diverging.direction, parameter_name = "diverging.direction")
-
+  check_parameters(parameter = symmetry.type, parameter_name = "symmetry.type")
+  
+  
   if (length(min.cutoff) != length(features)){
     warning(paste0(add_warning(), crayon_body("Please provide as many values to "),
                    crayon_key("min.cutoff"),
@@ -404,7 +416,9 @@ do_FeaturePlot <- function(sample,
                                       min.cutoff = min.cutoff,
                                       max.cutoff = max.cutoff,
                                       flavor = "Seurat",
-                                      enforce_symmetry = enforce_symmetry)
+                                      enforce_symmetry = enforce_symmetry,
+                                      center_on_value = if(symmetry.type == "absolute"){FALSE} else {TRUE},
+                                      value_center = symmetry.center)
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
                                                                      na.value = na.value,
@@ -425,7 +439,9 @@ do_FeaturePlot <- function(sample,
                                       min.cutoff = min.cutoff[counter],
                                       max.cutoff = max.cutoff[counter],
                                       flavor = "Seurat",
-                                      enforce_symmetry = enforce_symmetry)
+                                      enforce_symmetry = enforce_symmetry,
+                                      center_on_value = if(symmetry.type == "absolute"){FALSE} else {TRUE},
+                                      value_center = symmetry.center)
 
         p[[counter]] <- add_scale(p = p[[counter]],
                                   function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
@@ -656,7 +672,9 @@ do_FeaturePlot <- function(sample,
                                       min.cutoff = min.cutoff.use,
                                       max.cutoff = max.cutoff.use,
                                       flavor = "Seurat",
-                                      enforce_symmetry = enforce_symmetry)
+                                      enforce_symmetry = enforce_symmetry,
+                                      center_on_value = if(symmetry.type == "absolute"){FALSE} else {TRUE},
+                                      value_center = symmetry.center)
 
         p.loop <- add_scale(p = p.loop,
                             function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
@@ -839,7 +857,9 @@ do_FeaturePlot <- function(sample,
                                         min.cutoff = min.cutoff.use,
                                         max.cutoff = max.cutoff.use,
                                         flavor = "Seurat",
-                                        enforce_symmetry = enforce_symmetry)
+                                        enforce_symmetry = enforce_symmetry,
+                                        center_on_value = if(symmetry.type == "absolute"){FALSE} else {TRUE},
+                                        value_center = symmetry.center)
 
           p.loop <- add_scale(p = p.loop,
                               function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,

@@ -267,6 +267,17 @@ do_CopyNumberVariantPlot <- function(sample,
 
                  dplyr::group_by(.data[[group]], .data$Event) %>%
                  dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
+    
+    # Fix the out of bound values.
+    if (!is.na(min.cutoff)){
+      data.use <- data.use %>% 
+                  dplyr::mutate("mean" = ifelse(.data$mean < min.cutoff, min.cutoff, .data$mean))
+    }
+    
+    if (!is.na(max.cutoff)){
+      data.use <- data.use %>% 
+                  dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
+    }
     })
 
     events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))

@@ -60,7 +60,6 @@ Suggests:
     purrr,
     qpdf,
     RColorBrewer,
-    rgdal,
     rjags,
     rlang,
     rmarkdown,
