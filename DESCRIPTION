@@ -2,7 +2,7 @@ Type: Package
 Package: SCpubr
 Title: Generate Publication Ready Visualizations of Single Cell
     Transcriptomics Data
-Version: 2.0.2
+Version: 2.0.2.9000
 Authors@R: 
     person("Enrique", "Blanco-Carmona", , "scpubr@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-1208-1691"))
@@ -75,7 +75,10 @@ Suggests:
     tidyr,
     UCell,
     viridis,
-    withr
+    withr,
+    liana (>= 0.1.6)
+Remotes: 
+    saezlab/liana
 VignetteBuilder: 
     knitr
 biocViews: Software, SingleCell, Visualization

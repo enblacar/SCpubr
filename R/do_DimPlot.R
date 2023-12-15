@@ -865,7 +865,8 @@ do_DimPlot <- function(sample,
                                 reduction = reduction,
                                 group.by = group.by,
                                 split.by = split.by,
-                                n = 100)
+                                n = 100,
+                                skip.density = TRUE)
       base_layer_subset <- out$base_layer
       p$layers <- append(base_layer_subset, p$layers)
       p$layers <- append(na_layer, p$layers)

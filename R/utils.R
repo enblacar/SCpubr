@@ -1825,6 +1825,7 @@ modify_string <- function(string_to_modify){
 #' @param verbose  Verbose output.
 #' @param nbin Number of bins.
 #' @param ctrl Number of control genes.
+#' @param norm_data Whether to 0-1 normalize the data
 #'
 #' @return None
 #' @noRd
@@ -1841,7 +1842,8 @@ compute_enrichment_scores <- function(sample,
                                       slot = NULL,
                                       flavor = "Seurat",
                                       ncores = 1,
-                                      storeRanks = TRUE){
+                                      storeRanks = TRUE,
+                                      norm_data = FALSE){
   `%>%` <- magrittr::`%>%`
 
   # Checks for UCell.
@@ -1975,11 +1977,14 @@ compute_enrichment_scores <- function(sample,
                                          by = "cell") %>%
                         tibble::column_to_rownames(var = "cell")
   }
-
-  # Compute a 0-1 normalization.
-  for (name in names(input_gene_list)){
-    sample@meta.data[, paste0(name, "_scaled")] <- zero_one_norm(sample@meta.data[, name])
+  
+  if (isTRUE(norm_data)){
+    # Compute a 0-1 normalization.
+    for (name in names(input_gene_list)){
+      sample@meta.data[, name] <- zero_one_norm(sample@meta.data[, name])
+    }
   }
+  
 
   return(sample)
 }
@@ -2843,28 +2848,33 @@ compute_umap_layer <- function(sample,
                                reduction = "umap",
                                group.by = NULL,
                                split.by = NULL,
-                               n = 100) {
+                               n = 100,
+                               skip.density = FALSE) {
   `%>%` <- magrittr::`%>%`
   embeddings <- Seurat::Embeddings(sample,
-                                   reduction = reduction)[, labels] %>%
+                                   reduction = reduction)[, labels, drop = FALSE] %>%
                 as.data.frame()
   colnames(embeddings) <- c("x", "y")
 
   # Code adapted from: https://slowkow.com/notes/ggplot2-color-by-density/
   # Licensed under: CC BY-SA (compatible with GPL-3).
   # Author: Kamil Slowikowski - https://slowkow.com/
+  
 
   # Obtain density.
-  density <- MASS::kde2d(x = embeddings$x,
-                         y = embeddings$y,
-                         n = n)
-  # Find the intervals.
-  x.intervals <- findInterval(embeddings$x, density$x)
-  y.intervals <- findInterval(embeddings$y, density$y)
-  # Generate density vector to add to metadata.
-  interval_matrix <- cbind(x.intervals, y.intervals)
-  density_vector <- density$z[interval_matrix]
-  embeddings$density <- density_vector
+  if (base::isFALSE(skip.density)){
+    density <- MASS::kde2d(x = embeddings$x,
+                           y = embeddings$y,
+                           n = n)
+    # Find the intervals.
+    x.intervals <- findInterval(embeddings$x, density$x)
+    y.intervals <- findInterval(embeddings$y, density$y)
+    # Generate density vector to add to metadata.
+    interval_matrix <- cbind(x.intervals, y.intervals)
+    density_vector <- density$z[interval_matrix]
+    embeddings$density <- density_vector
+  }
+  
 
   # Add the group.by and split.by layers.
   if (!is.null(group.by)){
@@ -2877,18 +2887,20 @@ compute_umap_layer <- function(sample,
                   tibble::column_to_rownames(var = "cell")
     colnames(embeddings) <- c(colnames(embeddings)[seq(1, (length(colnames(embeddings)) - 1))], "group.by")
 
-
-    density.center.group.by <- embeddings %>%
-                               dplyr::select(dplyr::all_of(c("x", "y", "group.by", "density"))) %>%
-                               dplyr::group_by(.data$group.by) %>%
-                               dplyr::mutate("filt_x_up" = stats::quantile(.data$x, 0.66),
-                                             "filt_x_down" = stats::quantile(.data$x, 0.33),
-                                             "filt_y_up" = stats::quantile(.data$y, 0.66),
-                                             "filt_y_down" = stats::quantile(.data$y, 0.33)) %>%
-                               dplyr::filter(.data$x >= .data$filt_x_down & .data$x <= .data$filt_x_up,
-                                             .data$y >= .data$filt_y_down & .data$y <= .data$filt_y_up) %>%
-                               dplyr::summarize("x" = mean(.data$x),
-                                                "y" = mean(.data$y))
+    if (base::isFALSE(skip.density)){
+      density.center.group.by <- embeddings %>%
+                                 dplyr::select(dplyr::all_of(c("x", "y", "group.by", "density"))) %>%
+                                 dplyr::group_by(.data$group.by) %>%
+                                 dplyr::mutate("filt_x_up" = stats::quantile(.data$x, 0.66),
+                                               "filt_x_down" = stats::quantile(.data$x, 0.33),
+                                               "filt_y_up" = stats::quantile(.data$y, 0.66),
+                                               "filt_y_down" = stats::quantile(.data$y, 0.33)) %>%
+                                 dplyr::filter(.data$x >= .data$filt_x_down & .data$x <= .data$filt_x_up,
+                                               .data$y >= .data$filt_y_down & .data$y <= .data$filt_y_up) %>%
+                                 dplyr::summarize("x" = mean(.data$x),
+                                                  "y" = mean(.data$y))
+    }
+    
   }
 
   if (!is.null(split.by)){
@@ -2903,8 +2915,11 @@ compute_umap_layer <- function(sample,
   }
 
   # Apply filtering criteria:
-  embeddings <- embeddings %>%
-                dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
+  if (base::isFALSE(skip.density)){
+    embeddings <- embeddings %>%
+                  dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
+  }
+  
 
   # Generate base layer.
   if (base::isFALSE(raster)){
@@ -2954,7 +2969,7 @@ compute_umap_layer <- function(sample,
 
   # Generate center points layer.
   out <- list()
-  if (!is.null(group.by)){
+  if (!is.null(group.by) & base::isFALSE(skip.density)){
     # Generate colored based layer.
     if (base::isFALSE(raster)){
       color_layer <- ggplot2::geom_point(data = embeddings,

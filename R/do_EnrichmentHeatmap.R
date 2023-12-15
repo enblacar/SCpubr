@@ -17,7 +17,7 @@ do_EnrichmentHeatmap <- function(sample,
                                  features.order = NULL,
                                  groups.order = NULL,
                                  cluster = TRUE,
-                                 scale_scores = TRUE,
+                                 scale_scores = FALSE,
                                  assay = NULL,
                                  slot = NULL,
                                  reduction = NULL,
@@ -217,11 +217,11 @@ do_EnrichmentHeatmap <- function(sample,
   
   if (is.null(legend.title)){
     if (flavor == "AUCell") {
-      legend.title <- "AUC"
+      legend.title <- ifelse(isTRUE(scale_scores), "AUC | Scaled", "AUC")
     } else if (flavor == "UCell"){
-      legend.title <- "UCell score"
+      legend.title <- ifelse(isTRUE(scale_scores), "UCell score | Scaled", "UCell score")
     } else if (flavor == "Seurat"){
-      legend.title <- "Enrichment"
+      legend.title <- ifelse(isTRUE(scale_scores), "Enrichment | Scaled", "Enrichment")
     }
   }
   
@@ -277,7 +277,8 @@ do_EnrichmentHeatmap <- function(sample,
                                       storeRanks = storeRanks,
                                       # nocov start
                                       assay = if (flavor == "UCell"){NULL} else {assay},
-                                      slot = if (flavor == "Seurat"){NULL} else {slot})
+                                      slot = if (flavor == "Seurat"){NULL} else {slot},
+                                      norm_data = scale_scores)
                                       # nocov end
   out.list <- list()
   
@@ -290,12 +291,8 @@ do_EnrichmentHeatmap <- function(sample,
   group.by <- out[["group.by"]]
 
   matrix.list <- list()
+  names.use <- names(input_list)
   
-  if (base::isFALSE(scale_scores)){
-    names.use <- names(input_list)
-  } else {
-    names.use <- unname(vapply(names(input_list), function(x){paste0(x, "_scaled")}, FUN.VALUE = character(1)))
-  }
   for (group in group.by){
     suppressMessages({
       sample$group.by <- sample@meta.data[, group]

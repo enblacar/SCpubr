@@ -10,7 +10,7 @@ do_EnrichmentHeatmap(
   features.order = NULL,
   groups.order = NULL,
   cluster = TRUE,
-  scale_scores = TRUE,
+  scale_scores = FALSE,
   assay = NULL,
   slot = NULL,
   reduction = NULL,

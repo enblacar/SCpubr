@@ -1,3 +1,16 @@
+# SCpbur v2.0.3 (In Development)
+
+## do_DimPlot()
+-   Fixed a bug caused by using `cells.highlight` with only one cell.
+
+## do_EnrichmentHeatmap()
+-   Changed default value of `scale_scores` to `FALSE`.
+-   Fixed a bug in which scores were not actually being scaled when `scale_scores = TRUE`.
+-   Fixed a bug in which setting `scale_scores = TRUE` and `features.order` would trigger an error since the output had the suffix `_scaled` on it. This has been patched.
+
+## do_LigandReceptorPlot()
+-   Added a new parameter `top_interactions_by_group` which when set to `TRUE` 
+
 # SCpbur v2.0.2
 
 ## General.
