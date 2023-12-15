@@ -37,6 +37,7 @@ do_ViolinPlot <- function(sample,
                           plot.grid = TRUE,
                           grid.color = "grey75",
                           grid.type = "dashed",
+                          order = TRUE,
                           flip = FALSE,
                           ncol = NULL,
                           share.y.lims = FALSE,
@@ -70,7 +71,8 @@ do_ViolinPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "flip" = flip,
                        "share.y.lims" = share.y.lims,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "order" = order)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -218,7 +220,38 @@ do_ViolinPlot <- function(sample,
                                        slot = slot,
                                        group.by = group.by,
                                        split.by = split.by)
-
+    
+    
+    # Sort the groups.
+    if (isTRUE(order) & is.null(split.by)){
+      data <- data %>%
+              dplyr::mutate("group.by" = factor(as.character(.data[["group.by"]]),
+                                                levels = {data %>%
+                                                    tibble::as_tibble() %>%
+                                                    dplyr::group_by(.data[["group.by"]]) %>%
+                                                    dplyr::summarise("median" = stats::median(.data[["feature"]], na.rm = TRUE)) %>%
+                                                    dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
+                                                    dplyr::pull(.data[["group.by"]]) %>%
+                                                    as.character()}))
+    }
+    if (isTRUE(order)){
+      assertthat::assert_that(is.null(split.by),
+                              msg = paste0(add_cross(), crayon_body("Parameter "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" cannot be used alonside "),
+                                           crayon_key("order"),
+                                           crayon_body(".")))
+    }
+    
+    if (!is.null(split.by)){
+      assertthat::assert_that(base::isFALSE(order),
+                              msg = paste0(add_cross(), crayon_body("Parameter "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" cannot be used alonside "),
+                                           crayon_key("order"),
+                                           crayon_body(".")))
+    }
+    
     if (!is.null(split.by)){
       p <- data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$group.by,
@@ -241,9 +274,8 @@ do_ViolinPlot <- function(sample,
                                            crayon_body(" are not implemented when "),
                                            crayon_key("split.by"),
                                            crayon_body(" is set. Set "),
-                                           crayon_key("plot_boxplots = FALSE"),
-                                           crayon_body("."),
-                                           crayon_key("NA")))
+                                           crayon_key("plot_boxplot = FALSE"),
+                                           crayon_body(".")))
       p <- p +
            ggplot2::geom_boxplot(fill = "white",
                                  color = "black",

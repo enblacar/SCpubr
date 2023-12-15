@@ -29,6 +29,7 @@ do_ViolinPlot(
   plot.grid = TRUE,
   grid.color = "grey75",
   grid.type = "dashed",
+  order = TRUE,
   flip = FALSE,
   ncol = NULL,
   share.y.lims = FALSE,

@@ -9,7 +9,10 @@
 -   Fixed a bug in which setting `scale_scores = TRUE` and `features.order` would trigger an error since the output had the suffix `_scaled` on it. This has been patched.
 
 ## do_LigandReceptorPlot()
--   Added a new parameter `top_interactions_by_group` which when set to `TRUE` 
+-   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
+
+## do_ViolinPlot()
+-   Added `order` parameter to reorder the groups based on the median. Only works when `split.by` is set to `NULL`.
 
 # SCpbur v2.0.2
 
