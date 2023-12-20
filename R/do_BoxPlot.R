@@ -9,7 +9,6 @@
 #' @param outlier.alpha \strong{\code{\link[base]{numeric}}} | Alpha applied to the outliers.
 #' @param boxplot.linewidth \strong{\code{\link[base]{numeric}}} | Width of the lines in the boxplots. Also controls the lines of the tests applied if use_test is set to true.
 #' @param boxplot.width \strong{\code{\link[base]{numeric}}} | Width of the boxplots.
-#' @param order \strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.
 #' @param use_silhouette \strong{\code{\link[base]{logical}}} | Whether to color the borders of the boxplots instead of the inside area.
 #' @param use_test \strong{\code{\link[base]{logical}}} | Whether to apply a statistical test to a given pair of elements. Can not be used alongside split.by.
 #'

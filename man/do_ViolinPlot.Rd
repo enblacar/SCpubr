@@ -111,6 +111,8 @@ do_ViolinPlot(
 \item \emph{\code{twodash}}.
 }}
 
+\item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.}
+
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns used in the arrangement of the output plot using "split.by" parameter.}

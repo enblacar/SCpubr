@@ -3,6 +3,7 @@
 #' @inheritParams doc_function
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
 #' @param shuffle \strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
+#' @param split.by.combined \strong{\code{\link[base]{logical}}} | Adds a combined view of the all the values before splitting them by \strong{\code{split.by}}. Think of this as a regular DimPlot added in front. This is set to \strong{\code{TRUE}} if \strong{\code{split.by}} is used in combination with \strong{\code{group.by}}.
 #' @param order \strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param sizes.highlight \strong{\code{\link[base]{numeric}}} | Point size of highlighted cells using cells.highlight parameter.
 #' @return  A ggplot2 object containing a DimPlot.
@@ -13,6 +14,7 @@ do_DimPlot <- function(sample,
                        reduction = NULL,
                        group.by = NULL,
                        split.by = NULL,
+                       split.by.combined = TRUE,
                        colors.use = NULL,
                        shuffle = TRUE,
                        order = NULL,
@@ -90,7 +92,8 @@ do_DimPlot <- function(sample,
                        "plot_cell_borders" = plot_cell_borders,
                        "plot.axes" = plot.axes,
                        "plot_density_contour" = plot_density_contour,
-                       "label.box" = label.box)
+                       "label.box" = label.box,
+                       "split.by.combined" = split.by.combined)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -158,7 +161,21 @@ do_DimPlot <- function(sample,
                                        crayon_body(" have to be set to "),
                                        crayon_key("NULL"),
                                        crayon_body(".")))
+  
+  if (base::isTRUE(group_by_and_split_by_used)){
+    assertthat::assert_that(base::isTRUE(split.by.combined),
+                            msg = paste0(add_cross(), crayon_body("Parameter "),
+                                         crayon_key("split.by.combined"),
+                                         crayon_body(" must be set to "),
+                                         crayon_key("TRUE"),
+                                         crayon_body(" when using a combination of "),
+                                         crayon_key("split.by"),
+                                         crayon_body(" and "),
+                                         crayon_key("group.by"),
+                                         crayon_body(".")))
+  }
 
+  
   if (order_and_shuffle_used){
     warning(paste0(add_warning(), crayon_body("Setting up a custom order with paramter "),
                    crayon_key("order"),
@@ -610,7 +627,7 @@ do_DimPlot <- function(sample,
                           idents.keep = NULL,
                           sizes.highlight = sizes.highlight,
                           ncol = ncol,
-                          plot.title = "Combined",
+                          plot.title = ifelse(isTRUE(group_by_and_split_by_used), group.by, split.by),
                           plot.subtitle = NULL,
                           plot.caption = NULL,
                           legend.title = legend.title,
@@ -647,9 +664,13 @@ do_DimPlot <- function(sample,
                           axis.text.face = axis.text.face,
                           legend.title.face = legend.title.face,
                           legend.text.face = legend.text.face)
-    p.extra <- p.extra + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    p.extra <- p.extra + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, color = "black"))
     # Add plot to list.
-    list.plots[[1]] <- p.extra
+    
+    if (base::isTRUE(split.by.combined)){
+      list.plots[[1]] <- p.extra
+    }
+    
 
     num_values <- length(unique_values)
     for (i in seq_len(num_values)){
@@ -796,6 +817,9 @@ do_DimPlot <- function(sample,
     p <- p + 
          patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
     
+    if (base::isTRUE(split.by.combined)){
+      p[[1]]$labels$title <- ifelse(isTRUE(group_by_and_split_by_used), group.by, split.by)
+    }
   }
    # If the user wants to highlight some of the cells.
   else if (highlighting_cells){

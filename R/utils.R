@@ -165,6 +165,7 @@
 #' @param features.order \strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.
 #' @param groups.order \strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.
 #' @param interpolate \strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.
+#' @param order \strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -285,7 +286,8 @@ doc_function <- function(sample,
                          flavor,
                          features.order,
                          groups.order,
-                         interpolate){}
+                         interpolate,
+                         order){}
 
 #' Named vector.
 #'

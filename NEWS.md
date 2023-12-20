@@ -2,6 +2,9 @@
 
 ## do_DimPlot()
 -   Fixed a bug caused by using `cells.highlight` with only one cell.
+-   Changed the plot title of the "Combined" plot to either `group.by` or `split.by` depending of the usage context.
+-   Added `split.by.combined` parameter and set its default value to `TRUE`. This allows to toggle on or off whether to display the combined view when `split.by` is used.
+-   However, when `split.by`is used alongside `group.by`, it is now enforced to show the combined plot (`split.by.combined = TRUE`), to avoid bugs.
 
 ## do_EnrichmentHeatmap()
 -   Changed default value of `scale_scores` to `FALSE`.
