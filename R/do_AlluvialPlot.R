@@ -144,6 +144,14 @@ do_AlluvialPlot <- function(sample,
   check_parameters(viridis.direction, parameter_name = "viridis.direction")
   check_parameters(sequential.direction, parameter_name = "sequential.direction")
   
+  # Check minimum version.
+  assertthat::assert_that(utils::packageVersion("ggalluvial") >= "0.12.5",
+                          msg = paste0(add_cross(), crayon_body("Please, update "),
+                                       crayon_key("ggalluvial"),
+                                       crayon_body(" to minimum version "),
+                                       crayon_key("0.12.5"),
+                                       crayon_body(".")))
+  
 
   #StatStratum <- ggalluvial::StatStratum
   `%>%` <- magrittr::`%>%`

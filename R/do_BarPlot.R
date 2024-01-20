@@ -17,13 +17,6 @@
 #'   \item \emph{\code{stack}}: Set the bars side by side, displaying the total number of counts. Uses \link[ggplot2]{position_stack}.
 #'   \item \emph{\code{fill}}: Set the bars on top of each other, displaying the proportion of counts from the total that each group represents. Uses \link[ggplot2]{position_fill}.
 #' }
-#' @param strip.text.face \strong{\code{\link[base]{character}}} | Controls the style of the font for the strip text.  One of:
-#' \itemize{
-#'   \item \emph{\code{plain}}: For normal text.
-#'   \item \emph{\code{italic}}: For text in itallic.
-#'   \item \emph{\code{bold}}: For text in bold.
-#'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
-#' }
 #' @return A ggplot2 object containing a Bar plot.
 #' @export
 #'

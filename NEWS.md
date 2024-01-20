@@ -1,10 +1,36 @@
 # SCpbur v2.0.3 (In Development)
 
+## Added functions
+-   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. s
+
+## Removed functions
+-   `do_FunctionalAnnotationPlot()`.
+-   `do_GroupedGOTermPlot()`.
+
+The reason behind it is that they, together with do_TermEnrichmentPlot() targetted the same analysis and, therefore, were redundant.
+
+## Heavily modified functions.
+-   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
+
+The reason of this modification is to allow for a much clearer and concise output than before.
+
+## do_AlluvialPlot()
+-   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
+
+## do_CopyNumberVariantPlot()
+-   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
+
 ## do_DimPlot()
 -   Fixed a bug caused by using `cells.highlight` with only one cell.
+-   Fixed a bug causing a "selected_cells" plot title to show up when using `cells.highlight` and `idents.highlight`. 
 -   Changed the plot title of the "Combined" plot to either `group.by` or `split.by` depending of the usage context.
 -   Added `split.by.combined` parameter and set its default value to `TRUE`. This allows to toggle on or off whether to display the combined view when `split.by` is used.
 -   However, when `split.by`is used alongside `group.by`, it is now enforced to show the combined plot (`split.by.combined = TRUE`), to avoid bugs.
+-   Added `legend.dot.border` parameter to select whether we want a black border around the legend dots or not.
+
+## do_DotPlot()
+-   Fixed a bug that caused sequential palettes to not be checked properly.
+-   Changed default value of `dot.scale` to 8.
 
 ## do_EnrichmentHeatmap()
 -   Changed default value of `scale_scores` to `FALSE`.

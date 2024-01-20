@@ -36,6 +36,7 @@ do_DimPlot(
   legend.nrow = NULL,
   legend.icon.size = 4,
   legend.byrow = FALSE,
+  legend.dot.border = TRUE,
   raster.dpi = 2048,
   dims = c(1, 2),
   font.size = 14,
@@ -134,6 +135,8 @@ do_DimPlot(
 \item{legend.icon.size}{\strong{\code{\link[base]{numeric}}} | Size of the icons in legend.}
 
 \item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
+
+\item{legend.dot.border}{\strong{\code{\link[base]{logical}}} | Adds a black border around the dots in the legend.}
 
 \item{raster.dpi}{\strong{\code{\link[base]{numeric}}} | Pixel resolution for rasterized plots. Defaults to 1024. Only activates on Seurat versions higher or equal than 4.1.0.}
 

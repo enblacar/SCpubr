@@ -4,6 +4,7 @@
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
 #' @param shuffle \strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param split.by.combined \strong{\code{\link[base]{logical}}} | Adds a combined view of the all the values before splitting them by \strong{\code{split.by}}. Think of this as a regular DimPlot added in front. This is set to \strong{\code{TRUE}} if \strong{\code{split.by}} is used in combination with \strong{\code{group.by}}.
+#' @param legend.dot.border \strong{\code{\link[base]{logical}}} | Adds a black border around the dots in the legend. 
 #' @param order \strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param sizes.highlight \strong{\code{\link[base]{numeric}}} | Point size of highlighted cells using cells.highlight parameter.
 #' @return  A ggplot2 object containing a DimPlot.
@@ -41,6 +42,7 @@ do_DimPlot <- function(sample,
                        legend.nrow = NULL,
                        legend.icon.size = 4,
                        legend.byrow = FALSE,
+                       legend.dot.border = TRUE,
                        raster.dpi = 2048,
                        dims = c(1, 2),
                        font.size = 14,
@@ -93,7 +95,8 @@ do_DimPlot <- function(sample,
                        "plot.axes" = plot.axes,
                        "plot_density_contour" = plot_density_contour,
                        "label.box" = label.box,
-                       "split.by.combined" = split.by.combined)
+                       "split.by.combined" = split.by.combined,
+                       "legend.dot.border" = legend.dot.border)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -260,21 +263,24 @@ do_DimPlot <- function(sample,
       highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
       if (isTRUE(default_parameters)){
         # Generate the color scale based on the levels assigned to the sample.
-        generate_color_scale(levels(sample))
+        colors.use <- generate_color_scale(levels(sample))
+        colors.use <- colors.use[levels(sample)]
       } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
         # Retrieve the unique values in group.by metadata variable.
         data.use <- sample[[]][, group.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale to be used based on the unique values of group.by.
-        generate_color_scale(names.use)
+        colors.use <- generate_color_scale(names.use)
+        colors.use <- colors.use[names.use]
       } else if (isTRUE(split_by_is_used)){
         # Retrieve the unique values in split.by metadata variable.
         data.use <- sample[[]][, split.by, drop = FALSE]
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale based on the unique values of split.by
-        generate_color_scale(names.use)
+        colors.use <- generate_color_scale(names.use)
+        colors.use <- colors.use[names.use]
       } else if (isTRUE(highlighting_cells)){
         # If the user wants to highlight some cells, use this color.
         colors.use <- "#0A305F"
@@ -304,21 +310,36 @@ do_DimPlot <- function(sample,
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use,
                                                        idents.keep = idents.keep)
+      if (is.null(idents.keep)){
+        colors.use <- colors.use[levels(sample)]
+      } else {
+        colors.use <- colors.use[levels(sample)[idents.keep]]
+      }
+      
       # When using group.by or a combination of group.by and split.by.
     } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
+      # Retrieve the unique values in group.by metadata variable.
+      data.use <- sample[[]][, group.by, drop = FALSE]
       # Check that the color palette has the right amount of named colors with regards to group.by values.
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use,
                                                        grouping_variable = group.by,
                                                        idents.keep = idents.keep)
+      names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+      colors.use <- colors.use[names.use]
       # When using split.by.
     } else if (isTRUE(split_by_is_used)){
+      # Retrieve the unique values in split.by metadata variable.
+      data.use <- sample[[]][, split.by, drop = FALSE]
       # Check that the color palette has the right amount of named colors with regards to split.by values.
       colors.use <- check_consistency_colors_and_names(sample = sample,
                                                        colors = colors.use,
                                                        grouping_variable = split.by,
                                                        idents.keep = idents.keep)
-    
+      
+      names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
+      colors.use <- colors.use[names.use]
+      
       # When highlighting cells.
     } else if (isTRUE(highlighting_cells)){
       # Stop the execution if more than one color is provided to highlight the cells.
@@ -495,13 +516,28 @@ do_DimPlot <- function(sample,
                            raster = raster,
                            ncol = ncol)
     } # nocov end
-    p <- p &
-      ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
-                                                    nrow = legend.nrow,
-                                                    byrow = legend.byrow,
-                                                    override.aes = list(size = legend.icon.size),
-                                                    title = legend.title,
-                                                    title.position = legend.title.position))
+    
+    if (base::isTRUE(legend.dot.border)){
+      p <- p &
+           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                         nrow = legend.nrow,
+                                                         byrow = legend.byrow,
+                                                         override.aes = list(size = legend.icon.size,
+                                                                             color = "black",
+                                                                             fill = colors.use,
+                                                                             shape = 21),
+                                                         title = legend.title,
+                                                         title.position = legend.title.position))
+    } else {
+      p <- p &
+           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                         nrow = legend.nrow,
+                                                         byrow = legend.byrow,
+                                                         override.aes = list(size = legend.icon.size),
+                                                         title = legend.title,
+                                                         title.position = legend.title.position))
+    }
+    
 
     if (isTRUE(label)){
       if (isTRUE(label.box)){
@@ -712,14 +748,32 @@ do_DimPlot <- function(sample,
                                   cols = colors.use,
                                   raster = raster)
       } # nocov end
+      
+      # Add plot.title.
       p.loop <- p.loop +
-                ggplot2::ggtitle(value) +
-                ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
-                                                              ncol = legend.ncol,
-                                                              nrow = legend.nrow,
-                                                              byrow = legend.byrow,
-                                                              override.aes = list(size = legend.icon.size),
-                                                              title.position = legend.title.position))
+                ggplot2::labs(title = value)
+      
+      if (base::isTRUE(legend.dot.border)){
+        p.loop <- p.loop &
+                  ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                                nrow = legend.nrow,
+                                                                byrow = legend.byrow,
+                                                                override.aes = list(size = legend.icon.size,
+                                                                                    color = "black",
+                                                                                    fill = colors.use,
+                                                                                    shape = 21),
+                                                                title = legend.title,
+                                                                title.position = legend.title.position))
+      } else {
+        p.loop <- p.loop &
+                  ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                                nrow = legend.nrow,
+                                                                byrow = legend.byrow,
+                                                                override.aes = list(size = legend.icon.size),
+                                                                title = legend.title,
+                                                                title.position = legend.title.position))
+      }
+      
       if (isTRUE(label)){
         if (isTRUE(label.box)){
           p.loop <- add_scale(p = p.loop,
@@ -865,15 +919,30 @@ do_DimPlot <- function(sample,
                            cols = colors.use.highlight,
                            na.value = "#bfbfbf00")
     } # nocov end
-
-    p <- p &
-         ggplot2::ggtitle("") &
-         ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
-                                                       ncol = legend.ncol,
-                                                       nrow = legend.nrow,
-                                                       byrow = legend.byrow,
-                                                       override.aes = list(size = legend.icon.size),
-                                                       title.position = legend.title.position))
+    
+    # Remove unwanted "selected_cells" title.
+    p <- p & ggplot2::labs(title = "")
+    
+    if (base::isTRUE(legend.dot.border)){
+      p <- p &
+           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                         nrow = legend.nrow,
+                                                         byrow = legend.byrow,
+                                                         override.aes = list(size = legend.icon.size,
+                                                                             color = "black",
+                                                                             fill = colors.use,
+                                                                             shape = 21),
+                                                         title = legend.title,
+                                                         title.position = legend.title.position))
+    } else {
+      p <- p &
+           ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
+                                                         nrow = legend.nrow,
+                                                         byrow = legend.byrow,
+                                                         override.aes = list(size = legend.icon.size),
+                                                         title = legend.title,
+                                                         title.position = legend.title.position))
+    }
    
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){

@@ -6,6 +6,7 @@
 #' @param using_metacells \strong{\code{\link[base]{logical}}} | Whether inferCNV was run using metacells or not.
 #' @param metacell_mapping \strong{\code{\link[SCpubr]{named_vector}}} | Vector or cell - metacell mapping.
 #' @param chromosome_locations \strong{\code{\link[tibble]{tibble}}} | Tibble containing the chromosome regions to use. Can be obtained using \strong{\code{utils::data("human_chr_locations", package = "SCpubr")}}.
+#' @param include_chr_arms \strong{\code{\link[base]{logical}}} | Whether the output heatmap should also include chromosome arms or just whole chromosomes.
 #'
 #' @return A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..
 #' @export
@@ -17,6 +18,7 @@ do_CopyNumberVariantPlot <- function(sample,
                                      group.by = NULL,
                                      using_metacells = FALSE,
                                      metacell_mapping = NULL,
+                                     include_chr_arms = FALSE,
                                      legend.type = "colorbar",
                                      legend.position = "bottom",
                                      legend.length = 20,
@@ -62,7 +64,8 @@ do_CopyNumberVariantPlot <- function(sample,
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
                        "enforce_symmetry" = enforce_symmetry,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "include_chr_arms" = include_chr_arms)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -156,7 +159,7 @@ do_CopyNumberVariantPlot <- function(sample,
   # Retrieve the genes.
   genes <- infercnv_object@gene_order
 
-  # Retrieve chr 1p start and end coordinates.
+  # Retrieve chr coordinates.
   chr_locations <- chromosome_locations
 
   # This list will contain all the outputs.
@@ -166,8 +169,8 @@ do_CopyNumberVariantPlot <- function(sample,
     # Retrieve chr locations of the chromosome.
     locations <- chr_locations %>%
                  dplyr::filter(.data[["chr"]] == chromosome)
-
-    for (chr_arm in c("p", "q", "whole")){
+    events <- ifelse(base::isTRUE(include_chr_arms), c("p", "q", "whole"), "whole")
+    for (chr_arm in events){
       if (chr_arm != "whole"){
         # Retrieve the start.
         start <- locations %>%
@@ -204,7 +207,7 @@ do_CopyNumberVariantPlot <- function(sample,
       if (sum(genes_use %in% rownames(CNV_scores)) > 1){
         # Filter the scores for only the genes in the chromosome arm.
         CNV_scores <- CNV_scores[genes_use[genes_use %in% rownames(CNV_scores)], ]
-
+        
         scores_name <- if (chr_arm != "whole"){paste0(chromosome, chr_arm)} else {chromosome}
         CNV_scores_final <- tibble::tibble(!!scores_name := colMeans(CNV_scores),
                                            "cells" = colnames(CNV_scores))
@@ -279,8 +282,13 @@ do_CopyNumberVariantPlot <- function(sample,
                   dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
     }
     })
-
-    events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
+    
+    if (base::isTRUE(include_chr_arms)){
+      events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))
+    } else {
+      events <- c(as.character(seq(1, 22)))
+    }
+    
     if (base::isFALSE(flip)){
       factor.levels <- events[events %in% unique(data.use$Event)]
     } else {

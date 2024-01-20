@@ -21,7 +21,7 @@ do_DotPlot(
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
   colors.use = NULL,
-  dot.scale = 6,
+  dot.scale = 8,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,

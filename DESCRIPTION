@@ -18,13 +18,11 @@ BugReports: https://github.com/enblacar/SCpubr/issues/
 Depends: 
     R (>= 4.0.0)
 Suggests:
-    AnnotationDbi,
     assertthat,
     AUCell,
     circlize,
     cli,
     cluster,
-    clusterProfiler,
     colorspace,
     ComplexHeatmap,
     covr,
@@ -32,12 +30,11 @@ Suggests:
     dplyr (>= 1.1.0),
     enrichplot,
     forcats,
-    ggalluvial,
+    ggalluvial (>= 0.12.5),
     ggbeeswarm,
     ggdist,
     ggExtra,
     ggh4x,
-    ggnewscale,
     ggplot2 (>= 3.4.0),
     ggplotify,
     ggrastr,
@@ -75,6 +72,7 @@ Suggests:
     tidyr,
     UCell,
     viridis,
+    waffle,
     withr,
     liana (>= 0.1.6)
 Remotes: 

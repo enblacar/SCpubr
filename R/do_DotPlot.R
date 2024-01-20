@@ -2,7 +2,6 @@
 #' You can
 #'
 #' @inheritParams doc_function
-#' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
 #' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
 #' @param scale \strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.
 #' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
@@ -31,7 +30,7 @@ do_DotPlot <- function(sample,
                        legend.framecolor = "grey50",
                        legend.tickcolor = "white",
                        colors.use = NULL,
-                       dot.scale = 6,
+                       dot.scale = 8,
                        plot.title = NULL,
                        plot.subtitle = NULL,
                        plot.caption = NULL,
@@ -132,6 +131,7 @@ do_DotPlot <- function(sample,
     check_parameters(parameter = legend.type, parameter_name = "legend.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
     check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
+    check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
     check_parameters(parameter = grid.type, parameter_name = "grid.type")
     check_parameters(parameter = axis.text.x.angle, parameter_name = "axis.text.x.angle")
     check_parameters(parameter = number.breaks, parameter_name = "number.breaks")

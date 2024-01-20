@@ -253,6 +253,8 @@
 
 \item{order}{\strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.}
 
+\item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
+
 \item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}
@@ -279,6 +281,14 @@
 }}
 
 \item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
+
+\item{strip.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the strip text.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
+}}
 }
 \value{
 Nothing. This is a mock function.

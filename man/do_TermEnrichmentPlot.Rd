@@ -5,46 +5,50 @@
 \title{Display the enriched terms for a given list of genes.}
 \usage{
 do_TermEnrichmentPlot(
-  enriched_terms,
-  nchar_wrap = 20,
-  nterms = 10,
+  mat,
+  n.chars = 40,
+  n.terms = 25,
   font.size = 14,
   font.type = "sans",
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
-  legend.position = "bottom",
+  use_viridis = FALSE,
+  viridis.palette = "G",
+  viridis.direction = -1,
+  sequential.palette = "YlGnBu",
+  sequential.direction = 1,
+  dot.scale = 8,
   legend.type = "colorbar",
-  colors.use = NULL,
-  text_labels_size = 4,
-  legend.length = 30,
-  legend.width = 1,
+  legend.position = "bottom",
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
+  legend.length = 20,
+  legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
+  number.breaks = 5,
+  xlab = NULL,
+  ylab = NULL,
+  na.value = "grey75",
+  grid.color = "grey90",
+  grid.type = "dashed",
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
   axis.title.face = "bold",
   axis.text.face = "plain",
+  axis.text.x.angle = 45,
   legend.title.face = "bold",
   legend.text.face = "plain"
 )
 }
 \arguments{
-\item{enriched_terms}{\strong{\code{\link[base]{list}}} | List containing the output(s) of running Enrichr.}
+\item{mat}{\strong{\code{\link[base]{list}}} | Result of over-representation test with clusterProfiler. Accepts only one result, be aware of that if you compute the test for all GO ontologies. Accessed through \strong{\code{mat@result}}.}
 
-\item{nchar_wrap}{\strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 60.}
+\item{n.chars}{\strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 40.}
 
-\item{nterms}{\strong{\code{\link[base]{numeric}}} | Number of terms to report for each database. Terms are arranged by adjusted p-value and selected from lowest to highest. Defaults to 5.
-\itemize{
-\item \emph{\code{Enrichr}}.
-\item \emph{\code{FlyEnrichr}}.
-\item \emph{\code{WormEnrichr}}.
-\item \emph{\code{YeastEnrichr}}.
-\item \emph{\code{FishEnrichr}}.
-}}
+\item{n.terms}{\strong{\code{\link[base]{numeric}}} | Number of terms to display. Defaults to 25.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
@@ -57,6 +61,24 @@ do_TermEnrichmentPlot(
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+
+\item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
+
+\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
+\itemize{
+\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
+\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
+}}
+
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
 \item \emph{\code{top}}: Top of the figure.
@@ -66,23 +88,32 @@ do_TermEnrichmentPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
-\item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
-\itemize{
-\item \emph{\code{normal}}: Default legend displayed by \pkg{ggplot2}.
-\item \emph{\code{colorbar}}: Redefined colorbar legend, using \link[ggplot2]{guide_colorbar}.
-}}
-
-\item{colors.use}{\strong{\code{\link[base]{character}}} | Character vector of 2 colors (low and high ends of the color scale) to generate the gradient.}
-
-\item{text_labels_size}{\strong{\code{\link[base]{numeric}}} | Controls how big or small labels are in the plot.}
+\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
-
-\item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
 
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+
+\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+
+\item{grid.type}{\strong{\code{\link[base]{character}}} | One of the possible linetype options:
+\itemize{
+\item \emph{\code{blank}}.
+\item \emph{\code{solid}}.
+\item \emph{\code{dashed}}.
+\item \emph{\code{dotted}}.
+\item \emph{\code{dotdash}}.
+\item \emph{\code{longdash}}.
+\item \emph{\code{twodash}}.
+}}
 
 \item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
 \itemize{
@@ -91,6 +122,8 @@ do_TermEnrichmentPlot(
 \item \emph{\code{bold}}: For text in bold.
 \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
+
+\item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 }
 \value{
 A ggplot2 object with enriched terms.
@@ -108,12 +141,10 @@ Display the enriched terms for a given list of genes.
 
     # Define your enriched terms.
     enriched_terms <- readRDS(system.file("extdata/enriched_terms_example.rds", package = "SCpubr"))
-    enriched_terms$GO_Cellular_Component_2021 <- NULL
-    enriched_terms$Azimuth_Cell_Types_2021 <- NULL
-
+    
     # Default plot.
-    p <- SCpubr::do_TermEnrichmentPlot(enriched_terms = enriched_terms)
-    p
+    p <- SCpubr::do_TermEnrichmentPlot(mat = enriched_terms)
+    
   } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")

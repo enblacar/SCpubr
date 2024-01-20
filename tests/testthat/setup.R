@@ -61,19 +61,6 @@ for (func in names(dependencies)){
   dep_check[[func]] <- value
 }
 
-# nolint start
-if (base::isFALSE(dep_check[["do_GroupedGOTermPlot"]]) | base::isFALSE(dep_check[["do_FunctionalAnnotationPlot"]])){
-  if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
-    suppressMessages(library("org.Hs.eg.db"))
-  }
-
-  if (requireNamespace("AnnotationDbi", quietly = TRUE)) {
-    suppressMessages(library("AnnotationDbi"))
-    org.db <- AnnotationDbi::loadDb(system.file("./extdata/org.Hs.eg.sqlite", package = "org.Hs.eg.db"))
-  }
-}
-# nolint end
-
 # Remove this for publication in CRAN.
 if (base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
   liana_output <- readRDS(system.file("extdata/liana_output_example.rds", package = "SCpubr"))

@@ -161,11 +161,19 @@
 #'   \item \emph{\code{bold}}: For text in bold.
 #'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 #' }
+#' @param strip.text.face \strong{\code{\link[base]{character}}} | Controls the style of the font for the strip text.  One of:
+#' \itemize{
+#'   \item \emph{\code{plain}}: For normal text.
+#'   \item \emph{\code{italic}}: For text in itallic.
+#'   \item \emph{\code{bold}}: For text in bold.
+#'   \item \emph{\code{bold.italic}}: For text both in itallic and bold.
+#' }
 #' @param flavor \strong{\code{\link[base]{character}}} | One of: Seurat, UCell. Compute the enrichment scores using \link[Seurat]{AddModuleScore} or \link[UCell]{AddModuleScore_UCell}.
 #' @param features.order \strong{\code{\link[base]{character}}} | Should the gene sets be ordered in a specific way? Provide it as a vector of characters with the same names as the names of the gene sets.
 #' @param groups.order \strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.
 #' @param interpolate \strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.
+#' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -287,7 +295,8 @@ doc_function <- function(sample,
                          features.order,
                          groups.order,
                          interpolate,
-                         order){}
+                         order,
+                         dot.scale){}
 
 #' Named vector.
 #'
@@ -415,9 +424,7 @@ return_dependencies <- function(){
                    "do_EnrichmentHeatmap" = c("UCell", "AUCell"),
                    "do_ExpressionHeatmap" = NULL,
                    "do_FeaturePlot" = c("scattermore", "MASS"),
-                   "do_FunctionalAnnotationPlot" = c("clusterProfiler", "enrichplot", "ggnewscale", "AnnotationDbi"),
                    "do_GeyserPlot" = "ggdist",
-                   "do_GroupedGOTermPlot" = c("clusterProfiler", "AnnotationDbi"),
                    "do_GroupwiseDEPlot" = NULL,
                    "do_MetadataPlot" = "cluster",
                    "do_LigandReceptorPlot" = "liana",
@@ -428,10 +435,11 @@ return_dependencies <- function(){
                    "do_RidgePlot" = "ggridges",
                    "do_SCExpressionHeatmap" = NULL,
                    "do_SCEnrichmentHeatmap" = c("UCell", "AUCell"),
-                   "do_TermEnrichmentPlot" = NULL,
+                   "do_TermEnrichmentPlot" = c("enrichplot"),
                    "do_TFActivityPlot" = NULL,
                    "do_ViolinPlot" = NULL,
                    "do_VolcanoPlot" = "ggrepel",
+                   "do_WafflePlot" = "waffle",
                    "save_Plot" = "svglite")
   return(pkg_list)
 }
@@ -2689,128 +2697,6 @@ get_axis_parameters <- function(angle,
 }
 
 
-#' Compute grouped GO matrices.
-#'
-#' @param genes Genes to use.
-#' @param org.db Database to use.
-#' @param levels.use Levels to use.
-#' @param ontologies Ontology to use.
-#' @param min.overlap Min overlap of genes for each term.
-#' @param verbose Verbose.
-#'
-#' @return None
-#' @noRd
-#' @examples
-#' \donttest{
-#' TBD
-#' }
-do_GroupedGO_matrices <- function(genes,
-                                  org.db,
-                                  levels.use = NULL,
-                                  ontologies = c("BP", "CC", "MF"),
-                                  min.overlap = 3,
-                                  verbose = TRUE){
-  `%>%` <- magrittr::`%>%`
-  # Convert genes to ENTREZIDs.
-  suppressMessages({
-    conversion <-clusterProfiler::bitr(genes, fromType = "SYMBOL",
-                                       toType = "ENTREZID",
-                                       OrgDb = org.db)
-  })
-
-
-  # Iterate over the three ontologies.
-  result_ontologies <- list()
-  for (ont in ontologies){
-    if(isTRUE(verbose)){
-      message(paste0(add_info(), crayon_body("Computing grouped GO terms for the ontology: "), crayon_key(ont)))
-    }
-    result_list <- list()
-
-    # To break out of the while loop.
-    breakpoint <- FALSE
-
-    # Set a counter, that will act as level of the ontologies.
-    counter <- 0
-
-    if (is.null(levels.use)){
-      if (isTRUE(verbose)){
-        message(paste0(add_info(), crayon_body("Computing for all possible ontology levels...")))
-      }
-      while(base::isFALSE(breakpoint)){
-        # Set the ontology level.
-        counter <- counter + 1
-        if (isTRUE(verbose)){
-          message(paste0(add_info(), crayon_body("Computing level "), crayon_key(counter), crayon_body("...")))
-        }
-
-        grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
-                                                  OrgDb = org.db,
-                                                  ont = ont,
-                                                  level = counter,
-                                                  readable = TRUE)
-
-        # Arrange the dataframe by descending count and filter.
-        result <- grouped_terms@result %>%
-                  dplyr::arrange(dplyr::desc(.data$Count)) %>%
-                  dplyr::filter(.data$Count >= min.overlap)
-
-
-        if (dim(result)[1] > 0){
-          result <- result %>%
-                    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
-          result_list[[paste0("Lv. ", counter)]] <- result
-        } else {
-          # nocov start
-          if (isTRUE(verbose)){
-            message(crayon_body("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes."))
-          }
-          breakpoint <- TRUE
-          # nocov end
-        }
-      }
-    } else {
-      if (isTRUE(verbose)){
-        message(add_info(), "Computing for the requested levels...")
-      }
-      for (level in levels.use){
-        if (isTRUE(verbose)){
-          message(paste0(add_info(), crayon_body("Computing level "), crayon_key(level), crayon_body("...")))
-        }
-
-        grouped_terms <- clusterProfiler::groupGO(gene = conversion$ENTREZID,
-                                                  OrgDb = org.db,
-                                                  ont = ont,
-                                                  level = level,
-                                                  readable = TRUE)
-
-        # Arrange the dataframe by descending count and filter.
-        result <- grouped_terms@result %>%
-                  dplyr::arrange(dplyr::desc(.data$Count)) %>%
-                  dplyr::filter(.data$Count >= min.overlap)
-
-        if (dim(result)[1] > 0){
-          result <- result %>%
-                    dplyr::mutate("Description" = stringr::str_to_sentence(stringr::str_replace_all(.data$Description, "_", " ")))
-          result_list[[paste0("Lv. ", level)]] <- result
-        } else {
-          # nocov start
-          if (isTRUE(verbose)){
-            message(crayon_body("No results for this level. This can be due to the filtering cutoffs applied or because no terms were found for the genes."))
-          }
-          breakpoint <- TRUE
-          # nocov end
-        }
-      }
-    }
-    result_ontologies[[ont]] <- result_list
-  }
-
-  if (isTRUE(verbose)){
-    message(paste0(add_tick(), crayon_body("Finished computing!")))
-  }
-  return(result_ontologies)
-}
 
 #' Compute UMAP layers.
 #'
@@ -3478,4 +3364,45 @@ one_one_norm <- function(x){
 range_norm <- function(x, a, b){
   y <- (b - a) * ((x - (min(x, na.rm = TRUE))) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))) + a
   return(y)
+}
+
+#' Rounds up a vector of percentages to ensure they add up to 100.
+#' 
+#' First, truncates the values and keeps the truncated values and discarded decimals stored.
+#' Then, it orders the discarded decimals and adds a unit to the correspondent truncated value
+#' until the summ of truncated values reaches 100.
+#' 
+#' For exclusive use in do_WafflePlot().
+#'
+#' @param x Data Frame of frequencies.
+#' @param group.by The grouping variable used.
+#'
+#' @return A rounded up vector of percentages.
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+round_percent <- function(x,
+                          group.by){
+  # Generate named vector of freqs.
+  x <- as.data.frame(x)
+  names.use <- x[, group.by]
+  freqs <- x$freq
+  names(freqs) <- names.use
+  
+  # Get trunctaed values and the removed percentages.
+  trimmed <- trunc(freqs)
+  cut.percent <- rev(sort(freqs - trimmed))
+  
+  # Now, order the removed percentages and, in descending order, add a unit to the trimmed values until they add up to 100.
+  index <- 0
+  while(sum(trimmed) != 100){
+    index <- index + 1
+    
+    trimmed[names(trimmed[index])] <- trimmed[index] + 1
+  }
+  
+  # Return the new vector of rounded percentages.
+  return(trimmed)
 }
