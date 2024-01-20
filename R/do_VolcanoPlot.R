@@ -8,8 +8,9 @@
 #' @param line_color \strong{\code{\link[base]{character}}} | Color for the lines.
 #' @param line_size \strong{\code{\link[base]{numeric}}} | Size of the lines in the plot.
 #' @param add_gene_tags \strong{\code{\link[base]{logical}}} | Whether to plot the top genes.
+#' @param add_tag_side \strong{\code{\link[base]{logical}}} | Either "both", "positive" or "negative" to indicate which side of genes to tag
 #' @param order_tags_by \strong{\code{\link[base]{character}}} | Either "both", "pvalue" or "logfc".
-#' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes in each side to plot.
+#' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes to plot.
 #' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.
 #' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.
 #'
@@ -33,6 +34,7 @@ do_VolcanoPlot <- function(sample,
                            line_color = "grey75",
                            line_size = 0.5,
                            add_gene_tags = TRUE,
+                           add_tag_side = "both",
                            order_tags_by = "both",
                            n_genes = 5,
                            use_labels = FALSE,
@@ -46,7 +48,7 @@ do_VolcanoPlot <- function(sample,
                            legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-  
+
   check_suggests(function_name = "do_VolcanoPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
@@ -72,6 +74,7 @@ do_VolcanoPlot <- function(sample,
                          "plot.title" = plot.title,
                          "plot.subtitle" = plot.subtitle,
                          "plot.caption" = plot.caption,
+                         "add_tag_side" = add_tag_side,
                          "order_tags_by" = order_tags_by,
                          "colors.use" = colors.use,
                          "plot.title.face" = plot.title.face,
@@ -95,10 +98,13 @@ do_VolcanoPlot <- function(sample,
   check_parameters(axis.text.face, parameter_name = "axis.text.face")
   check_parameters(legend.title.face, parameter_name = "legend.title.face")
   check_parameters(legend.text.face, parameter_name = "legend.text.face")
-  
-  
+
+
   assertthat::assert_that(order_tags_by %in% c("both", "pvalue", "logfc"),
                           msg = "Please use either both, pvalue or logfc in order_tags_by.")
+
+  assertthat::assert_that(add_tag_side %in% c("both", "positive", "negative"),
+                          msg = "Please use either both, positive or negative in add_tag_side")
 
   `%>%` <- magrittr::`%>%`
   colors <- do_ColorPalette(colors.use, tetradic = TRUE)
@@ -202,7 +208,17 @@ do_VolcanoPlot <- function(sample,
                    as.data.frame() %>%
                    utils::head(n_genes)
     }
-    data.label <- dplyr::bind_rows(data.up, data.down)
+
+    if (add_tag_side == "both") {
+      data.label <- dplyr::bind_rows(data.up, data.down)
+
+    } else if (add_tag_side == "positive") {
+      data.label <- data.up
+
+    } else if (add_tag_side == "negative") {
+      data.label <- data.down
+
+    }
 
     if (base::isFALSE(use_labels)){
       p <- p +
