@@ -21,6 +21,7 @@ do_VolcanoPlot(
   line_color = "grey75",
   line_size = 0.5,
   add_gene_tags = TRUE,
+  add_tag_side = "both",
   order_tags_by = "both",
   n_genes = 5,
   use_labels = FALSE,
@@ -68,9 +69,11 @@ do_VolcanoPlot(
 
 \item{add_gene_tags}{\strong{\code{\link[base]{logical}}} | Whether to plot the top genes.}
 
+\item{add_tag_side}{\strong{\code{\link[base]{logical}}} | Either "both", "positive" or "negative" to indicate which side of genes to tag}
+
 \item{order_tags_by}{\strong{\code{\link[base]{character}}} | Either "both", "pvalue" or "logfc".}
 
-\item{n_genes}{\strong{\code{\link[base]{numeric}}} | Number of top genes in each side to plot.}
+\item{n_genes}{\strong{\code{\link[base]{numeric}}} | Number of top genes to plot.}
 
 \item{use_labels}{\strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.}
 

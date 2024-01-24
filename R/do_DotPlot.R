@@ -3,13 +3,6 @@
 #'
 #' @inheritParams doc_function
 #' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
-#' @param scale \strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.
-#' @param scale.by \strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
-#' \itemize{
-#'   \item \emph{\code{radius}}: use radius aesthetic.
-#'   \item \emph{\code{size}}: use size aesthetic.
-#' }
-#' @param dot_border \strong{\code{\link[base]{logical}}} | Whether to plot a border around dots.
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -18,8 +11,12 @@
 do_DotPlot <- function(sample,
                        features,
                        assay = NULL,
+                       slot = "data",
                        group.by = NULL,
-                       scale = FALSE,
+                       split.by = NULL,
+                       min.cutoff = NA,
+                       max.cutoff = NA,
+                       enforce_symmetry = FALSE, 
                        legend.title = NULL,
                        legend.type = "colorbar",
                        legend.position = "bottom",
@@ -29,7 +26,9 @@ do_DotPlot <- function(sample,
                        legend.width = 1,
                        legend.framecolor = "grey50",
                        legend.tickcolor = "white",
-                       colors.use = NULL,
+                       legend.ncol = NULL,
+                       legend.nrow = NULL,
+                       legend.byrow = FALSE,
                        dot.scale = 8,
                        plot.title = NULL,
                        plot.subtitle = NULL,
@@ -41,14 +40,14 @@ do_DotPlot <- function(sample,
                        cluster = FALSE,
                        flip = FALSE,
                        axis.text.x.angle = 45,
-                       scale.by = "size",
                        use_viridis = FALSE,
                        viridis.palette = "G",
                        viridis.direction = -1,
                        sequential.palette = "YlGnBu",
                        sequential.direction = 1,
+                       diverging.palette = "RdBu",
+                       diverging.direction = -1,
                        na.value = "grey75",
-                       dot_border = TRUE,
                        plot.grid = TRUE,
                        grid.color = "grey75",
                        grid.type = "dashed",
@@ -69,14 +68,24 @@ do_DotPlot <- function(sample,
     out <- check_and_set_assay(sample, assay = assay)
     sample <- out[["sample"]]
     assay <- out[["assay"]]
-
+    
+    # Check group.by.
+    out <- check_group_by(sample = sample,
+                          group.by = group.by,
+                          is.heatmap = FALSE)
+    sample <- out[["sample"]]
+    group.by <- out[["group.by"]]
+    
+    # Check slot.
+    slot <- check_and_set_slot(slot = slot)
+                               
     # Check logical parameters.
     logical_list <- list("flip" = flip,
                          "cluster" = cluster,
                          "use_viridis" = use_viridis,
-                         "dot_border" = dot_border,
                          "plot.grid" = plot.grid,
-                         "scale" = scale)
+                         "enforce_symmetry" = enforce_symmetry,
+                         "legend.byrow" = legend.byrow)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -88,7 +97,12 @@ do_DotPlot <- function(sample,
                          "viridis.direction" = viridis.direction,
                          "axis.text.x.angle" = axis.text.x.angle,
                          "number.breaks" = number.breaks,
-                         "sequential.direction" = sequential.direction)
+                         "sequential.direction" = sequential.direction,
+                         "diverging.direction" = diverging.direction,
+                         "min.cutoff" = min.cutoff,
+                         "max.cutoff" = max.cutoff,
+                         "legend.ncol" = legend.ncol,
+                         "legend.nrow" = legend.nrow)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -97,7 +111,7 @@ do_DotPlot <- function(sample,
                            "xlab" = xlab,
                            "ylab" = ylab,
                            "group.by" = group.by,
-                           "scale.by" = scale.by,
+                           "split.by" = split.by,
                            "legend.framecolor" = legend.framecolor,
                            "legend.tickcolor" = legend.tickcolor,
                            "legend.type" = legend.type,
@@ -106,6 +120,7 @@ do_DotPlot <- function(sample,
                            "grid.color" = grid.color,
                            "grid.type" = grid.type,
                            "sequential.palette" = sequential.palette,
+                           "diverging.palette" = diverging.palette,
                            "plot.title.face" = plot.title.face,
                            "plot.subtitle.face" = plot.subtitle.face,
                            "plot.caption.face" = plot.caption.face,
@@ -113,7 +128,8 @@ do_DotPlot <- function(sample,
                            "axis.text.face" = axis.text.face,
                            "legend.title.face" = legend.title.face,
                            "legend.text.face" = legend.text.face,
-                           "legend.title" = legend.title)
+                           "legend.title" = legend.title,
+                           "slot" = slot)
     check_type(parameters = character_list, required_type = "character", test_function = is.character)
     
     `%>%` <- magrittr::`%>%`
@@ -122,11 +138,6 @@ do_DotPlot <- function(sample,
     features <- check_feature(sample = sample, features = features, permissive = TRUE)
     features <- remove_duplicated_features(features = features)
 
-    if (!is.null(colors.use)){
-      check_colors(colors.use)
-    }
-
-    # Check that split.by is set and the user has not provided a correct vector of colors.
     check_parameters(parameter = font.type, parameter_name = "font.type")
     check_parameters(parameter = legend.type, parameter_name = "legend.type")
     check_parameters(parameter = legend.position, parameter_name = "legend.position")
@@ -145,63 +156,173 @@ do_DotPlot <- function(sample,
     check_parameters(viridis.direction, parameter_name = "viridis.direction")
     check_parameters(sequential.direction, parameter_name = "sequential.direction")
 
-    # Check the colors provided to legend.framecolor and legend.tickcolor.
     check_colors(legend.framecolor, parameter_name = "legend.framecolor")
     check_colors(legend.tickcolor, parameter_name = "legend.tickcolor")
     check_colors(na.value, parameter_name = "na.value")
     check_colors(grid.color, parameter_name = "grid.color")
     
-    colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
-                                                  use_viridis = use_viridis,
-                                                  direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
-                                                  enforce_symmetry = FALSE)
-    
-    # Until they resolve ggplot2 deprecation.
-    p <- suppressWarnings({Seurat::DotPlot(sample,
-                                           features = features,
-                                           group.by = group.by,
-                                           dot.scale = dot.scale,
-                                           cluster.idents = cluster,
-                                           scale = scale,
-                                           scale.by = scale.by)})
-    # Retrieve original data and plot again to allow the use of flip parameter.
-    if (isTRUE(dot_border)){
-      p <- p$data %>%
-           ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$features.plot} else {.data$id},
-                                                  y = if (base::isFALSE(flip)){.data$id} else {.data$features.plot},
-                                                  fill = .data$avg.exp.scaled,
-                                                  size = .data$pct.exp)) + 
-           ggplot2::geom_point(color = "black", shape = 21) +
-           ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
-           ggplot2::scale_fill_gradientn(colors = colors.gradient,
-                                         na.value = na.value,
-                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                         breaks = scales::extended_breaks(n = number.breaks))
-
+    if (base::isFALSE(enforce_symmetry)){
+      colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
+                                                    use_viridis = use_viridis,
+                                                    direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
+                                                    enforce_symmetry = enforce_symmetry)
     } else {
-      p <- p$data %>%
-           ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$features.plot} else {.data$id},
-                                                  y = if (base::isFALSE(flip)){.data$id} else {.data$features.plot},
-                                                  color = .data$avg.exp.scaled,
-                                                  size = .data$pct.exp)) + 
-           ggplot2::geom_point() +
-           ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
-           ggplot2::scale_color_gradientn(colors = colors.gradient,
-                                         na.value = na.value,
-                                         name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
-                                         breaks = scales::extended_breaks(n = number.breaks))
+      colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                    use_viridis = FALSE,
+                                                    direction = diverging.direction,
+                                                    enforce_symmetry = enforce_symmetry)
+      
     }
     
+    
+    assertthat::assert_that(!is.list(features),
+                            msg = paste0(add_cross(), crayon_body("Please provide features as a "),
+                                         crayon_key("character"),
+                                         crayon_body(" vector and not as a "),
+                                         crayon_key("list"),
+                                         crayon_body(".")))
+    
+    if (!is.null(split.by)){
+      assertthat::assert_that(base::isFALSE(cluster),
+                              msg = paste0(add_cross(), crayon_body("Please when using "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" set "),
+                                           crayon_key("cluster"),
+                                           crayon_body(" to "),
+                                           crayon_key("FALSE"),
+                                           crayon_body(".")))
+    }
+    
+    
+    # Until they resolve ggplot2 deprecation.
+    # p <- suppressWarnings({Seurat::DotPlot(sample,
+    #                                        features = features,
+    #                                        group.by = group.by,
+    #                                        dot.scale = dot.scale,
+    #                                        cluster.idents = cluster,
+    #                                        scale = scale,
+    #                                        scale.by = scale.by)})
+    # Retrieve original data and plot again to allow the use of flip parameter.
+    
+    
+    data <- sample@assays[[assay]][[slot]][unlist(unname(features)), , drop = FALSE] %>% 
+            as.data.frame() %>% 
+            tibble::rownames_to_column(var = "Gene") %>% 
+            tidyr::pivot_longer(cols = -"Gene",
+                                values_to = "Expression",
+                                names_to = "Cell") %>% 
+            dplyr::left_join(y = {sample@meta.data[ , c(group.by, split.by), drop = FALSE] %>% 
+                                  tibble::rownames_to_column(var = "Cell")},
+                             by = "Cell") %>% 
+            dplyr::mutate("logical" = ifelse(.data$Expression == 0, 0, 1)) %>% 
+            dplyr::group_by(dplyr::across(dplyr::all_of(c(split.by, group.by, "Gene")))) %>% 
+            dplyr::summarise("Avg.Exp" = mean(.data$Expression, na.rm = TRUE),
+                             "N.Exp" = sum(.data$logical),
+                             "N" = dplyr::n()) %>% 
+            dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>% 
+            dplyr::select(dplyr::all_of(c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")))
+    
+    
+    # Define cutoffs.
+    range.data <- c(min(data[, "Avg.Exp"], na.rm = TRUE),
+                    max(data[, "Avg.Exp"], na.rm = TRUE))
+    
+    out <- check_cutoffs(min.cutoff = min.cutoff,
+                         max.cutoff = max.cutoff,
+                         limits = range.data)
+    ragne.data <- out$limits
+    
+    
+    scale.setup <- compute_scales(sample = sample,
+                                  feature = NULL,
+                                  assay = assay,
+                                  reduction = NULL,
+                                  slot = slot,
+                                  number.breaks = number.breaks,
+                                  min.cutoff = min.cutoff,
+                                  max.cutoff = max.cutoff,
+                                  flavor = "Seurat",
+                                  enforce_symmetry = enforce_symmetry,
+                                  from_data = TRUE,
+                                  limits.use = range.data)
+    
+    # Modify values
+    if (!is.na(min.cutoff)){
+      data$Avg.Exp <- ifelse(data$Avg.Exp <= min.cutoff, min.cutoff, data$Avg.Exp)
+    }
+    
+    if (!is.na(max.cutoff)){
+      data$Avg.Exp <- ifelse(data$Avg.Exp >= max.cutoff, max.cutoff, data$Avg.Exp)
+    }
+    
+  
+    data.cluster <- data %>% 
+                    dplyr::ungroup() %>% 
+                    dplyr::mutate("Groups" = .data[[group.by]]) %>% 
+                    dplyr::select(dplyr::all_of(c("Groups", "Gene", "Avg.Exp"))) %>% 
+                    tidyr::pivot_wider(names_from = "Groups",
+                                       values_from = "Avg.Exp",
+                                       values_fn = list) %>% 
+                    as.data.frame() %>% 
+                    tibble::column_to_rownames(var = "Gene") %>% 
+                    as.matrix()
+    
+    
+    
+    # Cluster rows.
+    if(length(rownames(data.cluster)) == 1){
+      row_order <- rownames(data.cluster)[1]
+    } else {
+      if (isTRUE(cluster)){
+        row_order <- rownames(data.cluster)[stats::hclust(stats::dist(data.cluster, method = "euclidean"), method = "ward.D")$order]
+      } else {
+        row_order <- rownames(data.cluster)
+      }
+    }
+    
+    # Cluster columns.
+    if (length(colnames(data.cluster)) == 1){
+      col_order <- colnames(data.cluster)[1]
+    } else {
+      if (isTRUE(cluster)){
+        col_order <- colnames(data.cluster)[stats::hclust(stats::dist(t(data.cluster), method = "euclidean"), method = "ward.D")$order]
+      } else {
+        col_order <- colnames(data.cluster)
+      }
+    }
+    
+    # Apply clustering.
+    data <- data %>% 
+            dplyr::ungroup() %>% 
+            dplyr::mutate("Groups" = .data[[group.by]]) %>% 
+            dplyr::mutate("Gene" = factor(.data$Gene, levels = row_order),
+                          "Groups" = factor(.data$Groups, levels = rev(col_order)))
+    
+  
+    p <- data %>%
+         ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$Gene} else {.data$Groups},
+                                                y = if (base::isFALSE(flip)){.data$Groups} else {.data$Gene},
+                                                fill = .data$Avg.Exp,
+                                                size = .data$P.Exp)) + 
+         ggplot2::geom_point(color = "black", shape = 21) +
+         ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
+         ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                       na.value = na.value,
+                                       name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                       breaks = scale.setup$breaks,
+                                       labels = scale.setup$labels,
+                                       limits = scale.setup$limits)
+     
     # Facet grid.
-    if (isTRUE(is.list(features))){
+    if (!is.null(split.by)){
       if (base::isFALSE(flip)){
         p <- p +
-             ggplot2::facet_grid(cols = ggplot2::vars(.data$feature.groups),
+             ggplot2::facet_grid(cols = ggplot2::vars(.data[[split.by]]),
                                  scales = "free",
                                  space = "free")
       } else {
         p <- p +
-             ggplot2::facet_grid(rows = ggplot2::vars(.data$feature.groups),
+             ggplot2::facet_grid(rows = ggplot2::vars(.data[[split.by]]),
                                  scales = "free",
                                  space = "free")
       }
@@ -239,6 +360,7 @@ do_DotPlot <- function(sample,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+    
     # Add leyend modifiers.
     p <- modify_continuous_legend(p = p,
                                   # nocov start
@@ -255,27 +377,14 @@ do_DotPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
 
     # Modify size legend.
-    if (isTRUE(dot_border)){
-      p <- p +
-           ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
-                                                        title.position = "top",
-                                                        title.hjust = 0.5,
-                                                        override.aes = ggplot2::aes(fill = "black")))
-    } else {
-      p <- p +
-           ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
-                                                        title.position = "top",
-                                                        title.hjust = 0.5))
-    }
+    p <- p +
+         ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
+                                                      title.position = "top",
+                                                      title.hjust = 0.5,
+                                                      ncol = legend.ncol,
+                                                      nrow = legend.nrow,
+                                                      byrow = legend.byrow,
+                                                      override.aes = ggplot2::aes(fill = "black")))
 
-    if (is.list(features)){
-      if (base::isFALSE(flip)){
-        p <- p + ggplot2::theme(strip.background = ggplot2::element_blank(),
-                                strip.text.x = ggplot2::element_text(face = "bold", color = "black", angle = 0))
-      } else {
-        p <- p + ggplot2::theme(strip.background = ggplot2::element_blank(),
-                                strip.text.y = ggplot2::element_text(face = "bold", color = "black", angle = 0, hjust = 0))
-      } 
-    }
     return(p)
 }

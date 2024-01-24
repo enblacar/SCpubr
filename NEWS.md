@@ -11,8 +11,9 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targett
 
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
+-   `do_DotPlot()`: Removed dependencies with `Seurat::DotPlot()`.
 
-The reason of this modification is to allow for a much clearer and concise output than before.
+The reason of these modification is to allow for a much clearer and concise output than before.
 
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
@@ -31,6 +32,12 @@ The reason of this modification is to allow for a much clearer and concise outpu
 ## do_DotPlot()
 -   Fixed a bug that caused sequential palettes to not be checked properly.
 -   Changed default value of `dot.scale` to 8.
+-   Removed legacy parameter `colors.use`, which had no effect as of previous version but was still listed as parameter.
+-   Removed dependency with `Seurat::DotPlot()`. This means that there will be some differences with the output of this function. However, this is a design choice for the sake of preventing future dependency problems.
+-   Added `split.by` parameter.
+-   Removed `scale`and `scale.by` parameters.
+-   Removed the possibility to use a list of features. Instead, facets are being drawn according to `split.by` parameter.
+-   Removed `dot_border`. This is a design choice of `SCpubr`.
 
 ## do_EnrichmentHeatmap()
 -   Changed default value of `scale_scores` to `FALSE`.

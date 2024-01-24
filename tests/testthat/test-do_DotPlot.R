@@ -232,62 +232,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     testthat::expect_type(p, "list")
   })
 
-  testthat::test_that("do_DotPlot: PASS - list of features", {
-    testthat::skip_on_cran()
 
-
-    genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
-                  "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
-                  "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
-                  "B" = Seurat::VariableFeatures(sample)[6],
-                  "CD8+ T" = Seurat::VariableFeatures(sample)[7],
-                  "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
-                  "NK" = Seurat::VariableFeatures(sample)[10:11],
-                  "DC" = Seurat::VariableFeatures(sample)[12:13],
-                  "Platelet" = Seurat::VariableFeatures(sample)[14])
-    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                              features = genes)})
-    testthat::expect_type(p, "list")
-  })
-
-  testthat::test_that("do_DotPlot: PASS - list of features cluster idents", {
-    testthat::skip_on_cran()
-
-
-    genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
-                  "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
-                  "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
-                  "B" = Seurat::VariableFeatures(sample)[6],
-                  "CD8+ T" = Seurat::VariableFeatures(sample)[7],
-                  "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
-                  "NK" = Seurat::VariableFeatures(sample)[10:11],
-                  "DC" = Seurat::VariableFeatures(sample)[12:13],
-                  "Platelet" = Seurat::VariableFeatures(sample)[14])
-    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                              features = genes,
-                                              cluster = TRUE)})
-    testthat::expect_type(p, "list")
-  })
-
-  testthat::test_that("do_DotPlot: PASS - list of features cluster idents modify colors", {
-    testthat::skip_on_cran()
-
-
-    genes <- list("Naive CD4+ T" = Seurat::VariableFeatures(sample)[1:2],
-                  "EPC1+ Mono" = Seurat::VariableFeatures(sample)[3:4],
-                  "Memory CD4+" = Seurat::VariableFeatures(sample)[5],
-                  "B" = Seurat::VariableFeatures(sample)[6],
-                  "CD8+ T" = Seurat::VariableFeatures(sample)[7],
-                  "FCGR3A+ Mono" = Seurat::VariableFeatures(sample)[8:9],
-                  "NK" = Seurat::VariableFeatures(sample)[10:11],
-                  "DC" = Seurat::VariableFeatures(sample)[12:13],
-                  "Platelet" = Seurat::VariableFeatures(sample)[14])
-    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
-                                              features = genes,
-                                              cluster = TRUE,
-                                              colors.use = c("#001219", "#e9d8a6"))})
-    testthat::expect_type(p, "list")
-  })
 
 
 

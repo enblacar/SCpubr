@@ -9,8 +9,12 @@ do_DotPlot(
   sample,
   features,
   assay = NULL,
+  slot = "data",
   group.by = NULL,
-  scale = FALSE,
+  split.by = NULL,
+  min.cutoff = NA,
+  max.cutoff = NA,
+  enforce_symmetry = FALSE,
   legend.title = NULL,
   legend.type = "colorbar",
   legend.position = "bottom",
@@ -20,7 +24,9 @@ do_DotPlot(
   legend.width = 1,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
-  colors.use = NULL,
+  legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   dot.scale = 8,
   plot.title = NULL,
   plot.subtitle = NULL,
@@ -32,14 +38,14 @@ do_DotPlot(
   cluster = FALSE,
   flip = FALSE,
   axis.text.x.angle = 45,
-  scale.by = "size",
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
   sequential.palette = "YlGnBu",
   sequential.direction = 1,
+  diverging.palette = "RdBu",
+  diverging.direction = -1,
   na.value = "grey75",
-  dot_border = TRUE,
   plot.grid = TRUE,
   grid.color = "grey75",
   grid.type = "dashed",
@@ -60,9 +66,15 @@ do_DotPlot(
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
+\item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
+
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{scale}{\strong{\code{\link[base]{logical}}} | Whether the data should be scaled or not. Non-scaled data allows for comparison across genes. Scaled data allows for an easier comparison along the same gene.}
+\item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
+
+\item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 
@@ -89,7 +101,11 @@ do_DotPlot(
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
 
-\item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
 \item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
 
@@ -112,12 +128,6 @@ do_DotPlot(
 
 \item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 
-\item{scale.by}{\strong{\code{\link[base]{character}}} | How to scale the size of the dots. One of:
-\itemize{
-\item \emph{\code{radius}}: use radius aesthetic.
-\item \emph{\code{size}}: use size aesthetic.
-}}
-
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 
 \item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
@@ -128,9 +138,11 @@ do_DotPlot(
 
 \item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
 
-\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
-\item{dot_border}{\strong{\code{\link[base]{logical}}} | Whether to plot a border around dots.}
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
+
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{plot.grid}{\strong{\code{\link[base]{logical}}} | Whether to plot grid lines.}
 
@@ -170,51 +182,16 @@ You can
   value <- SCpubr:::check_suggests(function_name = "do_DotPlot", passive = TRUE)
 
   if (isTRUE(value)){
+    # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
+    
     # Define your Seurat object.
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
     # Basic Dot plot.
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = "EPC1")
-
-    # Querying multiple features.
     genes <- rownames(sample)[1:14]
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = genes)
 
-    # Inverting the axes.
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = genes,
-                            cluster = TRUE,
-                            plot.title = "Clustered",
-                            flip = TRUE)
-
-    # Modifying default colors.
-    # Two colors to generate a gradient.
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = genes,
-                            colors.use = c("#001219", "#e9d8a6"))
-
-    # Querying multiple features as a named list - splitting by each item in list.
-    # Genes have to be unique.
-    genes <- list("Naive CD4+ T" = rownames(sample)[1:2],
-                  "EPC1+ Mono" = rownames(sample)[3:4],
-                  "Memory CD4+" = rownames(sample)[5],
-                  "B" = rownames(sample)[6],
-                  "CD8+ T" = rownames(sample)[7],
-                  "FCGR3A+ Mono" = rownames(sample)[8:9],
-                  "NK" = rownames(sample)[10:11],
-                  "DC" = rownames(sample)[12:13],
-                  "Platelet" = rownames(sample)[14])
-
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = genes)
-
-    # Clustering the identities.
-    p <- SCpubr::do_DotPlot(sample = sample,
-                            features = genes,
-                            cluster = TRUE,
-                            plot.title = "Clustered")
   } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
