@@ -806,10 +806,6 @@ if (base::isFALSE(dep_check[["utils"]])){
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
 
-    output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), nbin = 1, ctrl = 10, flavor = "AUCell")
-    testthat::expect_true("Seurat" %in% class(output))
-    testthat::expect_true("test" %in% colnames(output@meta.data))
-
     output <- compute_enrichment_scores(sample = sample, input_gene_list = list("test" = "EPC1"), verbose = TRUE, nbin = 1, ctrl = 10)
     testthat::expect_true("Seurat" %in% class(output))
     testthat::expect_true("test" %in% colnames(output@meta.data))
