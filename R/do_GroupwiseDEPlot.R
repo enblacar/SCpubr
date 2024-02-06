@@ -228,9 +228,9 @@ do_GroupwiseDEPlot <- function(sample,
                                  assay = assay,
                                  slot = slot)
   } else {
-    data <- Seurat::LayerData(object = sample,
-                              assay = assay,
-                              layer = slot)
+    data <- SeuratObject::LayerData(object = sample,
+                                    assay = assay,
+                                    layer = slot)
   }
   
   expr.data <- data[data.use$gene, , drop = FALSE] %>% 
