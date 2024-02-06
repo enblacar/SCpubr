@@ -12,6 +12,7 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targett
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
 -   `do_DotPlot()`: Removed dependencies with `Seurat::DotPlot()`.
+-   `do_DiffusionMapPlot()`, `do_EnrichmentHeatmap()` and `do_SCEnrichmentHeatmap()` do not longer accept `flavor = "AUCell"` due to dependency issues and lack of development support.
 
 The reason of these modification is to allow for a much clearer and concise output than before.
 
@@ -49,6 +50,9 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
+
+## do_RidgePlot()
+-   Removed `size = 1.25` aesthetic from the call to `ggridges::geom_ridge...`.
 
 ## do_ViolinPlot()
 -   Added `order` parameter to reorder the groups based on the median. Only works when `split.by` is set to `NULL`.

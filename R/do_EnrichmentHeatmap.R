@@ -216,9 +216,7 @@ do_EnrichmentHeatmap <- function(sample,
   }
   
   if (is.null(legend.title)){
-    if (flavor == "AUCell") {
-      legend.title <- ifelse(isTRUE(scale_scores), "AUC | Scaled", "AUC")
-    } else if (flavor == "UCell"){
+    if (flavor == "UCell"){
       legend.title <- ifelse(isTRUE(scale_scores), "UCell score | Scaled", "UCell score")
     } else if (flavor == "Seurat"){
       legend.title <- ifelse(isTRUE(scale_scores), "Enrichment | Scaled", "Enrichment")

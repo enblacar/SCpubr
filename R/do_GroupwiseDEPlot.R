@@ -223,7 +223,9 @@ do_GroupwiseDEPlot <- function(sample,
               dplyr::select(-dplyr::all_of(c(specificity)))
   
   
-  expr.data <- sample@assays[[assay]][[slot]][data.use$gene, ] %>% 
+  expr.data <- Seurat::GetAssayData(object = sample,
+                                    assay = assay,
+                                    slot = slot)[data.use$gene, , drop = FALSE] %>% 
                as.data.frame() %>% 
                tibble::rownames_to_column(var = "gene") %>% 
                tidyr::pivot_longer(cols = -"gene",

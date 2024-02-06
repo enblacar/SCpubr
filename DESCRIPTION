@@ -19,7 +19,6 @@ Depends:
     R (>= 4.0.0)
 Suggests:
     assertthat,
-    AUCell,
     circlize,
     cli,
     cluster,

@@ -421,7 +421,7 @@ return_dependencies <- function(){
                    "do_CorrelationPlot" = NULL,
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
                    "do_DotPlot" = NULL,
-                   "do_EnrichmentHeatmap" = c("UCell", "AUCell"),
+                   "do_EnrichmentHeatmap" = c("UCell"),
                    "do_ExpressionHeatmap" = NULL,
                    "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_GeyserPlot" = "ggdist",
@@ -434,7 +434,7 @@ return_dependencies <- function(){
                    "do_PathwayActivityPlot" = NULL,
                    "do_RidgePlot" = "ggridges",
                    "do_SCExpressionHeatmap" = NULL,
-                   "do_SCEnrichmentHeatmap" = c("UCell", "AUCell"),
+                   "do_SCEnrichmentHeatmap" = c("UCell"),
                    "do_TermEnrichmentPlot" = c("enrichplot"),
                    "do_TFActivityPlot" = NULL,
                    "do_ViolinPlot" = NULL,
@@ -1874,14 +1874,6 @@ compute_enrichment_scores <- function(sample,
     }
   }
 
-  if (flavor == "AUCell"){
-    if (!requireNamespace("AUCell", quietly = TRUE)) {
-      # nocov start
-      stop(paste0(add_cross(), crayon_body("Package "), crayon_key("AUCell"), crayon_body(" must be installed to run AUCell scoring.")), call. = FALSE)
-      # nocov end
-    }
-  }
-
   if (!is.list(input_gene_list) & is.character(input_gene_list)){
     input_gene_list <- list("Input" = input_gene_list)
   }
@@ -1956,37 +1948,6 @@ compute_enrichment_scores <- function(sample,
     }
   }
 
-  if (flavor == "AUCell"){
-    if (is.null(assay)){
-      assay <- Seurat::DefaultAssay(sample)
-    }
-
-    if (is.null(slot)){
-      slot <- "data"
-    }
-    suppressWarnings({
-    scores <- AUCell::AUCell_run(exprMat = SeuratObject::GetAssayData(sample, assay = assay, slot = slot),
-                                 geneSets = input_gene_list)
-    })
-    scores <- scores@assays@data$AUC %>%
-              as.matrix() %>%
-              t() %>%
-              as.data.frame() %>%
-              tibble::rownames_to_column(var = "cell")
-
-    # This is to remove some head title that prevents the left join afterwards.
-    col.names <- colnames(scores)
-    row.names <- rownames(scores)
-    scores <- unname(scores)
-    colnames(scores) <- col.names
-    row.names(scores) <- row.names
-
-    sample@meta.data <- sample@meta.data %>%
-                        tibble::rownames_to_column(var = "cell") %>%
-                        dplyr::left_join(y = scores,
-                                         by = "cell") %>%
-                        tibble::column_to_rownames(var = "cell")
-  }
   
   if (isTRUE(norm_data)){
     # Compute a 0-1 normalization.
@@ -2447,15 +2408,13 @@ check_parameters <- function(parameter,
                                          crayon_key("bottom"),
                                          crayon_body(".")))
   } else if (parameter_name == "flavor"){
-    assertthat::assert_that(parameter %in% c("Seurat", "UCell", "AUCell"),
+    assertthat::assert_that(parameter %in% c("Seurat", "UCell"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
                                          crayon_body(": "),
                                          crayon_key("Seurat"),
                                          crayon_body(", "),
                                          crayon_key("UCell"),
-                                         crayon_body(", "),
-                                         crayon_key("AUCell"),
                                          crayon_body(".")))
  } else if (parameter_name == "database"){
     assertthat::assert_that(parameter %in% c("GO", "KEGG"),

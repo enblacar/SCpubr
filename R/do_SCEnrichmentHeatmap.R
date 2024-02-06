@@ -242,9 +242,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   # nocov end
   
   if (is.null(legend.title)){
-    if (flavor == "AUCell") {
-      legend.title <- "AUC"
-    } else if (flavor == "UCell"){
+    if (flavor == "UCell"){
       legend.title <- "UCell score"
     } else if (flavor == "Seurat"){
       legend.title <- "Enrichment"

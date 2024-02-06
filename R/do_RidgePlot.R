@@ -182,8 +182,7 @@ do_RidgePlot <- function(sample,
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                   y = .data$group.by,
                                                   fill = ggplot2::after_stat(x))) +
-           ggridges::geom_density_ridges_gradient(color = "black",
-                                                  size = 1.25) + 
+           ggridges::geom_density_ridges_gradient(color = "black") + 
            ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                          na.value = "grey75",
                                          name = feature,
@@ -216,7 +215,6 @@ do_RidgePlot <- function(sample,
                                                     y = .data$group.by,
                                                     fill = ggplot2::after_stat(quantile))) +
              ggridges::stat_density_ridges(color = "black",
-                                           size = 1.25,
                                            quantile_lines = TRUE,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
@@ -245,7 +243,6 @@ do_RidgePlot <- function(sample,
                                                     y = .data$group.by,
                                                     fill = ggplot2::after_stat(quantile))) +
              ggridges::stat_density_ridges(color = "black",
-                                           size = 1.25,
                                            quantile_lines = TRUE,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient",
@@ -265,7 +262,6 @@ do_RidgePlot <- function(sample,
                                                     y = .data$group.by,
                                                     fill = 0.5 - abs(0.5 - ggplot2::after_stat(ecdf)))) +
              ggridges::stat_density_ridges(color = "black",
-                                           size = 1.25,
                                            calc_ecdf = TRUE,
                                            geom = "density_ridges_gradient") + 
              ggplot2::scale_fill_gradientn(colors = colors.gradient,
@@ -292,8 +288,7 @@ do_RidgePlot <- function(sample,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                 y = .data$group.by,
                                                 fill = .data$group.by)) +
-         ggridges::geom_density_ridges(color = "black",
-                                       size = 1.25) +
+         ggridges::geom_density_ridges(color = "black") +
          ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}})} else {colors.use},
                                     name = legend.title) +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,

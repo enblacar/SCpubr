@@ -299,7 +299,7 @@ do_DiffusionMapPlot <- function(sample,
                                                 fill = .data$Enrichment)) + 
          ggplot2::geom_raster(interpolate = interpolate)
     
-    legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"} else if (flavor == "AUCell") {"AUC"}
+    legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"}
     legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name), legend.name)
     
     p <- p + 
