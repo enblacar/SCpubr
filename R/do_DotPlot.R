@@ -199,9 +199,9 @@ do_DotPlot <- function(sample,
                                    assay = assay,
                                    slot = slot)
     } else {
-      data <- Seurat::GetAssayData(object = sample,
-                                   assay = assay,
-                                   layer = slot)
+      data <- Seurat::LayerData(object = sample,
+                                assay = assay,
+                                layer = slot)
     }
     
     data <- data[features, , drop = FALSE] %>% 
