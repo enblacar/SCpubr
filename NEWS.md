@@ -1,7 +1,7 @@
 # SCpbur v2.0.3 (In Development)
 
 ## Added functions
--   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. s
+-   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset.
 
 ## Removed functions
 -   `do_FunctionalAnnotationPlot()`.
