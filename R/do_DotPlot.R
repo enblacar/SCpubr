@@ -194,7 +194,7 @@ do_DotPlot <- function(sample,
     }
     
     # Workaround parameter depreciation.
-    if (utils::packageVersion("Seurat" < "4.9.9")){
+    if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){
       data <- Seurat::GetAssayData(object = sample,
                                    assay = assay,
                                    slot = slot)

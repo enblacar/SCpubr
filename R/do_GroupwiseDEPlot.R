@@ -223,7 +223,7 @@ do_GroupwiseDEPlot <- function(sample,
               dplyr::select(-dplyr::all_of(c(specificity)))
   
   # Workaround parameter deprecation.
-  if (utils::packageVersion("Seurat" < "4.9.9")){
+  if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){
     data <- Seurat::GetAssayData(object = sample,
                                  assay = assay,
                                  slot = slot)
