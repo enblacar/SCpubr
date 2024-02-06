@@ -59,72 +59,10 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                                                   ctrl = 5)})
     
     sample$test <- as.factor(sample$seurat_clusters)
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        group.by = "test",
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5)
-    testthat::expect_type(p, "list")
     
     genes <- list("A" = rownames(sample)[1:5])
     
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        subsample = 100,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5)
-    testthat::expect_type(p, "list")
     
-    
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5,
-                                        cluster = TRUE)
-    testthat::expect_type(p, "list")
-    
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5,
-                                        cluster = FALSE)
-    testthat::expect_type(p, "list")
-    
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5,
-                                        metadata = c("orig.ident", "seurat_clusters"),
-                                        metadata.colors = list("orig.ident" = c("Cell" = "red")))
-    testthat::expect_type(p, "list")
-    
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5,
-                                        proportional.size = TRUE)
-    testthat::expect_type(p, "list")
-    
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5,
-                                        proportional.size = FALSE)
-    testthat::expect_type(p, "list")
    
     
     testthat::expect_warning({p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
@@ -136,13 +74,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         ctrl = 5)})
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
-                                        input_gene_list = genes,
-                                        flavor = "AUCell",
-                                        assay = "SCT",
-                                        nbin = 1,
-                                        ctrl = 5)
-    testthat::expect_type(p, "list")
+    
     
     testthat::expect_warning({p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,

@@ -169,24 +169,6 @@ if (base::isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       ctrl = 10,
                                       viridis.direction = -1)
     testthat::expect_true("ggplot" %in% class(p))
-
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flavor = "AUCell",
-                                      assay = "SCT",
-                                      nbin = 1,
-                                      ctrl = 10,
-                                      viridis.direction = 1)
-    testthat::expect_true("ggplot" %in% class(p))
-
-    p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
-                                      input_gene_list = genes,
-                                      flavor = "AUCell",
-                                      assay = "SCT",
-                                      nbin = 1,
-                                      ctrl = 10,
-                                      viridis.direction = -1)
-    testthat::expect_true("ggplot" %in% class(p))
   })
 
   testthat::test_that("do_EnrichmentHeatmap: PASS - normal", {

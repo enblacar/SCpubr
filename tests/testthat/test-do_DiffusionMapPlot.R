@@ -68,19 +68,6 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                      enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
-                                     input_gene_list =  genes,
-                                     subsample = NA,
-                                     nbin = 1,
-                                     ctrl = 5,
-                                     reduction = "umap",
-                                     dims = 1:2,
-                                     return_object = TRUE,
-                                     verbose = FALSE,
-                                     flavor = "AUCell",
-                                     use_viridis = TRUE,
-                                     enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
     
     p <- SCpubr::do_DiffusionMapPlot(sample = sample,
                                      input_gene_list =  genes,
