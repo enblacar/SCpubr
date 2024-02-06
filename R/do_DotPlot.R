@@ -193,19 +193,9 @@ do_DotPlot <- function(sample,
                                            crayon_body(".")))
     }
     
+
     
-    # Until they resolve ggplot2 deprecation.
-    # p <- suppressWarnings({Seurat::DotPlot(sample,
-    #                                        features = features,
-    #                                        group.by = group.by,
-    #                                        dot.scale = dot.scale,
-    #                                        cluster.idents = cluster,
-    #                                        scale = scale,
-    #                                        scale.by = scale.by)})
-    # Retrieve original data and plot again to allow the use of flip parameter.
-    
-    
-    data <- sample@assays[[assay]][[slot]][unlist(unname(features)), , drop = FALSE] %>% 
+    data <- sample@assays[[assay]][[slot]][features, , drop = FALSE] %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "Gene") %>% 
             tidyr::pivot_longer(cols = -"Gene",
