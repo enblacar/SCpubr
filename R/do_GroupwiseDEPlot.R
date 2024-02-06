@@ -222,10 +222,18 @@ do_GroupwiseDEPlot <- function(sample,
               dplyr::arrange(dplyr::desc(.data[[magnitude]]), dplyr::desc(.data$p.adj.log10.minus)) %>% 
               dplyr::select(-dplyr::all_of(c(specificity)))
   
+  # Workaround parameter deprecation.
+  if (utils::packageVersion("Seurat" < "4.9.9")){
+    data <- Seurat::GetAssayData(object = sample,
+                                 assay = assay,
+                                 slot = slot)
+  } else {
+    data <- Seurat::GetAssayData(object = sample,
+                                 assay = assay,
+                                 layer = slot)
+  }
   
-  expr.data <- Seurat::GetAssayData(object = sample,
-                                    assay = assay,
-                                    slot = slot)[data.use$gene, , drop = FALSE] %>% 
+  expr.data <- data[data.use$gene, , drop = FALSE] %>% 
                as.data.frame() %>% 
                tibble::rownames_to_column(var = "gene") %>% 
                tidyr::pivot_longer(cols = -"gene",
@@ -237,6 +245,7 @@ do_GroupwiseDEPlot <- function(sample,
                                      dplyr::mutate("Groups.use" = .data[[group.by]]) %>% 
                                      dplyr::select(-dplyr::all_of(c(group.by)))},
                                 by = "Cell")
+  
   
   data.use <- expr.data %>% 
               dplyr::mutate("logical" = ifelse(.data$Expression == 0, 0, 1)) %>% 

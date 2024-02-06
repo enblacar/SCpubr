@@ -193,11 +193,18 @@ do_DotPlot <- function(sample,
                                            crayon_body(".")))
     }
     
-
+    # Workaround parameter depreciation.
+    if (utils::packageVersion("Seurat" < "4.9.9")){
+      data <- Seurat::GetAssayData(object = sample,
+                                   assay = assay,
+                                   slot = slot)
+    } else {
+      data <- Seurat::GetAssayData(object = sample,
+                                   assay = assay,
+                                   layer = slot)
+    }
     
-    data <- Seurat::GetAssayData(object = sample,
-                                 assay = assay,
-                                 slot = slot)[features, , drop = FALSE] %>% 
+    data <- data[features, , drop = FALSE] %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "Gene") %>% 
             tidyr::pivot_longer(cols = -"Gene",
