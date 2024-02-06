@@ -230,7 +230,7 @@ do_DotPlot <- function(sample,
     out <- check_cutoffs(min.cutoff = min.cutoff,
                          max.cutoff = max.cutoff,
                          limits = range.data)
-    ragne.data <- out$limits
+    range.data <- out$limits
     
     
     scale.setup <- compute_scales(sample = sample,
@@ -366,7 +366,7 @@ do_DotPlot <- function(sample,
                                   # nocov start
                                   legend.title = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
                                   # nocov end
-                                  legend.aes = if (isTRUE(dot_border)) {"fill"} else {"color"},
+                                  legend.aes = "fill",
                                   legend.type = legend.type,
                                   legend.position = legend.position,
                                   legend.length = legend.length,

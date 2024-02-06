@@ -18,6 +18,9 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
 
+## do_BoxPlot()
+-   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behaviour.
+
 ## do_CopyNumberVariantPlot()
 -   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
 

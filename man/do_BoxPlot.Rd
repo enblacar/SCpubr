@@ -24,6 +24,9 @@ do_BoxPlot(
   legend.title = NULL,
   legend.title.position = "top",
   legend.position = "bottom",
+  legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   boxplot.line.color = "black",
   outlier.color = "black",
   outlier.alpha = 0.5,
@@ -98,6 +101,12 @@ do_BoxPlot(
 \item \emph{\code{right}}: Right of the figure.
 \item \emph{\code{none}}: No legend is displayed.
 }}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
 \item{boxplot.line.color}{\strong{\code{\link[base]{character}}} | Color of the borders of the boxplots if use_silhouette is FALSE.}
 

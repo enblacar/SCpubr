@@ -36,6 +36,9 @@ do_BoxPlot <- function(sample,
                        legend.title = NULL,
                        legend.title.position = "top",
                        legend.position = "bottom",
+                       legend.ncol = NULL,
+                       legend.nrow = NULL,
+                       legend.byrow = FALSE,
                        boxplot.line.color = "black",
                        outlier.color = "black",
                        outlier.alpha = 0.5,
@@ -76,14 +79,17 @@ do_BoxPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "order" = order,
                        "use_silhouette" = use_silhouette,
-                       "map_signif_level" = map_signif_level)
+                       "map_signif_level" = map_signif_level,
+                       "legend.byrow" = legend.byrow)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
                        "outlier.alpha" = outlier.alpha,
                        "boxplot.linewidth" = boxplot.linewidth,
                        "boxplot.width" = boxplot.width,
-                       "axis.text.x.angle" = axis.text.x.angle)
+                       "axis.text.x.angle" = axis.text.x.angle,
+                       "legend.nrow" = legend.nrow,
+                       "legend.ncol" = legend.ncol)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("feature" = feature,
@@ -222,7 +228,10 @@ do_BoxPlot <- function(sample,
                                na.rm = TRUE)   +
          ggplot2::guides(color = ggplot2::guide_legend(title = legend.title,
                                                        title.position = legend.title.position,
-                                                       title.hjust = 0.5))
+                                                       title.hjust = 0.5,
+                                                       ncol = legend.ncol,
+                                                       nrow = legend.nrow,
+                                                       byrow = legend.byrow))
   } else if (isTRUE(use_silhouette) & !is.null(split.by)){
     stop(paste0(add_cross(), crayon_body("Parameter "), crayon_key("use_silhouette"),  crayon_body("can not be used alongside "), crayon_key("split.by"), crayon_body(".")), call. = FALSE)
   } else if (base::isFALSE(use_silhouette)){
@@ -249,7 +258,10 @@ do_BoxPlot <- function(sample,
                                na.rm = TRUE)   +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                       title.position = legend.title.position,
-                                                      title.hjust = 0.5))
+                                                      title.hjust = 0.5,
+                                                      ncol = legend.ncol,
+                                                      nrow = legend.nrow,
+                                                      byrow = legend.byrow))
   }
 
    p <- p +

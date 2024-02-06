@@ -8,34 +8,45 @@ do_GroupwiseDEPlot(
   sample,
   de_genes,
   group.by = NULL,
-  number.breaks = 5,
-  top_genes = 5,
-  use_viridis = FALSE,
-  viridis.direction = -1,
-  viridis.palette.pvalue = "C",
-  viridis.palette.logfc = "E",
-  viridis.palette.expression = "G",
-  sequential.direction = 1,
-  sequential.palette.pvalue = "YlGn",
-  sequential.palette.logfc = "YlOrRd",
-  sequential.palette.expression = "YlGnBu",
   assay = NULL,
   slot = "data",
+  number.breaks = 5,
+  dot.scale = 8,
+  top_genes = 5,
+  p.cutoff = 0.05,
+  flip = FALSE,
+  plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.caption = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  use_viridis = FALSE,
+  colors.use = NULL,
+  viridis.direction = -1,
+  viridis.palette = "G",
+  sequential.direction = 1,
+  sequential.palette = "YlGnBu",
+  diverging.palette = "RdBu",
+  diverging.direction = -1,
   legend.position = "bottom",
+  legend.title = NULL,
   legend.width = 1,
-  legend.length = 20,
+  legend.length = 7.5,
   legend.framewidth = 0.5,
   legend.tickwidth = 0.5,
   legend.framecolor = "grey50",
   legend.tickcolor = "white",
+  legend.ncol = NULL,
+  legend.nrow = NULL,
+  legend.byrow = FALSE,
   legend.type = "colorbar",
   font.size = 14,
   font.type = "sans",
   axis.text.x.angle = 45,
   min.cutoff = NA,
   max.cutoff = NA,
+  enforce_symmetry = FALSE,
   na.value = "grey75",
-  grid.color = "white",
   border.color = "black",
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
@@ -53,23 +64,39 @@ do_GroupwiseDEPlot(
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
-\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
-
-\item{top_genes}{\strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.}
-
-\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
-
-\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
-
-\item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
-
-\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
-
-\item{sequential.palette.pvalue, sequential.palette.expression, sequential.palette.logfc}{\strong{\code{\link[base]{character}}} | Sequential palettes for p-value, logfc and expression heatmaps. Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
-
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
+
+\item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
+
+\item{top_genes}{\strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.}
+
+\item{p.cutoff}{\strong{\code{\link[base]{numeric}}} | Cutoff to use for adjusted p.value to filter significant genes.}
+
+\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
+
+\item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
+
+\item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
+
+\item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
+
+\item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
+
+\item{viridis.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Controls how the gradient of viridis scale is formed.}
+
+\item{viridis.palette}{\strong{\code{\link[base]{character}}} | A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
+
+\item{sequential.direction}{\strong{\code{\link[base]{numeric}}} | Direction of the sequential color scale. Either 1 or -1.}
+
+\item{sequential.palette}{\strong{\code{\link[base]{character}}} | Type of sequential color palette to use. Out of the sequential palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
+
+\item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
 
 \item{legend.position}{\strong{\code{\link[base]{character}}} | Position of the legend in the plot. One of:
 \itemize{
@@ -80,6 +107,8 @@ do_GroupwiseDEPlot(
 \item \emph{\code{none}}: No legend is displayed.
 }}
 
+\item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
+
 \item{legend.length, legend.width}{\strong{\code{\link[base]{numeric}}} | Length and width of the legend. Will adjust automatically depending on legend side.}
 
 \item{legend.framewidth, legend.tickwidth}{\strong{\code{\link[base]{numeric}}} | Width of the lines of the box in the legend.}
@@ -87,6 +116,12 @@ do_GroupwiseDEPlot(
 \item{legend.framecolor}{\strong{\code{\link[base]{character}}} | Color of the lines of the box in the legend.}
 
 \item{legend.tickcolor}{\strong{\code{\link[base]{character}}} | Color of the ticks of the box in the legend.}
+
+\item{legend.ncol}{\strong{\code{\link[base]{numeric}}} | Number of columns in the legend.}
+
+\item{legend.nrow}{\strong{\code{\link[base]{numeric}}} | Number of rows in the legend.}
+
+\item{legend.byrow}{\strong{\code{\link[base]{logical}}} | Whether the legend is filled by row or not.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
@@ -107,9 +142,9 @@ do_GroupwiseDEPlot(
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 
-\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
+\item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 
-\item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}
+\item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 
 \item{border.color}{\strong{\code{\link[base]{character}}} | Color for the border of the heatmap body.}
 

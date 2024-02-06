@@ -73,12 +73,6 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
                                     slot = "scale.data")
     testthat::expect_type(p, "list")
 
-    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
-                                    de_genes = de_genes_scaled,
-                                    assay = "SCT",
-                                    group.by = "annotation",
-                                    slot = "scale.data")
-    testthat::expect_type(p, "list")
 
     p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
                                     de_genes = de_genes,
@@ -135,53 +129,13 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEPlot"]])){
   })
 
 
-  testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong number of titles", {
-    testthat::skip_on_cran()
-
-    suppressWarnings({
-      sample <- SeuratObject::SetAssayData(object = sample,
-                                           assay = "SCT",
-                                           slot = "scale.data",
-                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                                                       assay = "SCT",
-                                                                                       slot = "data")))
-    })
-
-    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
-                                                       de_genes = de_genes,
-                                                       assay = "SCT",
-                                                       slot = "data",
-                                                       group.by = c("seurat_clusters", "orig.ident"),
-                                                       row_title_expression = "a")})
-    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
-                                                       de_genes = de_genes_scaled,
-                                                       assay = "SCT",
-                                                       slot = "scale.data",
-                                                       group.by = c("seurat_clusters", "orig.ident"),
-                                                       row_title_expression = "a")})
-  })
-
   testthat::test_that("do_GroupwiseDEPlot: FAIL - wrong direction", {
     testthat::skip_on_cran()
 
-    suppressWarnings({
-      sample <- SeuratObject::SetAssayData(object = sample,
-                                           assay = "SCT",
-                                           slot = "scale.data",
-                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                                                       assay = "SCT",
-                                                                                       slot = "data")))
-    })
-
     testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
                                                        de_genes = de_genes,
                                                        assay = "SCT",
                                                        slot = "data",
-                                                       viridis.direction = 0)})
-    testthat::expect_error({SCpubr::do_GroupwiseDEPlot(sample = sample,
-                                                       de_genes = de_genes_scaled,
-                                                       assay = "SCT",
-                                                       slot = "scale.data",
                                                        viridis.direction = 0)})
   })
 
