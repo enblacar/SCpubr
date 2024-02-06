@@ -4,7 +4,7 @@
 #' @param mat \strong{\code{\link[base]{list}}} | Result of over-representation test with clusterProfiler. Accepts only one result, be aware of that if you compute the test for all GO ontologies. Accessed through \strong{\code{mat@result}}.
 #' @param n.chars \strong{\code{\link[base]{numeric}}} | Number of characters to use as a limit to wrap the term names. The higher this value, the longer the lines would be for each term in the plots. Defaults to 40.
 #' @param n.terms \strong{\code{\link[base]{numeric}}} | Number of terms to display. Defaults to 25.
-#' @return A ggplot2 object with enriched terms.
+#' @return A dotplot object with enriched terms.
 #' @export
 #'
 #' @example man/examples/examples_do_TermEnrichmentPlot.R

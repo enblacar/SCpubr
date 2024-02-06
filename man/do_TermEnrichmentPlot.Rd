@@ -126,7 +126,7 @@ do_TermEnrichmentPlot(
 \item{axis.text.x.angle}{\strong{\code{\link[base]{numeric}}} | Degree to rotate the X labels. One of: 0, 45, 90.}
 }
 \value{
-A ggplot2 object with enriched terms.
+A dotplot object with enriched terms.
 }
 \description{
 Display the enriched terms for a given list of genes.

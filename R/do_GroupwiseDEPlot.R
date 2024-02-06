@@ -1,11 +1,11 @@
-#' Compute a heatmap with the results of a group-wise DE analysis.
+#' Compute a dotplot with the results of a group-wise DE analysis.
 #'
 #' @inheritParams doc_function
 #' @param de_genes \strong{\code{\link[tibble]{tibble}}} | DE genes matrix resulting of running `Seurat::FindAllMarkers()`.
 #' @param top_genes \strong{\code{\link[base]{numeric}}} | Top N differentially expressed (DE) genes by group to retrieve.
 #' @param p.cutoff \strong{\code{\link[base]{numeric}}} | Cutoff to use for adjusted p.value to filter significant genes.
 #' 
-#' @return A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
+#' @return A dotplot composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
 #' @export
 #'
 #' @example /man/examples/examples_do_GroupwiseDEPlot.R

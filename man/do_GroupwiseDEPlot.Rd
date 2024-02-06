@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_GroupwiseDEPlot.R
 \name{do_GroupwiseDEPlot}
 \alias{do_GroupwiseDEPlot}
-\title{Compute a heatmap with the results of a group-wise DE analysis.}
+\title{Compute a dotplot with the results of a group-wise DE analysis.}
 \usage{
 do_GroupwiseDEPlot(
   sample,
@@ -157,10 +157,10 @@ do_GroupwiseDEPlot(
 }}
 }
 \value{
-A heatmap composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
+A dotplot composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
 }
 \description{
-Compute a heatmap with the results of a group-wise DE analysis.
+Compute a dotplot with the results of a group-wise DE analysis.
 }
 \examples{
 \donttest{
