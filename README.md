@@ -10,8 +10,6 @@
 
 This package aims to provide a streamlined way of generating publication ready plots for known **S**ingle-**C**ell visualizations in a "**pub**lication **r**eady" format (**SCpubr**). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. 
 
-For installation and tutorials consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
-
 ## Installation
 
 **SCpubr** can be installed via:
@@ -27,6 +25,9 @@ if(!requireNamespace("devtools", quietly = TRUE)){
 
 devtools::install_github("enblacar/SCpubr", ref = "v2.0.0-dev-stable")
 ```
+
+For tutorials, consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
+
 
 ## Updates
 `SCpubr` is an active package currently aiming to improve and add new functionalities.
