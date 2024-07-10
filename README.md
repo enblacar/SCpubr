@@ -1,4 +1,4 @@
-# SCpubr <a href="https://github.com/enblacar/SCpubr"><img src="man/figures/SCpubr_Logo512.png" align="right" height="256" width="256"/></a>
+# SCpubr <a href="https://github.com/enblacar/SCpubr"><img src="man/figures/SCpubr_Logo512.png" align="right" height="200" width="200"/></a>
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/SCpubr)](https://CRAN.R-project.org/package=SCpubr)
 [![R-CMD-check](https://github.com/enblacar/SCpubr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/enblacar/SCpubr/actions/workflows/R-CMD-check.yaml)
@@ -7,6 +7,7 @@
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/grand-total/SCpubr)](https://cran.r-project.org/package=SCpubr)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
+
 
 This package aims to provide a streamlined way of generating publication ready plots for known **S**ingle-**C**ell visualizations in a "**pub**lication **r**eady" format (**SCpubr**). This is, the aim is to automatically generate plots with the highest quality possible, that can be used right away or with minimal modifications for a research article. 
 
@@ -44,4 +45,3 @@ doi:10.1101/2022.02.28.482303.
 
 ## Contact
 `scpubr@gmail.com`
-
