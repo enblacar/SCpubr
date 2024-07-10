@@ -275,7 +275,7 @@ do_DotPlot <- function(sample,
       if (isTRUE(cluster)){
         row_order <- rownames(data.cluster)[stats::hclust(stats::dist(data.cluster, method = "euclidean"), method = "ward.D")$order]
       } else {
-        row_order <- rownames(data.cluster)
+        row_order <- features
       }
     }
     
@@ -286,7 +286,11 @@ do_DotPlot <- function(sample,
       if (isTRUE(cluster)){
         col_order <- colnames(data.cluster)[stats::hclust(stats::dist(t(data.cluster), method = "euclidean"), method = "ward.D")$order]
       } else {
-        col_order <- colnames(data.cluster)
+        if (is.factor(sample@meta.data[, group.by])){
+          col_order <- levels(sample@meta.data[, group.by])
+        } else {
+          col_order <- sort(unique(sample@meta.data[, group.by])) 
+        }
       }
     }
     

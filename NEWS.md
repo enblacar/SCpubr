@@ -1,7 +1,8 @@
 # SCpbur v2.0.3 (In Development)
 
 ## Added functions
--   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset.
+-   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
+-   `do_RankedExpressionPlot()` to plot expression values as a heatmap along a diffusion component.
 
 ## Removed functions
 -   `do_FunctionalAnnotationPlot()`.
@@ -9,10 +10,13 @@
 
 The reason behind it is that they, together with do_TermEnrichmentPlot() targetted the same analysis and, therefore, were redundant.
 
+## Renamed functions
+-   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentPlot()`. As it now accepts any dimensional reduction and not only diffusion maps.
+
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
 -   `do_DotPlot()`: Removed dependencies with `Seurat::DotPlot()`.
--   `do_DiffusionMapPlot()`, `do_EnrichmentHeatmap()` and `do_SCEnrichmentHeatmap()` do not longer accept `flavor = "AUCell"` due to dependency issues and lack of development support.
+-   `do_RankedEnrichmentPlot()`, `do_EnrichmentHeatmap()` and `do_SCEnrichmentHeatmap()` do not longer accept `flavor = "AUCell"` due to dependency issues and lack of development support.
 
 The reason of these modification is to allow for a much clearer and concise output than before.
 
@@ -20,13 +24,16 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
 
 ## do_BoxPlot()
--   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behaviour.
+-   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behavior.
+-   Fixed a bug in which `map_signif_levels` would only accept a logical and not custom mappings.
+-   When `map_signif_levels` is used, the mapping now appears as a plot legend for clarity.
 
 ## do_CopyNumberVariantPlot()
 -   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
 
 ## do_DimPlot()
 -   Fixed a bug caused by using `cells.highlight` with only one cell.
+-   Fixed a bug causing the "Combined" plot resulting of the use of `split.by` and `group.by` to have a different size than the rest of panels when `ncol` parameter was also used.
 -   Fixed a bug causing a "selected_cells" plot title to show up when using `cells.highlight` and `idents.highlight`. 
 -   Changed the plot title of the "Combined" plot to either `group.by` or `split.by` depending of the usage context.
 -   Added `split.by.combined` parameter and set its default value to `TRUE`. This allows to toggle on or off whether to display the combined view when `split.by` is used.
@@ -56,6 +63,11 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_ViolinPlot()
 -   Added `order` parameter to reorder the groups based on the median. Only works when `split.by` is set to `NULL`.
+-   Fixed typos in error logging.
+-   Fixed a bug in which color palettes would not display by default when using `split.by`.
+
+## do_VolcanoPlot()
+-   Fixed an issue in which tags would be duplicated when using `use_labels = TRUE` in combination with `order_tabs_by = "both"`.
 
 # SCpbur v2.0.2
 

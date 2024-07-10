@@ -3,65 +3,69 @@
 #' @inheritParams doc_function
 #' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the package but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | A number from 0 to 1 corresponding to how big the main heatmap plot should be with regards to the rest (corresponds to the proportion in size).  
-#' @param scale.enrichment \strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.
+#' @param scale.enrichment \strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled (z-scored) for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.
 #' @return A list of ggplot2 objects and a Seurat object if desired.
 #' @export
 #'
-#' @example /man/examples/examples_do_DiffusionMapPlot.R
-do_DiffusionMapPlot <- function(sample,
-                                input_gene_list,
-                                assay = NULL,
-                                slot = NULL,
-                                scale.enrichment = TRUE,
-                                dims = 1:5,
-                                subsample = 2500,
-                                reduction = "diffusion",
-                                group.by = NULL,
-                                colors.use = NULL,
-                                interpolate = FALSE,
-                                nbin = 24,
-                                ctrl = 100,
-                                flavor = "Seurat",
-                                main.heatmap.size = 0.95,
-                                enforce_symmetry = ifelse(isTRUE(scale.enrichment), TRUE, FALSE),
-                                use_viridis = FALSE,
-                                viridis.palette = "G",
-                                viridis.direction = -1,
-                                sequential.palette = "YlGnBu",
-                                sequential.direction = 1,
-                                font.size = 14,
-                                font.type = "sans",
-                                na.value = "grey75",
-                                legend.width = 1,
-                                legend.length = 20,
-                                legend.framewidth = 0.5,
-                                legend.tickwidth = 0.5,
-                                legend.framecolor = "grey50",
-                                legend.tickcolor = "white",
-                                legend.type = "colorbar",
-                                legend.position = "bottom",
-                                legend.nrow = NULL,
-                                legend.ncol = NULL,
-                                legend.byrow = FALSE,
-                                number.breaks = 5,
-                                diverging.palette = "RdBu",
-                                diverging.direction = -1,
-                                axis.text.x.angle = 45,
-                                border.color = "black",
-                                return_object = FALSE,
-                                verbose = TRUE,
-                                plot.title.face = "bold",
-                                plot.subtitle.face = "plain",
-                                plot.caption.face = "italic",
-                                axis.title.face = "bold",
-                                axis.text.face = "plain",
-                                legend.title.face = "bold",
-                                legend.text.face = "plain"){
+#' @example /man/examples/examples_do_RankedEnrichmentPlot.R
+do_RankedEnrichmentPlot <- function(sample,
+                                    input_gene_list,
+                                    assay = NULL,
+                                    slot = NULL,
+                                    scale.enrichment = TRUE,
+                                    dims = 1:2,
+                                    subsample = 2500,
+                                    reduction = NULL,
+                                    group.by = NULL,
+                                    colors.use = NULL,
+                                    raster = FALSE,
+                                    interpolate = FALSE,
+                                    nbin = 24,
+                                    ctrl = 100,
+                                    flavor = "Seurat",
+                                    main.heatmap.size = 0.95,
+                                    enforce_symmetry = ifelse(isTRUE(scale.enrichment), TRUE, FALSE),
+                                    use_viridis = FALSE,
+                                    viridis.palette = "G",
+                                    viridis.direction = -1,
+                                    sequential.palette = "YlGnBu",
+                                    sequential.direction = 1,
+                                    font.size = 14,
+                                    font.type = "sans",
+                                    na.value = "grey75",
+                                    legend.width = 1,
+                                    legend.length = 20,
+                                    legend.framewidth = 0.5,
+                                    legend.tickwidth = 0.5,
+                                    legend.framecolor = "grey50",
+                                    legend.tickcolor = "white",
+                                    legend.type = "colorbar",
+                                    legend.position = "bottom",
+                                    legend.nrow = NULL,
+                                    legend.ncol = NULL,
+                                    legend.byrow = FALSE,
+                                    number.breaks = 5,
+                                    diverging.palette = "RdBu",
+                                    diverging.direction = -1,
+                                    axis.text.x.angle = 45,
+                                    border.color = "black",
+                                    return_object = FALSE,
+                                    verbose = FALSE,
+                                    plot.title.face = "bold",
+                                    plot.subtitle.face = "plain",
+                                    plot.caption.face = "italic",
+                                    axis.title.face = "bold",
+                                    axis.text.face = "plain",
+                                    legend.title.face = "bold",
+                                    legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
-  check_suggests("do_DiffusionMapPlot")
+  check_suggests("do_RankedEnrichmentPlot")
   check_Seurat(sample = sample)
+  
+  # Check the reduction.
+  reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
   
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
@@ -70,7 +74,8 @@ do_DiffusionMapPlot <- function(sample,
                        "scale.enrichment" = scale.enrichment,
                        "use_viridis" = use_viridis,
                        "verbose" = verbose,
-                       "interpolate" = interpolate)
+                       "interpolate" = interpolate,
+                       "raster" = raster)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -157,6 +162,7 @@ do_DiffusionMapPlot <- function(sample,
   key <- sample@reductions[[reduction]]@key
   
   if (!is.na(subsample)){
+    # Perform subsampling.
     sample <- sample[, sample(colnames(sample, subsample))]
   }
   
@@ -270,8 +276,8 @@ do_DiffusionMapPlot <- function(sample,
                   dplyr::filter(.data[[key_col]] == dc.use)
     
     # Limit the scale to quantiles 0.1 and 0.9 to avoid extreme outliers.
-    limits <- c(stats::quantile(data.plot$Enrichment, 0.1, na.rm = TRUE),
-                stats::quantile(data.plot$Enrichment, 0.9, na.rm = TRUE))
+    limits <- c(stats::quantile(data.plot$Enrichment, 0.05, na.rm = TRUE),
+                stats::quantile(data.plot$Enrichment, 0.95, na.rm = TRUE))
     
     # Bring extreme values to the cutoffs.
     data.plot <- data.plot %>% 
@@ -296,11 +302,19 @@ do_DiffusionMapPlot <- function(sample,
     p <- data.plot %>% 
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                 y = .data$Gene_Set,
-                                                fill = .data$Enrichment)) + 
-         ggplot2::geom_raster(interpolate = interpolate)
+                                                fill = .data$Enrichment))
+    
+    if (base::isTRUE(raster)){
+      p <- p + 
+           ggplot2::geom_raster(interpolate = interpolate)
+    } else {
+      p <- p + 
+           ggplot2::geom_tile()
+    }
+         
     
     legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"}
-    legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Scaled + centered | ", legend.name), legend.name)
+    legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Z-scored | ", legend.name), legend.name)
     
     p <- p + 
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
@@ -345,8 +359,16 @@ do_DiffusionMapPlot <- function(sample,
            dplyr::mutate("grouped.var" = .env$name) %>% 
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
                                                   y = .data$grouped.var,
-                                                  fill = .data[[name]])) + 
-           ggplot2::geom_raster(interpolate = interpolate) + 
+                                                  fill = .data[[name]]))
+      
+      if (base::isTRUE(raster)){
+        p <- p + 
+          ggplot2::geom_raster(interpolate = interpolate)
+      } else {
+        p <- p + 
+          ggplot2::geom_tile()
+      }
+      p <- p + 
            ggplot2::scale_fill_manual(values = colors.use.iteration) + 
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                         title.position = "top",
@@ -376,7 +398,7 @@ do_DiffusionMapPlot <- function(sample,
                                            axis.ticks.y.left = ggplot2::element_blank(),
                                            axis.ticks.x = ggplot2::element_blank(),
                                            axis.line = ggplot2::element_blank(),
-                                           axis.title.y = ggplot2::element_text(face = axis.title.face, color = "black", angle = 0, hjust = 0.5, vjust = 0.5),
+                                           axis.title.y = ggplot2::element_text(face = axis.title.face, color = "black", angle = 90, hjust = 0.5, vjust = 0.5),
                                            axis.title.x = ggplot2::element_text(face = axis.title.face, color = "black", angle = 0),
                                            plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
                                            plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),

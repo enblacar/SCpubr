@@ -41,7 +41,7 @@ do_BoxPlot(
   use_test = FALSE,
   comparisons = NULL,
   test = "wilcox.test",
-  map_signif_level = TRUE,
+  map_signif_level = c(`***` = 0.001, `**` = 0.01, `*` = 0.05),
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",

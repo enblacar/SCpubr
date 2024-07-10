@@ -376,7 +376,7 @@ add_tick <- function(initial_newline = TRUE){
 
 
 crayon_key <- function(text){
-  return(cli::col_green(text))
+  return(cli::col_cyan(text))
 }
 
 # nocov end
@@ -429,7 +429,8 @@ return_dependencies <- function(){
                    "do_MetadataPlot" = "cluster",
                    "do_LigandReceptorPlot" = "liana",
                    "do_LoadingsPlot" = NULL,
-                   "do_DiffusionMapPlot" = "Matrix",
+                   "do_RankedEnrichmentPlot" = "Matrix",
+                   "do_RankedExpressionPlot" = NULL,
                    "do_NebulosaPlot" = "Nebulosa",
                    "do_PathwayActivityPlot" = NULL,
                    "do_RidgePlot" = "ggridges",
@@ -3198,7 +3199,7 @@ check_group_by <- function(sample,
 }
 
 
-#' Temporal fix for DimPlots/FeaturePlots when using Assay5 and asplit.by
+#' Temporal fix for DimPlots/FeaturePlots when using Assay5 and split.by
 #'
 #' @param sample Seurat object.
 #' @param assay assay to use.

@@ -989,7 +989,7 @@ do_FeaturePlot <- function(sample,
     }
 
     # Generate the final plot with patchwork and use the "ncol" parameter value for the number of columns.
-    p <- patchwork::wrap_plots(list.plots, nrow = 1)
+    p <- patchwork::wrap_plots(list.plots, nrow = ncol)
 
   }
 

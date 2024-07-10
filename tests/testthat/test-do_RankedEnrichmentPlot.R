@@ -1,11 +1,11 @@
-if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
+if (base::isFALSE(dep_check[["do_RankedEnrichmentPlot"]])){
   
-  testthat::test_that("do_DiffusionMapPlot: CRAN essentials", {
+  testthat::test_that("do_RankedEnrichmentPlot: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = NA,
                                      nbin = 1,
@@ -18,13 +18,13 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
     
   })
   
-  testthat::test_that("do_DiffusionMapPlot: PASS - default", {
+  testthat::test_that("do_RankedEnrichmentPlot: PASS - default", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = NA,
                                      nbin = 1,
@@ -38,7 +38,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                      enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = NA,
                                      nbin = 1,
@@ -53,7 +53,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                      enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = NA,
                                      nbin = 1,
@@ -69,7 +69,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
     testthat::expect_type(p, "list")
     
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = 100,
                                      nbin = 1,
@@ -83,7 +83,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                      enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
     
-    testthat::expect_warning({SCpubr::do_DiffusionMapPlot(sample = sample,
+    testthat::expect_warning({SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                                         input_gene_list =  genes,
                                                         subsample = 100,
                                                         nbin = 1,
@@ -97,7 +97,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                                         use_viridis = FALSE,
                                                         enforce_symmetry = FALSE)})
     
-    testthat::expect_warning({SCpubr::do_DiffusionMapPlot(sample = sample,
+    testthat::expect_warning({SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                                           input_gene_list =  genes,
                                                           subsample = 100,
                                                           nbin = 1,
@@ -111,7 +111,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                                           use_viridis = FALSE,
                                                           enforce_symmetry = FALSE)})
     
-    suppressMessages({testthat::expect_message({p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    suppressMessages({testthat::expect_message({p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                                                input_gene_list =  genes,
                                                                subsample = 100,
                                                                nbin = 1,
@@ -122,7 +122,7 @@ if (base::isFALSE(dep_check[["do_DiffusionMapPlot"]])){
                                                                verbose = TRUE)})})
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_DiffusionMapPlot(sample = sample,
+    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
                                      input_gene_list =  genes,
                                      subsample = 100,
                                      group.by = c("orig.ident", "seurat_clusters"),

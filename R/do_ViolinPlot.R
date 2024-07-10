@@ -174,14 +174,27 @@ do_ViolinPlot <- function(sample,
   }
   
   if (is.null(colors.use)){
-    if (is.factor(sample@meta.data[, group.by])){
-      names.use <- levels(sample@meta.data[, group.by])
+    if (is.null(split.by)){
+      if (is.factor(sample@meta.data[, group.by])){
+        names.use <- levels(sample@meta.data[, group.by])
+      } else {
+        names.use <- sort(unique(sample@meta.data[, group.by]))
+      }
     } else {
-      names.use <- sort(unique(sample@meta.data[, group.by]))
+      if (is.factor(sample@meta.data[, split.by])){
+        names.use <- levels(sample@meta.data[, split.by])
+      } else {
+        names.use <- sort(unique(sample@meta.data[, split.by]))
+      }
     }
+    
     colors.use <- generate_color_scale(names.use)
   } else {
-    colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    if (is.null(split.by)){
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
+    } else {
+      colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = split.by)
+    }
   }
   
   check_colors(grid.color, parameter_name = "grid.color")
@@ -227,12 +240,12 @@ do_ViolinPlot <- function(sample,
       data <- data %>%
               dplyr::mutate("group.by" = factor(as.character(.data[["group.by"]]),
                                                 levels = {data %>%
-                                                    tibble::as_tibble() %>%
-                                                    dplyr::group_by(.data[["group.by"]]) %>%
-                                                    dplyr::summarise("median" = stats::median(.data[["feature"]], na.rm = TRUE)) %>%
-                                                    dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
-                                                    dplyr::pull(.data[["group.by"]]) %>%
-                                                    as.character()}))
+                                                          tibble::as_tibble() %>%
+                                                          dplyr::group_by(.data[["group.by"]]) %>%
+                                                          dplyr::summarise("median" = stats::median(.data[["feature"]], na.rm = TRUE)) %>%
+                                                          dplyr::arrange(if(base::isFALSE(flip)){dplyr::desc(.data[["median"]])} else {.data[["median"]]}) %>%
+                                                          dplyr::pull(.data[["group.by"]]) %>%
+                                                          as.character()}))
     }
     if (isTRUE(order)){
       assertthat::assert_that(is.null(split.by),
@@ -240,6 +253,8 @@ do_ViolinPlot <- function(sample,
                                            crayon_key("split.by"),
                                            crayon_body(" cannot be used alonside "),
                                            crayon_key("order"),
+                                           crayon_body(". Please set "),
+                                           crayon_key("order = FALSE"),
                                            crayon_body(".")))
     }
     
@@ -249,6 +264,8 @@ do_ViolinPlot <- function(sample,
                                            crayon_key("split.by"),
                                            crayon_body(" cannot be used alonside "),
                                            crayon_key("order"),
+                                           crayon_body(". Please set "),
+                                           crayon_key("order = FALSE"),
                                            crayon_body(".")))
     }
     

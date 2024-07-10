@@ -173,17 +173,12 @@ do_VolcanoPlot <- function(sample,
 
   if (isTRUE(add_gene_tags)){
     if (order_tags_by == "both"){
-      data.up <- data %>%
-                 dplyr::arrange(dplyr::desc(.data$log_p),
-                                dplyr::desc(.data$avg_log2FC)) %>%
-                 as.data.frame() %>%
-                 utils::head(n_genes)
-
-      data.down <- data %>%
-                   dplyr::arrange(dplyr::desc(.data$log_p),
-                                  .data$avg_log2FC) %>%
-                   as.data.frame() %>%
-                   utils::head(n_genes)
+      data.label <- genes %>%
+                    dplyr::mutate("abs_avg_log2FC" = abs(.data$avg_log2FC)) %>% 
+                    dplyr::arrange(dplyr::desc(.data$log_p),
+                                   dplyr::desc(.data$abs_avg_log2FC)) %>%
+                    as.data.frame() %>%
+                    utils::head(number.tags * 2)
     } else if (order_tags_by == "pvalue"){
       data.up <- data %>%
                  dplyr::filter(.data$avg_log2FC > 0) %>%
@@ -209,10 +204,7 @@ do_VolcanoPlot <- function(sample,
                    utils::head(n_genes)
     }
 
-    if (add_tag_side == "both") {
-      data.label <- dplyr::bind_rows(data.up, data.down)
-
-    } else if (add_tag_side == "positive") {
+    if (add_tag_side == "positive") {
       data.label <- data.up
 
     } else if (add_tag_side == "negative") {

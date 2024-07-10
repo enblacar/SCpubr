@@ -53,7 +53,7 @@ do_BoxPlot <- function(sample,
                        use_test = FALSE,
                        comparisons = NULL,
                        test = "wilcox.test",
-                       map_signif_level = TRUE,
+                       map_signif_level = c("***" = 0.001, "**" = 0.01, "*" = 0.05),
                        plot.title.face = "bold",
                        plot.subtitle.face = "plain",
                        plot.caption.face = "italic",
@@ -79,7 +79,6 @@ do_BoxPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "order" = order,
                        "use_silhouette" = use_silhouette,
-                       "map_signif_level" = map_signif_level,
                        "legend.byrow" = legend.byrow)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
@@ -213,7 +212,21 @@ do_BoxPlot <- function(sample,
                                          crayon_key("order"),
                                          crayon_body(".")))
   }
-
+  
+  
+  if (!is.null(map_signif_level)){
+    assertthat::assert_that(base::isTRUE(is.logical(map_signif_level) | is.numeric(map_signif_level)),
+                            msg = paste0(add_cross(), crayon_body("Parameter "),
+                                         crayon_key("map_signif_level"),
+                                         crayon_body(" needs to be a "),
+                                         crayon_key("logical"),
+                                         crayon_body(" or a "),
+                                         crayon_key("custom mapping"),
+                                         crayon_body(" such as "),
+                                         crayon_key('c("***" = 0.001, "**" = 0.01, "*" = 0.05)'),
+                                         crayon_body(".")))
+  }
+  
   if (isTRUE(use_silhouette) & is.null(split.by)){
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data[["group.by"]],
@@ -317,6 +330,14 @@ do_BoxPlot <- function(sample,
                                  textsize = font.size - 8,
                                  family = font.type,
                                  fontface = "bold")
+      
+      if (!is.logical(map_signif_level)){
+        caption <- c()
+        for (i in seq_len(length(map_signif_level))){caption <- append(caption, paste0(names(map_signif_level)[i], " = ", format(map_signif_level[i], scientific = FALSE)))}
+        caption <- paste(caption, collapse = ", ")
+        
+        p <- p + ggplot2::labs(caption = caption)
+      }
     } else {
       stop(paste0(add_cross(), crayon_body("Please provide the pair of groups to test.")), call. = FALSE)
     }
