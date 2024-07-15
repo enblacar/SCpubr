@@ -32,7 +32,7 @@ By default, **SCpubr** downloads without installing any of the required dependen
 SCpubr::package_report(extended = TRUE)
 ```
 
-For tutorials, consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
+For tutorials, check **SCpubr**'s [reference manual](https://enblacar.github.io/SCpubr-book/).
 
 
 ## Updates
