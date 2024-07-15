@@ -271,7 +271,16 @@ do_FeaturePlot <- function(sample,
       group.by.colors.use <- generate_color_scale(names.use)
     }
   }
-
+  
+  # Check that the legend title match the length of features.
+  if (!is.null(legend.title)){
+    assertthat::assert_that(length(legend.title) == length(features),
+                            msg = paste0(add_cross(), crayon_body("Please provide as many different "),
+                                         crayon_key("legend titles"),
+                                         crayon_body(" as number of "),
+                                         crayon_key("features"),
+                                         crayon_body(" queried.")))
+  }
 
 
   check_parameters(parameter = font.type, parameter_name = "font.type")
@@ -1016,7 +1025,11 @@ do_FeaturePlot <- function(sample,
     counter <- 0
     for (feature in features){
       counter <- counter + 1
-      legend.title.use <- ifelse(is.null(legend.title), feature, legend.title)
+      if (is.null(legend.title)){
+        legend.title.use <- feature
+      } else {
+        legend.title.use <- legend.title[counter]
+      }
       p[[counter]] <- modify_continuous_legend(p = p[[counter]],
                                                legend.title = legend.title.use,
                                                legend.aes = "color",
@@ -1124,15 +1137,6 @@ do_FeaturePlot <- function(sample,
                         max(sample@reductions[[reduction]][[]][, labels[2]], na.rm = TRUE)))
     })
 
-  }
-
-  # Add legend titles.
-  if (is.null(split.by) & is.null(legend.title)){
-    counter <- 0
-    for (feature in features){
-      counter <- counter + 1
-      p[[counter]]$guides$colour$title <- feature
-    }
   }
 
   # Return the plot.

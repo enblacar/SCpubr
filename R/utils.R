@@ -727,12 +727,13 @@ package_report <- function(startup = FALSE,
                                                                url = "https://github.com/enblacar/SCpubr/releases")),
                                crayon_body(" page."))
 
-      functions_tip3 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
-                              crayon_body(" Check the package requirements function-wise with: "),
-                              cli::style_italic(crayon_key('SCpubr:::return_dependencies()')))
     }
     tip_rule <- cli::rule(left = "Tips!", width = nchar("Tips!") + 6)
-
+    
+    ins_message <- paste0(cli::style_bold(cli::col_blue("!")),
+                          crayon_body(" Check missing dependencies with: "),
+                          cli::style_italic(crayon_key('SCpubr::package_report(extended = TRUE)')))
+    
     tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" To remove the white and black end from continuous palettes, use: "),
                           cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
@@ -765,9 +766,9 @@ package_report <- function(startup = FALSE,
                            functions_check, "\n", "\n",
                            paste(print.list.functions, collapse = "\n"), "\n", "\n",
                            functions_tip1, "\n",
-                           functions_tip2, "\n",
-                           functions_tip3, "\n", "\n", "\n", "\n",
+                           functions_tip2, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
+                           ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
@@ -780,6 +781,7 @@ package_report <- function(startup = FALSE,
                            updates, "\n", "\n",
                            plotting, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
+                           ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
@@ -797,9 +799,9 @@ package_report <- function(startup = FALSE,
                            functions_check, "\n", "\n",
                            paste(print.list.functions, collapse = "\n"), "\n", "\n",
                            functions_tip1, "\n",
-                           functions_tip2, "\n",
-                           functions_tip3, "\n", "\n", "\n", "\n",
+                           functions_tip2, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
+                           ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
@@ -812,6 +814,7 @@ package_report <- function(startup = FALSE,
                            updates, "\n", "\n",
                            plotting, "\n", "\n", "\n", "\n",
                            tip_rule, "\n", "\n",
+                           ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)

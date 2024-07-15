@@ -1,5 +1,8 @@
 # SCpbur v2.0.3 (In Development)
 
+## General
+-   Enhanced startup message for clarity. Not it guides the user to run `SCpubr::package_report(extended = TRUE)` to get an overview of the missing dependencies.
+
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
 -   `do_RankedExpressionPlot()` to plot expression values as a heatmap along a diffusion component.
@@ -57,6 +60,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_FeaturePlot()
 -   Fixed a bug in which legend titles would not show up as intended.
+-   Enabled the use of several legend titles when multiple features are provided. The number of legend titles and features have to be equal.
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
