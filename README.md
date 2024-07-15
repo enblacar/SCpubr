@@ -26,6 +26,12 @@ if(!requireNamespace("devtools", quietly = TRUE)){
 devtools::install_github("enblacar/SCpubr", ref = "v2.0.0-dev-stable")
 ```
 
+By default, **SCpubr** downloads without installing any of the required dependencies. A comprehensive report of which dependencies are still missing and which functions can be run is available through:
+
+```r
+SCpubr::package_report(extended = TRUE)
+```
+
 For tutorials, consult the [reference manual](https://enblacar.github.io/SCpubr-book/).
 
 
