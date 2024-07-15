@@ -1016,8 +1016,9 @@ do_FeaturePlot <- function(sample,
     counter <- 0
     for (feature in features){
       counter <- counter + 1
+      legend.title.use <- ifelse(is.null(legend.title), feature, legend.title)
       p[[counter]] <- modify_continuous_legend(p = p[[counter]],
-                                               legend.title = legend.title,
+                                               legend.title = legend.title.use,
                                                legend.aes = "color",
                                                legend.type = legend.type,
                                                legend.position = legend.position,
