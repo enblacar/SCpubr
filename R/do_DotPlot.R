@@ -3,6 +3,7 @@
 #'
 #' @inheritParams doc_function
 #' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
+#' @param scale.data \strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data". 
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -14,9 +15,10 @@ do_DotPlot <- function(sample,
                        slot = "data",
                        group.by = NULL,
                        split.by = NULL,
+                       scale.data = FALSE,
                        min.cutoff = NA,
                        max.cutoff = NA,
-                       enforce_symmetry = FALSE, 
+                       enforce_symmetry = ifelse(base::isTRUE(scale.data), TRUE, FALSE), 
                        legend.title = NULL,
                        legend.type = "colorbar",
                        legend.position = "bottom",
@@ -85,7 +87,8 @@ do_DotPlot <- function(sample,
                          "use_viridis" = use_viridis,
                          "plot.grid" = plot.grid,
                          "enforce_symmetry" = enforce_symmetry,
-                         "legend.byrow" = legend.byrow)
+                         "legend.byrow" = legend.byrow,
+                         "scale.data" = scale.data)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -161,17 +164,45 @@ do_DotPlot <- function(sample,
     check_colors(na.value, parameter_name = "na.value")
     check_colors(grid.color, parameter_name = "grid.color")
     
-    if (base::isFALSE(enforce_symmetry)){
+    
+    if (base::isTRUE(scale.data)){
+      assertthat::assert_that(base::isTRUE(enforce_symmetry),
+                              msg = paste0(add_cross(), crayon_body("Please set "),
+                                           crayon_key("enforce_symmetry"),
+                                           crayon_body(" to "),
+                                           crayon_key("TRUE"),
+                                           crayon_body(" when scaling the data. This allows for a "),
+                                           crayon_key("centered"),
+                                           crayon_body(" color scale around "),
+                                           crayon_key("0"),
+                                           crayon_body(".")))
+      
+      assertthat::assert_that(slot == "scale.data",
+                              msg = paste0(add_cross(), crayon_body("Please set "),
+                                           crayon_key("slot"),
+                                           crayon_body(" to "),
+                                           crayon_key('"data"'),
+                                           crayon_body(" when scaling the data. Performing Z-scaling over "),
+                                           crayon_key("already scaled"),
+                                           crayon_body(" data is "),
+                                           crayon_key("not advisable"),
+                                           crayon_body(".")))
+      
+      colors.gradient <- compute_continuous_palette(name = diverging.palette,
+                                                    use_viridis = FALSE,
+                                                    direction = diverging.direction,
+                                                    enforce_symmetry = TRUE)
+      
+      
+    } else {
+      
       colors.gradient <- compute_continuous_palette(name = ifelse(isTRUE(use_viridis), viridis.palette, sequential.palette),
                                                     use_viridis = use_viridis,
                                                     direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                     enforce_symmetry = enforce_symmetry)
-    } else {
-      colors.gradient <- compute_continuous_palette(name = diverging.palette,
-                                                    use_viridis = FALSE,
-                                                    direction = diverging.direction,
-                                                    enforce_symmetry = enforce_symmetry)
       
+      center_on_value <- FALSE
+      value_center <- NULL
     }
     
     
@@ -221,6 +252,24 @@ do_DotPlot <- function(sample,
             dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>% 
             dplyr::select(dplyr::all_of(c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")))
     
+    if (base::isTRUE(scale.data)){
+      data <- data %>% 
+              dplyr::select(dplyr::all_of(c(group.by, "Gene", "Avg.Exp"))) %>% 
+              tidyr::pivot_wider(names_from = group.by,
+                                 values_from = "Avg.Exp") %>% 
+              as.data.frame() %>% 
+              tibble::column_to_rownames(var = "Gene") %>% 
+              t() %>% 
+              scale(center = TRUE, scale = TRUE) %>% 
+              t() %>% 
+              as.data.frame() %>% 
+              tibble::rownames_to_column(var = "Gene") %>% 
+              tidyr::pivot_longer(-"Gene",
+                                  names_to = group.by,
+                                  values_to = "Avg.Exp") %>% 
+              dplyr::left_join(y = data %>% dplyr::select(-dplyr::all_of(c("Avg.Exp"))),
+                               by = c(group.by, "Gene"))
+    }
     
     # Define cutoffs.
     range.data <- c(min(data[, "Avg.Exp"], na.rm = TRUE),
@@ -301,7 +350,12 @@ do_DotPlot <- function(sample,
             dplyr::mutate("Gene" = factor(.data$Gene, levels = row_order),
                           "Groups" = factor(.data$Groups, levels = rev(col_order)))
     
-  
+    
+    # Define legend title
+    if (is.null(legend.title)){
+      legend.title <- ifelse(base::isTRUE(scale.data), "Z-Scores | Avg. Exp.", "Avg. Exp.")
+    }
+    
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = if (base::isFALSE(flip)){.data$Gene} else {.data$Groups},
                                                 y = if (base::isFALSE(flip)){.data$Groups} else {.data$Gene},
@@ -311,7 +365,7 @@ do_DotPlot <- function(sample,
          ggplot2::scale_size_continuous(range = c(0, dot.scale)) +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
-                                       name = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                       name = legend.title,
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
