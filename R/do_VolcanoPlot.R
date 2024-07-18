@@ -178,7 +178,7 @@ do_VolcanoPlot <- function(sample,
                     dplyr::arrange(dplyr::desc(.data$log_p),
                                    dplyr::desc(.data$abs_avg_log2FC)) %>%
                     as.data.frame() %>%
-                    utils::head(number.tags * 2)
+                    utils::head(n_genes * 2)
     } else if (order_tags_by == "pvalue"){
       data.up <- data %>%
                  dplyr::filter(.data$avg_log2FC > 0) %>%
