@@ -192,6 +192,8 @@ do_VolcanoPlot <- function(sample,
                    dplyr::arrange(dplyr::desc(.data$log_p)) %>%
                    as.data.frame() %>%
                    utils::head(n_genes)
+      
+      data.label <- dplyr::bind_rows(data.up, data.down)
     } else if (order_tags_by == "logfc"){
       data.up <- data %>%
                  dplyr::arrange(dplyr::desc(.data$avg_log2FC)) %>%
@@ -202,6 +204,8 @@ do_VolcanoPlot <- function(sample,
                    dplyr::arrange(.data$avg_log2FC) %>%
                    as.data.frame() %>%
                    utils::head(n_genes)
+
+      data.label <- dplyr::bind_rows(data.up, data.down)
     }
 
     if (add_tag_side == "positive") {
