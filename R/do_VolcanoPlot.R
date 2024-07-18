@@ -173,7 +173,7 @@ do_VolcanoPlot <- function(sample,
 
   if (isTRUE(add_gene_tags)){
     if (order_tags_by == "both"){
-      data.label <- genes %>%
+      data.label <- de_genes %>%
                     dplyr::mutate("abs_avg_log2FC" = abs(.data$avg_log2FC)) %>% 
                     dplyr::arrange(dplyr::desc(.data$log_p),
                                    dplyr::desc(.data$abs_avg_log2FC)) %>%
