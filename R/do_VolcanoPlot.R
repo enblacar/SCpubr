@@ -226,7 +226,7 @@ do_VolcanoPlot <- function(sample,
                                     max.overlaps = 1000,
                                     color = "black",
                                     fontface = "bold",
-                                    tag_size = tag_size)
+                                    size = tag_size)
     } else if (isTRUE(use_labels)){
       p <- p +
            ggrepel::geom_label_repel(data = data.label,
@@ -234,7 +234,7 @@ do_VolcanoPlot <- function(sample,
                                      max.overlaps = 1000,
                                      color = "black",
                                      fontface = "bold",
-                                     tag_size = tag_size)
+                                     size = tag_size)
     }
 
   }
