@@ -10,6 +10,7 @@
 #' @param add_gene_tags \strong{\code{\link[base]{logical}}} | Whether to plot the top genes.
 #' @param add_tag_side \strong{\code{\link[base]{logical}}} | Either "both", "positive" or "negative" to indicate which side of genes to tag
 #' @param order_tags_by \strong{\code{\link[base]{character}}} | Either "both", "pvalue" or "logfc".
+#' @param tag_size \strong{\code{\link[base]{numeric}}} | Size of the text/label for the tags.
 #' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes to plot.
 #' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.
 #' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.
@@ -36,6 +37,7 @@ do_VolcanoPlot <- function(sample,
                            add_gene_tags = TRUE,
                            add_tag_side = "both",
                            order_tags_by = "both",
+                           tag_size = 6,
                            n_genes = 5,
                            use_labels = FALSE,
                            colors.use = "steelblue",
@@ -65,7 +67,8 @@ do_VolcanoPlot <- function(sample,
                        "border.size" = border.size,
                        "font.size" = font.size,
                        "line_size" = line_size,
-                       "n_genes" = n_genes)
+                       "n_genes" = n_genes,
+                       "tag_size" = tag_size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("border.color" = border.color,
@@ -222,14 +225,16 @@ do_VolcanoPlot <- function(sample,
                                     mapping = ggplot2::aes(label = .data$gene),
                                     max.overlaps = 1000,
                                     color = "black",
-                                    fontface = "bold")
+                                    fontface = "bold",
+                                    size = tag_size)
     } else if (isTRUE(use_labels)){
       p <- p +
            ggrepel::geom_label_repel(data = data.label,
                                      mapping = ggplot2::aes(label = .data$gene),
                                      max.overlaps = 1000,
                                      color = "black",
-                                     fontface = "bold")
+                                     fontface = "bold",
+                                     size = tag_size)
     }
 
   }
