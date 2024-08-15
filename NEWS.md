@@ -63,7 +63,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_FeaturePlot()
 -   Fixed a bug in which legend titles would not show up as intended.
 -   Enabled the use of several legend titles when multiple features are provided. The number of legend titles and features have to be equal.
--   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. (#76)
+-   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. [#76](https://github.com/enblacar/SCpubr/issues/76)
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
