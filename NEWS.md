@@ -42,6 +42,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Added `split.by.combined` parameter and set its default value to `TRUE`. This allows to toggle on or off whether to display the combined view when `split.by` is used.
 -   However, when `split.by`is used alongside `group.by`, it is now enforced to show the combined plot (`split.by.combined = TRUE`), to avoid bugs.
 -   Added `legend.dot.border` parameter to select whether we want a black border around the legend dots or not.
+-   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. (#76)
 
 ## do_DotPlot()
 -   Fixed a bug that caused sequential palettes to not be checked properly.
@@ -62,6 +63,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_FeaturePlot()
 -   Fixed a bug in which legend titles would not show up as intended.
 -   Enabled the use of several legend titles when multiple features are provided. The number of legend titles and features have to be equal.
+-   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. (#76)
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.

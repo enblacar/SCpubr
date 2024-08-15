@@ -1021,6 +1021,23 @@ do_FeaturePlot <- function(sample,
                       plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"))
+  
+  
+  # Add font.family to geom_text and geom_label.
+  if (length(p$patches$plots) > 0){
+    num.plots <- length(p$patches$plots)
+  } else {
+    num.plots <- 1
+  }
+  for (plot.use in seq(1, num.plots)){
+    for (layer.use in seq(1, length(p[[plot.use]]$layers))){
+      if (sum(stringr::str_detect(class(p[[plot.use]]$layers[[layer.use]]$geom), "GeomText|GeomLabel"))){
+        p[[plot.use]]$layers[[layer.use]]$aes_params$family <- font.family
+      }
+    }
+  }
+  
+  
   if (is.null(split.by) & legend.position != "none"){
     counter <- 0
     for (feature in features){

@@ -177,7 +177,7 @@ do_DotPlot <- function(sample,
                                            crayon_key("0"),
                                            crayon_body(".")))
       
-      assertthat::assert_that(slot == "scale.data",
+      assertthat::assert_that(slot == "data",
                               msg = paste0(add_cross(), crayon_body("Please set "),
                                            crayon_key("slot"),
                                            crayon_body(" to "),
