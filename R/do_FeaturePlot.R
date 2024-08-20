@@ -1032,7 +1032,7 @@ do_FeaturePlot <- function(sample,
   for (plot.use in seq(1, num.plots)){
     for (layer.use in seq(1, length(p[[plot.use]]$layers))){
       if (sum(stringr::str_detect(class(p[[plot.use]]$layers[[layer.use]]$geom), "GeomText|GeomLabel"))){
-        p[[plot.use]]$layers[[layer.use]]$aes_params$family <- font.family
+        p[[plot.use]]$layers[[layer.use]]$aes_params$family <- font.type
       }
     }
   }
