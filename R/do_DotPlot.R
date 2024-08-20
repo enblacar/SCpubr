@@ -3,7 +3,7 @@
 #'
 #' @inheritParams doc_function
 #' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
-#' @param scale.data \strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data". 
+#' @param zscore.data \strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data" or with split.by. 
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -15,7 +15,7 @@ do_DotPlot <- function(sample,
                        slot = "data",
                        group.by = NULL,
                        split.by = NULL,
-                       scale.data = FALSE,
+                       zscore.data = FALSE,
                        min.cutoff = NA,
                        max.cutoff = NA,
                        enforce_symmetry = ifelse(base::isTRUE(scale.data), TRUE, FALSE), 
@@ -88,7 +88,7 @@ do_DotPlot <- function(sample,
                          "plot.grid" = plot.grid,
                          "enforce_symmetry" = enforce_symmetry,
                          "legend.byrow" = legend.byrow,
-                         "scale.data" = scale.data)
+                         "zscore.data" = zscore.data)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("dot.scale" = dot.scale,
@@ -165,7 +165,7 @@ do_DotPlot <- function(sample,
     check_colors(grid.color, parameter_name = "grid.color")
     
     
-    if (base::isTRUE(scale.data)){
+    if (base::isTRUE(zscore.data)){
       assertthat::assert_that(base::isTRUE(enforce_symmetry),
                               msg = paste0(add_cross(), crayon_body("Please set "),
                                            crayon_key("enforce_symmetry"),
@@ -222,6 +222,15 @@ do_DotPlot <- function(sample,
                                            crayon_body(" to "),
                                            crayon_key("FALSE"),
                                            crayon_body(".")))
+      
+      assertthat::assert_that(base::isFALSE(zscore.data),
+                              msg = paste0(add_cross(), crayon_body("Please when using "),
+                                           crayon_key("split.by"),
+                                           crayon_body(" set "),
+                                           crayon_key("zscore.data"),
+                                           crayon_body(" to "),
+                                           crayon_key("FALSE"),
+                                           crayon_body(".")))
     }
     
     # Workaround parameter depreciation.
@@ -248,11 +257,19 @@ do_DotPlot <- function(sample,
             dplyr::group_by(dplyr::across(dplyr::all_of(c(split.by, group.by, "Gene")))) %>% 
             dplyr::summarise("Avg.Exp" = mean(.data$Expression, na.rm = TRUE),
                              "N.Exp" = sum(.data$logical),
-                             "N" = dplyr::n()) %>% 
+                             "N" = dplyr::n(),
+                             .groups = "drop") %>% 
             dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>% 
             dplyr::select(dplyr::all_of(c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")))
     
-    if (base::isTRUE(scale.data)){
+    if (is.null(split.by)){
+      data <- data %>% tidyr::complete(.data[[group.by]], .data$Gene, fill = list("Avg.Exp" = 0, "P.Exp" = 0))
+    } else {
+      data <- data %>% tidyr::complete(.data[[split.by]], .data[[group.by]], .data$Gene, fill = list("Avg.Exp" = 0, "P.Exp" = 0))
+    }
+            
+    
+    if (base::isTRUE(zscore.data)){
       data <- data %>% 
               dplyr::select(dplyr::all_of(c(group.by, "Gene", "Avg.Exp"))) %>% 
               tidyr::pivot_wider(names_from = group.by,
@@ -353,7 +370,7 @@ do_DotPlot <- function(sample,
     
     # Define legend title
     if (is.null(legend.title)){
-      legend.title <- ifelse(base::isTRUE(scale.data), "Z-Scores | Avg. Exp.", "Avg. Exp.")
+      legend.title <- ifelse(base::isTRUE(zscore.data), "Z-Scores | Avg. Exp.", "Avg. Exp.")
     }
     
     p <- data %>%

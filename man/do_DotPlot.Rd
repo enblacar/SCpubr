@@ -12,7 +12,7 @@ do_DotPlot(
   slot = "data",
   group.by = NULL,
   split.by = NULL,
-  scale.data = FALSE,
+  zscore.data = FALSE,
   min.cutoff = NA,
   max.cutoff = NA,
   enforce_symmetry = ifelse(base::isTRUE(scale.data), TRUE, FALSE),
@@ -73,7 +73,7 @@ do_DotPlot(
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
 
-\item{scale.data}{\strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data".}
+\item{zscore.data}{\strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data" or with split.by.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
 

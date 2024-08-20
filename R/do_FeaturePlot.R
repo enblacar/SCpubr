@@ -970,7 +970,14 @@ do_FeaturePlot <- function(sample,
             })
 
           }
-
+          
+          # Add label font customization.
+          for (layer.use in seq(1, length(p.loop$layers))){
+            if (sum(stringr::str_detect(class(p.loop$layers[[layer.use]]$geom), "GeomText|GeomLabel"))){
+              p.loop$layers[[layer.use]]$aes_params$family <- font.type
+            }
+          }
+          
           list.plots.split.by[[iteration]] <- p.loop
         }
         p.loop <- patchwork::wrap_plots(list.plots.split.by,
@@ -1024,18 +1031,21 @@ do_FeaturePlot <- function(sample,
   
   
   # Add font.family to geom_text and geom_label.
-  if (length(p$patches$plots) > 0){
-    num.plots <- length(p$patches$plots)
-  } else {
-    num.plots <- 1
-  }
-  for (plot.use in seq(1, num.plots)){
-    for (layer.use in seq(1, length(p[[plot.use]]$layers))){
-      if (sum(stringr::str_detect(class(p[[plot.use]]$layers[[layer.use]]$geom), "GeomText|GeomLabel"))){
-        p[[plot.use]]$layers[[layer.use]]$aes_params$family <- font.type
+  if (is.null(split.by)){
+    if (length(p$patches$plots) > 0){
+      num.plots <- length(p$patches$plots)
+    } else {
+      num.plots <- 1
+    }
+    for (plot.use in seq(1, num.plots)){
+      for (layer.use in seq(1, length(p[[plot.use]]$layers))){
+        if (sum(stringr::str_detect(class(p[[plot.use]]$layers[[layer.use]]$geom), "GeomText|GeomLabel"))){
+          p[[plot.use]]$layers[[layer.use]]$aes_params$family <- font.type
+        }
       }
     }
   }
+
   
   
   if (is.null(split.by) & legend.position != "none"){
