@@ -9,9 +9,7 @@
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
     
     # Genes have to be unique.
-    genes <- list("A" = rownames(sample)[1:5],
-                  "B" = rownames(sample)[6:10],
-                  "C" = rownames(sample)[11:15])
+    genes <- rownames(sample)[1:15]
     
     
     # This will query, for the provided components, the expression of the genes 

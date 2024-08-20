@@ -190,6 +190,17 @@ do_RankedExpressionPlot <- function(sample,
   key_col <- stringr::str_remove_all(key, "_")
   # Obtain the DC embeddings, together with the enrichment scores.
   suppressWarnings({
+    # Workaround parameter depreciation.
+  if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){
+    data <- Seurat::GetAssayData(object = sample,
+                                 assay = assay,
+                                 slot = slot)
+  } else {
+    data <- SeuratObject::LayerData(object = sample,
+                                    assay = assay,
+                                    layer = slot)
+  }
+    
   data.use <- sample@reductions[[reduction]]@cell.embeddings %>% 
               as.data.frame() %>% 
               tibble::rownames_to_column(var = "Cell") %>% 
@@ -208,9 +219,7 @@ do_RankedExpressionPlot <- function(sample,
                                     tibble::rownames_to_column(var = "Cell") %>% 
                                     tibble::as_tibble() %>% 
                                     dplyr::select(dplyr::all_of(c("Cell", group.by))) %>% 
-                                    dplyr::left_join(y = {SeuratObject::GetAssayData(sample,
-                                                               assay = assay,
-                                                               slot = slot)[features, , drop = FALSE] %>% 
+                                    dplyr::left_join(y = {data[features, , drop = FALSE] %>% 
                                                           as.data.frame() %>% 
                                                           t() %>% 
                                                           as.data.frame() %>% 
