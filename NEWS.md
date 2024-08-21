@@ -50,6 +50,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Removed legacy parameter `colors.use`, which had no effect as of previous version but was still listed as parameter.
 -   Removed dependency with `Seurat::DotPlot()`. This means that there will be some differences with the output of this function. However, this is a design choice for the sake of preventing future dependency problems.
 -   Added `split.by` parameter.
+-   If `features` is provided as a named list, the plot facets them based on the belonging list (duplcated genes are removed). Cannot be used alongside `split.by`.
 -   Removed `scale`and `scale.by` parameters. In the sense of how they worked in `Seurat`.
 -   Added `zscore.data` parameter. When set to `TRUE`, it computes Z-scores for each gene across the different groups, allowing for inspection of which group has highest or lowest expression, but prevents you from comparing values across different genes. It is intended to be used alongside `slot = "data"`. 
 -   Removed the possibility to use a list of features. Instead, facets are being drawn according to `split.by` parameter.

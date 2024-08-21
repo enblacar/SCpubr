@@ -205,13 +205,21 @@ do_DotPlot <- function(sample,
       value_center <- NULL
     }
     
-    
-    assertthat::assert_that(!is.list(features),
-                            msg = paste0(add_cross(), crayon_body("Please provide features as a "),
-                                         crayon_key("character"),
-                                         crayon_body(" vector and not as a "),
-                                         crayon_key("list"),
-                                         crayon_body(".")))
+    if (is.list(features)){
+      assertthat::assert_that(!is.null(names(features)),
+                              msg = paste0(add_cross(), crayon_body("Please provide features as a "),
+                                           crayon_key("named list"),
+                                           crayon_body(" and not as a "),
+                                           crayon_key("regular list"),
+                                           crayon_body(".")))
+      
+      assertthat::assert_that(is.null(split.by),
+                              msg = paste0(add_cross(), crayon_body("Please either provide features as a "),
+                                           crayon_key("named list"),
+                                           crayon_body(" or set up "),
+                                           crayon_key("split by"),
+                                           crayon_body(". A combination of both is not allowed.")))
+    }
     
     if (!is.null(split.by)){
       assertthat::assert_that(base::isFALSE(cluster),
@@ -244,7 +252,36 @@ do_DotPlot <- function(sample,
                                       layer = slot)
     }
     
-    data <- data[features, , drop = FALSE] %>% 
+    # Select features.
+    if (is.list(features)){
+      genes.unique <- unique(unlist(features))
+      
+      # Remove duplicates across lists.
+      features.use <- list()
+      start <- 1
+      
+      # Add back in the original order
+      for (name in names(features)) {
+        len <- length(features[[name]])
+        features.use[[name]] <- genes.unique[start:(start + len - 1)]
+        start <- start + len
+      }
+      
+      # Get the length of the longest list.
+      max_len <- max(lengths(features.use))
+      # Get a padded list
+      df.map <- as.data.frame(lapply(features.use, function(x) c(x, rep(NA, max_len - length(x))))) %>% 
+                tidyr::pivot_longer(cols = dplyr::everything(),
+                                    names_to = "Name",
+                                    values_to = "Gene")
+      
+      
+      features.use <- unique(unlist(unname(features)))[!duplicated(unique(unlist(unname(features))))]
+    } else {
+      features.use <- features
+    }
+    
+    data <- data[features.use, , drop = FALSE] %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "Gene") %>% 
             tidyr::pivot_longer(cols = -"Gene",
@@ -286,6 +323,12 @@ do_DotPlot <- function(sample,
                                   values_to = "Avg.Exp") %>% 
               dplyr::left_join(y = data %>% dplyr::select(-dplyr::all_of(c("Avg.Exp"))),
                                by = c(group.by, "Gene"))
+    }
+    
+    # Add gene map.
+    if (is.list(features)){
+      data <- data %>% dplyr::left_join(y = df.map, by = "Gene")
+      
     }
     
     # Define cutoffs.
@@ -341,7 +384,7 @@ do_DotPlot <- function(sample,
       if (isTRUE(cluster)){
         row_order <- rownames(data.cluster)[stats::hclust(stats::dist(data.cluster, method = "euclidean"), method = "ward.D")$order]
       } else {
-        row_order <- features
+        row_order <- features.use
       }
     }
     
@@ -399,6 +442,20 @@ do_DotPlot <- function(sample,
              ggplot2::facet_grid(rows = ggplot2::vars(.data[[split.by]]),
                                  scales = "free",
                                  space = "free")
+      }
+    } else {
+      if (is.list(features)){
+        if (base::isFALSE(flip)){
+          p <- p +
+               ggplot2::facet_grid(cols = ggplot2::vars(.data$Name),
+                                   scales = "free",
+                                   space = "free")
+        } else {
+          p <- p +
+               ggplot2::facet_grid(rows = ggplot2::vars(.data$Name),
+                                   scales = "free",
+                                   space = "free")
+        }
       }
     }
      
