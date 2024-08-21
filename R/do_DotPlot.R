@@ -270,10 +270,11 @@ do_DotPlot <- function(sample,
       # Get the length of the longest list.
       max_len <- max(lengths(features.use))
       # Get a padded list
-      df.map <- as.data.frame(lapply(features.use, function(x) c(x, rep(NA, max_len - length(x))))) %>% 
+      df.map <- as.data.frame(lapply(features.use, function(x) c(x, rep(NA, max_len - length(x)))), check.names = FALSE) %>% 
                 tidyr::pivot_longer(cols = dplyr::everything(),
                                     names_to = "Name",
-                                    values_to = "Gene")
+                                    values_to = "Gene") %>% 
+                dplyr::mutate("Name" = factor(.data$Name, levels = names(features)))
       
       
       features.use <- unique(unlist(unname(features)))[!duplicated(unique(unlist(unname(features))))]
