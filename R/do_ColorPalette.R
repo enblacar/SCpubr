@@ -183,7 +183,7 @@ do_ColorPalette <- function(colors.use,
       colors.use[!(names(colors.use) %in% colors[c(1, 4, 7, 10)])] <- "grey75"
       # If complete_output is TRUE, report everything.
     } else {
-      name_center <- "Wheel"
+      name_center <- stringr::str_wrap("Color wheel", width = 5)
     }
 
     # Define blank labels.

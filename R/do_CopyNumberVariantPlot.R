@@ -169,7 +169,7 @@ do_CopyNumberVariantPlot <- function(sample,
     # Retrieve chr locations of the chromosome.
     locations <- chr_locations %>%
                  dplyr::filter(.data[["chr"]] == chromosome)
-    events <- ifelse(base::isTRUE(include_chr_arms), c("p", "q", "whole"), "whole")
+    events <- if(base::isTRUE(include_chr_arms)) {c("p", "q")} else {"whole"}
     for (chr_arm in events){
       if (chr_arm != "whole"){
         # Retrieve the start.
@@ -233,6 +233,7 @@ do_CopyNumberVariantPlot <- function(sample,
           scores.assay[[scores_name]] <- CNV_scores_final[, scores_name]
         }
       } else {
+        skipped_chr <- TRUE
         #nocov start
         if(isTRUE(verbose)){message(paste0(add_info(), "Your sample has only one gene in ", chromosome, chr_arm, ". Skipping this chromosome arm."))}
         #nocov end
@@ -427,6 +428,7 @@ do_CopyNumberVariantPlot <- function(sample,
     p <- p +
          ggplot2::xlab(xlab) +
          ggplot2::ylab(ylab) +
+         ggplot2::labs(caption = if(base::isTRUE(skipped_chr)){if((base::isTRUE(include_chr_arms))){"Skipped arms with low number of genes."} else {"Skipped chromosomes with low number of genes."}} else {none}) + 
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
                         axis.ticks.x.top = axis.parameters$axis.ticks.x.top,

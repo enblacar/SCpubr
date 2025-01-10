@@ -31,6 +31,9 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Fixed a bug in which `map_signif_levels` would only accept a logical and not custom mappings.
 -   When `map_signif_levels` is used, the mapping now appears as a plot legend for clarity.
 
+## do_ColorPalette()
+-  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.
+
 ## do_CopyNumberVariantPlot()
 -   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
 
