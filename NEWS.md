@@ -30,6 +30,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behavior.
 -   Fixed a bug in which `map_signif_levels` would only accept a logical and not custom mappings.
 -   When `map_signif_levels` is used, the mapping now appears as a plot legend for clarity.
+-   Added black borders to the legend glyphs when using `use_silhouette = FALSE`. 
 
 ## do_ColorPalette()
 -  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.

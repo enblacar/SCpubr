@@ -163,6 +163,19 @@ do_BoxPlot <- function(sample,
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
   
+  # Custom function to draw black border in legend.
+  # Define the custom draw_key function
+  draw_key_square_black_border <- function(data, 
+                                           params, 
+                                           size) {
+    grid::rectGrob(width = grid::unit(1, "npc"),        # Full size of the key (square)
+                  height = grid::unit(1, "npc"),
+                  gp = grid::gpar(col = "black", # Black border
+                                  fill = ggplot2::alpha(data$fill, data$alpha),  # Fill with specified color and alpha
+                                  lwd = 1)  # Border line width
+    )
+  }
+  
   if (is.null(colors.use)){
     if (is.null(split.by)){
       colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {
@@ -267,7 +280,7 @@ do_BoxPlot <- function(sample,
                                width = boxplot.width,
                                lwd = boxplot.linewidth,
                                fatten = 1,
-                               key_glyph = "rect",
+                               key_glyph = draw_key_square_black_border,
                                na.rm = TRUE)   +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                       title.position = legend.title.position,
