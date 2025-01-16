@@ -254,6 +254,8 @@ do_CellularStatesPlot <- function(sample,
                                            pixels = c(raster.dpi, raster.dpi))
       }
       p <- p +
+           ggplot2::geom_hline(yintercept = 0, linetype = "dashed") + 
+           ggplot2::geom_vline(xintercept = 0, linetype = "dashed") +
            ggplot2::scale_color_manual(values = colors.use) +
            ggplot2::guides(color = ggplot2::guide_legend(title = "")) +
            ggplot2::xlab(x_lab) +
@@ -357,6 +359,8 @@ do_CellularStatesPlot <- function(sample,
                                              pixels = c(raster.dpi, raster.dpi))
         }
         p <- p +
+             ggplot2::geom_hline(yintercept = 0, linetype = "dashed") + 
+             ggplot2::geom_vline(xintercept = 0, linetype = "dashed") + 
              ggplot2::scale_color_manual(values = colors.use) +
              ggplot2::xlab(x_lab) +
              ggplot2::ylab(y_lab) +
@@ -465,6 +469,8 @@ do_CellularStatesPlot <- function(sample,
                                              pixels = c(raster.dpi, raster.dpi))
         }
         p <- p +
+             ggplot2::geom_hline(yintercept = 0, linetype = "dashed") + 
+             ggplot2::geom_vline(xintercept = 0, linetype = "dashed") +
              ggplot2::scale_color_manual(values = colors.use) +
              ggplot2::xlab(x_lab1) +
              ggplot2::ylab(y_lab1) +
@@ -485,6 +491,8 @@ do_CellularStatesPlot <- function(sample,
 
       suppressMessages({
         p <- p +
+             ggplot2::geom_hline(yintercept = 0, linetype = "dashed") + 
+             ggplot2::geom_vline(xintercept = 0, linetype = "dashed") +
              ggplot2::xlim(lim) +
              ggplot2::ylim(lim) +
              ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = y_lab2)) +
@@ -510,7 +518,6 @@ do_CellularStatesPlot <- function(sample,
                         axis.text.y.right = ggplot2::element_text(face = axis.text.face, color = "black"),
                         axis.title.x.top = ggplot2::element_text(face = axis.title.face, color = "black"),
                         axis.title.y.right = ggplot2::element_text(face = axis.title.face, color = "black"),
-                        axis.text = ggplot2::element_text(face = "bold", color = "black"),
                         plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
                         plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
                         plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),
@@ -532,7 +539,10 @@ do_CellularStatesPlot <- function(sample,
                                                        ncol = legend.ncol,
                                                        nrow = legend.nrow,
                                                        byrow = legend.byrow,
-                                                       override.aes = list(size = legend.icon.size)))
+                                                       override.aes = list(size = legend.icon.size,
+                                                                           color = "black",
+                                                                           fill = colors.use,
+                                                                           shape = 21)))
 
     # Add cell borders.
     if (isTRUE(plot_cell_borders)){

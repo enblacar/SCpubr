@@ -21,19 +21,19 @@
 #' @return Nothing.
 #' @export
 #'
-#' @example /man/examples/examples_save_Plot.R
-save_Plot <- function(plot,
-                      figure_path = NULL,
-                      create_path = TRUE,
-                      file_name = NULL,
-                      dpi = 300,
-                      output_format = "publication",
-                      width = 8,
-                      height = 8){
+#' @example /man/examples/examples_do_SavePlot.R
+do_SavePlot <- function(plot,
+                        figure_path = NULL,
+                        create_path = TRUE,
+                        file_name = NULL,
+                        dpi = 300,
+                        output_format = "publication",
+                        width = 8,
+                        height = 8){
   # nocov start
 
   # Checks for packages.
-  check_suggests(function_name = "save_Plot")
+  check_suggests(function_name = "do_SavePlot")
 
   # Check logical parameters.
   logical_list <- list("create_path" = create_path)

@@ -428,9 +428,9 @@ return_dependencies <- function(){
                    "do_GroupwiseDEPlot" = NULL,
                    "do_MetadataPlot" = "cluster",
                    "do_LigandReceptorPlot" = "liana",
-                   "do_LoadingsPlot" = NULL,
-                   "do_RankedEnrichmentPlot" = "Matrix",
-                   "do_RankedExpressionPlot" = NULL,
+                   "do_LoadingsHeatmap" = NULL,
+                   "do_RankedEnrichmentHeatmap" = "Matrix",
+                   "do_RankedExpressionHeatmap" = NULL,
                    "do_NebulosaPlot" = "Nebulosa",
                    "do_PathwayActivityPlot" = NULL,
                    "do_RidgePlot" = "ggridges",
@@ -441,7 +441,7 @@ return_dependencies <- function(){
                    "do_ViolinPlot" = NULL,
                    "do_VolcanoPlot" = "ggrepel",
                    "do_WafflePlot" = "waffle",
-                   "save_Plot" = "svglite")
+                   "do_SavePlot" = "svglite")
   return(pkg_list)
 }
 
@@ -463,7 +463,7 @@ check_suggests <- function(function_name, passive = FALSE){
   }
   pkgs <- c(pkg_list[[function_name]], pkg_list[["Essentials"]])
 
-  non_seurat_functions <- c("save_Plot",
+  non_seurat_functions <- c("do_SavePlot",
                             "do_VolcanoPlot",
                             "do_LigandReceptorPlot",
                             "do_ColorPalette")
@@ -506,11 +506,11 @@ check_suggests <- function(function_name, passive = FALSE){
 #'
 #' \donttest{
 #' # Print a package report.
-#' SCpubr::package_report(startup = FALSE, extended = FALSE)
+#' SCpubr::do_PackageReport(startup = FALSE, extended = FALSE)
 #' }
 
-package_report <- function(startup = FALSE,
-                           extended = FALSE){
+do_PackageReport <- function(startup = FALSE,
+                             extended = FALSE){
   # nocov start
   if (base::isFALSE(requireNamespace("cli", quietly = TRUE)) | base::isFALSE(requireNamespace("rlang", quietly = TRUE))){
     if (base::isFALSE(startup)){
@@ -606,25 +606,21 @@ package_report <- function(startup = FALSE,
 
       if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
         names.use <- unname(vapply(functions, function(x){if (x %in% c("do_LigandReceptorPlot",
-                                                                       "save_Plot",
+                                                                       "do_SavePlot",
                                                                        "do_MetadataPlot",
                                                                        "do_SCExpressionHeatmap",
                                                                        "do_SCEnrichmentHeatmap",
-                                                                       "do_AffinityAnalysisPlot",
-                                                                       "do_DiffusionMapPlot",
-                                                                       "do_LoadingsPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+                                                                       "do_AffinityAnalysisPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
         names(functions) <- names.use
         # nocov start
       } else {
         functions <- functions[!(functions %in% c("do_LigandReceptorPlot",
-                                                  "save_Plot",
+                                                  "do_SavePlot",
                                                   "do_MetadataPlot",
                                                   "do_SCExpressionHeatmap",
                                                   "do_SCEnrichmentHeatmap",
-                                                  "do_AffinityAnalysisPlot",
-                                                  "do_DiffusionMapPlot",
-                                                  "do_LoadingsPlot"))]
+                                                  "do_AffinityAnalysisPlot"))]
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       }
       # nocov end
@@ -716,7 +712,7 @@ package_report <- function(startup = FALSE,
                                crayon_body(" builds of "),
                                crayon_key("SCpubr"),
                                crayon_body(" are marked by the ("),
-                               cli::style_bold(cli::col_cyan("| DEV")),
+                               cli::col_cyan("| DEV"),
                                crayon_body(") tag."))
 
       functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
@@ -732,7 +728,7 @@ package_report <- function(startup = FALSE,
     
     ins_message <- paste0(cli::style_bold(cli::col_blue("!")),
                           crayon_body(" Check missing dependencies with: "),
-                          cli::style_italic(crayon_key('SCpubr::package_report(extended = TRUE)')))
+                          cli::style_italic(crayon_key('SCpubr::do_PackageReport(extended = TRUE)')))
     
     tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" To remove the white and black end from continuous palettes, use: "),

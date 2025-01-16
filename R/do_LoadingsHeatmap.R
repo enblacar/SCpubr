@@ -10,13 +10,13 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_LoadingsPlot.R
-do_LoadingsPlot <- function(sample,
+#' @example /man/examples/examples_do_LoadingsHeatmap.R
+do_LoadingsHeatmap <- function(sample,
                             group.by = NULL,
                             subsample = NA,
                             dims = 1:10,
                             top_loadings = 5,
-                            assay = "SCT",
+                            assay = NULL,
                             slot = "data",
                             grid.color = "white",
                             border.color = "black",
@@ -56,7 +56,7 @@ do_LoadingsPlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests("do_LoadingsPlot")
+  check_suggests("do_LoadingsHeatmap")
 
   # Check logical parameters.
   logical_list <- list("use_viridis" = use_viridis,
@@ -139,7 +139,14 @@ do_LoadingsPlot <- function(sample,
                                                            use_viridis = use_viridis,
                                                            direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                            enforce_symmetry = FALSE)
-
+  
+  
+  # Check assay.
+  assay <- if (is.null(assay)){Seurat::DefaultAssay(sample)} else {assay}
+  
+  Seurat::DefaultAssay(sample) <- assay
+  
+  
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,

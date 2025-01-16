@@ -5,16 +5,19 @@
 
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
--   `do_RankedExpressionPlot()` to plot expression values as a heatmap along a diffusion component.
+-   `do_RankedExpressionHeatmap()` to plot expression values as a heatmap along a dimensional reduction component.
 
 ## Removed functions
 -   `do_FunctionalAnnotationPlot()`.
 -   `do_GroupedGOTermPlot()`.
 
-The reason behind it is that they, together with do_TermEnrichmentPlot() targetted the same analysis and, therefore, were redundant.
+The reason behind it is that they, together with do_TermEnrichmentPlot() targeted the same analysis and, therefore, were redundant.
 
 ## Renamed functions
--   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentPlot()`. As it now accepts any dimensional reduction and not only diffusion maps.
+-   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentHeatmap()`. As it now accepts any dimensional reduction and not only diffusion maps.
+-   `save_plot()` (development release only) is now called `do_SavePlot()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
+-   `package_report()`  is now called `do_PackageReport()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
+-   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
 
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
@@ -25,12 +28,21 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
+-   Modified the legend items to have a black border.
 
 ## do_BoxPlot()
 -   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behavior.
 -   Fixed a bug in which `map_signif_levels` would only accept a logical and not custom mappings.
 -   When `map_signif_levels` is used, the mapping now appears as a plot legend for clarity.
 -   Added black borders to the legend glyphs when using `use_silhouette = FALSE`. 
+
+## do_CellularStatesPlot()
+-  Added reference lines to the plot to better visualize the segments.
+-  Added black border around the legend items. 
+-  Fixed bug where axis text will always display in bold. 
+
+## do_ChortDiagramPlot()
+-  Added `font.size` parameter to control the font size of the plot.
 
 ## do_ColorPalette()
 -  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.

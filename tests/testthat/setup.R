@@ -70,7 +70,7 @@ if (base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
 #   base::isFALSE(dep_check[["do_CorrelationPlot"]]) &
 #    base::isFALSE(dep_check[["do_ChordDiagramPlot"]]) &
 #    isTRUE(requireNamespace(pkg, quietly = TRUE)) &
-#    base::isFALSE(dep_check[["save_Plot"]])){
+#    base::isFALSE(dep_check[["do_SavePlot"]])){
   #p <- SCpubr::do_DimPlot(sample)
   #data <- data.frame("A" = stats::runif(n = 10),
   #                   "B" = stats::runif(n = 10),

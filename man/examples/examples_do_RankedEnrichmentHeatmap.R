@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_RankedEnrichmentPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_RankedEnrichmentHeatmap", passive = TRUE)
   
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -17,14 +17,14 @@
     # This will query, for the provided components, the enrichment of the gene 
     # sets for all cells and plot them in the context of the cells reordered by 
     # the position alongside each dimensional reduction component. 
-    p <- SCpubr::do_RankedEnrichmentPlot(sample = sample,
-                                         input_gene_list = genes,
-                                         nbin = 1,
-                                         ctrl = 5,
-                                         flavor = "Seurat",
-                                         subsample = NA,
-                                         dims = 1:2,
-                                         verbose = FALSE)
+    p <- SCpubr::do_RankedEnrichmentHeatmap(sample = sample,
+                                            input_gene_list = genes,
+                                            nbin = 1,
+                                            ctrl = 5,
+                                            flavor = "Seurat",
+                                            subsample = NA,
+                                            dims = 1:2,
+                                            verbose = FALSE)
     
     p
     

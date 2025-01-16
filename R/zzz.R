@@ -7,6 +7,6 @@
   # nocov end
   
   # Print startup message.
-  package_report(startup = TRUE,
-                 extended = FALSE)
+  do_PackageReport(startup = TRUE,
+                   extended = FALSE)
 }

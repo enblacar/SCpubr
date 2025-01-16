@@ -71,6 +71,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 alignment = "default",
                                 annotationTrack = c("grid", "axis"),
                                 padding_labels = 4,
+                                font.size = 1,
                                 ...){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
@@ -90,7 +91,8 @@ do_ChordDiagramPlot <- function(sample = NULL,
                        "alpha.highlight" = alpha.highlight,
                        "self.link" = self.link,
                        "directional" = directional,
-                       "padding_labels" = padding_labels)
+                       "padding_labels" = padding_labels,
+                       "font.size" = font.size)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
 
@@ -352,7 +354,8 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                                                           facing = "clockwise",
                                                                           niceFacing = TRUE,
                                                                           adj = c(-0.15, 0.5),
-                                                                          font = 2)},
+                                                                          font = 2,
+                                                                          cex = font.size)},
                          bg.border = NA)
   p <- grDevices::recordPlot()
   circlize::circos.clear()

@@ -1,18 +1,16 @@
-#' Compute a heatmap of enrichment of gene sets on the context of a diffusion component.
+#' Compute a heatmap of expression of genes on the context of a dimensional reduction component.
 #'
 #' @inheritParams doc_function
 #' @param colors.use \strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the package but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column! 
 #' @param main.heatmap.size \strong{\code{\link[base]{numeric}}} | A number from 0 to 1 corresponding to how big the main heatmap plot should be with regards to the rest (corresponds to the proportion in size).  
-#' @param scale.enrichment \strong{\code{\link[base]{logical}}} | Should the enrichment scores be scaled (z-scored) for better comparison in between gene sets? Setting this to TRUE should make intra- gene set comparisons easier at the cost ot not being able to compare inter- gene sets in absolute values.
-#' @return A list of ggplot2 objects and a Seurat object if desired.
+#' @return A list of ggplot2 objects, one per dimensional reduction component, and a Seurat object if desired.
 #' @export
 #'
-#' @example /man/examples/examples_do_RankedEnrichmentPlot.R
-do_RankedEnrichmentPlot <- function(sample,
-                                    input_gene_list,
+#' @example /man/examples/examples_do_RankedExpressionHeatmap.R
+do_RankedExpressionHeatmap <- function(sample,
+                                    features,
                                     assay = NULL,
                                     slot = NULL,
-                                    scale.enrichment = TRUE,
                                     dims = 1:2,
                                     subsample = 2500,
                                     reduction = NULL,
@@ -22,9 +20,8 @@ do_RankedEnrichmentPlot <- function(sample,
                                     interpolate = FALSE,
                                     nbin = 24,
                                     ctrl = 100,
-                                    flavor = "Seurat",
                                     main.heatmap.size = 0.95,
-                                    enforce_symmetry = ifelse(isTRUE(scale.enrichment), TRUE, FALSE),
+                                    enforce_symmetry = TRUE,
                                     use_viridis = FALSE,
                                     viridis.palette = "G",
                                     viridis.direction = -1,
@@ -61,7 +58,7 @@ do_RankedEnrichmentPlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
-  check_suggests("do_RankedEnrichmentPlot")
+  check_suggests("do_RankedExpressionHeatmap")
   check_Seurat(sample = sample)
   
   # Check the reduction.
@@ -71,7 +68,6 @@ do_RankedEnrichmentPlot <- function(sample,
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "legend.byrow" = legend.byrow,
                        "return_object" = return_object,
-                       "scale.enrichment" = scale.enrichment,
                        "use_viridis" = use_viridis,
                        "verbose" = verbose,
                        "interpolate" = interpolate,
@@ -103,7 +99,6 @@ do_RankedEnrichmentPlot <- function(sample,
                          "reduction" = reduction,
                          "slot" = slot,
                          "group.by" = group.by,
-                         "flavor" = flavor,
                          "font.type" = font.type,
                          "na.value" = na.value,
                          "legend.framecolor" = legend.framecolor,
@@ -133,7 +128,6 @@ do_RankedEnrichmentPlot <- function(sample,
   check_parameters(parameter = diverging.palette, parameter_name = "diverging.palette")
   check_parameters(parameter = sequential.palette, parameter_name = "sequential.palette")
   check_parameters(parameter = viridis.palette, parameter_name = "viridis.palette")
-  check_parameters(parameter = flavor, parameter_name = "flavor")
   check_parameters(plot.title.face, parameter_name = "plot.title.face")
   check_parameters(plot.subtitle.face, parameter_name = "plot.subtitle.face")
   check_parameters(plot.caption.face, parameter_name = "plot.caption.face")
@@ -185,53 +179,28 @@ do_RankedEnrichmentPlot <- function(sample,
                                                   enforce_symmetry = enforce_symmetry)
   }
   
-  genes.use <- unlist(input_gene_list) %>% unname() %>% unique()
+  genes.use <- features %>% unique()
   genes.use <- genes.use[genes.use %in% rownames(sample)]
   
-  if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Computing "), crayon_key("enrichment scores"), crayon_body("...")))}
-  
-  if (!(is.null(assay)) & flavor == "UCell"){
-    warning(paste0(add_warning(), crayon_body("When using "),
-                   crayon_key("flavor = UCell"),
-                   crayon_body(" do not use the "),
-                   crayon_key("assay"),
-                   crayon_body(" parameter.\nInstead, make sure that the "),
-                   crayon_key("assay"),
-                   crayon_body(" you want to compute the scores with is set as the "),
-                   crayon_key("default"),
-                   crayon_body(" assay. Setting it to "),
-                   crayon_key("NULL"),
-                   crayon_body(".")), call. = FALSE)
-  }
-  
-  if (!(is.null(slot)) & flavor == "Seurat"){
-    warning(paste0(add_warning(), crayon_body("When using "),
-                   crayon_key("flavor = Seurat"),
-                   crayon_body(" do not use the "),
-                   crayon_key("slot"),
-                   crayon_body(" parameter.\nThis is determiend by default in "),
-                   crayon_key("Seurat"),
-                   crayon_body(". Setting it to "),
-                   crayon_key("NULL"),
-                   crayon_body(".")), call. = FALSE)
-  }
   
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
   if (is.null(slot)){slot <- check_and_set_slot(slot)}
   
-  # nocov start
-  sample <- compute_enrichment_scores(sample, 
-                                      input_gene_list = input_gene_list,
-                                      nbin = nbin,
-                                      ctrl = ctrl,
-                                      flavor = flavor,
-                                      assay = if (flavor == "UCell"){NULL} else {assay},
-                                      slot = if (flavor == "Seurat"){NULL} else {slot})
-  # nocov end
-  
   if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
   key_col <- stringr::str_remove_all(key, "_")
   # Obtain the DC embeddings, together with the enrichment scores.
+  suppressWarnings({
+    # Workaround parameter depreciation.
+  if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){
+    data <- Seurat::GetAssayData(object = sample,
+                                 assay = assay,
+                                 slot = slot)
+  } else {
+    data <- SeuratObject::LayerData(object = sample,
+                                    assay = assay,
+                                    layer = slot)
+  }
+    
   data.use <- sample@reductions[[reduction]]@cell.embeddings %>% 
               as.data.frame() %>% 
               tibble::rownames_to_column(var = "Cell") %>% 
@@ -249,12 +218,21 @@ do_RankedEnrichmentPlot <- function(sample,
               dplyr::left_join(y = {sample@meta.data %>% 
                                     tibble::rownames_to_column(var = "Cell") %>% 
                                     tibble::as_tibble() %>% 
-                                    dplyr::select(dplyr::all_of(c("Cell", group.by, names(input_gene_list))))},
-                                    by = "Cell")
+                                    dplyr::select(dplyr::all_of(c("Cell", group.by))) %>% 
+                                    dplyr::left_join(y = {data[features, , drop = FALSE] %>% 
+                                                          as.data.frame() %>% 
+                                                          t() %>% 
+                                                          as.data.frame() %>% 
+                                                          tibble::rownames_to_column(var = "Cell") %>% 
+                                                          tibble::as_tibble()},
+                                                      by = "Cell")},
+                                by = "Cell")
+  })
   
-  if (isTRUE(scale.enrichment)){
+  data.use <- as.data.frame(data.use)
+  if (isTRUE(enforce_symmetry)){
     # Scale the enrichment scores as we are just interested in where they are enriched the most and not to compare across them.
-    for (name in names(input_gene_list)){
+    for (name in features){
       data.use[, name] <- scale(data.use[, name])[, 1]
     }
   }
@@ -262,10 +240,11 @@ do_RankedEnrichmentPlot <- function(sample,
   
   # Prepare the data to plot.
   data.use <- data.use %>% 
-              tidyr::pivot_longer(cols = dplyr::all_of(c(names(input_gene_list))),
-                                  names_to = "Gene_Set",
-                                  values_to = "Enrichment")
-  
+              tidyr::pivot_longer(cols = dplyr::all_of(c(features)),
+                                  names_to = "Feature",
+                                  values_to = "Expression") %>% 
+              dplyr::mutate("Feature" = factor(.data$Feature, levels = genes.use))
+            
   
   # Generate DC-based heatmaps.
   list.out <- list()
@@ -273,16 +252,16 @@ do_RankedEnrichmentPlot <- function(sample,
   for (dc.use in vapply(dims, function(x){paste0(key, x)}, FUN.VALUE = character(1))){
     # Filter for the DC.
     data.plot <- data.use %>% 
-                  dplyr::filter(.data[[key_col]] == dc.use)
+                 dplyr::filter(.data[[key_col]] == dc.use)
     
     # Limit the scale to quantiles 0.1 and 0.9 to avoid extreme outliers.
-    limits <- c(stats::quantile(data.plot$Enrichment, 0.05, na.rm = TRUE),
-                stats::quantile(data.plot$Enrichment, 0.95, na.rm = TRUE))
+    limits <- c(stats::quantile(data.plot$Expression, 0.05, na.rm = TRUE),
+                stats::quantile(data.plot$Expression, 0.95, na.rm = TRUE))
     
     # Bring extreme values to the cutoffs.
     data.plot <- data.plot %>% 
-                 dplyr::mutate("Enrichment" = ifelse(.data$Enrichment <= limits[1], limits[1], .data$Enrichment)) %>% 
-                 dplyr::mutate("Enrichment" = ifelse(.data$Enrichment >= limits[2], limits[2], .data$Enrichment))
+                 dplyr::mutate("Expression" = ifelse(.data$Expression <= limits[1], limits[1], .data$Expression)) %>% 
+                 dplyr::mutate("Expression" = ifelse(.data$Expression >= limits[2], limits[2], .data$Expression))
     
     # Compute scale limits, breaks etc.
     scale.setup <- compute_scales(sample = NULL,
@@ -301,8 +280,8 @@ do_RankedEnrichmentPlot <- function(sample,
     # Generate the plot.
     p <- data.plot %>% 
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
-                                                y = .data$Gene_Set,
-                                                fill = .data$Enrichment))
+                                                y = .data$Feature,
+                                                fill = .data$Expression))
     
     if (base::isTRUE(raster)){
       p <- p + 
@@ -311,21 +290,20 @@ do_RankedEnrichmentPlot <- function(sample,
       p <- p + 
            ggplot2::geom_tile()
     }
-         
     
-    legend.name <- if (flavor == "Seurat"){"Enrichment"} else if (flavor == "UCell"){"UCell score"}
-    legend.name.use <- ifelse(isTRUE(scale.enrichment), paste0("Z-scored | ", legend.name), legend.name)
+    
+    legend.name.use <- ifelse(isTRUE(enforce_symmetry), "Z-scored | Expression", "Expression")
     
     p <- p + 
-         ggplot2::scale_fill_gradientn(colors = colors.gradient,
-                                       na.value = na.value,
-                                       name = legend.name.use,
-                                       breaks = scale.setup$breaks,
-                                       labels = scale.setup$labels,
-                                       limits = scale.setup$limits) + 
-         ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
-         ggplot2::ylab("Gene sets") +
-         ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 
+      ggplot2::scale_fill_gradientn(colors = colors.gradient,
+                                    na.value = na.value,
+                                    name = legend.name.use,
+                                    breaks = scale.setup$breaks,
+                                    labels = scale.setup$labels,
+                                    limits = scale.setup$limits) + 
+      ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
+      ggplot2::ylab("Features") +
+      ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Features)))) 
     
     # Modify the appearance of the plot.
     p <- modify_continuous_legend(p = p,
@@ -344,7 +322,7 @@ do_RankedEnrichmentPlot <- function(sample,
     list.plots <- list()
     list.plots[["main"]] <- p
     for (name in group.by){
-
+      
       # Select color palette for metadata.
       if (name %in% names(colors.use)){
         colors.use.iteration <- colors.use[[name]]
@@ -355,11 +333,11 @@ do_RankedEnrichmentPlot <- function(sample,
       
       # Generate the metadata heatmap.
       p <- data.use %>% 
-           dplyr::filter(.data[[key_col]] == dc.use) %>% 
-           dplyr::mutate("grouped.var" = .env$name) %>% 
-           ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
-                                                  y = .data$grouped.var,
-                                                  fill = .data[[name]]))
+        dplyr::filter(.data[[key_col]] == dc.use) %>% 
+        dplyr::mutate("grouped.var" = .env$name) %>% 
+        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$rank,
+                                               y = .data$grouped.var,
+                                               fill = .data[[name]]))
       
       if (base::isTRUE(raster)){
         p <- p + 
@@ -369,17 +347,19 @@ do_RankedEnrichmentPlot <- function(sample,
           ggplot2::geom_tile()
       }
       p <- p + 
-           ggplot2::scale_fill_manual(values = colors.use.iteration) + 
-           ggplot2::guides(fill = ggplot2::guide_legend(title = name,
-                                                        title.position = "top",
-                                                        title.hjust = 0.5,
-                                                        ncol = legend.ncol,
-                                                        nrow = legend.nrow,
-                                                        byrow = legend.byrow)) +
-           ggplot2::xlab(NULL) +
-           ggplot2::ylab(NULL) +
-           ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$grouped.var)))) 
-         
+        ggplot2::scale_fill_manual(values = colors.use.iteration) + 
+        ggplot2::guides(fill = ggplot2::guide_legend(title = name,
+                                                     title.position = "top",
+                                                     title.hjust = 0.5,
+                                                     override.aes = list(color = "black",
+                                                                         shape = 22),
+                                                     ncol = legend.ncol,
+                                                     nrow = legend.nrow,
+                                                     byrow = legend.byrow)) +
+        ggplot2::xlab(NULL) +
+        ggplot2::ylab(NULL) +
+        ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$grouped.var)))) 
+      
       list.plots[[name]] <- p
     }
     
@@ -430,7 +410,7 @@ do_RankedEnrichmentPlot <- function(sample,
                                ncol = 1,
                                guides = "collect",
                                heights = height_unit) +
-         patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
+      patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position))
     
     list.out[[dc.use]] <- p
   }

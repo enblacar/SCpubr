@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_RankedExpressionPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_RankedExpressionHeatmap", passive = TRUE)
   
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -15,13 +15,13 @@
     # This will query, for the provided components, the expression of the genes 
     # for all cells and plot them in the context of the cells reordered by 
     # the position alongside each dimensional reduction component. 
-    p <- SCpubr::do_RankedExpressionPlot(sample = sample,
-                                         features = genes,
-                                         nbin = 1,
-                                         ctrl = 5,
-                                         subsample = NA,
-                                         dims = 1:2,
-                                         verbose = FALSE)
+    p <- SCpubr::do_RankedExpressionHeatmap(sample = sample,
+                                            features = genes,
+                                            nbin = 1,
+                                            ctrl = 5,
+                                            subsample = NA,
+                                            dims = 1:2,
+                                            verbose = FALSE)
     
     p
     

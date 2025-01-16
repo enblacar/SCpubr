@@ -26,10 +26,10 @@ if (base::isFALSE(dep_check[["utils"]])){
 
   
   # PACKAGE REPORT
-  testthat::test_that("utils: package_report - PASS - general", {
+  testthat::test_that("utils: do_PackageReport - PASS - general", {
     testthat::skip_on_cran()
-    suppressMessages({testthat::expect_message(SCpubr::package_report(startup = FALSE))})
-    suppressMessages({testthat::expect_message(SCpubr::package_report(startup = TRUE))})
+    suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(startup = FALSE))})
+    suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(startup = TRUE))})
   })
   
   
