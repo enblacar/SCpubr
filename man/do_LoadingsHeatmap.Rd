@@ -35,7 +35,6 @@ do_LoadingsHeatmap(
   viridis.direction = -1,
   diverging.palette = "RdBu",
   diverging.direction = -1,
-  flip = FALSE,
   min.cutoff.loadings = NA,
   max.cutoff.loadings = NA,
   min.cutoff.expression = NA,
@@ -121,8 +120,6 @@ do_LoadingsHeatmap(
 \item{diverging.palette}{\strong{\code{\link[base]{character}}} | Type of symmetrical color palette to use. Out of the diverging palettes defined in \strong{\code{\link[RColorBrewer]{brewer.pal}}}.}
 
 \item{diverging.direction}{\strong{\code{\link[base]{numeric}}} | Either 1 or -1. Direction of the divering palette. This basically flips the two ends.}
-
-\item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{min.cutoff.loadings, max.cutoff.loadings}{\strong{\code{\link[base]{numeric}}} | Cutoff to subset the scale of the Loading score heatmap. NA will use quantiles 0.05 and 0.95.}
 

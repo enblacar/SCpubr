@@ -157,7 +157,7 @@ do_RankedExpressionHeatmap <- function(sample,
   
   if (!is.na(subsample)){
     # Perform subsampling.
-    sample <- sample[, sample(colnames(sample, subsample))]
+    sample <- sample[, sample(colnames(sample), subsample)]
   }
   
   # Check group.by.

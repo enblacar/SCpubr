@@ -6,9 +6,9 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_PathwayActivityPlot.R
+#' @example /man/examples/examples_do_PathwayActivityHeatmap.R
 
-do_PathwayActivityPlot <- function(sample,
+do_PathwayActivityHeatmap <- function(sample,
                                    activities,
                                    group.by = NULL,
                                    split.by = NULL,
@@ -54,7 +54,7 @@ do_PathwayActivityPlot <- function(sample,
   withr::local_options(.new = list("warning.length" = 8170))
 
 
-  check_suggests(function_name = "do_PathwayActivityPlot")
+  check_suggests(function_name = "do_PathwayActivityHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
@@ -333,7 +333,7 @@ do_PathwayActivityPlot <- function(sample,
          ggplot2::coord_equal() +
          ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                        na.value = na.value,
-                                       name = paste0("Pathway score | ", statistic, ifelse(slot == "scale.data", " | Scaled + Centered", "")),
+                                       name = paste0(ifelse(slot == "scale.data", "Z-scored | ", ""), statistic, " score"),
                                        breaks = scale.setup$breaks,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits)
@@ -345,7 +345,7 @@ do_PathwayActivityPlot <- function(sample,
     }
 
     p <- modify_continuous_legend(p = p,
-                                  legend.title = paste0("Pathway score | ", statistic),
+                                  legend.title = paste0(ifelse(slot == "scale.data", "Z-scored | ", ""), statistic, " score"),
                                   legend.aes = "fill",
                                   legend.type = legend.type,
                                   legend.position = legend.position,

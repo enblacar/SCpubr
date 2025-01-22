@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_TFActivityPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_PathwayActivityHeatmap", passive = TRUE)
 
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -10,12 +10,12 @@
                                   package = "SCpubr"))
 
     # Define your activities object.
-    dorothea_activities <- readRDS(system.file("extdata/dorothea_activities_example.rds",
-                                               package = "SCpubr"))
+    progeny_activities <- readRDS(system.file("extdata/progeny_activities_example.rds",
+                                              package = "SCpubr"))
 
     # General heatmap.
-    out <- SCpubr::do_TFActivityPlot(sample = sample,
-                                     activities = dorothea_activities)
+    out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
+                                          activities = progeny_activities)
     p <- out$heatmaps$average_scores
     p
 

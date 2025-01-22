@@ -41,7 +41,6 @@ do_LoadingsHeatmap <- function(sample,
                             viridis.direction = -1,
                             diverging.palette = "RdBu",
                             diverging.direction = -1,
-                            flip = FALSE,
                             min.cutoff.loadings = NA,
                             max.cutoff.loadings = NA,
                             min.cutoff.expression = NA,
@@ -59,8 +58,7 @@ do_LoadingsHeatmap <- function(sample,
   check_suggests("do_LoadingsHeatmap")
 
   # Check logical parameters.
-  logical_list <- list("use_viridis" = use_viridis,
-                       "flip" = flip)
+  logical_list <- list("use_viridis" = use_viridis)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("axis.text.x.angle" = axis.text.x.angle,
@@ -330,7 +328,7 @@ do_LoadingsHeatmap <- function(sample,
                                              limits = scale.setup$limits) +
                ggplot2::coord_equal() +
                ggplot2::xlab("Top genes") +
-               ggplot2::ylab("PCs")
+               ggplot2::ylab("PC")
 
   limits <- c(min(data.expression$mean_Expression, na.rm = TRUE),
               max(data.expression$mean_Expression, na.rm = TRUE))
@@ -446,9 +444,6 @@ do_LoadingsHeatmap <- function(sample,
                                          panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                                          legend.background = ggplot2::element_rect(fill = "white", color = "white"))
   }
-  list.plots[["Loadings"]] <- list.plots[["Loadings"]] +
-                              ggplot2::xlab(paste0("Top and bottom ", top_loadings, " genes in PCA loadings")) +
-                              ggplot2::theme(axis.title.x.top = ggplot2::element_text(face = "bold", color = "black"))
 
   p <- patchwork::wrap_plots(A = list.plots$Loadings,
                              B = list.plots$Expression,

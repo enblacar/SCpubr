@@ -17,6 +17,7 @@
 #' }
 #' @param dpi \strong{\code{\link[base]{numeric}}} | Dpi to use.
 #' @param width,height \strong{\code{\link[base]{numeric}}} | Width and height of the figure (inches).
+#' @param dpi \strong{\code{\link[base]{logical}}} | Whether to remove size limitation when saving ggplot2 objects.
 #'
 #' @return Nothing.
 #' @export
@@ -29,14 +30,16 @@ do_SavePlot <- function(plot,
                         dpi = 300,
                         output_format = "publication",
                         width = 8,
-                        height = 8){
+                        height = 8,
+                        limitsize = TRUE){
   # nocov start
 
   # Checks for packages.
   check_suggests(function_name = "do_SavePlot")
 
   # Check logical parameters.
-  logical_list <- list("create_path" = create_path)
+  logical_list <- list("create_path" = create_path,
+                       "limitsize" = limitsize)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("dpi" = dpi,
@@ -91,7 +94,8 @@ do_SavePlot <- function(plot,
                           dpi = dpi,
                           width = width,
                           height = height,
-                          device = device)
+                          device = device,
+                          limitsize = limitsize)
         })
     }
   # Is it a heatmap?

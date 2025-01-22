@@ -163,7 +163,7 @@ do_RankedEnrichmentHeatmap <- function(sample,
   
   if (!is.na(subsample)){
     # Perform subsampling.
-    sample <- sample[, sample(colnames(sample, subsample))]
+    sample <- sample[, sample(colnames(sample), subsample)]
   }
   
   # Check group.by.
@@ -324,7 +324,7 @@ do_RankedEnrichmentHeatmap <- function(sample,
                                        labels = scale.setup$labels,
                                        limits = scale.setup$limits) + 
          ggplot2::xlab(paste0("Ordering of cells along ", dc.use)) + 
-         ggplot2::ylab("Gene sets") +
+         ggplot2::ylab("Gene set") +
          ggplot2::guides(y.sec = guide_axis_label_trans(~paste0(levels(.data$Gene_Set)))) 
     
     # Modify the appearance of the plot.

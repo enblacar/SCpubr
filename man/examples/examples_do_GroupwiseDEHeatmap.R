@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_GroupwiseDEPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_GroupwiseDEHeatmap", passive = TRUE)
 
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -12,7 +12,7 @@
     de_genes <- readRDS(system.file("extdata/de_genes_example.rds", package = "SCpubr"))
 
     # Default output.
-    p <- SCpubr::do_GroupwiseDEPlot(sample = sample,
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
                                     de_genes = de_genes)
 
     p

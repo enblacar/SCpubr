@@ -167,7 +167,7 @@ do_LigandReceptorPlot(
 A ggplot2 plot with the results of the Ligand-Receptor analysis.
 }
 \description{
-This function makes use of \href{https://github.com/saezlab/liana}{liana} package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
+This function takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 }
 \examples{
 \donttest{

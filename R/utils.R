@@ -409,7 +409,7 @@ return_dependencies <- function(){
                                     "RColorBrewer",
                                     "labeling",
                                     "withr"),
-                   "do_AffinityAnalysisPlot" = "decoupleR",
+                   "do_AffinityHeatmap" = "decoupleR",
                    "do_AlluvialPlot" = "ggalluvial",
                    "do_BarPlot" = c("colorspace", "ggrepel"),
                    "do_BeeSwarmPlot" = c("colorspace", "ggbeeswarm", "ggrastr"),
@@ -425,19 +425,19 @@ return_dependencies <- function(){
                    "do_ExpressionHeatmap" = NULL,
                    "do_FeaturePlot" = c("scattermore", "MASS"),
                    "do_GeyserPlot" = "ggdist",
-                   "do_GroupwiseDEPlot" = NULL,
+                   "do_GroupwiseDEHeatmap" = NULL,
                    "do_MetadataPlot" = "cluster",
                    "do_LigandReceptorPlot" = "liana",
                    "do_LoadingsHeatmap" = NULL,
                    "do_RankedEnrichmentHeatmap" = "Matrix",
                    "do_RankedExpressionHeatmap" = NULL,
                    "do_NebulosaPlot" = "Nebulosa",
-                   "do_PathwayActivityPlot" = NULL,
+                   "do_PathwayActivityHeatmap" = NULL,
                    "do_RidgePlot" = "ggridges",
                    "do_SCExpressionHeatmap" = NULL,
                    "do_SCEnrichmentHeatmap" = c("UCell"),
                    "do_TermEnrichmentPlot" = c("enrichplot"),
-                   "do_TFActivityPlot" = NULL,
+                   "do_TFActivityHeatmap" = NULL,
                    "do_ViolinPlot" = NULL,
                    "do_VolcanoPlot" = "ggrepel",
                    "do_WafflePlot" = "waffle",
@@ -605,22 +605,12 @@ do_PackageReport <- function(startup = FALSE,
       functions <- sort(unique(names(return_dependencies())))
 
       if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
-        names.use <- unname(vapply(functions, function(x){if (x %in% c("do_LigandReceptorPlot",
-                                                                       "do_SavePlot",
-                                                                       "do_MetadataPlot",
-                                                                       "do_SCExpressionHeatmap",
-                                                                       "do_SCEnrichmentHeatmap",
-                                                                       "do_AffinityAnalysisPlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
+        names.use <- unname(vapply(functions, function(x){if (x %in% c("do_SavePlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
         names(functions) <- names.use
         # nocov start
       } else {
-        functions <- functions[!(functions %in% c("do_LigandReceptorPlot",
-                                                  "do_SavePlot",
-                                                  "do_MetadataPlot",
-                                                  "do_SCExpressionHeatmap",
-                                                  "do_SCEnrichmentHeatmap",
-                                                  "do_AffinityAnalysisPlot"))]
+        functions <- functions[!(functions %in% c("do_SavePlot"))]
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       }
       # nocov end

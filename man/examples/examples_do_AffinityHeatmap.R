@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_AffinityAnalysisPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_AffinityHeatmap", passive = TRUE)
   
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -14,13 +14,13 @@
                   "C" = rownames(sample)[11:15])
     
     # Default parameters.
-    p <- SCpubr::do_AffinityAnalysisPlot(sample = sample,
-                                         input_gene_list = genes,
-                                         nbin = 1,
-                                         ctrl = 5,
-                                         flavor = "Seurat",
-                                         subsample = NA,
-                                         verbose = FALSE)
+    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+                                    input_gene_list = genes,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    flavor = "Seurat",
+                                    subsample = NA,
+                                    verbose = FALSE)
     p
     
   } else if (base::isFALSE(value)){

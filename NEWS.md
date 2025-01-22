@@ -1,7 +1,13 @@
-# SCpbur v2.0.3 (In Development)
+# SCpbur v3.0.0 (In Development)
+
+## Reason for the mejor version change
+-   Due to the preparation for the publication of SCpubr's manuscript, a major effort has been made to further standardize and wrap up the package nicely.
+-   Some functions have been removed, and many have been renamed, for consistency.
+-   Development versions have been transferred to the normal release, with the exception of `SCpubr::do_SavePlot()`.
 
 ## General
 -   Enhanced startup message for clarity. Not it guides the user to run `SCpubr::package_report(extended = TRUE)` to get an overview of the missing dependencies.
+-   Added black border to glyphs in legends.
 
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
@@ -15,9 +21,13 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targete
 
 ## Renamed functions
 -   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentHeatmap()`. As it now accepts any dimensional reduction and not only diffusion maps.
--   `save_plot()` (development release only) is now called `do_SavePlot()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
--   `package_report()`  is now called `do_PackageReport()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
--   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. This is a preparation for the version `2.0.3` which will launch together with the publication.
+-   `save_plot()` (development release only) is now called `do_SavePlot()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `package_report()`  is now called `do_PackageReport()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_AffinityAnalysisPlot()` is now called `do_AffinityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_PathwayActivityPlot()` is now called `do_PathwayActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_TFActivityPlot()` is now called `do_TFActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_GroupwiseDEPlot()` is now called `do_GroupwiseDEHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
@@ -25,6 +35,9 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targete
 -   `do_RankedEnrichmentPlot()`, `do_EnrichmentHeatmap()` and `do_SCEnrichmentHeatmap()` do not longer accept `flavor = "AUCell"` due to dependency issues and lack of development support.
 
 The reason of these modification is to allow for a much clearer and concise output than before.
+
+## do_AffinityHeatmap()
+-   Changed legend title to "Z-Scored | ulm score", for consistency with other functions in the package.
 
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
@@ -58,7 +71,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Added `split.by.combined` parameter and set its default value to `TRUE`. This allows to toggle on or off whether to display the combined view when `split.by` is used.
 -   However, when `split.by`is used alongside `group.by`, it is now enforced to show the combined plot (`split.by.combined = TRUE`), to avoid bugs.
 -   Added `legend.dot.border` parameter to select whether we want a black border around the legend dots or not.
--   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. [(#76)](https://github.com/enblacar/SCpubr/issues/76)
+-   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. 
 
 ## do_DotPlot()
 -   Fixed a bug that caused sequential palettes to not be checked properly.
@@ -80,13 +93,26 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_FeaturePlot()
 -   Fixed a bug in which legend titles would not show up as intended.
 -   Enabled the use of several legend titles when multiple features are provided. The number of legend titles and features have to be equal.
--   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. [(#76)](https://github.com/enblacar/SCpubr/issues/76)
+-   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. 
+-   Added `scale.limits` parameter to control the range of values the color scale should take. This is specially useful if you want to plot several features and make the color comparable between them. 
+
+## do_GroupwiseDEHeatmap()
+-   Reduced the legend title texts to allow for more room in the plot.
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
 
+## do_PathwayActivityHeatmap
+-   Changed legend title to "Z-Scored | <statistic> score", for consistency with other functions in the package.
+
 ## do_RidgePlot()
 -   Removed `size = 1.25` aesthetic from the call to `ggridges::geom_ridge...`.
+
+## do_SavePlot()
+-   Added `limitsize` parameter, that allows for very big ggplot2-based plots to be saved with big dimensions.
+
+## do_TFActivityHeatmap()
+-   Changed legend title to "Z-Scored | <statistic> score", for consistency with other functions in the package.
 
 ## do_ViolinPlot()
 -   Added `order` parameter to reorder the groups based on the median. Only works when `split.by` is set to `NULL`.

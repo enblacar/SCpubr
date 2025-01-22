@@ -375,7 +375,7 @@ do_SCExpressionHeatmap <- function(sample,
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                                   y = .data$y_row,
                                                   fill = .data$y)) +
-           ggplot2::geom_raster(interpolate = interpolate) +
+           ggplot2::geom_tile() +
            ggplot2::facet_grid(~ .data$group.by,
                                scales = "free_x",
                                space = if(isTRUE(proportional.size)) {"fixed"} else {"free"}) +
@@ -383,6 +383,8 @@ do_SCExpressionHeatmap <- function(sample,
            ggplot2::guides(fill = ggplot2::guide_legend(title = name,
                                                        title.position = "top",
                                                        title.hjust = 0.5,
+                                                       override.aes = list(color = "black",
+                                                                           shape = 22),
                                                        ncol = legend.ncol,
                                                        nrow = legend.nrow,
                                                        byrow = legend.byrow)) +
@@ -422,7 +424,7 @@ do_SCExpressionHeatmap <- function(sample,
        ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,
                                               y = .data$gene,
                                               fill = .data$expression)) +
-       ggplot2::geom_raster()
+       ggplot2::geom_raster(interpolate = interpolate)
 
 
   p <- p + ggplot2::facet_grid(~ .data$group.by,

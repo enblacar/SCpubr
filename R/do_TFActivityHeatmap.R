@@ -10,9 +10,9 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_TFActivityPlot.R
+#' @example /man/examples/examples_do_TFActivityHeatmap.R
 
-do_TFActivityPlot <- function(sample,
+do_TFActivityHeatmap <- function(sample,
                               activities,
                               n_tfs = 25,
                               slot = "scale.data",
@@ -57,7 +57,7 @@ do_TFActivityPlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests(function_name = "do_TFActivityPlot")
+  check_suggests(function_name = "do_TFActivityHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
@@ -362,7 +362,7 @@ do_TFActivityPlot <- function(sample,
            ggplot2::coord_equal() +
            ggplot2::scale_fill_gradientn(colors = colors.gradient,
                                          na.value = na.value,
-                                         name = paste0("Regulon score | ", statistic, ifelse(slot == "scale.data", " | Scaled + Centered", "")),
+                                         name = paste0(ifelse(slot == "scale.data", "Z-scored | ", ""), statistic, " score"),
                                          breaks = scale.setup$breaks,
                                          labels = scale.setup$labels,
                                          limits = scale.setup$limits)
@@ -376,7 +376,7 @@ do_TFActivityPlot <- function(sample,
       }
 
       p <- modify_continuous_legend(p = p,
-                                    legend.title = paste0("Regulon score | ", statistic),
+                                    legend.title = paste0(ifelse(slot == "scale.data", "Z-scored | ", ""), statistic, " score"),
                                     legend.aes = "fill",
                                     legend.type = legend.type,
                                     legend.position = legend.position,

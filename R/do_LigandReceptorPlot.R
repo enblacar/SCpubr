@@ -1,6 +1,6 @@
 #' Visualize Ligand-Receptor analysis output.
 #'
-#' This function makes use of [liana](https://github.com/saezlab/liana) package to run Ligand-Receptor analysis. Takes the output of liana and generates a dot-plot visualization according to the user's specifications.
+#' This function takes the output of liana and generates a dot-plot visualization according to the user's specifications.
 #'
 #' @inheritParams doc_function
 #' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap} and \link[liana]{liana_aggregate}.

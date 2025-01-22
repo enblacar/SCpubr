@@ -23,7 +23,7 @@ do_SCEnrichmentHeatmap(
   nbin = 24,
   ctrl = 100,
   xlab = "Cells",
-  ylab = "Genes",
+  ylab = "Gene set",
   font.size = 14,
   font.type = "sans",
   plot.title = NULL,

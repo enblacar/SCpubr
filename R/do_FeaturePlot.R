@@ -11,6 +11,7 @@
 #' @param group.by.colors.use \strong{\code{\link[base]{character}}} | Colors to use for the group dots.
 #' @param group.by.show.dots \strong{\code{\link[base]{logical}}} | Controls whether to place in the middle of the groups.
 #' @param group.by.cell_borders.alpha \strong{\code{\link[base]{numeric}}} | Controls the transparency of the new borders drawn by \strong{\code{group.by.cell_borders}}.
+#' @param scale.limits \strong{\code{\link[base]{numeric}}} | Vector of two values (i.e: \code{c(0, 1)}) to limit the scales. Particularly useful to extend the color scale beyond the values in the dataset, contrary to \code{min.cutoff} and \code{max.cutoff}. 
 #' @param symmetry.type \strong{\code{\link[base]{character}}} | Type of symmetry to be enforced. One of:
 #' \itemize{
 #'   \item \emph{\code{absolute}}: The highest absolute value will be taken into a account to generate the color scale. Works after \strong{\code{min.cutoff}} and \strong{\code{max.cutoff}}.
@@ -78,6 +79,7 @@ do_FeaturePlot <- function(sample,
                            plot.axes = FALSE,
                            min.cutoff = rep(NA, length(features)),
                            max.cutoff = rep(NA, length(features)),
+                           scale.limits = NULL,
                            plot_density_contour = FALSE,
                            contour.position = "bottom",
                            contour.color = "grey90",
@@ -249,6 +251,37 @@ do_FeaturePlot <- function(sample,
                                        crayon_body(" higher or equal than "),
                                        crayon_key("0"),
                                        crayon_body(".")))
+  
+  if (!is.null(scale.limits)){
+    assertthat::assert_that(length(scale.limits) == 2,
+                            msg = paste0(add_cross(), crayon_body("Please provide a two values to "),
+                                         crayon_key("scale.limits"),
+                                         crayon_body(".")))
+  }
+
+  
+  if (!is.null(scale.limits)){
+    comparison <- !is.na(min.cutoff)
+    for (item in comparison){
+      assertthat::assert_that(base::isFALSE(item),
+                              msg = paste0(add_cross(), crayon_body("When using "),
+                                           crayon_key("scale.limits"),
+                                           crayon_body(" you can not provide values to "),
+                                           crayon_key("min.cutoff"),
+                                           crayon_body(".")))
+    }
+    
+    comparison <- !is.na(max.cutoff)
+    for (item in comparison){
+      assertthat::assert_that(base::isFALSE(item),
+                              msg = paste0(add_cross(), crayon_body("When using "),
+                                           crayon_key("scale.limits"),
+                                           crayon_body(" you can not provide values to "),
+                                           crayon_key("max.cutoff"),
+                                           crayon_body(".")))
+    }
+    
+  }
 
 
   check_colors(border.color, parameter_name = "border.color")
@@ -421,6 +454,8 @@ do_FeaturePlot <- function(sample,
                                       assay = assay,
                                       reduction = NULL,
                                       slot = slot,
+                                      limits.use = scale.limits,
+                                      from_data = if (is.null(scale.limits)){FALSE} else {TRUE},
                                       number.breaks = number.breaks,
                                       min.cutoff = min.cutoff,
                                       max.cutoff = max.cutoff,
@@ -444,6 +479,8 @@ do_FeaturePlot <- function(sample,
                                       assay = assay,
                                       reduction = NULL,
                                       slot = slot,
+                                      limits.use = scale.limits,
+                                      from_data = if (is.null(scale.limits)){FALSE} else {TRUE},
                                       number.breaks = number.breaks,
                                       min.cutoff = min.cutoff[counter],
                                       max.cutoff = max.cutoff[counter],
@@ -677,6 +714,8 @@ do_FeaturePlot <- function(sample,
                                       assay = assay,
                                       reduction = NULL,
                                       slot = slot,
+                                      limits.use = scale.limits,
+                                      from_data = if (is.null(scale.limits)){FALSE} else {TRUE},
                                       number.breaks = number.breaks,
                                       min.cutoff = min.cutoff.use,
                                       max.cutoff = max.cutoff.use,
@@ -861,6 +900,8 @@ do_FeaturePlot <- function(sample,
                                         feature = feature,
                                         assay = assay,
                                         reduction = NULL,
+                                        limits.use = scale.limits,
+                                        from_data = if (is.null(scale.limits)){FALSE} else {TRUE},
                                         slot = slot,
                                         number.breaks = number.breaks,
                                         min.cutoff = min.cutoff.use,

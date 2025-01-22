@@ -62,6 +62,7 @@ do_FeaturePlot(
   plot.axes = FALSE,
   min.cutoff = rep(NA, length(features)),
   max.cutoff = rep(NA, length(features)),
+  scale.limits = NULL,
   plot_density_contour = FALSE,
   contour.position = "bottom",
   contour.color = "grey90",
@@ -203,6 +204,8 @@ do_FeaturePlot(
 \item{plot.axes}{\strong{\code{\link[base]{logical}}} | Whether to plot axes or not.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{scale.limits}{\strong{\code{\link[base]{numeric}}} | Vector of two values (i.e: \code{c(0, 1)}) to limit the scales. Particularly useful to extend the color scale beyond the values in the dataset, contrary to \code{min.cutoff} and \code{max.cutoff}.}
 
 \item{plot_density_contour}{\strong{\code{\link[base]{logical}}} | Whether to plot density contours in the UMAP.}
 

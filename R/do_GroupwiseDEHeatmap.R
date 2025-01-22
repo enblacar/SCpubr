@@ -8,8 +8,8 @@
 #' @return A dotplot composed of 3 main panels: -log10(adjusted p-value), log2(FC) and mean expression by cluster.
 #' @export
 #'
-#' @example /man/examples/examples_do_GroupwiseDEPlot.R
-do_GroupwiseDEPlot <- function(sample,
+#' @example /man/examples/examples_do_GroupwiseDEHeatmap.R
+do_GroupwiseDEHeatmap <- function(sample,
                                de_genes,
                                group.by = NULL,
                                assay = NULL,
@@ -62,7 +62,7 @@ do_GroupwiseDEPlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests(function_name = "do_GroupwiseDEPlot")
+  check_suggests(function_name = "do_GroupwiseDEHeatmap")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 
@@ -384,10 +384,10 @@ do_GroupwiseDEPlot <- function(sample,
                        plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                        panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                        legend.background = ggplot2::element_rect(fill = "white", color = "white")) +
-        ggplot2::guides(size = ggplot2::guide_legend(title = "Percent Expressed",
+        ggplot2::guides(size = ggplot2::guide_legend(title = "Pct. Exp.",
                                                      title.position = "top",
                                                      title.hjust = 0.5,
-                                                     ncol = 2,
+                                                     ncol = 1,
                                                      nrow = legend.nrow,
                                                      byrow = legend.byrow,
                                                      override.aes = ggplot2::aes(fill = "black")))
@@ -395,7 +395,7 @@ do_GroupwiseDEPlot <- function(sample,
   # Add leyend modifiers.
   p1 <- modify_continuous_legend(p = p1,
                                  # nocov start
-                                 legend.title = if (is.null(legend.title)){"Avg. Expression"} else {legend.title},
+                                 legend.title = if (is.null(legend.title)){"Avg. Exp."} else {legend.title},
                                  # nocov end
                                  legend.aes = "fill",
                                  legend.type = legend.type,
@@ -511,7 +511,7 @@ do_GroupwiseDEPlot <- function(sample,
   # Add leyend modifiers.
   p3 <- modify_continuous_legend(p = p3,
                                  # nocov start
-                                 legend.title = expression(bold(paste("-", log["10"], "(p.adjust)"))),
+                                 legend.title = expression(bold(paste("-", log["10"], "(p.adj.)"))),
                                  # nocov end
                                  legend.aes = "fill",
                                  legend.type = legend.type,
@@ -574,6 +574,10 @@ do_GroupwiseDEPlot <- function(sample,
                       paste(rep("B", 1), collapse = "\n"),
                       paste(rep("C", 1), collapse = "\n"),
                       paste(rep("D", length(order.use)), collapse = "\n"),
+                      paste(rep("D", length(order.use)), collapse = "\n"),
+                      paste(rep("D", length(order.use)), collapse = "\n"),
+                      paste(rep("E", 2), collapse = "\n"),
+                      paste(rep("E", 2), collapse = "\n"),
                       paste(rep("E", 2), collapse = "\n")), collapse = "\n")
   } else {
     first <- paste(c(rep("D", length(order.use)), "C", "B", "A"), collapse = "")
