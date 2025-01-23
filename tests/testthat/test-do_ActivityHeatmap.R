@@ -1,11 +1,11 @@
-if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
+if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
   
-  testthat::test_that("do_AffinityHeatmap: CRAN essentials", {
+  testthat::test_that("do_ActivityHeatmap: CRAN essentials", {
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = NA,
                                          nbin = 1,
@@ -16,13 +16,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - default", {
+  testthat::test_that("do_ActivityHeatmap: PASS - default", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -35,7 +35,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                   "B" = rownames(sample)[6:11],
                   "C" = rownames(sample)[12:19])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -44,7 +44,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -54,7 +54,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -64,7 +64,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -74,7 +74,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -89,7 +89,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                   "C" = rownames(sample)[11:15])
     
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -99,7 +99,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          return_object = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -109,13 +109,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - robustness", {
+  testthat::test_that("do_ActivityHeatmap: PASS - robustness", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -124,7 +124,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = FALSE)
     testthat::expect_type(p, "list")
     
-    suppressMessages({testthat::expect_message({p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    suppressMessages({testthat::expect_message({p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                    input_gene_list =  genes,
                                                                    subsample = 100,
                                                                    nbin = 1,
@@ -136,7 +136,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     genes <- list("A" = rownames(sample)[1:3],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[9:15])
-    testthat::expect_error({SCpubr::do_AffinityHeatmap(sample = sample,
+    testthat::expect_error({SCpubr::do_ActivityHeatmap(sample = sample,
                                                             input_gene_list =  genes,
                                                             subsample = 100,
                                                             nbin = 1,
@@ -146,7 +146,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                   "B" = rownames(sample)[16:40],
                   "C" = rownames(sample)[41:80])
     
-    SCpubr::do_AffinityHeatmap(sample = sample,
+    SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
                                     subsample = 100,
                                     nbin = 1,
@@ -156,13 +156,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - symmetry", {
+  testthat::test_that("do_ActivityHeatmap: PASS - symmetry", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -172,7 +172,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          use_viridis = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -182,7 +182,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          use_viridis = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -192,13 +192,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - add enrichment", {
+  testthat::test_that("do_ActivityHeatmap: PASS - add enrichment", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -208,7 +208,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -218,7 +218,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = FALSE)
     testthat::expect_type(p, "list")
     
-    suppressMessages({testthat::expect_message({ p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    suppressMessages({testthat::expect_message({ p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                     input_gene_list =  genes,
                                                                     subsample = 100,
                                                                     nbin = 1,
@@ -227,7 +227,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                                                     use_viridis = TRUE)})})
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -237,7 +237,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flavor = "UCell")
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -246,7 +246,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          use_viridis = FALSE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -256,13 +256,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - flip", {
+  testthat::test_that("do_ActivityHeatmap: PASS - flip", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -271,7 +271,7 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
                                          flip = TRUE)
     testthat::expect_type(p, "list")
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -281,13 +281,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - cutoffs", {
+  testthat::test_that("do_ActivityHeatmap: PASS - cutoffs", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,
@@ -298,13 +298,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - multiple group.by", {
+  testthat::test_that("do_ActivityHeatmap: PASS - multiple group.by", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          group.by = c("seurat_clusters", "orig.ident"),
                                          subsample = 100,
@@ -314,13 +314,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - verbose", {
+  testthat::test_that("do_ActivityHeatmap: PASS - verbose", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
                   "C" = rownames(sample)[11:15])
     
-    testthat::expect_message({p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    testthat::expect_message({p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                    input_gene_list =  genes,
                                                                    subsample = 100,
                                                                    nbin = 1,
@@ -330,13 +330,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - underscores", {
+  testthat::test_that("do_ActivityHeatmap: PASS - underscores", {
     testthat::skip_on_cran()
     genes <- list("_A" = rownames(sample)[1:5],
                   "_B" = rownames(sample)[6:10],
                   "_C" = rownames(sample)[11:15])
     
-    testthat::expect_warning({p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    testthat::expect_warning({p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                    input_gene_list =  genes,
                                                                    subsample = 100,
                                                                    nbin = 1,
@@ -345,13 +345,13 @@ if (base::isFALSE(dep_check[["do_AffinityHeatmap"]])){
     testthat::expect_type(p, "list")
   })
   
-  testthat::test_that("do_AffinityHeatmap: PASS - different length of gene sets", {
+  testthat::test_that("do_ActivityHeatmap: PASS - different length of gene sets", {
     testthat::skip_on_cran()
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:15],
                   "C" = rownames(sample)[15:30])
     
-    p <- SCpubr::do_AffinityHeatmap(sample = sample,
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
                                          subsample = 100,
                                          nbin = 1,

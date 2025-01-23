@@ -24,10 +24,11 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targete
 -   `save_plot()` (development release only) is now called `do_SavePlot()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 -   `package_report()`  is now called `do_PackageReport()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 -   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_AffinityAnalysisPlot()` is now called `do_AffinityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_AffinityAnalysisPlot()` is now called `do_ActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 -   `do_PathwayActivityPlot()` is now called `do_PathwayActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 -   `do_TFActivityPlot()` is now called `do_TFActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 -   `do_GroupwiseDEPlot()` is now called `do_GroupwiseDEHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+-   `do_CopyNumberVariantPlot()` is now called `do_CNVHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
 
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
@@ -36,7 +37,7 @@ The reason behind it is that they, together with do_TermEnrichmentPlot() targete
 
 The reason of these modification is to allow for a much clearer and concise output than before.
 
-## do_AffinityHeatmap()
+## do_ActivityHeatmap()
 -   Changed legend title to "Z-Scored | ulm score", for consistency with other functions in the package.
 
 ## do_AlluvialPlot()
@@ -60,7 +61,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_ColorPalette()
 -  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.
 
-## do_CopyNumberVariantPlot()
+## do_CNVHeatmap()
 -   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
 
 ## do_DimPlot()

@@ -11,55 +11,55 @@
 #' @return A list containing Feature Plots for different chromosome regions and corresponding dot plots by groups..
 #' @export
 #'
-#' @example man/examples/examples_do_CopyNumberVariantPlot.R
-do_CopyNumberVariantPlot <- function(sample,
-                                     infercnv_object,
-                                     chromosome_locations,
-                                     group.by = NULL,
-                                     using_metacells = FALSE,
-                                     metacell_mapping = NULL,
-                                     include_chr_arms = FALSE,
-                                     legend.type = "colorbar",
-                                     legend.position = "bottom",
-                                     legend.length = 20,
-                                     legend.width = 1,
-                                     legend.framewidth = 0.5,
-                                     legend.tickwidth = 0.5,
-                                     legend.framecolor = "grey50",
-                                     legend.tickcolor = "white",
-                                     font.size = 14,
-                                     pt.size = 1,
-                                     font.type = "sans",
-                                     axis.text.x.angle = 45,
-                                     enforce_symmetry = TRUE,
-                                     legend.title = NULL,
-                                     na.value = "grey75",
-                                     viridis.palette = "G",
-                                     viridis.direction = 1,
-                                     verbose = FALSE,
-                                     min.cutoff = NA,
-                                     max.cutoff = NA,
-                                     number.breaks = 5,
-                                     diverging.palette = "RdBu",
-                                     diverging.direction = -1,
-                                     sequential.palette = "YlGnBu",
-                                     sequential.direction = -1,
-                                     use_viridis = TRUE,
-                                     return_object = FALSE,
-                                     grid.color = "white",
-                                     border.color = "black",
-                                     flip = FALSE,
-                                     plot.title.face = "bold",
-                                     plot.subtitle.face = "plain",
-                                     plot.caption.face = "italic",
-                                     axis.title.face = "bold",
-                                     axis.text.face = "plain",
-                                     legend.title.face = "bold",
-                                     legend.text.face = "plain"){
+#' @example man/examples/examples_do_CNVHeatmap.R
+do_CNVHeatmap <- function(sample,
+                          infercnv_object,
+                          chromosome_locations,
+                          group.by = NULL,
+                          using_metacells = FALSE,
+                          metacell_mapping = NULL,
+                          include_chr_arms = FALSE,
+                          legend.type = "colorbar",
+                          legend.position = "bottom",
+                          legend.length = 20,
+                          legend.width = 1,
+                          legend.framewidth = 0.5,
+                          legend.tickwidth = 0.5,
+                          legend.framecolor = "grey50",
+                          legend.tickcolor = "white",
+                          font.size = 14,
+                          pt.size = 1,
+                          font.type = "sans",
+                          axis.text.x.angle = 45,
+                          enforce_symmetry = TRUE,
+                          legend.title = NULL,
+                          na.value = "grey75",
+                          viridis.palette = "G",
+                          viridis.direction = 1,
+                          verbose = FALSE,
+                          min.cutoff = NA,
+                          max.cutoff = NA,
+                          number.breaks = 5,
+                          diverging.palette = "RdBu",
+                          diverging.direction = -1,
+                          sequential.palette = "YlGnBu",
+                          sequential.direction = -1,
+                          use_viridis = TRUE,
+                          return_object = FALSE,
+                          grid.color = "white",
+                          border.color = "black",
+                          flip = FALSE,
+                          plot.title.face = "bold",
+                          plot.subtitle.face = "plain",
+                          plot.caption.face = "italic",
+                          axis.title.face = "bold",
+                          axis.text.face = "plain",
+                          legend.title.face = "bold",
+                          legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests("do_CopyNumberVariantPlot")
+  check_suggests("do_CNVHeatmap")
 
   # Check logical parameters.
   logical_list <- list("using_metacells" = using_metacells,
@@ -165,6 +165,7 @@ do_CopyNumberVariantPlot <- function(sample,
   # This list will contain all the outputs.
   return_list <- list()
   scores.assay <- data.frame(row.names = colnames(sample))
+  skipped_chr <- FALSE
   for (chromosome in chromosome_list){
     # Retrieve chr locations of the chromosome.
     locations <- chr_locations %>%
@@ -428,7 +429,7 @@ do_CopyNumberVariantPlot <- function(sample,
     p <- p +
          ggplot2::xlab(xlab) +
          ggplot2::ylab(ylab) +
-         ggplot2::labs(caption = if(base::isTRUE(skipped_chr)){if((base::isTRUE(include_chr_arms))){"Skipped arms with low number of genes."} else {"Skipped chromosomes with low number of genes."}} else {none}) + 
+         ggplot2::labs(caption = if(base::isTRUE(skipped_chr)){if((base::isTRUE(include_chr_arms))){"Skipped arms with low number of genes."} else {"Skipped chromosomes with low number of genes."}} else {""}) + 
          ggplot2::theme_minimal(base_size = font.size) +
          ggplot2::theme(axis.ticks.x.bottom = axis.parameters$axis.ticks.x.bottom,
                         axis.ticks.x.top = axis.parameters$axis.ticks.x.top,

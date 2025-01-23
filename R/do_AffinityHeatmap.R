@@ -11,9 +11,9 @@
 #' @return A list containing different plots.
 #' @export
 #'
-#' @example /man/examples/examples_do_AffinityHeatmap.R
+#' @example /man/examples/examples_do_ActivityHeatmap.R
 
-do_AffinityHeatmap <- function(sample,
+do_ActivityHeatmap <- function(sample,
                                input_gene_list,
                                subsample = 2500,
                                group.by = NULL,
@@ -62,7 +62,7 @@ do_AffinityHeatmap <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests("do_AffinityHeatmap")
+  check_suggests("do_ActivityHeatmap")
 
   check_Seurat(sample)
 

@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_CopyNumberVariantPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_CNVHeatmap", passive = TRUE)
 
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -20,7 +20,7 @@
     chromosome_locations = SCpubr::human_chr_locations
 
     # Compute for a all chromosomes.
-    p <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    p <- SCpubr::do_CNVHeatmap(sample = sample,
                                           infercnv_object = infercnv_object,
                                           using_metacells = FALSE,
                                           chromosome_locations = chromosome_locations)

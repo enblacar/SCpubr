@@ -1,7 +1,7 @@
-if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
+if (base::isFALSE(dep_check[["do_CNVHeatmap"]])){
 
   testthat::test_that("do_BarPlot: CRAN essentials", {
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations)
@@ -12,14 +12,14 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
 
     testthat::skip_on_cran()
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
                                             flip = TRUE)
     testthat::expect_type(out, "list")
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
@@ -27,14 +27,14 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             group.by = c("seurat_clusters", "orig.ident", "annotation"))
     testthat::expect_type(out, "list")
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
                                             flip = FALSE)
     testthat::expect_type(out, "list")
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
@@ -42,7 +42,7 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             group.by = c("seurat_clusters", "orig.ident", "annotation"))
     testthat::expect_type(out, "list")
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,
@@ -51,7 +51,7 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
     testthat::expect_type(out, "list")
     
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             group.by = c("seurat_clusters", "orig.ident"),
@@ -59,7 +59,7 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             flip = TRUE)
     testthat::expect_type(out, "list")
     
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             group.by = c("seurat_clusters", "orig.ident"),
@@ -69,20 +69,20 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
     testthat::expect_type(out, "list")
   })
 
-  testthat::test_that("do_BarPlot: PASS - normal cells one chromosome", {
+  testthat::test_that("do_CNVHeatmap: PASS - normal cells one chromosome", {
 
     testthat::skip_on_cran()
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations)
     testthat::expect_type(out, "list")
   })
 
-  testthat::test_that("do_BarPlot: PASS - metacells all chromosomes", {
+  testthat::test_that("do_CNVHeatmap: PASS - metacells all chromosomes", {
     testthat::skip_on_cran()
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
@@ -92,10 +92,10 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
 
   
 
-  testthat::test_that("do_BarPlot: PASS - group.by", {
+  testthat::test_that("do_CNVHeatmap: PASS - group.by", {
     testthat::skip_on_cran()
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
@@ -105,10 +105,10 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
   })
 
 
-  testthat::test_that("do_BarPlot: PASS - legend.position", {
+  testthat::test_that("do_CNVHeatmap: PASS - legend.position", {
     testthat::skip_on_cran()
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
@@ -117,7 +117,7 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             chromosome_locations = human_chr_locations)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
@@ -126,10 +126,10 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
     testthat::expect_type(out, "list")
   })
 
-  testthat::test_that("do_BarPlot: PASS - legend.position", {
+  testthat::test_that("do_CNVHeatmap: PASS - legend.position", {
     testthat::skip_on_cran()
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
@@ -137,7 +137,7 @@ if (base::isFALSE(dep_check[["do_CopyNumberVariantPlot"]])){
                                             chromosome_locations = human_chr_locations)
     testthat::expect_type(out, "list")
 
-    out <- SCpubr::do_CopyNumberVariantPlot(sample = sample,
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object_metacells,
                                             using_metacells = TRUE,
                                             metacell_mapping = metacell_mapping,
