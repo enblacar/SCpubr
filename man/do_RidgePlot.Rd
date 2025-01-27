@@ -16,7 +16,7 @@ do_RidgePlot(
   legend.ncol = NULL,
   legend.nrow = NULL,
   legend.byrow = FALSE,
-  legend.position = NULL,
+  legend.position = "bottom",
   legend.width = 1,
   legend.length = 20,
   legend.framewidth = 0.5,

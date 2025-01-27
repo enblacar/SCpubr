@@ -9,7 +9,7 @@ do_VolcanoPlot(
   de_genes,
   pval_cutoff = 0.05,
   FC_cutoff = 2,
-  pt.size = 2,
+  pt.size = 1,
   border.size = 1.5,
   border.color = "black",
   font.size = 14,
@@ -26,7 +26,7 @@ do_VolcanoPlot(
   tag_size = 6,
   n_genes = 5,
   use_labels = FALSE,
-  colors.use = "steelblue",
+  colors.use = NULL,
   plot.title.face = "bold",
   plot.subtitle.face = "plain",
   plot.caption.face = "italic",
@@ -80,7 +80,7 @@ do_VolcanoPlot(
 
 \item{use_labels}{\strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.}
 
-\item{colors.use}{\strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.}
+\item{colors.use}{\strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with. If NULL, default colors are used.}
 
 \item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
 \itemize{

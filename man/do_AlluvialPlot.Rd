@@ -39,7 +39,7 @@ do_AlluvialPlot(
   grid.color = "grey75",
   grid.type = "dashed",
   na.value = "white",
-  legend.position = "right",
+  legend.position = "bottom",
   legend.title = NULL,
   plot.title.face = "bold",
   plot.subtitle.face = "plain",

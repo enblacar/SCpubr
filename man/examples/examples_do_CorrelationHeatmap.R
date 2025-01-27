@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_CorrelationPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_CorrelationHeatmap", passive = TRUE)
 
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -9,7 +9,7 @@
     sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
 
     # Default values.
-    p <- SCpubr::do_CorrelationPlot(sample = sample)
+    p <- SCpubr::do_CorrelationHeatmap(sample = sample)
     p
 
   } else if (base::isFALSE(value)){

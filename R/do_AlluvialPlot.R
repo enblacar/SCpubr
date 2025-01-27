@@ -65,7 +65,7 @@ do_AlluvialPlot <- function(sample,
                             grid.color = "grey75",
                             grid.type = "dashed",
                             na.value = "white",
-                            legend.position = "right",
+                            legend.position = "bottom",
                             legend.title = NULL,
                             plot.title.face = "bold",
                             plot.subtitle.face = "plain",
@@ -241,7 +241,10 @@ do_AlluvialPlot <- function(sample,
   } else {
     check_colors(colors.use)
   }
-
+  
+  if (is.null(legend.title)){
+    legend.title = last_group
+  }
 
   p <- prepare_ggplot_alluvial_plot(data = data,
                                     vars.use = vars.use)

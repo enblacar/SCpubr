@@ -1,10 +1,9 @@
-#' Generate a Geyser plot.
+#' Generate a Strip plot.
 #'
-#' A Geyser plot is a custom plot in which we plot continuous values on the Y axis grouped by a categorical value in the X. This is plotted as a dot plot, jittered so that the dots span
+#' A strip plot is a scatter plot in which we plot continuous values on the Y axis grouped by a categorical value in the X. This is plotted as a dot plot, jittered so that the dots span
 #' all the way to the other groups. On top of this, the mean and .66 and .95 of the data is plotted, depicting the overall distribution of the dots. The cells can, then, be colored by
 #' a continuous variable (same as Y axis or different) or a categorical one (same as X axis or different).
 #'
-#' Special thanks to Christina Blume for coming up with the name of the plot.
 #'
 #' @inheritParams doc_function
 #' @param scale_type \strong{\code{\link[base]{character}}} | Type of color scale to use.  One of:
@@ -18,9 +17,9 @@
 #'
 #' @return Either a plot of a list of plots, depending on the number of features provided.
 #' @export
-#' @example /man/examples/examples_do_GeyserPlot.R
+#' @example /man/examples/examples_do_StripPlot.R
 
-do_GeyserPlot <- function(sample,
+do_StripPlot <- function(sample,
                           features,
                           assay = NULL,
                           slot = "data",
@@ -78,7 +77,7 @@ do_GeyserPlot <- function(sample,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
-  check_suggests(function_name = "do_GeyserPlot")
+  check_suggests(function_name = "do_StripPlot")
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
 

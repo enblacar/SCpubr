@@ -1,6 +1,6 @@
 \donttest{
   # Check Suggests.
-  value <- SCpubr:::check_suggests(function_name = "do_MetadataPlot", passive = TRUE)
+  value <- SCpubr:::check_suggests(function_name = "do_MetadataHeatmap", passive = TRUE)
   
   if (isTRUE(value)){
     # Consult the full documentation in https://enblacar.github.io/SCpubr-book/
@@ -10,7 +10,7 @@
                      "A" = as.character(seq(1, 5)),
                      "B" = rev(as.character(seq(1, 5))))
     
-    p <- SCpubr::do_MetadataPlot(from_df = TRUE,
+    p <- SCpubr::do_MetadataHeatmap(from_df = TRUE,
                                  df = df)
     
     p

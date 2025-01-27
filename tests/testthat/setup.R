@@ -67,7 +67,7 @@ if (base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
 }
 
 #if (base::isFALSE(dep_check[["do_DimPlot"]]) &
-#   base::isFALSE(dep_check[["do_CorrelationPlot"]]) &
+#   base::isFALSE(dep_check[["do_CorrelationHeatmap"]]) &
 #    base::isFALSE(dep_check[["do_ChordDiagramPlot"]]) &
 #    isTRUE(requireNamespace(pkg, quietly = TRUE)) &
 #    base::isFALSE(dep_check[["do_SavePlot"]])){

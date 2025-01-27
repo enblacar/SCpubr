@@ -3,7 +3,7 @@
 ## Reason for the mejor version change
 -   Due to the preparation for the publication of SCpubr's manuscript, a major effort has been made to further standardize and wrap up the package nicely.
 -   Some functions have been removed, and many have been renamed, for consistency.
--   Development versions have been transferred to the normal release, with the exception of `SCpubr::do_SavePlot()`.
+-   Development version of functions have been transferred to the normal release, with the exception of `SCpubr::do_SavePlot()`.
 
 ## General
 -   Enhanced startup message for clarity. Not it guides the user to run `SCpubr::package_report(extended = TRUE)` to get an overview of the missing dependencies.
@@ -20,15 +20,20 @@
 The reason behind it is that they, together with do_TermEnrichmentPlot() targeted the same analysis and, therefore, were redundant.
 
 ## Renamed functions
--   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentHeatmap()`. As it now accepts any dimensional reduction and not only diffusion maps.
--   `save_plot()` (development release only) is now called `do_SavePlot()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `package_report()`  is now called `do_PackageReport()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_AffinityAnalysisPlot()` is now called `do_ActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_PathwayActivityPlot()` is now called `do_PathwayActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_TFActivityPlot()` is now called `do_TFActivityHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_GroupwiseDEPlot()` is now called `do_GroupwiseDEHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
--   `do_CopyNumberVariantPlot()` is now called `do_CNVHeatmap()`. This is a preparation for the version `3.0.0` which will launch together with the publication.
+In an effort to standardize function names, the following changes have been implemented: 
+
+-   `do_DiffusionMapPlot()` is now called `do_RankedEnrichmentHeatmap()`. 
+-   `save_plot()` (development release only) is now called `do_SavePlot()`. 
+-   `package_report()`  is now called `do_PackageReport()`. 
+-   `do_LoadingsPlot()` is now called `do_LoadingsHeatmap()`. 
+-   `do_AffinityAnalysisPlot()` is now called `do_ActivityHeatmap()`. 
+-   `do_PathwayActivityPlot()` is now called `do_PathwayActivityHeatmap()`. 
+-   `do_TFActivityPlot()` is now called `do_TFActivityHeatmap()`.
+-   `do_GroupwiseDEPlot()` is now called `do_GroupwiseDEHeatmap()`. 
+-   `do_CopyNumberVariantPlot()` is now called `do_CNVHeatmap()`. 
+-   `do_CorrelationPlot()` is now called `do_CorrelationHeatmap()`. 
+-   `do_MetadataPlot()` is now called `do_MetadataHeatmap()`. 
+-   `do_GeyserPlot()` is now called `do_StripPlot()`. 
 
 ## Heavily modified functions.
 -   `do_TermEnrichmentPlot()`: Recoded the whole function. Now accepts the result of using `clusterProfiler::enrichGO()`, `clusterProfiler::enrichKEGG()`, etc. The output is a dot plot with the terms on the Y axis, the Gene Ratio in the X, colored by the adjusted p-value and size mapped to the Gene Count.
@@ -43,6 +48,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
 -   Modified the legend items to have a black border.
+-   Changed default legend position to bottom.
 
 ## do_BoxPlot()
 -   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behavior.
@@ -103,11 +109,15 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
 
+## do_MetadataHeatmap()
+-   Modified the legend items to have a black border.
+
 ## do_PathwayActivityHeatmap
 -   Changed legend title to "Z-Scored | <statistic> score", for consistency with other functions in the package.
 
 ## do_RidgePlot()
 -   Removed `size = 1.25` aesthetic from the call to `ggridges::geom_ridge...`.
+-   Set default legend position to bottom.
 
 ## do_SavePlot()
 -   Added `limitsize` parameter, that allows for very big ggplot2-based plots to be saved with big dimensions.
@@ -122,6 +132,9 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_VolcanoPlot()
 -   Fixed an issue in which tags would be duplicated when using `use_labels = TRUE` in combination with `order_tabs_by = "both"`.
+-   Renewed aesthetics.
+-   Parameter `colors.use` now defaults to `NULL`, allowing a default color scheme to take place. Setting this parameter to a color will modify the color scheme appropriately.
+-   Simplified axis titles. 
 
 # SCpbur v2.0.2
 

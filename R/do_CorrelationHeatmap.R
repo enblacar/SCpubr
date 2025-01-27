@@ -7,8 +7,8 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_CorrelationPlot.R
-do_CorrelationPlot <- function(sample = NULL,
+#' @example /man/examples/examples_do_CorrelationHeatmap.R
+do_CorrelationHeatmap <- function(sample = NULL,
                                input_gene_list = NULL,
                                cluster = TRUE,
                                remove.diagonal = TRUE,
@@ -53,7 +53,9 @@ do_CorrelationPlot <- function(sample = NULL,
                                legend.text.face = "plain"){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-
+  
+  check_suggests(function_name = "do_CorrelationHeatmap")
+  
   `%>%` <- magrittr::`%>%`
 
   # Check logical parameters.

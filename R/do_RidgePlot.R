@@ -26,7 +26,7 @@ do_RidgePlot <- function(sample,
                          legend.ncol = NULL,
                          legend.nrow = NULL,
                          legend.byrow = FALSE,
-                         legend.position = NULL,
+                         legend.position = "bottom",
                          legend.width = 1,
                          legend.length = 20,
                          legend.framewidth = 0.5,
@@ -169,6 +169,12 @@ do_RidgePlot <- function(sample,
                         is.heatmap = FALSE)
   sample <- out[["sample"]]
   group.by <- out[["group.by"]]
+  
+  
+  if (is.null(legend.title)){
+    legend.title = group.by
+  }
+  
   
   data <- get_data_column_in_context(sample = sample,
                                      feature = feature,

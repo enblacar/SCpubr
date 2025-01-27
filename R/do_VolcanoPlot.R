@@ -13,7 +13,7 @@
 #' @param tag_size \strong{\code{\link[base]{numeric}}} | Size of the text/label for the tags.
 #' @param n_genes \strong{\code{\link[base]{numeric}}} | Number of top genes to plot.
 #' @param use_labels \strong{\code{\link[base]{logical}}} | Whether to use labels instead of text for the tags.
-#' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with.
+#' @param colors.use \strong{\code{\link[base]{character}}} | Color to generate a tetradic color scale with. If NULL, default colors are used.
 #'
 #' @return A volcano plot as a ggplot2 object.
 #' @export
@@ -23,7 +23,7 @@ do_VolcanoPlot <- function(sample,
                            de_genes,
                            pval_cutoff = 0.05,
                            FC_cutoff = 2,
-                           pt.size = 2,
+                           pt.size = 1,
                            border.size = 1.5,
                            border.color = "black",
                            font.size = 14,
@@ -40,7 +40,7 @@ do_VolcanoPlot <- function(sample,
                            tag_size = 6,
                            n_genes = 5,
                            use_labels = FALSE,
-                           colors.use = "steelblue",
+                           colors.use = NULL,
                            plot.title.face = "bold",
                            plot.subtitle.face = "plain",
                            plot.caption.face = "italic",
@@ -110,8 +110,17 @@ do_VolcanoPlot <- function(sample,
                           msg = "Please use either both, positive or negative in add_tag_side")
 
   `%>%` <- magrittr::`%>%`
-  colors <- do_ColorPalette(colors.use, tetradic = TRUE)
-  names(colors) <- c("A", "C", "B", "D")
+  
+  if (!is.null(colors.use)){
+    colors <- do_ColorPalette(colors.use, tetradic = TRUE)
+    names(colors) <- c("A", "C", "B", "D")
+  } else {
+    colors <- c("A" = "#385f71",
+                "B" = "#d7b377",
+                "C" = "#f5f0f6",
+                "D" = "grey75")
+  }
+  
 
   if (!("gene" %in% colnames(de_genes))){
     data <- de_genes %>%
@@ -156,7 +165,7 @@ do_VolcanoPlot <- function(sample,
                                                      title.hjust = 0.5)) +
        ggplot2::xlim(x_lims) +
        ggplot2::xlab(expression(bold(paste("Avg. ", log["2"], "(FC)")))) +
-       ggplot2::ylab(expression(bold(paste("-", log["10"], "(p-value adjusted)"))))
+       ggplot2::ylab(expression(bold(paste("-", log["10"], "(p.adj.)"))))
 
   if (isTRUE(plot_lines)){
     p <- p +
@@ -180,8 +189,18 @@ do_VolcanoPlot <- function(sample,
                     dplyr::mutate("abs_avg_log2FC" = abs(.data$avg_log2FC)) %>% 
                     dplyr::arrange(dplyr::desc(.data$log_p),
                                    dplyr::desc(.data$abs_avg_log2FC)) %>%
-                    as.data.frame() %>%
-                    utils::head(n_genes * 2)
+                    as.data.frame()
+      
+      data.up <- data.label %>% 
+                 dplyr::filter(.data$avg_log2FC > 0) %>% 
+                 utils::head(n_genes)
+      
+      data.down <- data.label %>% 
+                   dplyr::filter(.data$avg_log2FC < 0) %>% 
+                   utils::head(n_genes)
+      
+      data.label <- dplyr::bind_rows(data.up, data.down)
+                    
     } else if (order_tags_by == "pvalue"){
       data.up <- data %>%
                  dplyr::filter(.data$avg_log2FC > 0) %>%

@@ -414,7 +414,7 @@ do_DotPlot <- function(sample,
     
     # Define legend title
     if (is.null(legend.title)){
-      legend.title <- ifelse(base::isTRUE(zscore.data), "Z-Scores | Avg. Exp.", "Avg. Exp.")
+      legend.title <- ifelse(base::isTRUE(zscore.data), "Z-Scored | Avg. Exp.", "Avg. Exp.")
     }
     
     p <- data %>%

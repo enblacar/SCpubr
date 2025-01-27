@@ -17,8 +17,8 @@
 #' @return A ggplot2 object.
 #' @export
 #'
-#' @example /man/examples/examples_do_MetadataPlot.R
-do_MetadataPlot <- function(sample = NULL,
+#' @example /man/examples/examples_do_MetadataHeatmap.R
+do_MetadataHeatmap <- function(sample = NULL,
                             group.by = NULL,
                             metadata = NULL,
                             from_df = FALSE,
@@ -51,7 +51,7 @@ do_MetadataPlot <- function(sample = NULL,
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
-  check_suggests(function_name = "do_MetadataPlot")
+  check_suggests(function_name = "do_MetadataHeatmap")
   
   # Check logical parameters.
   logical_list <- list("flip" = flip,
@@ -220,6 +220,8 @@ do_MetadataPlot <- function(sample = NULL,
          ggplot2::guides(fill = ggplot2::guide_legend(legend.position = legend.position,
                                                       title.position = "top",
                                                       title.hjust = ifelse(legend.position %in% c("top", "bottom"), 0.5, 0),
+                                                      override.aes = list(color = "black",
+                                                                          shape = 22),
                                                       ncol = legend.ncol,
                                                       nrow = legend.nrow,
                                                       byrow = legend.byrow))
@@ -306,6 +308,7 @@ do_MetadataPlot <- function(sample = NULL,
                         plot.background = ggplot2::element_rect(fill = "white", color = "white"),
                         panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                         legend.background = ggplot2::element_rect(fill = "white", color = "white"),
+                        legend.spacing = ggplot2::unit(0, "cm"),
                         panel.spacing.x = ggplot2::unit(0, "cm"))
     
     if (!is.null(legend.symbol.size)){
@@ -326,6 +329,7 @@ do_MetadataPlot <- function(sample = NULL,
                              guides = "collect")
   p <- p +
        patchwork::plot_annotation(theme = ggplot2::theme(legend.position = legend.position,
+                                                         legend.spacing = ggplot2::unit(0, "cm"),
                                                          plot.title = ggplot2::element_text(family = font.type,
                                                                                             color = "black",
                                                                                             face = plot.title.face,
