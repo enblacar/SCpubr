@@ -25,6 +25,7 @@ do_RidgePlot(
   legend.tickcolor = "white",
   legend.type = "colorbar",
   colors.use = NULL,
+  colorblind = FALSE,
   font.size = 14,
   font.type = "sans",
   axis.text.x.angle = 45,
@@ -105,6 +106,8 @@ do_RidgePlot(
 }}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Named vector of colors to use. Has to match the unique values of group.by or color.by (if used) when scale_type is set to categorical.}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 

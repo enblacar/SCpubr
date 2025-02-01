@@ -289,6 +289,8 @@
 \item \emph{\code{bold}}: For text in bold.
 \item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 }
 \value{
 Nothing. This is a mock function.

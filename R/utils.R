@@ -174,6 +174,7 @@
 #' @param interpolate \strong{\code{\link[base]{logical}}} | Smoothes the output heatmap, saving space on disk when saving the image. However, the image is not as crisp.
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.
 #' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
+#' @param colorblind \strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -417,6 +418,7 @@ return_dependencies <- function(){
                    "do_CellularStatesPlot" = c("pbapply", "ggExtra", "ggplotify", "scattermore"),
                    "do_ChordDiagramPlot" = "circlize",
                    "do_ColorPalette" = NULL,
+                   "do_ColorBlindCheck" = c("colorspace"),
                    "do_CNVHeatmap" = "ggdist",
                    "do_CorrelationHeatmap" = NULL,
                    "do_DimPlot" = c("colorspace", "ggplotify", "scattermore"),
@@ -466,7 +468,8 @@ check_suggests <- function(function_name, passive = FALSE){
   non_seurat_functions <- c("do_SavePlot",
                             "do_VolcanoPlot",
                             "do_LigandReceptorPlot",
-                            "do_ColorPalette")
+                            "do_ColorPalette",
+                            "do_ColorBlindPalette")
 
   if (function_name %in% non_seurat_functions){
     pkgs <- pkgs[!(pkgs %in% c("Seurat", "SeuratObject"))]
@@ -723,6 +726,12 @@ do_PackageReport <- function(startup = FALSE,
     tip_message <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                           crayon_body(" To remove the white and black end from continuous palettes, use: "),
                           cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
+    
+    tip_message2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                          crayon_body(" Colorblind-safe continuous/divergent color palettes are used by default.\n"),
+                          cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                          crayon_body(" For categorical variables, you can use: "),
+                          cli::style_italic(crayon_key('colorblind = TRUE')))
 
     disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)),
                               crayon_body(" To suppress this startup message, use: "),
@@ -756,6 +765,7 @@ do_PackageReport <- function(startup = FALSE,
                            tip_rule, "\n", "\n",
                            ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
+                           tip_message2, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       } else {
@@ -769,6 +779,7 @@ do_PackageReport <- function(startup = FALSE,
                            tip_rule, "\n", "\n",
                            ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
+                           tip_message2, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       }
@@ -789,6 +800,7 @@ do_PackageReport <- function(startup = FALSE,
                            tip_rule, "\n", "\n",
                            ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
+                           tip_message2, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       } else {
@@ -802,6 +814,7 @@ do_PackageReport <- function(startup = FALSE,
                            tip_rule, "\n", "\n",
                            ins_message, "\n", "\n", 
                            tip_message, "\n", "\n",
+                           tip_message2, "\n", "\n",
                            disable_message, "\n", "\n",
                            end_rule)
       }
@@ -979,20 +992,71 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
 #' \donttest{
 #' TBD
 #' }
-generate_color_scale <- function(names_use){
-  # Generate a vector of colors equal to the number of identities in the sample.
-  colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
-  colors <- grDevices::col2rgb(colors)
-  colors <- grDevices::rgb2hsv(colors)
-  colors["v", ] <- colors["v", ] - 0.1
-  colors["s", ] <- colors["s", ] + 0.2
-  colors["s", ][colors["s", ] > 1] <- 1
-  colors <- grDevices::hsv(h = colors["h", ],
-                           s = colors["s", ],
-                           v = colors["v", ],
-                           alpha = 1)
-  names(colors) <- names_use
-  return(colors)
+generate_color_scale <- function(names_use, colorblind = FALSE){
+  if (base::isFALSE(colorblind)){
+    # Generate a vector of colors equal to the number of identities in the sample.
+    colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
+    colors <- grDevices::col2rgb(colors)
+    colors <- grDevices::rgb2hsv(colors)
+    colors["v", ] <- colors["v", ] - 0.1
+    colors["s", ] <- colors["s", ] + 0.2
+    colors["s", ][colors["s", ] > 1] <- 1
+    colors <- grDevices::hsv(h = colors["h", ],
+                             s = colors["s", ],
+                             v = colors["v", ],
+                             alpha = 1)
+    names(colors) <- names_use
+    return(colors)
+  } else {
+    colors.use <- get_Colorblind_colors()
+    
+    wong.colors <- colors.use[["Wong"]]
+    tol.bright.colors <- colors.use[["Tol_Bright"]]
+    tol.muted.colors <- colors.use[["Tol_Muted"]]
+    okabe.colors <- colors.use[["Okabe"]]
+    krz.8 <- colros.use[["Krz8"]]
+    krz.12 <- colros.use[["Krz12"]]
+    krz.15 <- colros.use[["Krz15"]]
+    krz.23 <- colros.use[["Krz24"]]
+    collection <- colros.use[["Collection"]]
+    
+    assertthat::assert_that(length(names_use) < length(collection),
+                            msg = paste0(add_cross(), crayon_body("Please, select another variable that has less than "),
+                                         crayon_key(as.character(length(collection))),
+                                         crayon_body(" classes when using "),
+                                         crayon_key("colorblind = TRUE"),
+                                         crayon_body(".")))
+    
+    # N = 7
+    if (length(names_use) == length(tol.bright.colors)){
+      colors <- tol.bright.colors
+    # N = 8
+    } else if (length(names_use) == length(wong.colors)){
+      colors <- wong.colors
+    # N = 9
+    } else if (length(names_use) == length(tol.muted.colors)){
+      colors <- tol.muted.colors
+    # N = 12
+    } else if (length(names_use) == length(krz.12)){
+      colors <- krz.12
+      # N = 15
+    } else if (length(names_use) == length(krz.15)){
+      colors <- krz.15
+      # N = 24
+    } else if (length(names_use) == length(krz.24)){
+      colors <- krz.24
+    # Less than 7
+    } else if (length(names_use) < 7){
+      colors <- wong.colors[1:length(names_use)]
+    # Remaining cases
+    } else {
+      length.use <- length(names_use)
+      colors <- collection[1:length.use]
+    }
+    names(colors) <- names_use
+    
+    return(colors)
+  }
 }
 
 
@@ -3123,6 +3187,146 @@ get_SCpubr_colors <- function(){
               "#bfd7b5")
   return(colors)
 }
+
+
+#' Generate a list of colorblind-friendly colors that will be used for colorblind = TRUE plots.
+#'
+#' @return None
+#' @noRd
+#' @examples
+#' \donttest{
+#' TBD
+#' }
+get_Colorblind_colors <- function(){
+  
+  # Colorblind palettes from literature:
+  # Wong: https://www.nature.com/articles/nmeth.1618
+  wong.colors <- c("#000000",
+                   "#E69F00",
+                   "#56B4E9",
+                   "#009E73",
+                   "#F0E442",
+                   "#0072B2",
+                   "#D55E00",
+                   "#CC79A7")
+  
+  # Tol: https://personal.sron.nl/~pault/
+  tol.muted.colors <- c("#dddddd",
+                        "#332288",
+                        "#117733",
+                        "#44AA99",
+                        "#88CCEE",
+                        "#DDCC77",
+                        "#CC6677",
+                        "#AA4499",
+                        "#882255")
+  
+  tol.bright.colors <- c("#bbbbbb",
+                         "#4477aa",
+                         "#218833",
+                         "#66ccee",
+                         "#cbbb45",
+                         "#ee6577",
+                         "#aa3377")
+  
+  
+  okabe.colors <- c("#000000",
+                    "#009e73",
+                    "#0071b2",
+                    "#55b4e9",
+                    "#efe441",
+                    "#e69f00",
+                    "#d55d00",
+                    "#cb79a7")
+  
+  
+  # Krzywinski: https://mk.bcgsc.ca/colorblind/palettes.mhtml#projecthome
+  krz.8 <- c("#000000",
+             "#2271B2",
+             "#3DB7E9",
+             "#F748A5",
+             "#359B73",
+             "#d55e00",
+             "#e69f00",
+             "#f0e442")
+  
+  krz.12 <- c("#9F0162",
+              "#009F81",
+              "#FF5AAF",
+              "#00FCCF",
+              "#8400CD",
+              "#008DF9",
+              "#00C2F9",
+              "#FFB2FD",
+              "#A40122",
+              "#E20134",
+              "#FF6E3A",
+              "#FFC33B")
+  
+  krz.15 <- c("#68023F",
+              "#008169",
+              "#EF0096",
+              "#00DCB5",
+              "#FFCFE2",
+              "#003C86",
+              "#9400E6",
+              "#009FFA",
+              "#FF71FD",
+              "#7CFFFA",
+              "#6A0213",
+              "#008607",
+              "#F60239",
+              "#00E307",
+              "#FFDC3D")
+  
+  krz.24 <- c("#003D30",
+              "#005745",
+              "#00735C",
+              "#009175",
+              "#00AF8E",
+              "#00CBA7",
+              "#00EBC1",
+              "#86FFDE",
+              "#00306F",
+              "#00489E",
+              "#005FCC",
+              "#0079FA",
+              "#009FFA",
+              "#00C2F9",
+              "#00E5F8",
+              "#7CFFFA",
+              "#004002",
+              "#005A01",
+              "#007702",
+              "#009503",
+              "#00B408",
+              "#00D302",
+              "#00F407",
+              "#AFFF2A")
+  
+  collection <- c(wong.colors,
+                  tol.muted.colors,
+                  tol.bright.colors,
+                  okabe.colors,
+                  krz.8,
+                  krz.12,
+                  krz.15,
+                  krz.24)
+  collection <- collection[!duplicated(collection)]
+  
+  out.colors <- list("Wong" = wong.colors,
+                     "Tol_Muted" = tol.muted.colors,
+                     "Tol_Bright" = tol.bright.colors,
+                     "Okabe" = okabe.colors,
+                     "Krz8" = krz.8,
+                     "Krz12" = krz.12,
+                     "Krz15" = krz.15,
+                     "Krz24" = krz.24,
+                     "Collection" = collection)
+  return(out.colors)
+}
+
+
 
 
 #' Check the group.by parameter

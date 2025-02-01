@@ -11,7 +11,8 @@ do_MetadataHeatmap(
   from_df = FALSE,
   df = NULL,
   colors.use = NULL,
-  cluster = TRUE,
+  colorblind = FALSE,
+  cluster = FALSE,
   flip = TRUE,
   heatmap.gap = 1,
   axis.text.x.angle = 45,
@@ -49,6 +50,8 @@ do_MetadataHeatmap(
 \item{df}{\strong{\code{\link[base]{data.frame}}} | Data frame containing the metadata to plot. Rows contain the unique values common to all columns (metadata variables). The columns must be named.}
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the pacakge but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column!}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to perform clustering of rows and columns.}
 

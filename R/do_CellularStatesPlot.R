@@ -34,6 +34,7 @@ do_CellularStatesPlot <- function(sample,
                                   y2 = NULL,
                                   group.by = NULL,
                                   colors.use = NULL,
+                                  colorblind = FALSE,
                                   legend.position = "bottom",
                                   legend.icon.size = 4,
                                   legend.ncol = NULL,
@@ -97,7 +98,8 @@ do_CellularStatesPlot <- function(sample,
                          "raster" = raster,
                          "plot_features" = plot_features,
                          "plot_enrichment_scores" = plot_enrichment_scores,
-                         "use_viridis" = use_viridis)
+                         "use_viridis" = use_viridis,
+                         "colorblind" = colorblind)
     check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
     # Check numeric parameters.
     numeric_list <- list("font.size" = font.size,
@@ -149,11 +151,11 @@ do_CellularStatesPlot <- function(sample,
     if (is.null(colors.use)){
       colors.use <- {
         if (is.null(group.by)){
-          generate_color_scale(levels(sample))
+          generate_color_scale(levels(sample), colorblind = colorblind)
         } else if (!(is.null(group.by))){
           data.use <- sample[[]][, group.by, drop = FALSE]
           names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
-          generate_color_scale(names.use)
+          generate_color_scale(names.use, colorblind = colorblind)
         }
       }
     } else {

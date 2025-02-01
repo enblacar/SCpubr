@@ -24,7 +24,8 @@ do_MetadataHeatmap <- function(sample = NULL,
                             from_df = FALSE,
                             df = NULL,
                             colors.use = NULL,
-                            cluster = TRUE,
+                            colorblind = FALSE,
+                            cluster = FALSE,
                             flip = TRUE,
                             heatmap.gap = 1,
                             axis.text.x.angle = 45,
@@ -57,7 +58,8 @@ do_MetadataHeatmap <- function(sample = NULL,
   logical_list <- list("flip" = flip,
                        "from_df" = from_df,
                        "legend.byrow" = legend.byrow,
-                       "cluster" = cluster)
+                       "cluster" = cluster,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -178,7 +180,8 @@ do_MetadataHeatmap <- function(sample = NULL,
   list.heatmaps <- list()
   
   # Get a list of predefined colors to then compute color wheels on for each metadata variable not covered.
-  colors.pool <- get_SCpubr_colors()
+  colors.pool <- if (base::isFALSE(colorblind)){get_SCpubr_colors()} else {get_Colorblind_colors()[["Collection"]]}
+  
   counter <- 0
   for (name in metadata){
     # Colors
@@ -187,8 +190,13 @@ do_MetadataHeatmap <- function(sample = NULL,
       counter <- counter + 1
       values <- unique(data.plot %>% dplyr::pull(name))
       
-      colors.use.name <- stats::setNames(do_ColorPalette(n = length(values), colors.use = colors.pool[counter]),
-                                          values)
+      if (base::isFALSE(colorblind)){
+        colors.use.name <- stats::setNames(do_ColorPalette(n = length(values), colors.use = colors.pool[counter]),
+                                           values)
+      } else {
+        colors.use.name <- stats::setNames(colors.pool[1:length(values)], values)
+      }
+      
     }
     
     

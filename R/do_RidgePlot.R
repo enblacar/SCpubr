@@ -35,6 +35,7 @@ do_RidgePlot <- function(sample,
                          legend.tickcolor = "white",
                          legend.type = "colorbar",
                          colors.use = NULL,
+                         colorblind = FALSE,
                          font.size = 14,
                          font.type = "sans",
                          axis.text.x.angle = 45,
@@ -84,7 +85,8 @@ do_RidgePlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "flip" = flip,
                        "legend.nrow" = legend.nrow,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("legend.width" = legend.width,
@@ -295,7 +297,7 @@ do_RidgePlot <- function(sample,
                                                 y = .data$group.by,
                                                 fill = .data$group.by)) +
          ggridges::geom_density_ridges(color = "black") +
-         ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}})} else {colors.use},
+         ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}}, colorblind = colorblind)} else {colors.use},
                                     name = legend.title) +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                       title.position = "top",

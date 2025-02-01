@@ -18,6 +18,7 @@ do_BeeSwarmPlot <- function(sample,
                             continuous_feature = FALSE,
                             order = FALSE,
                             colors.use = NULL,
+                            colorblind = FALSE,
                             legend.title = NULL,
                             legend.type = "colorbar",
                             legend.position = "bottom",
@@ -91,7 +92,8 @@ do_BeeSwarmPlot <- function(sample,
                        "raster" = raster,
                        "plot_cell_borders" = plot_cell_borders,
                        "use_viridis" = use_viridis,
-                       "order" = order)
+                       "order" = order,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -312,7 +314,7 @@ do_BeeSwarmPlot <- function(sample,
                                   legend.tickwidth = legend.tickwidth)
   } else if (continuous_feature == FALSE) {
     if (is.null(colors.use)){
-      colors.use <- generate_color_scale(levels(sample))
+      colors.use <- generate_color_scale(levels(sample), colorblind = colorblind)
     } else {
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
     }

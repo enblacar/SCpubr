@@ -12,6 +12,7 @@ do_WafflePlot <- function(sample,
                           waffle.size = 2,
                           flip = TRUE,
                           colors.use = NULL,
+                          colorblind = FALSE,
                           na.value = "grey75",
                           font.size = 14,
                           font.type = "sans",
@@ -42,7 +43,8 @@ do_WafflePlot <- function(sample,
   
   # Check logical parameters
   logical_list <- list("flip" = flip,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("waffle.size" = waffle.size,
@@ -91,7 +93,7 @@ do_WafflePlot <- function(sample,
   check_colors(na.value, parameter_name = "na.value")
   
   if (is.null(colors.use)){
-    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
+    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}, colorblind = colorblind)
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)

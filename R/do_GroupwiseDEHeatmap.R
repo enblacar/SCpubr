@@ -26,6 +26,7 @@ do_GroupwiseDEHeatmap <- function(sample,
                                ylab = NULL,
                                use_viridis = FALSE,
                                colors.use = NULL,
+                               colorblind = FALSE,
                                viridis.direction = -1,
                                viridis.palette = "G",
                                sequential.direction = 1,
@@ -69,7 +70,8 @@ do_GroupwiseDEHeatmap <- function(sample,
   logical_list <- list("use_viridis" = use_viridis,
                        "enforce_symmetry" = enforce_symmetry,
                        "flip" = flip,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("number.breaks" = number.breaks,
@@ -189,7 +191,7 @@ do_GroupwiseDEHeatmap <- function(sample,
   }
   
   if (is.null(colors.use)){
-    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
+    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}, colorblind = colorblind)
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)

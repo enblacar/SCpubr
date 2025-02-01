@@ -22,6 +22,7 @@ do_SCEnrichmentHeatmap <- function(sample,
                                    features.order = NULL,
                                    metadata = NULL,
                                    metadata.colors = NULL,
+                                   colorblind = FALSE,
                                    subsample = NA,
                                    cluster = TRUE,
                                    flavor = "Seurat",
@@ -91,7 +92,8 @@ do_SCEnrichmentHeatmap <- function(sample,
                        "cluster" = cluster,
                        "storeRanks" = storeRanks,
                        "return_object" = return_object,
-                       "interpolate" = interpolate) 
+                       "interpolate" = interpolate,
+                       "colorblind" = colorblind) 
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -426,7 +428,7 @@ do_SCEnrichmentHeatmap <- function(sample,
         colors.use <- metadata.colors[[name]]
       } else {
         names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
-        colors.use <- generate_color_scale(names_use = names.use)
+        colors.use <- generate_color_scale(names_use = names.use, colorblind = colorblind)
       }
       p <- plot_data %>%
            ggplot2::ggplot(mapping = ggplot2::aes(x = .data$cell,

@@ -18,6 +18,7 @@ do_RankedEnrichmentHeatmap <- function(sample,
                                     reduction = NULL,
                                     group.by = NULL,
                                     colors.use = NULL,
+                                    colorblind = FALSE,
                                     raster = FALSE,
                                     interpolate = FALSE,
                                     nbin = 24,
@@ -75,7 +76,8 @@ do_RankedEnrichmentHeatmap <- function(sample,
                        "use_viridis" = use_viridis,
                        "verbose" = verbose,
                        "interpolate" = interpolate,
-                       "raster" = raster)
+                       "raster" = raster,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   
   # Check numeric parameters.
@@ -350,7 +352,7 @@ do_RankedEnrichmentHeatmap <- function(sample,
         colors.use.iteration <- colors.use[[name]]
       } else {
         names.use <- if(is.factor(sample@meta.data[, name])){levels(sample@meta.data[, name])} else {sort(unique(sample@meta.data[, name]))}
-        colors.use.iteration <- generate_color_scale(names_use = names.use)
+        colors.use.iteration <- generate_color_scale(names_use = names.use, colorblind = colorblind)
       }
       
       # Generate the metadata heatmap.

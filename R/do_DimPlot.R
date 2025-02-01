@@ -17,6 +17,7 @@ do_DimPlot <- function(sample,
                        split.by = NULL,
                        split.by.combined = TRUE,
                        colors.use = NULL,
+                       colorblind = FALSE,
                        shuffle = TRUE,
                        order = NULL,
                        raster = FALSE,
@@ -96,7 +97,8 @@ do_DimPlot <- function(sample,
                        "plot_density_contour" = plot_density_contour,
                        "label.box" = label.box,
                        "split.by.combined" = split.by.combined,
-                       "legend.dot.border" = legend.dot.border)
+                       "legend.dot.border" = legend.dot.border,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -263,7 +265,7 @@ do_DimPlot <- function(sample,
       highlighting_cells <- is.null(group.by) & is.null(split.by) & (!(is.null(cells.highlight)) | !(is.null(idents.highlight)))
       if (isTRUE(default_parameters)){
         # Generate the color scale based on the levels assigned to the sample.
-        colors.use <- generate_color_scale(levels(sample))
+        colors.use <- generate_color_scale(levels(sample), colorblind = colorblind)
         colors.use <- colors.use[levels(sample)]
       } else if (isTRUE(group_by_is_used) | isTRUE(group_by_and_split_by_used)){
         # Retrieve the unique values in group.by metadata variable.
@@ -271,7 +273,7 @@ do_DimPlot <- function(sample,
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale to be used based on the unique values of group.by.
-        colors.use <- generate_color_scale(names.use)
+        colors.use <- generate_color_scale(names.use, colorblind = colorblind)
         colors.use <- colors.use[names.use]
       } else if (isTRUE(split_by_is_used)){
         # Retrieve the unique values in split.by metadata variable.
@@ -279,7 +281,7 @@ do_DimPlot <- function(sample,
         # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
         names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
         # Generate the color scale based on the unique values of split.by
-        colors.use <- generate_color_scale(names.use)
+        colors.use <- generate_color_scale(names.use, colorblind = colorblind)
         colors.use <- colors.use[names.use]
       } else if (isTRUE(highlighting_cells)){
         # If the user wants to highlight some cells, use this color.

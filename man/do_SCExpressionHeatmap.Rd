@@ -13,6 +13,7 @@ do_SCExpressionHeatmap(
   features.order = NULL,
   metadata = NULL,
   metadata.colors = NULL,
+  colorblind = FALSE,
   subsample = NA,
   cluster = TRUE,
   interpolate = FALSE,
@@ -79,6 +80,8 @@ do_SCExpressionHeatmap(
 \item{metadata}{\strong{\code{\link[base]{character}}} | Categorical metadata variables to plot alongside the main heatmap.}
 
 \item{metadata.colors}{\strong{\code{\link[SCpubr]{named_list}}} | Named list of valid colors for each of the variables defined in \strong{\code{metadata}}.}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{subsample}{\strong{\code{\link[base]{numeric}}} | Number of cells to subset for the analysis. NA will use all. Cells are selected at random.}
 

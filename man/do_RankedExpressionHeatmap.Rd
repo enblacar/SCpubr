@@ -14,6 +14,7 @@ do_RankedExpressionHeatmap(
   reduction = NULL,
   group.by = NULL,
   colors.use = NULL,
+  colorblind = FALSE,
   raster = FALSE,
   interpolate = FALSE,
   nbin = 24,
@@ -73,6 +74,8 @@ do_RankedExpressionHeatmap(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{colors.use}{\strong{\code{\link[base]{list}}} | A named list of named vectors. The names of the list correspond to the names of the values provided to metadata and the names of the items in the named vectors correspond to the unique values of that specific metadata variable. The values are the desired colors in HEX code for the values to plot. The used are pre-defined by the package but, in order to get the most out of the plot, please provide your custom set of colors for each metadata column!}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{raster}{\strong{\code{\link[base]{logical}}} | Whether to raster the resulting plot. This is recommendable if plotting a lot of cells.}
 

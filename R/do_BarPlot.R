@@ -43,6 +43,7 @@ do_BarPlot <- function(sample,
                        xlab = NULL,
                        ylab = NULL,
                        colors.use = NULL,
+                       colorblind = colorblind,
                        flip = FALSE,
                        plot.title = NULL,
                        plot.subtitle = NULL,
@@ -74,7 +75,8 @@ do_BarPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "legend.byrow" = legend.byrow,
                        "add.n" = add.n,
-                       "return_data" = return_data)
+                       "return_data" = return_data,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -158,7 +160,7 @@ do_BarPlot <- function(sample,
                                        crayon_body(".")))
   
   if (is.null(colors.use)){
-    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))})
+    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}, colorblind = colorblind)
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)

@@ -30,6 +30,7 @@ do_FeaturePlot <- function(sample,
                            order = FALSE,
                            group.by = NULL,
                            group.by.colors.use = NULL,
+                           colorblind = FALSE,
                            group.by.legend = NULL,
                            group.by.show.dots = TRUE,
                            group.by.dot.size = 8,
@@ -130,7 +131,8 @@ do_FeaturePlot <- function(sample,
                        "legend.byrow" = legend.byrow,
                        "group.by.cell_borders" = group.by.cell_borders,
                        "group.by.show.dots" = group.by.show.dots,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -301,7 +303,7 @@ do_FeaturePlot <- function(sample,
       # If the variable is a factor, use the levels as order. If not, order the values alphabetically.
       names.use <- if (is.factor(data.use[, 1])){levels(data.use[, 1])} else {sort(unique(data.use[, 1]))}
       # Generate the color scale to be used based on the unique values of group.by.
-      group.by.colors.use <- generate_color_scale(names.use)
+      group.by.colors.use <- generate_color_scale(names.use, colorblind = colorblind)
     }
   }
   

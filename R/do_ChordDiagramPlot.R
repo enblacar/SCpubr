@@ -53,6 +53,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 to = NULL,
                                 colors.from = NULL,
                                 colors.to = NULL,
+                                colorblind = colorblind,
                                 big.gap = 10,
                                 small.gap = 1,
                                 link.border.color = NA,
@@ -82,7 +83,8 @@ do_ChordDiagramPlot <- function(sample = NULL,
   logical_list <- list("link.decreasing" = link.decreasing,
                        "z_index" = z_index,
                        "symmetric" = symmetric,
-                       "scale" = scale)
+                       "scale" = scale,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("big.gap" = big.gap,
@@ -269,9 +271,9 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                        grouping_variable = from)
   } else {
     if (is.factor(data[["from"]])){
-      colors.from <- generate_color_scale(names_use = levels(data[["from"]]))
+      colors.from <- generate_color_scale(names_use = levels(data[["from"]]), colorblind = colorblind)
     } else {
-      colors.from <- generate_color_scale(names_use = sort(unique(data[["from"]])))
+      colors.from <- generate_color_scale(names_use = sort(unique(data[["from"]])), colorblind = colorblind)
     }
   }
   names(colors.from) <- stringr::str_pad(names(colors.from), width = max_char, side = "both")

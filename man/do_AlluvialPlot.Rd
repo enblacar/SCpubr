@@ -10,6 +10,7 @@ do_AlluvialPlot(
   last_group,
   middle_groups = NULL,
   colors.use = NULL,
+  colorblind = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,
   plot.caption = NULL,
@@ -60,6 +61,8 @@ do_AlluvialPlot(
 \item{middle_groups}{\strong{\code{\link[base]{character}}} | Categorical metadata variable. Vector of groups of nodes of the alluvial plot.}
 
 \item{colors.use}{\strong{\code{\link[base]{character}}} | Named list of colors corresponding to the unique values in fill.by (which defaults to last_group).}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 

@@ -36,6 +36,7 @@ do_AlluvialPlot <- function(sample,
                             last_group,
                             middle_groups = NULL,
                             colors.use = NULL,
+                            colorblind = FALSE,
                             plot.title = NULL,
                             plot.subtitle = NULL,
                             plot.caption = NULL,
@@ -90,7 +91,8 @@ do_AlluvialPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "repel" = repel,
                        "use_geom_flow" = use_geom_flow,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("stratum.width" = stratum.width,
@@ -234,9 +236,9 @@ do_AlluvialPlot <- function(sample,
   # COLORS.
   if (is.null(colors.use)){
     if (is.factor(data[[fill.by]])){
-      colors.use <- generate_color_scale(levels(data[[fill.by]]))
+      colors.use <- generate_color_scale(levels(data[[fill.by]]), colorblind = colorblind)
     } else {
-      colors.use <- generate_color_scale(sort(unique(data[[fill.by]])))
+      colors.use <- generate_color_scale(sort(unique(data[[fill.by]])), colorblind = colorblind)
     }
   } else {
     check_colors(colors.use)

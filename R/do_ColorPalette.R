@@ -30,6 +30,9 @@ do_ColorPalette <- function(colors.use,
                             plot = FALSE,
                             font.size = 14,
                             font.type = "sans"){
+  `%>%` <- magrittr::`%>%`
+  `%*%` <- base::`%*%`
+  
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
   
@@ -126,6 +129,7 @@ do_ColorPalette <- function(colors.use,
     alpha <- substr(colors.use, 8, 9)
     colors <- paste(colors, alpha, sep="")
   }
+  
 
   # If opposite is TRUE, select the first and middle colors.
   if (isTRUE(opposite)){
@@ -153,9 +157,10 @@ do_ColorPalette <- function(colors.use,
   if (isTRUE(plot) & base::isFALSE(complete_output)){
     # Dummy df to plot.
     names(colors) <- colors
+    
     df <- data.frame("values" = rep(1, n), "names" = factor(colors, levels = names(colors)))
-    limits <- c(-5, 1.35)
     colors.use <- colors
+    limits <-  c(-5, 1.35)
 
     # Define name for the center of the plot.
     if (isTRUE(opposite)){

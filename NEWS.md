@@ -8,10 +8,12 @@
 ## General
 -   Enhanced startup message for clarity. Not it guides the user to run `SCpubr::package_report(extended = TRUE)` to get an overview of the missing dependencies.
 -   Added black border to glyphs in legends.
+-   Whenever a categorical color scale is used, now you can set `colorblind = TRUE`, and it will pull from a collection of different published colorblind-safe palettes. If the length of the classes in the categorical variable matches the length of one of the palettes, that palettes is used. If not, a pool will be selected, with a total maximum of 85 categories allowed. If `colors.use` is used, `colorblind` has no effect (thus, check if your palette is colorblind-safe with `do_ColorBlindCheck()`). For continuous variables, `YlGnBu` is used. For divergent variables, `RdBu` is used. Both `YlGnBu` and `RdBu` are colorblind-safe. Since they are set as default, there is no need for `colorblind` parameter in the functions that only plot continuous/divergent variables.
 
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
 -   `do_RankedExpressionHeatmap()` to plot expression values as a heatmap along a dimensional reduction component.
+-   `do_ColorBlindCheck` to provide a comparative view of a given color paletter under different kinds of color blindness. This will allow to check for the suitability of a given set of colors for publication.
 
 ## Removed functions
 -   `do_FunctionalAnnotationPlot()`.
@@ -111,6 +113,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_MetadataHeatmap()
 -   Modified the legend items to have a black border.
+-   Set `cluster = FALSE` as default.
 
 ## do_PathwayActivityHeatmap
 -   Changed legend title to "Z-Scored | <statistic> score", for consistency with other functions in the package.

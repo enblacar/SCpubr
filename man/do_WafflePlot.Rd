@@ -10,6 +10,7 @@ do_WafflePlot(
   waffle.size = 2,
   flip = TRUE,
   colors.use = NULL,
+  colorblind = FALSE,
   na.value = "grey75",
   font.size = 14,
   font.type = "sans",
@@ -41,6 +42,8 @@ do_WafflePlot(
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 
 \item{colors.use}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of valid color representations (either name of HEX codes) with as many named colors as unique values of group.by. If group.by is not provided, defaults to the unique values of \link[Seurat]{Idents}. If not provided, a color scale will be set by default.}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 

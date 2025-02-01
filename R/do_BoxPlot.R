@@ -27,6 +27,7 @@ do_BoxPlot <- function(sample,
                        font.type = "sans",
                        axis.text.x.angle = 45,
                        colors.use = NULL,
+                       colorblind = colorblind,
                        na.value = "grey75",
                        plot.title = NULL,
                        plot.subtitle = NULL,
@@ -79,7 +80,8 @@ do_BoxPlot <- function(sample,
                        "plot.grid" = plot.grid,
                        "order" = order,
                        "use_silhouette" = use_silhouette,
-                       "legend.byrow" = legend.byrow)
+                       "legend.byrow" = legend.byrow,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -182,9 +184,9 @@ do_BoxPlot <- function(sample,
         levels(sample@meta.data[, group.by])
       } else {
         sort(unique(sample@meta.data[, group.by]))
-      })
+      }, colorblind = colorblind)
     } else {
-      colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, split.by])) {levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))})
+      colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, split.by])) {levels(sample@meta.data[, split.by])} else {sort(unique(sample@meta.data[, split.by]))}, colorblind = colorblind)
     }
   } else {
     check_colors(colors.use, parameter_name = "colors.use")

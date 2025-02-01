@@ -10,6 +10,7 @@ do_ChordDiagramPlot(
   to = NULL,
   colors.from = NULL,
   colors.to = NULL,
+  colorblind = colorblind,
   big.gap = 10,
   small.gap = 1,
   link.border.color = NA,
@@ -38,6 +39,8 @@ do_ChordDiagramPlot(
 \item{from, to}{\strong{\code{\link[base]{character}}} | Categorical metadata variable to be used as origin and end points of the interactions.}
 
 \item{colors.from, colors.to}{\strong{\code{\link[SCpubr]{named_vector}}} | Named vector of colors corresponding to the unique values of "from" and "to".}
+
+\item{colorblind}{\strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.}
 
 \item{big.gap}{\strong{\code{\link[base]{numeric}}} | Space between the groups in "from" and "to".}
 

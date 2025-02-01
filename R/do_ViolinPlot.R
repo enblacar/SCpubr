@@ -20,6 +20,7 @@ do_ViolinPlot <- function(sample,
                           group.by = NULL,
                           split.by = NULL,
                           colors.use = NULL,
+                          colorblind = FALSE,
                           pt.size = 0,
                           line_width = 0.5,
                           y_cut = rep(NA, length(features)),
@@ -72,7 +73,8 @@ do_ViolinPlot <- function(sample,
                        "flip" = flip,
                        "share.y.lims" = share.y.lims,
                        "legend.byrow" = legend.byrow,
-                       "order" = order)
+                       "order" = order,
+                       "colorblind" = colorblind)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("pt.size" = pt.size,
@@ -188,7 +190,7 @@ do_ViolinPlot <- function(sample,
       }
     }
     
-    colors.use <- generate_color_scale(names.use)
+    colors.use <- generate_color_scale(names.use, colorblind = colorblind)
   } else {
     if (is.null(split.by)){
       colors.use <- check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)
