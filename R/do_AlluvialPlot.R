@@ -296,9 +296,6 @@ do_AlluvialPlot <- function(sample,
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
                      caption = plot.caption) +
-       ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
-                                                    override.aes = list(color = "black",
-                                                                        shape = 22))) +
        ggplot2::theme_minimal(base_size = font.size) +
        ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
                                                          face = axis.title.face),
@@ -327,6 +324,13 @@ do_AlluvialPlot <- function(sample,
                       panel.background = ggplot2::element_rect(fill = "white", color = "white"),
                       legend.background = ggplot2::element_rect(fill = "white", color = "white"),
                       strip.text =ggplot2::element_text(color = "black", face = "bold"))
+  
+  p <- p +
+       ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
+                                                    title.position = "top",
+                                                    title.hjust = 0.5,
+                                                    override.aes = list(color = "black",
+                                                                        shape = 22))) 
   
 
   if (isTRUE(flip)){

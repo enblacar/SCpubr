@@ -13,6 +13,10 @@ do_ActivityHeatmap(
   slot = NULL,
   statistic = "ulm",
   number.breaks = 5,
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = -1,
@@ -70,6 +74,14 @@ do_ActivityHeatmap(
 values in the Idents of the Seurat object are reported, assessing how specific a given gene set is for a given cell population compared to other gene sets of equal expression.}
 
 \item{number.breaks}{\strong{\code{\link[base]{numeric}}} | Controls the number of breaks in continuous color scales of ggplot2-based plots.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 

@@ -9,7 +9,8 @@
 -   Enhanced startup message for clarity. Not it guides the user to run `SCpubr::package_report(extended = TRUE)` to get an overview of the missing dependencies.
 -   Added black border to glyphs in legends.
 -   Whenever a categorical color scale is used, now you can set `colorblind = TRUE`, and it will pull from a collection of different published colorblind-safe palettes. If the length of the classes in the categorical variable matches the length of one of the palettes, that palettes is used. If not, a pool will be selected, with a total maximum of 85 categories allowed. If `colors.use` is used, `colorblind` has no effect (thus, check if your palette is colorblind-safe with `do_ColorBlindCheck()`). For continuous variables, `YlGnBu` is used. For divergent variables, `RdBu` is used. Both `YlGnBu` and `RdBu` are colorblind-safe. Since they are set as default, there is no need for `colorblind` parameter in the functions that only plot continuous/divergent variables.
-
+-  Added support to show the values as text in most heatmap-based functions. This is achieved by using `values.show = TRUE`.
+-  Aesthetics of the text labels can be tuned with `values.threshold`, `values.size` and `values.round`. 
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
 -   `do_RankedExpressionHeatmap()` to plot expression values as a heatmap along a dimensional reduction component.
@@ -50,7 +51,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_AlluvialPlot()
 -   Enforced a minimum version of `ggalluvial` to deal with deprecation of functions from `dplyr` and `tidyr` that were still used in `ggalluvial` functions.
 -   Modified the legend items to have a black border.
--   Changed default legend position to bottom.
+-   Changed default legend position to bottom and legend title to top and centered.
 
 ## do_BoxPlot()
 -   Added `legend.ncol`, `legend.nrow` and `legend.byrow` parameters to control legend behavior.
@@ -66,11 +67,11 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_ChortDiagramPlot()
 -  Added `font.size` parameter to control the font size of the plot.
 
-## do_ColorPalette()
--  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.
-
 ## do_CNVHeatmap()
 -   Added `include_chr_arms` parameter to decide whether the heatmap should include a breakdown of the arms or just keep it by chromosomes.
+
+## do_ColorPalette()
+-  Changed "Wheel" to "Color wheel" when plotting the output without additional parameters.
 
 ## do_DimPlot()
 -   Fixed a bug caused by using `cells.highlight` with only one cell.
@@ -121,6 +122,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 ## do_RidgePlot()
 -   Removed `size = 1.25` aesthetic from the call to `ggridges::geom_ridge...`.
 -   Set default legend position to bottom.
+-   Fixed a bug in which plot grid would not react properly to `flip`.
 
 ## do_SavePlot()
 -   Added `limitsize` parameter, that allows for very big ggplot2-based plots to be saved with big dimensions.
@@ -167,6 +169,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Changed default value of `legend.position` to `bottom`. 
 -   Fixed a bug in which the default color palette would not be applied when `plot_boxplots = FALSE`.
 -   Added `legend.title.position` parameter and set it up as `top` by default.
+-   Fixed a bug in which plot grid would not react properly to `flip`.
 
 # SCpubr v2.0.1 
 

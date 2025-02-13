@@ -13,6 +13,10 @@ do_ExpressionHeatmap(
   features.order = NULL,
   groups.order = NULL,
   slot = "data",
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   legend.title = "Avg. Expression",
   na.value = "grey75",
   legend.position = "bottom",
@@ -65,6 +69,14 @@ do_ExpressionHeatmap(
 \item{groups.order}{\strong{\code{\link[SCpubr]{named_list}}} | Should the groups in theheatmaps be ordered in a specific way? Provide it as a named list (as many lists as values in \strong{\code{group.by}}) with the order for each of the elements in the groups.}
 
 \item{slot}{\strong{\code{\link[base]{character}}} | Data slot to use. Only one of: counts, data, scale.data. Defaults to "data".}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{legend.title}{\strong{\code{\link[base]{character}}} | Title for the legend.}
 

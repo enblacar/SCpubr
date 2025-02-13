@@ -10,7 +10,7 @@ do_ChordDiagramPlot(
   to = NULL,
   colors.from = NULL,
   colors.to = NULL,
-  colorblind = colorblind,
+  colorblind = FALSE,
   big.gap = 10,
   small.gap = 1,
   link.border.color = NA,

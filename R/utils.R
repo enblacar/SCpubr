@@ -175,6 +175,10 @@
 #' @param order \strong{\code{\link[base]{logical}}} | Whether to order the boxplots by average values. Can not be used alongside split.by.
 #' @param dot.scale \strong{\code{\link[base]{numeric}}} | Scale the size of the dots.
 #' @param colorblind \strong{\code{\link[base]{logical}}} | Whether to use colorblind-friendly colors for categorical variables. In place when \code{colors.use} is not used. Allows for a maximum of 85 different classes within a categorical variable.
+#' @param values.show \strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.
+#' @param values.threshold \strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.
+#' @param values.size \strong{\code{\link[base]{numeric}}} | Size of the text labels.
+#' @param values.round \strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.
 #' @usage NULL
 #' @return Nothing. This is a mock function.
 #' @keywords internal
@@ -297,7 +301,11 @@ doc_function <- function(sample,
                          groups.order,
                          interpolate,
                          order,
-                         dot.scale){}
+                         dot.scale,
+                         values.show,
+                         values.threshold,
+                         values.size,
+                         values.round){}
 
 #' Named vector.
 #'
@@ -457,24 +465,24 @@ return_dependencies <- function(){
 #' TBD
 #' }
 check_suggests <- function(function_name, passive = FALSE){
-
+  
   pkg_list <- return_dependencies()
   # The function is not in the current list of possibilities.
   if (function_name %!in% names(pkg_list)){
     stop(paste0(add_cross(), crayon_key(function_name), crayon_body(" is not an accepted function name.")), call. = FALSE)
   }
   pkgs <- c(pkg_list[[function_name]], pkg_list[["Essentials"]])
-
+  
   non_seurat_functions <- c("do_SavePlot",
                             "do_VolcanoPlot",
                             "do_LigandReceptorPlot",
                             "do_ColorPalette",
                             "do_ColorBlindPalette")
-
+  
   if (function_name %in% non_seurat_functions){
     pkgs <- pkgs[!(pkgs %in% c("Seurat", "SeuratObject"))]
   }
-
+  
   pkgs <- vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))
   # nocov start
   if(sum(!pkgs) > 0){
@@ -487,8 +495,8 @@ check_suggests <- function(function_name, passive = FALSE){
                   crayon_body(".")), call. = FALSE)
     }
   }
-
-
+  
+  
   value <-  if(sum(pkgs) != length(pkgs)){FALSE} else {TRUE}
   if (isTRUE(passive)) {return(value)}
   # nocov end
@@ -534,13 +542,13 @@ do_PackageReport <- function(startup = FALSE,
   } else {
     # nocov end
     tip_rule <- cli::rule(left = "General", width = nchar("General") + 6)
-
+    
     tutorials <- paste0(add_info(initial_newline = FALSE),
                         crayon_body("Have a look at extensive tutorials in "),
                         crayon_key(cli::style_hyperlink(text = "SCpubr's book",
                                                         url = "https://enblacar.github.io/SCpubr-book/")),
                         crayon_body("."))
-
+    
     cite <- paste0(add_tick(initial_newline = FALSE),
                    crayon_body("If you use "),
                    crayon_key("SCpubr"),
@@ -548,7 +556,7 @@ do_PackageReport <- function(startup = FALSE,
                    crayon_key(cli::style_hyperlink(text = "cite it accordingly",
                                                    url = "https://www.biorxiv.org/content/10.1101/2022.02.28.482303v1")),
                    crayon_body("."))
-
+    
     stars <- paste0(add_star(initial_newline = FALSE),
                     crayon_body("If the package is useful to you, consider leaving a "),
                     crayon_key("Star"),
@@ -556,7 +564,7 @@ do_PackageReport <- function(startup = FALSE,
                     crayon_key(cli::style_hyperlink(text = "GitHub repository",
                                                     url = "https://github.com/enblacar/SCpubr")),
                     crayon_body("."))
-
+    
     updates <- paste0(cli::style_bold(cli::col_blue("!")),
                       crayon_body(" Keep track of the package "),
                       crayon_key("updates"),
@@ -567,12 +575,12 @@ do_PackageReport <- function(startup = FALSE,
                       crayon_key(cli::style_hyperlink(text = "Official NEWS website",
                                                       url = "https://github.com/enblacar/SCpubr/blob/main/NEWS.md")),
                       crayon_body("."))
-
+    
     plotting <- paste0(cli::style_bold(cli::col_red(cli::symbol$heart)), " ", crayon_body("Happy plotting!"))
-
+    
     header <- cli::rule(left = paste0(crayon_body("SCpubr "),
                                       crayon_key(utils::packageVersion("SCpubr"))), line_col = "cadetblue")
-
+    
     if (isTRUE(extended)){
       format_package_name <- function(package,
                                       max_length_packages){
@@ -592,7 +600,7 @@ do_PackageReport <- function(startup = FALSE,
                            crayon_body(" "),
                            crayon_body(package.use))
           }
-
+          
           return(name)
         } else {
           return(paste0(cli::col_red(cli::symbol$cross),
@@ -600,13 +608,13 @@ do_PackageReport <- function(startup = FALSE,
                         cli::col_red(package.use)))
         }
       }
-
+      
       packages <- sort(unique(unlist(return_dependencies())))
       max_length_packages <- max(vapply(packages, nchar, FUN.VALUE = numeric(1)))
       packages_mod <- vapply(packages, function(x){format_package_name(x,
                                                                        max_length_packages = max_length_packages)}, FUN.VALUE = character(1))
       functions <- sort(unique(names(return_dependencies())))
-
+      
       if (rev(strsplit(as.character( as.character(utils::packageVersion("SCpubr"))), split = "\\.")[[1]])[1] >= 9000){
         names.use <- unname(vapply(functions, function(x){if (x %in% c("do_SavePlot")){x <- paste0(x, cli::col_cyan(" | DEV"))} else {x}}, FUN.VALUE = character(1)))
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
@@ -617,10 +625,10 @@ do_PackageReport <- function(startup = FALSE,
         functions <- vapply(functions, check_suggests, passive = TRUE, FUN.VALUE = logical(1))
       }
       # nocov end
-
-
+      
+      
       functions <- functions[names(functions) != "Essentials"]
-
+      
       max_length_functions <- max(vapply(names(functions), nchar, FUN.VALUE = numeric(1)))
       format_functions <- function(name, value, max_length){
         func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
@@ -629,12 +637,12 @@ do_PackageReport <- function(startup = FALSE,
                            cli::ansi_align(cli::col_red(name), max_length, align = "left"))
         paste0(func_use, " ", name_use)
       }
-
+      
       functions.use <- NULL
       for(item in names(functions)){
         functions.use <- append(functions.use, format_functions(name = item, value = functions[[item]], max_length = max_length_functions))
       }
-
+      
       counter <- 0
       print.list <- list()
       print.list.functions <- list()
@@ -642,7 +650,7 @@ do_PackageReport <- function(startup = FALSE,
       print.vector.functions <- NULL
       for(item in packages_mod){
         counter <- counter + 1
-
+        
         if (counter %% 4 != 0){
           print.vector <- append(print.vector, item)
           if (counter == length(packages)){
@@ -655,11 +663,11 @@ do_PackageReport <- function(startup = FALSE,
           print.vector <- NULL
         }
       }
-
+      
       counter <- 0
       for(item in functions.use){
         counter <- counter + 1
-
+        
         if (counter %% 3 != 0){
           print.vector.functions <- append(print.vector.functions, item)
           if (counter == length(functions.use)){
@@ -670,12 +678,12 @@ do_PackageReport <- function(startup = FALSE,
           print.list.functions[[item]] <- paste(print.vector.functions, collapse = "     ")
           print.vector.functions <- NULL
         }
-
-
+        
+        
       }
-
+      
       packages_check <- cli::rule(left = "Required packages", width = nchar("Required packages") + 6)
-
+      
       packages_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                               crayon_body(" Installed packages are denoted by a "),
                               crayon_key("tick"),
@@ -686,7 +694,7 @@ do_PackageReport <- function(startup = FALSE,
                               crayon_body(" ("),
                               cli::style_bold(cli::col_red(cli::symbol$cross)),
                               crayon_body(")."))
-
+      
       packages_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                               crayon_body(" Installed packages that still require an update to correctly run "),
                               crayon_key("SCpubr"),
@@ -695,10 +703,10 @@ do_PackageReport <- function(startup = FALSE,
                               crayon_body(" ("),
                               cli::style_bold(cli::col_yellow("!")),
                               crayon_body(")."))
-
-
+      
+      
       functions_check <- cli::rule(left = "Available functions", width = nchar("Available functions") + 6)
-
+      
       functions_tip1 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                                crayon_body(" Functions tied to "),
                                crayon_key("development"),
@@ -707,7 +715,7 @@ do_PackageReport <- function(startup = FALSE,
                                crayon_body(" are marked by the ("),
                                cli::col_cyan("| DEV"),
                                crayon_body(") tag."))
-
+      
       functions_tip2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
                                crayon_body(" You can install development builds of "),
                                crayon_key("SCpubr"),
@@ -715,7 +723,7 @@ do_PackageReport <- function(startup = FALSE,
                                crayon_key(cli::style_hyperlink(text = "Releases",
                                                                url = "https://github.com/enblacar/SCpubr/releases")),
                                crayon_body(" page."))
-
+      
     }
     tip_rule <- cli::rule(left = "Tips!", width = nchar("Tips!") + 6)
     
@@ -728,11 +736,11 @@ do_PackageReport <- function(startup = FALSE,
                           cli::style_italic(crayon_key('options("SCpubr.ColorPaletteEnds" = FALSE)')))
     
     tip_message2 <- paste0(cli::style_bold(cli::col_cyan(cli::symbol$info)),
-                          crayon_body(" Colorblind-safe continuous/divergent color palettes are used by default.\n"),
-                          cli::style_bold(cli::col_cyan(cli::symbol$info)),
-                          crayon_body(" For categorical variables, you can use: "),
-                          cli::style_italic(crayon_key('colorblind = TRUE')))
-
+                           crayon_body(" Colorblind-safe continuous/divergent color palettes are used by default.\n"),
+                           cli::style_bold(cli::col_cyan(cli::symbol$info)),
+                           crayon_body(" For categorical variables, you can use: "),
+                           cli::style_italic(crayon_key('colorblind = TRUE')))
+    
     disable_message <- paste0(cli::style_bold(cli::col_red(cli::symbol$cross)),
                               crayon_body(" To suppress this startup message, use: "),
                               cli::style_italic(crayon_key('suppressPackageStartupMessages(library(SCpubr))\n')),
@@ -741,9 +749,9 @@ do_PackageReport <- function(startup = FALSE,
                               cli::style_italic(crayon_key('options("SCpubr.verbose" = FALSE)\n')),
                               crayon_body("  And then load the package normally (and faster) as: "),
                               cli::style_italic(crayon_key('library(SCpubr)')))
-
+    
     end_rule <- cli::rule(col = "cadetblue")
-
+    
     # Mount all individual messages into a big one that will be then be printed as a packageStartupMessage.
     if (isTRUE(startup)){
       if (isTRUE(extended)){
@@ -783,7 +791,7 @@ do_PackageReport <- function(startup = FALSE,
                            disable_message, "\n", "\n",
                            end_rule)
       }
-
+      
       rlang::inform(msg_wrap, class = "packageStartupMessage")
     } else if (base::isFALSE(startup)){
       if (isTRUE(extended)){
@@ -818,7 +826,7 @@ do_PackageReport <- function(startup = FALSE,
                            disable_message, "\n", "\n",
                            end_rule)
       }
-
+      
       rlang::inform(msg_wrap)
     }
   }
@@ -886,10 +894,10 @@ check_colors <- function(colors, parameter_name = "") {
 #' TBD
 #' }
 check_consistency_colors_and_names <- function(sample, colors, grouping_variable = NULL, idents.keep = NULL){
-
+  
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
-
+  
   if (is.null(grouping_variable)){
     check_values <- levels(sample)
   } else {
@@ -899,48 +907,48 @@ check_consistency_colors_and_names <- function(sample, colors, grouping_variable
       check_values <- as.character(unique(sample@meta.data[, grouping_variable]))
     }
   }
-
+  
   if (!is.null(idents.keep)){
     # Remove unwanted idents.
     check_values <- check_values[check_values %in% idents.keep]
   }
-
+  
   # Remove NAs.
   check_values <- check_values[!(is.na(check_values))]
-
+  
   # Remove values that are not in the vector.
   if (sum(names(colors) %in% check_values) == length(check_values) & length(names(colors)) > length(check_values)){
     colors <- colors[names(colors) %in% check_values]
   }
-
+  
   if (base::isFALSE(length(colors) == length(check_values)) | base::isFALSE(sum(names(colors) %in% check_values) == length(check_values))){
-
+    
     format_colors <- function(name, value, colors,  max_length){
-
+      
       if (name %in% names(colors)){
         name <- paste(c(name, crayon_body(" | "), cli::col_cyan(paste0(colors[[name]]))), collapse = "")
       }
-
+      
       func_use <- ifelse(isTRUE(value), cli::col_green(cli::symbol$tick), cli::col_red(cli::symbol$cross))
       name_use <- ifelse(isTRUE(value),
                          cli::ansi_align(crayon_key(name), max_length, align = "left"),
                          cli::ansi_align(cli::col_red(name), max_length, align = "left"))
       paste0(func_use, " ", name_use)
     }
-
-      color_check <- vapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)}, FUN.VALUE = logical(1))
-
-      max_length <- max(vapply(check_values, nchar, FUN.VALUE = numeric(1)))
-      max_length_colors <- max(vapply(unname(colors), nchar, FUN.VALUE = numeric(1)))
-      length.use <- max_length + 3 + max_length_colors
-
-
-      colors.print <- NULL
-      for(item in sort(names(color_check))){
-        colors.print <- append(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
-      }
-
-
+    
+    color_check <- vapply(check_values, function(x){ifelse(x %in% names(colors), TRUE, FALSE)}, FUN.VALUE = logical(1))
+    
+    max_length <- max(vapply(check_values, nchar, FUN.VALUE = numeric(1)))
+    max_length_colors <- max(vapply(unname(colors), nchar, FUN.VALUE = numeric(1)))
+    length.use <- max_length + 3 + max_length_colors
+    
+    
+    colors.print <- NULL
+    for(item in sort(names(color_check))){
+      colors.print <- append(colors.print, format_colors(name = item, colors = colors, value = color_check[[item]], max_length = length.use))
+    }
+    
+    
     msg <- paste0("\n", "\n",
                   add_cross(),
                   crayon_body("The "),
@@ -1030,13 +1038,13 @@ generate_color_scale <- function(names_use, colorblind = FALSE){
     # N = 7
     if (length(names_use) == length(tol.bright.colors)){
       colors <- tol.bright.colors
-    # N = 8
+      # N = 8
     } else if (length(names_use) == length(wong.colors)){
       colors <- wong.colors
-    # N = 9
+      # N = 9
     } else if (length(names_use) == length(tol.muted.colors)){
       colors <- tol.muted.colors
-    # N = 12
+      # N = 12
     } else if (length(names_use) == length(krz.12)){
       colors <- krz.12
       # N = 15
@@ -1045,10 +1053,10 @@ generate_color_scale <- function(names_use, colorblind = FALSE){
       # N = 24
     } else if (length(names_use) == length(krz.24)){
       colors <- krz.24
-    # Less than 7
+      # Less than 7
     } else if (length(names_use) < 7){
       colors <- wong.colors[1:length(names_use)]
-    # Remaining cases
+      # Remaining cases
     } else {
       length.use <- length(names_use)
       colors <- collection[1:length.use]
@@ -1084,16 +1092,16 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
       }
     }
   }
-
+  
   if (is.null(slot)){
     slot <- "data"
   }
-
+  
   if (feature %in% rownames(sample)){
     suppressWarnings({
-    data.check <- SeuratObject::GetAssayData(sample,
-                                       assay = assay,
-                                       slot = slot)[feature, ]
+      data.check <- SeuratObject::GetAssayData(sample,
+                                               assay = assay,
+                                               slot = slot)[feature, ]
     })
     scale.begin <- min(data.check, na.rm = TRUE)
     scale.end <- max(data.check, na.rm = TRUE)
@@ -1143,7 +1151,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_key(max.cutoff),
                                          crayon_body(").")))
   }
-
+  
   if (!is.na(min.cutoff)){
     assertthat::assert_that(min.cutoff >= limits[1],
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
@@ -1155,7 +1163,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(") for the feature ("),
                                          crayon_key(feature),
                                          crayon_body(").")))
-
+    
     assertthat::assert_that(min.cutoff <= limits[2],
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("min.cutoff"),
@@ -1169,7 +1177,7 @@ check_cutoffs <- function(min.cutoff,
     limits <- c(min.cutoff, limits[2])
     outlier.data <- TRUE
   }
-
+  
   if (!is.na(max.cutoff)){
     assertthat::assert_that(max.cutoff <= limits[2],
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
@@ -1181,7 +1189,7 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(") for the feature ("),
                                          crayon_key(feature),
                                          crayon_body(").")))
-
+    
     assertthat::assert_that(max.cutoff >= limits[1],
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
                                          crayon_key("max.cutoff"),
@@ -1192,11 +1200,11 @@ check_cutoffs <- function(min.cutoff,
                                          crayon_body(") for the feature ("),
                                          crayon_key(feature),
                                          crayon_body(").")))
-
+    
     limits <- c(limits[1], max.cutoff)
     outlier.data <- TRUE
   }
-
+  
   return.list <- list("outlier.data" = outlier.data,
                       "limits" = limits)
   return(return.list)
@@ -1245,14 +1253,14 @@ compute_scales <- function(sample,
   } else {
     limits <- limits.use
   }
-
+  
   out <- check_cutoffs(min.cutoff = min.cutoff,
                        max.cutoff = max.cutoff,
                        limits = limits,
                        feature = feature)
-
+  
   limits <- out$limits
-
+  
   if (isTRUE(enforce_symmetry)){
     if (base::isFALSE(center_on_value)){
       end_value <- max(abs(limits))
@@ -1263,35 +1271,35 @@ compute_scales <- function(sample,
       value.use <- max(c(low_end, high_end))
       limits <- c(1 - value.use, 1 + value.use)
     }
-
+    
   }
-
+  
   breaks <- labeling::extended(dmin = limits[1],
                                dmax = limits[2],
                                m = number.breaks)
   labels <- as.character(breaks)
-
+  
   if (!is.na(min.cutoff)){
     if (isTRUE(min.cutoff == breaks[1])){
       breaks[1] <- min.cutoff
       labels[1] <- paste0(as.character(expression("\u2264")), " ", min.cutoff)
     }
   }
-
+  
   if (!is.na(max.cutoff)){
     if (isTRUE(max.cutoff == breaks[length(breaks)])){
       breaks[length(breaks)] <- max.cutoff
       labels[length(labels)] <- paste0(as.character(expression("\u2265")), " ", max.cutoff)
     }
   }
-
+  
   # Fix for the one value limit.
-
+  
   if(limits[[1]] == limits[[2]]){
     breaks <- limits[[1]]
     labels <- as.character(limits[[1]])
   }
-
+  
   return.obj <- list("limits" = limits,
                      "breaks" = breaks,
                      "labels" = labels)
@@ -1316,8 +1324,8 @@ compute_scales <- function(sample,
 #' }
 check_limits <- function(sample, feature, value_name, value, assay = NULL, reduction = NULL){
   limits <- compute_scale_limits(sample = sample, feature = feature, assay = assay, reduction = reduction)
-
-
+  
+  
   assertthat::assert_that(limits[["scale.begin"]] <= value & limits[["scale.end"]] >= value,
                           msg = paste0(add_cross(), crayon_body("The value provided to "),
                                        crayon_key(value_name),
@@ -1330,7 +1338,7 @@ check_limits <- function(sample, feature, value_name, value, assay = NULL, reduc
                                        crayon_body(".\nMax:"),
                                        crayon_key(limits[["scale.end"]]),
                                        crayon_body(".")))
-
+  
 }
 
 #' Check if the feature to plot is in the Seurat object.
@@ -1363,14 +1371,14 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     } else {
       check_enforcers[["gene"]] <- TRUE
     }
-
+    
     if (!(feature %in% colnames(sample@meta.data))){
       check <- check + 1
       check_enforcers[["metadata"]] <- FALSE
     } else {
       check_enforcers[["metadata"]] <- TRUE
     }
-
+    
     dim_colnames <- NULL
     for(red in Seurat::Reductions(object = sample)){
       dim_colnames <- append(dim_colnames, colnames(sample@reductions[[red]][[]]))
@@ -1381,12 +1389,12 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
     } else {
       check_enforcers[["reductions"]] <- TRUE
     }
-
+    
     if (check == 3) {
       not_found_features <- append(not_found_features, feature)
     }
   }
-
+  
   # Return the error logs if there were features not found.
   if (length(not_found_features) > 0){
     if (isTRUE(permissive)){
@@ -1399,7 +1407,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                      paste(vapply(not_found_features, crayon_key, FUN.VALUE = character(1)), collapse = crayon_body(", ")),
                      crayon_body(".")), call. = FALSE)
       features_out <- remove_not_found_features(features = features, not_found_features = not_found_features)
-
+      
     } else if (base::isFALSE(permissive)){
       assertthat::assert_that(length(not_found_features) == 0,
                               msg = paste0(add_cross(), crayon_body("The following "),
@@ -1415,7 +1423,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
   if (!(is.null(enforce_check))){
     assertthat::assert_that(enforce_check %in% names(check_enforcers),
                             msg = "The variable enforcer is not in the current list of checked variable types.")
-
+    
     assertthat::assert_that(isTRUE(check_enforcers[[enforce_check]]),
                             msg = paste0(add_cross(), crayon_body("Feature "),
                                          crayon_key(enforce_parameter),
@@ -1425,7 +1433,7 @@ check_feature <- function(sample, features, permissive = FALSE, dump_reduction_n
                                          crayon_key(enforce_check),
                                          crayon_body(".")))
   }
-
+  
   # Return options.
   if (isTRUE(dump_reduction_names) & base::isFALSE(permissive)){return(dim_colnames)}
   if (isTRUE(permissive) & base::isFALSE(dump_reduction_names)){return(features_out)}
@@ -1472,8 +1480,8 @@ remove_duplicated_features <- function(features){
     check <- sum(duplicated(features))
     if (check > 0){
       warning(paste0(add_warning(), crayon_body("Found duplicated features:\n"),
-                       crayon_key(paste(features[duplicated(features)])),
-                       crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
+                     crayon_key(paste(features[duplicated(features)])),
+                     crayon_body(".\nExcluding them from the analysis.")), call. = FALSE)
       features <- features[!(duplicated(features))]
     }
   } else if (is.list(features)){
@@ -1554,7 +1562,7 @@ check_and_set_reduction <- function(sample, reduction = NULL){
       # Select the last computed one.
       reduction <- Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]
     }
-  # If the user provided a value for reduction.
+    # If the user provided a value for reduction.
   } else if (!(is.null(reduction))){
     # Check if the provided reduction is in the list.
     assertthat::assert_that(reduction %in% Seurat::Reductions(sample),
@@ -1584,7 +1592,7 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
   if (is.null(reduction)){
     reduction <- Seurat::Reductions(sample)[length(Seurat::Reductions(sample))]
   }
-
+  
   # Check that the dimensions is a 2 item vector.
   if (!is.null(dims)){
     assertthat::assert_that(length(dims) == 2,
@@ -1593,26 +1601,26 @@ check_and_set_dimensions <- function(sample, reduction = NULL, dims = NULL){
                                          crayon_body(" to "),
                                          crayon_key("dims"),
                                          crayon_body(".")))
-
+    
     # Check that at least 2 dimensions are present.
     aval_dims <- length(colnames(Seurat::Embeddings(sample[[reduction]])))
-
+    
     assertthat::assert_that(aval_dims >= 2,
                             msg = paste0(add_cross(), crayon_body("There need to be at least "),
                                          crayon_key("two available dimensions"),
                                          crayon_body(" computed.")))
-
+    
     # Check that the dimensions are integers.
     null_check <- is.null(dims[1]) & is.null(dims[2])
     integer_check <- is.numeric(dims[1]) & is.numeric(dims[1])
-
+    
     assertthat::assert_that(base::isFALSE(null_check) &  isTRUE(integer_check),
                             msg = paste0(add_cross(), crayon_body("The dimensions provided to "),
                                          crayon_key("dims"),
                                          crayon_body(" need to be of class "),
                                          crayon_key("numeric"),
                                          crayon_body(".")))
-
+    
     # Check that the dimensions are in the requested embedding.
     assertthat::assert_that(dims[1] %in% seq_len(aval_dims) & dims[2] %in% seq_len(aval_dims),
                             msg = paste0(add_cross(), crayon_body("The dimensions provided to "),
@@ -1736,7 +1744,7 @@ check_and_set_slot <- function(slot){
                                           crayon_key("scale.data"),
                                           crayon_body(".")))
   }
-
+  
   return(slot)
 }
 
@@ -1757,7 +1765,7 @@ check_and_set_slot <- function(slot){
 #' }
 compute_factor_levels <- function(sample, feature, position, group.by = NULL, order = FALSE, order.by = FALSE, assay = "SCT", slot = "data"){
   `%>%` <- magrittr::`%>%`
-
+  
   assertthat::assert_that(position %in% c("stack", "fill"),
                           msg = paste0(add_cross(), crayon_body("Parameter "),
                                        crayon_key("position"),
@@ -1766,14 +1774,14 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
                                        crayon_body(" or "),
                                        crayon_key("fill"),
                                        crayon_body(".")))
-
+  
   if (is.null(group.by)){
     sample@meta.data[, "group.by"] <- sample@active.ident
   } else {
     sample@meta.data[, "group.by"] <- sample@meta.data[, group.by]
   }
   group.by <- "group.by"
-
+  
   if (base::isFALSE(order)){
     factor_levels <- as.character(rev(sort(unique(sample@meta.data[, group.by]))))
   } else if (isTRUE(order)){
@@ -1782,16 +1790,16 @@ compute_factor_levels <- function(sample, feature, position, group.by = NULL, or
                                                 group.by = group.by,
                                                 assay = assay,
                                                 slot = slot) %>%
-                     dplyr::group_by(.data$group.by) %>%
-                     dplyr::summarise("value" = if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {"feature" <- dplyr::n()}) %>%
-                     dplyr::mutate("feature" = if (position == "fill") {.data$value / sum(.data$value)} else {.data$value}) %>%
-                     dplyr::arrange(dplyr::desc(.data$feature)) %>%
-                     dplyr::pull(.data$group.by) %>%
-                     as.character()
-
+      dplyr::group_by(.data$group.by) %>%
+      dplyr::summarise("value" = if(is.double(.data$feature)){dplyr::across(.cols = dplyr::all_of("feature"), mean)} else {"feature" <- dplyr::n()}) %>%
+      dplyr::mutate("feature" = if (position == "fill") {.data$value / sum(.data$value)} else {.data$value}) %>%
+      dplyr::arrange(dplyr::desc(.data$feature)) %>%
+      dplyr::pull(.data$group.by) %>%
+      as.character()
+    
   }
-
-
+  
+  
   return(factor_levels)
 }
 
@@ -1909,7 +1917,7 @@ compute_enrichment_scores <- function(sample,
                                       storeRanks = TRUE,
                                       norm_data = FALSE){
   `%>%` <- magrittr::`%>%`
-
+  
   # Checks for UCell.
   if (flavor == "UCell"){
     R_version <- paste0(R.version$major, ".", R.version$minor)
@@ -1927,13 +1935,13 @@ compute_enrichment_scores <- function(sample,
       # nocov end
     }
   }
-
+  
   if (!is.list(input_gene_list) & is.character(input_gene_list)){
     input_gene_list <- list("Input" = input_gene_list)
   }
   for (celltype in names(input_gene_list)){
     list_markers <- list(input_gene_list[[celltype]])
-
+    
     if (flavor == "Seurat"){
       # Compute Seurat AddModuleScore as well.
       if (verbose){
@@ -1955,13 +1963,13 @@ compute_enrichment_scores <- function(sample,
                                                                            ctrl = ctrl,
                                                                            assay = assay)))
       }
-
-
+      
+      
       # Retrieve the scores.
       col_name <- stringr::str_replace_all(paste0(celltype, "1"), " ", ".")
       col_name <- stringr::str_replace_all(col_name, "-", ".")
       col_name <- stringr::str_replace_all(col_name, "\\+", ".")
-
+      
       # Modify the name that Seurat::AddModuleScore gives by default.
       sample@meta.data[, celltype] <- sample@meta.data[, col_name]
       # Remove old metadata.
@@ -1979,7 +1987,7 @@ compute_enrichment_scores <- function(sample,
     }
     list.originals <- names(input_gene_list)
     names(input_gene_list) <- list.names
-
+    
     sample <- UCell::AddModuleScore_UCell(obj = sample,
                                           features = input_gene_list,
                                           assay = assay,
@@ -1987,7 +1995,7 @@ compute_enrichment_scores <- function(sample,
                                           name = "",
                                           ncores = ncores,
                                           storeRanks = storeRanks)
-
+    
     for (i in seq_len(length(list.names))){
       old.name <- list.originals[i]
       mod.name <- list.names[i]
@@ -2001,7 +2009,7 @@ compute_enrichment_scores <- function(sample,
       }
     }
   }
-
+  
   
   if (isTRUE(norm_data)){
     # Compute a 0-1 normalization.
@@ -2010,7 +2018,7 @@ compute_enrichment_scores <- function(sample,
     }
   }
   
-
+  
   return(sample)
 }
 
@@ -2053,9 +2061,9 @@ modify_continuous_legend <- function(p,
     legend.barwidth <- legend.width
     legend.barheight <- legend.length
   }
-
+  
   legend.title <- if (is.null(legend.title)){ggplot2::waiver()} else {legend.title}
-
+  
   if (legend.aes == "color" | legend.aes == "colour"){
     if (legend.type == "normal"){
       p <- p +
@@ -2079,21 +2087,21 @@ modify_continuous_legend <- function(p,
       p <- p +
         ggplot2::guides(fill = ggplot2::guide_colorbar(title = legend.title,
                                                        title.position = "top",
-                                                        title.hjust = 0.5))
+                                                       title.hjust = 0.5))
     } else if (legend.type == "colorbar"){
       p <- p +
         ggplot2::guides(fill = ggplot2::guide_colorbar(title = legend.title,
                                                        title.position = "top",
-                                                        barwidth = legend.barwidth,
-                                                        barheight = legend.barheight,
-                                                        title.hjust = 0.5,
-                                                        ticks.linewidth = legend.tickwidth,
-                                                        frame.linewidth = legend.framewidth,
-                                                        frame.colour = legend.framecolor,
-                                                        ticks.colour = legend.tickcolor))
+                                                       barwidth = legend.barwidth,
+                                                       barheight = legend.barheight,
+                                                       title.hjust = 0.5,
+                                                       ticks.linewidth = legend.tickwidth,
+                                                       frame.linewidth = legend.framewidth,
+                                                       frame.colour = legend.framecolor,
+                                                       ticks.colour = legend.tickcolor))
     }
   }
-
+  
   return(p)
 }
 
@@ -2123,28 +2131,28 @@ get_data_column <- function(sample,
       reduction <- red
     }
   }
-
+  
   if (isTRUE(feature %in% colnames(sample@meta.data))){
     feature_column <- sample@meta.data %>%
-                      dplyr::select(dplyr::all_of(c(feature))) %>%
-                      tibble::rownames_to_column(var = "cell") %>%
-                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
+      dplyr::select(dplyr::all_of(c(feature))) %>%
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
     suppressWarnings({
-    feature_column <- SeuratObject::GetAssayData(object = sample,
-                                    assay = assay,
-                                    slot = slot)[feature, , drop = FALSE] %>%
-                      as.matrix() %>%
-                      t() %>%
-                      as.data.frame() %>%
-                      tibble::rownames_to_column(var = "cell") %>%
-                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
+      feature_column <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   slot = slot)[feature, , drop = FALSE] %>%
+        as.matrix() %>%
+        t() %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(var = "cell") %>%
+        dplyr::rename("feature" = dplyr::all_of(c(feature)))
     })
   } else if (isTRUE(feature %in% dim_colnames)){
     feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
-                      as.data.frame() %>%
-                      tibble::rownames_to_column(var = "cell") %>%
-                      dplyr::rename("feature" = dplyr::all_of(c(feature)))
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::rename("feature" = dplyr::all_of(c(feature)))
   }
   return(feature_column)
 }
@@ -2176,23 +2184,23 @@ get_data_column_in_context <- function(sample,
     sample@meta.data[, "group.by"] <- sample@meta.data[, group.by]
   }
   group.by <- "group.by"
-
+  
   vars <- c("cell", "group.by")
   if (!is.null(split.by)){
     sample@meta.data[, "split.by"] <- sample@meta.data[, split.by]
     vars <- c(vars, "split.by")
   }
-
+  
   data <- sample@meta.data %>%
-          tibble::rownames_to_column(var = "cell") %>%
-          dplyr::select(dplyr::all_of(vars)) %>%
-          dplyr::left_join(y = get_data_column(sample = sample,
-                                               feature = feature,
-                                               assay = assay,
-                                               slot = slot),
-                           by = "cell") %>%
-          tibble::as_tibble()
-
+    tibble::rownames_to_column(var = "cell") %>%
+    dplyr::select(dplyr::all_of(vars)) %>%
+    dplyr::left_join(y = get_data_column(sample = sample,
+                                         feature = feature,
+                                         assay = assay,
+                                         slot = slot),
+                     by = "cell") %>%
+    tibble::as_tibble()
+  
   return(data)
 }
 
@@ -2211,15 +2219,15 @@ check_parameters <- function(parameter,
   if (parameter_name == "font.type"){
     # Check font.type.
     assertthat::assert_that(parameter %in% c("sans", "serif", "mono"),
-                           msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
-                                        crayon_key(parameter_name),
-                                        crayon_body(": "),
-                                        crayon_key("sans"),
-                                        crayon_body(", "),
-                                        crayon_key("serif"),
-                                        crayon_body(", "),
-                                        crayon_key("mono"),
-                                        crayon_body(".")))
+                            msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
+                                         crayon_key(parameter_name),
+                                         crayon_body(": "),
+                                         crayon_key("sans"),
+                                         crayon_body(", "),
+                                         crayon_key("serif"),
+                                         crayon_body(", "),
+                                         crayon_key("mono"),
+                                         crayon_body(".")))
   } else if (parameter_name == "legend.type"){
     # Check the legend.type.
     assertthat::assert_that(parameter %in% c("normal", "colorbar"),
@@ -2470,7 +2478,7 @@ check_parameters <- function(parameter,
                                          crayon_body(", "),
                                          crayon_key("UCell"),
                                          crayon_body(".")))
- } else if (parameter_name == "database"){
+  } else if (parameter_name == "database"){
     assertthat::assert_that(parameter %in% c("GO", "KEGG"),
                             msg = paste0(add_cross(), crayon_body("Please provide one of the following to "),
                                          crayon_key(parameter_name),
@@ -2582,85 +2590,85 @@ prepare_ggplot_alluvial_plot <- function(data,
                                        crayon_body("different unique elements.")))
   if (items == 2){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]]))
   } else if (items == 3){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]]))
   } else if (items == 4){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]]))
   } else if (items == 5){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]]))
   } else if (items == 6){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]],
-                                                axis6 = data[[vars.use[6]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]],
+                                             axis6 = data[[vars.use[6]]]))
   } else if (items == 7){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]],
-                                                axis6 = data[[vars.use[6]]],
-                                                axis7 = data[[vars.use[7]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]],
+                                             axis6 = data[[vars.use[6]]],
+                                             axis7 = data[[vars.use[7]]]))
   } else if (items == 8) {
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]],
-                                                axis6 = data[[vars.use[6]]],
-                                                axis7 = data[[vars.use[7]]],
-                                                axis8 = data[[vars.use[8]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]],
+                                             axis6 = data[[vars.use[6]]],
+                                             axis7 = data[[vars.use[7]]],
+                                             axis8 = data[[vars.use[8]]]))
   } else if (items == 9){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]],
-                                                axis6 = data[[vars.use[6]]],
-                                                axis7 = data[[vars.use[7]]],
-                                                axis8 = data[[vars.use[8]]],
-                                                axis9 = data[[vars.use[9]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]],
+                                             axis6 = data[[vars.use[6]]],
+                                             axis7 = data[[vars.use[7]]],
+                                             axis8 = data[[vars.use[8]]],
+                                             axis9 = data[[vars.use[9]]]))
   } else if (items == 10){
     p <- data %>%
-         ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
-                                                axis1 = data[[vars.use[1]]],
-                                                axis2 = data[[vars.use[2]]],
-                                                axis3 = data[[vars.use[3]]],
-                                                axis4 = data[[vars.use[4]]],
-                                                axis5 = data[[vars.use[5]]],
-                                                axis6 = data[[vars.use[6]]],
-                                                axis7 = data[[vars.use[7]]],
-                                                axis8 = data[[vars.use[8]]],
-                                                axis9 = data[[vars.use[9]]],
-                                                axis10 = data[[vars.use[10]]]))
+      ggplot2::ggplot(mapping = ggplot2::aes(y = data$n,
+                                             axis1 = data[[vars.use[1]]],
+                                             axis2 = data[[vars.use[2]]],
+                                             axis3 = data[[vars.use[3]]],
+                                             axis4 = data[[vars.use[4]]],
+                                             axis5 = data[[vars.use[5]]],
+                                             axis6 = data[[vars.use[6]]],
+                                             axis7 = data[[vars.use[7]]],
+                                             axis8 = data[[vars.use[8]]],
+                                             axis9 = data[[vars.use[9]]],
+                                             axis10 = data[[vars.use[10]]]))
   }
   return(p)
 }
@@ -2676,7 +2684,7 @@ prepare_ggplot_alluvial_plot <- function(data,
 #' TBD
 #' }
 get_axis_parameters <- function(angle,
-                               flip){
+                                flip){
   if (isTRUE(flip)){
     if (angle == 0){
       out <- list("angle" = angle,
@@ -2754,14 +2762,14 @@ compute_umap_layer <- function(sample,
   `%>%` <- magrittr::`%>%`
   embeddings <- Seurat::Embeddings(sample,
                                    reduction = reduction)[, labels, drop = FALSE] %>%
-                as.data.frame()
+    as.data.frame()
   colnames(embeddings) <- c("x", "y")
-
+  
   # Code adapted from: https://slowkow.com/notes/ggplot2-color-by-density/
   # Licensed under: CC BY-SA (compatible with GPL-3).
   # Author: Kamil Slowikowski - https://slowkow.com/
   
-
+  
   # Obtain density.
   if (base::isFALSE(skip.density)){
     density <- MASS::kde2d(x = embeddings$x,
@@ -2776,52 +2784,52 @@ compute_umap_layer <- function(sample,
     embeddings$density <- density_vector
   }
   
-
+  
   # Add the group.by and split.by layers.
   if (!is.null(group.by)){
     embeddings <- embeddings %>%
-                  tibble::rownames_to_column(var = "cell") %>%
-                  dplyr::left_join(y = sample@meta.data %>%
-                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
-                                     tibble::rownames_to_column(var = "cell"),
-                                   by = "cell") %>%
-                  tibble::column_to_rownames(var = "cell")
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::left_join(y = sample@meta.data %>%
+                         dplyr::select(dplyr::all_of(c(group.by))) %>%
+                         tibble::rownames_to_column(var = "cell"),
+                       by = "cell") %>%
+      tibble::column_to_rownames(var = "cell")
     colnames(embeddings) <- c(colnames(embeddings)[seq(1, (length(colnames(embeddings)) - 1))], "group.by")
-
+    
     if (base::isFALSE(skip.density)){
       density.center.group.by <- embeddings %>%
-                                 dplyr::select(dplyr::all_of(c("x", "y", "group.by", "density"))) %>%
-                                 dplyr::group_by(.data$group.by) %>%
-                                 dplyr::mutate("filt_x_up" = stats::quantile(.data$x, 0.66),
-                                               "filt_x_down" = stats::quantile(.data$x, 0.33),
-                                               "filt_y_up" = stats::quantile(.data$y, 0.66),
-                                               "filt_y_down" = stats::quantile(.data$y, 0.33)) %>%
-                                 dplyr::filter(.data$x >= .data$filt_x_down & .data$x <= .data$filt_x_up,
-                                               .data$y >= .data$filt_y_down & .data$y <= .data$filt_y_up) %>%
-                                 dplyr::summarize("x" = mean(.data$x),
-                                                  "y" = mean(.data$y))
+        dplyr::select(dplyr::all_of(c("x", "y", "group.by", "density"))) %>%
+        dplyr::group_by(.data$group.by) %>%
+        dplyr::mutate("filt_x_up" = stats::quantile(.data$x, 0.66),
+                      "filt_x_down" = stats::quantile(.data$x, 0.33),
+                      "filt_y_up" = stats::quantile(.data$y, 0.66),
+                      "filt_y_down" = stats::quantile(.data$y, 0.33)) %>%
+        dplyr::filter(.data$x >= .data$filt_x_down & .data$x <= .data$filt_x_up,
+                      .data$y >= .data$filt_y_down & .data$y <= .data$filt_y_up) %>%
+        dplyr::summarize("x" = mean(.data$x),
+                         "y" = mean(.data$y))
     }
     
   }
-
+  
   if (!is.null(split.by)){
     embeddings <- embeddings %>%
-                  tibble::rownames_to_column(var = "cell") %>%
-                  dplyr::left_join(y = sample@meta.data %>%
-                                     dplyr::select(dplyr::all_of(c(split.by))) %>%
-                                     tibble::rownames_to_column(var = "cell"),
-                                   by = "cell") %>%
-                  tibble::column_to_rownames(var = "cell")
+      tibble::rownames_to_column(var = "cell") %>%
+      dplyr::left_join(y = sample@meta.data %>%
+                         dplyr::select(dplyr::all_of(c(split.by))) %>%
+                         tibble::rownames_to_column(var = "cell"),
+                       by = "cell") %>%
+      tibble::column_to_rownames(var = "cell")
     colnames(embeddings) <- c(colnames(embeddings)[seq(1, (length(colnames(embeddings)) - 1))], "split.by")
   }
-
+  
   # Apply filtering criteria:
   if (base::isFALSE(skip.density)){
     embeddings <- embeddings %>%
-                  dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
+      dplyr::filter(.data$density <= stats::quantile(embeddings$density, border.density))
   }
   
-
+  
   # Generate base layer.
   if (base::isFALSE(raster)){
     base_layer <- ggplot2::geom_point(data = embeddings,
@@ -2843,9 +2851,9 @@ compute_umap_layer <- function(sample,
                                                 pixels = c(raster.dpi, raster.dpi),
                                                 na.rm = TRUE)
   }
-
-
-
+  
+  
+  
   # Generate NA layer.
   if (base::isFALSE(raster)){
     na_layer <- ggplot2::geom_point(data = embeddings,
@@ -2867,7 +2875,7 @@ compute_umap_layer <- function(sample,
                                               pixels = c(raster.dpi, raster.dpi),
                                               na.rm = TRUE)
   }
-
+  
   # Generate center points layer.
   out <- list()
   if (!is.null(group.by) & base::isFALSE(skip.density)){
@@ -2898,13 +2906,13 @@ compute_umap_layer <- function(sample,
                                                    na.rm = TRUE)
     }
     out[["color_layer"]] <- color_layer
-
+    
     center_layer_2 <- ggplot2::geom_point(data = density.center.group.by,
                                           mapping = ggplot2::aes(x = .data$x,
                                                                  y = .data$y),
                                           color = "black",
                                           size = pt.size * dot.size)
-
+    
     center_layer <- ggplot2::geom_point(data = density.center.group.by,
                                         mapping = ggplot2::aes(x = .data$x,
                                                                y = .data$y,
@@ -2917,12 +2925,12 @@ compute_umap_layer <- function(sample,
                           "center_layer_1" = center_layer)
     out[["center_layers"]] <- center_layers
   }
-
-
+  
+  
   out[["base_layer"]] <- base_layer
   out[["na_layer"]] <- na_layer
   out[["embeddings"]] <- embeddings
-
+  
   return(out)
 }
 
@@ -2993,7 +3001,7 @@ handle_axis <- function(flip,
       strip.text <- ggplot2::element_blank()
       legend.position <- "none"
     }
-
+    
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3016,7 +3024,7 @@ handle_axis <- function(flip,
                                                   hjust = 0.5)
         axis.title.x.bottom <- ggplot2::element_blank()
       }
-
+      
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 90,
                                                  hjust = 0.5,
@@ -3041,13 +3049,13 @@ handle_axis <- function(flip,
         axis.title.x.top <- ggplot2::element_blank()
         axis.title.x.bottom <- ggplot2::element_blank()
       }
-
+      
       axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                  angle = 90,
                                                  hjust = 0.5,
                                                  vjust = 0.5)
       axis.title.y.right <- ggplot2::element_blank()
-
+      
     }
   } else {
     # Strips and legend.
@@ -3067,8 +3075,8 @@ handle_axis <- function(flip,
       strip.text <- ggplot2::element_blank()
       legend.position <- "none"
     }
-
-
+    
+    
     if (counter == 1){
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3103,7 +3111,7 @@ handle_axis <- function(flip,
                                                    hjust = 0.5)
         axis.title.y.right <- ggplot2::element_blank()
       }
-
+      
     } else {
       axis.ticks.x.bottom <- ggplot2::element_line(color = "black")
       axis.ticks.x.top <- ggplot2::element_blank()
@@ -3134,7 +3142,7 @@ handle_axis <- function(flip,
       }
     }
   }
-
+  
   out_list <- list("axis.ticks.x.top" = axis.ticks.x.top,
                    "axis.ticks.x.bottom" = axis.ticks.x.bottom,
                    "axis.ticks.y.left" = axis.ticks.y.left,
@@ -3152,7 +3160,7 @@ handle_axis <- function(flip,
                    "strip.text" = strip.text,
                    "legend.position" = legend.position)
   return(out_list)
-
+  
 }
 
 #' Generate a list of colors that will be used for metadata plots.
@@ -3164,7 +3172,7 @@ handle_axis <- function(flip,
 #' TBD
 #' }
 get_SCpubr_colors <- function(){
-
+  
   colors <- c("#457b9d",
               "#b5838d",
               "#d4a276",
@@ -3344,9 +3352,9 @@ get_Colorblind_colors <- function(){
 check_group_by <- function(sample,
                            group.by,
                            is.heatmap){
-
+  
   group.by.return <- NULL
-
+  
   if (is.null(group.by)){
     assertthat::assert_that(!("Groups" %in% colnames(sample@meta.data)),
                             msg = paste0(add_cross(), crayon_body("Please, make sure you provide a value for "),
@@ -3357,7 +3365,7 @@ check_group_by <- function(sample,
     sample@meta.data[, "Groups"] <- sample@active.ident
     group.by <- "Groups"
   }
-
+  
   for (group in group.by){
     assertthat::assert_that(group %in% colnames(sample@meta.data),
                             msg = paste0(add_cross(), crayon_body("The value provided to "),
@@ -3365,7 +3373,7 @@ check_group_by <- function(sample,
                                          crayon_body(" is not part of the Seurat object "),
                                          crayon_key("meta.data"),
                                          crayon_body(".")))
-
+    
     assertthat::assert_that(class(sample@meta.data[, group]) %in% c("character", "factor"),
                             msg = paste0(add_cross(), crayon_body("The value provided to"),
                                          crayon_key(paste0("group.by (", group, " | defaults to Seurat::Idents(sample) if NULL)")),
@@ -3376,7 +3384,7 @@ check_group_by <- function(sample,
                                          crayon_body(" column in the sample"),
                                          crayon_key("metadata of the Seurat object"),
                                          crayon_body(".")))
-
+    
     if (isTRUE(is.heatmap)){
       assertthat::assert_that(sum(is.na(sample@meta.data[, group])) == 0,
                               msg = paste0(add_warning(), crayon_body("Found "),
@@ -3461,7 +3469,7 @@ compute_continuous_palette <- function(name = "YlGnBu",
         }
       }
     }
-
+    
   } else {
     if (direction == 1){
       colors <- RColorBrewer::brewer.pal(n = 11, name = name)

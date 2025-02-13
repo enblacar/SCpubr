@@ -13,6 +13,10 @@ do_CorrelationHeatmap <- function(sample = NULL,
                                cluster = TRUE,
                                remove.diagonal = TRUE,
                                mode = "hvg",
+                               values.show = FALSE,
+                               values.threshold = NULL,
+                               values.size = 3,
+                               values.round = 1,
                                assay = NULL,
                                group.by = NULL,
                                legend.title = "Pearson coef.",
@@ -61,7 +65,8 @@ do_CorrelationHeatmap <- function(sample = NULL,
   # Check logical parameters.
   logical_list <- list("enforce_symmetry" = enforce_symmetry,
                        "cluster" = cluster,
-                       "remove.diagonal" = remove.diagonal)
+                       "remove.diagonal" = remove.diagonal,
+                       "values.show" = values.show)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("min.cutoff" = min.cutoff,
@@ -75,7 +80,10 @@ do_CorrelationHeatmap <- function(sample = NULL,
                        "axis.text.x.angle" = axis.text.x.angle,
                        "sequential.direction" = sequential.direction,
                        "viridis.direction" = viridis.direction,
-                       "diverging.direction" = diverging.direction)
+                       "diverging.direction" = diverging.direction,
+                       "values.threshold" = values.threshold,
+                       "values.size" = values.size,
+                       "values.round" = values.round)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("mode" = mode,
@@ -138,7 +146,15 @@ do_CorrelationHeatmap <- function(sample = NULL,
                                                   direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                   enforce_symmetry = enforce_symmetry)
   }
-
+  
+  if (base::isTRUE(values.show)){
+    assertthat::assert_that(is.numeric(values.threshold),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value to "),
+                                         crayon_key("values.threshold"),
+                                         crayon_body(" when setting "),
+                                         crayon_key("values.show = TRUE"),
+                                         crayon_body(".")))
+  }
 
   if (mode == "hvg"){
     # Check if the sample provided is a Seurat object.
@@ -255,7 +271,16 @@ do_CorrelationHeatmap <- function(sample = NULL,
                          mapping = ggplot2::aes(x = .data$x,
                                                 y = .data$y,
                                                 fill = .data$score)) +
-         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5)
+    
+    if (base::isTRUE(values.show)){
+      p <- p + 
+           ggplot2::geom_text(ggplot2::aes(label = round(.data$score, values.round), 
+                                           color = ifelse(abs(.data$score) > values.threshold, "white", "black")), 
+                              size = values.size) + 
+           ggplot2::scale_color_identity()
+    }
+    p <- p + 
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
@@ -412,6 +437,10 @@ do_CorrelationHeatmap <- function(sample = NULL,
                                                 y = .data$y,
                                                 fill = .data$score)) +
          ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::geom_text(ggplot2::aes(label = round(.data$score, values.round), 
+                                         color = ifelse(.data$score > values.threshold, "white", "black")), 
+                            size = values.size) + 
+         ggplot2::scale_color_identity() + 
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

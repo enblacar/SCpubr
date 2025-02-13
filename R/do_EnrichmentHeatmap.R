@@ -22,6 +22,10 @@ do_EnrichmentHeatmap <- function(sample,
                                  slot = NULL,
                                  reduction = NULL,
                                  group.by = NULL,
+                                 values.show = FALSE,
+                                 values.threshold = NULL,
+                                 values.size = 3,
+                                 values.round = 1,
                                  verbose = FALSE,
                                  na.value = "grey75",
                                  legend.position = "bottom",
@@ -79,7 +83,8 @@ do_EnrichmentHeatmap <- function(sample,
                        "plot_cell_borders" = plot_cell_borders,
                        "flip" = flip,
                        "cluster" = cluster,
-                       "scale_scores" = scale_scores)
+                       "scale_scores" = scale_scores,
+                       "values.show" = values.show)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("viridis.direction" = viridis.direction,
@@ -99,7 +104,10 @@ do_EnrichmentHeatmap <- function(sample,
                        "max.cutoff" = max.cutoff,
                        "number.breaks" = number.breaks,
                        "sequential.direction" = sequential.direction,
-                       "diverging.direction" = diverging.direction)
+                       "diverging.direction" = diverging.direction,
+                       "values.threshold" = values.threshold,
+                       "values.size" = values.size,
+                       "values.round" = values.round)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("input_gene_list" = input_gene_list,
@@ -263,6 +271,14 @@ do_EnrichmentHeatmap <- function(sample,
     # nocov end
   }
   
+  if (base::isTRUE(values.show)){
+    assertthat::assert_that(is.numeric(values.threshold),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value to "),
+                                         crayon_key("values.threshold"),
+                                         crayon_body(" when setting "),
+                                         crayon_key("values.show = TRUE"),
+                                         crayon_body(".")))
+  }
 
   # Compute the enrichment scores.
   sample <- compute_enrichment_scores(sample = sample,
@@ -424,7 +440,25 @@ do_EnrichmentHeatmap <- function(sample,
                                                 y = if(base::isFALSE(flip)){.data$group.by} else {.data$gene_list},
                                                 fill = .data$mean)) +
          # nocov end
-         ggplot2::geom_tile(color = grid.color, linewidth = 0.5) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5)
+    
+    
+    if (base::isTRUE(values.show)){
+      if (base::isTRUE(enforce_symmetry)){
+        p <- p + 
+          ggplot2::geom_text(ggplot2::aes(label = round(.data$mean, values.round), 
+                                          color = ifelse(abs(.data$mean) > values.threshold, "white", "black")), 
+                             size = values.size)
+      } else {
+        p <- p + 
+          ggplot2::geom_text(ggplot2::aes(label = round(.data$mean, values.round), 
+                                          color = ifelse(.data$mean > values.threshold, "white", "black")), 
+                             size = values.size)
+      }
+      p <- p + ggplot2::scale_color_identity()
+    }
+    
+    p <- p +
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

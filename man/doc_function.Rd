@@ -255,6 +255,14 @@
 
 \item{dot.scale}{\strong{\code{\link[base]{numeric}}} | Scale the size of the dots.}
 
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
+
 \item{viridis.palette.pvalue, viridis.palette.logfc, viridis.palette.expression}{\strong{\code{\link[base]{character}}} | Viridis color palettes for the p-value, logfc and expression heatmaps. A capital letter from A to H or the scale name as in \link[viridis]{scale_fill_viridis}.}
 
 \item{nbin}{\strong{\code{\link[base]{numeric}}} | Number of bins to use in \link[Seurat]{AddModuleScore}.}

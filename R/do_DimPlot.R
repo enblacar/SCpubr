@@ -1,13 +1,16 @@
 #' Wrapper for \link[Seurat]{DimPlot}.
-#'
-#' @inheritParams doc_function
+#' 
+#' 
+#' @inheritParams doc_function 
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.
+#'
 #' @param shuffle \strong{\code{\link[base]{logical}}} | Whether to shuffle the cells or not, so that they are not plotted cluster-wise. Recommended.
 #' @param split.by.combined \strong{\code{\link[base]{logical}}} | Adds a combined view of the all the values before splitting them by \strong{\code{split.by}}. Think of this as a regular DimPlot added in front. This is set to \strong{\code{TRUE}} if \strong{\code{split.by}} is used in combination with \strong{\code{group.by}}.
 #' @param legend.dot.border \strong{\code{\link[base]{logical}}} | Adds a black border around the dots in the legend. 
 #' @param order \strong{\code{\link[base]{character}}} | Vector of identities to be plotted. Either one with all identities or just some, which will be plotted last.
 #' @param sizes.highlight \strong{\code{\link[base]{numeric}}} | Point size of highlighted cells using cells.highlight parameter.
 #' @return  A ggplot2 object containing a DimPlot.
+#' @md
 #' @export
 #'
 #' @example man/examples/examples_do_DimPlot.R

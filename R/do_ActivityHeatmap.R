@@ -21,6 +21,10 @@ do_ActivityHeatmap <- function(sample,
                                slot = NULL,
                                statistic = "ulm",
                                number.breaks = 5,
+                               values.show = FALSE,
+                               values.threshold = NULL,
+                               values.size = 3,
+                               values.round = 1,
                                use_viridis = FALSE,
                                viridis.palette = "G",
                                viridis.direction = -1,
@@ -73,7 +77,8 @@ do_ActivityHeatmap <- function(sample,
   logical_list <- list("verbose" = verbose,
                        "flip" = flip,
                        "enforce_symmetry" = enforce_symmetry,
-                       "use_viridis" = use_viridis)
+                       "use_viridis" = use_viridis,
+                       "values.show" = values.show)
   check_type(parameters = logical_list, required_type = "logical", test_function = is.logical)
   # Check numeric parameters.
   numeric_list <- list("font.size" = font.size,
@@ -90,7 +95,10 @@ do_ActivityHeatmap <- function(sample,
                        "sequential.direction" = sequential.direction,
                        "nbin" = nbin,
                        "ctrl" = ctrl,
-                       "diverging.direction" = diverging.direction)
+                       "diverging.direction" = diverging.direction,
+                       "values.threshold" = values.threshold,
+                       "values.size" = values.size,
+                       "values.round" = values.round)
   check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
   # Check character parameters.
   character_list <- list("group.by" = group.by,
@@ -195,7 +203,17 @@ do_ActivityHeatmap <- function(sample,
                                        crayon_body(" have at least "),
                                        crayon_key("five genes"),
                                        crayon_body(" each.")))
-
+  
+  
+  if (base::isTRUE(values.show)){
+    assertthat::assert_that(is.numeric(values.threshold),
+                            msg = paste0(add_cross(), crayon_body("Please provide a value to "),
+                                         crayon_key("values.threshold"),
+                                         crayon_body(" when setting "),
+                                         crayon_key("values.show = TRUE"),
+                                         crayon_body(".")))
+  }
+  
   # Add fake genes until all lists have the same length so that it can be converted into a tibble.
   gene_list <- lapply(input_gene_list, function(x){
     if (length(x) != max_value){
@@ -344,7 +362,24 @@ do_ActivityHeatmap <- function(sample,
                                                 y = if (isTRUE(flip)){.data$target} else {.data$source},
                                                 fill = .data$mean)) +
          # nocov end
-         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE)
+    
+    if (base::isTRUE(values.show)){
+      if (base::isTRUE(enforce_symmetry)){
+        p <- p + 
+          ggplot2::geom_text(ggplot2::aes(label = round(.data$mean, values.round), 
+                                          color = ifelse(abs(.data$mean) > values.threshold, "white", "black")), 
+                             size = values.size)
+      } else {
+        p <- p + 
+          ggplot2::geom_text(ggplot2::aes(label = round(.data$mean, values.round), 
+                                          color = ifelse(.data$mean > values.threshold, "white", "black")), 
+                             size = values.size)
+      }
+      p <- p + ggplot2::scale_color_identity()
+    }
+    
+    p <- p + 
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +

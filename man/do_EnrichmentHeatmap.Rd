@@ -15,6 +15,10 @@ do_EnrichmentHeatmap(
   slot = NULL,
   reduction = NULL,
   group.by = NULL,
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   verbose = FALSE,
   na.value = "grey75",
   legend.position = "bottom",
@@ -81,6 +85,14 @@ do_EnrichmentHeatmap(
 \item{reduction}{\strong{\code{\link[base]{character}}} | Reduction to use. Can be the canonical ones such as "umap", "pca", or any custom ones, such as "diffusion". If you are unsure about which reductions you have, use \code{Seurat::Reductions(sample)}. Defaults to "umap" if present or to the last computed reduction if the argument is not provided.}
 
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{verbose}{\strong{\code{\link[base]{logical}}} | Whether to show extra comments, warnings,etc.}
 

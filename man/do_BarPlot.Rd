@@ -27,7 +27,7 @@ do_BarPlot(
   xlab = NULL,
   ylab = NULL,
   colors.use = NULL,
-  colorblind = colorblind,
+  colorblind = FALSE,
   flip = FALSE,
   plot.title = NULL,
   plot.subtitle = NULL,

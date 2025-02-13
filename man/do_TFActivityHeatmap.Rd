@@ -13,6 +13,10 @@ do_TFActivityHeatmap(
   tfs.use = NULL,
   group.by = NULL,
   split.by = NULL,
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   na.value = "grey75",
   legend.position = "bottom",
   legend.width = 1,
@@ -70,6 +74,14 @@ do_TFActivityHeatmap(
 \item{group.by}{\strong{\code{\link[base]{character}}} | Metadata variable to group the output by. Has to be a character of factor column.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Secondary metadata variable to further group (split) the output by. Has to be a character of factor column.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 

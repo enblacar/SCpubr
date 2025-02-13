@@ -15,7 +15,7 @@ do_BoxPlot(
   font.type = "sans",
   axis.text.x.angle = 45,
   colors.use = NULL,
-  colorblind = colorblind,
+  colorblind = FALSE,
   na.value = "grey75",
   plot.title = NULL,
   plot.subtitle = NULL,

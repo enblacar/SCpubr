@@ -10,6 +10,10 @@ do_CorrelationHeatmap(
   cluster = TRUE,
   remove.diagonal = TRUE,
   mode = "hvg",
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   assay = NULL,
   group.by = NULL,
   legend.title = "Pearson coef.",
@@ -60,6 +64,14 @@ do_CorrelationHeatmap(
 \item{remove.diagonal}{\strong{\code{\link[base]{logical}}} | Whether to convert diagnoal to NA. Normally this value would be 1, heavily shifting the color scale.}
 
 \item{mode}{\strong{\code{\link[base]{character}}} | Different types of correlation matrices can be computed. Right now, the only possible value is "hvg", standing for Highly Variable Genes. The sample is subset for the HVG and the data is re-scaled. Scale data is used for the correlation.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{assay}{\strong{\code{\link[base]{character}}} | Assay to use. Defaults to the current assay.}
 

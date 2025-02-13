@@ -13,6 +13,10 @@ do_PathwayActivityHeatmap(
   statistic = "norm_wmean",
   pt.size = 1,
   border.size = 2,
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   na.value = "grey75",
   legend.position = "bottom",
   legend.width = 1,
@@ -70,6 +74,14 @@ do_PathwayActivityHeatmap(
 \item{pt.size}{\strong{\code{\link[base]{numeric}}} | Size of the dots.}
 
 \item{border.size}{\strong{\code{\link[base]{numeric}}} | Width of the border of the cells.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{na.value}{\strong{\code{\link[base]{character}}} | Color value for NA.}
 

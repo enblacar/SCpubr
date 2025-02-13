@@ -12,6 +12,10 @@ do_CNVHeatmap(
   using_metacells = FALSE,
   metacell_mapping = NULL,
   include_chr_arms = FALSE,
+  values.show = FALSE,
+  values.threshold = NULL,
+  values.size = 3,
+  values.round = 1,
   legend.type = "colorbar",
   legend.position = "bottom",
   legend.length = 20,
@@ -65,6 +69,14 @@ do_CNVHeatmap(
 \item{metacell_mapping}{\strong{\code{\link[SCpubr]{named_vector}}} | Vector or cell - metacell mapping.}
 
 \item{include_chr_arms}{\strong{\code{\link[base]{logical}}} | Whether the output heatmap should also include chromosome arms or just whole chromosomes.}
+
+\item{values.show}{\strong{\code{\link[base]{logical}}} | Whether to add values as text in the heatmap.}
+
+\item{values.threshold}{\strong{\code{\link[base]{numeric}}} | Value from which the text color turns from black to white. If mode = "hvg", this is applied to both ends of the color scale.}
+
+\item{values.size}{\strong{\code{\link[base]{numeric}}} | Size of the text labels.}
+
+\item{values.round}{\strong{\code{\link[base]{numeric}}} | Decimal to which round the values to.}
 
 \item{legend.type}{\strong{\code{\link[base]{character}}} | Type of legend to display. One of:
 \itemize{
