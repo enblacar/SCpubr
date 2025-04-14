@@ -71,7 +71,7 @@ if (base::isFALSE(dep_check[["do_RankedEnrichmentHeatmap"]])){
     
     p <- SCpubr::do_RankedEnrichmentHeatmap(sample = sample,
                                      input_gene_list =  genes,
-                                     subsample = 100,
+                                     subsample = 120,
                                      nbin = 1,
                                      ctrl = 5,
                                      reduction = "umap",

@@ -324,6 +324,8 @@ do_DotPlot <- function(sample,
                                   values_to = "Avg.Exp") %>% 
               dplyr::left_join(y = data %>% dplyr::select(-dplyr::all_of(c("Avg.Exp"))),
                                by = c(group.by, "Gene"))
+      
+      
     }
     
     # Add gene map.
@@ -376,7 +378,9 @@ do_DotPlot <- function(sample,
                     tibble::column_to_rownames(var = "Gene") %>% 
                     as.matrix()
     
-    
+
+    # Set NAs to 0.
+    data.cluster[is.na(data.cluster)] <- 0
     
     # Cluster rows.
     if(length(rownames(data.cluster)) == 1){

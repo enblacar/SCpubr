@@ -17,6 +17,8 @@ do_ColorBlindCheck <- function(colors.use,
                                plot.caption.face = "italic",
                                axis.title.face = "bold",
                                axis.text.face = "plain",
+                               legend.text.face = "plain",
+                               legend.title.face = "bold",
                                grid.color = "white",
                                border.color = "black",
                                axis.text.x.angle = 45){
@@ -47,7 +49,9 @@ do_ColorBlindCheck <- function(colors.use,
                          "plot.subtitle.face" = plot.subtitle.face,
                          "plot.caption.face" = plot.caption.face,
                          "axis.title.face" = axis.title.face,
-                         "axis.text.face" = axis.text.face)
+                         "axis.text.face" = axis.text.face,
+                         "legend.text.face" = legend.text.face,
+                         "legend.title.face" = legend.title.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   
   

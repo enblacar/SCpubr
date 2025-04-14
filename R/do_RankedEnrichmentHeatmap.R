@@ -161,12 +161,13 @@ do_RankedEnrichmentHeatmap <- function(sample,
                 cli::style_italic(paste0(crayon_key('sample@reductions[['), cli::col_yellow("reduction"), crayon_key(']]@key <- "DC_"')))), call. = FALSE)
   }
   # nocov end
-  key <- sample@reductions[[reduction]]@key
   
   if (!is.na(subsample)){
     # Perform subsampling.
     sample <- sample[, sample(colnames(sample), subsample)]
   }
+  key <- sample@reductions[[reduction]]@key
+  
   
   # Check group.by.
   out <- check_group_by(sample = sample,
@@ -280,7 +281,6 @@ do_RankedEnrichmentHeatmap <- function(sample,
     # Limit the scale to quantiles 0.1 and 0.9 to avoid extreme outliers.
     limits <- c(stats::quantile(data.plot$Enrichment, 0.05, na.rm = TRUE),
                 stats::quantile(data.plot$Enrichment, 0.95, na.rm = TRUE))
-    
     # Bring extreme values to the cutoffs.
     data.plot <- data.plot %>% 
                  dplyr::mutate("Enrichment" = ifelse(.data$Enrichment <= limits[1], limits[1], .data$Enrichment)) %>% 

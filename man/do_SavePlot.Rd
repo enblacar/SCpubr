@@ -25,7 +25,7 @@ do_SavePlot(
 
 \item{file_name}{\strong{\code{\link[base]{character}}} | Name of the file (without extension, it will be added automatically).}
 
-\item{dpi}{\strong{\code{\link[base]{logical}}} | Whether to remove size limitation when saving ggplot2 objects.}
+\item{dpi}{\strong{\code{\link[base]{numeric}}} | Dpi to use.}
 
 \item{output_format}{\strong{\code{\link[base]{character}}} | Output format of the saved figure.  One of:
 \itemize{
@@ -39,6 +39,8 @@ do_SavePlot(
 }}
 
 \item{width, height}{\strong{\code{\link[base]{numeric}}} | Width and height of the figure (inches).}
+
+\item{limitsize}{\strong{\code{\link[base]{logical}}} | Whether to remove size limitation when saving ggplot2 objects.}
 }
 \value{
 Nothing.

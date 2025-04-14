@@ -14,6 +14,8 @@ do_ColorBlindCheck(
   plot.caption.face = "italic",
   axis.title.face = "bold",
   axis.text.face = "plain",
+  legend.text.face = "plain",
+  legend.title.face = "bold",
   grid.color = "white",
   border.color = "black",
   axis.text.x.angle = 45
@@ -31,6 +33,14 @@ do_ColorBlindCheck(
 \item \emph{\code{mono}}: Mono spaced font.
 \item \emph{\code{serif}}: Serif font family.
 \item \emph{\code{sans}}: Default font family.
+}}
+
+\item{plot.title.face, plot.subtitle.face, plot.caption.face, axis.title.face, axis.text.face, legend.title.face, legend.text.face}{\strong{\code{\link[base]{character}}} | Controls the style of the font for the corresponding theme element.  One of:
+\itemize{
+\item \emph{\code{plain}}: For normal text.
+\item \emph{\code{italic}}: For text in itallic.
+\item \emph{\code{bold}}: For text in bold.
+\item \emph{\code{bold.italic}}: For text both in itallic and bold.
 }}
 
 \item{grid.color}{\strong{\code{\link[base]{character}}} | Color of the grid in the plot. In heatmaps, color of the border of the cells.}

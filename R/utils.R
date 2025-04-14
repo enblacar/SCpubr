@@ -1022,11 +1022,11 @@ generate_color_scale <- function(names_use, colorblind = FALSE){
     tol.bright.colors <- colors.use[["Tol_Bright"]]
     tol.muted.colors <- colors.use[["Tol_Muted"]]
     okabe.colors <- colors.use[["Okabe"]]
-    krz.8 <- colros.use[["Krz8"]]
-    krz.12 <- colros.use[["Krz12"]]
-    krz.15 <- colros.use[["Krz15"]]
-    krz.23 <- colros.use[["Krz24"]]
-    collection <- colros.use[["Collection"]]
+    krz.8 <- colors.use[["Krz8"]]
+    krz.12 <- colors.use[["Krz12"]]
+    krz.15 <- colors.use[["Krz15"]]
+    krz.24 <- colors.use[["Krz24"]]
+    collection <- colors.use[["Collection"]]
     
     assertthat::assert_that(length(names_use) < length(collection),
                             msg = paste0(add_cross(), crayon_body("Please, select another variable that has less than "),

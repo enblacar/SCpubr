@@ -82,6 +82,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   However, when `split.by`is used alongside `group.by`, it is now enforced to show the combined plot (`split.by.combined = TRUE`), to avoid bugs.
 -   Added `legend.dot.border` parameter to select whether we want a black border around the legend dots or not.
 -   Fixed a bug in which `font.family` would not be applied when `label = TRUE`. 
+-   Fixed a bug in which groups would not cluster if `cluster = TRUE` if there were missing values.
 
 ## do_DotPlot()
 -   Fixed a bug that caused sequential palettes to not be checked properly.

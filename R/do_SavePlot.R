@@ -17,7 +17,7 @@
 #' }
 #' @param dpi \strong{\code{\link[base]{numeric}}} | Dpi to use.
 #' @param width,height \strong{\code{\link[base]{numeric}}} | Width and height of the figure (inches).
-#' @param dpi \strong{\code{\link[base]{logical}}} | Whether to remove size limitation when saving ggplot2 objects.
+#' @param limitsize \strong{\code{\link[base]{logical}}} | Whether to remove size limitation when saving ggplot2 objects.
 #'
 #' @return Nothing.
 #' @export

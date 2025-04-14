@@ -436,11 +436,16 @@ do_CorrelationHeatmap <- function(sample = NULL,
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$x,
                                                 y = .data$y,
                                                 fill = .data$score)) +
-         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) +
-         ggplot2::geom_text(ggplot2::aes(label = round(.data$score, values.round), 
-                                         color = ifelse(.data$score > values.threshold, "white", "black")), 
-                            size = values.size) + 
-         ggplot2::scale_color_identity() + 
+         ggplot2::geom_tile(color = grid.color, linewidth = 0.5, na.rm = TRUE) 
+    
+    if (base::isTRUE(values.show)){
+      p <- p + 
+        ggplot2::geom_text(ggplot2::aes(label = round(.data$score, values.round), 
+                                        color = ifelse(abs(.data$score) > values.threshold, "white", "black")), 
+                           size = values.size) + 
+        ggplot2::scale_color_identity()
+    }
+    p <- p + 
          ggplot2::scale_y_discrete(expand = c(0, 0)) +
          ggplot2::scale_x_discrete(expand = c(0, 0),
                                    position = "top") +
