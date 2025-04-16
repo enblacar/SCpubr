@@ -34,13 +34,7 @@ do_RidgePlot(
   plot.caption = NULL,
   xlab = NULL,
   ylab = NULL,
-  compute_quantiles = FALSE,
-  compute_custom_quantiles = FALSE,
-  quantiles = c(0.25, 0.5, 0.75),
-  compute_distribution_tails = FALSE,
-  prob_tails = 0.025,
-  color_by_probabilities = FALSE,
-  use_viridis = TRUE,
+  use_viridis = FALSE,
   viridis.palette = "G",
   viridis.direction = 1,
   sequential.palette = "YlGnBu",
@@ -123,18 +117,6 @@ do_RidgePlot(
 \item{plot.title, plot.subtitle, plot.caption}{\strong{\code{\link[base]{character}}} | Title, subtitle or caption to use in the plot.}
 
 \item{xlab, ylab}{\strong{\code{\link[base]{character}}} | Titles for the X and Y axis.}
-
-\item{compute_quantiles}{\strong{\code{\link[base]{logical}}} | Whether to compute quantiles of the distribution and color the ridge plots by them.}
-
-\item{compute_custom_quantiles}{\strong{\code{\link[base]{logical}}} | Whether to compute custom quantiles.}
-
-\item{quantiles}{\strong{\code{\link[base]{numeric}}} | Numeric vector of quantiles.}
-
-\item{compute_distribution_tails}{\strong{\code{\link[base]{logical}}} | Whether to compute distribution tails and color them.}
-
-\item{prob_tails}{\strong{\code{\link[base]{numeric}}} | The accumulated probability that the tails should contain.}
-
-\item{color_by_probabilities}{\strong{\code{\link[base]{logical}}} | Whether to color the ridges depending on the probability.}
 
 \item{use_viridis}{\strong{\code{\link[base]{logical}}} | Whether to use viridis color scales.}
 

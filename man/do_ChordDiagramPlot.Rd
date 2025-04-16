@@ -29,8 +29,7 @@ do_ChordDiagramPlot(
   alignment = "default",
   annotationTrack = c("grid", "axis"),
   padding_labels = 4,
-  font.size = 1,
-  ...
+  font.size = 1
 )
 }
 \arguments{

@@ -72,8 +72,7 @@ do_ChordDiagramPlot <- function(sample = NULL,
                                 alignment = "default",
                                 annotationTrack = c("grid", "axis"),
                                 padding_labels = 4,
-                                font.size = 1,
-                                ...){
+                                font.size = 1){
   # Add lengthy error messages.
   withr::local_options(.new = list("warning.length" = 8170))
 
@@ -119,75 +118,6 @@ do_ChordDiagramPlot <- function(sample = NULL,
 
   extra_params <- list(...)
 
-  # Internal use only
-  if ("from_df" %in% names(extra_params) & "df" %in% names(extra_params)){
-    data <- extra_params[["df"]]
-
-    assertthat::assert_that("data.frame" %in% class(data),
-                            msg = paste0(add_cross(), crayon_body("Please provide a "),
-                                         crayon_key("data.frame"),
-                                         crayon_body(" or a "),
-                                         crayon_key("tibble"),
-                                         crayon_body(" to the parameter "),
-                                         crayon_key("df"),
-                                         crayon_body(".")))
-
-    assertthat::assert_that(ncol(data) == 3,
-                            msg = paste0(add_cross(), crayon_body("If you make use of "),
-                                         crayon_key("from_df"),
-                                         crayon_body(" parameter, make sure that the dataframe provided to "),
-                                         crayon_key("df"),
-                                         crayon_body(" has at least "),
-                                         crayon_key("three"),
-                                         crayon_body(" columns.")))
-
-    assertthat::assert_that(sum(colnames(data) %in% c("from", "to", "value")) == 3,
-                            msg = paste0(add_cross(), crayon_body("If you make use of "),
-                                         crayon_key("from_df"),
-                                         crayon_body(" parameter, make sure that the dataframe provided to "),
-                                         crayon_key("df"),
-                                         crayon_body(" has at least "),
-                                         crayon_key("three"),
-                                         crayon_body(" columns named: "),
-                                         crayon_key("from"),
-                                         crayon_body(", "),
-                                         crayon_key("to"),
-                                         crayon_body(" and "),
-                                         crayon_key("value"),
-                                         crayon_body(".")))
-
-    assertthat::assert_that(class(data[["from"]]) %in% c("factor", "character"),
-                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
-                                         crayon_key("from"),
-                                         crayon_body(" in the dataframe provided to "),
-                                         crayon_key("df"),
-                                         crayon_body(" is a "),
-                                         crayon_key("character"),
-                                         crayon_body(" or "),
-                                         crayon_key("factor"),
-                                         crayon_body(" column.")))
-
-    assertthat::assert_that(class(data[["to"]]) %in% c("factor", "character"),
-                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
-                                         crayon_key("to"),
-                                         crayon_body(" in the dataframe provided to "),
-                                         crayon_key("df"),
-                                         crayon_body(" is a "),
-                                         crayon_key("character"),
-                                         crayon_body(" or "),
-                                         crayon_key("factor"),
-                                         crayon_body(" column.")))
-
-    assertthat::assert_that("integer" %in% class(data[["value"]]),
-                            msg = paste0(add_cross(), crayon_body("Make sure that the column named "),
-                                         crayon_key("from"),
-                                         crayon_body(" in the dataframe provided to "),
-                                         crayon_key("df"),
-                                         crayon_body(" is a "),
-                                         crayon_key("numeric"),
-                                         crayon_body(" column.")))
-
-  }  else {
     assertthat::assert_that(!is.null(sample),
                             msg = paste0(add_cross(), crayon_body("Please provide a "),
                                          crayon_key("Seurat object"),
@@ -233,7 +163,6 @@ do_ChordDiagramPlot <- function(sample = NULL,
             dplyr::rename("from" = dplyr::all_of(c(from)),
                           "to" = dplyr::all_of(c(to))) %>%
             dplyr::select(dplyr::all_of(c("from", "to", "value")))
-  }
 
 
   max_char <- max(c(max(nchar(as.character(data[["from"]]))), max(nchar(as.character(data[["to"]]))))) + padding_labels

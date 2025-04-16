@@ -1996,7 +1996,7 @@ compute_enrichment_scores <- function(sample,
                                           ncores = ncores,
                                           storeRanks = storeRanks)
     
-    for (i in seq_len(length(list.names))){
+    for (i in seq_along(list.names)){
       old.name <- list.originals[i]
       mod.name <- list.names[i]
       # Modify the name that Seurat::AddModuleScore gives by default.

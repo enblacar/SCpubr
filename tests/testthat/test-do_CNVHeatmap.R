@@ -20,6 +20,13 @@ if (base::isFALSE(dep_check[["do_CNVHeatmap"]])){
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_CNVHeatmap(sample = sample,
+                                 infercnv_object = infercnv_object,
+                                 using_metacells = FALSE,
+                                 chromosome_locations = human_chr_locations,
+                                 flip = TRUE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
                                             infercnv_object = infercnv_object,
                                             using_metacells = FALSE,
                                             chromosome_locations = human_chr_locations,

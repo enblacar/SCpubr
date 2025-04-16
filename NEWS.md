@@ -124,6 +124,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Removed `size = 1.25` aesthetic from the call to `ggridges::geom_ridge...`.
 -   Set default legend position to bottom.
 -   Fixed a bug in which plot grid would not react properly to `flip`.
+-   Simplified the functionality of the function due to inconsistent interactions with `ggridges` package. As such, parameters `compute_quantiles`, `compute_custom_quantiles`, `quantiles`, `compute_distribution_tails`, `prob_tails` and `color_by_probabilities` are removed. 
 
 ## do_SavePlot()
 -   Added `limitsize` parameter, that allows for very big ggplot2-based plots to be saved with big dimensions.
