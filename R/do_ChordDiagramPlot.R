@@ -42,7 +42,6 @@
 #' }
 #' @param padding_labels \strong{\code{\link[base]{numeric}}} | Number of extra padding (white spaces) of the labels so that they do not overlap with the scales.
 #' @param colors.from,colors.to \strong{\code{\link[SCpubr]{named_vector}}} | Named vector of colors corresponding to the unique values of "from" and "to".
-#' @param ... For internal use only.
 #'
 #' @return A circlize plot.
 #' @export
@@ -115,8 +114,6 @@ do_ChordDiagramPlot <- function(sample = NULL,
   check_parameters(parameter = alignment, parameter_name = "alignment")
   check_parameters(parameter = alpha.highlight, parameter_name = "alpha.highlight")
   circlize::circos.clear()
-
-  extra_params <- list(...)
 
     assertthat::assert_that(!is.null(sample),
                             msg = paste0(add_cross(), crayon_body("Please provide a "),

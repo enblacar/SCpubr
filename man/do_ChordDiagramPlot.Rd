@@ -106,8 +106,6 @@ do_ChordDiagramPlot(
 \item{padding_labels}{\strong{\code{\link[base]{numeric}}} | Number of extra padding (white spaces) of the labels so that they do not overlap with the scales.}
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
-
-\item{...}{For internal use only.}
 }
 \value{
 A circlize plot.

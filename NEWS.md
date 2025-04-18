@@ -11,6 +11,8 @@
 -   Whenever a categorical color scale is used, now you can set `colorblind = TRUE`, and it will pull from a collection of different published colorblind-safe palettes. If the length of the classes in the categorical variable matches the length of one of the palettes, that palettes is used. If not, a pool will be selected, with a total maximum of 85 categories allowed. If `colors.use` is used, `colorblind` has no effect (thus, check if your palette is colorblind-safe with `do_ColorBlindCheck()`). For continuous variables, `YlGnBu` is used. For divergent variables, `RdBu` is used. Both `YlGnBu` and `RdBu` are colorblind-safe. Since they are set as default, there is no need for `colorblind` parameter in the functions that only plot continuous/divergent variables.
 -  Added support to show the values as text in most heatmap-based functions. This is achieved by using `values.show = TRUE`.
 -  Aesthetics of the text labels can be tuned with `values.threshold`, `values.size` and `values.round`. 
+-  Fixed an issue where `symmetry_center` would not work as intended. Now it correctly displays the color scale with the provided value in the center.
+
 ## Added functions
 -   `do_WafflePlot()`: This function displays proportions as a pictogram grid of 10x10 tiles. It helps to visually see at a glance the proportions of your data. This fails to correctly convey decimal proportions and completely ignores heavily under-represented classes in your dataset. 
 -   `do_RankedExpressionHeatmap()` to plot expression values as a heatmap along a dimensional reduction component.

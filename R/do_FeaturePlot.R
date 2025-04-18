@@ -371,7 +371,6 @@ do_FeaturePlot <- function(sample,
                                                   enforce_symmetry = enforce_symmetry)
   }
 
-
   # Generate base layer.
   if (isTRUE(plot_cell_borders)){
     out <- compute_umap_layer(sample = sample,
@@ -465,6 +464,7 @@ do_FeaturePlot <- function(sample,
                                       enforce_symmetry = enforce_symmetry,
                                       center_on_value = if(symmetry.type == "absolute"){FALSE} else {TRUE},
                                       value_center = symmetry.center)
+        
         p <- add_scale(p = p,
                        function_use = ggplot2::scale_color_gradientn(colors = colors.gradient,
                                                                      na.value = na.value,

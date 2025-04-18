@@ -1268,8 +1268,8 @@ compute_scales <- function(sample,
     } else {
       low_end <- value_center - limits[1]
       high_end <- limits[2] - value_center
-      value.use <- max(c(low_end, high_end))
-      limits <- c(1 - value.use, 1 + value.use)
+      value.use <- max(c(abs(low_end), abs(high_end)))
+      limits <- c(value_center - value.use, value_center + value.use)
     }
     
   }

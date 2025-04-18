@@ -184,29 +184,6 @@ This function computes ridge plots based on the \pkg{ggridges} package.
                               viridis.direction = 1)
     p
 
-    # Draw quantiles of the distribution.
-    p <- SCpubr::do_RidgePlot(sample = sample,
-                              feature = "nFeature_RNA",
-                              continuous_scale = TRUE,
-                              compute_quantiles = TRUE,
-                              compute_custom_quantiles = TRUE)
-    p
-
-    # Draw probability tails.
-    p <- SCpubr::do_RidgePlot(sample = sample,
-                              feature = "nFeature_RNA",
-                              continuous_scale = TRUE,
-                              compute_quantiles = TRUE,
-                              compute_distribution_tails = TRUE)
-    p
-
-    # Draw probability tails.
-    p <- SCpubr::do_RidgePlot(sample = sample,
-                              feature = "nFeature_RNA",
-                              continuous_scale = TRUE,
-                              compute_quantiles = TRUE,
-                              color_by_probabilities = TRUE)
-    p
   } else if (base::isFALSE(value)){
     message("This function can not be used without its suggested packages.")
     message("Check out which ones are needed using `SCpubr::state_dependencies()`.")
