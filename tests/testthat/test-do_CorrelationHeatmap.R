@@ -57,12 +57,41 @@ if (base::isFALSE(dep_check[["do_CorrelationHeatmap"]])){
   testthat::test_that("do_CorrelationHeatmap: PASS - group.by", {
     testthat::skip_on_cran()
 
-    genes <- list("A" = Seurat::VariableFeatures(sample)[1:5],
-                  "B" = Seurat::VariableFeatures(sample)[6:10],
-                  "C" = Seurat::VariableFeatures(sample)[11:15])
+    genes <- list("A" = Seurat::VariableFeatures(sample)[1:50],
+                  "B" = Seurat::VariableFeatures(sample)[25:75],
+                  "C" = Seurat::VariableFeatures(sample)[50:101])
 
     p <- SCpubr::do_CorrelationHeatmap(sample = sample,
                                     group.by = "seurat_clusters")
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationHeatmap(sample = sample,
+                                       input_gene_list = genes,
+                                       group.by = "seurat_clusters",
+                                       mode = "jaccard")
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationHeatmap(sample = sample,
+                                       input_gene_list = genes,
+                                       group.by = "seurat_clusters",
+                                       mode = "jaccard",
+                                       min.cutoff = 0.01,
+                                       max.cutoff = 0.02)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationHeatmap(sample = sample,
+                                       input_gene_list = genes,
+                                       group.by = "seurat_clusters",
+                                       mode = "jaccard",
+                                       cluster = TRUE)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_CorrelationHeatmap(sample = sample,
+                                       input_gene_list = genes,
+                                       group.by = "seurat_clusters",
+                                       mode = "jaccard",
+                                       values.show = TRUE,
+                                       values.threshold = 0.01)
     testthat::expect_true("ggplot" %in% class(p))
   })
 
