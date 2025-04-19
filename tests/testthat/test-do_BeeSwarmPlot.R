@@ -58,6 +58,70 @@ if (base::isFALSE(dep_check[["do_BeeSwarmPlot"]])){
                                  feature_to_rank = "EPC1",
                                  group.by = "seurat_clusters",
                                  continuous_feature = FALSE,
+                                 remove_x_axis = TRUE,
+                                 remove_y_axis = TRUE,
+                                 flip = TRUE,
+                                 raster = TRUE,
+                                 ylab = "Ylab")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 remove_x_axis = TRUE,
+                                 remove_y_axis = TRUE,
+                                 flip = TRUE,
+                                 raster = TRUE,
+                                 ylab = NULL)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 order = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 raster = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "orig.ident",
+                                 continuous_feature = FALSE,
+                                 colors.use = c("Cell" = "red"))
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
+                                 legend.title = NULL)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BeeSwarmPlot(sample = sample,
+                                 feature_to_rank = "EPC1",
+                                 group.by = "seurat_clusters",
+                                 continuous_feature = FALSE,
                                  order = TRUE)
     testthat::expect_type(p, "list")
     

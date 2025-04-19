@@ -11,6 +11,12 @@ if (base::isFALSE(dep_check[["do_BarPlot"]])){
     p <- SCpubr::do_BarPlot(sample = sample,
                             group.by = "seurat_clusters",
                             position = "stack",
+                            colors.use = NULL)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            position = "stack",
                             order = FALSE)
     testthat::expect_type(p, "list")
 
@@ -25,6 +31,35 @@ if (base::isFALSE(dep_check[["do_BarPlot"]])){
                             split.by = "orig.ident",
                             position = "fill")
     testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            position = "stack")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = NULL,
+                            position = "stack",
+                            flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            position = "fill",
+                            add.n = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            position = "fill",
+                            order = TRUE,
+                            order.by = "0")
+    testthat::expect_type(p, "list")
+
     
     p <- SCpubr::do_BarPlot(sample = sample,
                             group.by = "seurat_clusters",
@@ -48,6 +83,16 @@ if (base::isFALSE(dep_check[["do_BarPlot"]])){
                             position = "fill",
                             add.n = TRUE,
                             return_data = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat_clusters",
+                            split.by = "orig.ident",
+                            facet.by = "orig.ident",
+                            position = "fill",
+                            add.n = TRUE,
+                            return_data = TRUE,
+                            flip = TRUE)
     testthat::expect_type(p, "list")
   })
 
@@ -177,6 +222,12 @@ if (base::isFALSE(dep_check[["do_BarPlot"]])){
                             group.by = "seurat.clusters.factor",
                             split.by = "seurat_clusters",
                             colors.use = colors)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BarPlot(sample = sample,
+                            group.by = "seurat.clusters.factor",
+                            split.by = "seurat_clusters",
+                            colors.use = NULL)
     testthat::expect_type(p, "list")
   })
 

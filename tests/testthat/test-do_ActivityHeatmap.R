@@ -13,6 +13,15 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE)
     testthat::expect_type(p, "list")
     
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = NA,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    enforce_symmetry = FALSE,
+                                    verbose = FALSE)
+    testthat::expect_type(p, "list")
+    
     
   })
   
@@ -33,7 +42,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
     
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:11],
-                  "C" = rownames(sample)[12:19])
+                  "C" = rownames(sample)[12:24])
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -42,6 +51,73 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = TRUE,
+                                    statistic = "wmean",
+                                    flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    group.by = "orig.ident",
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = FALSE,
+                                    flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    min.cutoff = 0,
+                                    max.cutoff = 0.1,
+                                    verbose = FALSE,
+                                    flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = FALSE,
+                                    values.show = TRUE,
+                                    values.threshold = 0.1,
+                                    enforce_symmetry = TRUE,
+                                    flip = FALSE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = FALSE,
+                                    values.show = TRUE,
+                                    values.threshold = 0.1,
+                                    enforce_symmetry = FALSE,
+                                    flip = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_ActivityHeatmap(sample = sample,
+                                    input_gene_list =  genes,
+                                    subsample = 100,
+                                    nbin = 1,
+                                    ctrl = 5,
+                                    verbose = FALSE,
+                                    flip = FALSE,
+                                    values.show = TRUE,
+                                    values.threshold = 0.2,
+                                    return_object = TRUE)
     testthat::expect_type(p, "list")
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,

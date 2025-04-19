@@ -23,6 +23,27 @@ if (base::isFALSE(dep_check[["do_BoxPlot"]])){
     p <- SCpubr::do_BoxPlot(sample = sample,
                             feature = "nCount_RNA")
     testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BoxPlot(sample = sample,
+                            feature = "nCount_RNA",
+                            split.by = "orig.ident")
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BoxPlot(sample = sample,
+                            feature = "nCount_RNA",
+                            group.by = "orig.ident",
+                            colors.use = c("Cell" = "red"))
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BoxPlot(sample = sample,
+                            feature = "nCount_RNA",
+                            order = TRUE)
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_BoxPlot(sample = sample,
+                            feature = "nCount_RNA",
+                            use_silhouette = TRUE)
+    testthat::expect_type(p, "list")
 
     sample$group.by <- as.character(sample$seurat_clusters)
     p <- SCpubr::do_BoxPlot(sample = sample,
@@ -127,6 +148,12 @@ if (base::isFALSE(dep_check[["do_BoxPlot"]])){
     testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
                                                feature = "nCount_RNA",
                                                order = TRUE,
+                                               split.by = "orig.ident")})
+    
+    testthat::expect_error({SCpubr::do_BoxPlot(sample = sample,
+                                               feature = "nCount_RNA",
+                                               use_silhouette = TRUE,
+                                               order = FALSE,
                                                split.by = "orig.ident")})
   })
 }

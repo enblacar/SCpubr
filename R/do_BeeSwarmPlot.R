@@ -332,17 +332,17 @@ do_BeeSwarmPlot <- function(sample,
          ggplot2::theme(legend.position = legend.position)
   }
 
-  if (remove_x_axis == TRUE){
+  if (base::isTRUE(remove_x_axis)){
     p <- p +
          ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                         axis.ticks.x = ggplot2::element_blank())
   }
-  if (remove_y_axis == TRUE){
+  if (base::isTRUE(remove_y_axis)){
     p <- p +
          ggplot2::theme(axis.text.y = ggplot2::element_blank(),
                         axis.ticks.y = ggplot2::element_blank())
   }
-  if (flip == TRUE){
+  if (base::isTRUE(flip)){
     p <- p +
          ggplot2::coord_flip() +
          ggplot2::theme(axis.text.y = ggplot2::element_blank(),

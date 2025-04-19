@@ -19,6 +19,58 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters")
 
     testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 use_labels = TRUE,
+                                 repel = TRUE)
+    
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 use_labels = TRUE,
+                                 repel = FALSE)
+    
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 flip = FALSE)
+    
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 flip = TRUE)
+    
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 use_viridis = TRUE,
+                                 colors.use = NULL)
+    
+    testthat::expect_type(p, "list")
+    
+    p <- SCpubr::do_AlluvialPlot(sample,
+                                 first_group = "orig.ident",
+                                 middle_groups = "annotation",
+                                 last_group = "seurat_clusters",
+                                 use_labels = FALSE,
+                                 repel = TRUE)
+    
+    testthat::expect_type(p, "list")
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
