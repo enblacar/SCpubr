@@ -210,6 +210,7 @@ do_GroupwiseDEHeatmap <- function(sample,
               dplyr::group_by(.data$cluster) %>%
               dplyr::filter(.data[[specificity]] <= p.cutoff) %>% 
               dplyr::slice_head(n = top_genes)
+
   
   gene.order <- data.use$gene %>% unique()
   
@@ -223,6 +224,10 @@ do_GroupwiseDEHeatmap <- function(sample,
               dplyr::mutate("p.adj.log10.minus" := -log10(.data[[specificity]])) %>% 
               dplyr::arrange(dplyr::desc(.data[[magnitude]]), dplyr::desc(.data$p.adj.log10.minus)) %>% 
               dplyr::select(-dplyr::all_of(c(specificity)))
+  
+  data.use$p.adj.log10.minus[data.use$p.adj.log10.minus == Inf] <- .Machine$double.xmax
+  
+  
   
   # Workaround parameter deprecation.
   if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){

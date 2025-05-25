@@ -111,6 +111,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 
 ## do_GroupwiseDEHeatmap()
 -   Reduced the legend title texts to allow for more room in the plot.
+-   Fixed a bug in which providing a DE genes object with `p_val_adj = 0` would cause the function to crash.
 
 ## do_LigandReceptorPlot()
 -   Added a new parameter `top_interactions_by_group` which when set to `TRUE` will report for each pair of `source` and `target`, as many interactions as stated in `top_interactions`.
