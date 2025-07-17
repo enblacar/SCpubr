@@ -16,6 +16,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 # nolint end
 
 sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
+sample@assays$SCT$counts <- sample@assays$SCT$data
 
 if (isTRUE(getOption("SCpubr.v5"))){
   suppressWarnings(sample[["SCT"]] <- as(object = sample[["SCT"]], Class = "Assay5"))

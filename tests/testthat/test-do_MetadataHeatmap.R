@@ -7,7 +7,7 @@ if (base::isFALSE(dep_check[["do_MetadataHeatmap"]])){
     
     p <- SCpubr::do_MetadataHeatmap(from_df = TRUE,
                                  df = df)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
   })
@@ -24,24 +24,24 @@ if (base::isFALSE(dep_check[["do_MetadataHeatmap"]])){
                                  df = df,
                                  flip = FALSE,
                                  legend.symbol.size = 2)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_MetadataHeatmap(from_df = TRUE,
                                  df = df,
                                  flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     sample$labelling <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     p <- SCpubr::do_MetadataHeatmap(sample = sample,
                                  group.by = "labelling",
                                  metadata = "orig.ident",
                                  flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_MetadataHeatmap(sample = sample,
                                  group.by = "labelling",
                                  metadata = "orig.ident",
                                  flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 }

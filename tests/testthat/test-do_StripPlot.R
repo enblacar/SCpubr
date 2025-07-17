@@ -4,13 +4,13 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     sample$orig.ident <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                split.by = "orig.ident")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 
@@ -21,43 +21,43 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                features = "nCount_RNA",
                                scale_type = "categorical",
                                enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "nCount_RNA",
                                scale_type = "categorical",
                                enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     sample$seurat_clusters <- as.character(sample$seurat_clusters)
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - flip", {
@@ -68,25 +68,25 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                features = "EPC1",
                                scale_type = "categorical",
                                flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - cutoffs", {
@@ -97,7 +97,7 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                features = "EPC1",
                                scale_type = "categorical",
                                min.cutoff = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
@@ -106,7 +106,7 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                use_viridis = FALSE,
                                sequential.direction = 1)
                               
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
@@ -115,39 +115,39 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                use_viridis = FALSE,
                                sequential.direction = -1)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                min.cutoff = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                max.cutoff = 2)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                max.cutoff = 2)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                min.cutoff = 1,
                                max.cutoff = 2)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                min.cutoff = 1,
                                max.cutoff = 2)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - default parameters = symmetrical scale", {
@@ -157,12 +157,12 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                enforce_symmetry = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -173,7 +173,7 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     sample$seurat_clusters_character <- as.character(sample$seurat_clusters)
     p <- SCpubr::do_StripPlot(sample = sample,
@@ -181,7 +181,7 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                scale_type = "categorical",
                                group.by = "seurat_clusters_character",
                                colors.use = NULL)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -194,14 +194,14 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                scale_type = "categorical",
                                group.by = "orig.ident",
                                colors.use = c("Cell" = "green"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "categorical",
                                group.by = "orig.ident",
                                colors.use = NULL)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - order by mean", {
@@ -212,13 +212,13 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                features = "EPC1",
                                scale_type = "continuous",
                                order = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                order = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - plot cell borders", {
@@ -229,13 +229,13 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                features = "EPC1",
                                scale_type = "continuous",
                                plot_cell_borders = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                plot_cell_borders = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - split.by", {
@@ -247,14 +247,14 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
                                scale_type = "continuous",
                                split.by = "seurat_clusters",
                                plot_cell_borders = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1",
                                scale_type = "continuous",
                                split.by = "seurat_clusters",
                                plot_cell_borders = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -282,11 +282,11 @@ if(base::isFALSE(dep_check[["do_StripPlot"]])){
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_StripPlot(sample = sample,
                                features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_StripPlot: PASS - several features", {

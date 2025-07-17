@@ -12,7 +12,7 @@
 #' @param heatmap.gap \strong{\code{\link[base]{numeric}}} | Size of the gap between heatmaps in mm.
 #' @param from_df \strong{\code{\link[base]{logical}}} | Whether to provide a data frame with the metadata instead.
 #' @param df \strong{\code{\link[base]{data.frame}}} | Data frame containing the metadata to plot. Rows contain the unique values common to all columns (metadata variables). The columns must be named.
-#' @param legend.font.size \strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the strong{\code{font.size}} parameter.
+#' @param legend.font.size \strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the \strong{\code{font.size}} parameter.
 #' @param legend.symbol.size \strong{\code{\link[base]{numeric}}} | Size of symbols in the legend in mm. NULL uses the default size.
 #' @return A ggplot2 object.
 #' @export

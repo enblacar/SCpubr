@@ -437,7 +437,7 @@ return_dependencies <- function(){
                    "do_StripPlot" = "ggdist",
                    "do_GroupwiseDEHeatmap" = NULL,
                    "do_MetadataHeatmap" = "cluster",
-                   "do_LigandReceptorPlot" = "liana",
+                   "do_LigandReceptorPlot" = NULL,
                    "do_LoadingsHeatmap" = NULL,
                    "do_RankedEnrichmentHeatmap" = "Matrix",
                    "do_RankedExpressionHeatmap" = NULL,

@@ -7,7 +7,7 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:5)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
   })
@@ -16,18 +16,18 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
     testthat::skip_on_cran()
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  subsample = 100)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     sample$test <- as.factor(sample$seurat_clusters)
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  group.by = "test")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
@@ -35,32 +35,32 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
                                  max.cutoff.loadings = 0.01,
                                  min.cutoff.expression = 0,
                                  max.cutoff.expression = 0.75)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  use_viridis = TRUE,
                                  viridis.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  use_viridis = TRUE,
                                  viridis.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  use_viridis = FALSE,
                                  sequential.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10,
                                  use_viridis = FALSE,
                                  sequential.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
   })

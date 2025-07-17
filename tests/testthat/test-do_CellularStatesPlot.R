@@ -16,7 +16,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y1 = "B",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -62,7 +62,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y1 = "B",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -71,7 +71,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        pt.size = 1,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - cell_borders", {
@@ -91,7 +91,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -101,7 +101,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -111,7 +111,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -122,7 +122,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -133,7 +133,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -145,7 +145,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - continuous feature", {
@@ -298,7 +298,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.size", {
@@ -320,7 +320,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.size = 8,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal marginal.group FALSE", {
@@ -342,7 +342,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.group = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables marginal distribution types", {
@@ -364,7 +364,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.type = "density",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -375,7 +375,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.type = "histogram",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -386,7 +386,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.type = "boxplot",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
@@ -397,7 +397,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        marginal.type = "violin",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     #p <- SCpubr::do_CellularStatesPlot(sample = sample,
     #                                   input_gene_list = genes,
@@ -408,7 +408,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
     #                                   marginal.type = "densigram",
     #                                   nbin = 1,
     #                                   ctrl = 10)
-    #testthat::expect_type(p, "list")
+    #testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables marginal wrong marginal.type", {
@@ -451,7 +451,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot.caption = "C",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables enforce symmetry", {
@@ -471,7 +471,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        enforce_symmetry = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, colors.use", {
@@ -492,7 +492,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y1 = "B",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by", {
@@ -512,7 +512,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y1 = "B",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis ticks", {
@@ -532,7 +532,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        axis.ticks = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables remove axis text", {
@@ -552,7 +552,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        axis.text = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 2 variables, group.by and colors.use", {
@@ -573,7 +573,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y1 = "B",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: FAIL - 2 variables same parameters", {
@@ -666,7 +666,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        x2 = "C",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -676,7 +676,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        pt.size = 1,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 3 variables marginal", {
@@ -698,7 +698,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 3 variables enforce symmetry", {
@@ -719,7 +719,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        enforce_symmetry = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -817,7 +817,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        y2 = "D",
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- SCpubr::do_CellularStatesPlot(sample = sample,
                                        input_gene_list = genes,
                                        x1 = "A",
@@ -828,7 +828,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        pt.size = 1,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 4 variables marginal", {
@@ -851,7 +851,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        plot_cell_borders = FALSE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_CellularStatesPlot: PASS - 4 variables enforce symmetry", {
@@ -873,7 +873,7 @@ if (base::isFALSE(dep_check[["do_CellularStatesPlot"]])){
                                        enforce_symmetry = TRUE,
                                        nbin = 1,
                                        ctrl = 10)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 

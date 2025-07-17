@@ -5,7 +5,7 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - default", {
@@ -14,7 +14,7 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     de_genes[1, "p_val_adj"] <- 1
     de_genes[2, "avg_log2FC"] <- 0.001
@@ -23,7 +23,7 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     de_genes <- de_genes %>%
       tibble::as_tibble() %>%
@@ -32,7 +32,7 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - n_genes", {
@@ -42,7 +42,7 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 n_genes = 15)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - use_labels", {
@@ -52,12 +52,12 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 use_labels = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 use_labels = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - gene tags", {
@@ -67,12 +67,12 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 add_gene_tags = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 add_gene_tags = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: PASS - gene tags order by", {
@@ -83,19 +83,19 @@ if(base::isFALSE(dep_check[["do_VolcanoPlot"]])){
                                 de_genes = de_genes,
                                 add_gene_tags = TRUE,
                                 order_tags_by = "both")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 add_gene_tags = TRUE,
                                 order_tags_by = "pvalue")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_VolcanoPlot(sample = sample,
                                 de_genes = de_genes,
                                 add_gene_tags = TRUE,
                                 order_tags_by = "logfc")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_VolcanoPlot: FAIL - wrong parameters", {

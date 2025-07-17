@@ -2,16 +2,16 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
   testthat::test_that("do_NebulosaPlot: CRAN essentials", {
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -23,50 +23,50 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  features = "EPC1",
                                  use_viridis = TRUE,
                                  viridis.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  use_viridis = TRUE,
                                  viridis.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  use_viridis = FALSE,
                                  sequential.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  use_viridis = FALSE,
                                  sequential.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = TRUE,
                                  viridis.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = TRUE,
                                  viridis.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = FALSE,
                                  sequential.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = FALSE,
                                  sequential.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
@@ -74,28 +74,28 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  use_viridis = TRUE,
                                  viridis.direction = 1,
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = TRUE,
                                  viridis.direction = -1,
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = FALSE,
                                  sequential.direction = 1,
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "TOX2"),
                                  use_viridis = FALSE,
                                  sequential.direction = -1,
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - cell_borders", {
@@ -103,9 +103,9 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, features = "EPC1", plot_cell_borders = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     p <- suppressWarnings({SCpubr::do_NebulosaPlot(sample = sample, features = c("EPC1", "PC_1"), plot_cell_borders = TRUE)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature legend normal", {
@@ -115,7 +115,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  legend.type = "normal")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - single feature legend colorbar", {
@@ -125,7 +125,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  legend.type = "colorbar")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -164,7 +164,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  dims = c(2, 1))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_FeaturePlot: PASS - diffusion", {
@@ -178,7 +178,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- suppressWarnings(SCpubr::do_NebulosaPlot(sample,
                                                   features = "PC_1",
                                                   reduction = "diffusion"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several", {
@@ -187,7 +187,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
 
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "LTV1"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several, joint", {
@@ -197,7 +197,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = c("EPC1", "LTV1"),
                                  joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - several, joint only joint", {
@@ -208,7 +208,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  features = c("EPC1", "LTV1"),
                                  joint = TRUE,
                                  return_only_joint = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - title", {
@@ -220,7 +220,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  joint = TRUE,
                                  return_only_joint = TRUE,
                                  plot.title = "Title")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - subtitle", {
@@ -232,7 +232,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  joint = TRUE,
                                  return_only_joint = TRUE,
                                  plot.subtitle = "Subtitle")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - caption", {
@@ -244,7 +244,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  joint = TRUE,
                                  return_only_joint = TRUE,
                                  plot.caption = "Caption")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -255,7 +255,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  viridis.palette = "F")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - legend top", {
@@ -265,7 +265,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  legend.position = "left")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - legend top", {
@@ -275,7 +275,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  legend.position = "top")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: WARNING - features as list", {
@@ -295,7 +295,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  features = "EPC1",
                                  legend.position = "none")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - patchwork title, subtitle and caption", {
@@ -307,7 +307,7 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
                                  plot.title = "A",
                                  plot.subtitle = "B",
                                  plot.caption = "C")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_NebulosaPlot: PASS - plot axis", {
@@ -315,20 +315,20 @@ if(base::isFALSE(dep_check[["do_NebulosaPlot"]])){
 
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, plot.axes = TRUE, features = "nCount_RNA")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, reduction = "pca", plot.axes = TRUE, features = "nCount_RNA")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_NebulosaPlot(sample = sample, dims = c(2, 1), plot.axes = TRUE, features = "nCount_RNA")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     sample@reductions$diffusion <- sample@reductions$umap
     p <- SCpubr::do_NebulosaPlot(sample = sample,
                                  reduction = "diffusion",
                                  plot.axes = TRUE,
                                  features = "nCount_RNA")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 }
 

@@ -11,7 +11,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         assay = "SCT",
                                         nbin = 1,
                                         ctrl = 5)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
   })
@@ -32,7 +32,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         ctrl = 5,
                                         cluster = FALSE,
                                         features.order = c("B", "C", "A"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     genes <- list("A_A" = rownames(sample)[1:5],
                   "B_A" = rownames(sample)[6:10],
@@ -45,7 +45,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                                                   slot = "data",
                                                                   nbin = 1,
                                                                   ctrl = 5)})})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
@@ -72,7 +72,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         slot = "data",
                                         nbin = 1,
                                         ctrl = 5)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     
@@ -82,7 +82,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         assay = "SCT",
                                         nbin = 1,
                                         ctrl = 5)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -90,7 +90,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         nbin = 1,
                                         ctrl = 5,
                                         metadata = c("seurat_clusters", "orig.ident"))
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -100,7 +100,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         metadata = c("seurat_clusters", "orig.ident"),
                                         min.cutoff = 0,
                                         max.cutoff = 0.5)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -112,7 +112,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         max.cutoff = 0.5,
                                         use_viridis = TRUE,
                                         viridis.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -124,7 +124,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         max.cutoff = 0.5,
                                         use_viridis = TRUE,
                                         viridis.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -136,7 +136,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         max.cutoff = 0.5,
                                         use_viridis = FALSE,
                                         sequential.direction = 1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -148,7 +148,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         max.cutoff = 0.5,
                                         use_viridis = FALSE,
                                         sequential.direction = -1)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -159,7 +159,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         min.cutoff = 0,
                                         max.cutoff = 0.5,
                                         enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,
@@ -170,7 +170,7 @@ if (base::isFALSE(dep_check[["do_SCEnrichmentHeatmap"]])){
                                         min.cutoff = 0,
                                         max.cutoff = 0.5,
                                         enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_SCEnrichmentHeatmap(sample = sample,
                                         input_gene_list = genes,

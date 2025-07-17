@@ -72,7 +72,7 @@ do_MetadataHeatmap(
 
 \item{font.size}{\strong{\code{\link[base]{numeric}}} | Overall font size of the plot. All plot elements will have a size relationship with this font size.}
 
-\item{legend.font.size}{\strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the strong{\code{font.size}} parameter.}
+\item{legend.font.size}{\strong{\code{\link[base]{numeric}}} | Size of the font size of the legend. NULL uses default theme font size for legend according to the \strong{\code{font.size}} parameter.}
 
 \item{legend.symbol.size}{\strong{\code{\link[base]{numeric}}} | Size of symbols in the legend in mm. NULL uses the default size.}
 

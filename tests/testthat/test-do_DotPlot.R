@@ -4,7 +4,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 
@@ -14,36 +14,36 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.position = "right")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.position = "top")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.position = "none")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.position = "none",
                             use_viridis = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.position = "none",
                             use_viridis = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - plot grid", {
@@ -53,12 +53,12 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             plot.grid = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             plot.grid = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - use_viridis", {
@@ -68,7 +68,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             use_viridis = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend normal", {
@@ -78,7 +78,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.type = "normal")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - one variable legend colorbar", {
@@ -88,7 +88,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             legend.type = "colorbar")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -135,7 +135,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",
                             flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features", {
@@ -145,7 +145,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
 
     p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                               features = genes)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features flip", {
@@ -157,7 +157,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
                                               features = genes,
                                               flip = TRUE)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_DotPlot: PASS - multiple features flip rotate x labels", {
@@ -169,7 +169,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
                                               features = genes,
                                               flip = TRUE,
                                               axis.text.x.angle = 45)})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -187,7 +187,7 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
                             plot.title = "C",
                             plot.subtitle = "D",
                             plot.caption = "E")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 }
 

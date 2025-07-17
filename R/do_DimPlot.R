@@ -718,11 +718,12 @@ do_DimPlot <- function(sample,
       value <- unique_values[i]
       # Generate a middle layer for the missing values after split.by.
       sample.use <- sample[, sample@meta.data[, split.by] == value]
-
+      
+      group.by.value <- if (is.null(group.by)) {split.by} else {group.by}
       if (utils::packageVersion("Seurat") >= "4.1.0"){
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
-                                  group.by = if (is.null(group.by)) {split.by} else {group.by},
+                                  group.by = group.by.value,
                                   label = label,
                                   dims = dims,
                                   repel = repel,
@@ -739,7 +740,7 @@ do_DimPlot <- function(sample,
       } else { # nocov start
         p.loop <- Seurat::DimPlot(sample.use,
                                   reduction = reduction,
-                                  group.by = if (is.null(group.by)) {split.by} else {group.by},
+                                  group.by = group.by.value,
                                   label = label,
                                   dims = dims,
                                   repel = repel,
@@ -758,6 +759,9 @@ do_DimPlot <- function(sample,
       p.loop <- p.loop +
                 ggplot2::labs(title = value)
       
+      
+      used.values <- unique(sample.use@meta.data[ , group.by.value])
+
       if (base::isTRUE(legend.dot.border)){
         p.loop <- p.loop &
                   ggplot2::guides(color = ggplot2::guide_legend(ncol = legend.ncol,
@@ -765,7 +769,7 @@ do_DimPlot <- function(sample,
                                                                 byrow = legend.byrow,
                                                                 override.aes = list(size = legend.icon.size,
                                                                                     color = "black",
-                                                                                    fill = colors.use,
+                                                                                    fill = colors.use[used.values],
                                                                                     shape = 21),
                                                                 title = legend.title,
                                                                 title.position = legend.title.position))

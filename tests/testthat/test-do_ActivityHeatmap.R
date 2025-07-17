@@ -11,7 +11,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -20,7 +20,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     ctrl = 5,
                                     enforce_symmetry = FALSE,
                                     verbose = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     
   })
@@ -38,7 +38,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:11],
@@ -51,7 +51,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -61,7 +61,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     verbose = TRUE,
                                     statistic = "wmean",
                                     flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -71,7 +71,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     ctrl = 5,
                                     verbose = FALSE,
                                     flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -82,7 +82,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     max.cutoff = 0.1,
                                     verbose = FALSE,
                                     flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -94,7 +94,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     values.threshold = 0.1,
                                     enforce_symmetry = TRUE,
                                     flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -106,7 +106,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     values.threshold = 0.1,
                                     enforce_symmetry = FALSE,
                                     flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                     input_gene_list =  genes,
@@ -128,7 +128,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          group.by = c("seurat_clusters", "orig.ident"),
                                          flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -138,7 +138,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          group.by = c("seurat_clusters", "orig.ident"),
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -148,7 +148,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          group.by = c("seurat_clusters", "orig.ident"),
                                          flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -158,7 +158,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          group.by = c("seurat_clusters", "orig.ident"),
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     genes <- list("A" = rownames(sample)[1:5],
                   "B" = rownames(sample)[6:10],
@@ -182,7 +182,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - robustness", {
@@ -198,7 +198,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     suppressMessages({testthat::expect_message({p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                    input_gene_list =  genes,
@@ -207,7 +207,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                                                    ctrl = 5,
                                                                    verbose = TRUE,
                                                                    flip = TRUE)})})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     genes <- list("A" = rownames(sample)[1:3],
                   "B" = rownames(sample)[6:10],
@@ -228,7 +228,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                     nbin = 1,
                                     ctrl = 5,
                                     verbose = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
   })
   
@@ -246,7 +246,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          enforce_symmetry = FALSE,
                                          use_viridis = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -256,7 +256,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          enforce_symmetry = FALSE,
                                          use_viridis = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -265,7 +265,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - add enrichment", {
@@ -282,7 +282,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          use_viridis = TRUE,
                                          flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -292,7 +292,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          use_viridis = TRUE,
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     suppressMessages({testthat::expect_message({ p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                                                     input_gene_list =  genes,
@@ -301,7 +301,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                                                     ctrl = 5,
                                                                     verbose = TRUE,
                                                                     use_viridis = TRUE)})})
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -311,7 +311,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          use_viridis = TRUE,
                                          flavor = "UCell")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -320,7 +320,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          use_viridis = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -329,7 +329,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          enforce_symmetry = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - flip", {
@@ -345,7 +345,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_ActivityHeatmap(sample = sample,
                                          input_gene_list =  genes,
@@ -354,7 +354,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          ctrl = 5,
                                          verbose = FALSE,
                                          flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - cutoffs", {
@@ -371,7 +371,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          verbose = FALSE,
                                          min.cutoff = -0.25,
                                          max.cutoff = 0.25)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - multiple group.by", {
@@ -387,7 +387,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - verbose", {
@@ -403,7 +403,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                                                    ctrl = 5,
                                                                    verbose = TRUE)})
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - underscores", {
@@ -418,7 +418,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                                                    nbin = 1,
                                                                    ctrl = 5,
                                                                    verbose = FALSE)}) 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_ActivityHeatmap: PASS - different length of gene sets", {
@@ -433,7 +433,7 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
 }

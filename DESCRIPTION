@@ -72,10 +72,7 @@ Suggests:
     UCell,
     viridis,
     waffle,
-    withr,
-    liana (>= 0.1.6)
-Remotes: 
-    saezlab/liana
+    withr
 VignetteBuilder: 
     knitr
 biocViews: Software, SingleCell, Visualization

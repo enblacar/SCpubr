@@ -38,25 +38,25 @@ if (base::isFALSE(dep_check[["do_ColorPalette"]])){
   testthat::test_that("do_BarPlot: PASS - color vectors plot = TRUERUE", {
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", opposite = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", adjacent = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", triadic = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", split_complementary = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", tetradic = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_ColorPalette(colors.use = "steelblue", square = TRUE, plot = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_BarPlot: PASS - complete output = TRUE", {

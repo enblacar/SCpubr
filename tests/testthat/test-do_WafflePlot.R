@@ -4,7 +4,7 @@ if (base::isFALSE(dep_check[["do_WafflePlot"]])){
 
     p <- SCpubr::do_WafflePlot(sample = sample,
                                group.by = "seurat_clusters")
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_WafflePlot: PASS - flip", {
@@ -13,11 +13,11 @@ if (base::isFALSE(dep_check[["do_WafflePlot"]])){
     p <- SCpubr::do_WafflePlot(sample = sample,
                                group.by = "seurat_clusters",
                                flip = FALSE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_WafflePlot(sample = sample,
                                group.by = "seurat_clusters",
                                flip = TRUE)
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 }

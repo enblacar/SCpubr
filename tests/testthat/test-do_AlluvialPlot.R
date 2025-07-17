@@ -6,7 +6,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  first_group = "orig.ident",
                                  last_group = "seurat_clusters")
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -18,7 +18,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  middle_groups = "annotation",
                                  last_group = "seurat_clusters")
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -27,7 +27,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = TRUE,
                                  repel = TRUE)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -36,7 +36,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = TRUE,
                                  repel = FALSE)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -44,7 +44,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  flip = FALSE)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -52,7 +52,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  flip = TRUE)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -61,7 +61,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_viridis = TRUE,
                                  colors.use = NULL)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -70,7 +70,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = FALSE,
                                  repel = TRUE)
     
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -78,7 +78,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  flip = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -88,7 +88,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = TRUE,
                                  repel = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -98,7 +98,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = TRUE,
                                  repel = FALSE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -108,7 +108,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = FALSE,
                                  repel = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -118,7 +118,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_labels = FALSE,
                                  repel = FALSE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
 
@@ -131,7 +131,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  middle_groups = "annotation",
                                  last_group = "seurat_clusters")
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     sample$orig.ident <- as.character(sample$orig.ident)
     sample$seurat_clusters <- as.character(sample$seurat_clusters)
@@ -141,7 +141,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  middle_groups = "annotation",
                                  last_group = "seurat_clusters")
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_AlluvialPlot: geom_flow", {
@@ -151,7 +151,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_geom_flow = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -159,7 +159,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_geom_flow = FALSE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 
@@ -171,7 +171,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_geom_flow = FALSE,
                                  stratum.fill.conditional = FALSE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -180,7 +180,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_geom_flow = FALSE,
                                  stratum.fill.conditional = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 
@@ -191,7 +191,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -200,7 +200,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  use_geom_flow = FALSE,
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 
@@ -210,7 +210,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "orig.ident",
                                  colors.use = c("Cell" = "blue"))
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
 
   testthat::test_that("do_AlluvialPlot: test_numbers", {
@@ -229,7 +229,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -239,7 +239,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -250,7 +250,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -262,7 +262,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -275,7 +275,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -289,7 +289,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_AlluvialPlot(sample,
                                  first_group = "orig.ident",
@@ -304,7 +304,7 @@ if (base::isFALSE(dep_check[["do_AlluvialPlot"]])){
                                  last_group = "seurat_clusters",
                                  use_viridis = TRUE)
 
-    testthat::expect_type(p, "list")
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
   })
 }
