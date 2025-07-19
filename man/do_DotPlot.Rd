@@ -15,6 +15,7 @@ do_DotPlot(
   zscore.data = FALSE,
   min.cutoff = NA,
   max.cutoff = NA,
+  dot.min = 5,
   enforce_symmetry = ifelse(base::isTRUE(zscore.data), TRUE, FALSE),
   legend.title = NULL,
   legend.type = "colorbar",
@@ -76,6 +77,8 @@ do_DotPlot(
 \item{zscore.data}{\strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data" or with split.by.}
 
 \item{min.cutoff, max.cutoff}{\strong{\code{\link[base]{numeric}}} | Set the min/max ends of the color scale. Any cell/group with a value lower than min.cutoff will turn into min.cutoff and any cell with a value higher than max.cutoff will turn into max.cutoff. In FeaturePlots, provide as many values as features. Use NAs to skip a feature.}
+
+\item{dot.min}{\strong{\code{\link[base]{numeric}}} | Ranges from 0 to 100. Filter out dots whose Percent Expressed falls below this threshold.}
 
 \item{enforce_symmetry}{\strong{\code{\link[base]{logical}}} | Return a symmetrical plot axes-wise or continuous color scale-wise, when applicable.}
 

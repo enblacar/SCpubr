@@ -97,6 +97,7 @@ The reason of these modification is to allow for a much clearer and concise outp
 -   Added `zscore.data` parameter. When set to `TRUE`, it computes Z-scores for each gene across the different groups, allowing for inspection of which group has highest or lowest expression, but prevents you from comparing values across different genes. It is intended to be used alongside `slot = "data"`. 
 -   Removed the possibility to use a list of features. Instead, facets are being drawn according to `split.by` parameter.
 -   Removed `dot_border`. This is a design choice of `SCpubr`.
+-   Added `dot.min` parameter to exclude dots falling below a threshold for `P.Exp`.
 
 ## do_EnrichmentHeatmap()
 -   Changed default value of `scale_scores` to `FALSE`.

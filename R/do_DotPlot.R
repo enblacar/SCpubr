@@ -4,6 +4,7 @@
 #' @inheritParams doc_function
 #' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
 #' @param zscore.data \strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data" or with split.by. 
+#' @param dot.min \strong{\code{\link[base]{numeric}}} | Ranges from 0 to 100. Filter out dots whose Percent Expressed falls below this threshold. 
 #'
 #' @return A ggplot2 object containing a Dot Plot.
 #' @export
@@ -18,6 +19,7 @@ do_DotPlot <- function(sample,
                        zscore.data = FALSE,
                        min.cutoff = NA,
                        max.cutoff = NA,
+                       dot.min = 5,
                        enforce_symmetry = ifelse(base::isTRUE(zscore.data), TRUE, FALSE), 
                        legend.title = NULL,
                        legend.type = "colorbar",
@@ -105,7 +107,8 @@ do_DotPlot <- function(sample,
                          "min.cutoff" = min.cutoff,
                          "max.cutoff" = max.cutoff,
                          "legend.ncol" = legend.ncol,
-                         "legend.nrow" = legend.nrow)
+                         "legend.nrow" = legend.nrow,
+                         "dot.min" = dot.min)
     check_type(parameters = numeric_list, required_type = "numeric", test_function = is.numeric)
     # Check character parameters.
     character_list <- list("legend.position" = legend.position,
@@ -521,6 +524,9 @@ do_DotPlot <- function(sample,
                                                       nrow = legend.nrow,
                                                       byrow = legend.byrow,
                                                       override.aes = ggplot2::aes(fill = "black")))
+    
+    # Filter out dots with low percent expressed.
+    p$data <- p$data %>% dplyr::filter(.data$P.Exp >= dot.min)
 
     return(p)
 }
