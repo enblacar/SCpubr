@@ -113,7 +113,7 @@ do_FeaturePlot <- function(sample,
   sample <- out[["sample"]]
   assay <- out[["assay"]]
 
-  sample <- check_Assay5(sample, assay = assay)
+  #sample <- check_Assay5(sample, assay = assay)
 
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)
@@ -206,7 +206,7 @@ do_FeaturePlot <- function(sample,
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
 
   # Check slot.
-  slot <- check_and_set_slot(slot = slot)
+  slot <- if(is.null(slot)){"data"} else {slot}
 
   # Check split.by is on metadata.
   if (!(is.null(split.by))){check_feature(sample = sample, features = split.by, enforce_check = "metadata", enforce_parameter = "split.by")}

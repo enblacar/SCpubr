@@ -220,7 +220,7 @@ do_RankedEnrichmentHeatmap <- function(sample,
   }
   
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- check_and_set_slot(slot)}
+  slot <- if(is.null(slot)){"data"} else {slot}
   
   # nocov start
   sample <- compute_enrichment_scores(sample, 

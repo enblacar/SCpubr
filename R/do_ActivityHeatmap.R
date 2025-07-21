@@ -71,7 +71,7 @@ do_ActivityHeatmap <- function(sample,
   check_Seurat(sample)
 
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- check_and_set_slot(slot)}
+  slot <- if(is.null(slot)){"data"} else {slot}
 
   # Check logical parameters.
   logical_list <- list("verbose" = verbose,

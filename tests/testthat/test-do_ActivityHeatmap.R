@@ -369,8 +369,8 @@ if (base::isFALSE(dep_check[["do_ActivityHeatmap"]])){
                                          nbin = 1,
                                          ctrl = 5,
                                          verbose = FALSE,
-                                         min.cutoff = -0.25,
-                                         max.cutoff = 0.25)
+                                         min.cutoff = -0.15,
+                                         max.cutoff = 0.15)
     testthat::expect_true(ggplot2::is_ggplot(p))
   })
   

@@ -81,7 +81,7 @@ do_DotPlot <- function(sample,
     group.by <- out[["group.by"]]
     
     # Check slot.
-    slot <- check_and_set_slot(slot = slot)
+    slot <- if(is.null(slot)){"data"} else {slot}
                                
     # Check logical parameters.
     logical_list <- list("flip" = flip,

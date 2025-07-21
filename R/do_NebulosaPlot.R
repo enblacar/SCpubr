@@ -116,7 +116,7 @@ do_NebulosaPlot <- function(sample,
                          "legend.text.face" = legend.text.face)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
-  slot <- check_and_set_slot(slot = slot)
+  slot <- if(is.null(slot)){"data"} else {slot}
 
   # Check if the feature is actually in the object.
   features <- check_feature(sample = sample, features = features, permissive = TRUE)

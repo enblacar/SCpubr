@@ -215,7 +215,7 @@ do_SCEnrichmentHeatmap <- function(sample,
   }
   
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- check_and_set_slot(slot)}
+  slot <- if(is.null(slot)){"data"} else {slot}
   
   if (is.character(input_gene_list)){
     stop(paste0(add_cross(),

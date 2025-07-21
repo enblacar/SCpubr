@@ -140,7 +140,7 @@ do_BeeSwarmPlot <- function(sample,
                          "na.value" = na.value)
   check_type(parameters = character_list, required_type = "character", test_function = is.character)
   # Check slot.
-  slot <- check_and_set_slot(slot = slot)
+  slot <- if(is.null(slot)){"data"} else {slot}
 
   # Check the colors provided to legend.framecolor and legend.tickcolor and border color.
   check_colors(legend.framecolor, parameter_name = "legend.framecolor")

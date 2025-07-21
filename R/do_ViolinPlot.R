@@ -66,7 +66,7 @@ do_ViolinPlot <- function(sample,
   sample <- out[["sample"]]
   assay <- out[["assay"]]
   # Check slot.
-  slot <- check_and_set_slot(slot = slot)
+  slot <- if(is.null(slot)){"data"} else {slot}
   # Check logical parameters.
   logical_list <- list("plot_boxplot" = plot_boxplot,
                        "plot.grid" = plot.grid,

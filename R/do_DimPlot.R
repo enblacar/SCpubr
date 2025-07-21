@@ -81,7 +81,7 @@ do_DimPlot <- function(sample,
   # Check if the sample provided is a Seurat object.
   check_Seurat(sample = sample)
   
-  sample <- check_Assay5(sample)
+  #sample <- check_Assay5(sample)
   
   # Check the reduction.
   reduction <- check_and_set_reduction(sample = sample, reduction = reduction)

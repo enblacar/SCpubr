@@ -186,7 +186,7 @@ do_RankedExpressionHeatmap <- function(sample,
   
   
   if (is.null(assay)){assay <- check_and_set_assay(sample)$assay}
-  if (is.null(slot)){slot <- check_and_set_slot(slot)}
+  slot <- if(is.null(slot)){"data"} else {slot}
   
   if (isTRUE(verbose)){message(paste0(add_info(initial_newline = FALSE), crayon_body("Plotting "), crayon_key("heatmaps"), crayon_body("...")))}
   key_col <- stringr::str_remove_all(key, "_")

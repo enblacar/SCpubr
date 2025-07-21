@@ -74,7 +74,7 @@ do_BoxPlot <- function(sample,
   sample <- out[["sample"]]
   assay <- out[["assay"]]
   # Check slot.
-  slot <- check_and_set_slot(slot = slot)
+  slot <- if(is.null(slot)){"data"} else {slot}
   # Check logical parameters.
   logical_list <- list("flip" = flip,
                        "plot.grid" = plot.grid,
