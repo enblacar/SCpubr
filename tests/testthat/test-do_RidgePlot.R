@@ -20,7 +20,27 @@ if(base::isFALSE(dep_check[["do_RidgePlot"]])){
 
   testthat::test_that("do_RidgePlot: PASS - default", {
     testthat::skip_on_cran()
-
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = FALSE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              continuous_scale = FALSE,
+                              group.by = "annotation",
+                              colors.use = c("A" = "red", "B" = "blue"))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              split.by = "annotation",
+                              continuous_scale = TRUE,
+                              use_viridis = TRUE,
+                              viridis.direction = 1)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               continuous_scale = TRUE,
@@ -87,6 +107,18 @@ if(base::isFALSE(dep_check[["do_RidgePlot"]])){
     p <- SCpubr::do_RidgePlot(sample = sample,
                               feature = "nCount_RNA",
                               plot.grid = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              plot.grid = TRUE,
+                              flip = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_RidgePlot(sample = sample,
+                              feature = "nCount_RNA",
+                              plot.grid = TRUE,
+                              flip = FALSE)
     testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_RidgePlot(sample = sample,

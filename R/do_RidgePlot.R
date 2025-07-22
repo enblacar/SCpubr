@@ -141,10 +141,12 @@ do_RidgePlot <- function(sample,
                                                 direction = ifelse(isTRUE(use_viridis), viridis.direction, sequential.direction),
                                                 enforce_symmetry = FALSE)
   
-  if (!is.null(colors.use)){check_colors(colors.use, parameter_name = "colors.use")}
+  if (!is.null(colors.use)){
+    check_colors(colors.use, parameter_name = "colors.use")
+  }
 
   if (is.null(legend.position)){
-    legend.position <- ifelse(isTRUE(continuous_scale), "bottom", "none")
+    legend.position <- if(isTRUE(continuous_scale)){"bottom"} else {"none"}
   }
   
   # Check group.by.
@@ -188,12 +190,27 @@ do_RidgePlot <- function(sample,
                                     legend.tickwidth = legend.tickwidth)
 
   } else if (base::isFALSE(continuous_scale)){
+    if (is.null(colors.use)){
+      if (is.null(group.by)){
+        values.use <- generate_color_scale(levels(sample), colorblind = colorblind)
+      } else {
+        if (is.factor(sample@meta.data[, group.by])){
+          values.use <- generate_color_scale(levels(sample@meta.data[, group.by]), colorblind = colorblind)
+        } else {
+          values.use <- generate_color_scale(unique(sample@meta.data[, group.by]), colorblind = colorblind)
+        }
+       
+      } 
+    } else {
+      values.use <- colors.use
+    }
+    
     p <- data %>%
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$feature,
                                                 y = .data$group.by,
                                                 fill = .data$group.by)) +
          ggridges::geom_density_ridges(color = "black") +
-         ggplot2::scale_fill_manual(values = if (is.null(colors.use)) {generate_color_scale(if (is.null(group.by)){levels(sample)} else {if(is.factor(sample@meta.data[, group.by])){levels(sample@meta.data[, group.by])} else {unique(sample@meta.data[, group.by])}}, colorblind = colorblind)} else {colors.use},
+         ggplot2::scale_fill_manual(values = values.use,
                                     name = legend.title) +
          ggplot2::guides(fill = ggplot2::guide_legend(title = legend.title,
                                                       title.position = "top",

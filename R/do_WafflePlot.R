@@ -93,7 +93,13 @@ do_WafflePlot <- function(sample,
   check_colors(na.value, parameter_name = "na.value")
   
   if (is.null(colors.use)){
-    colors.use <- generate_color_scale(names_use = if (is.factor(sample@meta.data[, group.by])) {levels(sample@meta.data[, group.by])} else {sort(unique(sample@meta.data[, group.by]))}, colorblind = colorblind)
+    if (is.factor(sample@meta.data[, group.by])){
+      names.use <- levels(sample@meta.data[, group.by])
+    } else {
+      names.use <- sort(unique(sample@meta.data[, group.by]))
+    }
+    
+    colors.use <- generate_color_scale(names_use = names.use, colorblind = colorblind)
   } else {
     check_colors(colors.use, parameter_name = "colors.use")
     check_consistency_colors_and_names(sample = sample, colors = colors.use, grouping_variable = group.by)

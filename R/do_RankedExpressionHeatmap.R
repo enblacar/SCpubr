@@ -266,6 +266,7 @@ do_RankedExpressionHeatmap <- function(sample,
                  dplyr::mutate("Expression" = ifelse(.data$Expression >= limits[2], limits[2], .data$Expression))
     
     # Compute scale limits, breaks etc.
+    message(limits)
     scale.setup <- compute_scales(sample = NULL,
                                   feature = NULL,
                                   assay = NULL,

@@ -6,7 +6,7 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
                   "C" = rownames(sample)[11:15])
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
-                                 dims = 1:5)
+                                    dims = 1:5)
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     
@@ -16,6 +16,26 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
     testthat::skip_on_cran()
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                  dims = 1:10)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_LoadingsHeatmap(sample = sample,
+                                    dims = 1:10,
+                                    min.cutoff.loadings = 0.5)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_LoadingsHeatmap(sample = sample,
+                                    dims = 1:10,
+                                    max.cutoff.loadings = 0.5)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_LoadingsHeatmap(sample = sample,
+                                    dims = 1:10,
+                                    min.cutoff.expression = 0.5)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_LoadingsHeatmap(sample = sample,
+                                    dims = 1:10,
+                                    max.cutoff.expresion = 0.5)
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,

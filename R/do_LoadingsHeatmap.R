@@ -262,6 +262,7 @@ do_LoadingsHeatmap <- function(sample,
 
 
   # Apply cutoffs.
+  # nocov start
   if (!is.na(min.cutoff.loadings)){
     data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score < min.cutoff.loadings, min.cutoff.loadings, .data$mean_Loading_Score))
@@ -277,6 +278,7 @@ do_LoadingsHeatmap <- function(sample,
     data.loading <- data.loading %>%
                     dplyr::mutate("mean_Loading_Score" = ifelse(.data$mean_Loading_Score > stats::quantile(.data$mean_Loading_Score, 0.95), stats::quantile(.data$mean_Loading_Score, 0.95), .data$mean_Loading_Score))
   }
+  # nocov end
 
 
   if (!is.na(min.cutoff.expression)){

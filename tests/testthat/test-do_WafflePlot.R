@@ -11,7 +11,20 @@ if (base::isFALSE(dep_check[["do_WafflePlot"]])){
     testthat::skip_on_cran()
     
     p <- SCpubr::do_WafflePlot(sample = sample,
-                               group.by = "seurat_clusters",
+                               group.by = "annotation",
+                               flip = FALSE,
+                               colors.use = c("A" = "red", "B"= "blue"))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    sample$annotation <- factor(sample$annotation)
+    p <- SCpubr::do_WafflePlot(sample = sample,
+                               group.by = "annotation",
+                               flip = FALSE,
+                               colors.use = c("A" = "red", "B"= "blue"))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_WafflePlot(sample = sample,
+                               group.by = "annotation",
                                flip = FALSE)
     testthat::expect_true(ggplot2::is_ggplot(p))
     
