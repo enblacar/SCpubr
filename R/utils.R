@@ -1274,6 +1274,10 @@ compute_scales <- function(sample,
     
   }
   
+  if (is.na(limits[1]) || is.na(limits[2])) {
+    stop("Invalid axis limits: dmin or dmax is NA.")
+  }
+  
   breaks <- labeling::extended(dmin = limits[1],
                                dmax = limits[2],
                                m = number.breaks)

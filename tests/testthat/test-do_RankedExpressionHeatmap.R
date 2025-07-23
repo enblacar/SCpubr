@@ -65,7 +65,7 @@ if (base::isFALSE(dep_check[["do_RankedExpressionHeatmap"]])){
                                             enforce_symmetry = FALSE)
     testthat::expect_type(p, "list")
     
-    testthat::expect_warning({SCpubr::do_RankedExpressionHeatmap(sample = sample,
+    SCpubr::do_RankedExpressionHeatmap(sample = sample,
                                                                  features =  genes,
                                                                  subsample = 100,
                                                                  reduction = "umap",
@@ -74,9 +74,9 @@ if (base::isFALSE(dep_check[["do_RankedExpressionHeatmap"]])){
                                                                  verbose = FALSE,
                                                                  assay = "SCT",
                                                                  use_viridis = FALSE,
-                                                                 enforce_symmetry = FALSE)})
+                                                                 enforce_symmetry = FALSE)
     
-    testthat::expect_warning({SCpubr::do_RankedExpressionHeatmap(sample = sample,
+   SCpubr::do_RankedExpressionHeatmap(sample = sample,
                                                                  features =  genes,
                                                                  subsample = 100,
                                                                  reduction = "umap",
@@ -85,7 +85,7 @@ if (base::isFALSE(dep_check[["do_RankedExpressionHeatmap"]])){
                                                                  verbose = FALSE,
                                                                  slot = "data",
                                                                  use_viridis = FALSE,
-                                                                 enforce_symmetry = FALSE)})
+                                                                 enforce_symmetry = FALSE)
     
     suppressMessages({testthat::expect_message({p <- SCpubr::do_RankedExpressionHeatmap(sample = sample,
                                                                                         features =  genes,

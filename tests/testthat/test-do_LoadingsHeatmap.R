@@ -35,7 +35,7 @@ if (base::isFALSE(dep_check[["do_LoadingsHeatmap"]])){
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,
                                     dims = 1:10,
-                                    max.cutoff.expresion = 0.5)
+                                    max.cutoff.expression = 0.5)
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LoadingsHeatmap(sample = sample,

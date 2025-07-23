@@ -211,6 +211,7 @@ do_RankedExpressionHeatmap <- function(sample,
               tidyr::pivot_longer(cols = -dplyr::all_of("Cell"),
                                   names_to = key_col,
                                   values_to = "Score") %>% 
+              dplyr::mutate("{key_col}" := stringr::str_to_upper(.data[[key_col]])) %>% 
               dplyr::filter(.data[[key_col]] %in% vapply(dims, function(x){paste0(key, x)}, FUN.VALUE = character(1))) %>% 
               dplyr::group_by(.data[[key_col]]) %>% 
               dplyr::reframe("rank" = rank(.data$Score),
@@ -266,7 +267,6 @@ do_RankedExpressionHeatmap <- function(sample,
                  dplyr::mutate("Expression" = ifelse(.data$Expression >= limits[2], limits[2], .data$Expression))
     
     # Compute scale limits, breaks etc.
-    message(limits)
     scale.setup <- compute_scales(sample = NULL,
                                   feature = NULL,
                                   assay = NULL,
