@@ -44,11 +44,48 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEHeatmap"]])){
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes,
+                                       assay = "SCT",
+                                       slot = "data",
+                                       use_viridis = FALSE,
+                                       sequential.direction = 1,
+                                       enforce_symmetry = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes,
+                                       assay = "SCT",
+                                       slot = "data",
+                                       use_viridis = FALSE,
+                                       sequential.direction = 1,
+                                       enforce_symmetry = FALSE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
                                     de_genes = de_genes,
                                     assay = "SCT",
                                     slot = "data",
                                     use_viridis = FALSE,
                                     sequential.direction = -1)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes,
+                                       assay = "SCT",
+                                       slot = "data",
+                                       use_viridis = FALSE,
+                                       sequential.direction = -1,
+                                       flip = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes,
+                                       assay = "SCT",
+                                       slot = "data",
+                                       use_viridis = FALSE,
+                                       sequential.direction = -1,
+                                       flip = FALSE,
+                                       legend.title = "Test")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
@@ -72,6 +109,21 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEHeatmap"]])){
                                     assay = "SCT",
                                     slot = "scale.data")
     testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes_scaled,
+                                       assay = "SCT",
+                                       slot = "scale.data",
+                                       flip = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
+                                       de_genes = de_genes_scaled,
+                                       assay = "SCT",
+                                       slot = "scale.data",
+                                       flip = FALSE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
 
 
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,

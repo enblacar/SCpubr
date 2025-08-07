@@ -17,6 +17,18 @@ if(base::isFALSE(dep_check[["do_TFActivityHeatmap"]])){
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
+                                        activities = dorothea_activities,
+                                        enforce_symmetry = FALSE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_TFActivityHeatmap(sample = sample,
+                                        activities = dorothea_activities,
+                                        enforce_symmetry = FALSE,
+                                        values.show = TRUE,
+                                        values.threshold = 0.5)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      group.by = "orig.ident")
     testthat::expect_type(out, "list")

@@ -377,6 +377,7 @@ if (base::isFALSE(dep_check[["do_BarPlot"]])){
                             xlab = "A",
                             ylab = "B",
                             legend.title = NULL,
+                            position = "fill",
                             group.by = "seurat_clusters",
                             split.by = "orig.ident",
                             flip = FALSE)

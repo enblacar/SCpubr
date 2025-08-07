@@ -30,6 +30,8 @@ if (base::isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(startup = FALSE))})
     suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(startup = TRUE))})
+    suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(extended = FALSE))})
+    suppressMessages({testthat::expect_message(SCpubr::do_PackageReport(extended = TRUE))})
   })
   
   
@@ -134,6 +136,15 @@ if (base::isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     names_use <- c("a", "b", "c")
     colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
+    testthat::expect_length(colors, length(names_use))
+    
+    colors <- colorspace::qualitative_hcl(length(names_use), palette = "Dark 3")
+    testthat::expect_length(colors, length(names_use))
+    
+    colors <- generate_color_scale(names_use = names_use, colorblind = FALSE)
+    testthat::expect_length(colors, length(names_use))
+    
+    colors <- generate_color_scale(names_use = names_use, colorblind = TRUE)
     testthat::expect_length(colors, length(names_use))
   })
 
@@ -839,6 +850,9 @@ if (base::isFALSE(dep_check[["utils"]])){
     testthat::skip_on_cran()
     testthat::expect_error({check_parameters(parameter = -2, parameter_name = "viridis.direction")})
     testthat::expect_error({check_parameters(parameter = "ERROR", parameter_name = "viridis.palette")})
+    testthat::expect_error({check_parameters(parameter = "ERROR", parameter_name = "database")})
+    testthat::expect_error({check_parameters(parameter = "ERROR", parameter_name = "GO_ontology")})
+    testthat::expect_error({check_parameters(parameter = "ERROR", parameter_name = "pAdjustMethod")})
   })
 
   # GET AXIS PARAMETERS
@@ -862,7 +876,41 @@ if (base::isFALSE(dep_check[["utils"]])){
     out <- get_axis_parameters(angle = 90, flip = TRUE)
     testthat::expect_type(out, "list")
   })
+  
+  # GET COLORBLIND COLORS
+  testthat::test_that("utils: check get_axis_parameters - PASS ", {
+    testthat::skip_on_cran()
+    
+    out <- get_Colorblind_colors()
+    testthat::expect_type(out, "list")
+  })
+  
+  testthat::test_that("utils: check compute_continuous_palette - PASS ", {
+    testthat::skip_on_cran()
+    
+    out <- compute_continuous_palette(name = "YlGnBu", use_viridis = FALSE)
+    testthat::expect_type(out, "character")
+    
+    out <- compute_continuous_palette(name = "YlGnBu", use_viridis = FALSE)
+    testthat::expect_type(out, "character")
+    
+    out <- compute_continuous_palette(name = "YlGnBu", use_viridis = FALSE, direction = 1)
+    testthat::expect_type(out, "character")
+    
+    out <- compute_continuous_palette(name = "YlGnBu", use_viridis = FALSE, direction = -1)
+    testthat::expect_type(out, "character")
+    
+    out <- compute_continuous_palette(name = "YlGnBu", use_viridis = FALSE, enforce_symmetry =  FALSE)
+    testthat::expect_type(out, "character")
+    
+    out <- compute_continuous_palette(name = "RdBu", use_viridis = FALSE, enforce_symmetry =  TRUE)
+    testthat::expect_type(out, "character")
+  })
+  
 }
+
+
+
 
 
 

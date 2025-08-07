@@ -18,6 +18,24 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
     testthat::expect_type(out, "list")
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
+                                             activities = progeny_activities,
+                                             values.show = TRUE,
+                                             values.threshold = 0.2)
+    testthat::expect_type(out, "list")
+    
+    sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
+    out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
+                                             activities = progeny_activities,
+                                             enforce_symmetry = TRUE)
+    testthat::expect_type(out, "list")
+    
+    sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
+    out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
+                                             activities = progeny_activities,
+                                             enforce_symmetry = FALSE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                      activities = progeny_activities,
                                      group.by = "orig.ident")
     testthat::expect_type(out, "list")

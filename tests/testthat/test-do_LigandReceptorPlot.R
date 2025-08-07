@@ -13,6 +13,9 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "A", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
+    suppressMessages(p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, sort.by = "A", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending", verbose = TRUE))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "A", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "descending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
@@ -70,6 +73,9 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "B", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
+    suppressMessages(p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, sort.by = "B", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending", verbose = TRUE))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "B", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "descending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
@@ -121,6 +127,9 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     
     
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "C", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending")
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    suppressMessages(p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, sort.by = "C", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending", verbose = TRUE))
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "C", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "descending", sorting.type.magnitude = "ascending")
@@ -175,6 +184,9 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     
     
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "D", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending")
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    suppressMessages(p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, sort.by = "D", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending", verbose = TRUE))
     testthat::expect_true(ggplot2::is_ggplot(p))
     
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "D", invert_specificity = TRUE, invert_magnitude = TRUE, sorting.type.specificity = "descending", sorting.type.magnitude = "ascending")
@@ -244,6 +256,9 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "E", invert_specificity = TRUE, invert_magnitude = FALSE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
+    suppressMessages(p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output,  sort.by = "E", invert_specificity = TRUE, invert_magnitude = FALSE, sorting.type.specificity = "ascending", sorting.type.magnitude = "ascending", verbose = TRUE))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "E", invert_specificity = TRUE, invert_magnitude = FALSE, sorting.type.specificity = "descending", sorting.type.magnitude = "ascending")
     testthat::expect_true(ggplot2::is_ggplot(p))
     
@@ -278,6 +293,12 @@ if(base::isFALSE(dep_check[["do_LigandReceptorPlot"]])){
     
     p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "E", invert_specificity = FALSE, invert_magnitude = FALSE, sorting.type.specificity = "descending", sorting.type.magnitude = "descending")
     testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "E", invert_specificity = FALSE, invert_magnitude = FALSE, sorting.type.specificity = "descending", sorting.type.magnitude = "descending")
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    out <- SCpubr::do_LigandReceptorPlot(liana_output = liana_output, verbose = FALSE, sort.by = "E", invert_specificity = FALSE, invert_magnitude = FALSE, sorting.type.specificity = "descending", sorting.type.magnitude = "descending", return_interactions = TRUE)
+    testthat::expect_type(out, "list")
     
     
     

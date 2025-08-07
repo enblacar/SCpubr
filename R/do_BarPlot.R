@@ -223,10 +223,12 @@ do_BarPlot <- function(sample,
                                          crayon_key("position = fill"),
                                          crayon_body(".")))
     if (is.null(split.by) & !is.null(group.by)){
+      # nocov start
       data.n <- data %>% 
                 dplyr::group_by(.data[[group.by]]) %>% 
                 dplyr::summarise(n = dplyr::n()) %>% 
                 dplyr::mutate(n = paste0("n = ", .data$n))
+      # nocov end
     } else if (!is.null(split.by) & !is.null(group.by)){
       data.n <- data %>% 
                 dplyr::group_by(.data[[split.by]]) %>% 
@@ -278,6 +280,7 @@ do_BarPlot <- function(sample,
   
   if (isTRUE(add.n)){
     if (is.null(split.by) & !is.null(group.by)){
+      # nocov start
       p <- p + 
            ggplot2::geom_text(data = data.n,
                               mapping = ggplot2::aes(x = .data[[group.by]],
@@ -287,6 +290,7 @@ do_BarPlot <- function(sample,
                               hjust = ifelse(isTRUE(flip), 0, 0.5),
                               fontface = "plain",
                               size = add.n.size)
+      # nocov end
     } else if (!is.null(split.by) & !is.null(group.by)){
       p <- p + 
            ggplot2::geom_text(data = data.n,

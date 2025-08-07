@@ -245,6 +245,7 @@ do_DotPlot <- function(sample,
     }
     
     # Workaround parameter depreciation.
+    # nocov start
     if (base::isTRUE(utils::packageVersion("Seurat") < "4.9.9")){
       data <- Seurat::GetAssayData(object = sample,
                                    assay = assay,
@@ -254,6 +255,8 @@ do_DotPlot <- function(sample,
                                       assay = assay,
                                       layer = slot)
     }
+    
+    # nocov end
     
     # Select features.
     if (is.list(features)){
@@ -285,6 +288,7 @@ do_DotPlot <- function(sample,
       features.use <- features
     }
     
+    selection <- c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")
     data <- data[features.use, , drop = FALSE] %>% 
             as.data.frame() %>% 
             tibble::rownames_to_column(var = "Gene") %>% 
@@ -301,7 +305,7 @@ do_DotPlot <- function(sample,
                              "N" = dplyr::n(),
                              .groups = "drop") %>% 
             dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>% 
-            dplyr::select(dplyr::all_of(c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")))
+            dplyr::select(dplyr::all_of(selection))
     
     if (is.null(split.by)){
       data <- data %>% tidyr::complete(.data[[group.by]], .data$Gene, fill = list("Avg.Exp" = 0, "P.Exp" = 0))
@@ -311,9 +315,10 @@ do_DotPlot <- function(sample,
             
     
     if (base::isTRUE(zscore.data)){
+      selection <- c(group.by, "Gene", "Avg.Exp")
       data <- data %>% 
-              dplyr::select(dplyr::all_of(c(group.by, "Gene", "Avg.Exp"))) %>% 
-              tidyr::pivot_wider(names_from = group.by,
+              dplyr::select(dplyr::all_of(selection)) %>% 
+              tidyr::pivot_wider(names_from = dplyr::all_of(group.by),
                                  values_from = "Avg.Exp") %>% 
               as.data.frame() %>% 
               tibble::column_to_rownames(var = "Gene") %>% 
@@ -322,10 +327,10 @@ do_DotPlot <- function(sample,
               t() %>% 
               as.data.frame() %>% 
               tibble::rownames_to_column(var = "Gene") %>% 
-              tidyr::pivot_longer(-"Gene",
+              tidyr::pivot_longer(-dplyr::all_of("Gene"),
                                   names_to = group.by,
                                   values_to = "Avg.Exp") %>% 
-              dplyr::left_join(y = data %>% dplyr::select(-dplyr::all_of(c("Avg.Exp"))),
+              dplyr::left_join(y = data %>% dplyr::select(-dplyr::all_of("Avg.Exp")),
                                by = c(group.by, "Gene"))
       
       
@@ -369,11 +374,12 @@ do_DotPlot <- function(sample,
       data$Avg.Exp <- ifelse(data$Avg.Exp >= max.cutoff, max.cutoff, data$Avg.Exp)
     }
     
-  
+    
+    selection <- c("Groups", "Gene", "Avg.Exp")
     data.cluster <- data %>% 
                     dplyr::ungroup() %>% 
                     dplyr::mutate("Groups" = .data[[group.by]]) %>% 
-                    dplyr::select(dplyr::all_of(c("Groups", "Gene", "Avg.Exp"))) %>% 
+                    dplyr::select(dplyr::all_of(selection)) %>% 
                     tidyr::pivot_wider(names_from = "Groups",
                                        values_from = "Avg.Exp",
                                        values_fn = list) %>% 

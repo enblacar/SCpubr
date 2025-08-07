@@ -15,6 +15,53 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1")
     testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1", flip = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1", flip = FALSE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            max.cutoff = 0.5,
+                            min.cutoff = 0.4)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            zscore.data = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            split.by = "annotation",
+                            flip = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            split.by = "annotation",
+                            flip = FALSE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = "EPC1",
+                            zscore.data = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = list("A" = "EPC1"),
+                            zscore.data = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_DotPlot(sample = sample,
+                            features = list("A" = "EPC1"),
+                            zscore.data = TRUE)
+    testthat::expect_true(ggplot2::is_ggplot(p))
 
     p <- SCpubr::do_DotPlot(sample = sample,
                             features = "EPC1",

@@ -18,6 +18,11 @@ if (base::isFALSE(dep_check[["do_FeaturePlot"]])){
     p <- SCpubr::do_FeaturePlot(sample = sample,
                                 features = "nCount_RNA")
     testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample,
+                                features = "nCount_RNA",
+                                slot = NULL)
+    testthat::expect_true(ggplot2::is_ggplot(p))
   })
   
   testthat::test_that("do_FeaturePlot: PASS - group.by", {
@@ -1002,6 +1007,28 @@ if (base::isFALSE(dep_check[["do_FeaturePlot"]])){
                                 plot.axes = TRUE,
                                 features = "nCount_RNA")
     testthat::expect_true(ggplot2::is_ggplot(p))
+  })
+  
+  testthat::test_that("do_FeaturePlot: PASS - scale limits", {
+    testthat::skip_on_cran()
+    
+    
+    p <- SCpubr::do_FeaturePlot(sample = sample, 
+                                features = "nCount_RNA",
+                                scale.limits = c(0, 1))
+    testthat::expect_true(ggplot2::is_ggplot(p))
+    
+    testthat::expect_error(SCpubr::do_FeaturePlot(sample = sample, 
+                                                       features = "nCount_RNA",
+                                                       scale.limits = c(0, 1),
+                                                  min.cutoff = 0.2))
+    
+    testthat::expect_error(SCpubr::do_FeaturePlot(sample = sample, 
+                                                  features = "nCount_RNA",
+                                                  scale.limits = c(0, 1),
+                                                  max.cutoff = 0.2))
+    
+    
   })
 }
 

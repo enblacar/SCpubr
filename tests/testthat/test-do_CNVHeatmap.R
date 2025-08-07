@@ -23,6 +23,40 @@ if (base::isFALSE(dep_check[["do_CNVHeatmap"]])){
                                  infercnv_object = infercnv_object,
                                  using_metacells = FALSE,
                                  chromosome_locations = human_chr_locations,
+                                 flip = TRUE,
+                                 min.cutoff = 0.99,
+                                 max.cutoff = 1.01)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
+                                 infercnv_object = infercnv_object,
+                                 using_metacells = FALSE,
+                                 chromosome_locations = human_chr_locations,
+                                 flip = TRUE,
+                                 include_chr_arms = TRUE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
+                                 infercnv_object = infercnv_object,
+                                 using_metacells = FALSE,
+                                 chromosome_locations = human_chr_locations,
+                                 flip = TRUE,
+                                 enforce_symmetry = FALSE)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
+                                 infercnv_object = infercnv_object,
+                                 using_metacells = FALSE,
+                                 chromosome_locations = human_chr_locations,
+                                 flip = TRUE,
+                                 values.show = TRUE,
+                                 values.threshold = 1)
+    testthat::expect_type(out, "list")
+    
+    out <- SCpubr::do_CNVHeatmap(sample = sample,
+                                 infercnv_object = infercnv_object,
+                                 using_metacells = FALSE,
+                                 chromosome_locations = human_chr_locations,
                                  flip = TRUE)
     testthat::expect_type(out, "list")
     

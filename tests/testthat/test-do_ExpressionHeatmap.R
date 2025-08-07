@@ -18,6 +18,13 @@ if (base::isFALSE(dep_check[["do_ExpressionHeatmap"]])){
     
     p <- SCpubr::do_ExpressionHeatmap(sample = sample,
                                       features = rownames(sample)[1:5],
+                                      cluster = TRUE,
+                                      values.show = TRUE,
+                                      values.threshold = 0.2)
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    p <- SCpubr::do_ExpressionHeatmap(sample = sample,
+                                      features = rownames(sample)[1:5],
                                       cluster = FALSE)
     testthat::expect_true("ggplot" %in% class(p))
     

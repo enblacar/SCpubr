@@ -3415,13 +3415,13 @@ check_group_by <- function(sample,
 #' \donttest{
 #' TBD
 #' }
-check_Assay5 <- function(sample,
-                         assay = Seurat::DefaultAssay(sample)){
-  if (isTRUE(methods::is(sample@assays[[assay]], "Assay5"))){
-    suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
-  }
-  return(sample)
-}
+#check_Assay5 <- function(sample,
+#                         assay = Seurat::DefaultAssay(sample)){
+#  if (isTRUE(methods::is(sample@assays[[assay]], "Assay5"))){
+#    suppressWarnings(sample@assays[[assay]] <- methods::as(sample@assays[[assay]], "Assay"))
+#  }
+#  return(sample)
+#}
 
 
 #' Handles the generation of continuous color palettes for the plots.

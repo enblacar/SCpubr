@@ -30,6 +30,25 @@ if (base::isFALSE(dep_check[["do_EnrichmentHeatmap"]])){
                                       cluster = TRUE)
     testthat::expect_true("ggplot" %in% class(p))
     
+    genes <- list("A-A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
+    
+    
+    testthat::expect_warning(p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
+                                                               input_gene_list = genes,
+                                                               nbin = 1,
+                                                               ctrl = 10,
+                                                               cluster = TRUE,
+                                                               values.show = TRUE,
+                                                               values.threshold = 0.2))
+    testthat::expect_true("ggplot" %in% class(p))
+    
+    genes <- list("A" = rownames(sample)[1:5],
+                  "B" = rownames(sample)[6:10],
+                  "C" = rownames(sample)[11:15])
+    
+    
     p <- SCpubr::do_EnrichmentHeatmap(sample = sample,
                                       input_gene_list = genes,
                                       nbin = 1,
