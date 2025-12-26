@@ -1098,11 +1098,16 @@ compute_scale_limits <- function(sample, feature, assay = NULL, reduction = NULL
   }
   
   if (feature %in% rownames(sample)){
-    suppressWarnings({
-      data.check <- SeuratObject::GetAssayData(sample,
-                                               assay = assay,
-                                               slot = slot)[feature, ]
-    })
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      data.check <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   slot = slot)[feature, ]
+    } else {
+      data.check <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   layer = slot)[feature, ]
+    }
+
     scale.begin <- min(data.check, na.rm = TRUE)
     scale.end <- max(data.check, na.rm = TRUE)
   } else if (feature %in% colnames(sample@meta.data)){
@@ -1857,15 +1862,19 @@ add_scale <- function(p, scale, function_use, num_plots = 1, limits = NULL){
     # Find the index in which the scale is stored.
     # Adapted from: https://stackoverflow.com/a/46003178
     x <- which(vapply(p$scales$scales, function(x){scale %in% x$aesthetics}, FUN.VALUE = logical(1)))
-    # Remove it.
-    p$scales$scales[[x]] <- NULL
+    # Remove it only if it exists.
+    if (!identical(x, integer(0))) {
+      p$scales$scales[[x]] <- NULL
+    }
   } else {
     for (i in seq(1, num_plots)){
       # Find the index in which the scale is stored.
       # Adapted from: https://stackoverflow.com/a/46003178
       x <- which(vapply(p[[i]]$scales$scales, function(x){scale %in% x$aesthetics}, FUN.VALUE = logical(1)))
-      # Remove it.
-      p[[i]]$scales$scales[[x]] <- NULL
+      # Remove it only if it exists.
+      if (!identical(x, integer(0))) {
+        p[[i]]$scales$scales[[x]] <- NULL
+      }
     }
   }
   # Add the scale and now it will now show up a warning since we removed the previous scale.
@@ -2142,16 +2151,22 @@ get_data_column <- function(sample,
       tibble::rownames_to_column(var = "cell") %>%
       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% rownames(sample))){
-    suppressWarnings({
+    # Patch for New Seurat versions.
+    if (utils::packageVersion("Seurat") < "5.0.0"){
       feature_column <- SeuratObject::GetAssayData(object = sample,
                                                    assay = assay,
-                                                   slot = slot)[feature, , drop = FALSE] %>%
-        as.matrix() %>%
-        t() %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column(var = "cell") %>%
-        dplyr::rename("feature" = dplyr::all_of(c(feature)))
-    })
+                                                   slot = slot)[feature, , drop = FALSE]
+    } else {
+      feature_column <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   layer = slot)[feature, , drop = FALSE]
+    }
+    feature_column <-  feature_column %>%
+                       as.matrix() %>%
+                       t() %>%
+                       as.data.frame() %>%
+                       tibble::rownames_to_column(var = "cell") %>%
+                       dplyr::rename("feature" = dplyr::all_of(c(feature)))
   } else if (isTRUE(feature %in% dim_colnames)){
     feature_column <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
       as.data.frame() %>%

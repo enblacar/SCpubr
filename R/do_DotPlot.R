@@ -2,7 +2,8 @@
 #' You can
 #'
 #' @inheritParams doc_function
-#' @param cluster \strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.
+#' @param cluster.identities \strong{\code{\link[base]{logical}}} | Whether to cluster the identities (groups) based on the expression of the features.
+#' @param cluster.features \strong{\code{\link[base]{logical}}} | Whether to cluster the features (genes) based on their expression across identities.
 #' @param zscore.data \strong{\code{\link[base]{logical}}} | Whether to compute Z-scores instead of showing average expression values. This allows to see, for each gene, which group has the highest average expression, but prevents you from comparing values across genes. Can not be used with slot = "scale.data" or with split.by. 
 #' @param dot.min \strong{\code{\link[base]{numeric}}} | Ranges from 0 to 100. Filter out dots whose Percent Expressed falls below this threshold. 
 #'
@@ -41,7 +42,8 @@ do_DotPlot <- function(sample,
                        ylab = NULL,
                        font.size = 14,
                        font.type = "sans",
-                       cluster = FALSE,
+                       cluster.identities = FALSE,
+                       cluster.features = FALSE,
                        flip = FALSE,
                        axis.text.x.angle = 45,
                        use_viridis = FALSE,
@@ -85,7 +87,8 @@ do_DotPlot <- function(sample,
                                
     # Check logical parameters.
     logical_list <- list("flip" = flip,
-                         "cluster" = cluster,
+                         "cluster.identities" = cluster.identities,
+                         "cluster.features" = cluster.features,
                          "use_viridis" = use_viridis,
                          "plot.grid" = plot.grid,
                          "enforce_symmetry" = enforce_symmetry,
@@ -225,11 +228,13 @@ do_DotPlot <- function(sample,
     }
     
     if (!is.null(split.by)){
-      assertthat::assert_that(base::isFALSE(cluster),
+      assertthat::assert_that(base::isFALSE(cluster.identities) & base::isFALSE(cluster.features),
                               msg = paste0(add_cross(), crayon_body("Please when using "),
                                            crayon_key("split.by"),
-                                           crayon_body(" set "),
-                                           crayon_key("cluster"),
+                                           crayon_body(" set both "),
+                                           crayon_key("cluster.identities"),
+                                           crayon_body(" and "),
+                                           crayon_key("cluster.features"),
                                            crayon_body(" to "),
                                            crayon_key("FALSE"),
                                            crayon_body(".")))
@@ -391,22 +396,22 @@ do_DotPlot <- function(sample,
     # Set NAs to 0.
     data.cluster[is.na(data.cluster)] <- 0
     
-    # Cluster rows.
+    # Cluster rows (features).
     if(length(rownames(data.cluster)) == 1){
       row_order <- rownames(data.cluster)[1]
     } else {
-      if (isTRUE(cluster)){
+      if (isTRUE(cluster.features)){
         row_order <- rownames(data.cluster)[stats::hclust(stats::dist(data.cluster, method = "euclidean"), method = "ward.D")$order]
       } else {
         row_order <- features.use
       }
     }
     
-    # Cluster columns.
+    # Cluster columns (identities).
     if (length(colnames(data.cluster)) == 1){
       col_order <- colnames(data.cluster)[1]
     } else {
-      if (isTRUE(cluster)){
+      if (isTRUE(cluster.identities)){
         col_order <- colnames(data.cluster)[stats::hclust(stats::dist(t(data.cluster), method = "euclidean"), method = "ward.D")$order]
       } else {
         if (is.factor(sample@meta.data[, group.by])){

@@ -289,10 +289,18 @@ do_StripPlot <- function(sample,
               tibble::rownames_to_column(var = "cell") %>%
               tibble::as_tibble()
     } else if (isTRUE(feature %in% rownames(sample))){
-      suppressWarnings({
-      data <- SeuratObject::GetAssayData(object = sample,
-                                   assay = assay,
-                                   slot = slot)[feature, , drop = FALSE] %>%
+      
+      if (utils::packageVersion("Seurat") < "5.0.0"){
+        data <- SeuratObject::GetAssayData(object = sample,
+                                           assay = assay,
+                                           slot = slot)[feature, , drop = FALSE]
+      } else {
+        data <- SeuratObject::GetAssayData(object = sample,
+                                           assay = assay,
+                                           layer = slot)[feature, , drop = FALSE]
+      }
+      
+      data <- data %>%
               as.matrix() %>%
               t() %>%
               as.data.frame() %>%
@@ -302,7 +310,7 @@ do_StripPlot <- function(sample,
                                     dplyr::select(dplyr::all_of(c(group.by))) %>%
                                     tibble::rownames_to_column(var = "cell")},
                                by = "cell")
-      })
+      
     } else if (isTRUE(feature %in% dim_colnames)){
       data <- sample@reductions[[reduction]][[]][, feature, drop = FALSE] %>%
               as.data.frame() %>%

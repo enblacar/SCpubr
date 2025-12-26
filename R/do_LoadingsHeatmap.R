@@ -206,11 +206,19 @@ do_LoadingsHeatmap <- function(sample,
               dplyr::left_join(y = loadings,
                                by = "PC",
                                relationship = "many-to-many")
-  suppressWarnings({
+  
+  if (utils::packageVersion("Seurat") < "5.0.0"){
+    left_join_data <- SeuratObject::GetAssayData(sample,
+                                                 assay = assay,
+                                                 slot = slot)[unique(data.use$Gene), ]
+  } else {
+    left_join_data <- SeuratObject::GetAssayData(sample,
+                                                 assay = assay,
+                                                 layer = slot)[unique(data.use$Gene), ]
+  }
+  
   data.use <- data.use %>%
-              dplyr::left_join(y = {SeuratObject::GetAssayData(sample,
-                                                         assay = assay,
-                                                         slot = slot)[unique(data.use$Gene), ] %>%
+              dplyr::left_join(y = {left_join_data %>%
                                     as.matrix() %>%
                                     t() %>%
                                     as.data.frame() %>%
@@ -220,7 +228,7 @@ do_LoadingsHeatmap <- function(sample,
                                                         values_to = "Expression")},
                                by = c("Gene", "Cell")) %>%
               dplyr::mutate("Gene" = factor(.data$Gene, levels = genes.use))
-  })
+  
   data.loading <- data.use %>%
                   dplyr::group_by(.data$Gene, .data$PC) %>%
                   dplyr::reframe("mean_Loading_Score" = mean(.data$Loading_Score, na.rm = TRUE))

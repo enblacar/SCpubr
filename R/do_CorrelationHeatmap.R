@@ -174,17 +174,21 @@ do_CorrelationHeatmap <- function(sample = NULL,
     variable_genes <- Seurat::VariableFeatures(sample)
 
     # Sort them in order (for ATAC experiments).
-    suppressWarnings({
-    genes <- rownames(SeuratObject::GetAssayData(object = sample,
-                                    assay = assay,
-                                    slot = "data"))
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      genes <- rownames(SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   slot = "data"))
+    } else {
+      genes <- rownames(SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   layer = "data"))
+    }
     genes <- data.frame("Genes" = genes) %>%
              tibble::rowid_to_column(var = "Position") %>%
              tibble::as_tibble() %>%
              dplyr::filter(.data$Genes %in% variable_genes) %>%
              dplyr::arrange(.data$Position) %>%
              dplyr::pull(.data$Genes)
-    })
 
     # Subset sample according to the variable genes.
     sample <- sample[genes, ]
@@ -192,13 +196,20 @@ do_CorrelationHeatmap <- function(sample = NULL,
     sample <- Seurat::ScaleData(sample, features = genes, verbose = FALSE)
 
     # Retrieve correlation matrix.
-    suppressWarnings({
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      left_join_data <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   slot = "scale.data")
+    } else {
+      left_join_data <- SeuratObject::GetAssayData(object = sample,
+                                                   assay = assay,
+                                                   layer = "scale.data")
+    }
+    
     out <- sample@meta.data %>%
            dplyr::select(dplyr::all_of(c(group.by))) %>%
            tibble::rownames_to_column(var = "cell") %>%
-           dplyr::left_join(y = {SeuratObject::GetAssayData(object = sample,
-                                                      assay = assay,
-                                                      slot = "scale.data") %>%
+           dplyr::left_join(y = {left_join_data %>%
                                  as.matrix() %>%
                                  t() %>%
                                  as.data.frame() %>%
@@ -217,7 +228,6 @@ do_CorrelationHeatmap <- function(sample = NULL,
            as.matrix() %>%
            stats::cor() %>%
            round(digits = 2)
-    })
     # Compute hclust.
     if (isTRUE(cluster)){
       order <- rownames(out)[stats::hclust(stats::dist(out, method = "euclidean"), method = "ward.D")$order]

@@ -1,13 +1,23 @@
 if(base::isFALSE(dep_check[["do_GroupwiseDEHeatmap"]])){
   testthat::test_that("do_GroupwiseDEHeatmap: CRAN essentials", {
-    suppressWarnings({
-    sample <- SeuratObject::SetAssayData(object = sample,
-                                         assay = "SCT",
-                                         slot = "scale.data",
-                                         new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                                                         assay = "SCT",
-                                                                                         slot = "data")))
-    })
+    
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           slot = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                           assay = "SCT",
+                                                                                           slot = "data")))
+    } else {
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           layer = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                           assay = "SCT",
+                                                                                           layer = "data")))
+    }
+    
+    
 
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
                                     de_genes = de_genes,
@@ -26,14 +36,21 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEHeatmap"]])){
     testthat::skip_on_cran()
 
 
-    suppressWarnings({
+    if (utils::packageVersion("Seurat") < "5.0.0"){
       sample <- SeuratObject::SetAssayData(object = sample,
                                            assay = "SCT",
                                            slot = "scale.data",
                                            new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                                                       assay = "SCT",
-                                                                                       slot = "data")))
-    })
+                                                                                           assay = "SCT",
+                                                                                           slot = "data")))
+    } else {
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           layer = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                           assay = "SCT",
+                                                                                           layer = "data")))
+    }
 
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
                                     de_genes = de_genes,
@@ -156,14 +173,21 @@ if(base::isFALSE(dep_check[["do_GroupwiseDEHeatmap"]])){
   testthat::test_that("do_GroupwiseDEHeatmap: PASS - heatmap legend side", {
     testthat::skip_on_cran()
 
-    suppressWarnings({
+    if (utils::packageVersion("Seurat") < "5.0.0"){
       sample <- SeuratObject::SetAssayData(object = sample,
                                            assay = "SCT",
                                            slot = "scale.data",
                                            new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                                                       assay = "SCT",
-                                                                                       slot = "data")))
-    })
+                                                                                           assay = "SCT",
+                                                                                           slot = "data")))
+    } else {
+      sample <- SeuratObject::SetAssayData(object = sample,
+                                           assay = "SCT",
+                                           layer = "scale.data",
+                                           new.data = as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                                                           assay = "SCT",
+                                                                                           layer = "data")))
+    }
 
     p <- SCpubr::do_GroupwiseDEHeatmap(sample = sample,
                                     de_genes = de_genes,

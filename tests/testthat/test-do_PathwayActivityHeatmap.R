@@ -4,7 +4,7 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
   })
 
 
@@ -15,56 +15,56 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
     sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                              activities = progeny_activities,
                                              values.show = TRUE,
                                              values.threshold = 0.2)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                              activities = progeny_activities,
                                              enforce_symmetry = TRUE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                              activities = progeny_activities,
                                              enforce_symmetry = FALSE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                      activities = progeny_activities,
                                      group.by = "orig.ident")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                      activities = progeny_activities,
                                      group.by = c("orig.ident", "seurat_clusters", "annotation"))
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           split.by = "annotation")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           flip = TRUE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           flip = FALSE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           legend.position = "right")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
@@ -88,7 +88,7 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           group.by = "orig.ident")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
   })
 
 
@@ -99,25 +99,25 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
                                           activities = progeny_activities,
                                           min.cutoff = -0.1,
                                           max.cutoff = NA)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           min.cutoff = NA,
                                           max.cutoff = 0.1)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           min.cutoff = -0.1)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
 
 
     out <- SCpubr::do_PathwayActivityHeatmap(sample = sample,
                                           activities = progeny_activities,
                                           max.cutoff = 0.1)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
 
 
@@ -126,7 +126,7 @@ if (base::isFALSE(dep_check[["do_PathwayActivityHeatmap"]])){
                                           activities = progeny_activities,
                                           max.cutoff = 0.1,
                                           min.cutoff = -0.1)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
   })
 
 

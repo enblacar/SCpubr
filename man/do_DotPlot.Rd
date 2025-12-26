@@ -37,7 +37,8 @@ do_DotPlot(
   ylab = NULL,
   font.size = 14,
   font.type = "sans",
-  cluster = FALSE,
+  cluster.identities = FALSE,
+  cluster.features = FALSE,
   flip = FALSE,
   axis.text.x.angle = 45,
   use_viridis = FALSE,
@@ -128,7 +129,9 @@ do_DotPlot(
 \item \emph{\code{sans}}: Default font family.
 }}
 
-\item{cluster}{\strong{\code{\link[base]{logical}}} | Whether to cluster the identities based on the expression of the features.}
+\item{cluster.identities}{\strong{\code{\link[base]{logical}}} | Whether to cluster the identities (groups) based on the expression of the features.}
+
+\item{cluster.features}{\strong{\code{\link[base]{logical}}} | Whether to cluster the features (genes) based on their expression across identities.}
 
 \item{flip}{\strong{\code{\link[base]{logical}}} | Whether to invert the axis of the displayed plot.}
 

@@ -3,7 +3,7 @@ if(base::isFALSE(dep_check[["do_TFActivityHeatmap"]])){
   testthat::test_that("do_TFActivityHeatmap: PASS - minimal input", {
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
   })
 
@@ -14,64 +14,64 @@ if(base::isFALSE(dep_check[["do_TFActivityHeatmap"]])){
     sample$annotation <- sample(c("A", "B"), ncol(sample), replace = TRUE)
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                         activities = dorothea_activities,
                                         enforce_symmetry = FALSE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                         activities = dorothea_activities,
                                         enforce_symmetry = FALSE,
                                         values.show = TRUE,
                                         values.threshold = 0.5)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      group.by = "orig.ident")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      group.by = c("orig.ident", "seurat_clusters", "annotation"))
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      tfs.use = c("PDX1", "E2F1"))
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                           activities = dorothea_activities,
                                           split.by = "annotation")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      flip = TRUE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      flip = FALSE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      flip = TRUE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      legend.position = "right")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
 
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      legend.position = "right")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
     
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
@@ -88,7 +88,7 @@ if(base::isFALSE(dep_check[["do_TFActivityHeatmap"]])){
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      flip = TRUE)
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
   })
 
   
@@ -101,7 +101,7 @@ if(base::isFALSE(dep_check[["do_TFActivityHeatmap"]])){
     out <- SCpubr::do_TFActivityHeatmap(sample = sample,
                                      activities = dorothea_activities,
                                      group.by = "orig.ident")
-    testthat::expect_type(out, "list")
+    testthat::expect_true(ggplot2::is_ggplot(out))
   })
 
 

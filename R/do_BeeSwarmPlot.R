@@ -195,9 +195,15 @@ do_BeeSwarmPlot <- function(sample,
     sample@meta.data$rank_me <- sample@meta.data[, feature_to_rank]
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% rownames(sample)){
-    suppressWarnings({
-    sample@meta.data$rank_me  <- SeuratObject::GetAssayData(object = sample, slot = slot, assay = assay)[feature_to_rank, ]
-    })
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      sample@meta.data$rank_me <- SeuratObject::GetAssayData(object = sample,
+                                                             assay = assay,
+                                                             slot = slot)[feature_to_rank, ]
+    } else {
+      sample@meta.data$rank_me <- SeuratObject::GetAssayData(object = sample,
+                                                             assay = assay,
+                                                             layer = slot)[feature_to_rank, ]
+    }
     sample@meta.data$rank <- rank(sample@meta.data$rank_me)
   } else if (feature_to_rank %in% dim_colnames){
     for(red in Seurat::Reductions(object = sample)){

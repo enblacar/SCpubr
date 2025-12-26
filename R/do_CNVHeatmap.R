@@ -273,24 +273,31 @@ do_CNVHeatmap <- function(sample,
 
   list.data <- list()
   for (group in group.by){
-    suppressWarnings({
-    data.use  <- SeuratObject::GetAssayData(object = sample,
-                               assay = "CNV_scores",
-                               slot = "data") %>%
-                 as.matrix() %>%
-                 t() %>%
-                 as.data.frame() %>%
-                 tibble::rownames_to_column(var = "Cell") %>%
-                 dplyr::left_join(y = {sample@meta.data %>%
-                                       tibble::rownames_to_column(var = "Cell") %>%
-                                       dplyr::select(dplyr::all_of(c("Cell", group)))},
-                                  by = "Cell") %>%
-                 tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell", group)),
-                                     values_to = "CNV_score",
-                                     names_to = "Event") %>%
-
-                 dplyr::group_by(.data[[group]], .data$Event) %>%
-                 dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      data.use <- SeuratObject::GetAssayData(object = sample,
+                                             assay = "CNV_scores",
+                                             slot = "data")
+    } else {
+      data.use <- SeuratObject::GetAssayData(object = sample,
+                                             assay = "CNV_scores",
+                                             layer = "data")
+    }
+    
+    data.use <- data.use %>% 
+                as.matrix() %>%
+                t() %>%
+                as.data.frame() %>%
+                tibble::rownames_to_column(var = "Cell") %>%
+                dplyr::left_join(y = {sample@meta.data %>%
+                    tibble::rownames_to_column(var = "Cell") %>%
+                    dplyr::select(dplyr::all_of(c("Cell", group)))},
+                    by = "Cell") %>%
+                tidyr::pivot_longer(cols = -dplyr::all_of(c("Cell", group)),
+                                    values_to = "CNV_score",
+                                    names_to = "Event") %>%
+                
+                dplyr::group_by(.data[[group]], .data$Event) %>%
+                dplyr::summarise("mean" = mean(.data$CNV_score, na.rm = TRUE))
     
     # Fix the out of bound values.
     if (!is.na(min.cutoff)){
@@ -302,7 +309,6 @@ do_CNVHeatmap <- function(sample,
       data.use <- data.use %>% 
                   dplyr::mutate("mean" = ifelse(.data$mean > max.cutoff, max.cutoff, .data$mean))
     }
-    })
     
     if (base::isTRUE(include_chr_arms)){
       events <- c(as.character(seq(1, 22)), vapply(seq(1, 22), function(x){return(c(paste0(x, "p"), paste0(x, "q")))}, FUN.VALUE = character(2)))

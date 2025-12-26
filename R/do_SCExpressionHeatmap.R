@@ -177,9 +177,11 @@ do_SCExpressionHeatmap <- function(sample,
 
   `%>%` <- magrittr::`%>%`
   
-  suppressWarnings({
-  genes.avail <- rownames(SeuratObject::GetAssayData(sample, slot = slot, assay = assay))
-  })
+  if (utils::packageVersion("Seurat") < "5.0.0"){
+    genes.avail <- rownames(SeuratObject::GetAssayData(sample, slot = slot, assay = assay))
+  } else {
+    genes.avail <- rownames(SeuratObject::GetAssayData(sample, layer = slot, assay = assay))
+  }
   
   assertthat::assert_that(sum(features %in% genes.avail) > 0,
                           msg = paste0(add_cross(), crayon_body("None of the features are present in the row names of the assay "),
@@ -216,13 +218,19 @@ do_SCExpressionHeatmap <- function(sample,
                                          crayon_key("input_gene_list"),
                                          crayon_body(".")))
   }
-
-  suppressWarnings({
-  matrix <- SeuratObject::GetAssayData(sample,
-                                 assay = assay,
-                                 slot = slot)[features, , drop = FALSE] %>%
-            as.matrix()
-  })
+  
+  if (utils::packageVersion("Seurat") < "5.0.0"){
+    matrix <- SeuratObject::GetAssayData(sample,
+                                         assay = assay,
+                                         slot = slot)[features, , drop = FALSE] %>%
+              as.matrix()
+  } else {
+    matrix <- SeuratObject::GetAssayData(sample,
+                                         assay = assay,
+                                         layer = slot)[features, , drop = FALSE] %>%
+              as.matrix()
+  }
+  
   # Check group.by.
   out <- check_group_by(sample = sample,
                         group.by = group.by,

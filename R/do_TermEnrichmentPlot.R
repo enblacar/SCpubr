@@ -137,22 +137,24 @@ do_TermEnrichmentPlot <- function(mat,
     # PLOT
     
     # Start processing the matrix.
-    p <- mat %>%
-         dplyr::select(dplyr::all_of(c("Description", "GeneRatio", "p.adjust", "Count"))) %>% 
-         # Turn character column GeneRatio into actual numeric GeneRatio.
-         # -log10 transform p.adjust column.
-         dplyr::mutate("GeneRatio" = unname(vapply(X = sapply(X = .data$GeneRatio, 
-                                                              FUN = function(x){stringr::str_split(x, "/")}), 
-                                                   FUN = function(x){as.numeric(x[1]) / as.numeric(x[2])}, 
-                                                   FUN.VALUE = numeric(1))),
-                       "p.adjust" = -log10(.data$p.adjust)) %>% 
-         tibble::rownames_to_column(var = "Term") %>% 
-         # Retrieve most significant ones.
-         dplyr::arrange(dplyr::desc(.data$Count), dplyr::desc(.data$p.adjust)) %>% 
-         # Turn Description column into a factor to get the values ordered.
-         dplyr::mutate("Description" = factor(.data$Description, levels = rev(.data$Description))) %>% 
-         tibble::as_tibble() %>% 
-         dplyr::slice_head(n = n.terms) %>% 
+    data_processed <- mat %>%
+                      dplyr::select(dplyr::all_of(c("Description", "GeneRatio", "p.adjust", "Count"))) %>% 
+                      # Turn character column GeneRatio into actual numeric GeneRatio.
+                      # -log10 transform p.adjust column.
+                      dplyr::mutate("GeneRatio" = unname(vapply(X = sapply(X = .data$GeneRatio, 
+                                                                           FUN = function(x){stringr::str_split(x, "/")}), 
+                                                                FUN = function(x){as.numeric(x[1]) / as.numeric(x[2])}, 
+                                                                FUN.VALUE = numeric(1))),
+                                    "p.adjust" = -log10(.data$p.adjust)) %>% 
+                      tibble::rownames_to_column(var = "Term") %>% 
+                      # Retrieve most significant ones.
+                      dplyr::arrange(dplyr::desc(.data$Count), dplyr::desc(.data$p.adjust)) %>% 
+                      # Turn Description column into a factor to get the values ordered.
+                      dplyr::mutate("Description" = factor(.data$Description, levels = rev(.data$Description))) %>% 
+                      tibble::as_tibble() %>% 
+                      dplyr::slice_head(n = n.terms)
+    
+    p <- data_processed %>%
          # Start plotting.
          ggplot2::ggplot(mapping = ggplot2::aes(x = .data$GeneRatio,
                                                 y = .data$Description,
@@ -167,7 +169,7 @@ do_TermEnrichmentPlot <- function(mat,
                                        name = expression(bold(paste("-", log["10"], "(p.adj)"))),
                                        breaks = scales::extended_breaks(n = number.breaks)) +
          # Add wrapping around Y labels.
-         ggplot2::scale_y_discrete(labels = stringr::str_wrap(mat$Description, 
+         ggplot2::scale_y_discrete(labels = stringr::str_wrap(as.character(rev(data_processed$Description)), 
                                                               width = n.chars)) + 
          # Add a size scale.
          ggplot2::scale_size_continuous(range = c(3, dot.scale)) + 

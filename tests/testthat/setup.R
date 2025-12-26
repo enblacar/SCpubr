@@ -15,6 +15,9 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 }
 # nolint end
 
+# Suppress Nebulosa compatibility messages during testing
+options(SCpubr.nebulosa.quiet = TRUE)
+
 if (requireNamespace("Seurat", quietly = TRUE)) {
   sample <- readRDS(system.file("extdata/seurat_dataset_example.rds", package = "SCpubr"))
   sample@assays$SCT$counts <- sample@assays$SCT$data

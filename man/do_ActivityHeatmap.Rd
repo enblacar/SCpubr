@@ -41,7 +41,7 @@ do_ActivityHeatmap(
   colors.use = NULL,
   min.cutoff = NA,
   max.cutoff = NA,
-  verbose = TRUE,
+  verbose = FALSE,
   return_object = FALSE,
   grid.color = "white",
   border.color = "black",

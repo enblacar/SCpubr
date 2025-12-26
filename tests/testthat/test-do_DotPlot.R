@@ -236,5 +236,54 @@ if (isFALSE(dep_check[["do_DotPlot"]])){
                             plot.caption = "E")
     testthat::expect_true(ggplot2::is_ggplot(p))
   })
-}
 
+  testthat::test_that("do_DotPlot: PASS - cluster.identities", {
+    testthat::skip_on_cran()
+
+    genes <- Seurat::VariableFeatures(sample)[1:10]
+    
+    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                              features = genes,
+                                              cluster.identities = TRUE)})
+    testthat::expect_true(ggplot2::is_ggplot(p))
+  })
+
+  testthat::test_that("do_DotPlot: PASS - cluster.features", {
+    testthat::skip_on_cran()
+
+    genes <- Seurat::VariableFeatures(sample)[1:10]
+    
+    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                              features = genes,
+                                              cluster.features = TRUE)})
+    testthat::expect_true(ggplot2::is_ggplot(p))
+  })
+
+  testthat::test_that("do_DotPlot: PASS - cluster both", {
+    testthat::skip_on_cran()
+
+    genes <- Seurat::VariableFeatures(sample)[1:10]
+    
+    p <- suppressWarnings({SCpubr::do_DotPlot(sample = sample,
+                                              features = genes,
+                                              cluster.identities = TRUE,
+                                              cluster.features = TRUE)})
+    testthat::expect_true(ggplot2::is_ggplot(p))
+  })
+
+  testthat::test_that("do_DotPlot: FAIL - cluster with split.by", {
+    testthat::skip_on_cran()
+
+    genes <- Seurat::VariableFeatures(sample)[1:10]
+    
+    testthat::expect_error({SCpubr::do_DotPlot(sample = sample,
+                                               features = genes,
+                                               split.by = "annotation",
+                                               cluster.identities = TRUE)})
+    
+    testthat::expect_error({SCpubr::do_DotPlot(sample = sample,
+                                               features = genes,
+                                               split.by = "annotation",
+                                               cluster.features = TRUE)})
+  })
+}

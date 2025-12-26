@@ -149,12 +149,59 @@ do_NebulosaPlot <- function(sample,
                                                 enforce_symmetry = FALSE)
   
   # Plot a density plot using Nebulosa package.
-    p <- Nebulosa::plot_density(object = sample,
+  # Use compatibility wrapper for SeuratObject 5.0.0+
+  p <- .nebulosa_compat_wrapper(object = sample,
                                 features = features,
                                 joint = joint,
                                 reduction = reduction,
-                                dims = dims) &
-         ggplot2::theme_minimal(base_size = font.size) &
+                                dims = dims,
+                                slot = slot,
+                                verbose = verbose)
+  
+  # If NULL is returned, Nebulosa is not compatible - fall back to do_FeaturePlot
+  if (is.null(p)) {
+    return(do_FeaturePlot(sample = sample,
+                         features = features,
+                         reduction = reduction,
+                         dims = dims,
+                         pt.size = pt.size,
+                         order = TRUE,
+                         font.size = font.size,
+                         font.type = font.type,
+                         legend.type = legend.type,
+                         legend.position = legend.position,
+                         legend.framewidth = legend.framewidth,
+                         legend.tickwidth = legend.tickwidth,
+                         legend.framecolor = legend.framecolor,
+                         legend.tickcolor = legend.tickcolor,
+                         legend.length = legend.length,
+                         legend.width = legend.width,
+                         border.color = border.color,
+                         border.size = border.size,
+                         plot_cell_borders = plot_cell_borders,
+                         plot.title = plot.title,
+                         plot.subtitle = plot.subtitle,
+                         plot.caption = plot.caption,
+                         na.value = na.value,
+                         use_viridis = use_viridis,
+                         viridis.palette = viridis.palette,
+                         viridis.direction = viridis.direction,
+                         sequential.palette = sequential.palette,
+                         sequential.direction = sequential.direction,
+                         verbose = FALSE,
+                         plot.axes = plot.axes,
+                         plot.title.face = plot.title.face,
+                         plot.subtitle.face = plot.subtitle.face,
+                         plot.caption.face = plot.caption.face,
+                         axis.title.face = axis.title.face,
+                         axis.text.face = axis.text.face,
+                         legend.title.face = legend.title.face,
+                         legend.text.face = legend.text.face))
+  }
+  
+  # Continue with Nebulosa plotting
+  p <- p &
+       ggplot2::theme_minimal(base_size = font.size) &
          ggplot2::theme(plot.title = ggplot2::element_text(face = plot.title.face, hjust = 0),
                         plot.subtitle = ggplot2::element_text(face = plot.subtitle.face, hjust = 0),
                         plot.caption = ggplot2::element_text(face = plot.caption.face, hjust = 1),

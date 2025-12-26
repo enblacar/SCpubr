@@ -49,7 +49,7 @@ do_ActivityHeatmap <- function(sample,
                                colors.use = NULL,
                                min.cutoff = NA,
                                max.cutoff = NA,
-                               verbose = TRUE,
+                               verbose = FALSE,
                                return_object = FALSE,
                                grid.color = "white",
                                border.color = "black",
@@ -235,11 +235,17 @@ do_ActivityHeatmap <- function(sample,
              dplyr::filter(.data$target != "deleteme")
 
   # Get expression data.
-  suppressWarnings({
-  mat <- SeuratObject::GetAssayData(sample,
-                                    assay = assay,
-                                    slot = slot)
-  })
+  # Conditional behaviour for Seurat versions.
+  if (utils::packageVersion("Seurat") < "5.0.0"){
+    mat <- SeuratObject::GetAssayData(object = sample,
+                                      assay = assay,
+                                      slot = slot)
+  } else {
+    mat <- SeuratObject::GetAssayData(object = sample,
+                                      assay = assay,
+                                      layer = slot)
+  }
+
   # Compute activities.
   if(isTRUE(verbose)){message(paste0(add_info(), crayon_body("Computing "),
                                      crayon_key("activities"),
@@ -281,21 +287,28 @@ do_ActivityHeatmap <- function(sample,
   counter <- 0
   for (group in group.by){
     counter <- counter + 1
-    suppressWarnings({
-    data.use <- SeuratObject::GetAssayData(sample,
-                             assay = "affinity",
-                             slot = "scale.data") %>%
+    
+    if (utils::packageVersion("Seurat") < "5.0.0"){
+      data.use <- SeuratObject::GetAssayData(object = sample,
+                                             assay = "affinity",
+                                             slot = "scale.data")
+    } else {
+      data.use <- SeuratObject::GetAssayData(object = sample,
+                                             assay = "affinity",
+                                             layer = "scale.data")
+    }
+    
+    data.use <- data.use %>%
                 t() %>%
                 as.data.frame() %>%
                 tibble::rownames_to_column(var = "cell") %>%
                 dplyr::left_join(y = {sample@meta.data %>%
                                       tibble::rownames_to_column(var = "cell") %>%
                                       dplyr::select(dplyr::all_of(c("cell", group)))},
-                                      by = "cell") %>%
+                                 by = "cell") %>%
                 tidyr::pivot_longer(cols = -dplyr::all_of(c("cell", group)),
                                     names_to = "source",
                                     values_to = "score")
-    })
     # Clustering based on the median across all cells.
     data.cluster <- data.use %>%
                     tidyr::pivot_wider(id_cols = dplyr::all_of(c("cell", group)),

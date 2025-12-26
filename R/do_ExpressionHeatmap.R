@@ -208,28 +208,33 @@ do_ExpressionHeatmap <- function(sample,
   matrix.list <- list()
   for (group in group.by){
     # Extract activities from object as a long dataframe
-    suppressMessages({
-      sample$group.by <- sample@meta.data[, group]
-      suppressWarnings({
+    if (utils::packageVersion("Seurat") < "5.0.0"){
       df <- SeuratObject::GetAssayData(sample,
-                          assay = assay,
-                          slot = slot)[features, , drop = FALSE] %>%
-            as.matrix() %>%
-            t() %>%
-            as.data.frame() %>%
-            tibble::rownames_to_column(var = "cell") %>%
-            dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
-                                  tibble::rownames_to_column(var = "cell")},
-                                  by = "cell") %>%
-            dplyr::select(-"cell") %>%
-            tidyr::pivot_longer(cols = -"group.by",
-                                names_to = "gene",
-                                values_to = "expression") %>%
-            dplyr::group_by(.data$group.by, .data$gene) %>%
-            dplyr::summarise(mean = mean(.data$expression, na.rm = TRUE))
-      df.order <- df
-      })
-    })
+                                       assay = assay,
+                                       slot = slot)[features, , drop = FALSE]
+    } else {
+      df <- SeuratObject::GetAssayData(sample,
+                                       assay = assay,
+                                       layer = slot)[features, , drop = FALSE]
+    }
+    sample$group.by <- sample@meta.data[, group]
+    
+    df <- df %>%
+          as.matrix() %>%
+          t() %>%
+          as.data.frame() %>%
+          tibble::rownames_to_column(var = "cell") %>%
+          dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
+                                tibble::rownames_to_column(var = "cell")},
+                           by = "cell") %>%
+          dplyr::select(-"cell") %>%
+          tidyr::pivot_longer(cols = -"group.by",
+                              names_to = "gene",
+                              values_to = "expression") %>%
+          dplyr::group_by(.data$group.by, .data$gene) %>%
+          dplyr::summarise(mean = mean(.data$expression, na.rm = TRUE))
+    df.order <- df
+    
     matrix.list[[group]][["df"]] <- df
     matrix.list[[group]][["df.order"]] <- df.order
   }

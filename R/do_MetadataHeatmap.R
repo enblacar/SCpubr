@@ -225,7 +225,7 @@ do_MetadataHeatmap <- function(sample = NULL,
   for (name in names(list.heatmaps)){
     p <- list.heatmaps[[name]]
     p <- p + 
-         ggplot2::guides(fill = ggplot2::guide_legend(legend.position = legend.position,
+         ggplot2::guides(fill = ggplot2::guide_legend(position = legend.position,
                                                       title.position = "top",
                                                       title.hjust = ifelse(legend.position %in% c("top", "bottom"), 0.5, 0),
                                                       override.aes = list(color = "black",

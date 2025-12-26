@@ -202,10 +202,18 @@ do_TFActivityHeatmap <- function(sample,
       # Extract activities from object as a long dataframe
       suppressMessages({
         sample$group.by <- sample@meta.data[, group]
-        suppressWarnings({
-        df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
-                                        assay = "dorothea",
-                                        slot = slot))) %>%
+        if (utils::packageVersion("Seurat") < "5.0.0"){
+          df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                       assay = "dorothea",
+                                                       slot = slot)))
+        } else {
+          df <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                       assay = "dorothea",
+                                                       layer = slot)))
+        }
+        
+        
+        df <- df %>%
               as.data.frame() %>%
               tibble::rownames_to_column(var = "cell") %>%
               dplyr::left_join(y = {sample@meta.data[, "group.by", drop = FALSE] %>%
@@ -218,13 +226,22 @@ do_TFActivityHeatmap <- function(sample,
               dplyr::group_by(.data$group.by, .data$source) %>%
               dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
         df.order <- df
-        })
+        
         if (!is.null(split.by)){
           sample$split.by <- sample@meta.data[, split.by]
-          suppressWarnings({
-          df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
-                                                assay = "dorothea",
-                                                slot = slot))) %>%
+          
+          if (utils::packageVersion("Seurat") < "5.0.0"){
+            df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                               assay = "dorothea",
+                                                               slot = slot)))
+          } else {
+            df.split <- t(as.matrix(SeuratObject::GetAssayData(object = sample,
+                                                               assay = "dorothea",
+                                                               layer = slot)))
+          }
+          
+          
+          df.split <- df.split %>%
                       as.data.frame() %>%
                       tibble::rownames_to_column(var = "cell") %>%
                       dplyr::left_join(y = {sample@meta.data[, c("group.by", "split.by"), drop = FALSE] %>%
@@ -237,7 +254,7 @@ do_TFActivityHeatmap <- function(sample,
                       dplyr::group_by(.data$split.by, .data$group.by, .data$source) %>%
                       dplyr::summarise(mean = mean(.data$score, na.rm = TRUE))
           matrix.list[[group]][["df.split"]] <- df.split
-          })
+          
         }
 
 
