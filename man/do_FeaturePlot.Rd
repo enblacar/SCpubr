@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_FeaturePlot.R
 \name{do_FeaturePlot}
 \alias{do_FeaturePlot}
-\title{Wrapper for \link[Seurat]{FeaturePlot}.}
+\title{Plot gene expression on dimensional reduction embeddings.}
 \usage{
 do_FeaturePlot(
   sample,
@@ -250,7 +250,9 @@ do_FeaturePlot(
 A ggplot2 object containing a Feature Plot.
 }
 \description{
-Wrapper for \link[Seurat]{FeaturePlot}.
+This function wraps \link[Seurat]{FeaturePlot}, adding publication-ready
+theming, rasterization, density contours, marginal distributions, and
+cell border overlays.
 }
 \examples{
 \donttest{

@@ -1,5 +1,8 @@
-#' Wrapper for \link[Seurat]{DimPlot}.
-#' 
+#' Generate dimensional reduction plots from a Seurat object.
+#'
+#' This function wraps \link[Seurat]{DimPlot}, adding publication-ready theming,
+#' cell shuffling, rasterization, density contours, marginal distributions, and
+#' cell border overlays.
 #' 
 #' @inheritParams doc_function 
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to keep. This will effectively set the rest of the cells that do not match the identities provided to NA, therefore coloring them according to na.value parameter.

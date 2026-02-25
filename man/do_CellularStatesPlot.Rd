@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_CellularStatesPlot.R
 \name{do_CellularStatesPlot}
 \alias{do_CellularStatesPlot}
-\title{Cellular States plot.}
+\title{Plot relationships between enrichment scores to infer cellular states.}
 \usage{
 do_CellularStatesPlot(
   sample,

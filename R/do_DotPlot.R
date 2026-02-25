@@ -1,5 +1,8 @@
-#' This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
-#' You can
+#' Generate Dot plots of gene expression across cell groups.
+#'
+#' This function generates dot plots using ggplot2, displaying average
+#' expression and percent of expressing cells per group, with optional
+#' clustering of identities and features, and Z-score normalization.
 #'
 #' @inheritParams doc_function
 #' @param cluster.identities \strong{\code{\link[base]{logical}}} | Whether to cluster the identities (groups) based on the expression of the features.

@@ -450,7 +450,7 @@ return_dependencies <- function(){
                    "do_TFActivityHeatmap" = NULL,
                    "do_ViolinPlot" = NULL,
                    "do_VolcanoPlot" = "ggrepel",
-                   "do_WafflePlot" = "waffle",
+                   "do_WafflePlot" = NULL,
                    "do_SavePlot" = "svglite")
   return(pkg_list)
 }

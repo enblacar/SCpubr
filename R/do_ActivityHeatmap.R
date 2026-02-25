@@ -189,7 +189,7 @@ do_ActivityHeatmap <- function(sample,
   min_value <- min(unname(unlist(lapply(input_gene_list, length))))
 
   assertthat::assert_that(length(input_gene_list) >= 2,
-                          msg = paste0(add_cross,
+                          msg = paste0(add_cross(),
                                        crayon_body("Please make sure that the gene list you provide to "),
                                        crayon_key("input_gene_list"),
                                        crayon_body(" have at least "),
@@ -197,7 +197,7 @@ do_ActivityHeatmap <- function(sample,
                                        crayon_body(" gene sets.")))
 
   assertthat::assert_that(min_value >= 5,
-                          msg = paste0(add_cross,
+                          msg = paste0(add_cross(),
                                        crayon_body("Please make sure that the gene list you provide to "),
                                        crayon_key("input_gene_list"),
                                        crayon_body(" have at least "),

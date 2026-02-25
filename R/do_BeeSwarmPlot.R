@@ -1,4 +1,8 @@
-#' BeeSwarm plot.
+#' Generate BeeSwarm plots of ranked cells colored by gene expression or metadata.
+#'
+#' This function ranks cells along a continuous feature and displays them as a
+#' bee swarm, colored by a second variable. Useful for visualizing continuous
+#' enrichment scores across cell populations.
 #'
 #' @inheritParams doc_function
 #' @param feature_to_rank \strong{\code{\link[base]{character}}} | Feature for which the cells are going to be ranked. Ideal case is that this feature is stored as a metadata column.

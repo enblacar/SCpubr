@@ -2,8 +2,7 @@
 % Please edit documentation in R/do_DotPlot.R
 \name{do_DotPlot}
 \alias{do_DotPlot}
-\title{This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
-You can}
+\title{Generate Dot plots of gene expression across cell groups.}
 \usage{
 do_DotPlot(
   sample,
@@ -182,8 +181,9 @@ do_DotPlot(
 A ggplot2 object containing a Dot Plot.
 }
 \description{
-This function is a wrapper for \link[Seurat]{DotPlot}. It provides most of its functionalities while adding extra.
-You can
+This function generates dot plots using ggplot2, displaying average
+expression and percent of expressing cells per group, with optional
+clustering of identities and features, and Z-score normalization.
 }
 \examples{
 \donttest{

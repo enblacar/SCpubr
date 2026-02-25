@@ -1,11 +1,13 @@
-# SCpubr v3.0.1 (In Development)
+# SCpubr v3.0.1
 
 ## General
 -   Fixed compatibility with SeuratObject >= 5.0.0. Updated all instances of `GetAssayData()` to use the `layer` parameter instead of the deprecated `slot` parameter when SeuratObject version is 5.0.0 or higher. Affected functions: `do_FeaturePlot()`, `do_SCExpressionHeatmap()`, `do_CorrelationHeatmap()`, `do_LoadingsHeatmap()`, `do_TFActivityHeatmap()`, `do_PathwayActivityHeatmap()`, and `do_StripPlot()`.
 -   Added compatibility wrapper for `do_NebulosaPlot()` to handle Nebulosa package incompatibility with SeuratObject >= 5.0.0. The function now gracefully falls back to `do_FeaturePlot()` with an informative message when using newer SeuratObject versions, ensuring uninterrupted workflow.
+-   Packaging & documentation: Removed `waffle` from `Suggests` by implementing an internal waffle rendering in `do_WafflePlot()` using `ggplot2`. Replaced `\link[liana]{...}` cross-references with inline `\code{...}` mentions and removed `liana` from `Suggests`.
 -   Fixed bug in `do_DimPlot()` where using `label = TRUE` with `label.box = TRUE` would cause an error when attempting to add a fill scale that didn't exist. The internal `add_scale()` function now checks for scale existence before removal.
 -   Fixed bug in `do_DotPlot()` where the `cluster` parameter was clustering both features and identities, contrary to its documentation. Renamed `cluster` to `cluster.identities` and added `cluster.features` parameter for explicit control. Both default to `FALSE`.
 -   Fixed bug in `do_TermEnrichmentPlot()` where y-axis labels were derived from the original unfiltered data instead of the filtered/ordered terms, causing label mismatches. Labels now correctly correspond to the displayed terms.
+-   Fixed a bug in `do_ActivityHeatmap()` where asserthat calls would trigger an error regardless of the condition being met or not.
 
 # SCpbur v3.0.0 
 

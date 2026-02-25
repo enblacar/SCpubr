@@ -1,4 +1,7 @@
-#' Wrapper for Nebulosa::plot_density in Seurat.
+#' Plot kernel density estimates of gene expression on dimensional reduction embeddings.
+#'
+#' This function wraps \link[Nebulosa]{plot_density}, adding publication-ready
+#' theming and joint density visualization for multiple features.
 #'
 #' @inheritParams doc_function
 #' @inheritParams Nebulosa::plot_density

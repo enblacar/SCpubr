@@ -2,13 +2,13 @@
 % Please edit documentation in R/do_WafflePlot.R
 \name{do_WafflePlot}
 \alias{do_WafflePlot}
-\title{Display the enriched terms for a given list of genes.}
+\title{Generate Waffle plots to display cell group proportions.}
 \usage{
 do_WafflePlot(
   sample,
   group.by,
   waffle.size = 2,
-  flip = TRUE,
+  flip = FALSE,
   colors.use = NULL,
   colorblind = FALSE,
   na.value = "grey75",
@@ -95,7 +95,8 @@ do_WafflePlot(
 A ggplot2 object with a Waffle Plot.
 }
 \description{
-Display the enriched terms for a given list of genes.
+This function displays the proportional composition of cell groups as a
+waffle chart, where each tile represents a fixed number of cells.
 }
 \examples{
 \donttest{

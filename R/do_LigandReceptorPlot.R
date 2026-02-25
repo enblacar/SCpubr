@@ -1,9 +1,9 @@
 #' Visualize Ligand-Receptor analysis output.
 #'
-#' This function takes the output of liana and generates a dot-plot visualization according to the user's specifications.
+#' This function takes a tibble produced by the liana package and generates a dot-plot visualization according to the user's specifications.
 #'
 #' @inheritParams doc_function
-#' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap} and \link[liana]{liana_aggregate}.
+#' @param liana_output \strong{\code{\link[tibble]{tibble}}} | Object resulting from running the liana functions \code{liana_wrap} and \code{liana_aggregate}.
 #' @param split.by \strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.
 #' @param keep_source,keep_target \strong{\code{\link[base]{character}}} | Identities to keep for the source/target of the interactions. NULL otherwise.
 #' @param top_interactions \strong{\code{\link[base]{numeric}}} | Number of unique interactions to retrieve ordered by magnitude and specificity. It does not necessarily mean that the output will contain as many, but rather an approximate value.

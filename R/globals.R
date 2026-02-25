@@ -6,4 +6,7 @@ utils::globalVariables(c(".data",
                        "quantile",
                        "ecdf",
                        "summarise",
-                       "stratum"))
+                       "stratum",
+                       "global_idx",
+                       "tmp",
+                       "y"))

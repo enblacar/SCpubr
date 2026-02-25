@@ -1,4 +1,7 @@
-#' Display the enriched terms for a given list of genes.
+#' Generate Waffle plots to display cell group proportions.
+#'
+#' This function displays the proportional composition of cell groups as a
+#' waffle chart, where each tile represents a fixed number of cells.
 #'
 #' @inheritParams doc_function
 #' @param waffle.size \strong{\code{\link[base]{numeric}}} | Tile border size.
@@ -10,7 +13,7 @@
 do_WafflePlot <- function(sample,
                           group.by,
                           waffle.size = 2,
-                          flip = TRUE,
+                          flip = FALSE,
                           colors.use = NULL,
                           colorblind = FALSE,
                           na.value = "grey75",
@@ -124,28 +127,33 @@ do_WafflePlot <- function(sample,
   data$Totals <- round_percent(x = data,
                                group.by = group.by)
   
-  p <- data %>% 
-       # Mapping.
-       ggplot2::ggplot(mapping = ggplot2::aes(values = .data$Totals,
-                                              fill = .data$Groups)) + 
-       # This will create the white border around the boxes.
-       waffle::geom_waffle(na.rm = TRUE,
-                           n_rows = 10,
-                           size = waffle.size,
-                           color = "white",
-                           flip = flip)  + 
-       # This will create the black border around the boxes.
-       waffle::geom_waffle(na.rm = TRUE,
-                           n_rows = 10,
-                           size = 0.35,
-                           color = "black",
-                           flip = flip,
-                           alpha = 0.25) + 
-       # Keep squares "squared".
-       ggplot2::coord_fixed() + 
-       # Add colors cale.
-       ggplot2::scale_fill_manual(values = colors.use,
-                                  na.value = na.value)  +
+  # Build waffle grid manually to avoid depending on the 'waffle' package.
+  # Expand each group into tiles summing to 100 (10x10 grid).
+  tile_df <- data %>%
+    dplyr::mutate(tiles = .data$Totals) %>%
+    dplyr::select(.data$Groups, .data$tiles) %>%
+    tidyr::uncount(weights = .data$tiles, .remove = FALSE) %>%
+    dplyr::group_by(.data$Groups) %>%
+    dplyr::mutate(idx = dplyr::row_number()) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(global_idx = dplyr::row_number())
+
+  # Calculate x/y positions for a 10x10 grid.
+  tile_df <- tile_df %>%
+    dplyr::mutate(x = (global_idx - 1) %% 10 + 1,
+                  y = 10 - ((global_idx - 1) %/% 10))
+
+  # If flip requested, swap axes.
+  if (isTRUE(flip)){
+    tile_df <- tile_df %>% dplyr::mutate(tmp = x, x = y, y = tmp) %>% dplyr::select(-tmp)
+  }
+
+  p <- tile_df %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$x, y = .data$y, fill = .data$Groups)) +
+    ggplot2::geom_tile(color = "white", linewidth = waffle.size) +
+    ggplot2::geom_tile(color = "black", linewidth = 0.35, alpha = 0.25, fill = NA) +
+    ggplot2::coord_fixed() +
+    ggplot2::scale_fill_manual(values = colors.use, na.value = na.value) +
        # Add plot labels.
        ggplot2::labs(title = plot.title,
                      subtitle = plot.subtitle,
@@ -157,11 +165,10 @@ do_WafflePlot <- function(sample,
                                                     ncol = legend.ncol,
                                                     nrow = legend.nrow,
                                                     byrow = legend.byrow))  +
-       # Add theme.
-       ggplot2::theme_minimal(base_size = font.size) +
+      # Add theme.
+      ggplot2::theme_minimal(base_size = font.size) +
        # Customise theme.
-       ggplot2::theme(axis.title = ggplot2::element_text(color = "black",
-                                                         face = axis.title.face),
+      ggplot2::theme(axis.title = ggplot2::element_blank(),
                       panel.grid = ggplot2::element_blank(),
                       axis.line = ggplot2::element_blank(),
                       axis.text = ggplot2::element_blank(),

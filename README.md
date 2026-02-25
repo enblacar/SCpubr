@@ -35,10 +35,13 @@ SCpubr::package_report(extended = TRUE)
 For tutorials, check **SCpubr**'s [reference manual](https://enblacar.github.io/SCpubr-book/).
 
 
-## Updates
-`SCpubr` is an active package currently aiming to improve and add new functionalities.
+## Project Status
 
-Keep track of our new updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/master/NEWS.md)!
+> **SCpubr** is now in **maintenance mode**. No new features are planned, but bug fixes and compatibility updates will continue to be provided.
+
+Contributions from the community are very welcome! Whether it's a bug fix, documentation improvement, or a new idea — feel free to open an [issue](https://github.com/enblacar/SCpubr/issues) or submit a [pull request](https://github.com/enblacar/SCpubr/pulls). Check the [contributing guide](https://enblacar.github.io/SCpubr-book/08_appendix/02_contributing.html) for more details.
+
+Keep track of past updates in the [NEWS page](https://github.com/enblacar/SCpubr/blob/main/NEWS.md).
 
 ## Citation
 To cite `SCpubr` in your publications, please use: 

@@ -1,4 +1,8 @@
-#' Wrapper for \link[Seurat]{FeaturePlot}.
+#' Plot gene expression on dimensional reduction embeddings.
+#'
+#' This function wraps \link[Seurat]{FeaturePlot}, adding publication-ready
+#' theming, rasterization, density contours, marginal distributions, and
+#' cell border overlays.
 #'
 #' @inheritParams doc_function
 #' @param idents.keep \strong{\code{\link[base]{character}}} | Vector of identities to plot. The gradient scale will also be subset to only the values of such identities.

@@ -55,7 +55,7 @@ do_LigandReceptorPlot(
 )
 }
 \arguments{
-\item{liana_output}{\strong{\code{\link[tibble]{tibble}}} | Object resulting from running \link[liana]{liana_wrap} and \link[liana]{liana_aggregate}.}
+\item{liana_output}{\strong{\code{\link[tibble]{tibble}}} | Object resulting from running the liana functions \code{liana_wrap} and \code{liana_aggregate}.}
 
 \item{split.by}{\strong{\code{\link[base]{character}}} | Whether to further facet the plot on the y axis by common ligand.complex or receptor.complex. Values to provide: NULL, ligand.complex, receptor.complex.}
 
@@ -167,7 +167,7 @@ do_LigandReceptorPlot(
 A ggplot2 plot with the results of the Ligand-Receptor analysis.
 }
 \description{
-This function takes the output of liana and generates a dot-plot visualization according to the user's specifications.
+This function takes a tibble produced by the liana package and generates a dot-plot visualization according to the user's specifications.
 }
 \examples{
 \donttest{

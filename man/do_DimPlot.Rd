@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_DimPlot.R
 \name{do_DimPlot}
 \alias{do_DimPlot}
-\title{Wrapper for \link[Seurat]{DimPlot}.}
+\title{Generate dimensional reduction plots from a Seurat object.}
 \usage{
 do_DimPlot(
   sample,
@@ -205,7 +205,9 @@ do_DimPlot(
 A ggplot2 object containing a DimPlot.
 }
 \description{
-Wrapper for \link[Seurat]{DimPlot}.
+This function wraps \link[Seurat]{DimPlot}, adding publication-ready theming,
+cell shuffling, rasterization, density contours, marginal distributions, and
+cell border overlays.
 }
 \examples{
 \donttest{

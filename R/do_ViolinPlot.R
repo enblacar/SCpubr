@@ -1,4 +1,7 @@
-#' Wrapper for \link[Seurat]{VlnPlot}.
+#' Generate Violin plots from a Seurat object.
+#'
+#' This function generates violin plots using ggplot2, with publication-ready
+#' theming, optional box plot overlay, and extended customization options.
 #'
 #' @inheritParams doc_function
 #' @param plot_boxplot \strong{\code{\link[base]{logical}}} | Whether to plot a Box plot inside the violin or not.

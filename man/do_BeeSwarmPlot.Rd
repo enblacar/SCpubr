@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_BeeSwarmPlot.R
 \name{do_BeeSwarmPlot}
 \alias{do_BeeSwarmPlot}
-\title{BeeSwarm plot.}
+\title{Generate BeeSwarm plots of ranked cells colored by gene expression or metadata.}
 \usage{
 do_BeeSwarmPlot(
   sample,
@@ -170,7 +170,9 @@ do_BeeSwarmPlot(
 A ggplot2 object containing a Bee Swarm plot.
 }
 \description{
-BeeSwarm plot.
+This function ranks cells along a continuous feature and displays them as a
+bee swarm, colored by a second variable. Useful for visualizing continuous
+enrichment scores across cell populations.
 }
 \examples{
 \donttest{

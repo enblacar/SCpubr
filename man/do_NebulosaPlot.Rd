@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_NebulosaPlot.R
 \name{do_NebulosaPlot}
 \alias{do_NebulosaPlot}
-\title{Wrapper for Nebulosa::plot_density in Seurat.}
+\title{Plot kernel density estimates of gene expression on dimensional reduction embeddings.}
 \usage{
 do_NebulosaPlot(
   sample,
@@ -148,7 +148,8 @@ package to allow weights. Bandwidth selection from the \code{ks} package
 A ggplot2 object containing a Nebulosa plot.
 }
 \description{
-Wrapper for Nebulosa::plot_density in Seurat.
+This function wraps \link[Nebulosa]{plot_density}, adding publication-ready
+theming and joint density visualization for multiple features.
 }
 \examples{
 \donttest{

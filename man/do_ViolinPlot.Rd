@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_ViolinPlot.R
 \name{do_ViolinPlot}
 \alias{do_ViolinPlot}
-\title{Wrapper for \link[Seurat]{VlnPlot}.}
+\title{Generate Violin plots from a Seurat object.}
 \usage{
 do_ViolinPlot(
   sample,
@@ -150,7 +150,8 @@ do_ViolinPlot(
 A ggplot2 object containing a Violin Plot.
 }
 \description{
-Wrapper for \link[Seurat]{VlnPlot}.
+This function generates violin plots using ggplot2, with publication-ready
+theming, optional box plot overlay, and extended customization options.
 }
 \examples{
 \donttest{
