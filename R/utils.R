@@ -3031,7 +3031,7 @@ handle_axis <- function(flip,
                                                   hjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["hjust"]],
                                                   vjust = get_axis_parameters(angle = axis.text.x.angle, flip = FALSE)[["vjust"]])
       axis.text.x.top <- ggplot2::element_blank()
-      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black")
+      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black", hjust = 0)
       axis.text.y.left <- ggplot2::element_blank()
       if (length(group.by) > 1){
         axis.title.x.top <- ggplot2::element_blank()
@@ -3056,7 +3056,7 @@ handle_axis <- function(flip,
       axis.ticks.y.left <- ggplot2::element_blank()
       axis.text.x.top <- ggplot2::element_blank()
       axis.text.x.bottom <- ggplot2::element_blank()
-      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black")
+      axis.text.y.right <- ggplot2::element_text(face = axis.text.face, color = "black", hjust = 0)
       axis.text.y.left <- ggplot2::element_blank()
       if (length(group.by) > 1){
         axis.title.x.top <- ggplot2::element_text(face = axis.title.face, color = "black",
@@ -3113,7 +3113,7 @@ handle_axis <- function(flip,
         axis.ticks.y.left <- ggplot2::element_blank()
         axis.ticks.y.right <- ggplot2::element_line(color = "black")
         axis.text.y.left <- ggplot2::element_blank()
-        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face)
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face, hjust = 0)
         axis.title.y.left <- ggplot2::element_text(face = axis.title.face, color = "black",
                                                    angle = 90,
                                                    vjust = 0.5,
@@ -3148,7 +3148,7 @@ handle_axis <- function(flip,
         axis.ticks.y.left <- ggplot2::element_blank()
         axis.ticks.y.right <- ggplot2::element_line(color = "black")
         axis.text.y.left <- ggplot2::element_blank()
-        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face)
+        axis.text.y.right <- ggplot2::element_text(color = "black", face = axis.text.face, hjust = 0)
         axis.title.y.right <- ggplot2::element_blank()
         axis.title.y.left <- ggplot2::element_blank()
       } else {
