@@ -297,22 +297,48 @@ do_DotPlot <- function(sample,
     }
     
     selection <- c(split.by, group.by, "Gene", "Avg.Exp", "P.Exp")
-    data <- data[features.use, , drop = FALSE] %>% 
-            as.data.frame() %>% 
-            tibble::rownames_to_column(var = "Gene") %>% 
-            tidyr::pivot_longer(cols = -"Gene",
-                                values_to = "Expression",
-                                names_to = "Cell") %>% 
-            dplyr::left_join(y = {sample@meta.data[ , c(group.by, split.by), drop = FALSE] %>% 
+    
+    # Split features into gene features (in assay) and metadata features (in meta.data).
+    gene_features <- features.use[features.use %in% rownames(data)]
+    meta_features <- features.use[features.use %in% colnames(sample@meta.data)]
+    
+    # Build long-format data from gene features (assay matrix).
+    if (length(gene_features) > 0) {
+      data_genes <- data[gene_features, , drop = FALSE] %>%
+                    as.data.frame() %>%
+                    tibble::rownames_to_column(var = "Gene") %>%
+                    tidyr::pivot_longer(cols = -"Gene",
+                                        values_to = "Expression",
+                                        names_to = "Cell")
+    } else {
+      data_genes <- NULL
+    }
+    
+    # Build long-format data from metadata features.
+    if (length(meta_features) > 0) {
+      data_meta <- sample@meta.data[, meta_features, drop = FALSE] %>%
+                   tibble::rownames_to_column(var = "Cell") %>%
+                   tidyr::pivot_longer(cols = -"Cell",
+                                       names_to = "Gene",
+                                       values_to = "Expression")
+    } else {
+      data_meta <- NULL
+    }
+    
+    # Combine both sources.
+    data_combined <- dplyr::bind_rows(data_genes, data_meta)
+    
+    data <- data_combined %>%
+            dplyr::left_join(y = {sample@meta.data[, c(group.by, split.by), drop = FALSE] %>%
                                   tibble::rownames_to_column(var = "Cell")},
-                             by = "Cell") %>% 
-            dplyr::mutate("logical" = ifelse(.data$Expression == 0, 0, 1)) %>% 
-            dplyr::group_by(dplyr::across(dplyr::all_of(c(split.by, group.by, "Gene")))) %>% 
+                             by = "Cell") %>%
+            dplyr::mutate("logical" = ifelse(.data$Expression == 0, 0, 1)) %>%
+            dplyr::group_by(dplyr::across(dplyr::all_of(c(split.by, group.by, "Gene")))) %>%
             dplyr::summarise("Avg.Exp" = mean(.data$Expression, na.rm = TRUE),
                              "N.Exp" = sum(.data$logical),
                              "N" = dplyr::n(),
-                             .groups = "drop") %>% 
-            dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>% 
+                             .groups = "drop") %>%
+            dplyr::mutate("P.Exp" = (.data$N.Exp / .data$N) * 100) %>%
             dplyr::select(dplyr::all_of(selection))
     
     if (is.null(split.by)){

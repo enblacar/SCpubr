@@ -1,3 +1,11 @@
+# SCpubr v3.0.2 (In Development)
+
+## Bug fixes
+-   Fixed bug in `do_DotPlot()` where passing metadata columns (e.g., UCell enrichment scores, `nCount_RNA`, `nFeature_RNA`) as features would cause a "subscript out of bounds" error. The function now correctly retrieves metadata features from `sample@meta.data` alongside gene features from the assay matrix, allowing both to be plotted together.
+
+## Documentation
+-   Improved roxygen titles and descriptions for `do_ViolinPlot()`, `do_DimPlot()`, `do_FeaturePlot()`, `do_NebulosaPlot()`, `do_DotPlot()`, `do_BeeSwarmPlot()`, `do_CellularStatesPlot()`, and `do_WafflePlot()`. Replaced uninformative "Wrapper for ..." titles with descriptive summaries of each function's purpose.
+
 # SCpubr v3.0.1
 
 ## General
